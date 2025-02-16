@@ -13,13 +13,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
-<<<<<<< HEAD
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.0",
-    "aws-cdk": "^2.165.0",
-=======
     "aws-cdk": "^2.178.2",
->>>>>>> 4c95e59 (Fixed Dependencies)
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
@@ -32,15 +26,10 @@
     "@aws-sdk/lib-storage": "^3.679.0",
     "@cloudscape-design/components": "^3.0.779",
     "@cloudscape-design/global-styles": "^1.0.32",
-<<<<<<< HEAD
-    "aws-amplify": "^6.6.4",
-    "aws-cdk-lib": "^2.177.0",
-=======
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "aws-amplify": "^6.13.0",
     "aws-cdk-lib": "^2.178.2",
->>>>>>> 4c95e59 (Fixed Dependencies)
     "aws-sdk": "^2.1691.0",
     "axios": "^1.7.7",
     "babel-plugin-polyfill-corejs3": "^0.10.6",
@@ -53,11 +42,7 @@
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
-<<<<<<< HEAD
-    "react-markdown": "^9.0.1",
-=======
     "react-markdown": "^9.0.3",
->>>>>>> 4c95e59 (Fixed Dependencies)
     "react-multi-carousel": "^2.8.5",
     "react-router-dom": "^6.26.2",
     "react-speech-recognition": "^3.10.0",
