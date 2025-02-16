@@ -23,6 +23,7 @@ export interface ChatBotApiProps {
   readonly authentication: AuthorizationStack; 
 }
 
+
 export class ChatBotApi extends Construct {
   public readonly httpAPI: RestBackendAPI;
   public readonly wsAPI: WebsocketBackendAPI;
@@ -34,7 +35,7 @@ export class ChatBotApi extends Construct {
   constructor(scope: Construct, id: string, props: ChatBotApiProps) {
     super(scope, id);
 
-    const tables = new TableStack(this, "TableStack");
+    const tables = new TableStack(this, "TableStack"); // adding this here to create tables for dynamoDBs
     const buckets = new S3BucketStack(this, "BucketStack");
     
     const openSearch = new OpenSearchStack(this,"OpenSearchStack",{})
@@ -52,7 +53,7 @@ export class ChatBotApi extends Construct {
         sessionTable: tables.historyTable,        
         feedbackTable: tables.feedbackTable,
         feedbackBucket: buckets.feedbackBucket,
-        //knowledgeBucket: buckets.knowledgeBucket,
+        
         knowledgeBase: knowledgeBase.knowledgeBase,
         knowledgeBaseSource : knowledgeBase.dataSource,
         ffioNofosBucket: buckets.ffioNofosBucket,

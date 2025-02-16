@@ -9,6 +9,7 @@ import { UserInterface } from "./user-interface"
 
 export class GenAiMvpStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    //adding to see if it creates dynamoDB table
     super(scope, id, props);
 
     // The code that defines your stack goes here

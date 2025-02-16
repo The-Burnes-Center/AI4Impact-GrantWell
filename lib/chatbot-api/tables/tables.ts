@@ -22,7 +22,7 @@ export class TableStack extends Stack {
       projectionType: ProjectionType.ALL,
     });
 
-    this.historyTable = chatHistoryTable;
+    this.historyTable = chatHistoryTable; //let's see if this adds DynamoDB table
 
     // Define the second table (UserFeedbackTable)
     const userFeedbackTable = new Table(scope, 'UserFeedbackTable', {
