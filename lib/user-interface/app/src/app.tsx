@@ -15,7 +15,6 @@ import SessionPage from "./pages/chatbot/sessions/sessions";
 import Welcome from "./pages/landing-page/basePage";
 import Checklists from "./pages/requirements-gathering/checklist"; // Import the new Checklists page
 import { useState } from "react";
-//import { v4 as uuidv4 } from "uuid";
 import "./styles/app.scss";
 import { Mode } from "@cloudscape-design/global-styles";
 import { StorageHelper } from "./common/helpers/storage-helper";
