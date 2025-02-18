@@ -94,7 +94,7 @@ export default function GlobalHeader() {
             type: "menu-dropdown",
             description: userName ?? "",
             iconName: "user-profile",
-            // onItemClick: onUserProfileClick,
+            onItemClick: onUserProfileClick,
             items: [
               {
                 id: "signout",

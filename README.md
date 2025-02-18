@@ -39,3 +39,7 @@ The chatbot will prompt the applicant to provide details about who is applying f
 <p><a href="https://github.com/serenagreenx" target="_blank">Serena Green</a></p>
 
 <p><a href="https://github.com/shreyathal" target="_blank">Shreya Thalvayapati</a></p>
+
+<p><a href="https://github.com/Anuttan" target="_blank">Anjith Prakash</a></p>
+
+<p><a href="https://github.com/KodeJaiSurya" target="_blank">Jai Surya Kode</a></p>
