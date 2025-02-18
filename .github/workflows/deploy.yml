@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'  # Use Node.js version 20.x, which is compatible with "@types/node": "20.12.7"
+        node-version: '20'
 
     # Step 3: Install backend dependencies (from the root folder)
     - name: Install backend dependencies
