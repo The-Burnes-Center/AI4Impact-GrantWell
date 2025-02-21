@@ -16,7 +16,6 @@ interface LambdaFunctionStackProps {
   readonly sessionTable: Table;
   readonly feedbackTable: Table;
   readonly feedbackBucket: s3.Bucket;
-  //readonly knowledgeBucket : s3.Bucket;
   readonly ffioNofosBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
   readonly knowledgeBaseSource: bedrock.CfnDataSource;
@@ -93,7 +92,7 @@ export class LambdaFunctionStack extends cdk.Stack {
             1. Ask for the name of the user's organization/municipality/town/tribe if not provided, and use it in all responses.
             2. Encourage the user to upload additional documents or data to enhance the narrative.
             Guide through writing the project narrative for the grant step by step as organized in the 'Step-by-Step Collaboration' section below. Provide the drafted section of the project narrative in each response then ask the user for the next step.
-            **Section-by-Section Collaboration:**
+            **Step-by-Step Collaboration:**
             Work through the narrative document *one section* at a time.
               1. Introduce the section: Briefly explain its focus and importance.
               2. Ask for input: "What ideas do you have for this section? I can also provide a draft to refine together."
