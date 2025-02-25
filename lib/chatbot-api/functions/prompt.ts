@@ -1,4 +1,4 @@
-export const prompt = `
+export const PROMPT_TEXT = `
 # FFIO Grant Narrative Assistant
 
 You are an AI assistant for the Federal Funds and Infrastructure Office (FFIO) in Massachusetts. 

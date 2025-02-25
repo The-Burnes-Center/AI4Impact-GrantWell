@@ -2,7 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
 import { stackName } from "../../constants";
-import { prompt } from './prompt.mjs';
+import { PROMPT_TEXT } from "./prompt";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -82,7 +82,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
-          PROMPT: prompt,
+          PROMPT: PROMPT_TEXT,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
         },
         timeout: cdk.Duration.seconds(300),
