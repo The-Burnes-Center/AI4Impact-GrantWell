@@ -9,19 +9,9 @@ import { UserInterface } from "./user-interface"
 
 export class GenAiMvpStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    //adding to see if it creates dynamoDB table
+    
     super(scope, id, props);
 
-    // The code that defines your stack goes here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'GenAiMvpQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
-    // let authentication;
-    // if (AUTHENTICATION) {
-    //   authentication = new AuthorizationStack(this, "Authorization")
-    // }
     const authentication = new AuthorizationStack(this, "Authorization")
     const chatbotAPI = new ChatBotApi(this, "ChatbotAPI", {authentication});
     const userInterface = new UserInterface(this, "UserInterface",
