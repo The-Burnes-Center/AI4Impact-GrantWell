@@ -1,30 +1,32 @@
+/**
+ * This file defines a construct for creating and configuring an AWS Cognito User Pool for user authentication.
+ * It includes the setup of a Cognito domain, a user pool client, and an optional Azure OIDC identity provider.
+ * Additionally, it configures a Lambda function to act as a custom authorizer for the WebSocket API.
+ */
+
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { cognitoDomainName } from '../constants' 
-import { UserPool, UserPoolIdentityProviderOidc,UserPoolClient, UserPoolClientIdentityProvider, ProviderAttribute } from 'aws-cdk-lib/aws-cognito';
+import { cognitoDomainName } from '../constants';
+import { UserPool, UserPoolClient, FeaturePlan} from 'aws-cdk-lib/aws-cognito';
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as path from 'path';
 
 export class AuthorizationStack extends Construct {
-  public readonly lambdaAuthorizer : lambda.Function;
-  public readonly userPool : UserPool;
-  public readonly userPoolClient : UserPoolClient;
+  public readonly lambdaAuthorizer: lambda.Function;
+  public readonly userPool: UserPool;
+  public readonly userPoolClient: UserPoolClient;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id);
-
-    // Replace these values with your Azure client ID, client secret, and issuer URL
-    // const azureClientId = 'your-azure-client-id';
-    // const azureClientSecret = 'your-azure-client-secret';
-    // const azureIssuerUrl = 'https://your-azure-issuer.com';
 
     // Create the Cognito User Pool
     const userPool = new UserPool(this, 'UserPool', {      
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       selfSignUpEnabled: false,
       mfa: cognito.Mfa.OPTIONAL,
-      advancedSecurityMode: cognito.AdvancedSecurityMode.ENFORCED,
+      featurePlan: FeaturePlan.PLUS,
+      // advancedSecurityMode: cognito.AdvancedSecurityMode.ENFORCED, (deprecated)
       autoVerify: { email: true, phone: true },
       signInAliases: {
         email: true,

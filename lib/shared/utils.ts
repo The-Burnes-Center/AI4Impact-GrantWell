@@ -1,3 +1,8 @@
+/**
+ * This file defines utility functions used throughout the Gen AI MVP application.
+ * The Utils class provides a method for recursively copying directories and their contents.
+ */
+
 import * as fs from "node:fs";
 import * as path from "node:path";
 
@@ -21,5 +26,4 @@ export abstract class Utils {
       }
     }
   }
-
 }

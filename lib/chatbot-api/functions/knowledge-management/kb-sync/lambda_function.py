@@ -1,3 +1,9 @@
+"""
+This Lambda function handles the synchronization of a knowledge base with a data source.
+It checks if any sync jobs are currently running, starts new sync jobs, and retrieves the last sync time.
+The function also checks the user's role to ensure they have the necessary permissions to perform these actions.
+"""
+
 import json
 import boto3
 import os
@@ -16,16 +22,14 @@ def check_running():
     Returns:
         bool: True if there are any ongoing sync or sync-indexing jobs, False otherwise.
     """
-    # List ongoing sync jobs with status 'SYNCING'
+    # List ongoing sync jobs with status 'IN_PROGRESS'
     syncing = client.list_ingestion_jobs(
         dataSourceId=source_index,
         knowledgeBaseId=kb_index,
         filters=[{
             'attribute': 'STATUS',
             'operator': 'EQ',
-            'values': [
-                'IN_PROGRESS',
-            ]
+            'values': ['IN_PROGRESS']
         }]
     )
     
@@ -36,9 +40,7 @@ def check_running():
         filters=[{
             'attribute': 'STATUS',
             'operator': 'EQ',
-            'values': [
-                'STARTING',
-            ]
+            'values': ['STARTING']
         }]
     )
     
@@ -46,29 +48,31 @@ def check_running():
     hist = starting['ingestionJobSummaries'] + syncing['ingestionJobSummaries']
     
     # Check if there are any jobs in the history
-    if len(hist) > 0:
-        return True
+    return len(hist) > 0
 
-def get_last_sync():    
+def get_last_sync():
+    """
+    Retrieve the last sync time for the specified data source and index.
+
+    Returns:
+        dict: A response dictionary with the last sync time.
+    """
     syncs = client.list_ingestion_jobs(
         dataSourceId=source_index,
         knowledgeBaseId=kb_index,
         filters=[{
             'attribute': 'STATUS',
             'operator': 'EQ',
-            'values': [
-                'COMPLETE',
-            ]
+            'values': ['COMPLETE']
         }]
     )
     hist = syncs["ingestionJobSummaries"]
     time = hist[0]["updatedAt"].strftime('%B %d, %Y, %I:%M%p UTC')
     return {
-                'statusCode': 200,
-                'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps(time)
-            }
-
+        'statusCode': 200,
+        'headers': {'Access-Control-Allow-Origin': '*'},
+        'body': json.dumps(time)
+    }
 
 def lambda_handler(event, context):
     """
@@ -109,38 +113,29 @@ def lambda_handler(event, context):
                 'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps('User is not authorized to perform this action')
             }
-    except:
+    except Exception as e:
         return {
-                'statusCode': 500,
-                'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps('Unable to check user role, please ensure you have Cognito configured correctly with a custom:role attribute.')
-            }    
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps(f'Unable to check user role, please ensure you have Cognito configured correctly with a custom:role attribute. Error: {e}')
+        }    
         
     # Check if the request is for syncing Knowledge Base
     if "sync-kb" in resource_path:
         if check_running():
-            print("1")
-
             return {
                 'statusCode': 200,
                 'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps('STILL SYNCING')
             }
-        
-        
         else:
-            # Check if the request is for syncing Knowledge Base    
-            print("2")
             client.start_ingestion_job(
-                    dataSourceId=source_index,
-                    knowledgeBaseId=kb_index
+                dataSourceId=source_index,
+                knowledgeBaseId=kb_index
             )
-        
             return {
                 'statusCode': 200,
-                'headers': {
-                'Access-Control-Allow-Origin': '*'
-                },
+                'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps('STARTED SYNCING')
             }
    
@@ -151,6 +146,6 @@ def lambda_handler(event, context):
             'statusCode': 200,
             'headers': {'Access-Control-Allow-Origin': '*'},
             'body': json.dumps(status_msg)
-            }
+        }
     elif "last-sync" in resource_path:
         return get_last_sync()

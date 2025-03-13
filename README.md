@@ -9,17 +9,17 @@ GrantWell is organized into three key pages: 1) a homepage for selecting NOFOs, 
 # Homepage
 The homepage of GrantWell provides admin users with the ability to upload NOFOs that they want summarized. Once the system parses through the document and extracts the necessary requirements, grant applicants can select the NOFO that they'd like to work on from the top of the screen.
 
-<img src="https://github.com/deepikasai-mettu/FFIO-MVP-RAG-chatbot/blob/main/lib/user-interface/app/public/images/landingpage.gif?raw=true" alt="Homepage gif" width="500">
+<img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/landingpage.gif?raw=true" alt="Homepage gif" width="500">
 
 # Extracted Requirements Page
 Grant applicants can review the output of the summarized NOFO document on this page, as well as upload any relevant backend files that they would like the chatbot to have access to.
 
-<img src="https://github.com/deepikasai-mettu/FFIO-MVP-RAG-chatbot/blob/main/lib/user-interface/app/public/images/reqpage.gif?raw=true" alt="Requirements gif" width="500">
+<img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/reqpage.gif?raw=true" alt="Requirements gif" width="500">
 
 # Narrative Drafting Page
 The chatbot will prompt the applicant to provide details about who is applying for the grant. Users are encouraged to upload as much supplementary, application-related data to the backend before engaging in conversation with the chatbot.
 
-<img src="https://github.com/deepikasai-mettu/FFIO-MVP-RAG-chatbot/blob/main/lib/user-interface/app/public/images/chatbotreal-compress.gif?raw=true" alt="Requirements gif" width="500">
+<img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/chatbotreal-compress.gif?raw=true" alt="Requirements gif" width="500">
 
 # Important Notes
 - This tool is functional, but has undergone minimal user testing. Thus, bugs may arise. Report any bugs through the Google Form at the bottom of the landing page.
@@ -29,7 +29,7 @@ The chatbot will prompt the applicant to provide details about who is applying f
 - Ensure you fact-check any information that GrantWell provides that you are uncertain about.
 
 # Architecture 
-<img src="https://raw.githubusercontent.com/deepikasai-mettu/FFIO-MVP-RAG-chatbot/main/lib/user-interface/app/public/images/architecture.png" alt="FFIO Architecture" width="500">
+<img src="https://raw.githubusercontent.com/Anuttan/Grantwell-MVP/main/lib/user-interface/app/public/images/architecture.png" alt="FFIO Architecture" width="500">
 
 <p>For more information, visit the <a href="https://aws-samples.github.io/aws-genai-llm-chatbot/" target="_blank">AWS GenAI LLM Chatbot</a>.</p>
 
