@@ -16,9 +16,8 @@ import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
 import { S3EventSource } from "aws-cdk-lib/aws-lambda-event-sources";
-import { StackProps } from "aws-cdk-lib";
 
-interface LambdaFunctionStackProps extends StackProps {
+interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
   readonly sessionTable: Table;
   readonly feedbackTable: Table;
@@ -42,16 +41,15 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly processAndSummarizeNOFO: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
-    super(scope, id, props);
+    super(scope, id);
 
-    // Define the session handler Lambda function
     const sessionAPIHandlerFunction = new lambda.Function(
-      this,
+      scope,
       "SessionHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
-        code: lambda.Code.fromAsset(path.join(__dirname, "session-handler")),
-        handler: "lambda_function.lambda_handler",
+        runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
+        code: lambda.Code.fromAsset(path.join(__dirname, "session-handler")), // Points to the lambda directory
+        handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
         environment: {
           DDB_TABLE_NAME: props.sessionTable.tableName,
         },
@@ -72,21 +70,21 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
         resources: [
           props.sessionTable.tableArn,
-          `${props.sessionTable.tableArn}/index/*`,
+          props.sessionTable.tableArn + "/index/*",
         ],
       })
     );
 
     this.sessionFunction = sessionAPIHandlerFunction;
 
-    // Define the chat handler Lambda function
+    // Define the Lambda function resource
     const websocketAPIFunction = new lambda.Function(
-      this,
+      scope,
       "ChatHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset(path.join(__dirname, "websocket-chat")),
-        handler: "index.handler",
+        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+        code: lambda.Code.fromAsset(path.join(__dirname, "websocket-chat")), // Points to the lambda directory
+        handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
           PROMPT: PROMPT_TEXT,
@@ -95,7 +93,6 @@ export class LambdaFunctionStack extends cdk.Stack {
         timeout: cdk.Duration.seconds(300),
       }
     );
-
     websocketAPIFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -106,7 +103,6 @@ export class LambdaFunctionStack extends cdk.Stack {
         resources: ["*"],
       })
     );
-
     websocketAPIFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -125,14 +121,13 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.chatFunction = websocketAPIFunction;
 
-    // Define the feedback handler Lambda function
     const feedbackAPIHandlerFunction = new lambda.Function(
-      this,
+      scope,
       "FeedbackHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
-        code: lambda.Code.fromAsset(path.join(__dirname, "feedback-handler")),
-        handler: "lambda_function.lambda_handler",
+        runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
+        code: lambda.Code.fromAsset(path.join(__dirname, "feedback-handler")), // Points to the lambda directory
+        handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
         environment: {
           FEEDBACK_TABLE: props.feedbackTable.tableName,
           FEEDBACK_S3_DOWNLOAD: props.feedbackBucket.bucketName,
@@ -154,7 +149,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
         resources: [
           props.feedbackTable.tableArn,
-          `${props.feedbackTable.tableArn}/index/*`,
+          props.feedbackTable.tableArn + "/index/*",
         ],
       })
     );
@@ -165,24 +160,23 @@ export class LambdaFunctionStack extends cdk.Stack {
         actions: ["s3:*"],
         resources: [
           props.feedbackBucket.bucketArn,
-          `${props.feedbackBucket.bucketArn}/*`,
+          props.feedbackBucket.bucketArn + "/*",
         ],
       })
     );
 
     this.feedbackFunction = feedbackAPIHandlerFunction;
 
-    // Define the knowledge base sync handler Lambda function
     const kbSyncAPIHandlerFunction = new lambda.Function(
-      this,
+      scope,
       "SyncKBHandlerFunction",
       {
         functionName: `${stackName}-syncKBFunction`,
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/kb-sync")
-        ),
-        handler: "lambda_function.lambda_handler",
+        ), // Points to the lambda directory
+        handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
         environment: {
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SOURCE: props.knowledgeBaseSource.attrDataSourceId,
@@ -198,19 +192,17 @@ export class LambdaFunctionStack extends cdk.Stack {
         resources: [props.knowledgeBase.attrKnowledgeBaseArn],
       })
     );
-
     this.syncKBFunction = kbSyncAPIHandlerFunction;
 
-    // Define the delete S3 files handler Lambda function
     const deleteS3APIHandlerFunction = new lambda.Function(
-      this,
+      scope,
       "DeleteS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/delete-s3")
-        ),
-        handler: "lambda_function.lambda_handler",
+        ), // Points to the lambda directory
+        handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },
@@ -224,23 +216,21 @@ export class LambdaFunctionStack extends cdk.Stack {
         actions: ["s3:*"],
         resources: [
           props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
+          props.ffioNofosBucket.bucketArn + "/*",
         ],
       })
     );
-
     this.deleteS3Function = deleteS3APIHandlerFunction;
 
-    // Define the get S3 files handler Lambda function
     const getS3APIHandlerFunction = new lambda.Function(
-      this,
+      scope,
       "GetS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/get-s3")
-        ),
-        handler: "index.handler",
+        ), // Points to the lambda directory
+        handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },
@@ -254,16 +244,14 @@ export class LambdaFunctionStack extends cdk.Stack {
         actions: ["s3:*"],
         resources: [
           props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
+          props.ffioNofosBucket.bucketArn + "/*",
         ],
       })
     );
-
     this.getS3Function = getS3APIHandlerFunction;
 
-    // Define the get NOFOs list handler Lambda function
     const getS3APIHandlerFunctionForNOFOs = new lambda.Function(
-      this,
+      scope,
       "GetS3APIHandlerFunctionForNOFOs",
       {
         runtime: lambda.Runtime.NODEJS_20_X,
@@ -281,19 +269,21 @@ export class LambdaFunctionStack extends cdk.Stack {
     getS3APIHandlerFunctionForNOFOs.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:*"],
+        actions: [
+          "s3:*",
+          //'s3:GetObject',     // Read objects from the bucket
+          //'s3:ListBucket'     // List the contents of the bucket
+        ],
         resources: [
           props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
+          props.ffioNofosBucket.bucketArn + "/*",
         ],
       })
     );
-
     this.getNOFOsList = getS3APIHandlerFunctionForNOFOs;
 
-    // Define the process and summarize NOFO handler Lambda function
     const processNOFOAPIHandlerFunction = new lambda.Function(
-      this,
+      scope,
       "ProcessNOFOAPIHandlerFunction",
       {
         runtime: lambda.Runtime.NODEJS_20_X,
@@ -308,7 +298,15 @@ export class LambdaFunctionStack extends cdk.Stack {
         timeout: cdk.Duration.minutes(9),
       }
     );
-
+    // processNOFOAPIHandlerFunction.addToRolePolicy(new iam.PolicyStatement({
+    //   effect: iam.Effect.ALLOW,
+    //   actions: [
+    //     's3:*',
+    //     'bedrock:*',
+    //     'textract:*'
+    //   ],
+    //   resources: [props.ffioNofosBucket.bucketArn,props.ffioNofosBucket.bucketArn+"/*",'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0']
+    // }));
     // S3 permissions
     processNOFOAPIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -351,16 +349,14 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.processAndSummarizeNOFO = processNOFOAPIHandlerFunction;
-
     processNOFOAPIHandlerFunction.addEventSource(
       new S3EventSource(props.ffioNofosBucket, {
         events: [s3.EventType.OBJECT_CREATED],
       })
     );
 
-    // Define the get NOFO summary handler Lambda function
     const RequirementsForNOFOs = new lambda.Function(
-      this,
+      scope,
       "GetRequirementsForNOFOs",
       {
         runtime: lambda.Runtime.NODEJS_20_X,
@@ -381,53 +377,50 @@ export class LambdaFunctionStack extends cdk.Stack {
         actions: ["s3:*", "bedrock:*"],
         resources: [
           props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
+          props.ffioNofosBucket.bucketArn + "/*",
         ],
       })
     );
-
     this.getNOFOSummary = RequirementsForNOFOs;
 
-    // Define the NOFO upload handler Lambda function
+    // NOFO UPLOAD ATTEMPT
     const nofoUploadS3APIHandlerFunction = new lambda.Function(
-      this,
+      scope,
       "nofoUploadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/upload-nofos")
-        ),
-        handler: "index.handler",
+        ), // Points to the lambda directory
+        handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(60),
       }
     );
-
     nofoUploadS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["s3:*"],
         resources: [
           props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
+          props.ffioNofosBucket.bucketArn + "/*",
         ],
       })
     );
-
     this.uploadNOFOS3Function = nofoUploadS3APIHandlerFunction;
+    // end
 
-    // Define the general S3 upload handler Lambda function
     const uploadS3APIHandlerFunction = new lambda.Function(
-      this,
+      scope,
       "UploadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/upload-s3")
-        ),
-        handler: "index.handler",
+        ), // Points to the lambda directory
+        handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },
@@ -441,11 +434,10 @@ export class LambdaFunctionStack extends cdk.Stack {
         actions: ["s3:*"],
         resources: [
           props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
+          props.ffioNofosBucket.bucketArn + "/*",
         ],
       })
     );
-
     this.uploadS3Function = uploadS3APIHandlerFunction;
   }
 }
