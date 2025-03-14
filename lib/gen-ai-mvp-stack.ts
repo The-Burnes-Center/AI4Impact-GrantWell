@@ -10,8 +10,6 @@ import { cognitoDomainName } from "./constants";
 import { AuthorizationStack } from "./authorization";
 import { UserInterface } from "./user-interface";
 
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
-
 export class GenAiMvpStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
