@@ -8,9 +8,8 @@ import {
   Select,
   Container,
   Link,
-  // Button
+  Button
 } from '@cloudscape-design/components';
-import { Button } from '../../themed/components';
 import { ApiClient } from '../../common/api-client/api-client';
 import { AppContext } from '../../common/app-context';
 import { v4 as uuidv4 } from 'uuid';
