@@ -231,8 +231,8 @@ export default function Welcome({ theme }) {
     setStatusMessage('');
 
     try {
-      // Call the API to create a new user with the custom message
-      const result = await apiClient.landingPage.inviteUser(newUserEmail, inviteMessage);
+      // Call the API to create a new user without a custom message
+      const result = await apiClient.landingPage.inviteUser(newUserEmail);
       
       if (result.success) {
         setInviteStatus('success');
@@ -820,37 +820,6 @@ export default function Welcome({ theme }) {
                     fontSize: '16px',
                   }}
                   placeholder="user@example.com"
-                />
-              </div>
-              
-              <div style={{ marginBottom: '20px' }}>
-                <label 
-                  htmlFor="message-input" 
-                  style={{ 
-                    display: 'block', 
-                    marginBottom: '5px', 
-                    color: mainTextColor,
-                    fontWeight: 'bold' 
-                  }}
-                >
-                  Invitation Message:
-                </label>
-                <p style={{ color: bodyTextColor, fontSize: '12px', marginBottom: '5px' }}>
-                  Customize the invitation email. Use {'{'+'username'+'}'} for the username and {'{'+'####'+'}'} for the temporary password.
-                </p>
-                <textarea
-                  id="message-input"
-                  value={inviteMessage}
-                  onChange={(e) => setInviteMessage(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc',
-                    fontSize: '14px',
-                    minHeight: '200px',
-                    fontFamily: 'monospace'
-                  }}
                 />
               </div>
               

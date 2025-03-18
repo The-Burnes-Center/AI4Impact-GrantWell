@@ -111,7 +111,7 @@ export class LandingPageClient {
   }
 
   // Invites a new user to the application
-  async inviteUser(email: string, message?: string) {
+  async inviteUser(email: string) {
     try {
       const token = await Utils.authenticate();
       const response = await fetch(`${this.baseUrl}/user-management/invite-user`, {
@@ -120,7 +120,7 @@ export class LandingPageClient {
           'Content-Type': 'application/json',
           'Authorization': token
         },
-        body: JSON.stringify({ email, message })
+        body: JSON.stringify({ email })
       });
   
       const data = await response.json();
