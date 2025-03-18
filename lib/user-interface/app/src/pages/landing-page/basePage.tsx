@@ -14,6 +14,7 @@ import { ApiClient } from '../../common/api-client/api-client';
 import { AppContext } from '../../common/app-context';
 import { v4 as uuidv4 } from 'uuid';
 import '../styles/base-page.css'
+import { EMAIL_TEMPLATES, getConfiguredEmailTemplate } from '../../common/constants/email-templates';
 
 export default function Welcome({ theme }) {
   // **State Variables**
@@ -26,6 +27,7 @@ export default function Welcome({ theme }) {
   const [newUserEmail, setNewUserEmail] = useState('');
   const [inviteStatus, setInviteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [statusMessage, setStatusMessage] = useState('');
+  const [inviteMessage, setInviteMessage] = useState(getConfiguredEmailTemplate(EMAIL_TEMPLATES.USER_INVITATION_HTML));
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -229,8 +231,8 @@ export default function Welcome({ theme }) {
     setStatusMessage('');
 
     try {
-      // Call the API to create a new user
-      const result = await apiClient.landingPage.inviteUser(newUserEmail);
+      // Call the API to create a new user with the custom message
+      const result = await apiClient.landingPage.inviteUser(newUserEmail, inviteMessage);
       
       if (result.success) {
         setInviteStatus('success');
@@ -775,6 +777,8 @@ export default function Welcome({ theme }) {
               justifyContent: 'center',
               alignItems: 'center',
               zIndex: 1000,
+              overflowY: 'auto',
+              padding: '20px'
             }}
           >
             <div
@@ -782,7 +786,7 @@ export default function Welcome({ theme }) {
                 backgroundColor: 'white',
                 padding: '30px',
                 borderRadius: '8px',
-                width: '400px',
+                width: '600px',
                 maxWidth: '90%',
               }}
             >
@@ -816,6 +820,37 @@ export default function Welcome({ theme }) {
                     fontSize: '16px',
                   }}
                   placeholder="user@example.com"
+                />
+              </div>
+              
+              <div style={{ marginBottom: '20px' }}>
+                <label 
+                  htmlFor="message-input" 
+                  style={{ 
+                    display: 'block', 
+                    marginBottom: '5px', 
+                    color: mainTextColor,
+                    fontWeight: 'bold' 
+                  }}
+                >
+                  Invitation Message:
+                </label>
+                <p style={{ color: bodyTextColor, fontSize: '12px', marginBottom: '5px' }}>
+                  Customize the invitation email. Use {'{'+'username'+'}'} for the username and {'{'+'####'+'}'} for the temporary password.
+                </p>
+                <textarea
+                  id="message-input"
+                  value={inviteMessage}
+                  onChange={(e) => setInviteMessage(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    fontSize: '14px',
+                    minHeight: '200px',
+                    fontFamily: 'monospace'
+                  }}
                 />
               </div>
               
