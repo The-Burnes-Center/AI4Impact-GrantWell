@@ -1,16 +1,12 @@
-import React, { useContext, useState, useEffect, CSSProperties, useRef } from 'react';
+import React, { useContext, useState, useEffect, CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 import {
-  Header,
-  SpaceBetween,
-  Cards,
   Select,
   Container,
   Link,
-  // Button
+  Button
 } from '@cloudscape-design/components';
-import { Button } from '../../themed/components';
 import { ApiClient } from '../../common/api-client/api-client';
 import { AppContext } from '../../common/app-context';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,6 +19,10 @@ export default function Welcome({ theme }) {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
+  const [showInviteUserModal, setShowInviteUserModal] = useState(false);
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [inviteStatus, setInviteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -46,10 +46,6 @@ export default function Welcome({ theme }) {
     alignItems: "center",
     gap: "15px",
   };
-
-  // const descriptionStyle: CSSProperties = {
-
-  // };
 
   const logoStyle: CSSProperties = {
     width: "65px",
@@ -200,8 +196,6 @@ export default function Welcome({ theme }) {
     fileInput.click();
   };
   
-
-
   // Navigate to checklists
   const goToChecklists = () => {
     if (selectedDocument) {
@@ -214,7 +208,39 @@ export default function Welcome({ theme }) {
     }
   };
 
+  // Add this function with your other functions
+  const inviteNewUser = async () => {
+    if (!newUserEmail || !newUserEmail.includes('@')) {
+      setStatusMessage('Please enter a valid email address');
+      setInviteStatus('error');
+      return;
+    }
 
+    setInviteStatus('loading');
+    setStatusMessage('');
+
+    try {
+      // Call the API to create a new user without a custom message
+      const result = await apiClient.landingPage.inviteUser(newUserEmail);
+      
+      if (result.success) {
+        setInviteStatus('success');
+        setStatusMessage('User invitation sent successfully!');
+        // Reset form after short delay
+        setTimeout(() => {
+          setNewUserEmail('');
+          setInviteStatus('idle');
+          setShowInviteUserModal(false);
+        }, 2000);
+      } else {
+        throw new Error(result.message || 'Failed to invite user');
+      }
+    } catch (error) {
+      console.error('Error inviting user:', error);
+      setInviteStatus('error');
+      setStatusMessage(error.message || 'Failed to invite user. Please try again.');
+    }
+  };
 
   // **Components**
   // HistoryPanel component
@@ -268,7 +294,7 @@ export default function Welcome({ theme }) {
             textAlign: "center",
           }}
         >
-          You haven’t viewed any NOFOs recently. Select or upload a document at the panel to get started.
+          You haven't viewed any NOFOs recently. Select or upload a document at the panel to get started.
         </p>
       )}
     </div>
@@ -324,38 +350,39 @@ export default function Welcome({ theme }) {
           marginTop: '15px',
         }}
       >
-          {imagePosition === 'left' && imageSrc && (
-            <img src={imageSrc} alt={imageAlt} style={{width:imageWidth}}/>
+        {imagePosition === 'left' && imageSrc && (
+          <img src={imageSrc} alt={imageAlt} style={{width:imageWidth}}/>
+        )}
+        <div
+          style={{
+            display:'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            textAlign: titleAlign,
+            width: buttonText ? '70%' : '80%', // Adjust width based on whether there's a button
+          }}
+        >
+          { title && (
+            <h1 style={{ fontSize: titleFontSize, margin: 1, color:mainTextColor}}>
+              {title}
+            </h1>
           )}
-          <div
-            style={{
-              display:'flex',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              textAlign: titleAlign,
-            }}
-          >
-              { title && (
-                <h1 style={{ fontSize: titleFontSize, margin: 1, color:mainTextColor}}>
-                  {title}
-                </h1>
-              )}
-              <p style={{ fontSize: '13px', color: bodyTextColor}}>
-                {description}
-              </p>
+          <p style={{ fontSize: '13px', color: bodyTextColor}}>
+            {description}
+          </p>
         </div>
         {imagePosition === 'right' && imageSrc && (
-        <img src={imageSrc} alt={imageAlt} style={{ width: imageWidth }} />
-      )}
+          <img src={imageSrc} alt={imageAlt} style={{ width: imageWidth }} />
+        )}
         {buttonText && buttonAction && (
           <Button
             onClick={buttonAction}
             variant={buttonVariant}
             ariaLabel={buttonText}>
-              {buttonText}
-            </Button>
+            {buttonText}
+          </Button>
         )}
-        </div>
+      </div>
     );
     return(
     <div
@@ -389,44 +416,6 @@ export default function Welcome({ theme }) {
       </div>
     );
   };
-      {/* <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          maxWidth: "900px", // Set a max width for the page
-          alignItems: 'center',
-          margin: '0 auto',
-          flexDirection: 'row',
-          //height: '120px',
-          gap: '30px',
-          marginTop: '15px',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-          }}
-        >
-          <h1 style={{ fontSize: titleFontSize, margin: 1, color: mainTextColor }}>{title}</h1>
-          <p style={{ fontSize: '13px', color: bodyTextColor }}>{description}</p>
-        </div>
-        {buttonText && buttonAction && (
-          <Button 
-            onClick={buttonAction} 
-            variant={buttonVariant}
-            aria-label={buttonText}
-          >
-            {buttonText}
-          </Button>
-        )}
-        {imageSrc && (
-          <img src={imageSrc} alt={imageAlt} style={{ width: '300px' }} />
-        )}
-      </div>
-    </div>
-  ); */}
 
   const ContentBox = ({ children, backgroundColor = '#f1f6f9' }) => (
     <div
@@ -438,7 +427,7 @@ export default function Welcome({ theme }) {
         right: '50%',
         marginLeft: '-50vw',
         marginRight: '-50vw',
-        boxSizing: 'border-box', // Ensure padding doesn’t expand width
+        boxSizing: 'border-box', // Ensure padding doesn't expand width
         padding: '20px 0', // Add padding for vertical spacing
         marginTop: "0px",
         marginBottom: "0px",
@@ -642,12 +631,6 @@ export default function Welcome({ theme }) {
 
         </div>
 
-
-        {/* Main Content */}
-
-        {/* <div ref={selectNOFORef}></div> */}
-        {/* <SpaceBetween size="xs"> */}
-
         <ContentBox backgroundColor="#F6FCFF">
           <HistoryPanel />
         </ContentBox>
@@ -658,7 +641,21 @@ export default function Welcome({ theme }) {
             description="Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it'll be ready for your review!"
             buttonText="Upload New NOFO"
             buttonAction={uploadNOFO}
-            backgroundColor="##f1f6f9"
+            backgroundColor="#ffffff"
+            mainTextColor="#006499"
+            bodyTextColor="#6c757d"
+            titleFontSize='24px'
+            buttonVariant="primary"
+          />
+        )}
+
+        {isAdmin && (
+          <InfoBanner
+            title="User Management"
+            description="Invite new users to access the application. They will receive an email with instructions to set up their account."
+            buttonText="Invite New User"
+            buttonAction={() => setShowInviteUserModal(true)}
+            backgroundColor="#ffffff"
             mainTextColor="#006499"
             bodyTextColor="#6c757d"
             titleFontSize='24px'
@@ -710,6 +707,104 @@ export default function Welcome({ theme }) {
           imagePosition='left'
           imageWidth="75px"
         />
+
+        {/* User Invitation Modal */}
+        {showInviteUserModal && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000,
+              overflowY: 'auto',
+              padding: '20px'
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: 'white',
+                padding: '30px',
+                borderRadius: '8px',
+                width: '600px',
+                maxWidth: '90%',
+              }}
+            >
+              <h2 style={{ color: mainTextColor, marginTop: 0 }}>Invite New User</h2>
+              <p style={{ color: bodyTextColor }}>
+                Enter the email address of the user you want to invite. They will receive an email with instructions to set up their account.
+              </p>
+              
+              <div style={{ marginBottom: '20px' }}>
+                <label 
+                  htmlFor="email-input" 
+                  style={{ 
+                    display: 'block', 
+                    marginBottom: '5px', 
+                    color: mainTextColor,
+                    fontWeight: 'bold' 
+                  }}
+                >
+                  Email Address:
+                </label>
+                <input
+                  id="email-input"
+                  type="email"
+                  value={newUserEmail}
+                  onChange={(e) => setNewUserEmail(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    fontSize: '16px',
+                  }}
+                  placeholder="user@example.com"
+                />
+              </div>
+              
+              {statusMessage && (
+                <div 
+                  style={{ 
+                    padding: '10px', 
+                    marginBottom: '15px',
+                    backgroundColor: inviteStatus === 'error' ? '#ffebee' : '#e8f5e9',
+                    color: inviteStatus === 'error' ? '#c62828' : '#2e7d32',
+                    borderRadius: '4px',
+                  }}
+                >
+                  {statusMessage}
+                </div>
+              )}
+              
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                <Button
+                  onClick={() => {
+                    setShowInviteUserModal(false);
+                    setNewUserEmail('');
+                    setInviteStatus('idle');
+                    setStatusMessage('');
+                  }}
+                  variant="link"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={inviteNewUser}
+                  variant="primary"
+                  disabled={inviteStatus === 'loading'}
+                >
+                  {inviteStatus === 'loading' ? 'Sending...' : 'Send Invitation'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Container>
   );

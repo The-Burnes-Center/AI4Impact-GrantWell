@@ -1,22 +1,26 @@
+"""
+This Lambda function handles user feedback for the chatbot application.
+It supports creating, retrieving, downloading, and deleting feedback stored in a DynamoDB table.
+The function also generates presigned URLs for downloading feedback as CSV files from an S3 bucket.
+"""
+
 import json
 import uuid
 import boto3
 import os
 from datetime import datetime
-from boto3.dynamodb.conditions import Key, Attr
+from boto3.dynamodb.conditions import Key
+from decimal import Decimal
 
 # Initialize DynamoDB client
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ.get('FEEDBACK_TABLE'))
 
-from decimal import Decimal
-
 class DecimalEncoder(json.JSONEncoder):
-  def default(self, obj):
-    if isinstance(obj, Decimal):
-      return str(obj)
-    return json.JSONEncoder.default(self, obj)
-    
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)
 
 def lambda_handler(event, context):
     # Determine the type of HTTP method
@@ -24,19 +28,15 @@ def lambda_handler(event, context):
     try:
         claims = event["requestContext"]["authorizer"]["jwt"]["claims"]
         roles = json.loads(claims['custom:role'])
-        if "Admin" in roles:                        
+        if "Admin" in roles:
             print("admin granted!")
             admin = True
         else:
             print("Caught error: attempted unauthorized admin access")
             admin = False
-    except:
-        print("Caught error: admin access and user roles are not present")
-        # return {
-        #         'statusCode': 500,
-        #         'headers': {'Access-Control-Allow-Origin': '*'},
-        #         'body': json.dumps('Unable to check user role, please ensure you have Cognito configured correctly with a custom:role attribute.')
-        #     }
+    except Exception as e:
+        print(f"Caught error: admin access and user roles are not present - {e}")
+
     http_method = event.get('routeKey')
     if 'POST' in http_method:
         if event.get('rawPath') == '/user-feedback/download-feedback' and admin:
@@ -65,22 +65,22 @@ def post_feedback(event):
             'FeedbackID': feedback_id,
             'SessionID': feedback_data['sessionId'],
             'UserPrompt': feedback_data['prompt'],
-            'FeedbackComments': feedback_data.get('comment',''),
-            'Topic': feedback_data.get('topic','N/A (Good Response)'),
-            'Problem': feedback_data.get("problem",''),
+            'FeedbackComments': feedback_data.get('comment', ''),
+            'Topic': feedback_data.get('topic', 'N/A (Good Response)'),
+            'Problem': feedback_data.get("problem", ''),
             'Feedback': feedback_data["feedback"],
             'ChatbotMessage': feedback_data['completion'],
-            'Sources' : feedback_data['sources'],
+            'Sources': feedback_data['sources'],
             'CreatedAt': timestamp,
-            'Any' : "YES"
+            'Any': "YES"
         }
         # Put the item into the DynamoDB table
         table.put_item(Item=item)
         if feedback_data["feedback"] == 0:
             print("Negative feedback placed")
         return {
-            'headers' : {
-                'Access-Control-Allow-Origin' : "*"
+            'headers': {
+                'Access-Control-Allow-Origin': "*"
             },
             'statusCode': 200,
             'body': json.dumps({'FeedbackID': feedback_id})
@@ -89,34 +89,32 @@ def post_feedback(event):
         print(e)
         print("Caught error: DynamoDB error - could not add feedback")
         return {
-            'headers' : {
-                'Access-Control-Allow-Origin' : "*"
+            'headers': {
+                'Access-Control-Allow-Origin': "*"
             },
             'statusCode': 500,
             'body': json.dumps('Failed to store feedback: ' + str(e))
         }
-        
-    
-def download_feedback(event):
 
-    # load parameters
+def download_feedback(event):
+    # Load parameters
     data = json.loads(event['body'])
     start_time = data.get('startTime')
     end_time = data.get('endTime')
     topic = data.get('topic')
-        
+
     response = None
 
-    # if topic is any, use the appropriate index
-    if not topic or topic=="any":                
+    # If topic is any, use the appropriate index
+    if not topic or topic == "any":
         query_kwargs = {
             'IndexName': 'AnyIndex',
             'KeyConditionExpression': Key('Any').eq("YES") & Key('CreatedAt').between(start_time, end_time)
         }
     else:
         query_kwargs = {
-            'KeyConditionExpression': Key('CreatedAt').between(start_time, end_time) & Key('Topic').eq(topic),            
-        }   
+            'KeyConditionExpression': Key('CreatedAt').between(start_time, end_time) & Key('Topic').eq(topic),
+        }
 
     try:
         response = table.query(**query_kwargs)
@@ -129,20 +127,17 @@ def download_feedback(event):
             'statusCode': 500,
             'body': json.dumps('Failed to retrieve feedback for download: ' + str(e))
         }
-    
-    
+
     def clean_csv(field):
-        print("working")
         field = str(field).replace('"', '""')
-        field = field.replace('\n','').replace(',', '')
+        field = field.replace('\n', '').replace(',', '')
         return f'{field}'
-    
+
     csv_content = "FeedbackID, SessionID, UserPrompt, FeedbackComment, Topic, Problem, Feedback, ChatbotMessage, CreatedAt\n"
-    
+
     for item in response['Items']:
         csv_content += f"{clean_csv(item['FeedbackID'])}, {clean_csv(item['SessionID'])}, {clean_csv(item['UserPrompt'])}, {clean_csv(item['FeedbackComments'])}, {clean_csv(item['Topic'])}, {clean_csv(item['Problem'])}, {clean_csv(item['Feedback'])}, {clean_csv(item['ChatbotMessage'])}, {clean_csv(item['CreatedAt'])}\n"
-        print(csv_content)
-    
+
     s3 = boto3.client('s3')
     S3_DOWNLOAD_BUCKET = os.environ["FEEDBACK_S3_DOWNLOAD"]
 
@@ -150,7 +145,6 @@ def download_feedback(event):
         file_name = f"feedback-{start_time}-{end_time}.csv"
         s3.put_object(Bucket=S3_DOWNLOAD_BUCKET, Key=file_name, Body=csv_content)
         presigned_url = s3.generate_presigned_url('get_object', Params={'Bucket': S3_DOWNLOAD_BUCKET, 'Key': file_name}, ExpiresIn=3600)
-
     except Exception as e:
         print("Caught error: S3 error - could not generate download link")
         return {
@@ -162,12 +156,11 @@ def download_feedback(event):
         }
     return {
         'headers': {
-                'Access-Control-Allow-Origin': "*"
-            },
+            'Access-Control-Allow-Origin': "*"
+        },
         'statusCode': 200,
         'body': json.dumps({'download_url': presigned_url})
     }
-        
 
 def get_feedback(event):
     try:
@@ -176,33 +169,33 @@ def get_feedback(event):
         start_time = query_params.get('startTime')
         end_time = query_params.get('endTime')
         topic = query_params.get('topic')
-        exclusive_start_key = query_params.get('nextPageToken')  # Pagination token        
-        
-        response = None        
-        
-        if not topic or topic=="any":        
+        exclusive_start_key = query_params.get('nextPageToken')  # Pagination token
+
+        response = None
+
+        if not topic or topic == "any":
             query_kwargs = {
-                'IndexName' : 'AnyIndex',
+                'IndexName': 'AnyIndex',
                 'KeyConditionExpression': Key('Any').eq("YES") & Key('CreatedAt').between(start_time, end_time),
-                'ScanIndexForward' : False,
-                'Limit' : 10
-            } 
+                'ScanIndexForward': False,
+                'Limit': 10
+            }
         else:
             query_kwargs = {
                 'KeyConditionExpression': Key('CreatedAt').between(start_time, end_time) & Key('Topic').eq(topic),
-                'ScanIndexForward' : False,
-                'Limit' : 10
+                'ScanIndexForward': False,
+                'Limit': 10
             }
 
         if exclusive_start_key:
             query_kwargs['ExclusiveStartKey'] = json.loads(exclusive_start_key)
-        
+
         response = table.query(**query_kwargs)
-        
+
         body = {
-            'Items':  response['Items'],            
+            'Items': response['Items'],
         }
-        
+
         if 'LastEvaluatedKey' in response:
             body['NextPageToken'] = json.dumps(response['LastEvaluatedKey'])
 
@@ -222,15 +215,14 @@ def get_feedback(event):
             'statusCode': 500,
             'body': json.dumps('Failed to retrieve feedback: ' + str(e))
         }
-        
+
 def delete_feedback(event):
     try:
         # Extract FeedbackID from the event
-        # feedback_id = json.loads(event['body']).get('FeedbackID')
         query_params = event.get('queryStringParameters', {})
         topic = query_params.get('topic')
         created_at = query_params.get('createdAt')
-        
+
         if not topic:
             return {
                 'headers': {
@@ -243,7 +235,7 @@ def delete_feedback(event):
         response = table.delete_item(
             Key={
                 'Topic': topic,
-                'CreatedAt' : created_at
+                'CreatedAt': created_at
             }
         )
         return {

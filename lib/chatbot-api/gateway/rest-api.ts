@@ -1,31 +1,23 @@
-import * as path from "path";
-import * as cdk from "aws-cdk-lib";
+/**
+ * This file defines a construct for creating an HTTP API using AWS API Gateway v2.
+ * The API is configured with CORS settings to allow cross-origin requests.
+ * This construct can be used to define RESTful endpoints for the backend.
+ */
 
 import { Construct } from "constructs";
 import { Duration, aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
 
-import * as cognito from "aws-cdk-lib/aws-cognito";
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import * as ec2 from "aws-cdk-lib/aws-ec2";
-import * as iam from "aws-cdk-lib/aws-iam";
-import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as logs from "aws-cdk-lib/aws-logs";
-import * as ssm from "aws-cdk-lib/aws-ssm";
-// import { Shared } from "../shared";
-import * as appsync from "aws-cdk-lib/aws-appsync";
-// import { parse } from "graphql";
-import { readFileSync } from "fs";
-import * as s3 from "aws-cdk-lib/aws-s3";
-
 export interface RestBackendAPIProps {
-
+  // Define any properties needed for the RestBackendAPI construct here
 }
 
 export class RestBackendAPI extends Construct {
   public readonly restAPI: apigwv2.HttpApi;
+
   constructor(scope: Construct, id: string, props: RestBackendAPIProps) {
     super(scope, id);
 
+    // Create an HTTP API with CORS configuration
     const httpApi = new apigwv2.HttpApi(this, 'HTTP-API', {
       corsPreflight: {
         allowHeaders: ['*'],
@@ -40,6 +32,8 @@ export class RestBackendAPI extends Construct {
         maxAge: Duration.days(10),
       },
     });
-    this.restAPI = httpApi;    
+
+    // Assign the created HTTP API to the restAPI property
+    this.restAPI = httpApi;
   }
 }

@@ -1,7 +1,13 @@
+/**
+ * This file defines the LambdaFunctionStack class, which sets up various Lambda functions for the Gen AI MVP application using AWS CDK.
+ * These Lambda functions handle session management, feedback processing, S3 operations, and knowledge base synchronization.
+ */
+
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
 import { stackName } from "../../constants";
+import { PROMPT_TEXT } from "./prompt";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -81,34 +87,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
-          PROMPT: `** Persona **You are an AI assistant for the Federal Funds and Infrastructure Office (FFIO) in Massachusetts. Your role is to help users collaboratively craft narrative document for grant application mentioned earlier, using the NOFO and knowledge base summaries as context.
-            **  Guidelines:**
-            1. Please, DO NOT mention internal functions, tools, system messages, error messages, or technical issues in the response (e.g., query_db function).
-            2. Maintain professionalism; avoid technical references or unnecessary apologies.
-            3. If information is missing, politely ask for clarification.
-            4. Engage confidently and collaboratively without mentioning system limitations.
-            **** Process ****
-            ** 1. Gather context ** 
-            1. Ask for the name of the user's organization/municipality/town/tribe if not provided, and use it in all responses.
-            2. Encourage the user to upload additional documents or data to enhance the narrative.
-            Guide through writing the project narrative for the grant step by step as organized in the 'Step-by-Step Collaboration' section below. Provide the drafted section of the project narrative in each response then ask the user for the next step.
-            **Step-by-Step Collaboration:**
-            Work through the narrative document *one section* at a time.
-              1. Introduce the section: Briefly explain its focus and importance.
-              2. Ask for input: "What ideas do you have for this section? I can also provide a draft to refine together."
-              3. Draft and refine: Incorporate user input or provide a draft, iterating until the user approves.
-              4. Move to the next section only after the current one is finalized.
-            **Finalizing the Document:**
-              After all sections are completed to the user's satisfaction, provide the entire narrative document for review.
-              Example:
-                "Here's the complete narrative document based on our work together. Please review it and let me know if there's anything you'd like to adjust."
-            **Prioritize Contextual Information:**
-              1. Use the NOFO document, gathered summaries, and any additional user-provided resources as primary references.
-              2. Prioritize sources and information specific to the State of Massachusetts.
-            **Ensure Accuracy and Credibility:**
-            1. Ground your responses in factual data.
-            2. Cite authoritative sources where appropriate.
-            3. If you lack specific information, politely ask the user for the information you need.`,
+          PROMPT: PROMPT_TEXT,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
         },
         timeout: cdk.Duration.seconds(300),

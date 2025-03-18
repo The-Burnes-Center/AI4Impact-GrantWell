@@ -1,3 +1,8 @@
+"""
+This Lambda function creates an index in an OpenSearch collection.
+It defines the index settings and mappings, obtains AWS credentials, and signs the AWS API request.
+"""
+
 import os
 import boto3
 from opensearchpy import OpenSearch, RequestsHttpConnection, AWSV4SignerAuth
@@ -8,9 +13,9 @@ import time
 def lambda_handler(event, context):
     # 1. Defining the request body for the index and field creation
     host = os.environ["COLLECTION_ENDPOINT"]
-    print(f"Collection Endpoint: " + host)
+    print(f"Collection Endpoint: {host}")
     index_name = os.environ["INDEX_NAME"]
-    print(f"Index name: " + index_name)    
+    print(f"Index name: {index_name}")    
         
     payload = {
       "settings": {
@@ -19,11 +24,11 @@ def lambda_handler(event, context):
           "knn.algo_param.ef_search": 512
         }
       },
-      "mappings": { #how do we store, 
+      "mappings": {
         "properties": {
           "vector_field": {
-            "type": "knn_vector", #we are going to put 
-            "dimension": os.environ["EMBEDDING_DIM"],
+            "type": "knn_vector",
+            "dimension": int(os.environ["EMBEDDING_DIM"]),
             "method": {
               "name": "hnsw",
               "space_type": "innerproduct",
@@ -34,8 +39,8 @@ def lambda_handler(event, context):
               }
             }
           },
-          "metadata_field" : {"type": "text", "index": False},
-          "text_field" : {"type": "text"},
+          "metadata_field": {"type": "text", "index": False},
+          "text_field": {"type": "text"},
         }
       }
     }
@@ -48,20 +53,19 @@ def lambda_handler(event, context):
     auth = AWSV4SignerAuth(credentials, region, service)
 
     client = OpenSearch(
-            hosts=[{"host": host, "port": 443}],
-            http_auth=auth,
-            use_ssl=True,
-            verify_certs=True,
-            connection_class=RequestsHttpConnection,
-            pool_maxsize=20,
-        )
+        hosts=[{"host": host, "port": 443}],
+        http_auth=auth,
+        use_ssl=True,
+        verify_certs=True,
+        connection_class=RequestsHttpConnection,
+        pool_maxsize=20,
+    )
     
     try:
-      response = client.indices.create(index_name, body=payload_json)  
-      time.sleep(60)   
-      return response
+        response = client.indices.create(index_name, body=payload_json)  
+        time.sleep(60)   
+        return response
     except Exception as e:
-       print("Index creation failed! It most likely already exists!")
-       print(e)
-       return False
-    
+        print("Index creation failed! It most likely already exists!")
+        print(e)
+        return False

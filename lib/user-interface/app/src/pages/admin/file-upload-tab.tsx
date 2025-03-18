@@ -1,5 +1,5 @@
 import {
-  // Button,
+  Button,
   Container,
   FileUpload,
   Flashbar,
@@ -10,9 +10,6 @@ import {
   ProgressBarProps,
   SpaceBetween,
 } from "@cloudscape-design/components";
-import {
-  Button,
-} from '../../themed/components';
 import { useContext, useState } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";

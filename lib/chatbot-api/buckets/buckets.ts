@@ -1,9 +1,14 @@
+/**
+ * This file defines an AWS CDK stack that creates and configures S3 buckets.
+ * These buckets are used for storing various types of data.
+ * The common properties include versioning, automatic deletion, and CORS configuration.
+ */
+
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { Construct } from "constructs";
-// push test
+
 export class S3BucketStack extends cdk.Stack {
-  //public readonly knowledgeBucket: s3.Bucket;
   public readonly feedbackBucket: s3.Bucket;
   public readonly ffioNofosBucket: s3.Bucket;
 

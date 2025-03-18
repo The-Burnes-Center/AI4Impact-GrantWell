@@ -3,14 +3,11 @@ import {
   SpaceBetween,
   Table,
   Pagination,
-  //Button,
+  Button,
   Header,
   Modal,
   Spinner,
 } from "@cloudscape-design/components";
-import {
-  Button,
-} from '../../themed/components';
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { AdminDataType } from "../../common/types";

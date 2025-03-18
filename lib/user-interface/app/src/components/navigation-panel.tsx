@@ -2,7 +2,7 @@ import {
   SideNavigation,
   SideNavigationProps,
   Header,
-  // Button,
+  Button,
   Link,
   Box,
   StatusIndicator,
@@ -12,10 +12,6 @@ import {
   Tabs,
   Alert
 } from "@cloudscape-design/components";
-// import {
-//   Button,
-// } from '../../themed/components';
-import { Button } from '../themed/components';
 import { useContext, useState, useEffect } from "react";
 import useOnFollow from "../common/hooks/use-on-follow";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
@@ -29,7 +25,6 @@ import { v4 as uuidv4 } from "uuid";
 import { SessionRefreshContext } from "../common/session-refresh-context";
 import { useNotifications } from "../components/notif-manager";
 import { Utils } from "../common/utils.js";
-import BackArrowIcon from "../../public/images/back-arrow.jsx";
 import DocumentsTab from "../pages/admin/documents-tab";
 import DataFileUpload from "../pages/admin/file-upload-tab";
 import { useSearchParams } from "react-router-dom";

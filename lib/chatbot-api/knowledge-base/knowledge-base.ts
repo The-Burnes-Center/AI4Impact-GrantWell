@@ -1,12 +1,13 @@
+/**
+ * This file defines a construct for creating and configuring a Bedrock Knowledge Base using AWS CDK.
+ * The Knowledge Base is configured with OpenSearch Serverless for storage and an S3 bucket as a data source.
+ * This construct sets up the necessary IAM roles and permissions, and configures the Knowledge Base and data source.
+ */
+
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import * as path from 'path';
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as triggers from 'aws-cdk-lib/triggers'
-import * as cr from 'aws-cdk-lib/custom-resources'
 
-import { aws_opensearchserverless as opensearchserverless } from 'aws-cdk-lib';
 import { aws_bedrock as bedrock } from 'aws-cdk-lib';
 
 import { Construct } from "constructs";
@@ -112,32 +113,7 @@ export class KnowledgeBaseStack extends cdk.Stack {
             maxTokens: 300,
             overlapPercentage: 10,
           },
-
-          // hierarchicalChunkingConfiguration: {
-          //   levelConfigurations: [{
-          //     maxTokens: 123,
-          //   }],
-          //   overlapTokens: 123,
-          // },
-          // semanticChunkingConfiguration: {
-          //   breakpointPercentileThreshold: 123,
-          //   bufferSize: 123,
-          //   maxTokens: 123,
-          // },
         },
-        // parsingConfiguration: {
-        //   parsingStrategy: 'parsingStrategy',
-
-        //   // the properties below are optional
-        //   bedrockFoundationModelConfiguration: {
-        //     modelArn: 'modelArn',
-
-        //     // the properties below are optional
-        //     parsingPrompt: {
-        //       parsingPromptText: 'parsingPromptText',
-        //     },
-        //   },
-        // },
       },
     });
 

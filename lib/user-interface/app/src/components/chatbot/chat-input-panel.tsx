@@ -1,14 +1,12 @@
 import {
-  //Button,
+  Button,
   Container,
   Icon,
   Select,
   SelectProps,
   SpaceBetween,
   Spinner,
-  StatusIndicator,
 } from "@cloudscape-design/components";
-import { Button } from '../../themed/components';
 import {
   Dispatch,
   SetStateAction,
