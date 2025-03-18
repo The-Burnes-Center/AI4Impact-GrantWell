@@ -14,7 +14,6 @@ import { ApiClient } from '../../common/api-client/api-client';
 import { AppContext } from '../../common/app-context';
 import { v4 as uuidv4 } from 'uuid';
 import '../styles/base-page.css'
-import { EMAIL_TEMPLATES, getConfiguredEmailTemplate } from '../../common/constants/email-templates';
 
 export default function Welcome({ theme }) {
   // **State Variables**
@@ -27,7 +26,6 @@ export default function Welcome({ theme }) {
   const [newUserEmail, setNewUserEmail] = useState('');
   const [inviteStatus, setInviteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [statusMessage, setStatusMessage] = useState('');
-  const [inviteMessage, setInviteMessage] = useState(getConfiguredEmailTemplate(EMAIL_TEMPLATES.USER_INVITATION_HTML));
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
