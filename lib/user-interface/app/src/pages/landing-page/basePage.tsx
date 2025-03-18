@@ -1,10 +1,7 @@
-import React, { useContext, useState, useEffect, CSSProperties, useRef } from 'react';
+import React, { useContext, useState, useEffect, CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 import {
-  Header,
-  SpaceBetween,
-  Cards,
   Select,
   Container,
   Link,
@@ -49,10 +46,6 @@ export default function Welcome({ theme }) {
     alignItems: "center",
     gap: "15px",
   };
-
-  // const descriptionStyle: CSSProperties = {
-
-  // };
 
   const logoStyle: CSSProperties = {
     width: "65px",
@@ -203,8 +196,6 @@ export default function Welcome({ theme }) {
     fileInput.click();
   };
   
-
-
   // Navigate to checklists
   const goToChecklists = () => {
     if (selectedDocument) {
@@ -425,44 +416,6 @@ export default function Welcome({ theme }) {
       </div>
     );
   };
-      {/* <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          maxWidth: "900px", // Set a max width for the page
-          alignItems: 'center',
-          margin: '0 auto',
-          flexDirection: 'row',
-          //height: '120px',
-          gap: '30px',
-          marginTop: '15px',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-          }}
-        >
-          <h1 style={{ fontSize: titleFontSize, margin: 1, color: mainTextColor }}>{title}</h1>
-          <p style={{ fontSize: '13px', color: bodyTextColor }}>{description}</p>
-        </div>
-        {buttonText && buttonAction && (
-          <Button 
-            onClick={buttonAction} 
-            variant={buttonVariant}
-            aria-label={buttonText}
-          >
-            {buttonText}
-          </Button>
-        )}
-        {imageSrc && (
-          <img src={imageSrc} alt={imageAlt} style={{ width: '300px' }} />
-        )}
-      </div>
-    </div>
-  ); */}
 
   const ContentBox = ({ children, backgroundColor = '#f1f6f9' }) => (
     <div
@@ -677,12 +630,6 @@ export default function Welcome({ theme }) {
           </Button>
 
         </div>
-
-
-        {/* Main Content */}
-
-        {/* <div ref={selectNOFORef}></div> */}
-        {/* <SpaceBetween size="xs"> */}
 
         <ContentBox backgroundColor="#F6FCFF">
           <HistoryPanel />
