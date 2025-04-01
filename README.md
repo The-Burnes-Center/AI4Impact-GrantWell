@@ -37,8 +37,8 @@ The chatbot will prompt the applicant to provide details about who is applying f
 For more information, visit the [AWS GenAI LLM Chatbot](https://aws-samples.github.io/aws-genai-llm-chatbot/).
 
 ## Developers
+- [Anjith Prakash](https://github.com/Anuttan)
+- [Jai Surya Kode](https://github.com/KodeJaiSurya)
 - [Deepika Mettu](https://github.com/deepikasai-mettu)
 - [Serena Green](https://github.com/serenagreenx)
 - [Shreya Thalvayapati](https://github.com/shreyathal)
-- [Anjith Prakash](https://github.com/Anuttan)
-- [Jai Surya Kode](https://github.com/KodeJaiSurya)
