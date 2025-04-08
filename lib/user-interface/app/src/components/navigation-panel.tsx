@@ -47,7 +47,26 @@ export default function NavigationPanel({ documentIdentifier }) {
   const [activeTab, setActiveTab] = useState("file");
   const [lastSyncTime, setLastSyncTime] = useState("");
   const [showUnsyncedAlert, setShowUnsyncedAlert] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(identifier)}`
+
+  // Check if the current user is an admin
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const adminRole = user?.signInUserSession?.idToken?.payload['custom:role'];
+        if (adminRole) {
+          const role = JSON.parse(adminRole);
+          setIsAdmin(role.includes("Admin"));
+        }
+      } catch (error) {
+        console.error("Error checking admin status:", error);
+      }
+    };
+    
+    checkAdminStatus();
+  }, []);
 
   const loadSessions = async () => {
     let username;
@@ -231,14 +250,16 @@ export default function NavigationPanel({ documentIdentifier }) {
           <DataFileUpload 
             tabChangeFunction={() => setActiveTab("file")}
           />
-          <Button
-            variant="link"
-            iconName={activeTab === "backend-controls" ? "caret-down" : "caret-up"}
-            onClick={() => setActiveTab(activeTab === "backend-controls" ? "" : "backend-controls")}
-          >
-            Manage Backend Files
-          </Button>
-          {activeTab === "backend-controls" && (
+          {isAdmin && (
+            <Button
+              variant="link"
+              iconName={activeTab === "backend-controls" ? "caret-down" : "caret-up"}
+              onClick={() => setActiveTab(activeTab === "backend-controls" ? "" : "backend-controls")}
+            >
+              Manage Backend Files
+            </Button>
+          )}
+          {isAdmin && activeTab === "backend-controls" && (
             <DocumentsTab
               tabChangeFunction={() => setActiveTab("add-data")}
               documentType="file"
