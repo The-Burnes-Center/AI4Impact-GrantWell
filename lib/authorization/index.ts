@@ -26,49 +26,30 @@ export class AuthorizationStack extends Construct {
       selfSignUpEnabled: false,
       mfa: cognito.Mfa.OPTIONAL,
       featurePlan: FeaturePlan.PLUS,
-      // advancedSecurityMode: cognito.AdvancedSecurityMode.ENFORCED, (deprecated)
       autoVerify: { email: true, phone: true },
       signInAliases: {
         email: true,
       },
-      customAttributes : {
-        'role' : new cognito.StringAttribute({ minLen: 0, maxLen: 30, mutable: true })
+      customAttributes: {
+        'role': new cognito.StringAttribute({ minLen: 0, maxLen: 30, mutable: true })
+      },
+      // Add custom invitation messages
+      userInvitation: {
+        emailSubject: 'Welcome to GrantWell!',
+        emailBody: 'Hello {username},\n\nYou have been invited to join GrantWell! Your temporary password is {####}.\n\nPlease sign in to access your account. You will be prompted to create a new password after your first sign-in.\n\nThank you,\nThe GrantWell Team',
+        smsMessage: 'Hello {username}, your temporary password for GrantWell is {####}'
       }
-      // ... other user pool configurations
     });
     this.userPool = userPool;
 
-    // Create a provider attribute for mapping Azure claims
-    // const providerAttribute = new ProviderAttribute({
-    //   name: 'custom_attr',
-    //   type: 'String',
-    // });
     userPool.addDomain('CognitoDomain', {
       cognitoDomain: {
         domainPrefix: cognitoDomainName,
       },
     });
-    
-    
-    // Add the Azure OIDC identity provider to the User Pool
-    // const azureProvider = new UserPoolIdentityProviderOidc(this, 'AzureProvider', {
-    //   clientId: azureClientId,
-    //   clientSecret: azureClientSecret,
-    //   issuerUrl: azureIssuerUrl,
-    //   userPool: userPool,
-    //   attributeMapping: {
-    //     // email: ProviderAttribute.fromString('email'),
-    //     // fullname: ProviderAttribute.fromString('name'),
-    //     // custom: {
-    //     //   customKey: providerAttribute,
-    //     // },
-    //   },
-    //   // ... other optional properties
-    // });
 
     const userPoolClient = new UserPoolClient(this, 'UserPoolClient', {
       userPool,      
-      // supportedIdentityProviders: [UserPoolClientIdentityProvider.custom(azureProvider.providerName)],
     });
 
     this.userPoolClient = userPoolClient;
@@ -93,12 +74,5 @@ export class AuthorizationStack extends Construct {
     new cdk.CfnOutput(this, "UserPool Client ID", {
       value: userPoolClient.userPoolClientId || "",
     });
-
-    // new cdk.CfnOutput(this, "UserPool Client Name", {
-    //   value: userPoolClient.userPoolClientName || "",
-    // });
-
-
-    
   }
 }
