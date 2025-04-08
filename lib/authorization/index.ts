@@ -38,9 +38,9 @@ export class AuthorizationStack extends Construct {
         emailSubject: 'Welcome to GrantWell!',
         emailBody:
           'Hello,<br><br>' +
-          'I am pleased to inform you that the new custom deployment link for the GrantWell tool is now ready for testing. All future updates and changes will be applied to this new link.<br><br>' +
-          'Please note that the tool is still under development, so you may encounter errors. We kindly request that you record any feedback regarding the tool’s performance.<br><br>' +
-          'Below, you will find the necessary information for signing into the tool:<br><br>' +
+          'I am pleased to inform you that the new custom deployment link for the GrantWell tool is now ready for testing. All future updates and changes will be applied to this new link.<br>' +
+          'Please note that the tool is still under development, so you may encounter errors. We kindly request that you record any feedback regarding the tool’s performance.<br>' +
+          'Below, you will find the necessary information for signing into the tool:<br>' +
           '<strong>First-Time Sign-In:</strong><br>' +
           'Please use the following link when signing in for the first time:<br>' +
           '<a href="https://gw-auth.auth.us-east-1.amazoncognito.com/login?client_id=375cvc5uaol6jm9jm1jte11kpr&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://d17w6od3455cz1.cloudfront.net">First Time Sign-In Link</a><br><br>' +
