@@ -14,6 +14,7 @@ import UserFeedbackPage from "./pages/admin/user-feedback-page";
 import SessionPage from "./pages/chatbot/sessions/sessions";
 import Welcome from "./pages/landing-page/basePage";
 import Checklists from "./pages/requirements-gathering/checklist"; // Import the new Checklists page
+import DocumentEditor from "./pages/document-editor/document-editor"; // Import the document editor component
 import { useState } from "react";
 import "./styles/app.scss";
 import { Mode } from "@cloudscape-design/global-styles";
@@ -50,6 +51,7 @@ function App() {
             <Route path="/chatbot" element={<Outlet />}>
               <Route path="playground/:sessionId" element={<Playground />} />
               <Route path="sessions" element={<SessionPage />} />
+              <Route path="document-editor/:projectId" element={<DocumentEditor />} />
             </Route>
             <Route path="/admin" element={<Outlet />}>
               <Route path="data" element={<DataPage />} />

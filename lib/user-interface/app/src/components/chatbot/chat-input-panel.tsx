@@ -377,6 +377,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[readyState];
 
+  const navigate = useNavigate();
+
   return (
     <SpaceBetween direction="vertical" size="l">
       <Container>
@@ -442,6 +444,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       </Container>
       <div className={styles.input_controls}>
         <div>
+          <Button 
+            variant="link" 
+            onClick={() => navigate(`/chatbot/document-editor/${props.session.id}?folder=${encodeURIComponent(props.documentIdentifier)}`)}
+            iconName="file-text"
+          >
+            Open Document Editor
+          </Button>
         </div>
         <div className={styles.input_controls_right}>
           <SpaceBetween direction="horizontal" size="xxs" alignItems="center">

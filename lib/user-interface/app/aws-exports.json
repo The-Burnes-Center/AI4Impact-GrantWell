@@ -16,7 +16,7 @@
       "responseType": "code"
     }
   },
-  "httpEndpoint": "https://3pi0xvltw7.execute-api.us-east-1.amazonaws.com",
-  "wsEndpoint": "wss://60a8y2i4y6.execute-api.us-east-1.amazonaws.com",
+  "httpEndpoint": "https://3pi0xvltw7.execute-api.us-east-1.amazonaws.com/",
+  "wsEndpoint": "wss://60a8y2i4y6.execute-api.us-east-1.amazonaws.com/prod",
   "federatedSignInProvider": ""
 }

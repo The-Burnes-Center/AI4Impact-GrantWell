@@ -89,6 +89,12 @@ export default function DocumentEditor() {
             title: "Project Timeline",
             content: "<p>Provide a detailed timeline for the project, including key milestones and deliverables.</p>",
             isComplete: false
+          },
+          {
+            id: "section-5",
+            title: "Budget Narrative",
+            content: "<p>Explain how project funds will be allocated and justify each expenditure.</p>",
+            isComplete: false
           }
         ]
       };
@@ -333,4 +339,4 @@ export default function DocumentEditor() {
       }
     />
   );
-} 
+}
