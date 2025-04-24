@@ -29,7 +29,7 @@ export default function BaseAppLayout({
   const [needsRefresh, setNeedsRefresh] = useState(true);
   const [searchParams] = useSearchParams();
   const folderParam = searchParams.get("folder");
-  const [navOpen, setNavOpen] = useState(true);
+  const [navOpen, setNavOpen] = useState(false);
   return (
     <SessionRefreshContext.Provider value={{ needsRefresh, setNeedsRefresh }}>
       <NotificationProvider>

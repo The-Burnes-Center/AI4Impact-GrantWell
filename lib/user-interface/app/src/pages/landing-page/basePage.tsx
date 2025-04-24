@@ -1,16 +1,11 @@
-import React, { useContext, useState, useEffect, CSSProperties } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
-import {
-  Select,
-  Container,
-  Link,
-  Button
-} from '@cloudscape-design/components';
-import { ApiClient } from '../../common/api-client/api-client';
-import { AppContext } from '../../common/app-context';
-import { v4 as uuidv4 } from 'uuid';
-import '../styles/base-page.css'
+import React, { useContext, useState, useEffect, CSSProperties } from "react";
+import { useNavigate } from "react-router-dom";
+import { Auth } from "aws-amplify";
+import { Select, Container, Link, Button } from "@cloudscape-design/components";
+import { ApiClient } from "../../common/api-client/api-client";
+import { AppContext } from "../../common/app-context";
+import { v4 as uuidv4 } from "uuid";
+import "../styles/base-page.css";
 
 export default function Welcome({ theme }) {
   // **State Variables**
@@ -20,9 +15,11 @@ export default function Welcome({ theme }) {
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
   const [showInviteUserModal, setShowInviteUserModal] = useState(false);
-  const [newUserEmail, setNewUserEmail] = useState('');
-  const [inviteStatus, setInviteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [statusMessage, setStatusMessage] = useState('');
+  const [newUserEmail, setNewUserEmail] = useState("");
+  const [inviteStatus, setInviteStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [statusMessage, setStatusMessage] = useState("");
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -52,29 +49,31 @@ export default function Welcome({ theme }) {
     height: "65px",
   };
 
-  const mainTextColor = "#006499"
-  const bodyTextColor = "#6c757d"
+  const mainTextColor = "#006499";
+  const bodyTextColor = "#6c757d";
 
-  const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(selectedDocument)}`;
+  const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
+    selectedDocument
+  )}`;
 
   // **Admin Section Styles**
   const adminContainerStyle: CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    marginBottom: '50px',
-    marginLeft: '40px',
-    flexWrap: 'wrap', // Allows wrapping on smaller screens
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    marginBottom: "50px",
+    marginLeft: "40px",
+    flexWrap: "wrap", // Allows wrapping on smaller screens
   };
 
   const adminTextStyle: CSSProperties = {
-    fontSize: '16px',
-    fontStyle: 'italic',
-    color: '#555',
-    margin: '0 25px 10px 0', // Adjust margins for responsiveness
-    textAlign: 'left',
-    width: '100%',
-    maxWidth: '400px',
+    fontSize: "16px",
+    fontStyle: "italic",
+    color: "#555",
+    margin: "0 25px 10px 0", // Adjust margins for responsiveness
+    textAlign: "left",
+    width: "100%",
+    maxWidth: "400px",
   };
 
   // **Effect Hooks**
@@ -88,12 +87,12 @@ export default function Welcome({ theme }) {
           return;
         }
         const adminRole =
-          result?.signInUserSession?.idToken?.payload['custom:role'];
-        if (adminRole && adminRole.includes('Admin')) {
+          result?.signInUserSession?.idToken?.payload["custom:role"];
+        if (adminRole && adminRole.includes("Admin")) {
           setIsAdmin(true); // Set admin status to true if user has admin role
         }
       } catch (e) {
-        console.error('Error checking admin status:', e);
+        console.error("Error checking admin status:", e);
       }
     })();
   }, []);
@@ -101,7 +100,7 @@ export default function Welcome({ theme }) {
   // Load recently viewed NOFOs from localStorage
   useEffect(() => {
     const storedHistory =
-      JSON.parse(localStorage.getItem('recentlyViewedNOFOs')) || [];
+      JSON.parse(localStorage.getItem("recentlyViewedNOFOs")) || [];
     setRecentlyViewedNOFOs(storedHistory);
   }, []);
 
@@ -111,7 +110,7 @@ export default function Welcome({ theme }) {
       try {
         await getNOFOListFromS3();
       } catch (error) {
-        console.error('Failed to fetch NOFO documents:', error);
+        console.error("Failed to fetch NOFO documents:", error);
       }
     };
     fetchDocuments();
@@ -127,11 +126,11 @@ export default function Welcome({ theme }) {
       setDocuments(
         folders.map((document) => ({
           label: document,
-          value: document + '/',
+          value: document + "/",
         }))
       );
     } catch (error) {
-      console.error('Error retrieving NOFOs: ', error);
+      console.error("Error retrieving NOFOs: ", error);
     }
     setLoading(false);
   };
@@ -151,17 +150,14 @@ export default function Welcome({ theme }) {
     ].slice(0, 3);
 
     setRecentlyViewedNOFOs(updatedHistory);
-    localStorage.setItem(
-      'recentlyViewedNOFOs',
-      JSON.stringify(updatedHistory)
-    );
+    localStorage.setItem("recentlyViewedNOFOs", JSON.stringify(updatedHistory));
     navigate(href);
   };
 
   // Upload a new NOFO (Admin functionality)
   const uploadNOFO = async () => {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
 
     fileInput.onchange = async (event) => {
       const file = fileInput.files[0];
@@ -169,11 +165,11 @@ export default function Welcome({ theme }) {
       if (!file) return;
 
       try {
-        const documentName = file.name.split('.').slice(0, -1).join('');
+        const documentName = file.name.split(".").slice(0, -1).join("");
         let newFilePath;
-        if (file.type === 'text/plain') {
+        if (file.type === "text/plain") {
           newFilePath = `${documentName}/NOFO-File-TXT`;
-        } else if (file.type === 'application/pdf') {
+        } else if (file.type === "application/pdf") {
           newFilePath = `${documentName}/NOFO-File-PDF`;
         } else {
           newFilePath = `${documentName}/NOFO-File`;
@@ -185,17 +181,17 @@ export default function Welcome({ theme }) {
         );
         await apiClient.landingPage.uploadFileToS3(signedUrl, file);
 
-        alert('File uploaded successfully!');
+        alert("File uploaded successfully!");
         await getNOFOListFromS3();
       } catch (error) {
-        console.error('Upload failed:', error);
-        alert('Failed to upload the file.');
+        console.error("Upload failed:", error);
+        alert("Failed to upload the file.");
       }
     };
 
     fileInput.click();
   };
-  
+
   // Navigate to checklists
   const goToChecklists = () => {
     if (selectedDocument) {
@@ -210,35 +206,37 @@ export default function Welcome({ theme }) {
 
   // Add this function with your other functions
   const inviteNewUser = async () => {
-    if (!newUserEmail || !newUserEmail.includes('@')) {
-      setStatusMessage('Please enter a valid email address');
-      setInviteStatus('error');
+    if (!newUserEmail || !newUserEmail.includes("@")) {
+      setStatusMessage("Please enter a valid email address");
+      setInviteStatus("error");
       return;
     }
 
-    setInviteStatus('loading');
-    setStatusMessage('');
+    setInviteStatus("loading");
+    setStatusMessage("");
 
     try {
       // Call the API to create a new user without a custom message
       const result = await apiClient.landingPage.inviteUser(newUserEmail);
-      
+
       if (result.success) {
-        setInviteStatus('success');
-        setStatusMessage('User invitation sent successfully!');
+        setInviteStatus("success");
+        setStatusMessage("User invitation sent successfully!");
         // Reset form after short delay
         setTimeout(() => {
-          setNewUserEmail('');
-          setInviteStatus('idle');
+          setNewUserEmail("");
+          setInviteStatus("idle");
           setShowInviteUserModal(false);
         }, 2000);
       } else {
-        throw new Error(result.message || 'Failed to invite user');
+        throw new Error(result.message || "Failed to invite user");
       }
     } catch (error) {
-      console.error('Error inviting user:', error);
-      setInviteStatus('error');
-      setStatusMessage(error.message || 'Failed to invite user. Please try again.');
+      console.error("Error inviting user:", error);
+      setInviteStatus("error");
+      setStatusMessage(
+        error.message || "Failed to invite user. Please try again."
+      );
     }
   };
 
@@ -250,10 +248,18 @@ export default function Welcome({ theme }) {
         display: "grid",
         gridTemplateColumns: "repeat(2, 1fr)", // 2 columns
         gap: "25px", // Space between grid items
-        marginBottom: "30px"
+        marginBottom: "30px",
       }}
     >
-      <h2 style={{ gridColumn: "span 2", fontSize: "24px", lineHeight: "1", textAlign: "center", color: mainTextColor }}>
+      <h2
+        style={{
+          gridColumn: "span 2",
+          fontSize: "24px",
+          lineHeight: "1",
+          textAlign: "center",
+          color: mainTextColor,
+        }}
+      >
         Recently Viewed NOFOs
       </h2>
       {recentlyViewedNOFOs.length > 0 ? (
@@ -271,12 +277,22 @@ export default function Welcome({ theme }) {
             <Link
               onFollow={() =>
                 handleNOFOSelect(
-                  `/landing-page/basePage/checklists/${encodeURIComponent(nofo.value)}`,
+                  `/landing-page/basePage/checklists/${encodeURIComponent(
+                    nofo.value
+                  )}`,
                   nofo
                 )
               }
             >
-              <span style={{ fontSize: "18px", fontWeight: "bold", display: "block", marginBottom: "8px", color: mainTextColor }}>
+              <span
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  display: "block",
+                  marginBottom: "8px",
+                  color: mainTextColor,
+                }}
+              >
                 {nofo.label}
               </span>
             </Link>
@@ -294,7 +310,8 @@ export default function Welcome({ theme }) {
             textAlign: "center",
           }}
         >
-          You haven't viewed any NOFOs recently. Select or upload a document at the panel to get started.
+          You haven't viewed any NOFOs recently. Select or upload a document at
+          the panel to get started.
         </p>
       )}
     </div>
@@ -304,21 +321,21 @@ export default function Welcome({ theme }) {
   const InfoBanner = ({
     title,
     description,
-    buttonText = '',
+    buttonText = "",
     buttonAction = null,
     imageSrc = null, // Default to null if not provided
-    imageAlt = '',
+    imageAlt = "",
     height,
-    backgroundColor = '#06293d',
-    mainTextColor = '#ffffff',
-    bodyTextColor = '#ffffff',
+    backgroundColor = "#06293d",
+    mainTextColor = "#ffffff",
+    bodyTextColor = "#ffffff",
     // buttonColor = '#FF9B00',
-    titleFontSize = '24px',
+    titleFontSize = "24px",
     buttonVariant = "normal", // Default to "normal"
     linkUrl = null,
-    imagePosition = 'right',
-    titleAlign = 'left',
-    imageWidth = '150px',
+    imagePosition = "right",
+    titleAlign = "left",
+    imageWidth = "150px",
   }: {
     title: string;
     description: string;
@@ -340,105 +357,112 @@ export default function Welcome({ theme }) {
     const content = (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          maxWidth: '900px',
-          alignItems: 'center',
-          margin: '0 auto',
-          flexDirection: 'row',
-          gap: '30px',
-          marginTop: '15px',
+          display: "flex",
+          justifyContent: "space-between",
+          maxWidth: "900px",
+          alignItems: "center",
+          margin: "0 auto",
+          flexDirection: "row",
+          gap: "30px",
+          marginTop: "15px",
         }}
       >
-        {imagePosition === 'left' && imageSrc && (
-          <img src={imageSrc} alt={imageAlt} style={{width:imageWidth}}/>
+        {imagePosition === "left" && imageSrc && (
+          <img src={imageSrc} alt={imageAlt} style={{ width: imageWidth }} />
         )}
         <div
           style={{
-            display:'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
             textAlign: titleAlign,
-            width: buttonText ? '70%' : '80%', // Adjust width based on whether there's a button
+            width: buttonText ? "70%" : "80%", // Adjust width based on whether there's a button
           }}
         >
-          { title && (
-            <h1 style={{ fontSize: titleFontSize, margin: 1, color:mainTextColor}}>
+          {title && (
+            <h1
+              style={{
+                fontSize: titleFontSize,
+                margin: 1,
+                color: mainTextColor,
+              }}
+            >
               {title}
             </h1>
           )}
-          <p style={{ fontSize: '13px', color: bodyTextColor}}>
+          <p style={{ fontSize: "13px", color: bodyTextColor }}>
             {description}
           </p>
         </div>
-        {imagePosition === 'right' && imageSrc && (
+        {imagePosition === "right" && imageSrc && (
           <img src={imageSrc} alt={imageAlt} style={{ width: imageWidth }} />
         )}
         {buttonText && buttonAction && (
           <Button
             onClick={buttonAction}
             variant={buttonVariant}
-            ariaLabel={buttonText}>
+            ariaLabel={buttonText}
+          >
             {buttonText}
           </Button>
         )}
       </div>
     );
-    return(
-    <div
-      style={{
-        backgroundColor: backgroundColor,
-        padding: '20px',
-        marginBlockEnd: '0',
-        width: '100vw',
-        height: height,
-        position: 'relative',
-        left: '50%',
-        right: '50%',
-        marginLeft: '-50vw',
-        marginRight: '-50vw',
-        marginTop: "0px",
-        marginBottom: "0px",
-      }}
-    >
-      {linkUrl ? (
-        <a
-          href={linkUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
+    return (
+      <div
+        style={{
+          backgroundColor: backgroundColor,
+          padding: "20px",
+          marginBlockEnd: "0",
+          width: "100vw",
+          height: height,
+          position: "relative",
+          left: "50%",
+          right: "50%",
+          marginLeft: "-50vw",
+          marginRight: "-50vw",
+          marginTop: "0px",
+          marginBottom: "0px",
+        }}
+      >
+        {linkUrl ? (
+          <a
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none", color: "inherit" }}
           >
             {content}
           </a>
-      ): (
-        content
-      )}
+        ) : (
+          content
+        )}
       </div>
     );
   };
 
-  const ContentBox = ({ children, backgroundColor = '#f1f6f9' }) => (
+  const ContentBox = ({ children, backgroundColor = "#f1f6f9" }) => (
     <div
       style={{
-        width: '100vw', // Full screen width
+        width: "100vw", // Full screen width
         backgroundColor, // Customizable background color
-        position: 'relative',
-        left: '50%',
-        right: '50%',
-        marginLeft: '-50vw',
-        marginRight: '-50vw',
-        boxSizing: 'border-box', // Ensure padding doesn't expand width
-        padding: '20px 0', // Add padding for vertical spacing
+        position: "relative",
+        left: "50%",
+        right: "50%",
+        marginLeft: "-50vw",
+        marginRight: "-50vw",
+        boxSizing: "border-box", // Ensure padding doesn't expand width
+        padding: "20px 0", // Add padding for vertical spacing
         marginTop: "0px",
         marginBottom: "0px",
       }}
     >
       <div
         style={{
-          maxWidth: '950px', // Center-aligned content width
-          margin: '0 auto', // Center horizontally
-          padding: '0 40px', // Respect page margins
-          boxSizing: 'border-box',
+          maxWidth: "950px", // Center-aligned content width
+          margin: "0 auto", // Center horizontally
+          padding: "0 40px", // Respect page margins
+          boxSizing: "border-box",
         }}
       >
         {children}
@@ -451,30 +475,34 @@ export default function Welcome({ theme }) {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)", 
+        gridTemplateColumns: "repeat(3, 1fr)",
         gap: "25px",
-        marginBottom: "30px"
+        marginBottom: "30px",
       }}
     >
-      <h2 style={{ 
-        gridColumn: "span 3", 
-        fontSize: "24px", 
-        lineHeight: "1", 
-        textAlign: "center", 
-        color: mainTextColor 
-      }}>
+      <h2
+        style={{
+          gridColumn: "span 3",
+          fontSize: "24px",
+          lineHeight: "1",
+          textAlign: "center",
+          color: mainTextColor,
+        }}
+      >
         Additional Resources
       </h2>
       {[
         {
           title: "Federal Grant Finder",
           href: "https://www.usdigitalresponse.org/grant/grant-finder",
-          description: "Find grants you are eligible for with U.S. Digital Response's Federal Grants Finder.",
+          description:
+            "Find grants you are eligible for with U.S. Digital Response's Federal Grants Finder.",
         },
         {
           title: "Register for Federal Funds Partnership Meetings",
           href: "https://us02web.zoom.us/meeting/register/tZUucuyhrzguHNJkkh-XlmZBlQQKxxG_Acjl",
-          description: "Stay updated on current funding opportunities by joining our monthly informational sessions.",
+          description:
+            "Stay updated on current funding opportunities by joining our monthly informational sessions.",
         },
         {
           title: "Federal Grant Application Resources",
@@ -490,29 +518,30 @@ export default function Welcome({ theme }) {
             borderRadius: "8px",
             backgroundColor: "#f9f9f9",
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-            textAlign: "center" // Center all text content
+            textAlign: "center", // Center all text content
           }}
         >
-          <Link
-            href={resource.href}
-            external
-          >
-            <span style={{ 
-              fontSize: "18px", 
-              fontWeight: "bold", 
-              display: "block", 
-              marginBottom: "8px", 
-              color: mainTextColor,
-              textAlign: "center" // Center the title specifically
-            }}>
+          <Link href={resource.href} external>
+            <span
+              style={{
+                fontSize: "18px",
+                fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px",
+                color: mainTextColor,
+                textAlign: "center", // Center the title specifically
+              }}
+            >
               {resource.title}
             </span>
           </Link>
-          <div style={{ 
-            fontSize: "14px", 
-            color: bodyTextColor,
-            textAlign: "center" // Center the description specifically
-          }}>
+          <div
+            style={{
+              fontSize: "14px",
+              color: bodyTextColor,
+              textAlign: "center", // Center the description specifically
+            }}
+          >
             {resource.description}
           </div>
         </div>
@@ -520,13 +549,9 @@ export default function Welcome({ theme }) {
     </div>
   );
 
-
-
   // **Render**
   return (
-    <Container
-      disableContentPaddings
-    >
+    <Container disableContentPaddings>
       <div
         style={{
           maxWidth: "950px",
@@ -549,24 +574,27 @@ export default function Welcome({ theme }) {
               alt="State Seal"
               style={logoStyle}
             />
-            <h1 style={{ fontSize: "45px", margin: 0, color: mainTextColor }}>GrantWell</h1>
+            <h1 style={{ fontSize: "45px", margin: 0, color: mainTextColor }}>
+              GrantWell
+            </h1>
           </div>
 
           {/* Description */}
-          <div style={{
-            flex: "1 1 auto",
-            maxWidth: "400px",
-            textAlign: "center",
-            fontSize: "19px",
-            lineHeight: "1.3",
-            color: mainTextColor
-          }}>
+          <div
+            style={{
+              flex: "1 1 auto",
+              maxWidth: "400px",
+              textAlign: "center",
+              fontSize: "19px",
+              lineHeight: "1.3",
+              color: mainTextColor,
+            }}
+          >
             <p>
               An AI tool to help Massachusetts communities secure federal grants
             </p>
           </div>
         </div>
-
 
         <div
           style={{
@@ -585,21 +613,20 @@ export default function Welcome({ theme }) {
             filteringType="auto"
             aria-label="Select a NOFO document"
           />
-
         </div>
 
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '25px',
+            display: "flex",
+            flexDirection: "row",
+            gap: "25px",
             marginTop: "35px",
-            marginBottom: '75px',
-            width: '100%',
-            padding: '0 50px', // Add 50px padding on left and right
-            boxSizing: 'border-box',
-            flexWrap: 'wrap', // Allows wrapping on smaller screens
-            justifyContent: 'center', // Centers items when wrapped
+            marginBottom: "75px",
+            width: "100%",
+            padding: "0 50px", // Add 50px padding on left and right
+            boxSizing: "border-box",
+            flexWrap: "wrap", // Allows wrapping on smaller screens
+            justifyContent: "center", // Centers items when wrapped
           }}
         >
           <Button
@@ -619,8 +646,12 @@ export default function Welcome({ theme }) {
           </Button>
 
           <Button
-            onClick={() => 
-            navigate (`/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(selectedDocument.value)}`)
+            onClick={() =>
+              navigate(
+                `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
+                  selectedDocument.value
+                )}`
+              )
             }
             disabled={!selectedDocument}
             variant="primary"
@@ -629,6 +660,20 @@ export default function Welcome({ theme }) {
             Start Narrative Draft
           </Button>
 
+          <Button
+            onClick={() =>
+              navigate(
+                `/chatbot/document-editor/${uuidv4()}?folder=${encodeURIComponent(
+                  selectedDocument.value
+                )}`
+              )
+            }
+            disabled={!selectedDocument}
+            variant="primary"
+            aria-label="Start Document Editor"
+          >
+            Start Document Editor
+          </Button>
         </div>
 
         <ContentBox backgroundColor="#F6FCFF">
@@ -644,7 +689,7 @@ export default function Welcome({ theme }) {
             backgroundColor="#ffffff"
             mainTextColor="#006499"
             bodyTextColor="#6c757d"
-            titleFontSize='24px'
+            titleFontSize="24px"
             buttonVariant="primary"
           />
         )}
@@ -658,7 +703,7 @@ export default function Welcome({ theme }) {
             backgroundColor="#ffffff"
             mainTextColor="#006499"
             bodyTextColor="#6c757d"
-            titleFontSize='24px'
+            titleFontSize="24px"
             buttonVariant="primary"
           />
         )}
@@ -678,33 +723,33 @@ export default function Welcome({ theme }) {
           description="Help us make GrantWell better by sharing your thoughts and suggestions."
           buttonText="Open Feedback Form"
           buttonAction={() =>
-            window.open('https://forms.gle/M2PHgWTVVRrRubpc7', '_blank')
+            window.open("https://forms.gle/M2PHgWTVVRrRubpc7", "_blank")
           }
-          backgroundColor='#006499'
+          backgroundColor="#006499"
           // buttonColor="#FF9B00"
         />
 
         {/* Affiliations Section */}
         <InfoBanner
           title="Our Affiliations"
-          height= "125px"
+          height="125px"
           description=""
           imageSrc="/images/burnesLogo.png"
           imageAlt="Burnes Center Logo"
           titleAlign="left"
-          imagePosition='right'
+          imagePosition="right"
           imageWidth="200px"
         />
         <InfoBanner
-          title=''
-          height= "100px"
-          imageSrc='/images/creativeCommons.png'
-          imageAlt='Creative Commons'
+          title=""
+          height="100px"
+          imageSrc="/images/creativeCommons.png"
+          imageAlt="Creative Commons"
           description="This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License"
-          linkUrl={'https://creativecommons.org/licenses/by-sa/4.0/'}
-          backgroundColor='#000000'
-          titleFontSize='16px'
-          imagePosition='left'
+          linkUrl={"https://creativecommons.org/licenses/by-sa/4.0/"}
+          backgroundColor="#000000"
+          titleFontSize="16px"
+          imagePosition="left"
           imageWidth="75px"
         />
 
@@ -712,42 +757,45 @@ export default function Welcome({ theme }) {
         {showInviteUserModal && (
           <div
             style={{
-              position: 'fixed',
+              position: "fixed",
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
               zIndex: 1000,
-              overflowY: 'auto',
-              padding: '20px'
+              overflowY: "auto",
+              padding: "20px",
             }}
           >
             <div
               style={{
-                backgroundColor: 'white',
-                padding: '30px',
-                borderRadius: '8px',
-                width: '600px',
-                maxWidth: '90%',
+                backgroundColor: "white",
+                padding: "30px",
+                borderRadius: "8px",
+                width: "600px",
+                maxWidth: "90%",
               }}
             >
-              <h2 style={{ color: mainTextColor, marginTop: 0 }}>Invite New User</h2>
+              <h2 style={{ color: mainTextColor, marginTop: 0 }}>
+                Invite New User
+              </h2>
               <p style={{ color: bodyTextColor }}>
-                Enter the email address of the user you want to invite. They will receive an email with instructions to set up their account.
+                Enter the email address of the user you want to invite. They
+                will receive an email with instructions to set up their account.
               </p>
-              
-              <div style={{ marginBottom: '20px' }}>
-                <label 
-                  htmlFor="email-input" 
-                  style={{ 
-                    display: 'block', 
-                    marginBottom: '5px', 
+
+              <div style={{ marginBottom: "20px" }}>
+                <label
+                  htmlFor="email-input"
+                  style={{
+                    display: "block",
+                    marginBottom: "5px",
                     color: mainTextColor,
-                    fontWeight: 'bold' 
+                    fontWeight: "bold",
                   }}
                 >
                   Email Address:
@@ -758,37 +806,44 @@ export default function Welcome({ theme }) {
                   value={newUserEmail}
                   onChange={(e) => setNewUserEmail(e.target.value)}
                   style={{
-                    width: '100%',
-                    padding: '10px',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc',
-                    fontSize: '16px',
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ccc",
+                    fontSize: "16px",
                   }}
                   placeholder="user@example.com"
                 />
               </div>
-              
+
               {statusMessage && (
-                <div 
-                  style={{ 
-                    padding: '10px', 
-                    marginBottom: '15px',
-                    backgroundColor: inviteStatus === 'error' ? '#ffebee' : '#e8f5e9',
-                    color: inviteStatus === 'error' ? '#c62828' : '#2e7d32',
-                    borderRadius: '4px',
+                <div
+                  style={{
+                    padding: "10px",
+                    marginBottom: "15px",
+                    backgroundColor:
+                      inviteStatus === "error" ? "#ffebee" : "#e8f5e9",
+                    color: inviteStatus === "error" ? "#c62828" : "#2e7d32",
+                    borderRadius: "4px",
                   }}
                 >
                   {statusMessage}
                 </div>
               )}
-              
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                }}
+              >
                 <Button
                   onClick={() => {
                     setShowInviteUserModal(false);
-                    setNewUserEmail('');
-                    setInviteStatus('idle');
-                    setStatusMessage('');
+                    setNewUserEmail("");
+                    setInviteStatus("idle");
+                    setStatusMessage("");
                   }}
                   variant="link"
                 >
@@ -797,9 +852,11 @@ export default function Welcome({ theme }) {
                 <Button
                   onClick={inviteNewUser}
                   variant="primary"
-                  disabled={inviteStatus === 'loading'}
+                  disabled={inviteStatus === "loading"}
                 >
-                  {inviteStatus === 'loading' ? 'Sending...' : 'Send Invitation'}
+                  {inviteStatus === "loading"
+                    ? "Sending..."
+                    : "Send Invitation"}
                 </Button>
               </div>
             </div>

@@ -55,14 +55,17 @@ export default function NavigationPanel({
   const [lastSyncTime, setLastSyncTime] = useState("");
   const [showUnsyncedAlert, setShowUnsyncedAlert] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(identifier)}`
+  const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
+    identifier
+  )}`;
 
   // Check if the current user is an admin
   useEffect(() => {
     const checkAdminStatus = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
-        const adminRole = user?.signInUserSession?.idToken?.payload['custom:role'];
+        const adminRole =
+          user?.signInUserSession?.idToken?.payload["custom:role"];
         if (adminRole) {
           const role = JSON.parse(adminRole);
           setIsAdmin(role.includes("Admin"));
@@ -71,7 +74,7 @@ export default function NavigationPanel({
         console.error("Error checking admin status:", error);
       }
     };
-    
+
     checkAdminStatus();
   }, []);
 
@@ -212,6 +215,30 @@ export default function NavigationPanel({
             New Chatbot Session
           </Button>
         </div>
+
+        <div
+          style={{
+            marginTop: "10px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            iconAlign="left"
+            iconSvg={<PencilSquareIcon />}
+            variant="primary"
+            onClick={() =>
+              navigate(
+                `/chatbot/document-editor/${uuidv4()}?folder=${encodeURIComponent(
+                  identifier
+                )}`
+              )
+            }
+          >
+            New Document Editor
+          </Button>
+        </div>
+
         <div
           style={{
             borderBottom: "1px solid #f4f4f4",
@@ -330,14 +357,18 @@ export default function NavigationPanel({
       </Box>
       <Box margin={{ horizontal: "l" }}>
         <SpaceBetween size="l">
-          <DataFileUpload 
-            tabChangeFunction={() => setActiveTab("file")}
-          />
+          <DataFileUpload tabChangeFunction={() => setActiveTab("file")} />
           {isAdmin && (
             <Button
               variant="link"
-              iconName={activeTab === "backend-controls" ? "caret-down" : "caret-up"}
-              onClick={() => setActiveTab(activeTab === "backend-controls" ? "" : "backend-controls")}
+              iconName={
+                activeTab === "backend-controls" ? "caret-down" : "caret-up"
+              }
+              onClick={() =>
+                setActiveTab(
+                  activeTab === "backend-controls" ? "" : "backend-controls"
+                )
+              }
             >
               Manage Backend Files
             </Button>
