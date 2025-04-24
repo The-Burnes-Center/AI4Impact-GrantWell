@@ -4,9 +4,10 @@ import { Button, SpaceBetween } from '@cloudscape-design/components';
 interface SuggestedQuestionsProps {
   questions: string[];
   onQuestionClick: (question: string) => void;
+  disabled?: boolean;
 }
 
-export default function SuggestedQuestions({ questions, onQuestionClick }: SuggestedQuestionsProps) {
+export default function SuggestedQuestions({ questions, onQuestionClick, disabled = false }: SuggestedQuestionsProps) {
   if (!questions || questions.length === 0) return null;
 
   return (
@@ -20,6 +21,7 @@ export default function SuggestedQuestions({ questions, onQuestionClick }: Sugge
               variant="inline-link"
               onClick={() => onQuestionClick(question)}
               className="suggestion-chip"
+              disabled={disabled}
             >
               {question}
             </Button>

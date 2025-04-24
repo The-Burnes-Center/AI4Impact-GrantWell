@@ -43,6 +43,15 @@ interface GrantRecommendation {
   summaryUrl: string;
 }
 
+// Define WebSocket readyState constants to replace the ones from react-use-websocket
+enum ReadyState {
+  CONNECTING = 0,
+  OPEN = 1,
+  CLOSING = 2,
+  CLOSED = 3,
+  UNINSTANTIATED = -1,
+}
+
 interface RecommendationChatbotProps {
   isOpen: boolean;
   onClose: () => void;
@@ -61,6 +70,12 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
   const [sessionId, setSessionId] = useState<string>(uuidv4());
   const [username, setUsername] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [token, setToken] = useState<string>('');
+  
+  // WebSocket state
+  const [readyState, setReadyState] = useState<ReadyState>(ReadyState.UNINSTANTIATED);
+  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+  const webSocketRef = useRef<WebSocket | null>(null);
   
   // Initial pre-defined questions
   const initialQuestions = [
@@ -68,6 +83,114 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
     "I need funding for a transportation infrastructure project",
     "Are there grants available for small rural communities?"
   ];
+
+  // Handle WebSocket connection and authentication
+  useEffect(() => {
+    let ws: WebSocket | null = null;
+    
+    const setupWebSocket = async () => {
+      try {
+        // Get the JWT token for WebSocket authentication
+        const session = await Auth.currentSession();
+        const jwtToken = session.getIdToken().getJwtToken();
+        setToken(jwtToken);
+        
+        // Create WebSocket connection
+        const wsUrl = `${appContext?.wsEndpoint}?Authorization=${encodeURIComponent(jwtToken)}`;
+        ws = new WebSocket(wsUrl);
+        setWebSocket(ws);
+        webSocketRef.current = ws;
+        
+        // Set up WebSocket event handlers
+        ws.addEventListener('open', () => {
+          console.log('WebSocket connection established');
+          setReadyState(ReadyState.OPEN);
+        });
+        
+        ws.addEventListener('close', () => {
+          console.log('WebSocket connection closed');
+          setReadyState(ReadyState.CLOSED);
+          
+          // Attempt to reconnect after a delay
+          setTimeout(() => {
+            if (isOpen) {
+              setupWebSocket();
+            }
+          }, 3000);
+        });
+        
+        ws.addEventListener('error', (event) => {
+          console.error('WebSocket error:', event);
+          setReadyState(ReadyState.CLOSED);
+        });
+        
+        ws.addEventListener('message', (event) => {
+          try {
+            const wsResponse = JSON.parse(event.data);
+            
+            // Handle different types of responses
+            if (wsResponse.type === 'processing') {
+              // Show processing message
+              console.log('Processing request:', wsResponse.message);
+            } else if (wsResponse.type === 'ai' || wsResponse.type === 'grantRecommendations') {
+              // Replace the loading message with the actual recommendations
+              setMessages(prev => [
+                ...prev.slice(0, -1),
+                {
+                  type: 'ai',
+                  content: wsResponse.content || "Here are some grant opportunities that match your criteria:",
+                  metadata: {
+                    grantRecommendations: wsResponse.metadata?.grantRecommendations || wsResponse.recommendations,
+                    suggestedQuestions: wsResponse.metadata?.suggestedQuestions || wsResponse.suggestedQuestions || []
+                  }
+                }
+              ]);
+              setLoading(false);
+            } else if (wsResponse.type === 'error') {
+              // Handle error responses
+              setMessages(prev => [
+                ...prev.slice(0, -1),
+                {
+                  type: 'ai',
+                  content: "I'm having trouble finding matching grants. Please try again or refine your search."
+                }
+              ]);
+              setLoading(false);
+              
+              const id = addNotification("error", "Failed to get recommendations: " + wsResponse.message);
+              Utils.delay(3000).then(() => removeNotification(id));
+            }
+          } catch (error) {
+            console.error('Error parsing WebSocket message:', error);
+            
+            // Handle parsing error
+            setMessages(prev => [
+              ...prev.slice(0, -1),
+              {
+                type: 'ai',
+                content: "I encountered an error processing your request. Please try again."
+              }
+            ]);
+            setLoading(false);
+          }
+        });
+      } catch (error) {
+        console.error('Error setting up WebSocket:', error);
+        setReadyState(ReadyState.CLOSED);
+      }
+    };
+
+    if (isOpen && !ws) {
+      setupWebSocket();
+    }
+
+    // Cleanup function
+    return () => {
+      if (ws && (ws.readyState === ReadyState.OPEN || ws.readyState === ReadyState.CONNECTING)) {
+        ws.close();
+      }
+    };
+  }, [isOpen, appContext?.wsEndpoint]);
 
   // Load or initialize chat session when the chatbot opens
   useEffect(() => {
@@ -128,6 +251,20 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
     }
   }, [messages]);
 
+  // Function to send a message using raw WebSocket
+  const sendWebSocketMessage = (action: string, data: any) => {
+    if (!webSocketRef.current || webSocketRef.current.readyState !== ReadyState.OPEN) {
+      throw new Error('WebSocket not connected');
+    }
+    
+    const message = JSON.stringify({
+      action,
+      data
+    });
+    
+    webSocketRef.current.send(message);
+  };
+
   // Handle user message submission
   const handleSendMessage = async (message: string) => {
     if (message.trim() === '') return;
@@ -149,10 +286,28 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
       };
       setMessages(prev => [...prev, loadingMessage]);
       
-      // Call the backend API for a response
-      // In the future, this will be replaced with actual API call to get grant recommendations
-      await mockAPICall(message);
-            
+      // Check WebSocket connection status
+      if (!webSocketRef.current || webSocketRef.current.readyState !== ReadyState.OPEN) {
+        throw new Error('WebSocket not connected');
+      }
+      
+      // Send the request for grant recommendations
+      sendWebSocketMessage('getGrantRecommendations', {
+        query: message,
+        user_id: username,
+        session_id: sessionId,
+        preferences: {} // Optional user preferences can be added here
+      });
+      
+      // If WebSocket is not responding after a timeout, fall back to mock data
+      const timeoutId = setTimeout(() => {
+        if (loading) {
+          console.warn('WebSocket response timeout, falling back to mock data');
+          mockAPICall(message);
+        }
+      }, 8000);
+      
+      return () => clearTimeout(timeoutId);
     } catch (error) {
       console.error("Error sending message:", error);
       
@@ -167,12 +322,11 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
       
       const id = addNotification("error", "Failed to get a response. Please try again.");
       Utils.delay(3000).then(() => removeNotification(id));
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
-  // Mock API call - will be replaced with actual API integration
+  // Mock API call - used as a fallback if the WebSocket fails
   const mockAPICall = async (message: string) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -362,10 +516,14 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
 
   // Handle clearing the chat history
   const handleClearChat = async () => {
-    // Create a new welcome message
+    // Create a new session ID
+    const newSessionId = uuidv4();
+    setSessionId(newSessionId);
+    
+    // Create a new welcome message with initial suggested questions
     const welcomeMessage: Message = {
       type: 'ai',
-      content: "I've cleared our conversation. How can I help you find grants today?",
+      content: "👋 Hello! I'm your GrantWell Assistant. I can help you find grants that match your needs. What type of project or funding are you looking for?",
       metadata: {
         suggestedQuestions: initialQuestions
       }
@@ -377,18 +535,31 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
     // Create a new session
     try {
       const userInfo = await Auth.currentAuthenticatedUser();
-      const newSession = await SessionManager.createNewSession(userInfo.username);
-      setSessionId(newSession.id);
+      setUsername(userInfo.username);
+      
+      // Create new session
+      await SessionManager.createNewSession(userInfo.username);
       
       // Update the session with the welcome message
       SessionManager.updateSession([welcomeMessage]);
       
-      const id = addNotification("success", "Conversation history cleared");
+      const id = addNotification("success", "Started a new conversation");
       Utils.delay(2000).then(() => removeNotification(id));
     } catch (error) {
       console.error("Error clearing chat:", error);
+      const id = addNotification("error", "Error creating new session");
+      Utils.delay(2000).then(() => removeNotification(id));
     }
   };
+
+  // Get connection status text
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+  }[readyState];
 
   return (
     <Modal
@@ -397,57 +568,76 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
       closeAriaLabel="Close"
       size="large"
       header={
-        <Header
-          variant="h2"
-          actions={
-            <Button
-              iconName="close"
-              variant="icon"
-              onClick={handleClearChat}
-              ariaLabel="Clear chat history"
-            />
-          }
-        >
-          Grant Finder Assistant
+        <Header variant="h2">
+          Grant Recommendation Assistant
+          <span style={{ fontSize: '14px', fontWeight: 'normal', marginLeft: '10px' }}>
+            {connectionStatus === "Open" ? (
+              <StatusIndicator type="success">Connected</StatusIndicator>
+            ) : (
+              <StatusIndicator type="error">Disconnected</StatusIndicator>
+            )}
+          </span>
         </Header>
       }
+      footer={
+        <Box float="right">
+          <SpaceBetween direction="horizontal" size="xs">
+            <Button onClick={handleClearChat} disabled={loading || messages.length <= 1}>
+              Clear Chat
+            </Button>
+            <Button onClick={handleClose} variant="primary">
+              Close
+            </Button>
+          </SpaceBetween>
+        </Box>
+      }
     >
-      <Container>
-        <div className="chat-container" style={{ height: '400px', overflowY: 'auto', marginBottom: '10px', padding: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '60vh' }}>
+        {/* Chat messages */}
+        <div style={{ 
+          flex: 1, 
+          overflowY: 'auto', 
+          padding: '16px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '16px' 
+        }}>
           {messages.map((message, index) => (
-            <Box key={index} margin={{ bottom: 'l' }}>
-              <ChatMessageSimple
-                message={message}
-                navigateToGrant={navigateToGrant}
-                startChatWithGrant={startChatWithGrant}
-              />
-              {message.type === 'ai' && message.metadata?.suggestedQuestions && (
-                <SuggestedQuestions
-                  questions={message.metadata.suggestedQuestions}
-                  onQuestionClick={handleSuggestedQuestionClick}
-                />
-              )}
-            </Box>
+            <ChatMessageSimple 
+              key={index} 
+              message={message} 
+              onGrantClick={navigateToGrant}
+              onStartChatClick={startChatWithGrant}
+            />
           ))}
+          
+          {/* Empty div for scroll reference */}
           <div ref={messagesEndRef} />
         </div>
         
-        <Box padding={{ top: 's' }}>
-          <ChatInputSimple 
-            onSendMessage={handleSendMessage} 
-            isLoading={loading}
-            disabled={loading} 
-          />
-        </Box>
+        {/* Connection status when disconnected */}
+        {connectionStatus !== "Open" && (
+          <div style={{ padding: '8px', backgroundColor: '#fdf3f3', textAlign: 'center', fontSize: '14px' }}>
+            WebSocket {connectionStatus.toLowerCase()} - {connectionStatus === "Connecting" ? "Connecting to server..." : "Connection lost. Trying to reconnect..."}
+          </div>
+        )}
         
-        <Box padding={{ top: 'm' }}>
-          <SpaceBetween direction="horizontal" size="xs" alignItems="center">
-            <StatusIndicator type="info">
-              Find the perfect grant for your needs with our AI-powered grant finder
-            </StatusIndicator>
-          </SpaceBetween>
-        </Box>
-      </Container>
+        {/* Input area */}
+        <ChatInputSimple 
+          onSendMessage={handleSendMessage} 
+          isLoading={loading}
+          disabled={readyState !== ReadyState.OPEN || loading} 
+        />
+        
+        {/* Suggested questions */}
+        {messages.length > 0 && messages[messages.length - 1].type === 'ai' && messages[messages.length - 1].metadata?.suggestedQuestions?.length > 0 && (
+          <SuggestedQuestions 
+            questions={messages[messages.length - 1].metadata.suggestedQuestions} 
+            onQuestionClick={handleSuggestedQuestionClick}
+            disabled={loading}
+          />
+        )}
+      </div>
     </Modal>
   );
 }

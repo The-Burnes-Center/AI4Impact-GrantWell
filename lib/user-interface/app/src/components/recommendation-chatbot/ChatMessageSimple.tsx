@@ -36,11 +36,11 @@ interface GrantRecommendation {
 
 interface ChatMessageSimpleProps {
   message: Message;
-  navigateToGrant: (summaryUrl: string) => void;
-  startChatWithGrant: (summaryUrl: string) => void;
+  onGrantClick: (summaryUrl: string) => void;
+  onStartChatClick: (summaryUrl: string) => void;
 }
 
-export default function ChatMessageSimple({ message, navigateToGrant, startChatWithGrant }: ChatMessageSimpleProps) {
+export default function ChatMessageSimple({ message, onGrantClick, onStartChatClick }: ChatMessageSimpleProps) {
   if (!message) return null;
 
   const { type, content, metadata } = message;
@@ -122,14 +122,14 @@ export default function ChatMessageSimple({ message, navigateToGrant, startChatW
                             <Button 
                               iconName="external" 
                               variant="link" 
-                              onClick={() => navigateToGrant(item.summaryUrl)}
+                              onClick={() => onGrantClick(item.summaryUrl)}
                             >
                               View Requirements
                             </Button>
                             <Button 
                               iconName="contact" 
                               variant="link" 
-                              onClick={() => startChatWithGrant(item.summaryUrl)}
+                              onClick={() => onStartChatClick(item.summaryUrl)}
                             >
                               Start Narrative Draft
                             </Button>

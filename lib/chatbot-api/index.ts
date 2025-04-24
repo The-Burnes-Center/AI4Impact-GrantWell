@@ -20,7 +20,7 @@ import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
 
-export interface ChatBotApiProps {
+export interface ChatbotAPIProps {
   readonly authentication: AuthorizationStack; 
 }
 
@@ -28,7 +28,7 @@ export class ChatBotApi extends Construct {
   public readonly httpAPI: RestBackendAPI;
   public readonly wsAPI: WebsocketBackendAPI;
 
-  constructor(scope: Construct, id: string, props: ChatBotApiProps) {
+  constructor(scope: Construct, id: string, props: ChatbotAPIProps) {
     super(scope, id);
 
     const tables = new TableStack(this, "TableStack");
@@ -61,6 +61,12 @@ export class ChatBotApi extends Construct {
     websocketBackend.wsAPI.addRoute('getChatbotResponse', {
       integration: new WebSocketLambdaIntegration('chatbotResponseIntegration', lambdaFunctions.chatFunction),
     });
+    
+    // Add the WebSocket route for grant recommendations
+    websocketBackend.wsAPI.addRoute('getGrantRecommendations', {
+      integration: new WebSocketLambdaIntegration('grantRecommendationsIntegration', lambdaFunctions.chatFunction),
+    });
+    
     websocketBackend.wsAPI.addRoute('$connect', {
       integration: new WebSocketLambdaIntegration('chatbotConnectionIntegration', lambdaFunctions.chatFunction),
       authorizer: wsAuthorizer
@@ -173,6 +179,15 @@ export class ChatBotApi extends Construct {
       path: "/kb-sync/get-last-sync",
       methods: [apigwv2.HttpMethod.GET],
       integration: kbLastSyncAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for grant recommendations
+    const grantRecommendationAPIIntegration = new HttpLambdaIntegration('GrantRecommendationAPIIntegration', lambdaFunctions.grantRecommendationFunction);
+    restBackend.restAPI.addRoutes({
+      path: "/grant-recommendations",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: grantRecommendationAPIIntegration,
       authorizer: httpAuthorizer,
     });
 

@@ -39,6 +39,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly getNOFOsList: lambda.Function;
   public readonly getNOFOSummary: lambda.Function;
   public readonly processAndSummarizeNOFO: lambda.Function;
+  public readonly grantRecommendationFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -77,22 +78,65 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.sessionFunction = sessionAPIHandlerFunction;
 
-    // Define the Lambda function resource
+    // Grant Recommendation Lambda function
+    const grantRecommendationFunction = new lambda.Function(
+      scope,
+      "GrantRecommendationFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "landing-page/grant-recommendation")
+        ),
+        handler: "index.handler",
+        environment: {
+          BUCKET: props.ffioNofosBucket.bucketName,
+        },
+        timeout: cdk.Duration.minutes(2),
+      }
+    );
+
+    // S3 permissions for grant recommendation function
+    grantRecommendationFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:ListBucket"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          `${props.ffioNofosBucket.bucketArn}/*`,
+        ],
+      })
+    );
+
+    // Bedrock permissions for grant recommendation function
+    grantRecommendationFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:InvokeModel"],
+        resources: ["*"],
+      })
+    );
+
+    this.grantRecommendationFunction = grantRecommendationFunction;
+
+    // Update WebSocket chat function to include the grant recommendation function name
     const websocketAPIFunction = new lambda.Function(
       scope,
       "ChatHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
-        code: lambda.Code.fromAsset(path.join(__dirname, "websocket-chat")), // Points to the lambda directory
-        handler: "index.handler", // Points to the 'hello' file in the lambda directory
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(path.join(__dirname, "websocket-chat")),
+        handler: "index.handler",
         environment: {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
           PROMPT: PROMPT_TEXT,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
+          GRANT_RECOMMENDATION_FUNCTION: this.grantRecommendationFunction.functionName,
+          SESSION_HANDLER: this.sessionFunction.functionName,
         },
         timeout: cdk.Duration.seconds(300),
       }
     );
+
     websocketAPIFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -103,6 +147,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         resources: ["*"],
       })
     );
+
     websocketAPIFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -115,7 +160,10 @@ export class LambdaFunctionStack extends cdk.Stack {
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["lambda:InvokeFunction"],
-        resources: [this.sessionFunction.functionArn],
+        resources: [
+          this.sessionFunction.functionArn,
+          this.grantRecommendationFunction.functionArn,
+        ],
       })
     );
 
