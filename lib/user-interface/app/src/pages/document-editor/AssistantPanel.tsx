@@ -43,7 +43,7 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
         width: "280px", // Slightly narrower
         position: "fixed", // Fixed position
         left: 0,
-        top: "160px", // Adjust based on your header height
+        top: "70px", // Adjust based on your header height
         bottom: 0,
         borderRight: "1px solid #ccc",
         display: "flex",
@@ -51,7 +51,7 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
         backgroundColor: "#f5f5f5",
         overflow: "hidden",
         zIndex: 10,
-        height: "calc(100vh - 160px)", // Calculate height based on viewport
+        height: "calc(100vh - 70px)", // Calculate height based on viewport
       }}
     >
       <div

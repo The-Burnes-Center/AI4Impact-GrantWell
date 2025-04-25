@@ -37,7 +37,7 @@ import { AssistantPanel } from "./AssistantPanel";
 import { DocumentEditorPanel } from "./DocumentEditorPanel";
 import { SectionsPanel } from "./SectionsPanel";
 import { SectionData, DocumentData, ChatMessage } from "./types";
-import { getDefaultGuidanceText, getSectionDescription } from "./utils";
+import { getDefaultGuidanceText, getSectionDescription } from "./types";
 
 export default function DocumentEditor() {
   const navigate = useNavigate();

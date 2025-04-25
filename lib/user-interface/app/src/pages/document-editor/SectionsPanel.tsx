@@ -13,13 +13,13 @@ export const SectionsPanel: React.FC<SectionsPanelProps> = ({
         width: "240px", // Slightly narrower
         position: "fixed", // Fixed position
         right: 0,
-        top: "160px", // Adjust based on your header height
+        top: "70px", // Adjust based on your header height
         bottom: 0,
         borderLeft: "1px solid #ccc",
         backgroundColor: "#f5f5f5",
         overflow: "auto",
         zIndex: 10,
-        height: "calc(100vh - 160px)", // Calculate height based on viewport
+        height: "calc(100vh - 0px)", // Calculate height based on viewport
       }}
     >
       <DocumentSidebar
