@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useCallback } from "react";
-import { Button, Spinner } from "@cloudscape-design/components";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { AssistantPanelProps } from "./types";
@@ -38,63 +37,23 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
   );
 
   return (
-    <div
-      style={{
-        width: "280px", // Slightly narrower
-        position: "fixed", // Fixed position
-        left: 0,
-        top: "70px", // Adjust based on your header height
-        bottom: 0,
-        borderRight: "1px solid #ccc",
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "#f5f5f5",
-        overflow: "hidden",
-        zIndex: 10,
-        height: "calc(100vh - 70px)", // Calculate height based on viewport
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          padding: "10px",
-        }}
-      >
-        <div style={{ marginBottom: "10px" }}>
+    <div className="assistant-panel">
+      <div className="assistant-container">
+        <div className="assistant-header">
           <h3>Document Assistant</h3>
         </div>
-        <div
-          ref={chatContainerRef}
-          style={{
-            flex: 1,
-            overflowY: "auto",
-            marginBottom: "10px",
-            padding: "10px",
-            backgroundColor: "white",
-            borderRadius: "4px",
-          }}
-        >
+        <div ref={chatContainerRef} className="chat-messages">
           {chatMessages.map((message, index) => (
             <div
               key={index}
-              style={{
-                marginBottom: "12px",
-                textAlign: message.role === "user" ? "right" : "left",
-              }}
+              className={`message-container ${
+                message.role === "user" ? "user" : "bot"
+              }`}
             >
               <div
-                style={{
-                  display: "inline-block",
-                  maxWidth: "85%",
-                  padding: "8px 12px",
-                  borderRadius: "12px",
-                  backgroundColor:
-                    message.role === "user" ? "#007eb9" : "#e9ebed",
-                  color: message.role === "user" ? "white" : "black",
-                  textAlign: "left",
-                }}
+                className={`message ${
+                  message.role === "user" ? "user" : "bot"
+                }`}
               >
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {message.content}
@@ -103,43 +62,43 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
             </div>
           ))}
           {isSending && (
-            <div style={{ textAlign: "left", marginBottom: "12px" }}>
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "8px 12px",
-                  borderRadius: "12px",
-                  backgroundColor: "#e9ebed",
-                }}
-              >
-                <Spinner size="normal" />
+            <div className="message-container bot">
+              <div className="message bot is-typing">
+                <div className="loading-spinner chat-spinner"></div>
               </div>
             </div>
           )}
         </div>
-        <div style={{ display: "flex" }}>
+        <div className="chat-input-area">
           <textarea
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
             placeholder="Ask for writing help..."
-            style={{
-              flex: 1,
-              padding: "8px 12px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              resize: "none",
-              height: "60px",
-            }}
+            className="chat-input"
             onKeyDown={handleKeyDown}
           />
-          <div style={{ marginLeft: "8px", alignSelf: "flex-end" }}>
-            <Button
-              onClick={handleSendMessage}
-              disabled={isSending || !messageInput.trim()}
+          <button
+            onClick={handleSendMessage}
+            disabled={isSending || !messageInput.trim()}
+            className={`send-button ${
+              isSending || !messageInput.trim() ? "disabled" : ""
+            }`}
+            aria-label="Send message"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              Send
-            </Button>
-          </div>
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
         </div>
       </div>
     </div>

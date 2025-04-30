@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
-import { Select, Container, Link, Button } from "@cloudscape-design/components";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { v4 as uuidv4 } from "uuid";
@@ -45,12 +44,13 @@ export default function Welcome({ theme }) {
   };
 
   const logoStyle: CSSProperties = {
-    width: "65px",
-    height: "65px",
+    width: "100px",
+    height: "100px",
   };
 
   const mainTextColor = "#006499";
   const bodyTextColor = "#6c757d";
+  const primaryBlue = "#0073bb"; // Match header blue color
 
   const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
     selectedDocument
@@ -74,6 +74,91 @@ export default function Welcome({ theme }) {
     textAlign: "left",
     width: "100%",
     maxWidth: "400px",
+  };
+
+  const containerStyle: CSSProperties = {
+    maxWidth: "950px",
+    margin: "0 auto",
+    padding: "0 40px",
+    marginTop: "70px",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    paddingBottom: "0",
+  };
+
+  // Modern search bar styles
+  const searchContainerStyle: CSSProperties = {
+    position: "relative",
+    maxWidth: "650px",
+    width: "100%",
+    margin: "0 auto",
+  };
+
+  const searchIconStyle: CSSProperties = {
+    position: "absolute",
+    left: "15px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    color: "#666",
+    pointerEvents: "none",
+    zIndex: 1,
+  };
+
+  const selectStyle: CSSProperties = {
+    width: "100%",
+    padding: "14px 20px 14px 45px",
+    fontSize: "16px",
+    borderRadius: "25px", // More oval shape
+    border: "1px solid #e0e0e0",
+    boxSizing: "border-box",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+    appearance: "none",
+    backgroundImage:
+      'url(\'data:image/svg+xml;utf8,<svg fill="%23666" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>\')',
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "right 15px center",
+    transition: "all 0.2s ease",
+    backgroundColor: "#ffffff",
+  };
+
+  const buttonStyle: CSSProperties = {
+    backgroundColor: primaryBlue, // Use blue from the header when active
+    color: "white",
+    border: "none",
+    padding: "12px 22px",
+    fontSize: "16px",
+    borderRadius: "25px", // Oval/pill shape
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    fontWeight: "500",
+    margin: "0 5px", // Reduced from 10px to 5px
+    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+  };
+
+  const disabledButtonStyle: CSSProperties = {
+    ...buttonStyle,
+    backgroundColor: "#f0f0f0",
+    color: "#aaaaaa",
+    cursor: "not-allowed",
+    boxShadow: "none",
+  };
+
+  const buttonHoverStyle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if ((e.target as HTMLButtonElement).disabled) return;
+    (e.target as HTMLElement).style.backgroundColor = "#005d94"; // Darker blue on hover
+    (e.target as HTMLElement).style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
+  };
+
+  const buttonLeaveStyle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if ((e.target as HTMLButtonElement).disabled) return;
+    (e.target as HTMLElement).style.backgroundColor = primaryBlue;
+    (e.target as HTMLElement).style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+  };
+
+  const linkStyle: CSSProperties = {
+    color: "#006499",
+    textDecoration: "none",
   };
 
   // **Effect Hooks**
@@ -246,36 +331,45 @@ export default function Welcome({ theme }) {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)", // 2 columns
-        gap: "25px", // Space between grid items
+        gridTemplateColumns: "repeat(3, 1fr)", // 3 columns instead of 2
+        gap: "20px", // Slightly reduced gap for 3 columns
         marginBottom: "30px",
       }}
     >
       <h2
         style={{
-          gridColumn: "span 2",
+          gridColumn: "span 3", // Span all 3 columns
           fontSize: "24px",
           lineHeight: "1",
           textAlign: "center",
           color: mainTextColor,
+          marginBottom: "20px",
         }}
       >
         Recently Viewed NOFOs
       </h2>
       {recentlyViewedNOFOs.length > 0 ? (
-        recentlyViewedNOFOs.slice(0, 4).map((nofo, index) => (
-          <div
-            key={index}
-            style={{
-              padding: "15px",
-              border: "1px solid #e1e4e8",
-              borderRadius: "8px",
-              backgroundColor: "#f9f9f9",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <Link
-              onFollow={() =>
+        recentlyViewedNOFOs.slice(0, 6).map(
+          (
+            nofo,
+            index // Show up to 6 items
+          ) => (
+            <div
+              key={index}
+              style={{
+                padding: "15px",
+                border: "1px solid #e1e4e8",
+                borderRadius: "8px",
+                backgroundColor: "#f9f9f9",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                height: "100%", // Make all cards the same height
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+              onClick={() =>
                 handleNOFOSelect(
                   `/landing-page/basePage/checklists/${encodeURIComponent(
                     nofo.value
@@ -283,28 +377,44 @@ export default function Welcome({ theme }) {
                   nofo
                 )
               }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 4px 8px rgba(0, 0, 0, 0.15)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 2px 4px rgba(0, 0, 0, 0.1)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
             >
               <span
                 style={{
-                  fontSize: "18px",
+                  fontSize: "16px",
                   fontWeight: "bold",
                   display: "block",
                   marginBottom: "8px",
-                  color: mainTextColor,
+                  color: primaryBlue,
                 }}
               >
                 {nofo.label}
               </span>
-            </Link>
-            <div style={{ fontSize: "14px", color: "#6c757d" }}>
-              <span>Last viewed: {nofo.lastViewed}</span>
+              <div
+                style={{
+                  fontSize: "14px",
+                  color: "#6c757d",
+                  marginTop: "auto",
+                }}
+              >
+                <span>Last viewed: {nofo.lastViewed}</span>
+              </div>
             </div>
-          </div>
-        ))
+          )
+        )
       ) : (
         <p
           style={{
-            gridColumn: "span 2",
+            gridColumn: "span 3", // Span all 3 columns
             color: "#6c757d",
             fontSize: "16px",
             textAlign: "center",
@@ -354,6 +464,16 @@ export default function Welcome({ theme }) {
     titleAlign?: any;
     imageWidth?: any;
   }) => {
+    const bannerButtonStyle: CSSProperties = {
+      backgroundColor: buttonVariant === "primary" ? "#006499" : "#FF9B00",
+      color: "white",
+      border: "none",
+      padding: "10px 15px",
+      borderRadius: "4px",
+      cursor: "pointer",
+      textDecoration: buttonVariant === "link" ? "underline" : "none",
+    };
+
     const content = (
       <div
         style={{
@@ -398,13 +518,13 @@ export default function Welcome({ theme }) {
           <img src={imageSrc} alt={imageAlt} style={{ width: imageWidth }} />
         )}
         {buttonText && buttonAction && (
-          <Button
+          <button
             onClick={buttonAction}
-            variant={buttonVariant}
-            ariaLabel={buttonText}
+            style={bannerButtonStyle}
+            aria-label={buttonText}
           >
             {buttonText}
-          </Button>
+          </button>
         )}
       </div>
     );
@@ -521,7 +641,12 @@ export default function Welcome({ theme }) {
             textAlign: "center", // Center all text content
           }}
         >
-          <Link href={resource.href} external>
+          <a
+            href={resource.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={linkStyle}
+          >
             <span
               style={{
                 fontSize: "18px",
@@ -534,7 +659,7 @@ export default function Welcome({ theme }) {
             >
               {resource.title}
             </span>
-          </Link>
+          </a>
           <div
             style={{
               fontSize: "14px",
@@ -551,13 +676,13 @@ export default function Welcome({ theme }) {
 
   // **Render**
   return (
-    <Container disableContentPaddings>
+    <div style={containerStyle}>
       <div
         style={{
           maxWidth: "950px",
           margin: "0 auto",
           padding: "0 40px",
-          marginTop: "70px",
+          marginTop: "20px",
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -566,33 +691,95 @@ export default function Welcome({ theme }) {
       >
         {/* Header with logo and title */}
         {/* Header Section */}
-        <div style={headerContainerStyle}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "30px",
+            position: "relative",
+          }}
+        >
+          {/* Dashboard Button */}
+          <div
+            style={{
+              position: "absolute",
+              top: "-10px", // Move it higher to align with the header
+              right: "-10px", // Move it further right
+            }}
+          >
+            <button
+              onClick={() => navigate("/dashboard")}
+              style={{
+                backgroundColor: primaryBlue,
+                color: "white",
+                border: "none",
+                padding: "8px 16px",
+                fontSize: "14px",
+                borderRadius: "20px",
+                cursor: "pointer",
+                fontWeight: "500",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#005d94";
+                e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = primaryBlue;
+                e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
+              }}
+            >
+              Dashboard
+            </button>
+          </div>
+
           {/* Logo and Title */}
-          <div style={logoTitleStyle}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "15px",
+            }}
+          >
             <img
               src="/images/stateseal-color.png"
               alt="State Seal"
               style={logoStyle}
             />
-            <h1 style={{ fontSize: "45px", margin: 0, color: mainTextColor }}>
-              GrantWell
-            </h1>
-          </div>
-
-          {/* Description */}
-          <div
-            style={{
-              flex: "1 1 auto",
-              maxWidth: "400px",
-              textAlign: "center",
-              fontSize: "19px",
-              lineHeight: "1.3",
-              color: mainTextColor,
-            }}
-          >
-            <p>
-              An AI tool to help Massachusetts communities secure federal grants
-            </p>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <h1
+                style={{
+                  fontSize: "52px",
+                  margin: 0,
+                  color: mainTextColor,
+                  fontWeight: "600",
+                }}
+              >
+                GrantWell
+              </h1>
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: mainTextColor,
+                  margin: "-2px 3px 0 8px",
+                  fontStyle: "italic",
+                  maxWidth: "230px",
+                  lineHeight: "1.4",
+                }}
+              >
+                An AI tool to help Massachusetts communities secure federal
+                grants
+              </p>
+            </div>
           </div>
         </div>
 
@@ -603,24 +790,50 @@ export default function Welcome({ theme }) {
             margin: "0 auto", // Center it horizontally
           }}
         >
-          <Select
-            selectedOption={selectedDocument}
-            onChange={({ detail }) =>
-              setSelectedDocument(detail.selectedOption)
-            }
-            options={documents}
-            placeholder="Find a Notice of Funding Opportunity Document (NOFO)"
-            filteringType="auto"
-            aria-label="Select a NOFO document"
-          />
+          <div style={searchContainerStyle}>
+            <div style={searchIconStyle}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
+                  fill="#666666"
+                />
+              </svg>
+            </div>
+            <select
+              value={selectedDocument?.value || ""}
+              onChange={(e) => {
+                const selected = documents.find(
+                  (doc) => doc.value === e.target.value
+                );
+                setSelectedDocument(selected || null);
+              }}
+              style={selectStyle}
+              aria-label="Select a NOFO document"
+            >
+              <option value="" disabled selected={!selectedDocument}>
+                Find a Notice of Funding Opportunity Document (NOFO)
+              </option>
+              {documents.map((doc, index) => (
+                <option key={index} value={doc.value}>
+                  {doc.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div
           style={{
             display: "flex",
             flexDirection: "row",
-            gap: "25px",
-            marginTop: "35px",
+            gap: "5px", // Reduced from 10px to 5px
+            marginTop: "20px", // Reduced from 35px to 20px
             marginBottom: "75px",
             width: "100%",
             padding: "0 50px", // Add 50px padding on left and right
@@ -629,7 +842,7 @@ export default function Welcome({ theme }) {
             justifyContent: "center", // Centers items when wrapped
           }}
         >
-          <Button
+          <button
             onClick={() =>
               handleNOFOSelect(
                 `/landing-page/basePage/checklists/${encodeURIComponent(
@@ -639,28 +852,14 @@ export default function Welcome({ theme }) {
               )
             }
             disabled={!selectedDocument}
-            variant="primary"
+            style={selectedDocument ? buttonStyle : disabledButtonStyle}
+            onMouseEnter={buttonHoverStyle}
+            onMouseLeave={buttonLeaveStyle}
             aria-label="View Key Requirements"
           >
             View Key Requirements
-          </Button>
-
-          <Button
-            onClick={() =>
-              navigate(
-                `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
-                  selectedDocument.value
-                )}`
-              )
-            }
-            disabled={!selectedDocument}
-            variant="primary"
-            aria-label="Start Chat"
-          >
-            Start Narrative Draft
-          </Button>
-
-          <Button
+          </button>
+          <button
             onClick={() =>
               navigate(
                 `/chatbot/document-editor/${uuidv4()}?folder=${encodeURIComponent(
@@ -669,11 +868,29 @@ export default function Welcome({ theme }) {
               )
             }
             disabled={!selectedDocument}
-            variant="primary"
+            style={selectedDocument ? buttonStyle : disabledButtonStyle}
+            onMouseEnter={buttonHoverStyle}
+            onMouseLeave={buttonLeaveStyle}
             aria-label="Start Document Editor"
           >
-            Start Document Editor
-          </Button>
+            Start Narrative Draft
+          </button>
+          <button
+            onClick={() =>
+              navigate(
+                `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
+                  selectedDocument.value
+                )}`
+              )
+            }
+            disabled={!selectedDocument}
+            style={selectedDocument ? buttonStyle : disabledButtonStyle}
+            onMouseEnter={buttonHoverStyle}
+            onMouseLeave={buttonLeaveStyle}
+            aria-label="Start Chat"
+          >
+            Go to Chatbot
+          </button>
         </div>
 
         <ContentBox backgroundColor="#F6FCFF">
@@ -838,31 +1055,42 @@ export default function Welcome({ theme }) {
                   gap: "10px",
                 }}
               >
-                <Button
+                <button
                   onClick={() => {
                     setShowInviteUserModal(false);
                     setNewUserEmail("");
                     setInviteStatus("idle");
                     setStatusMessage("");
                   }}
-                  variant="link"
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "#006499",
+                    border: "none",
+                    padding: "10px 15px",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
                 >
                   Cancel
-                </Button>
-                <Button
+                </button>
+                <button
                   onClick={inviteNewUser}
-                  variant="primary"
+                  style={
+                    inviteStatus === "loading"
+                      ? disabledButtonStyle
+                      : buttonStyle
+                  }
                   disabled={inviteStatus === "loading"}
                 >
                   {inviteStatus === "loading"
                     ? "Sending..."
                     : "Send Invitation"}
-                </Button>
+                </button>
               </div>
             </div>
           </div>
         )}
       </div>
-    </Container>
+    </div>
   );
 }

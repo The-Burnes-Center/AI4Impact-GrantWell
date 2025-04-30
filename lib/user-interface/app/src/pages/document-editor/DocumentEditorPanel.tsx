@@ -1,5 +1,4 @@
 import React from "react";
-import { Box, TextContent, Spinner } from "@cloudscape-design/components";
 import TipTapEditor from "../../components/rich-text-editor/tip-tap-editor";
 import { DocumentEditorPanelProps } from "./types";
 
@@ -11,42 +10,60 @@ export const DocumentEditorPanel: React.FC<DocumentEditorPanelProps> = ({
   getSectionDescriptionText,
 }) => {
   return (
-    <div
-      className="document-main"
-      style={{
-        position: "absolute", // Use absolute positioning
-        top: "200px", // Increased from 160px to lower the panel
-        bottom: 0,
-        left: "280px", // Start exactly where assistant panel ends
-        right: "240px", // End exactly where sections panel starts
-        padding: "0 24px",
-        overflow: "auto",
-        height: "calc(100vh - 200px)", // Updated to match new top value
-        backgroundColor: "white",
-      }}
-    >
+    <div className="document-main">
       {activeSection ? (
-        <div style={{ height: "100%" }}>
-          <TextContent>
-            <h2>{activeSection.title}</h2>
-            <p>{getSectionDescriptionText()}</p>
-          </TextContent>
+        <div className="section-container">
+          <div className="section-header">
+            <h2
+              className="section-title"
+              style={{
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+                whiteSpace: "normal",
+                width: "100%",
+                maxWidth: "100%",
+                display: "block",
+              }}
+            >
+              {activeSection.title}
+            </h2>
+            <p className="section-description">{getSectionDescriptionText()}</p>
+          </div>
 
-          <div style={{ marginTop: "16px", height: "calc(100% - 150px)" }}>
-            <div style={{ height: "100%", minHeight: "500px" }}>
+          <div className="editor-wrapper">
+            <div className="editor-with-button">
               <TipTapEditor
                 content={activeSection.content}
                 onChange={handleSectionContentChange}
                 onGenerateAI={handleGenerateContent}
                 isGenerating={isGenerating}
               />
+              <button
+                onClick={handleGenerateContent}
+                disabled={isGenerating}
+                className={`btn-generate ${isGenerating ? "generating" : ""}`}
+                aria-label={
+                  isGenerating
+                    ? "Generating content..."
+                    : "Generate content with AI"
+                }
+              >
+                {isGenerating ? (
+                  <>
+                    <div className="loading-spinner"></div>
+                    <span>Generating...</span>
+                  </>
+                ) : (
+                  <span>Generate with AI</span>
+                )}
+              </button>
             </div>
           </div>
         </div>
       ) : (
-        <Box textAlign="center" padding="xl">
+        <div className="empty-state">
           <p>Select a section from the sidebar to start editing</p>
-        </Box>
+        </div>
       )}
     </div>
   );

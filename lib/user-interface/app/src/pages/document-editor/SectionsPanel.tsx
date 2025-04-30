@@ -1,5 +1,4 @@
 import React from "react";
-import DocumentSidebar from "../../components/rich-text-editor/document-sidebar";
 import { SectionsPanelProps } from "./types";
 
 export const SectionsPanel: React.FC<SectionsPanelProps> = ({
@@ -8,25 +7,28 @@ export const SectionsPanel: React.FC<SectionsPanelProps> = ({
   onSectionChange,
 }) => {
   return (
-    <div
-      style={{
-        width: "240px", // Slightly narrower
-        position: "fixed", // Fixed position
-        right: 0,
-        top: "70px", // Adjust based on your header height
-        bottom: 0,
-        borderLeft: "1px solid #ccc",
-        backgroundColor: "#f5f5f5",
-        overflow: "auto",
-        zIndex: 10,
-        height: "calc(100vh - 0px)", // Calculate height based on viewport
-      }}
-    >
-      <DocumentSidebar
-        sections={sections}
-        activeSection={activeSection}
-        onSectionChange={onSectionChange}
-      />
+    <div className="sections-panel">
+      <div className="document-sidebar">
+        <h3>Sections</h3>
+        <ul>
+          {sections.map((section) => (
+            <li
+              key={section.id}
+              className={section.id === activeSection ? "active" : ""}
+              onClick={() => onSectionChange(section.id)}
+            >
+              <div className="section-list-item">
+                <span
+                  className={section.id === activeSection ? "active-text" : ""}
+                >
+                  {section.title}
+                </span>
+                {section.isComplete && <span className="completed">✓</span>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

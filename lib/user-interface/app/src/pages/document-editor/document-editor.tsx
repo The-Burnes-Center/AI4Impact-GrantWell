@@ -7,24 +7,9 @@ import React, {
   useCallback,
 } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import {
-  Box,
-  Header,
-  SpaceBetween,
-  Button,
-  ProgressBar,
-  Spinner,
-  TextContent,
-  ContentLayout,
-  Container,
-  ButtonDropdown,
-  HelpPanel,
-  Alert,
-} from "@cloudscape-design/components";
 import BaseAppLayout from "../../components/base-app-layout";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
-import "../../styles/checklists.css";
 import "../../styles/document-editor.css";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -32,12 +17,11 @@ import {
   AiGenerationRequest,
 } from "../../components/rich-text-editor/ai-service";
 
-// Import the components we've split out
+// Import the components
 import { AssistantPanel } from "./AssistantPanel";
 import { DocumentEditorPanel } from "./DocumentEditorPanel";
 import { SectionsPanel } from "./SectionsPanel";
 import { SectionData, DocumentData, ChatMessage } from "./types";
-import { getDefaultGuidanceText, getSectionDescription } from "./types";
 
 export default function DocumentEditor() {
   const navigate = useNavigate();
@@ -50,8 +34,10 @@ export default function DocumentEditor() {
 
   // Refs
   const initialized = useRef(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const editorPanelRef = useRef<HTMLDivElement>(null);
 
-  // Document state variables
+  // Document state
   const [isLoading, setIsLoading] = useState(true);
   const [activeTabId, setActiveTabId] = useState("section-1");
   const [documentData, setDocumentData] = useState<DocumentData>({
@@ -63,8 +49,9 @@ export default function DocumentEditor() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [narrativeSectionsData, setNarrativeSectionsData] = useState<any[]>([]);
+  const [headerHeight, setHeaderHeight] = useState(110); // Default min-height
 
-  // Chat state variables
+  // Chat state
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
       role: "bot",
@@ -75,7 +62,64 @@ export default function DocumentEditor() {
   const [messageInput, setMessageInput] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  // Load document data with dynamic NOFO title
+  // Add a new useState for the title expansion
+  const [isTitleExpanded, setIsTitleExpanded] = useState(false);
+
+  // Add a function to handle title toggling
+  const toggleTitleExpansion = useCallback(() => {
+    setIsTitleExpanded((prev) => !prev);
+  }, []);
+
+  // Observer to measure header height and adjust document editor position
+  useEffect(() => {
+    if (!headerRef.current || !editorPanelRef.current) return;
+
+    const updateEditorPosition = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight;
+        setHeaderHeight(height);
+
+        // Update CSS variable
+        document.documentElement.style.setProperty(
+          "--header-min-height",
+          `${height}px`
+        );
+      }
+    };
+
+    // Set up observer to watch for size changes in the header
+    const resizeObserver = new ResizeObserver(updateEditorPosition);
+    resizeObserver.observe(headerRef.current);
+
+    // Initial measurement
+    updateEditorPosition();
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [documentData.title]);
+
+  // In the observer effect, check if the title needs expansion
+  useEffect(() => {
+    if (!headerRef.current) return;
+
+    const titleElement = headerRef.current.querySelector(
+      ".document-title"
+    ) as HTMLElement;
+    const toggleButton = headerRef.current.querySelector(
+      ".document-title-toggle"
+    ) as HTMLElement;
+
+    if (titleElement && toggleButton) {
+      // Check if title content is truncated
+      const isTruncated = titleElement.scrollHeight > titleElement.clientHeight;
+
+      // Show toggle button if title is truncated
+      toggleButton.style.display = isTruncated ? "block" : "none";
+    }
+  }, [headerHeight, documentData.title]);
+
+  // Load document data
   useEffect(() => {
     if (initialized.current) return;
 
@@ -83,8 +127,8 @@ export default function DocumentEditor() {
       setIsLoading(true);
 
       try {
-        // Get the NOFO title by fetching the summary
         let nofoTitle = "Project Narrative";
+        let sections = [];
 
         if (folderParam) {
           try {
@@ -92,118 +136,50 @@ export default function DocumentEditor() {
               folderParam
             );
 
-            // Check if summary.data.GrantName exists
             if (summary?.data?.GrantName) {
               nofoTitle = summary.data.GrantName;
 
-              // Get narrative sections from the summary if available
               if (
                 summary.data.ProjectNarrativeSections &&
                 Array.isArray(summary.data.ProjectNarrativeSections) &&
                 summary.data.ProjectNarrativeSections.length > 0
               ) {
-                // Store the complete narrative sections data for later reference
                 setNarrativeSectionsData(summary.data.ProjectNarrativeSections);
 
-                // Create sections with empty content
-                const sections = summary.data.ProjectNarrativeSections.map(
+                sections = summary.data.ProjectNarrativeSections.map(
                   (section, index) => ({
                     id: `section-${index + 1}`,
                     title: section.item || `Section ${index + 1}`,
-                    content: "<p></p>", // Empty content
+                    content: "<p></p>",
                     isComplete: false,
                   })
                 );
 
-                // Set document data
-                setDocumentData({
-                  title: nofoTitle,
-                  sections: sections,
-                });
-
-                // Set active tab ID to first section
-                const firstSectionId =
-                  sections.length > 0 ? sections[0].id : "section-1";
-                setActiveTabId(firstSectionId);
-
-                // Set active section
+                setDocumentData({ title: nofoTitle, sections });
+                setActiveTabId(
+                  sections.length > 0 ? sections[0].id : "section-1"
+                );
                 setActiveSection(sections.length > 0 ? sections[0] : null);
-
-                // Update completion percentage
                 updateCompletionPercentage(sections);
-
-                // Mark as initialized
                 initialized.current = true;
                 setIsLoading(false);
                 return;
               }
             } else {
-              // If no specific grant name is found, use the folder name as title
-              nofoTitle = folderParam
-                .split("/")[0]
-                .replace(/-/g, " ")
-                .replace(/\b\w/g, (l) => l.toUpperCase());
+              nofoTitle = formatTitleFromFolderName(folderParam);
             }
           } catch (error) {
             console.error("Error fetching NOFO summary:", error);
-            // Fall back to clean folder name if there's an error
-            nofoTitle = folderParam
-              .split("/")[0]
-              .replace(/-/g, " ")
-              .replace(/\b\w/g, (l) => l.toUpperCase());
+            nofoTitle = formatTitleFromFolderName(folderParam);
           }
         }
 
-        // If we get here, we need to use default sections
-        const defaultSections = [
-          {
-            id: "section-1",
-            title: "Executive Summary",
-            content: "<p></p>", // Empty content
-            isComplete: false,
-          },
-          {
-            id: "section-2",
-            title: "Project Description",
-            content: "<p></p>", // Empty content
-            isComplete: false,
-          },
-          {
-            id: "section-3",
-            title: "Goals and Objectives",
-            content: "<p></p>", // Empty content
-            isComplete: false,
-          },
-          {
-            id: "section-4",
-            title: "Project Timeline",
-            content: "<p></p>", // Empty content
-            isComplete: false,
-          },
-          {
-            id: "section-5",
-            title: "Budget Narrative",
-            content: "<p></p>", // Empty content
-            isComplete: false,
-          },
-        ];
-
-        // Set document data with defaults
-        setDocumentData({
-          title: nofoTitle,
-          sections: defaultSections,
-        });
-
-        // Set active tab to first section
+        // Use default sections if we get here
+        const defaultSections = getDefaultSections();
+        setDocumentData({ title: nofoTitle, sections: defaultSections });
         setActiveTabId("section-1");
-
-        // Set active section to first section
         setActiveSection(defaultSections[0]);
-
-        // Update completion percentage
         updateCompletionPercentage(defaultSections);
-
-        // Mark as initialized
         initialized.current = true;
       } catch (error) {
         console.error("Error initializing document:", error);
@@ -216,7 +192,51 @@ export default function DocumentEditor() {
     loadDocumentData();
   }, [folderParam, apiClient]);
 
-  // Set active section when tab changes - separate from data loading
+  // Helper function to format title from folder name
+  const formatTitleFromFolderName = (folderName) => {
+    return folderName
+      .split("/")[0]
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase());
+  };
+
+  // Helper function to get default sections
+  const getDefaultSections = () => {
+    return [
+      {
+        id: "section-1",
+        title: "Executive Summary",
+        content: "<p></p>",
+        isComplete: false,
+      },
+      {
+        id: "section-2",
+        title: "Project Description",
+        content: "<p></p>",
+        isComplete: false,
+      },
+      {
+        id: "section-3",
+        title: "Goals and Objectives",
+        content: "<p></p>",
+        isComplete: false,
+      },
+      {
+        id: "section-4",
+        title: "Project Timeline",
+        content: "<p></p>",
+        isComplete: false,
+      },
+      {
+        id: "section-5",
+        title: "Budget Narrative",
+        content: "<p></p>",
+        isComplete: false,
+      },
+    ];
+  };
+
+  // Set active section when tab changes
   useEffect(() => {
     if (documentData.sections.length > 0 && !isLoading) {
       const section = documentData.sections.find((s) => s.id === activeTabId);
@@ -228,7 +248,7 @@ export default function DocumentEditor() {
     }
   }, [activeTabId, documentData.sections, isLoading]);
 
-  // Function to handle section content changes
+  // Handle section content changes
   const handleSectionContentChange = useCallback(
     (content: string) => {
       if (!activeSection) return;
@@ -238,7 +258,7 @@ export default function DocumentEditor() {
           return {
             ...section,
             content: content,
-            isComplete: content.trim().length > 50, // Simple heuristic to determine completion
+            isComplete: content.trim().length > 50,
           };
         }
         return section;
@@ -260,7 +280,7 @@ export default function DocumentEditor() {
     [activeSection, documentData.sections]
   );
 
-  // Function to update completion percentage
+  // Update completion percentage
   const updateCompletionPercentage = useCallback((sections: SectionData[]) => {
     if (sections.length === 0) return;
 
@@ -271,15 +291,12 @@ export default function DocumentEditor() {
     setCompletionPercentage(percentage);
   }, []);
 
-  // Function to download document
+  // Handle document download
   const handleDownload = useCallback(
     (format: string) => {
-      // Simple example for text download
       if (format === "txt") {
-        // Create a text version of the HTML content
         const content = documentData.sections
           .map((section) => {
-            // Simple conversion of HTML to text (not perfect, but works for basic content)
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = section.content;
             return `## ${section.title}\n\n${tempDiv.textContent}\n\n`;
@@ -294,14 +311,13 @@ export default function DocumentEditor() {
         element.click();
         document.body.removeChild(element);
       } else {
-        // In a real implementation, this would call an API endpoint to generate and download the document
         alert(`Downloading document in ${format} format...`);
       }
     },
     [documentData]
   );
 
-  // Function to generate content with AI
+  // Generate content with AI
   const handleGenerateContent = useCallback(async () => {
     if (!activeSection) return;
 
@@ -309,17 +325,15 @@ export default function DocumentEditor() {
     setIsGenerating(true);
 
     try {
-      // Prepare request to the AI service
       const request: AiGenerationRequest = {
         prompt:
           activeSection.content ||
-          "Generate content for " + activeSection.title,
+          `Generate content for ${activeSection.title}`,
         sessionId: projectId || uuidv4(),
         documentIdentifier: folderParam || "",
         sectionTitle: activeSection.title,
       };
 
-      // Call the AI service
       const response = await aiService.generateSectionContent(request);
 
       if (response.success) {
@@ -343,11 +357,10 @@ export default function DocumentEditor() {
     handleSectionContentChange,
   ]);
 
-  // Function to handle sending a message
+  // Handle sending a message
   const handleSendMessage = useCallback(async () => {
     if (!messageInput.trim() || isSending) return;
 
-    // Add user message to chat
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: "user",
@@ -359,8 +372,7 @@ export default function DocumentEditor() {
     setIsSending(true);
 
     try {
-      // In a real implementation, this would call an API to get the response
-      // For now, we'll simulate a response
+      // Simulate a response for now
       setTimeout(() => {
         const botResponse: ChatMessage = {
           id: crypto.randomUUID(),
@@ -383,12 +395,10 @@ export default function DocumentEditor() {
   const getSectionDescriptionText = useCallback(() => {
     if (!activeSection) return "";
 
-    // Get the index from the section id (e.g., "section-1" -> 0)
     const sectionIndex = activeSection.id
       ? parseInt(activeSection.id.replace("section-", ""), 10) - 1
       : -1;
 
-    // Get description from narrativeSectionsData if available
     if (sectionIndex >= 0 && narrativeSectionsData.length > sectionIndex) {
       const sectionData = narrativeSectionsData[sectionIndex];
       return (
@@ -399,22 +409,18 @@ export default function DocumentEditor() {
     return "Complete this section according to the grant requirements.";
   }, [activeSection, narrativeSectionsData]);
 
-  // Memoize the header actions to prevent unnecessary re-renders
+  // Header actions
   const headerActions = useMemo(
     () => (
-      <SpaceBetween direction="horizontal" size="xs">
-        <ButtonDropdown
-          items={[
-            { id: "docx", text: "Word (.docx)" },
-            { id: "pdf", text: "PDF (.pdf)" },
-            { id: "txt", text: "Plain Text (.txt)" },
-          ]}
-          onItemClick={({ detail }) => handleDownload(detail.id)}
+      <div className="header-actions">
+        <button
+          className="btn btn-secondary"
+          onClick={() => handleDownload("docx")}
         >
           Download
-        </ButtonDropdown>
-        <Button
-          variant="primary"
+        </button>
+        <button
+          className="btn btn-primary"
           onClick={() =>
             navigate(
               `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
@@ -424,111 +430,175 @@ export default function DocumentEditor() {
           }
         >
           Back to Chat
-        </Button>
-      </SpaceBetween>
+        </button>
+      </div>
     ),
     [handleDownload, navigate, folderParam]
+  );
+
+  // Help panel content
+  const helpPanelContent = (
+    <div className="help-panel">
+      <h3 style={{ fontSize: "24px", display: "inline", color: "#006499" }}>
+        Document Editor
+      </h3>
+      <div style={{ color: "#006499" }}>
+        <p>
+          The Document Editor allows you to create and edit your project
+          narrative without switching platforms.
+        </p>
+        <p>
+          Use the tabs to navigate between different sections of your document.
+        </p>
+        <p>Features:</p>
+        <ul>
+          <li>Real-time progress tracking for each section</li>
+          <li>AI-powered content generation for each section</li>
+          <li>Rich text editing with formatting options</li>
+          <li>Download in multiple formats</li>
+          <li>Seamless integration with the chat interface</li>
+        </ul>
+        <p>
+          Click "Generate with AI" in any section to have the AI create content
+          based on your previous conversation.
+        </p>
+        <p>
+          When you're done, you can download the complete document or return to
+          the chat to continue refining your project narrative.
+        </p>
+      </div>
+    </div>
+  );
+
+  // Updated DocumentEditorPanel component with improved section title handling
+  const DocumentEditorPanel = useCallback(
+    ({
+      activeSection,
+      handleSectionContentChange,
+      handleGenerateContent,
+      isGenerating,
+      getSectionDescriptionText,
+    }) => {
+      if (!activeSection) return null;
+
+      return (
+        <div
+          className="document-main"
+          style={{ top: `calc(var(--header-top) + ${headerHeight}px)` }}
+          ref={editorPanelRef}
+        >
+          <div className="section-container">
+            <div className="section-header">
+              <h2
+                className="section-title"
+                style={{
+                  wordBreak: "break-word",
+                  overflowWrap: "break-word",
+                  whiteSpace: "normal",
+                  display: "block",
+                  width: "100%",
+                }}
+              >
+                {activeSection.title}
+              </h2>
+              <p className="section-description">
+                {getSectionDescriptionText()}
+              </p>
+            </div>
+
+            <div className="editor-wrapper">
+              <div className="editor-with-button">
+                <div
+                  className="rich-text-editor"
+                  dangerouslySetInnerHTML={{ __html: activeSection.content }}
+                  contentEditable
+                  onInput={(e) =>
+                    handleSectionContentChange(e.currentTarget.innerHTML)
+                  }
+                />
+                <button
+                  className={`btn-generate ${isGenerating ? "generating" : ""}`}
+                  onClick={handleGenerateContent}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? (
+                    <>
+                      <span className="loading-spinner" />
+                      Generating...
+                    </>
+                  ) : (
+                    "Generate with AI"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    },
+    [headerHeight]
   );
 
   return (
     <BaseAppLayout
       documentIdentifier={folderParam}
-      info={
-        <HelpPanel
-          header={
-            <h3
-              style={{ fontSize: "24px", display: "inline", color: "#006499" }}
-            >
-              Document Editor
-            </h3>
-          }
-        >
-          <div style={{ color: "#006499" }}>
-            <p>
-              The Document Editor allows you to create and edit your project
-              narrative without switching platforms.
-            </p>
-            <p>
-              Use the tabs to navigate between different sections of your
-              document.
-            </p>
-            <p>Features:</p>
-            <ul>
-              <li>Real-time progress tracking for each section</li>
-              <li>AI-powered content generation for each section</li>
-              <li>Rich text editing with formatting options</li>
-              <li>Download in multiple formats</li>
-              <li>Seamless integration with the chat interface</li>
-            </ul>
-            <p>
-              Click "Generate with AI" in any section to have the AI create
-              content based on your previous conversation.
-            </p>
-            <p>
-              When you're done, you can download the complete document or return
-              to the chat to continue refining your project narrative.
-            </p>
-          </div>
-        </HelpPanel>
-      }
+      info={helpPanelContent}
       content={
-        <ContentLayout
-          header={
-            <div
-              style={{
-                position: "absolute",
-                left: "280px", // Align with document panel left edge
-                right: "240px", // Align with document panel right edge
-                textAlign: "center", // Center text content
-                paddingTop: "20px",
-                paddingBottom: "20px",
-              }}
-            >
-              <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-                <SpaceBetween size="m">
-                  <Header
-                    variant="h1"
-                    actions={headerActions}
-                    description={`Progress: ${completionPercentage}% complete`}
-                  >
-                    {documentData.title}
-                  </Header>
-
-                  <Box padding="s">
-                    <ProgressBar
-                      value={completionPercentage}
-                      additionalInfo={`${
-                        documentData.sections.filter((s) => s.isComplete).length
-                      } of ${documentData.sections.length} sections completed`}
-                      status={
-                        completionPercentage === 100 ? "success" : "in-progress"
-                      }
-                    />
-                  </Box>
-
-                  {error && (
-                    <Alert
-                      type="error"
-                      dismissible
-                      onDismiss={() => setError(null)}
-                    >
-                      {error}
-                    </Alert>
-                  )}
-                </SpaceBetween>
-              </div>
+        <main className="content-layout">
+          {/* Document Header Section */}
+          <header ref={headerRef} className="document-header">
+            {/* Title and Actions Row */}
+            <div className="header-content">
+              <h4
+                className={`document-title ${
+                  isTitleExpanded ? "expanded" : ""
+                }`}
+              >
+                {documentData.title}
+              </h4>
+              <button
+                className="document-title-toggle"
+                onClick={toggleTitleExpansion}
+                aria-expanded={isTitleExpanded}
+              >
+                {isTitleExpanded ? "Show less" : "Show more"}
+              </button>{" "}
+              {headerActions}
             </div>
-          }
-        >
+
+            {/* Progress Bar */}
+            <div className="progress-bar-container">
+              <div
+                className={`progress-bar ${
+                  completionPercentage === 100 ? "complete" : ""
+                }`}
+                style={{ width: `${completionPercentage}%` }}
+              />
+            </div>
+            <p className="progress-details">
+              {documentData.sections.filter((s) => s.isComplete).length} of{" "}
+              {documentData.sections.length} sections completed
+            </p>
+
+            {/* Error Message */}
+            {error && (
+              <div className="alert error">
+                {error}
+                <button className="alert-close" onClick={() => setError(null)}>
+                  ×
+                </button>
+              </div>
+            )}
+          </header>
+
+          {/* Content Area */}
           {isLoading ? (
-            <Container>
-              <Box textAlign="center" padding="xl">
-                <Spinner size="large" />
-                <p>Loading document editor...</p>
-              </Box>
-            </Container>
+            <div className="loading-container">
+              <div className="spinner" />
+              <p>Loading document editor...</p>
+            </div>
           ) : (
-            <div className="flex flex-1 overflow-hidden">
+            <div>
               {/* Left Sidebar Chat Assistant */}
               <AssistantPanel
                 activeSection={activeSection}
@@ -539,7 +609,7 @@ export default function DocumentEditor() {
                 handleSendMessage={handleSendMessage}
               />
 
-              {/* Document editor area in the middle */}
+              {/* Document editor area in the middle - Use our updated inline component */}
               <DocumentEditorPanel
                 activeSection={activeSection}
                 handleSectionContentChange={handleSectionContentChange}
@@ -556,7 +626,7 @@ export default function DocumentEditor() {
               />
             </div>
           )}
-        </ContentLayout>
+        </main>
       }
     />
   );
