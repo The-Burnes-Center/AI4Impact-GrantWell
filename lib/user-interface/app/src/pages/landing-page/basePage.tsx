@@ -19,6 +19,7 @@ export default function Welcome({ theme }) {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [statusMessage, setStatusMessage] = useState("");
+  const [userName, setUserName] = useState<string>(""); // For storing user's name
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -176,6 +177,11 @@ export default function Welcome({ theme }) {
         if (adminRole && adminRole.includes("Admin")) {
           setIsAdmin(true); // Set admin status to true if user has admin role
         }
+
+        // Get user's name
+        const name = result?.signInUserSession?.idToken?.payload?.name;
+        const email = result?.signInUserSession?.idToken?.payload?.email;
+        setUserName(name || email?.split("@")[0] || "User"); // Use name, first part of email, or "User"
       } catch (e) {
         console.error("Error checking admin status:", e);
       }
@@ -700,41 +706,6 @@ export default function Welcome({ theme }) {
             position: "relative",
           }}
         >
-          {/* Dashboard Button */}
-          <div
-            style={{
-              position: "absolute",
-              top: "-10px", // Move it higher to align with the header
-              right: "-10px", // Move it further right
-            }}
-          >
-            <button
-              onClick={() => navigate("/dashboard")}
-              style={{
-                backgroundColor: primaryBlue,
-                color: "white",
-                border: "none",
-                padding: "8px 16px",
-                fontSize: "14px",
-                borderRadius: "20px",
-                cursor: "pointer",
-                fontWeight: "500",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#005d94";
-                e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = primaryBlue;
-                e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
-              }}
-            >
-              Dashboard
-            </button>
-          </div>
-
           {/* Logo and Title */}
           <div
             style={{
@@ -781,6 +752,19 @@ export default function Welcome({ theme }) {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Welcome message */}
+        <div
+          style={{
+            textAlign: "center",
+            margin: "50px auto 25px auto",
+            fontSize: "18px",
+            color: mainTextColor,
+            fontWeight: "500",
+          }}
+        >
+          Hello {userName}, please start by selecting a NOFO
         </div>
 
         <div

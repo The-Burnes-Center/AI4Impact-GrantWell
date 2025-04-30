@@ -15,6 +15,7 @@ import SessionPage from "./pages/chatbot/sessions/sessions";
 import Welcome from "./pages/landing-page/basePage";
 import Checklists from "./pages/requirements-gathering/checklist"; // Import the new Checklists page
 import DocumentEditor from "./pages/document-editor/document-editor"; // Import the document editor component
+import Dashboard from "./pages/Dashboard"; // Import the Dashboard component
 import { useState } from "react";
 import "./styles/app.scss";
 import { Mode } from "@cloudscape-design/global-styles";
@@ -41,23 +42,31 @@ function App() {
               <Route path="" element={<Welcome theme={theme} />} />
               {/* <Route path="checklists/:documentUrl" element={<Checklists />} /> */}
               {/* Route for the checklists page with a dynamic parameter */}
-            <Route
-              // path="/landing-page/basePage/checklists/:documentUrl"
-              // element={<Checklists />}
-              path="/landing-page/basePage/checklists/:documentIdentifier"
-              element={<Checklists />}
-            />
+              <Route
+                // path="/landing-page/basePage/checklists/:documentUrl"
+                // element={<Checklists />}
+                path="/landing-page/basePage/checklists/:documentIdentifier"
+                element={<Checklists />}
+              />
             </Route>
             <Route path="/chatbot" element={<Outlet />}>
               <Route path="playground/:sessionId" element={<Playground />} />
               <Route path="sessions" element={<SessionPage />} />
-              <Route path="document-editor/:projectId" element={<DocumentEditor />} />
+              <Route
+                path="document-editor/:projectId"
+                element={<DocumentEditor />}
+              />
             </Route>
             <Route path="/admin" element={<Outlet />}>
               <Route path="data" element={<DataPage />} />
               <Route path="user-feedback" element={<UserFeedbackPage />} />
             </Route>
-            <Route path="*" element={<Navigate to={`/landing-page/basePage`} replace />} />
+            {/* Add Dashboard route */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="*"
+              element={<Navigate to={`/landing-page/basePage`} replace />}
+            />
           </Routes>
         </div>
       </Router>

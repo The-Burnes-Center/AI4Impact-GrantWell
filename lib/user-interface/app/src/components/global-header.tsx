@@ -10,6 +10,7 @@ import useOnFollow from "../common/hooks/use-on-follow";
 import { CHATBOT_NAME } from "../common/constants";
 import "./styles/global-header.css";
 import { Divider } from "@aws-amplify/ui-react";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
   container: {
@@ -23,6 +24,8 @@ export default function GlobalHeader() {
   const onFollow = useOnFollow();
   const [userName, setUserName] = useState<string | null>(null);
   const [theme, setTheme] = useState<Mode>(StorageHelper.getTheme());
+  const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -38,6 +41,11 @@ export default function GlobalHeader() {
       const email = result?.signInUserSession?.idToken?.payload?.email;
       const userName = name ? name : email;
       setUserName(userName);
+
+      // Check for admin role
+      const adminRole =
+        result?.signInUserSession?.idToken?.payload["custom:role"];
+      setIsAdmin(adminRole && adminRole.includes("Admin"));
     })();
   }, []);
 
@@ -55,6 +63,8 @@ export default function GlobalHeader() {
   }) => {
     if (detail.id === "signout") {
       Auth.signOut();
+    } else if (detail.id === "dashboard") {
+      navigate("/dashboard");
     }
   };
 
@@ -94,6 +104,14 @@ export default function GlobalHeader() {
             iconName: "user-profile",
             onItemClick: onUserProfileClick,
             items: [
+              ...(isAdmin
+                ? [
+                    {
+                      id: "dashboard",
+                      text: "Dashboard",
+                    },
+                  ]
+                : []),
               {
                 id: "signout",
                 text: "Sign out",
