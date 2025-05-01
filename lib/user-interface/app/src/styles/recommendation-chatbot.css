@@ -1,0 +1,126 @@
+.suggestion-chip {
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 0.875rem;
+  background-color: #EBF5FF;
+  color: #0073BB;
+  transition: all 0.2s ease;
+  margin: 4px;
+  border: 1px solid #D1E4F5;
+  cursor: pointer;
+}
+
+.suggestion-chip:hover {
+  background-color: #D1E4F5;
+  transform: translateY(-1px);
+}
+
+.grant-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.grant-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.grant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.grant-title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #006499;
+}
+
+.grant-match {
+  display: flex;
+  align-items: center;
+}
+
+.grant-detail {
+  margin-bottom: 8px;
+}
+
+.grant-detail-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.grant-detail-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.grant-requirements {
+  font-size: 0.9rem;
+}
+
+.grant-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  gap: 8px;
+}
+
+.chatbot-float-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #0073BB;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 1000;
+  border: none;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.chatbot-float-button:hover {
+  transform: scale(1.05);
+  background-color: #005A94;
+}
+
+.chatbot-float-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 115, 187, 0.3);
+}
+
+.chat-container {
+  height: 400px;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-message {
+  max-width: 85%;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.ai-message {
+  background-color: #f1f6f9;
+  align-self: flex-start;
+}
+
+.user-message {
+  background-color: #EBF5FF;
+  align-self: flex-end;
+}
