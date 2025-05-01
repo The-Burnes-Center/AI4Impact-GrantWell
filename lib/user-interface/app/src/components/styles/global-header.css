@@ -1,3 +1,12 @@
 .awsui-context-top-navigation {
-  --color-background-container-content-z79u4u: #006499 !important; 
+  --color-background-container-content-z79u4u: #006499 !important;
+}
+
+/* Style the state seal in the header */
+.awsui-context-top-navigation img[alt="Massachusetts State Seal"] {
+  max-height: 30px;
+  margin-right: 10px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 2px;
 }

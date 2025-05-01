@@ -1,4 +1,4 @@
-import { Utils } from '../utils';
+import { Utils } from "../utils";
 
 export class LandingPageClient {
   private readonly baseUrl: string;
@@ -14,11 +14,11 @@ export class LandingPageClient {
     try {
       const token = await Utils.authenticate();
       const response = await fetch(`${this.API}/s3-nofo-bucket-data`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        }
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
       });
 
       if (!response.ok) {
@@ -27,7 +27,7 @@ export class LandingPageClient {
 
       return await response.json();
     } catch (error) {
-      console.error('Error retrieving NOFOs:', error);
+      console.error("Error retrieving NOFOs:", error);
       throw error;
     }
   }
@@ -37,14 +37,14 @@ export class LandingPageClient {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/s3-nofo-summary`);
-      url.searchParams.append('documentKey', documentKey);
-      
+      url.searchParams.append("documentKey", documentKey);
+
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        }
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
       });
 
       if (!response.ok) {
@@ -53,7 +53,7 @@ export class LandingPageClient {
 
       return await response.json();
     } catch (error) {
-      console.error('Error retrieving NOFO summary:', error);
+      console.error("Error retrieving NOFO summary:", error);
       throw error;
     }
   }
@@ -61,29 +61,29 @@ export class LandingPageClient {
   // Fetches a signed upload URL from the backend Lambda for uploading a file to S3
   async getUploadURL(fileName: string, fileType: string): Promise<string> {
     if (!fileType) {
-      alert('Must have a valid file type!');
-      throw new Error('Invalid file type');
+      alert("Must have a valid file type!");
+      throw new Error("Invalid file type");
     }
-    
+
     try {
       const token = await Utils.authenticate();
       const response = await fetch(`${this.API}/test-url`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
+          "Content-Type": "application/json",
+          Authorization: token,
         },
-        body: JSON.stringify({ fileName, fileType })
+        body: JSON.stringify({ fileName, fileType }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get upload URL');
+        throw new Error("Failed to get upload URL");
       }
 
       const data = await response.json();
       return data.signedUrl;
     } catch (error) {
-      console.error('Error getting upload URL:', error);
+      console.error("Error getting upload URL:", error);
       throw error;
     }
   }
@@ -92,11 +92,11 @@ export class LandingPageClient {
   async uploadFileToS3(url: string, file: File) {
     try {
       const response = await fetch(url, {
-        method: 'PUT',
+        method: "PUT",
         body: file,
         headers: {
-          'Content-Type': file.type
-        }
+          "Content-Type": file.type,
+        },
       });
 
       if (!response.ok) {
@@ -105,7 +105,7 @@ export class LandingPageClient {
 
       return true;
     } catch (error) {
-      console.error('Error uploading file to S3:', error);
+      console.error("Error uploading file to S3:", error);
       throw error;
     }
   }
@@ -114,25 +114,117 @@ export class LandingPageClient {
   async inviteUser(email: string) {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.baseUrl}/user-management/invite-user`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        },
-        body: JSON.stringify({ email })
-      });
-  
+      const response = await fetch(
+        `${this.baseUrl}/user-management/invite-user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || `Error: ${response.status}`);
       }
-  
+
       return data;
     } catch (error) {
-      console.error('Error inviting user:', error);
+      console.error("Error inviting user:", error);
       throw error;
     }
-  } 
-} 
+  }
+
+  // Renames a NOFO folder in S3
+  async renameNOFO(oldName: string, newName: string) {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(`${this.baseUrl}/s3-nofo-rename`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({
+          oldName,
+          newName,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `Error: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error renaming NOFO:", error);
+      throw error;
+    }
+  }
+
+  // Deletes a NOFO folder and all its contents from S3
+  async deleteNOFO(nofoName: string) {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(`${this.baseUrl}/s3-nofo-delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ nofoName }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `Error: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error deleting NOFO:", error);
+      throw error;
+    }
+  }
+
+  // Gets the list of users from Cognito
+  async getUsers() {
+    try {
+      console.log("getUsers: Getting authentication token");
+      const token = await Utils.authenticate();
+
+      const url = `${this.baseUrl}/user-management/list-users`;
+      console.log("getUsers: Making API request to:", url);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      console.log("getUsers: Received response status:", response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("getUsers: Error response:", errorText);
+        throw new Error(`Error: ${response.status} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log("getUsers: Successfully parsed response data");
+      return data;
+    } catch (error) {
+      console.error("Error retrieving users:", error);
+      throw error;
+    }
+  }
+}

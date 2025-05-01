@@ -20,6 +20,7 @@ export default function Welcome({ theme }) {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
+  const [userName, setUserName] = useState<string>(""); // For storing user's name
   const [showInviteUserModal, setShowInviteUserModal] = useState(false);
   const [newUserEmail, setNewUserEmail] = useState('');
   const [inviteStatus, setInviteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -50,12 +51,13 @@ export default function Welcome({ theme }) {
   };
 
   const logoStyle: CSSProperties = {
-    width: "65px",
-    height: "65px",
+    width: "100px",
+    height: "100px",
   };
 
-  const mainTextColor = "#006499"
-  const bodyTextColor = "#6c757d"
+  const mainTextColor = "#006499";
+  const bodyTextColor = "#6c757d";
+  const primaryBlue = "#0073bb"; // Match header blue color
 
   const floatingButtonStyle: CSSProperties = {
     position: 'fixed',
@@ -79,22 +81,107 @@ export default function Welcome({ theme }) {
 
   // **Admin Section Styles**
   const adminContainerStyle: CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    marginBottom: '50px',
-    marginLeft: '40px',
-    flexWrap: 'wrap', // Allows wrapping on smaller screens
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    marginBottom: "50px",
+    marginLeft: "40px",
+    flexWrap: "wrap", // Allows wrapping on smaller screens
   };
 
   const adminTextStyle: CSSProperties = {
-    fontSize: '16px',
-    fontStyle: 'italic',
-    color: '#555',
-    margin: '0 25px 10px 0', // Adjust margins for responsiveness
-    textAlign: 'left',
-    width: '100%',
-    maxWidth: '400px',
+    fontSize: "16px",
+    fontStyle: "italic",
+    color: "#555",
+    margin: "0 25px 10px 0", // Adjust margins for responsiveness
+    textAlign: "left",
+    width: "100%",
+    maxWidth: "400px",
+  };
+
+  const containerStyle: CSSProperties = {
+    maxWidth: "950px",
+    margin: "0 auto",
+    padding: "0 40px",
+    marginTop: "70px",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    paddingBottom: "0",
+  };
+
+  // Modern search bar styles
+  const searchContainerStyle: CSSProperties = {
+    position: "relative",
+    maxWidth: "650px",
+    width: "100%",
+    margin: "0 auto",
+  };
+
+  const searchIconStyle: CSSProperties = {
+    position: "absolute",
+    left: "15px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    color: "#666",
+    pointerEvents: "none",
+    zIndex: 1,
+  };
+
+  const selectStyle: CSSProperties = {
+    width: "100%",
+    padding: "14px 20px 14px 45px",
+    fontSize: "16px",
+    borderRadius: "25px", // More oval shape
+    border: "1px solid #e0e0e0",
+    boxSizing: "border-box",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+    appearance: "none",
+    backgroundImage:
+      'url(\'data:image/svg+xml;utf8,<svg fill="%23666" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>\')',
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "right 15px center",
+    transition: "all 0.2s ease",
+    backgroundColor: "#ffffff",
+  };
+
+  const buttonStyle: CSSProperties = {
+    backgroundColor: primaryBlue, // Use blue from the header when active
+    color: "white",
+    border: "none",
+    padding: "12px 22px",
+    fontSize: "16px",
+    borderRadius: "25px", // Oval/pill shape
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    fontWeight: "500",
+    margin: "0 5px", // Reduced from 10px to 5px
+    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+  };
+
+  const disabledButtonStyle: CSSProperties = {
+    ...buttonStyle,
+    backgroundColor: "#f0f0f0",
+    color: "#aaaaaa",
+    cursor: "not-allowed",
+    boxShadow: "none",
+  };
+
+  const buttonHoverStyle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if ((e.target as HTMLButtonElement).disabled) return;
+    (e.target as HTMLElement).style.backgroundColor = "#005d94"; // Darker blue on hover
+    (e.target as HTMLElement).style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
+  };
+
+  const buttonLeaveStyle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if ((e.target as HTMLButtonElement).disabled) return;
+    (e.target as HTMLElement).style.backgroundColor = primaryBlue;
+    (e.target as HTMLElement).style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+  };
+
+  const linkStyle: CSSProperties = {
+    color: "#006499",
+    textDecoration: "none",
   };
 
   // **Effect Hooks**
@@ -108,12 +195,17 @@ export default function Welcome({ theme }) {
           return;
         }
         const adminRole =
-          result?.signInUserSession?.idToken?.payload['custom:role'];
-        if (adminRole && adminRole.includes('Admin')) {
+          result?.signInUserSession?.idToken?.payload["custom:role"];
+        if (adminRole && adminRole.includes("Admin")) {
           setIsAdmin(true); // Set admin status to true if user has admin role
         }
+
+        // Get user's name
+        const name = result?.signInUserSession?.idToken?.payload?.name;
+        const email = result?.signInUserSession?.idToken?.payload?.email;
+        setUserName(name || email?.split("@")[0] || "User"); // Use name, first part of email, or "User"
       } catch (e) {
-        console.error('Error checking admin status:', e);
+        console.error("Error checking admin status:", e);
       }
     })();
   }, []);
@@ -121,7 +213,7 @@ export default function Welcome({ theme }) {
   // Load recently viewed NOFOs from localStorage
   useEffect(() => {
     const storedHistory =
-      JSON.parse(localStorage.getItem('recentlyViewedNOFOs')) || [];
+      JSON.parse(localStorage.getItem("recentlyViewedNOFOs")) || [];
     setRecentlyViewedNOFOs(storedHistory);
   }, []);
 
@@ -131,7 +223,7 @@ export default function Welcome({ theme }) {
       try {
         await getNOFOListFromS3();
       } catch (error) {
-        console.error('Failed to fetch NOFO documents:', error);
+        console.error("Failed to fetch NOFO documents:", error);
       }
     };
     fetchDocuments();
@@ -147,11 +239,11 @@ export default function Welcome({ theme }) {
       setDocuments(
         folders.map((document) => ({
           label: document,
-          value: document + '/',
+          value: document + "/",
         }))
       );
     } catch (error) {
-      console.error('Error retrieving NOFOs: ', error);
+      console.error("Error retrieving NOFOs: ", error);
     }
     setLoading(false);
   };
@@ -171,51 +263,10 @@ export default function Welcome({ theme }) {
     ].slice(0, 3);
 
     setRecentlyViewedNOFOs(updatedHistory);
-    localStorage.setItem(
-      'recentlyViewedNOFOs',
-      JSON.stringify(updatedHistory)
-    );
+    localStorage.setItem("recentlyViewedNOFOs", JSON.stringify(updatedHistory));
     navigate(href);
   };
 
-  // Upload a new NOFO (Admin functionality)
-  const uploadNOFO = async () => {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-
-    fileInput.onchange = async (event) => {
-      const file = fileInput.files[0];
-
-      if (!file) return;
-
-      try {
-        const documentName = file.name.split('.').slice(0, -1).join('');
-        let newFilePath;
-        if (file.type === 'text/plain') {
-          newFilePath = `${documentName}/NOFO-File-TXT`;
-        } else if (file.type === 'application/pdf') {
-          newFilePath = `${documentName}/NOFO-File-PDF`;
-        } else {
-          newFilePath = `${documentName}/NOFO-File`;
-        }
-
-        const signedUrl = await apiClient.landingPage.getUploadURL(
-          newFilePath,
-          file.type
-        );
-        await apiClient.landingPage.uploadFileToS3(signedUrl, file);
-
-        alert('File uploaded successfully!');
-        await getNOFOListFromS3();
-      } catch (error) {
-        console.error('Upload failed:', error);
-        alert('Failed to upload the file.');
-      }
-    };
-
-    fileInput.click();
-  };
-  
   // Navigate to checklists
   const goToChecklists = () => {
     if (selectedDocument) {
@@ -228,93 +279,103 @@ export default function Welcome({ theme }) {
     }
   };
 
-  // Add this function with your other functions
-  const inviteNewUser = async () => {
-    if (!newUserEmail || !newUserEmail.includes('@')) {
-      setStatusMessage('Please enter a valid email address');
-      setInviteStatus('error');
-      return;
-    }
-
-    setInviteStatus('loading');
-    setStatusMessage('');
-
-    try {
-      // Call the API to create a new user without a custom message
-      const result = await apiClient.landingPage.inviteUser(newUserEmail);
-      
-      if (result.success) {
-        setInviteStatus('success');
-        setStatusMessage('User invitation sent successfully!');
-        // Reset form after short delay
-        setTimeout(() => {
-          setNewUserEmail('');
-          setInviteStatus('idle');
-          setShowInviteUserModal(false);
-        }, 2000);
-      } else {
-        throw new Error(result.message || 'Failed to invite user');
-      }
-    } catch (error) {
-      console.error('Error inviting user:', error);
-      setInviteStatus('error');
-      setStatusMessage(error.message || 'Failed to invite user. Please try again.');
-    }
-  };
-
   // **Components**
   // HistoryPanel component
   const HistoryPanel = () => (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)", // 2 columns
-        gap: "25px", // Space between grid items
-        marginBottom: "30px"
+        gridTemplateColumns: "repeat(3, 1fr)", // 3 columns instead of 2
+        gap: "20px", // Slightly reduced gap for 3 columns
+        marginBottom: "30px",
       }}
     >
-      <h2 style={{ gridColumn: "span 2", fontSize: "24px", lineHeight: "1", textAlign: "center", color: mainTextColor }}>
+      <h2
+        style={{
+          gridColumn: "span 3", // Span all 3 columns
+          fontSize: "24px",
+          lineHeight: "1",
+          textAlign: "center",
+          color: mainTextColor,
+          marginBottom: "20px",
+        }}
+      >
         Recently Viewed NOFOs
       </h2>
       {recentlyViewedNOFOs.length > 0 ? (
-        recentlyViewedNOFOs.slice(0, 4).map((nofo, index) => (
-          <div
-            key={index}
-            style={{
-              padding: "15px",
-              border: "1px solid #e1e4e8",
-              borderRadius: "8px",
-              backgroundColor: "#f9f9f9",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <Link
-              onFollow={() =>
+        recentlyViewedNOFOs.slice(0, 6).map(
+          (
+            nofo,
+            index // Show up to 6 items
+          ) => (
+            <div
+              key={index}
+              style={{
+                padding: "15px",
+                border: "1px solid #e1e4e8",
+                borderRadius: "8px",
+                backgroundColor: "#f9f9f9",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                height: "100%", // Make all cards the same height
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+              onClick={() =>
                 handleNOFOSelect(
-                  `/landing-page/basePage/checklists/${encodeURIComponent(nofo.value)}`,
+                  `/landing-page/basePage/checklists/${encodeURIComponent(
+                    nofo.value
+                  )}`,
                   nofo
                 )
               }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 4px 8px rgba(0, 0, 0, 0.15)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 2px 4px rgba(0, 0, 0, 0.1)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
             >
-              <span style={{ fontSize: "18px", fontWeight: "bold", display: "block", marginBottom: "8px", color: mainTextColor }}>
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  display: "block",
+                  marginBottom: "8px",
+                  color: primaryBlue,
+                }}
+              >
                 {nofo.label}
               </span>
-            </Link>
-            <div style={{ fontSize: "14px", color: "#6c757d" }}>
-              <span>Last viewed: {nofo.lastViewed}</span>
+              <div
+                style={{
+                  fontSize: "14px",
+                  color: "#6c757d",
+                  marginTop: "auto",
+                }}
+              >
+                <span>Last viewed: {nofo.lastViewed}</span>
+              </div>
             </div>
-          </div>
-        ))
+          )
+        )
       ) : (
         <p
           style={{
-            gridColumn: "span 2",
+            gridColumn: "span 3", // Span all 3 columns
             color: "#6c757d",
             fontSize: "16px",
             textAlign: "center",
           }}
         >
-          You haven't viewed any NOFOs recently. Select or upload a document at the panel to get started.
+          You haven't viewed any NOFOs recently. Select or upload a document at
+          the panel to get started.
         </p>
       )}
     </div>
@@ -324,21 +385,21 @@ export default function Welcome({ theme }) {
   const InfoBanner = ({
     title,
     description,
-    buttonText = '',
+    buttonText = "",
     buttonAction = null,
     imageSrc = null, // Default to null if not provided
-    imageAlt = '',
+    imageAlt = "",
     height,
-    backgroundColor = '#06293d',
-    mainTextColor = '#ffffff',
-    bodyTextColor = '#ffffff',
+    backgroundColor = "#06293d",
+    mainTextColor = "#ffffff",
+    bodyTextColor = "#ffffff",
     // buttonColor = '#FF9B00',
-    titleFontSize = '24px',
+    titleFontSize = "24px",
     buttonVariant = "normal", // Default to "normal"
     linkUrl = null,
-    imagePosition = 'right',
-    titleAlign = 'left',
-    imageWidth = '150px',
+    imagePosition = "right",
+    titleAlign = "left",
+    imageWidth = "150px",
   }: {
     title: string;
     description: string;
@@ -357,108 +418,125 @@ export default function Welcome({ theme }) {
     titleAlign?: any;
     imageWidth?: any;
   }) => {
+    const bannerButtonStyle: CSSProperties = {
+      backgroundColor: buttonVariant === "primary" ? "#006499" : "#FF9B00",
+      color: "white",
+      border: "none",
+      padding: "10px 15px",
+      borderRadius: "4px",
+      cursor: "pointer",
+      textDecoration: buttonVariant === "link" ? "underline" : "none",
+    };
+
     const content = (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          maxWidth: '900px',
-          alignItems: 'center',
-          margin: '0 auto',
-          flexDirection: 'row',
-          gap: '30px',
-          marginTop: '15px',
+          display: "flex",
+          justifyContent: "space-between",
+          maxWidth: "900px",
+          alignItems: "center",
+          margin: "0 auto",
+          flexDirection: "row",
+          gap: "30px",
+          marginTop: "15px",
         }}
       >
-        {imagePosition === 'left' && imageSrc && (
-          <img src={imageSrc} alt={imageAlt} style={{width:imageWidth}}/>
+        {imagePosition === "left" && imageSrc && (
+          <img src={imageSrc} alt={imageAlt} style={{ width: imageWidth }} />
         )}
         <div
           style={{
-            display:'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
             textAlign: titleAlign,
-            width: buttonText ? '70%' : '80%', // Adjust width based on whether there's a button
+            width: buttonText ? "70%" : "80%", // Adjust width based on whether there's a button
           }}
         >
-          { title && (
-            <h1 style={{ fontSize: titleFontSize, margin: 1, color:mainTextColor}}>
+          {title && (
+            <h1
+              style={{
+                fontSize: titleFontSize,
+                margin: 1,
+                color: mainTextColor,
+              }}
+            >
               {title}
             </h1>
           )}
-          <p style={{ fontSize: '13px', color: bodyTextColor}}>
+          <p style={{ fontSize: "13px", color: bodyTextColor }}>
             {description}
           </p>
         </div>
-        {imagePosition === 'right' && imageSrc && (
+        {imagePosition === "right" && imageSrc && (
           <img src={imageSrc} alt={imageAlt} style={{ width: imageWidth }} />
         )}
         {buttonText && buttonAction && (
-          <Button
+          <button
             onClick={buttonAction}
-            variant={buttonVariant}
-            ariaLabel={buttonText}>
+            style={bannerButtonStyle}
+            aria-label={buttonText}
+          >
             {buttonText}
-          </Button>
+          </button>
         )}
       </div>
     );
-    return(
-    <div
-      style={{
-        backgroundColor: backgroundColor,
-        padding: '20px',
-        marginBlockEnd: '0',
-        width: '100vw',
-        height: height,
-        position: 'relative',
-        left: '50%',
-        right: '50%',
-        marginLeft: '-50vw',
-        marginRight: '-50vw',
-        marginTop: "0px",
-        marginBottom: "0px",
-      }}
-    >
-      {linkUrl ? (
-        <a
-          href={linkUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
+    return (
+      <div
+        style={{
+          backgroundColor: backgroundColor,
+          padding: "20px",
+          marginBlockEnd: "0",
+          width: "100vw",
+          height: height,
+          position: "relative",
+          left: "50%",
+          right: "50%",
+          marginLeft: "-50vw",
+          marginRight: "-50vw",
+          marginTop: "0px",
+          marginBottom: "0px",
+        }}
+      >
+        {linkUrl ? (
+          <a
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none", color: "inherit" }}
           >
             {content}
           </a>
-      ): (
-        content
-      )}
+        ) : (
+          content
+        )}
       </div>
     );
   };
 
-  const ContentBox = ({ children, backgroundColor = '#f1f6f9' }) => (
+  const ContentBox = ({ children, backgroundColor = "#f1f6f9" }) => (
     <div
       style={{
-        width: '100vw', // Full screen width
+        width: "100vw", // Full screen width
         backgroundColor, // Customizable background color
-        position: 'relative',
-        left: '50%',
-        right: '50%',
-        marginLeft: '-50vw',
-        marginRight: '-50vw',
-        boxSizing: 'border-box', // Ensure padding doesn't expand width
-        padding: '20px 0', // Add padding for vertical spacing
+        position: "relative",
+        left: "50%",
+        right: "50%",
+        marginLeft: "-50vw",
+        marginRight: "-50vw",
+        boxSizing: "border-box", // Ensure padding doesn't expand width
+        padding: "20px 0", // Add padding for vertical spacing
         marginTop: "0px",
         marginBottom: "0px",
       }}
     >
       <div
         style={{
-          maxWidth: '950px', // Center-aligned content width
-          margin: '0 auto', // Center horizontally
-          padding: '0 40px', // Respect page margins
-          boxSizing: 'border-box',
+          maxWidth: "950px", // Center-aligned content width
+          margin: "0 auto", // Center horizontally
+          padding: "0 40px", // Respect page margins
+          boxSizing: "border-box",
         }}
       >
         {children}
@@ -471,30 +549,34 @@ export default function Welcome({ theme }) {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)", 
+        gridTemplateColumns: "repeat(3, 1fr)",
         gap: "25px",
-        marginBottom: "30px"
+        marginBottom: "30px",
       }}
     >
-      <h2 style={{ 
-        gridColumn: "span 3", 
-        fontSize: "24px", 
-        lineHeight: "1", 
-        textAlign: "center", 
-        color: mainTextColor 
-      }}>
+      <h2
+        style={{
+          gridColumn: "span 3",
+          fontSize: "24px",
+          lineHeight: "1",
+          textAlign: "center",
+          color: mainTextColor,
+        }}
+      >
         Additional Resources
       </h2>
       {[
         {
           title: "Federal Grant Finder",
           href: "https://www.usdigitalresponse.org/grant/grant-finder",
-          description: "Find grants you are eligible for with U.S. Digital Response's Federal Grants Finder.",
+          description:
+            "Find grants you are eligible for with U.S. Digital Response's Federal Grants Finder.",
         },
         {
           title: "Register for Federal Funds Partnership Meetings",
           href: "https://us02web.zoom.us/meeting/register/tZUucuyhrzguHNJkkh-XlmZBlQQKxxG_Acjl",
-          description: "Stay updated on current funding opportunities by joining our monthly informational sessions.",
+          description:
+            "Stay updated on current funding opportunities by joining our monthly informational sessions.",
         },
         {
           title: "Federal Grant Application Resources",
@@ -510,29 +592,35 @@ export default function Welcome({ theme }) {
             borderRadius: "8px",
             backgroundColor: "#f9f9f9",
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-            textAlign: "center" // Center all text content
+            textAlign: "center", // Center all text content
           }}
         >
-          <Link
+          <a
             href={resource.href}
-            external
+            target="_blank"
+            rel="noopener noreferrer"
+            style={linkStyle}
           >
-            <span style={{ 
-              fontSize: "18px", 
-              fontWeight: "bold", 
-              display: "block", 
-              marginBottom: "8px", 
-              color: mainTextColor,
-              textAlign: "center" // Center the title specifically
-            }}>
+            <span
+              style={{
+                fontSize: "18px",
+                fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px",
+                color: mainTextColor,
+                textAlign: "center", // Center the title specifically
+              }}
+            >
               {resource.title}
             </span>
-          </Link>
-          <div style={{ 
-            fontSize: "14px", 
-            color: bodyTextColor,
-            textAlign: "center" // Center the description specifically
-          }}>
+          </a>
+          <div
+            style={{
+              fontSize: "14px",
+              color: bodyTextColor,
+              textAlign: "center", // Center the description specifically
+            }}
+          >
             {resource.description}
           </div>
         </div>
@@ -540,19 +628,15 @@ export default function Welcome({ theme }) {
     </div>
   );
 
-
-
   // **Render**
   return (
-    <Container
-      disableContentPaddings
-    >
+    <div style={containerStyle}>
       <div
         style={{
           maxWidth: "950px",
           margin: "0 auto",
           padding: "0 40px",
-          marginTop: "70px",
+          marginTop: "20px",
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -561,32 +645,75 @@ export default function Welcome({ theme }) {
       >
         {/* Header with logo and title */}
         {/* Header Section */}
-        <div style={headerContainerStyle}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "30px",
+            position: "relative",
+          }}
+        >
           {/* Logo and Title */}
-          <div style={logoTitleStyle}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "15px",
+            }}
+          >
             <img
               src="/images/stateseal-color.png"
               alt="State Seal"
               style={logoStyle}
             />
-            <h1 style={{ fontSize: "45px", margin: 0, color: mainTextColor }}>GrantWell</h1>
-          </div>
-
-          {/* Description */}
-          <div style={{
-            flex: "1 1 auto",
-            maxWidth: "400px",
-            textAlign: "center",
-            fontSize: "19px",
-            lineHeight: "1.3",
-            color: mainTextColor
-          }}>
-            <p>
-              An AI tool to help Massachusetts communities secure federal grants
-            </p>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <h1
+                style={{
+                  fontSize: "52px",
+                  margin: 0,
+                  color: mainTextColor,
+                  fontWeight: "600",
+                }}
+              >
+                GrantWell
+              </h1>
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: mainTextColor,
+                  margin: "-2px 3px 0 8px",
+                  fontStyle: "italic",
+                  maxWidth: "230px",
+                  lineHeight: "1.4",
+                }}
+              >
+                An AI tool to help Massachusetts communities secure federal
+                grants
+              </p>
+            </div>
           </div>
         </div>
 
+        {/* Welcome message */}
+        <div
+          style={{
+            textAlign: "center",
+            margin: "50px auto 25px auto",
+            fontSize: "18px",
+            color: mainTextColor,
+            fontWeight: "500",
+          }}
+        >
+          Hello {userName}, please start by selecting a NOFO
+        </div>
 
         <div
           style={{
@@ -595,34 +722,59 @@ export default function Welcome({ theme }) {
             margin: "0 auto", // Center it horizontally
           }}
         >
-          <Select
-            selectedOption={selectedDocument}
-            onChange={({ detail }) =>
-              setSelectedDocument(detail.selectedOption)
-            }
-            options={documents}
-            placeholder="Find a Notice of Funding Opportunity Document (NOFO)"
-            filteringType="auto"
-            aria-label="Select a NOFO document"
-          />
-
+          <div style={searchContainerStyle}>
+            <div style={searchIconStyle}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
+                  fill="#666666"
+                />
+              </svg>
+            </div>
+            <select
+              value={selectedDocument?.value || ""}
+              onChange={(e) => {
+                const selected = documents.find(
+                  (doc) => doc.value === e.target.value
+                );
+                setSelectedDocument(selected || null);
+              }}
+              style={selectStyle}
+              aria-label="Select a NOFO document"
+            >
+              <option value="" disabled selected={!selectedDocument}>
+                Find a Notice of Funding Opportunity Document (NOFO)
+              </option>
+              {documents.map((doc, index) => (
+                <option key={index} value={doc.value}>
+                  {doc.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '25px',
-            marginTop: "35px",
-            marginBottom: '75px',
-            width: '100%',
-            padding: '0 50px', // Add 50px padding on left and right
-            boxSizing: 'border-box',
-            flexWrap: 'wrap', // Allows wrapping on smaller screens
-            justifyContent: 'center', // Centers items when wrapped
+            display: "flex",
+            flexDirection: "row",
+            gap: "5px", // Reduced from 10px to 5px
+            marginTop: "20px", // Reduced from 35px to 20px
+            marginBottom: "75px",
+            width: "100%",
+            padding: "0 50px", // Add 50px padding on left and right
+            boxSizing: "border-box",
+            flexWrap: "wrap", // Allows wrapping on smaller screens
+            justifyContent: "center", // Centers items when wrapped
           }}
         >
-          <Button
+          <button
             onClick={() =>
               handleNOFOSelect(
                 `/landing-page/basePage/checklists/${encodeURIComponent(
@@ -632,56 +784,50 @@ export default function Welcome({ theme }) {
               )
             }
             disabled={!selectedDocument}
-            variant="primary"
+            style={selectedDocument ? buttonStyle : disabledButtonStyle}
+            onMouseEnter={buttonHoverStyle}
+            onMouseLeave={buttonLeaveStyle}
             aria-label="View Key Requirements"
           >
             View Key Requirements
-          </Button>
-
-          <Button
-            onClick={() => 
-            navigate (`/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(selectedDocument.value)}`)
+          </button>
+          <button
+            onClick={() =>
+              navigate(
+                `/chatbot/document-editor/${uuidv4()}?folder=${encodeURIComponent(
+                  selectedDocument.value
+                )}`
+              )
             }
             disabled={!selectedDocument}
-            variant="primary"
+            style={selectedDocument ? buttonStyle : disabledButtonStyle}
+            onMouseEnter={buttonHoverStyle}
+            onMouseLeave={buttonLeaveStyle}
+            aria-label="Start Document Editor"
+          >
+            Write Project Narrative
+          </button>
+          <button
+            onClick={() =>
+              navigate(
+                `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
+                  selectedDocument.value
+                )}`
+              )
+            }
+            disabled={!selectedDocument}
+            style={selectedDocument ? buttonStyle : disabledButtonStyle}
+            onMouseEnter={buttonHoverStyle}
+            onMouseLeave={buttonLeaveStyle}
             aria-label="Start Chat"
           >
-            Start Narrative Draft
-          </Button>
-
+            Ask AI
+          </button>
         </div>
 
         <ContentBox backgroundColor="#F6FCFF">
           <HistoryPanel />
         </ContentBox>
-
-        {isAdmin && (
-          <InfoBanner
-            title="Admin Panel"
-            description="Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it'll be ready for your review!"
-            buttonText="Upload New NOFO"
-            buttonAction={uploadNOFO}
-            backgroundColor="#ffffff"
-            mainTextColor="#006499"
-            bodyTextColor="#6c757d"
-            titleFontSize='24px'
-            buttonVariant="primary"
-          />
-        )}
-
-        {isAdmin && (
-          <InfoBanner
-            title="User Management"
-            description="Invite new users to access the application. They will receive an email with instructions to set up their account."
-            buttonText="Invite New User"
-            buttonAction={() => setShowInviteUserModal(true)}
-            backgroundColor="#ffffff"
-            mainTextColor="#006499"
-            bodyTextColor="#6c757d"
-            titleFontSize='24px'
-            buttonVariant="primary"
-          />
-        )}
 
         <div style={{ flex: 1 }} />
 
@@ -698,133 +844,35 @@ export default function Welcome({ theme }) {
           description="Help us make GrantWell better by sharing your thoughts and suggestions."
           buttonText="Open Feedback Form"
           buttonAction={() =>
-            window.open('https://forms.gle/M2PHgWTVVRrRubpc7', '_blank')
+            window.open("https://forms.gle/M2PHgWTVVRrRubpc7", "_blank")
           }
-          backgroundColor='#006499'
+          backgroundColor="#006499"
           // buttonColor="#FF9B00"
         />
 
         {/* Affiliations Section */}
         <InfoBanner
           title="Our Affiliations"
-          height= "125px"
+          height="125px"
           description=""
           imageSrc="/images/burnesLogo.png"
           imageAlt="Burnes Center Logo"
           titleAlign="left"
-          imagePosition='right'
+          imagePosition="right"
           imageWidth="200px"
         />
         <InfoBanner
-          title=''
-          height= "100px"
-          imageSrc='/images/creativeCommons.png'
-          imageAlt='Creative Commons'
+          title=""
+          height="100px"
+          imageSrc="/images/creativeCommons.png"
+          imageAlt="Creative Commons"
           description="This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License"
-          linkUrl={'https://creativecommons.org/licenses/by-sa/4.0/'}
-          backgroundColor='#000000'
-          titleFontSize='16px'
-          imagePosition='left'
+          linkUrl={"https://creativecommons.org/licenses/by-sa/4.0/"}
+          backgroundColor="#000000"
+          titleFontSize="16px"
+          imagePosition="left"
           imageWidth="75px"
         />
-
-        {/* User Invitation Modal */}
-        {showInviteUserModal && (
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              zIndex: 1000,
-              overflowY: 'auto',
-              padding: '20px'
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: 'white',
-                padding: '30px',
-                borderRadius: '8px',
-                width: '600px',
-                maxWidth: '90%',
-              }}
-            >
-              <h2 style={{ color: mainTextColor, marginTop: 0 }}>Invite New User</h2>
-              <p style={{ color: bodyTextColor }}>
-                Enter the email address of the user you want to invite. They will receive an email with instructions to set up their account.
-              </p>
-              
-              <div style={{ marginBottom: '20px' }}>
-                <label 
-                  htmlFor="email-input" 
-                  style={{ 
-                    display: 'block', 
-                    marginBottom: '5px', 
-                    color: mainTextColor,
-                    fontWeight: 'bold' 
-                  }}
-                >
-                  Email Address:
-                </label>
-                <input
-                  id="email-input"
-                  type="email"
-                  value={newUserEmail}
-                  onChange={(e) => setNewUserEmail(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc',
-                    fontSize: '16px',
-                  }}
-                  placeholder="user@example.com"
-                />
-              </div>
-              
-              {statusMessage && (
-                <div 
-                  style={{ 
-                    padding: '10px', 
-                    marginBottom: '15px',
-                    backgroundColor: inviteStatus === 'error' ? '#ffebee' : '#e8f5e9',
-                    color: inviteStatus === 'error' ? '#c62828' : '#2e7d32',
-                    borderRadius: '4px',
-                  }}
-                >
-                  {statusMessage}
-                </div>
-              )}
-              
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                <Button
-                  onClick={() => {
-                    setShowInviteUserModal(false);
-                    setNewUserEmail('');
-                    setInviteStatus('idle');
-                    setStatusMessage('');
-                  }}
-                  variant="link"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={inviteNewUser}
-                  variant="primary"
-                  disabled={inviteStatus === 'loading'}
-                >
-                  {inviteStatus === 'loading' ? 'Sending...' : 'Send Invitation'}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Floating chatbot button */}

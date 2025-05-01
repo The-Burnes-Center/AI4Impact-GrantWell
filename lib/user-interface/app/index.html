@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,9 +16,39 @@
     />
     <meta name="description" content="FFIO Grants Assistant" />
     <link rel="manifest" href="/manifest.json" />
-    <title>FFIO Grants Assistant</title>
+    <title>GrantWell: AI Grants Assistant</title>
+    <link rel="icon" href="/images/stateseal-color.png" type="image/png" />
+    <style>
+      /* Custom styles for title with state seal */
+      .title-with-seal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0;
+      }
+      .title-with-seal img {
+        height: 32px;
+        margin-right: 10px;
+      }
+    </style>
     <script>
       const global = window.global || window;
+
+      // Add state seal to document title area after page loads
+      window.addEventListener("DOMContentLoaded", () => {
+        const headerTitle = document.querySelector(
+          "header h1, header div, .app-title"
+        );
+        if (headerTitle) {
+          const titleContent = headerTitle.innerHTML;
+          const sealImg = document.createElement("img");
+          sealImg.src = "/images/stateseal-color.png";
+          sealImg.alt = "State Seal";
+          sealImg.style.height = "32px";
+          sealImg.style.marginRight = "10px";
+          headerTitle.prepend(sealImg);
+        }
+      });
     </script>
   </head>
   <body>

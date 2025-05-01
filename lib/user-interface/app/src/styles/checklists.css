@@ -1,18 +1,101 @@
+/* Global layout adjustments */
+body {
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Fix layout alignment */
+#root {
+  margin: 0;
+  padding: 0;
+}
+
+.awsui-app-layout__content {
+  padding-left: 0 !important;
+}
+
+.full-height-content {
+  height: auto;
+  overflow: visible;
+  position: relative;
+  width: 100%;
+}
+
+.checklist-container {
+  padding: 0 40px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Ensure content aligns to the left edge */
+.awsui-box {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Override Cloudscape default spacing */
+#app-content > div {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Improve tab styling */
+.awsui-tabs-container {
+  width: 100%;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.awsui-tabs-header-wrapper {
+  padding-left: 0;
+}
+
+.awsui-tabs-tab {
+  transition: all 0.2s ease;
+}
+
+.awsui-tabs-tab-active .awsui-tabs-tab-label {
+  font-weight: 600;
+}
+
+/* Fix content container */
+.awsui-tabs-content-container {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .custom-markdown {
-    font-size: 14px; /* Adjust font size */
-    line-height: 1.3; /* Adjust line spacing */
-    margin-bottom: 10px; /* Adjust spacing between list items */
-    color: #333; /* Optional: Adjust text color */
-    max-width: 950px; /* Adjust the line length */
-    /* margin-left: auto; /* Center the content horizontally */
-    /* margin-right: auto; /* Center the content horizontally */
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+
+.custom-markdown p {
+  margin-bottom: 16px;
+}
+
+.custom-markdown ul {
+  padding-left: 25px;
+  margin-bottom: 20px;
+}
+
+.custom-markdown li {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.custom-markdown strong {
+  font-weight: 600;
+  color: #006499;
+}
+
+/* Make content area full width and responsive */
+@media screen and (max-width: 768px) {
+  .full-height-content {
+    padding: 15px !important;
   }
-  
-  .custom-markdown ul {
-    padding-left: 30px; /* Add indentation for lists */
+
+  .checklist-container {
+    padding: 0 20px;
   }
-  
-  .custom-markdown li {
-    margin-bottom: 15px; /* Add spacing between list items */
-  }
-  
+}
