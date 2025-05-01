@@ -398,3 +398,173 @@
   font-size: 14px;
   margin-top: 5px;
 }
+
+/* Status message styles */
+.status-message {
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin: 15px 0;
+  font-size: 14px;
+}
+
+.status-message.error {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-left: 4px solid #d32f2f;
+}
+
+.status-message.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-left: 4px solid #2e7d32;
+}
+
+.status-message.loading {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-left: 4px solid #1976d2;
+}
+
+/* Invite User Modal - Styled like the Base Page version */
+.invite-user-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.invite-user-modal {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: modal-appear 0.3s ease-out;
+}
+
+.invite-user-modal h2 {
+  color: #006499;
+  margin-top: 0;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.invite-user-modal p {
+  color: #6c757d;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.invite-form-group {
+  margin-bottom: 20px;
+}
+
+.invite-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #006499;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.invite-form-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.invite-form-input:focus {
+  outline: none;
+  border-color: #006499;
+  box-shadow: 0 0 0 3px rgba(0, 100, 153, 0.1);
+}
+
+.invite-form-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.invite-status-message {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.invite-status-message.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border-left: 4px solid #c62828;
+}
+
+.invite-status-message.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-left: 4px solid #2e7d32;
+}
+
+.invite-status-message.loading {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-left: 4px solid #1976d2;
+}
+
+.invite-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.invite-cancel-button {
+  background-color: transparent;
+  color: #006499;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.invite-cancel-button:hover {
+  color: #004c73;
+}
+
+.invite-cancel-button:disabled {
+  color: #aaaaaa;
+  cursor: not-allowed;
+}
+
+.invite-submit-button {
+  background-color: #006499;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+.invite-submit-button:hover {
+  background-color: #005380;
+}
+
+.invite-submit-button:disabled,
+.invite-submit-button.loading {
+  background-color: #b3d4e6;
+  cursor: not-allowed;
+}

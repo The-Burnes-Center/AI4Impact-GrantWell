@@ -193,4 +193,38 @@ export class LandingPageClient {
       throw error;
     }
   }
+
+  // Gets the list of users from Cognito
+  async getUsers() {
+    try {
+      console.log("getUsers: Getting authentication token");
+      const token = await Utils.authenticate();
+
+      const url = `${this.baseUrl}/user-management/list-users`;
+      console.log("getUsers: Making API request to:", url);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      console.log("getUsers: Received response status:", response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("getUsers: Error response:", errorText);
+        throw new Error(`Error: ${response.status} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log("getUsers: Successfully parsed response data");
+      return data;
+    } catch (error) {
+      console.error("Error retrieving users:", error);
+      throw error;
+    }
+  }
 }

@@ -13,12 +13,6 @@ export default function Welcome({ theme }) {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
-  const [showInviteUserModal, setShowInviteUserModal] = useState(false);
-  const [newUserEmail, setNewUserEmail] = useState("");
-  const [inviteStatus, setInviteStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
-  const [statusMessage, setStatusMessage] = useState("");
   const [userName, setUserName] = useState<string>(""); // For storing user's name
 
   // **Context and Navigation**
@@ -245,44 +239,6 @@ export default function Welcome({ theme }) {
     navigate(href);
   };
 
-  // Upload a new NOFO (Admin functionality)
-  const uploadNOFO = async () => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-
-    fileInput.onchange = async (event) => {
-      const file = fileInput.files[0];
-
-      if (!file) return;
-
-      try {
-        const documentName = file.name.split(".").slice(0, -1).join("");
-        let newFilePath;
-        if (file.type === "text/plain") {
-          newFilePath = `${documentName}/NOFO-File-TXT`;
-        } else if (file.type === "application/pdf") {
-          newFilePath = `${documentName}/NOFO-File-PDF`;
-        } else {
-          newFilePath = `${documentName}/NOFO-File`;
-        }
-
-        const signedUrl = await apiClient.landingPage.getUploadURL(
-          newFilePath,
-          file.type
-        );
-        await apiClient.landingPage.uploadFileToS3(signedUrl, file);
-
-        alert("File uploaded successfully!");
-        await getNOFOListFromS3();
-      } catch (error) {
-        console.error("Upload failed:", error);
-        alert("Failed to upload the file.");
-      }
-    };
-
-    fileInput.click();
-  };
-
   // Navigate to checklists
   const goToChecklists = () => {
     if (selectedDocument) {
@@ -291,42 +247,6 @@ export default function Welcome({ theme }) {
         `/landing-page/basePage/checklists/${encodeURIComponent(
           summaryFileKey
         )}`
-      );
-    }
-  };
-
-  // Add this function with your other functions
-  const inviteNewUser = async () => {
-    if (!newUserEmail || !newUserEmail.includes("@")) {
-      setStatusMessage("Please enter a valid email address");
-      setInviteStatus("error");
-      return;
-    }
-
-    setInviteStatus("loading");
-    setStatusMessage("");
-
-    try {
-      // Call the API to create a new user without a custom message
-      const result = await apiClient.landingPage.inviteUser(newUserEmail);
-
-      if (result.success) {
-        setInviteStatus("success");
-        setStatusMessage("User invitation sent successfully!");
-        // Reset form after short delay
-        setTimeout(() => {
-          setNewUserEmail("");
-          setInviteStatus("idle");
-          setShowInviteUserModal(false);
-        }, 2000);
-      } else {
-        throw new Error(result.message || "Failed to invite user");
-      }
-    } catch (error) {
-      console.error("Error inviting user:", error);
-      setInviteStatus("error");
-      setStatusMessage(
-        error.message || "Failed to invite user. Please try again."
       );
     }
   };
@@ -857,7 +777,7 @@ export default function Welcome({ theme }) {
             onMouseLeave={buttonLeaveStyle}
             aria-label="Start Document Editor"
           >
-            Start Narrative Draft
+            Write Project Narrative
           </button>
           <button
             onClick={() =>
@@ -873,41 +793,13 @@ export default function Welcome({ theme }) {
             onMouseLeave={buttonLeaveStyle}
             aria-label="Start Chat"
           >
-            Go to Chatbot
+            Ask AI
           </button>
         </div>
 
         <ContentBox backgroundColor="#F6FCFF">
           <HistoryPanel />
         </ContentBox>
-
-        {isAdmin && (
-          <InfoBanner
-            title="Admin Panel"
-            description="Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it'll be ready for your review!"
-            buttonText="Upload New NOFO"
-            buttonAction={uploadNOFO}
-            backgroundColor="#ffffff"
-            mainTextColor="#006499"
-            bodyTextColor="#6c757d"
-            titleFontSize="24px"
-            buttonVariant="primary"
-          />
-        )}
-
-        {isAdmin && (
-          <InfoBanner
-            title="User Management"
-            description="Invite new users to access the application. They will receive an email with instructions to set up their account."
-            buttonText="Invite New User"
-            buttonAction={() => setShowInviteUserModal(true)}
-            backgroundColor="#ffffff"
-            mainTextColor="#006499"
-            bodyTextColor="#6c757d"
-            titleFontSize="24px"
-            buttonVariant="primary"
-          />
-        )}
 
         <div style={{ flex: 1 }} />
 
@@ -953,127 +845,6 @@ export default function Welcome({ theme }) {
           imagePosition="left"
           imageWidth="75px"
         />
-
-        {/* User Invitation Modal */}
-        {showInviteUserModal && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 1000,
-              overflowY: "auto",
-              padding: "20px",
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: "white",
-                padding: "30px",
-                borderRadius: "8px",
-                width: "600px",
-                maxWidth: "90%",
-              }}
-            >
-              <h2 style={{ color: mainTextColor, marginTop: 0 }}>
-                Invite New User
-              </h2>
-              <p style={{ color: bodyTextColor }}>
-                Enter the email address of the user you want to invite. They
-                will receive an email with instructions to set up their account.
-              </p>
-
-              <div style={{ marginBottom: "20px" }}>
-                <label
-                  htmlFor="email-input"
-                  style={{
-                    display: "block",
-                    marginBottom: "5px",
-                    color: mainTextColor,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Email Address:
-                </label>
-                <input
-                  id="email-input"
-                  type="email"
-                  value={newUserEmail}
-                  onChange={(e) => setNewUserEmail(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    borderRadius: "4px",
-                    border: "1px solid #ccc",
-                    fontSize: "16px",
-                  }}
-                  placeholder="user@example.com"
-                />
-              </div>
-
-              {statusMessage && (
-                <div
-                  style={{
-                    padding: "10px",
-                    marginBottom: "15px",
-                    backgroundColor:
-                      inviteStatus === "error" ? "#ffebee" : "#e8f5e9",
-                    color: inviteStatus === "error" ? "#c62828" : "#2e7d32",
-                    borderRadius: "4px",
-                  }}
-                >
-                  {statusMessage}
-                </div>
-              )}
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "10px",
-                }}
-              >
-                <button
-                  onClick={() => {
-                    setShowInviteUserModal(false);
-                    setNewUserEmail("");
-                    setInviteStatus("idle");
-                    setStatusMessage("");
-                  }}
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "#006499",
-                    border: "none",
-                    padding: "10px 15px",
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={inviteNewUser}
-                  style={
-                    inviteStatus === "loading"
-                      ? disabledButtonStyle
-                      : buttonStyle
-                  }
-                  disabled={inviteStatus === "loading"}
-                >
-                  {inviteStatus === "loading"
-                    ? "Sending..."
-                    : "Send Invitation"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -3,58 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
+import { NOFOsTab, NOFO, Modal } from "./NOFOsTab";
+import { UsersTab, User } from "./UsersTab";
 import "./styles.css";
 
-// Types
-interface NOFO {
-  id: number;
-  name: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  lastActive: string;
-}
-
-// Status badge component
-const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
-  const getStatusColor = () => {
-    switch (status.toLowerCase()) {
-      case "released":
-        return "#9FD6A3"; // Light green
-      case "expired":
-        return "#E98989"; // Light red
-      case "archived":
-        return "#D9D9D9"; // Light gray
-      case "pending":
-        return "#E5D77C"; // Light yellow
-      default:
-        return "#D9D9D9"; // Default gray
-    }
-  };
-
-  return (
-    <div
-      style={{
-        backgroundColor: getStatusColor(),
-        padding: "6px 12px",
-        borderRadius: "20px",
-        display: "inline-block",
-        textAlign: "center",
-        minWidth: "100px",
-        fontWeight: "500",
-      }}
-    >
-      {status}
-    </div>
-  );
-};
-
-// Row actions menu
-const RowActions: React.FC<{
+/**
+ * Row actions menu component - provides edit/delete functionality
+ */
+export const RowActions: React.FC<{
   onEdit: () => void;
   onDelete: () => void;
 }> = ({ onEdit, onDelete }) => {
@@ -103,51 +59,33 @@ const RowActions: React.FC<{
   );
 };
 
-// Modal component
-const Modal: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}> = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{title}</h2>
-          <button className="modal-close-button" onClick={onClose}>
-            ×
-          </button>
-        </div>
-        <div className="modal-body">{children}</div>
-      </div>
-    </div>
-  );
-};
-
+/**
+ * Main Dashboard component
+ */
 const Dashboard: React.FC = () => {
-  // State
+  // Tab state
   const [activeTab, setActiveTab] = useState("nofos");
+
+  // Data state
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // UI state
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [usersLoading, setUsersLoading] = useState(false);
 
-  // Edit NOFO state
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedNofo, setSelectedNofo] = useState<NOFO | null>(null);
-  const [editedNofoName, setEditedNofoName] = useState("");
+  // New state for upload NOFO and invite user modals
+  const [uploadNofoModalOpen, setUploadNofoModalOpen] = useState(false);
+  const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
 
   // Hooks
   const navigate = useNavigate();
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
 
-  // Check if user is admin
+  // Check admin permissions on component mount
   useEffect(() => {
     const checkAdmin = async () => {
       try {
@@ -176,163 +114,125 @@ const Dashboard: React.FC = () => {
     checkAdmin();
   }, [navigate]);
 
-  // Fetch data
+  // Fetch NOFOs data
   useEffect(() => {
     if (!isAdmin) return;
 
-    const fetchData = async () => {
+    const fetchNofos = async () => {
       try {
-        // Fetch NOFOs
+        // Fetch NOFOs from API
         const nofoResult = await apiClient.landingPage.getNOFOs();
 
-        // Convert to simple format
+        // Convert to required format
         const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
           id: index,
           name: nofo,
         }));
 
         setNofos(nofoData);
-
-        // Mock users for now
-        setUsers([
-          {
-            id: 1,
-            name: "John Smith",
-            email: "john.smith@example.com",
-            role: "Admin",
-            lastActive: "2 days ago",
-          },
-          {
-            id: 2,
-            name: "Sarah Johnson",
-            email: "sarah.j@example.com",
-            role: "Editor",
-            lastActive: "5 hours ago",
-          },
-          {
-            id: 3,
-            name: "Michael Wong",
-            email: "m.wong@example.com",
-            role: "Viewer",
-            lastActive: "1 week ago",
-          },
-          {
-            id: 4,
-            name: "Jessica Chen",
-            email: "jchen@example.com",
-            role: "Editor",
-            lastActive: "Just now",
-          },
-        ]);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching NOFOs:", error);
       }
     };
 
-    fetchData();
+    fetchNofos();
   }, [isAdmin, apiClient.landingPage]);
 
-  // Filter data based on search query
-  const filteredNofos = nofos.filter((nofo) =>
-    nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // NOFO Handlers
-  const handleEditNofo = (nofo: NOFO) => {
-    setSelectedNofo(nofo);
-    setEditedNofoName(nofo.name);
-    setEditModalOpen(true);
-  };
-
-  const handleDeleteNofo = (nofo: NOFO) => {
-    setSelectedNofo(nofo);
-    setDeleteModalOpen(true);
-  };
-
-  const confirmEditNofo = async () => {
-    if (!selectedNofo || !editedNofoName.trim()) return;
-
+  // Fetch Users data
+  const fetchUsers = async () => {
     try {
-      // Call the API to update the NOFO name
-      await apiClient.landingPage.renameNOFO(
-        selectedNofo.name,
-        editedNofoName.trim()
-      );
-
-      // Update local state after successful API call
-      setNofos(
-        nofos.map((nofo) =>
-          nofo.id === selectedNofo.id
-            ? { ...nofo, name: editedNofoName.trim() }
-            : nofo
-        )
-      );
-
-      // Show success notification
-      alert(
-        `NOFO renamed successfully from "${selectedNofo.name}" to "${editedNofoName}"`
-      );
-
-      // Close the modal
-      setEditModalOpen(false);
-      setSelectedNofo(null);
-      setEditedNofoName("");
-    } catch (error) {
-      console.error("Error updating NOFO:", error);
-      alert("Failed to rename NOFO. Please try again.");
+      setUsersLoading(true);
+      // Try to get users from the API
+      try {
+        const result = await apiClient.landingPage.getUsers();
+        if (result && result.success && Array.isArray(result.users)) {
+          setUsers(result.users);
+        } else {
+          // If API call fails or returns unexpected data, fall back to mock data
+          useMockUsers();
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        useMockUsers();
+      }
+    } finally {
+      setUsersLoading(false);
     }
   };
 
-  const confirmDeleteNofo = async () => {
-    if (!selectedNofo) return;
-
-    try {
-      // Call the API to delete the NOFO
-      await apiClient.landingPage.deleteNOFO(selectedNofo.name);
-
-      // Update local state after successful API call
-      setNofos(nofos.filter((nofo) => nofo.id !== selectedNofo.id));
-
-      // Show success notification
-      alert(`NOFO "${selectedNofo.name}" deleted successfully`);
-
-      // Close the modal
-      setDeleteModalOpen(false);
-      setSelectedNofo(null);
-    } catch (error) {
-      console.error("Error deleting NOFO:", error);
-      alert("Failed to delete NOFO. Please try again.");
-    }
+  // If API call fails, use mock data
+  const useMockUsers = () => {
+    console.warn("Using mock user data due to API failure");
+    setUsers([
+      {
+        id: 1,
+        name: "John Smith",
+        email: "john.smith@example.com",
+        role: "Admin",
+        lastActive: "2 days ago",
+      },
+      {
+        id: 2,
+        name: "Sarah Johnson",
+        email: "sarah.j@example.com",
+        role: "Editor",
+        lastActive: "5 hours ago",
+      },
+      {
+        id: 3,
+        name: "Michael Wong",
+        email: "m.wong@example.com",
+        role: "Viewer",
+        lastActive: "1 week ago",
+      },
+      {
+        id: 4,
+        name: "Jessica Chen",
+        email: "jchen@example.com",
+        role: "Editor",
+        lastActive: "Just now",
+      },
+    ]);
   };
 
-  // Other Handlers
+  // Fetch users when the users tab is activated
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    if (activeTab === "users") {
+      fetchUsers();
+    }
+  }, [activeTab, isAdmin]);
+
+  // Handles when a user is invited successfully
+  const handleUserInvited = (email: string) => {
+    // After successful invitation, refresh the users list
+    fetchUsers();
+  };
+
+  // Upload NOFO handler
   const handleUploadNofo = () => {
-    alert("Upload NOFO functionality would open here");
+    setUploadNofoModalOpen(true);
   };
 
+  // Invite user handler
   const handleInviteUser = () => {
-    alert("Invite user functionality would open here");
+    setInviteUserModalOpen(true);
   };
 
-  // Loading state
+  // Show loading state
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
 
-  // Access control
+  // Redirect happens in useEffect if not admin
   if (!isAdmin) {
-    return null; // Will redirect in useEffect
+    return null;
   }
 
-  // Render
   return (
     <div className="dashboard-container">
+      {/* Header */}
       <div className="dashboard-header">
         <h1>Admin Dashboard</h1>
         <div className="dashboard-actions">
@@ -347,6 +247,7 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* Tabs */}
       <div className="tab-controls">
         <button
           className={`tab-button ${activeTab === "nofos" ? "active" : ""}`}
@@ -362,6 +263,7 @@ const Dashboard: React.FC = () => {
         </button>
       </div>
 
+      {/* Search bar */}
       <div className="search-container">
         <div className="search-input-wrapper">
           <input
@@ -401,130 +303,28 @@ const Dashboard: React.FC = () => {
         </button>
       </div>
 
+      {/* Render NOFOs Tab or Users Tab based on activeTab */}
       {activeTab === "nofos" ? (
-        <div className="data-table">
-          <div className="table-header">
-            <div className="header-cell nofo-name">NOFO Name</div>
-            <div className="header-cell">Agency</div>
-            <div className="header-cell">Created</div>
-            <div className="header-cell">Current Status</div>
-            <div className="header-cell">Deadline</div>
-            <div className="header-cell actions-cell"></div>
-          </div>
-          {filteredNofos.length > 0 ? (
-            filteredNofos.map((nofo) => (
-              <div className="table-row" key={nofo.id}>
-                <div className="row-cell nofo-name">{nofo.name}</div>
-                <div className="row-cell"></div>
-                <div className="row-cell"></div>
-                <div className="row-cell"></div>
-                <div className="row-cell"></div>
-                <div className="row-cell actions-cell">
-                  <RowActions
-                    onEdit={() => handleEditNofo(nofo)}
-                    onDelete={() => handleDeleteNofo(nofo)}
-                  />
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="no-data">No NOFOs found</div>
-          )}
-        </div>
+        <NOFOsTab
+          nofos={nofos}
+          searchQuery={searchQuery}
+          apiClient={apiClient}
+          setNofos={setNofos}
+        />
       ) : (
-        <div className="data-table">
-          <div className="table-header">
-            <div className="header-cell">Name</div>
-            <div className="header-cell">Email</div>
-            <div className="header-cell">Role</div>
-            <div className="header-cell">Last Active</div>
-            <div className="header-cell actions-cell"></div>
-          </div>
-          {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <div className="table-row" key={user.id}>
-                <div className="row-cell">{user.name}</div>
-                <div className="row-cell">{user.email}</div>
-                <div className="row-cell">{user.role}</div>
-                <div className="row-cell">{user.lastActive}</div>
-                <div className="row-cell actions-cell">
-                  <RowActions
-                    onEdit={() => alert(`Edit ${user.name}`)}
-                    onDelete={() => alert(`Delete ${user.name}`)}
-                  />
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="no-data">No users found</div>
-          )}
-        </div>
+        <UsersTab
+          users={users}
+          searchQuery={searchQuery}
+          apiClient={apiClient}
+          onUserInvited={handleUserInvited}
+          inviteUserModalOpen={inviteUserModalOpen}
+          setInviteUserModalOpen={setInviteUserModalOpen}
+          isLoading={usersLoading}
+        />
       )}
-
-      {/* Edit NOFO Modal */}
-      <Modal
-        isOpen={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
-        title="Edit NOFO"
-      >
-        <div className="modal-form">
-          <div className="form-group">
-            <label htmlFor="nofo-name">NOFO Name</label>
-            <input
-              type="text"
-              id="nofo-name"
-              value={editedNofoName}
-              onChange={(e) => setEditedNofoName(e.target.value)}
-              className="form-input"
-            />
-          </div>
-          <div className="modal-actions">
-            <button
-              className="modal-button secondary"
-              onClick={() => setEditModalOpen(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="modal-button primary"
-              onClick={confirmEditNofo}
-              disabled={
-                !editedNofoName.trim() || editedNofoName === selectedNofo?.name
-              }
-            >
-              Save Changes
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Delete NOFO Modal */}
-      <Modal
-        isOpen={deleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
-        title="Delete NOFO"
-      >
-        <div className="modal-form">
-          <p>
-            Are you sure you want to delete{" "}
-            <strong>{selectedNofo?.name}</strong>?
-          </p>
-          <p className="warning-text">This action cannot be undone.</p>
-          <div className="modal-actions">
-            <button
-              className="modal-button secondary"
-              onClick={() => setDeleteModalOpen(false)}
-            >
-              Cancel
-            </button>
-            <button className="modal-button danger" onClick={confirmDeleteNofo}>
-              Delete Permanently
-            </button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 };
 
 export default Dashboard;
+export { Modal } from "./NOFOsTab";
