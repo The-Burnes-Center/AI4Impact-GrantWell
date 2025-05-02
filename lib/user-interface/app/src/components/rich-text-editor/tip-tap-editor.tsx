@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Heading from '@tiptap/extension-heading';
+import Heading, { Level } from '@tiptap/extension-heading';
 import BulletList from '@tiptap/extension-bullet-list';
 import ListItem from '@tiptap/extension-list-item';
 import Bold from '@tiptap/extension-bold';
@@ -38,7 +38,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
     },
   });
 
-  const toggleHeading = useCallback((level: number) => {
+  const toggleHeading = useCallback((level: Level) => {
     editor?.chain().focus().toggleHeading({ level }).run();
   }, [editor]);
 
@@ -85,22 +85,25 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
           </ButtonDropdown>
           
           <Button
-            iconName="bold"
             variant={editor.isActive('bold') ? 'primary' : 'normal'}
             onClick={toggleBold}
-          />
+          >
+            B
+          </Button>
           
           <Button
-            iconName="italic"
             variant={editor.isActive('italic') ? 'primary' : 'normal'}
             onClick={toggleItalic}
-          />
+          >
+            I
+          </Button>
           
           <Button
-            iconName="list-ul"
             variant={editor.isActive('bulletList') ? 'primary' : 'normal'}
             onClick={toggleBulletList}
-          />
+          >
+            •
+          </Button>
           
           <Button
             variant="primary"

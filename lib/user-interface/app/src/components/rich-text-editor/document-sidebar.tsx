@@ -19,7 +19,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
   onSectionChange 
 }) => {
   const items = sections.map(section => ({
-    type: 'link',
+    type: "link" as const,
     text: section.title,
     href: `#${section.id}`,
     info: section.isComplete ? '✓' : '',

@@ -447,7 +447,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           <Button 
             variant="link" 
             onClick={() => navigate(`/chatbot/document-editor/${props.session.id}?folder=${encodeURIComponent(props.documentIdentifier)}`)}
-            iconName="file-text"
+            iconName="file"
           >
             Open Document Editor
           </Button>

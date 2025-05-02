@@ -903,6 +903,6 @@ export default function Welcome({ theme }) {
         isOpen={isChatbotOpen}
         onClose={() => setIsChatbotOpen(false)}
       />
-    </Container>
+    </div>
   );
 }
