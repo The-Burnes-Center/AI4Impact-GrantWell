@@ -28,6 +28,7 @@ import * as path from "path";
 
 export interface ChatbotAPIProps {
   readonly authentication: AuthorizationStack; 
+}
 
 
 export class ChatBotApi extends Construct {
