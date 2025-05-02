@@ -118,7 +118,7 @@ export class UserInterface extends Construct {
       sources: [asset, exportsAsset],
       destinationBucket: websiteBucket,
       distribution: distribution,
-      memoryLimit: 1024,
+      memoryLimit: 2048,
       retainOnDelete: false
     });
 
