@@ -46,13 +46,6 @@ export default function ChatMessageSimple({ message, onGrantClick, onStartChatCl
   const { type, content, metadata } = message;
   const isAI = type === 'ai';
 
-  // Function to get a badge color based on the match score
-  const getMatchBadgeColor = (score: number): "blue" | "green" | "grey" | "red" => {
-    if (score >= 90) return "green";
-    if (score >= 70) return "blue";
-    return "grey";
-  };
-
   return (
     <div style={{ 
       display: 'flex', 
@@ -88,9 +81,9 @@ export default function ChatMessageSimple({ message, onGrantClick, onStartChatCl
                         alignItems: 'center' 
                       }}>
                         <div>{item.name}</div>
-                        <Badge color={getMatchBadgeColor(item.matchScore)}>
-                          {item.matchScore}% Match
-                        </Badge>
+                        {item.matchScore >= 80 && (
+                          <Badge color="blue">Recommended</Badge>
+                        )}
                       </div>
                     ),
                     sections: [

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ApiClient } from "../../common/api-client/api-client";
-import { RowActions, Modal } from "./index";
+import { RowActions } from "./index";
+import { Modal } from "./NOFOsTab";
 
 export interface User {
   id: number;
@@ -14,20 +15,24 @@ interface UsersTabProps {
   users: User[];
   searchQuery: string;
   apiClient: ApiClient;
+  setUsers?: React.Dispatch<React.SetStateAction<User[]>>;
   onUserInvited?: (email: string) => void;
   inviteUserModalOpen?: boolean;
   setInviteUserModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading?: boolean;
+  usersLoading?: boolean;
 }
 
 export const UsersTab: React.FC<UsersTabProps> = ({
   users,
   searchQuery,
   apiClient,
+  setUsers,
   onUserInvited,
   inviteUserModalOpen: externalInviteModalOpen,
   setInviteUserModalOpen: externalSetInviteModalOpen,
   isLoading = false,
+  usersLoading = false,
 }) => {
   // Use internal state if external state is not provided
   const [internalInviteUserModalOpen, setInternalInviteUserModalOpen] =
@@ -98,7 +103,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
 
   return (
     <>
-      {isLoading ? (
+      {usersLoading ? (
         <div className="loading-users">Loading users...</div>
       ) : (
         <div className="data-table">

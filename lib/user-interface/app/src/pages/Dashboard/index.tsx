@@ -220,6 +220,27 @@ const Dashboard: React.FC = () => {
     setInviteUserModalOpen(true);
   };
 
+  // Get button text and action based on active tab
+  const getActionButtonProps = () => {
+    switch (activeTab) {
+      case "nofos":
+        return {
+          text: "Upload NOFO",
+          action: handleUploadNofo
+        };
+      case "users":
+        return {
+          text: "Invite User",
+          action: handleInviteUser
+        };
+      default:
+        return {
+          text: "Action",
+          action: () => {}
+        };
+    }
+  };
+
   // Show loading state
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -230,6 +251,8 @@ const Dashboard: React.FC = () => {
     return null;
   }
 
+  const actionButton = getActionButtonProps();
+
   return (
     <div className="dashboard-container">
       {/* Header */}
@@ -238,11 +261,9 @@ const Dashboard: React.FC = () => {
         <div className="dashboard-actions">
           <button
             className="upload-button"
-            onClick={
-              activeTab === "nofos" ? handleUploadNofo : handleInviteUser
-            }
+            onClick={actionButton.action}
           >
-            {activeTab === "nofos" ? "Upload NOFO" : "Invite User"}
+            {actionButton.text}
           </button>
         </div>
       </div>
@@ -266,26 +287,27 @@ const Dashboard: React.FC = () => {
       {/* Search bar */}
       <div className="search-container">
         <div className="search-input-wrapper">
+          <span className="search-icon">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
+                fill="#666666"
+              />
+            </svg>
+          </span>
           <input
             type="text"
-            placeholder="Search..."
+            className="search-input"
+            placeholder={`Search ${activeTab === "nofos" ? "NOFOs" : "users"}...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
           />
-          <svg
-            className="search-icon"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
-              fill="#666"
-            />
-          </svg>
         </div>
         <button className="filter-button">
           <svg
@@ -297,29 +319,30 @@ const Dashboard: React.FC = () => {
           >
             <path
               d="M4.25 5.66C4.35 5.79 9.99 12.99 9.99 12.99V19C9.99 19.55 10.44 20 11 20H13.01C13.56 20 14.02 19.55 14.02 19V12.98C14.02 12.98 19.51 5.96 19.77 5.64C20.03 5.32 20 5 20 5C20 4.45 19.55 4 18.99 4H5.01C4.4 4 4 4.48 4 5C4 5.2 4.06 5.44 4.25 5.66Z"
-              fill="#333"
+              fill="#666666"
             />
           </svg>
         </button>
       </div>
 
-      {/* Render NOFOs Tab or Users Tab based on activeTab */}
-      {activeTab === "nofos" ? (
+      {/* Tab Content */}
+      {activeTab === "nofos" && (
         <NOFOsTab
           nofos={nofos}
           searchQuery={searchQuery}
           apiClient={apiClient}
           setNofos={setNofos}
         />
-      ) : (
+      )}
+
+      {activeTab === "users" && (
         <UsersTab
           users={users}
           searchQuery={searchQuery}
           apiClient={apiClient}
+          setUsers={setUsers}
+          usersLoading={usersLoading}
           onUserInvited={handleUserInvited}
-          inviteUserModalOpen={inviteUserModalOpen}
-          setInviteUserModalOpen={setInviteUserModalOpen}
-          isLoading={usersLoading}
         />
       )}
     </div>

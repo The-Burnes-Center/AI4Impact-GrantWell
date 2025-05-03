@@ -1,17 +1,11 @@
 import React, { useContext, useState, useEffect, CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
-import {
-  Select,
-  Container,
-  Link,
-  Button
-} from '@cloudscape-design/components';
 import { ApiClient } from '../../common/api-client/api-client';
 import { AppContext } from '../../common/app-context';
 import { v4 as uuidv4 } from 'uuid';
 import '../styles/base-page.css';
-import RecommendationChatbot from '../../components/recommendation-chatbot/RecommendationChatbot';
+import IntegratedSearchBar from '../../components/search/IntegratedSearchBar';
 
 export default function Welcome({ theme }) {
   // **State Variables**
@@ -20,12 +14,6 @@ export default function Welcome({ theme }) {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
-  const [userName, setUserName] = useState<string>(""); // For storing user's name
-  const [showInviteUserModal, setShowInviteUserModal] = useState(false);
-  const [newUserEmail, setNewUserEmail] = useState('');
-  const [inviteStatus, setInviteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [statusMessage, setStatusMessage] = useState('');
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -33,23 +21,6 @@ export default function Welcome({ theme }) {
   const navigate = useNavigate();
 
   // **Styles**
-  const headerContainerStyle: CSSProperties = {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "20px",
-    flexWrap: "wrap", // Wraps on smaller screens
-    marginBottom: "40px",
-  };
-
-  const logoTitleStyle: CSSProperties = {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: "15px",
-  };
-
   const logoStyle: CSSProperties = {
     width: "100px",
     height: "100px",
@@ -58,46 +29,6 @@ export default function Welcome({ theme }) {
   const mainTextColor = "#006499";
   const bodyTextColor = "#6c757d";
   const primaryBlue = "#0073bb"; // Match header blue color
-
-  const floatingButtonStyle: CSSProperties = {
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-    width: '60px',
-    height: '60px',
-    borderRadius: '50%',
-    backgroundColor: '#0073BB',
-    border: 'none',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-    transition: 'transform 0.2s, background-color 0.2s',
-    zIndex: 1000,
-  };
-
-  const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(selectedDocument)}`;
-
-  // **Admin Section Styles**
-  const adminContainerStyle: CSSProperties = {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    marginBottom: "50px",
-    marginLeft: "40px",
-    flexWrap: "wrap", // Allows wrapping on smaller screens
-  };
-
-  const adminTextStyle: CSSProperties = {
-    fontSize: "16px",
-    fontStyle: "italic",
-    color: "#555",
-    margin: "0 25px 10px 0", // Adjust margins for responsiveness
-    textAlign: "left",
-    width: "100%",
-    maxWidth: "400px",
-  };
 
   const containerStyle: CSSProperties = {
     maxWidth: "950px",
@@ -108,41 +39,6 @@ export default function Welcome({ theme }) {
     display: "flex",
     flexDirection: "column",
     paddingBottom: "0",
-  };
-
-  // Modern search bar styles
-  const searchContainerStyle: CSSProperties = {
-    position: "relative",
-    maxWidth: "650px",
-    width: "100%",
-    margin: "0 auto",
-  };
-
-  const searchIconStyle: CSSProperties = {
-    position: "absolute",
-    left: "15px",
-    top: "50%",
-    transform: "translateY(-50%)",
-    color: "#666",
-    pointerEvents: "none",
-    zIndex: 1,
-  };
-
-  const selectStyle: CSSProperties = {
-    width: "100%",
-    padding: "14px 20px 14px 45px",
-    fontSize: "16px",
-    borderRadius: "25px", // More oval shape
-    border: "1px solid #e0e0e0",
-    boxSizing: "border-box",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-    appearance: "none",
-    backgroundImage:
-      'url(\'data:image/svg+xml;utf8,<svg fill="%23666" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>\')',
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "right 15px center",
-    transition: "all 0.2s ease",
-    backgroundColor: "#ffffff",
   };
 
   const buttonStyle: CSSProperties = {
@@ -199,11 +95,6 @@ export default function Welcome({ theme }) {
         if (adminRole && adminRole.includes("Admin")) {
           setIsAdmin(true); // Set admin status to true if user has admin role
         }
-
-        // Get user's name
-        const name = result?.signInUserSession?.idToken?.payload?.name;
-        const email = result?.signInUserSession?.idToken?.payload?.email;
-        setUserName(name || email?.split("@")[0] || "User"); // Use name, first part of email, or "User"
       } catch (e) {
         console.error("Error checking admin status:", e);
       }
@@ -248,35 +139,23 @@ export default function Welcome({ theme }) {
     setLoading(false);
   };
 
-  // Handle NOFO selection
+  // Handle selecting a NOFO document
   const handleNOFOSelect = (href, selectedNOFO) => {
-    const now = new Date().toLocaleString();
+    // Update recently viewed NOFOs in localStorage
     const updatedHistory = [
-      {
-        label: selectedNOFO.label,
-        value: selectedNOFO.value,
-        lastViewed: now,
-      },
+      selectedNOFO,
       ...recentlyViewedNOFOs.filter(
-        (nofo) => nofo.value !== selectedNOFO.value
+        (item) => item.value !== selectedNOFO.value
       ),
-    ].slice(0, 3);
-
+    ].slice(0, 3); // Keep only the 3 most recent items
     setRecentlyViewedNOFOs(updatedHistory);
-    localStorage.setItem("recentlyViewedNOFOs", JSON.stringify(updatedHistory));
-    navigate(href);
-  };
+    localStorage.setItem(
+      "recentlyViewedNOFOs",
+      JSON.stringify(updatedHistory)
+    );
 
-  // Navigate to checklists
-  const goToChecklists = () => {
-    if (selectedDocument) {
-      const summaryFileKey = `${selectedDocument.value}`;
-      navigate(
-        `/landing-page/basePage/checklists/${encodeURIComponent(
-          summaryFileKey
-        )}`
-      );
-    }
+    // Navigate to the selected NOFO
+    navigate(href);
   };
 
   // **Components**
@@ -393,7 +272,6 @@ export default function Welcome({ theme }) {
     backgroundColor = "#06293d",
     mainTextColor = "#ffffff",
     bodyTextColor = "#ffffff",
-    // buttonColor = '#FF9B00',
     titleFontSize = "24px",
     buttonVariant = "normal", // Default to "normal"
     linkUrl = null,
@@ -712,61 +590,23 @@ export default function Welcome({ theme }) {
             fontWeight: "500",
           }}
         >
-          Hello {userName}, please start by selecting a NOFO
+          Hello, find grants and funding opportunities
         </div>
 
-        <div
-          style={{
-            maxWidth: "650px", // Limit the maximum width of the Select component
-            width: "100%", // Allow it to shrink for smaller screens
-            margin: "0 auto", // Center it horizontally
-          }}
-        >
-          <div style={searchContainerStyle}>
-            <div style={searchIconStyle}>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
-                  fill="#666666"
-                />
-              </svg>
-            </div>
-            <select
-              value={selectedDocument?.value || ""}
-              onChange={(e) => {
-                const selected = documents.find(
-                  (doc) => doc.value === e.target.value
-                );
-                setSelectedDocument(selected || null);
-              }}
-              style={selectStyle}
-              aria-label="Select a NOFO document"
-            >
-              <option value="" disabled selected={!selectedDocument}>
-                Find a Notice of Funding Opportunity Document (NOFO)
-              </option>
-              {documents.map((doc, index) => (
-                <option key={index} value={doc.value}>
-                  {doc.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        {/* New integrated search bar */}
+        <IntegratedSearchBar 
+          documents={documents}
+          onSelectDocument={setSelectedDocument}
+          isLoading={loading}
+        />
 
         <div
           style={{
             display: "flex",
             flexDirection: "row",
             gap: "5px", // Reduced from 10px to 5px
-            marginTop: "20px", // Reduced from 35px to 20px
-            marginBottom: "75px",
+            marginTop: "40px", // Increased from 20px to 40px for better spacing
+            marginBottom: "45px",
             width: "100%",
             padding: "0 50px", // Add 50px padding on left and right
             boxSizing: "border-box",
@@ -836,7 +676,6 @@ export default function Welcome({ theme }) {
           <ResourcesPanel />
         </ContentBox>
 
-        {/* </SpaceBetween> */}
         {/* Feedback Section */}
         <InfoBanner
           title="We Value Your Feedback!"
@@ -847,7 +686,6 @@ export default function Welcome({ theme }) {
             window.open("https://forms.gle/M2PHgWTVVRrRubpc7", "_blank")
           }
           backgroundColor="#006499"
-          // buttonColor="#FF9B00"
         />
 
         {/* Affiliations Section */}
@@ -874,35 +712,6 @@ export default function Welcome({ theme }) {
           imageWidth="75px"
         />
       </div>
-
-      {/* Floating chatbot button */}
-      <button 
-        style={floatingButtonStyle}
-        onClick={() => setIsChatbotOpen(true)}
-        aria-label="Open Grant Finder Assistant"
-        title="Find the perfect grant for your needs"
-        onMouseOver={(e) => {
-          e.currentTarget.style.transform = 'scale(1.05)';
-          e.currentTarget.style.backgroundColor = '#005A94';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.backgroundColor = '#0073BB';
-        }}
-      >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" stroke="white" strokeWidth="2"/>
-          <path d="M8 12H8.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M12 12H12.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M16 12H16.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
-      </button>
-
-      {/* Recommendation chatbot modal */}
-      <RecommendationChatbot 
-        isOpen={isChatbotOpen}
-        onClose={() => setIsChatbotOpen(false)}
-      />
     </div>
   );
 }

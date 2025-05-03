@@ -55,9 +55,10 @@ enum ReadyState {
 interface RecommendationChatbotProps {
   isOpen: boolean;
   onClose: () => void;
+  initialQuery?: string;
 }
 
-export default function RecommendationChatbot({ isOpen, onClose }: RecommendationChatbotProps) {
+export default function RecommendationChatbot({ isOpen, onClose, initialQuery }: RecommendationChatbotProps) {
   // Contexts and hooks
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
   const [username, setUsername] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [token, setToken] = useState<string>('');
+  const [hasProcessedInitialQuery, setHasProcessedInitialQuery] = useState(false);
   
   // WebSocket state
   const [readyState, setReadyState] = useState<ReadyState>(ReadyState.UNINSTANTIATED);
@@ -250,6 +252,26 @@ export default function RecommendationChatbot({ isOpen, onClose }: Recommendatio
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  // Handle sending initial query if provided
+  useEffect(() => {
+    if (isOpen && initialQuery && !hasProcessedInitialQuery && messages.length > 0 && !loading) {
+      // Set flag to avoid sending the query multiple times
+      setHasProcessedInitialQuery(true);
+      
+      // Wait a bit to ensure welcome message is seen
+      setTimeout(() => {
+        handleSendMessage(initialQuery);
+      }, 500);
+    }
+  }, [isOpen, initialQuery, messages, loading, hasProcessedInitialQuery]);
+
+  // Reset initialQuery processing when chatbot closes
+  useEffect(() => {
+    if (!isOpen) {
+      setHasProcessedInitialQuery(false);
+    }
+  }, [isOpen]);
 
   // Function to send a message using raw WebSocket
   const sendWebSocketMessage = (action: string, data: any) => {
