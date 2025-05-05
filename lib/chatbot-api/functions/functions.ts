@@ -90,6 +90,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -111,7 +112,11 @@ export class LambdaFunctionStack extends cdk.Stack {
     grantRecommendationFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["bedrock:InvokeModel"],
+        actions: [
+          "bedrock:InvokeModel",
+          "bedrock:Retrieve",
+          "bedrock-agent:Retrieve"
+        ],
         resources: ["*"],
       })
     );
