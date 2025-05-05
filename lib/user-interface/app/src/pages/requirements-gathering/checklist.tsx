@@ -10,7 +10,6 @@ import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import "../../styles/checklists.css";
 import { v4 as uuidv4 } from "uuid";
-import QueryChat from "./querychat.tsx";
 
 // Types
 interface TabContent {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { SpaceBetween, Spinner, Badge, Cards, Button } from '@cloudscape-design/components';
+import { SpaceBetween, Spinner } from '@cloudscape-design/components';
 import useGrantRecommendations from '../../hooks/useGrantRecommendations';
 import { GrantRecommendation } from '../../hooks/useGrantRecommendations';
 import { Auth } from 'aws-amplify';
@@ -41,7 +41,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const [recommendedGrants, setRecommendedGrants] = useState<GrantRecommendation[]>([]);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
   
-  // Use grant recommendations hook
+  // Use grant recommendations hook only for the Grant Assistant
   const { 
     loading: recommendationsLoading, 
     recommendations, 
@@ -96,7 +96,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     };
   }, []);
 
-  // Filter documents and get recommendations when search term changes
+  // Filter documents when search term changes - removed automatic AI recommendations
   useEffect(() => {
     // Filter existing documents
     const filtered = documents.filter(doc => 
@@ -110,16 +110,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     );
     setFilteredPinnedGrants(filteredPinned);
 
-    // Get recommendations if search term is long enough
-    if (searchTerm.length >= 3) {
-      getRecommendationsUsingREST(searchTerm);
-    }
-  }, [searchTerm, documents, pinnedGrants, getRecommendationsUsingREST]);
+  }, [searchTerm, documents, pinnedGrants]);
 
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Total items (pinned grants + filtered documents + recommendations)
-    const totalItems = filteredPinnedGrants.length + filteredDocuments.length + (recommendations?.grants?.length || 0);
+    // Total items (pinned grants + filtered documents)
+    const totalItems = filteredPinnedGrants.length + filteredDocuments.length;
     
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -137,13 +133,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           // Select a document
           const docIndex = selectedIndex - filteredPinnedGrants.length;
           onSelectDocument(filteredDocuments[docIndex]);
-        } else {
-          // Select a recommendation
-          const recIndex = selectedIndex - (filteredPinnedGrants.length + filteredDocuments.length);
-          const recommendation = recommendations?.grants[recIndex];
-          if (recommendation) {
-            handleRecommendationSelect(recommendation);
-          }
         }
         setShowResults(false);
       }
@@ -167,167 +156,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     setShowResults(false);
   };
 
-  // Handle selecting a recommendation
-  const handleRecommendationSelect = (recommendation: GrantRecommendation) => {
-    // Set the search term
-    setSearchTerm(recommendation.name);
-    
-    // Find the matching document if needed for further processing
-    const matchedDoc = documents.find(doc => doc.label === recommendation.name);
-    if (matchedDoc) {
-      onSelectDocument(matchedDoc);
-    }
-    
-    // Close the dropdown
-    setShowResults(false);
-  };
-  
-  // Styles
-  const searchContainerStyle: React.CSSProperties = {
-    position: 'relative',
-    maxWidth: '650px',
-    width: '100%',
-    margin: '0 auto',
-    zIndex: 100
-  };
-
-  const inputContainerStyle: React.CSSProperties = {
-    position: 'relative',
-    width: '100%',
-  };
-
-  const searchIconStyle: React.CSSProperties = {
-    position: 'absolute',
-    left: '15px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: '#666',
-    pointerEvents: 'none',
-    zIndex: 1,
-  };
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '14px 20px 14px 45px',
-    fontSize: '16px',
-    borderRadius: '25px',
-    border: '1px solid #e0e0e0',
-    boxSizing: 'border-box',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-    transition: 'all 0.2s ease',
-    backgroundColor: '#ffffff',
-  };
-
-  const resultsContainerStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: '100%',
-    left: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    borderRadius: '0 0 15px 15px',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
-    maxHeight: '400px',
-    overflowY: 'auto',
-    zIndex: 10,
-    marginTop: '5px',
-    border: '1px solid #e0e0e0',
-  };
-
-  const resultItemStyle: React.CSSProperties = {
-    padding: '12px 15px',
-    cursor: 'pointer',
-    borderBottom: '1px solid #f0f0f0',
-    transition: 'background-color 0.2s',
-  };
-
-  const selectedItemStyle: React.CSSProperties = {
-    ...resultItemStyle,
-    backgroundColor: '#f0f7ff',
-    borderLeft: '3px solid #0073bb',
-  };
-  
-  const pinnedItemStyle: React.CSSProperties = {
-    ...resultItemStyle,
-    borderLeft: '3px solid #00a1b2',
-    backgroundColor: '#f0ffff',
-  };
-  
-  const selectedPinnedItemStyle: React.CSSProperties = {
-    ...pinnedItemStyle,
-    backgroundColor: '#e0f7f7',
-    borderLeft: '3px solid #0073bb',
-  };
-  
-  const sectionHeaderStyle: React.CSSProperties = {
-    padding: '10px 15px',
-    backgroundColor: '#f9f9f9',
-    fontWeight: 'bold',
-    fontSize: '14px',
-    color: '#666',
-  };
-
-  const recommendationItemStyle: React.CSSProperties = {
-    padding: '12px 15px',
-    cursor: 'pointer',
-    borderBottom: '1px solid #f0f0f0',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  };
-
-  const recommendationDetailsStyle: React.CSSProperties = {
-    fontSize: '13px',
-    color: '#666',
-    marginTop: '3px',
-  };
-  
-  const emptyPromptStyle: React.CSSProperties = {
-    padding: '20px',
-    textAlign: 'center',
-    color: '#555',
-    fontSize: '14px',
-  };
-
-  const pinnedBadgeStyle: React.CSSProperties = {
-    display: 'inline-block',
-    fontSize: '11px',
-    backgroundColor: '#00a1b2',
-    color: 'white',
-    padding: '2px 6px',
-    borderRadius: '10px',
-    marginLeft: '6px',
-    verticalAlign: 'middle',
-  };
-  
-  const recommendedBadgeStyle: React.CSSProperties = {
-    display: 'inline-block',
-    fontSize: '11px',
-    backgroundColor: '#0073bb',
-    color: 'white',
-    padding: '2px 6px',
-    borderRadius: '10px',
-    marginLeft: '6px',
-  };
-
-  // Pin/unpin button styles
-  const pinButtonStyle: React.CSSProperties = {
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    padding: '8px',
-    marginLeft: '8px',
-    borderRadius: '4px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'background-color 0.2s ease',
-  };
-  
-  const unpinButtonStyle: React.CSSProperties = {
-    ...pinButtonStyle,
-    color: '#E74C3C', // Red color for unpinning
-  };
-
   // Handle submitting the use case to get grant recommendations
   const handleAssistantSubmit = (e?: React.FormEvent) => {
     if (e) {
@@ -338,160 +166,23 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     
     setIsAssistantLoading(true);
     
-    // Simulate response (in a real implementation, this would call the API)
-    setTimeout(() => {
-      // For demo purposes, generate contextual responses based on keywords
-      const keywords = assistantInput.toLowerCase();
-      
-      if (keywords.includes('infrastructure') || keywords.includes('transportation') || keywords.includes('road')) {
-        setRecommendedGrants([
-          {
-            id: "RAISE-2025",
-            name: "Rebuilding American Infrastructure with Sustainability and Equity (RAISE)",
-            matchScore: 92,
-            eligibilityMatch: true,
-            fundingAmount: "$1-25 million",
-            deadline: "April 30, 2025",
-            keyRequirements: ["State/local government applicants", "Project readiness documentation", "Benefit-cost analysis"],
-            summaryUrl: "RAISE/",
-            matchReason: "Highly relevant for transportation infrastructure projects"
-          },
-          {
-            id: "INFRA-2025",
-            name: "Infrastructure for Rebuilding America (INFRA)",
-            matchScore: 85,
-            eligibilityMatch: true,
-            fundingAmount: "$5-100 million",
-            deadline: "May 15, 2025",
-            keyRequirements: ["Minimum project size: $5 million", "Highway or freight projects", "Environmental approvals"],
-            summaryUrl: "INFRA/",
-            matchReason: "Targets large-scale infrastructure needs"
-          },
-          {
-            id: "STBG-2024",
-            name: "Surface Transportation Block Grant",
-            matchScore: 80,
-            eligibilityMatch: true,
-            fundingAmount: "$2-15 million",
-            deadline: "September 30, 2024",
-            keyRequirements: ["State DOT or MPO sponsorship", "Road classification requirements", "Local match (20%)"],
-            summaryUrl: "STBG-2024/",
-            matchReason: "Flexible funding for various transportation projects"
-          }
-        ]);
-      } else if (keywords.includes('renewable') || keywords.includes('energy') || keywords.includes('solar') || keywords.includes('climate')) {
-        setRecommendedGrants([
-          {
-            id: "CERI-2025",
-            name: "Clean Energy Research Initiative",
-            matchScore: 94,
-            eligibilityMatch: true,
-            fundingAmount: "$500,000-2 million",
-            deadline: "June 12, 2025",
-            keyRequirements: ["Technology innovation component", "Emissions reduction metrics", "Community engagement plan"],
-            summaryUrl: "CERI/",
-            matchReason: "Perfect match for renewable energy innovation"
-          },
-          {
-            id: "CCUS-2025",
-            name: "Carbon Capture Utilization and Storage",
-            matchScore: 76,
-            eligibilityMatch: true,
-            fundingAmount: "$2-15 million",
-            deadline: "August 3, 2025",
-            keyRequirements: ["Technical feasibility study", "Environmental impact assessment", "Public-private partnership"],
-            summaryUrl: "CCUS/",
-            matchReason: "Supports carbon reduction technologies"
-          },
-          {
-            id: "REAP-2024",
-            name: "Rural Energy for America Program",
-            matchScore: 88,
-            eligibilityMatch: true,
-            fundingAmount: "$100,000-500,000",
-            deadline: "October 31, 2024",
-            keyRequirements: ["Rural location", "Agricultural producer or small business", "25% cost share"],
-            summaryUrl: "REAP-2024/",
-            matchReason: "Targeted support for rural energy projects"
-          }
-        ]);
-      } else if (keywords.includes('rural') || keywords.includes('community') || keywords.includes('small town')) {
-        setRecommendedGrants([
-          {
-            id: "RCDI-2025",
-            name: "Rural Community Development Initiative",
-            matchScore: 97,
-            eligibilityMatch: true,
-            fundingAmount: "$50,000-250,000",
-            deadline: "May 22, 2025",
-            keyRequirements: ["Population under 50,000", "Technical assistance component", "Community support documentation"],
-            summaryUrl: "RCDI/",
-            matchReason: "Specifically designed for rural community needs"
-          },
-          {
-            id: "RDUL-2025",
-            name: "Rural Development Utilities Loans",
-            matchScore: 82,
-            eligibilityMatch: true,
-            fundingAmount: "$100,000-3 million",
-            deadline: "Rolling applications",
-            keyRequirements: ["Critical infrastructure focus", "Underserved community benefit", "Economic impact analysis"],
-            summaryUrl: "RDUL/",
-            matchReason: "Infrastructure financing for rural areas"
-          },
-          {
-            id: "CDBG-2024",
-            name: "Community Development Block Grant",
-            matchScore: 85,
-            eligibilityMatch: true,
-            fundingAmount: "$500,000-2 million",
-            deadline: "December 15, 2024",
-            keyRequirements: ["Low-moderate income benefit", "Community participation process", "Detailed project plan"],
-            summaryUrl: "CDBG-2024/",
-            matchReason: "Flexible funding for various community needs"
-          }
-        ]);
-      } else {
-        // Default recommendations if no specific keywords match
-        setRecommendedGrants([
-          {
-            id: "CDBG-2024",
-            name: "Community Development Block Grant",
-            matchScore: 75,
-            eligibilityMatch: true,
-            fundingAmount: "$500,000-2 million",
-            deadline: "December 15, 2024",
-            keyRequirements: ["Low-moderate income benefit", "Community participation process", "Detailed project plan"],
-            summaryUrl: "CDBG-2024/",
-            matchReason: "Widely applicable to many municipal needs"
-          },
-          {
-            id: "BRIC-2024",
-            name: "Building Resilient Infrastructure and Communities",
-            matchScore: 70,
-            eligibilityMatch: true,
-            fundingAmount: "$1-50 million",
-            deadline: "January 30, 2025",
-            keyRequirements: ["Hazard mitigation focus", "Benefit-cost analysis", "Reduces risk to community"],
-            summaryUrl: "BRIC-2024/",
-            matchReason: "Supports many types of community infrastructure"
-          },
-          {
-            id: "LWCF-2024",
-            name: "Land and Water Conservation Fund",
-            matchScore: 65,
-            eligibilityMatch: true,
-            fundingAmount: "$100,000-1 million",
-            deadline: "March 1,, 2025",
-            keyRequirements: ["Recreation focus", "Public access", "Permanent protection"],
-            summaryUrl: "LWCF-2024/",
-            matchReason: "Broadly applicable for public use projects"
-          }
-        ]);
-      }
-      
-      setIsAssistantLoading(false);
-    }, 1500);
+    // Call the actual recommendation API instead of using mock data
+    getRecommendationsUsingREST(assistantInput)
+      .then((response) => {
+        if (response && response.grants) {
+          setRecommendedGrants(response.grants);
+        } else {
+          // Handle empty response
+          setRecommendedGrants([]);
+        }
+      })
+      .catch((error) => {
+        console.error('Error getting recommendations:', error);
+        setRecommendedGrants([]);
+      })
+      .finally(() => {
+        setIsAssistantLoading(false);
+      });
   };
   
   // Handle navigation to grant
@@ -729,6 +420,137 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     console.log('Unpinned grant:', normalizedName, 'Remaining pinned:', updatedPinnedGrants.length);
   };
 
+  // Styles
+  const searchContainerStyle: React.CSSProperties = {
+    position: 'relative',
+    maxWidth: '650px',
+    width: '100%',
+    margin: '0 auto',
+    zIndex: 100
+  };
+
+  const inputContainerStyle: React.CSSProperties = {
+    position: 'relative',
+    width: '100%',
+  };
+
+  const searchIconStyle: React.CSSProperties = {
+    position: 'absolute',
+    left: '15px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#666',
+    pointerEvents: 'none',
+    zIndex: 1,
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '14px 20px 14px 45px',
+    fontSize: '16px',
+    borderRadius: '25px',
+    border: '1px solid #e0e0e0',
+    boxSizing: 'border-box',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    transition: 'all 0.2s ease',
+    backgroundColor: '#ffffff',
+  };
+
+  const resultsContainerStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderRadius: '0 0 15px 15px',
+    boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
+    maxHeight: '400px',
+    overflowY: 'auto',
+    zIndex: 10,
+    marginTop: '5px',
+    border: '1px solid #e0e0e0',
+  };
+
+  const resultItemStyle: React.CSSProperties = {
+    padding: '12px 15px',
+    cursor: 'pointer',
+    borderBottom: '1px solid #f0f0f0',
+    transition: 'background-color 0.2s',
+  };
+
+  const selectedItemStyle: React.CSSProperties = {
+    ...resultItemStyle,
+    backgroundColor: '#f0f7ff',
+    borderLeft: '3px solid #0073bb',
+  };
+  
+  const pinnedItemStyle: React.CSSProperties = {
+    ...resultItemStyle,
+    borderLeft: '3px solid #00a1b2',
+    backgroundColor: '#f0ffff',
+  };
+  
+  const selectedPinnedItemStyle: React.CSSProperties = {
+    ...pinnedItemStyle,
+    backgroundColor: '#e0f7f7',
+    borderLeft: '3px solid #0073bb',
+  };
+  
+  const sectionHeaderStyle: React.CSSProperties = {
+    padding: '10px 15px',
+    backgroundColor: '#f9f9f9',
+    fontWeight: 'bold',
+    fontSize: '14px',
+    color: '#666',
+  };
+
+  const emptyPromptStyle: React.CSSProperties = {
+    padding: '20px',
+    textAlign: 'center',
+    color: '#555',
+    fontSize: '14px',
+  };
+
+  const pinnedBadgeStyle: React.CSSProperties = {
+    display: 'inline-block',
+    fontSize: '11px',
+    backgroundColor: '#00a1b2',
+    color: 'white',
+    padding: '2px 6px',
+    borderRadius: '10px',
+    marginLeft: '6px',
+    verticalAlign: 'middle',
+  };
+  
+  const recommendedBadgeStyle: React.CSSProperties = {
+    display: 'inline-block',
+    fontSize: '11px',
+    backgroundColor: '#0073bb',
+    color: 'white',
+    padding: '2px 6px',
+    borderRadius: '10px',
+    marginLeft: '6px',
+  };
+  
+  // Pin/unpin button styles
+  const pinButtonStyle: React.CSSProperties = {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '8px',
+    marginLeft: '8px',
+    borderRadius: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'background-color 0.2s ease',
+  };
+  
+  const unpinButtonStyle: React.CSSProperties = {
+    ...pinButtonStyle,
+    color: '#E74C3C', // Red color for unpinning
+  };
+
   return (
     <div style={searchContainerStyle} ref={searchRef}>
       <div style={inputContainerStyle}>
@@ -958,91 +780,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             </>
           )}
           
-          {/* AI Recommendations section */}
-          {recommendations && recommendations.grants && recommendations.grants.length > 0 && (
-            <>
-              <div style={sectionHeaderStyle}>AI Recommended Grants</div>
-              {recommendations.grants.map((grant, index) => {
-                const grantName = grant.name || '';
-                
-                // Check if this grant is already pinned
-                const isPinned = isNofoPinned(grantName);
-                
-                return (
-                  <div
-                    key={`rec-${grantName}-${index}`}
-                    style={selectedIndex === filteredPinnedGrants.length + filteredDocuments.length + index ? selectedItemStyle : recommendationItemStyle}
-                    onClick={() => {
-                      handleRecommendationSelect(grant);
-                      // Keep the dropdown open
-                    }}
-                    onMouseEnter={() => setSelectedIndex(filteredPinnedGrants.length + filteredDocuments.length + index)}
-                  >
-                    <div>
-                      <div>
-                        <span>{grantName}</span>
-                        {grant.matchScore >= 80 && <span style={recommendedBadgeStyle}>Recommended</span>}
-                      </div>
-                      <div style={recommendationDetailsStyle}>
-                        <SpaceBetween direction="horizontal" size="xs">
-                          <span>Amount: {grant.fundingAmount}</span>
-                          <span>Deadline: {grant.deadline}</span>
-                        </SpaceBetween>
-                      </div>
-                    </div>
-                    
-                    {isAdmin && (
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        {isPinned ? (
-                          <button 
-                            onClick={(e) => handleUnpinGrant(grantName, e)}
-                            style={unpinButtonStyle}
-                            title="Unpin grant"
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#f8e0e0';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                            }}
-                          >
-                            <LuPinOff size={20} color="#E74C3C" />
-                          </button>
-                        ) : (
-                          <button 
-                            onClick={(e) => handlePinGrant(grant, e)}
-                            style={pinButtonStyle}
-                            title="Pin grant to top of recommendations"
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#e0f0ff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                            }}
-                          >
-                            <LuPin size={20} color="#0073BB" />
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </>
-          )}
-          
-          {/* Loading state */}
-          {searchTerm.length >= 3 && recommendationsLoading && (
-            <div style={{ padding: '20px', textAlign: 'center' }}>
-              <Spinner size="normal" />
-              <div style={{ marginTop: '10px', color: '#666' }}>
-                Finding the best grant matches...
-              </div>
-            </div>
-          )}
-          
           {/* No results state with assistant button */}
-          {searchTerm.length > 0 && !recommendationsLoading && filteredPinnedGrants.length === 0 && filteredDocuments.length === 0 && 
-            (!recommendations || !recommendations.grants || recommendations.grants.length === 0) && (
+          {searchTerm.length > 0 && filteredPinnedGrants.length === 0 && filteredDocuments.length === 0 && (
             <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
               <p>No matches found for "{searchTerm}".</p>
               <p style={{ marginTop: '10px' }}>
@@ -1138,7 +877,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         <div style={grantCardHeaderStyle}>
                           <div style={grantCardTitleStyle}>
                             {grantName}
-                            {grant.matchScore >= 80 && <span style={recommendedBadgeStyle}>Recommended</span>}
                           </div>
                           
                           {isAdmin && (
