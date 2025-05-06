@@ -4,7 +4,6 @@ import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { NOFOsTab, NOFO, Modal } from "./NOFOsTab";
-import { UsersTab, User } from "./UsersTab";
 import "./styles.css";
 
 /**
@@ -63,22 +62,21 @@ export const RowActions: React.FC<{
  * Main Dashboard component
  */
 const Dashboard: React.FC = () => {
-  // Tab state
-  const [activeTab, setActiveTab] = useState("nofos");
+  // Tab state - Only grants tab now
+  const [activeTab] = useState("grants");
 
   // Data state
   const [nofos, setNofos] = useState<NOFO[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   // UI state
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [usersLoading, setUsersLoading] = useState(false);
 
-  // New state for upload NOFO and invite user modals
+  // Modal states
   const [uploadNofoModalOpen, setUploadNofoModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
 
   // Hooks
   const navigate = useNavigate();
@@ -131,84 +129,12 @@ const Dashboard: React.FC = () => {
 
         setNofos(nofoData);
       } catch (error) {
-        console.error("Error fetching NOFOs:", error);
+        console.error("Error fetching grants:", error);
       }
     };
 
     fetchNofos();
   }, [isAdmin, apiClient.landingPage]);
-
-  // Fetch Users data
-  const fetchUsers = async () => {
-    try {
-      setUsersLoading(true);
-      // Try to get users from the API
-      try {
-        const result = await apiClient.landingPage.getUsers();
-        if (result && result.success && Array.isArray(result.users)) {
-          setUsers(result.users);
-        } else {
-          // If API call fails or returns unexpected data, fall back to mock data
-          useMockUsers();
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        useMockUsers();
-      }
-    } finally {
-      setUsersLoading(false);
-    }
-  };
-
-  // If API call fails, use mock data
-  const useMockUsers = () => {
-    console.warn("Using mock user data due to API failure");
-    setUsers([
-      {
-        id: 1,
-        name: "John Smith",
-        email: "john.smith@example.com",
-        role: "Admin",
-        lastActive: "2 days ago",
-      },
-      {
-        id: 2,
-        name: "Sarah Johnson",
-        email: "sarah.j@example.com",
-        role: "Editor",
-        lastActive: "5 hours ago",
-      },
-      {
-        id: 3,
-        name: "Michael Wong",
-        email: "m.wong@example.com",
-        role: "Viewer",
-        lastActive: "1 week ago",
-      },
-      {
-        id: 4,
-        name: "Jessica Chen",
-        email: "jchen@example.com",
-        role: "Editor",
-        lastActive: "Just now",
-      },
-    ]);
-  };
-
-  // Fetch users when the users tab is activated
-  useEffect(() => {
-    if (!isAdmin) return;
-
-    if (activeTab === "users") {
-      fetchUsers();
-    }
-  }, [activeTab, isAdmin]);
-
-  // Handles when a user is invited successfully
-  const handleUserInvited = (email: string) => {
-    // After successful invitation, refresh the users list
-    fetchUsers();
-  };
 
   // Upload NOFO handler
   const handleUploadNofo = () => {
@@ -220,24 +146,24 @@ const Dashboard: React.FC = () => {
     setInviteUserModalOpen(true);
   };
 
-  // Get button text and action based on active tab
-  const getActionButtonProps = () => {
-    switch (activeTab) {
-      case "nofos":
-        return {
-          text: "Upload NOFO",
-          action: handleUploadNofo
-        };
-      case "users":
-        return {
-          text: "Invite User",
-          action: handleInviteUser
-        };
-      default:
-        return {
-          text: "Action",
-          action: () => {}
-        };
+  // Send invite email
+  const sendInvite = async () => {
+    if (!inviteEmail.trim() || !/\S+@\S+\.\S+/.test(inviteEmail)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      // This should be implemented in the API client
+      // For now, we'll just simulate success
+      // await apiClient.users.inviteUser(inviteEmail);
+      
+      alert(`Invitation sent to ${inviteEmail}`);
+      setInviteEmail("");
+      setInviteUserModalOpen(false);
+    } catch (error) {
+      console.error("Error sending invitation:", error);
+      alert("Failed to send invitation. Please try again.");
     }
   };
 
@@ -251,36 +177,54 @@ const Dashboard: React.FC = () => {
     return null;
   }
 
-  const actionButton = getActionButtonProps();
-
   return (
     <div className="dashboard-container">
       {/* Header */}
       <div className="dashboard-header">
         <h1>Admin Dashboard</h1>
-        <div className="dashboard-actions">
-          <button
-            className="upload-button"
-            onClick={actionButton.action}
-          >
-            {actionButton.text}
-          </button>
-        </div>
       </div>
 
-      {/* Tabs */}
+      {/* Only one tab now, but keeping the styling consistent */}
       <div className="tab-controls">
+        <button className="tab-button active">
+          Grants
+        </button>
+      </div>
+
+      {/* Action buttons now inside the tab content area */}
+      <div className="grants-actions" style={{ 
+          display: 'flex', 
+          justifyContent: 'flex-end', 
+          marginBottom: '15px', 
+          gap: '10px' 
+        }}>
         <button
-          className={`tab-button ${activeTab === "nofos" ? "active" : ""}`}
-          onClick={() => setActiveTab("nofos")}
+          className="action-button"
+          onClick={handleInviteUser}
+          style={{ 
+            backgroundColor: '#4a90e2', 
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '4px',
+            cursor: 'pointer' 
+          }}
         >
-          NOFOs
+          Invite User
         </button>
         <button
-          className={`tab-button ${activeTab === "users" ? "active" : ""}`}
-          onClick={() => setActiveTab("users")}
+          className="action-button"
+          onClick={handleUploadNofo}
+          style={{ 
+            backgroundColor: '#0073BB',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '4px',
+            cursor: 'pointer' 
+          }}
         >
-          Users
+          Add Grant
         </button>
       </div>
 
@@ -304,7 +248,7 @@ const Dashboard: React.FC = () => {
           <input
             type="text"
             className="search-input"
-            placeholder={`Search ${activeTab === "nofos" ? "NOFOs" : "users"}...`}
+            placeholder="Search grants..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -326,25 +270,80 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Tab Content */}
-      {activeTab === "nofos" && (
-        <NOFOsTab
-          nofos={nofos}
-          searchQuery={searchQuery}
-          apiClient={apiClient}
-          setNofos={setNofos}
-        />
-      )}
+      <NOFOsTab
+        nofos={nofos}
+        searchQuery={searchQuery}
+        apiClient={apiClient}
+        setNofos={setNofos}
+        uploadNofoModalOpen={uploadNofoModalOpen}
+        setUploadNofoModalOpen={setUploadNofoModalOpen}
+      />
 
-      {activeTab === "users" && (
-        <UsersTab
-          users={users}
-          searchQuery={searchQuery}
-          apiClient={apiClient}
-          setUsers={setUsers}
-          usersLoading={usersLoading}
-          onUserInvited={handleUserInvited}
-        />
-      )}
+      {/* Invite User Modal */}
+      <Modal
+        isOpen={inviteUserModalOpen}
+        onClose={() => setInviteUserModalOpen(false)}
+        title="Invite New User"
+      >
+        <div className="modal-form">
+          <p style={{ marginBottom: '20px', color: '#555' }}>
+            Enter the email address of the user you want to invite. They will receive an email
+            with instructions to set up their account.
+          </p>
+          <div className="form-group">
+            <label htmlFor="invite-email" style={{ fontWeight: '600', color: '#0073BB', marginBottom: '8px', display: 'block' }}>Email Address:</label>
+            <input
+              type="email"
+              id="invite-email"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              className="form-input"
+              placeholder="user@example.com"
+              style={{ 
+                width: '100%', 
+                padding: '10px', 
+                border: '1px solid #ccc', 
+                borderRadius: '4px',
+                fontSize: '16px'
+              }}
+            />
+          </div>
+          <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', gap: '10px' }}>
+            <button
+              className="modal-button secondary"
+              onClick={() => setInviteUserModalOpen(false)}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: 'white',
+                color: '#444',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-button primary"
+              onClick={sendInvite}
+              disabled={!inviteEmail.trim() || !/\S+@\S+\.\S+/.test(inviteEmail)}
+              style={{
+                padding: '8px 20px',
+                backgroundColor: '#0275d8',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600'
+              }}
+            >
+              Send Invitation
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

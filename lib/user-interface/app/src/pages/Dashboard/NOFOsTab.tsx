@@ -12,6 +12,8 @@ interface NOFOsTabProps {
   searchQuery: string;
   apiClient: ApiClient;
   setNofos: React.Dispatch<React.SetStateAction<NOFO[]>>;
+  uploadNofoModalOpen: boolean;
+  setUploadNofoModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const NOFOsTab: React.FC<NOFOsTabProps> = ({
@@ -19,13 +21,14 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   searchQuery,
   apiClient,
   setNofos,
+  uploadNofoModalOpen,
+  setUploadNofoModalOpen,
 }) => {
   // NOFO editing state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedNofo, setSelectedNofo] = useState<NOFO | null>(null);
   const [editedNofoName, setEditedNofoName] = useState("");
-  const [uploadNofoModalOpen, setUploadNofoModalOpen] = useState(false);
 
   // Filter data based on search query
   const filteredNofos = nofos.filter((nofo) =>
@@ -66,7 +69,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
 
       // Show success notification
       alert(
-        `NOFO renamed successfully from "${selectedNofo.name}" to "${editedNofoName}"`
+        `Grant renamed successfully from "${selectedNofo.name}" to "${editedNofoName}"`
       );
 
       // Reset state
@@ -74,8 +77,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setSelectedNofo(null);
       setEditedNofoName("");
     } catch (error) {
-      console.error("Error updating NOFO:", error);
-      alert("Failed to rename NOFO. Please try again.");
+      console.error("Error updating grant:", error);
+      alert("Failed to rename grant. Please try again.");
     }
   };
 
@@ -91,14 +94,14 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setNofos(nofos.filter((nofo) => nofo.id !== selectedNofo.id));
 
       // Show success notification
-      alert(`NOFO "${selectedNofo.name}" deleted successfully`);
+      alert(`Grant "${selectedNofo.name}" deleted successfully`);
 
       // Reset state
       setDeleteModalOpen(false);
       setSelectedNofo(null);
     } catch (error) {
-      console.error("Error deleting NOFO:", error);
-      alert("Failed to delete NOFO. Please try again.");
+      console.error("Error deleting grant:", error);
+      alert("Failed to delete grant. Please try again.");
     }
   };
 
@@ -119,11 +122,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         const documentName = file.name.split(".").slice(0, -1).join("");
         let newFilePath;
         if (file.type === "text/plain") {
-          newFilePath = `${documentName}/NOFO-File-TXT`;
+          newFilePath = `${documentName}/Grant-File-TXT`;
         } else if (file.type === "application/pdf") {
-          newFilePath = `${documentName}/NOFO-File-PDF`;
+          newFilePath = `${documentName}/Grant-File-PDF`;
         } else {
-          newFilePath = `${documentName}/NOFO-File`;
+          newFilePath = `${documentName}/Grant-File`;
         }
 
         const signedUrl = await apiClient.landingPage.getUploadURL(
@@ -132,7 +135,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         );
         await apiClient.landingPage.uploadFileToS3(signedUrl, file);
 
-        alert("File uploaded successfully!");
+        alert("Grant file uploaded successfully!");
 
         // Refresh NOFO list after successful upload
         const nofoResult = await apiClient.landingPage.getNOFOs();
@@ -143,7 +146,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         setNofos(nofoData);
       } catch (error) {
         console.error("Upload failed:", error);
-        alert("Failed to upload the file.");
+        alert("Failed to upload the grant file.");
       }
     };
 
@@ -154,7 +157,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     <>
       <div className="data-table">
         <div className="table-header">
-          <div className="header-cell nofo-name">NOFO Name</div>
+          <div className="header-cell nofo-name">Grant Name</div>
           <div className="header-cell">Agency</div>
           <div className="header-cell">Created</div>
           <div className="header-cell">Current Status</div>
@@ -178,7 +181,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
             </div>
           ))
         ) : (
-          <div className="no-data">No NOFOs found</div>
+          <div className="no-data">No grants found</div>
         )}
       </div>
 
@@ -186,11 +189,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       <Modal
         isOpen={editModalOpen}
         onClose={() => setEditModalOpen(false)}
-        title="Edit NOFO"
+        title="Edit Grant"
       >
         <div className="modal-form">
           <div className="form-group">
-            <label htmlFor="nofo-name">NOFO Name</label>
+            <label htmlFor="nofo-name">Grant Name</label>
             <input
               type="text"
               id="nofo-name"
@@ -223,7 +226,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       <Modal
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        title="Delete NOFO"
+        title="Delete Grant"
       >
         <div className="modal-form">
           <p>
@@ -249,12 +252,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       <Modal
         isOpen={uploadNofoModalOpen}
         onClose={() => setUploadNofoModalOpen(false)}
-        title="Upload New NOFO"
+        title="Upload Grant"
       >
         <div className="modal-form">
           <p>
-            Select a PDF or TXT file to upload as a new NOFO. The file name will
-            be used as the NOFO name.
+            Upload a new grant file in PDF or TXT format. The file name will be used as the grant name.
           </p>
           <div className="modal-actions">
             <button
@@ -264,7 +266,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               Cancel
             </button>
             <button className="modal-button primary" onClick={uploadNOFO}>
-              Select File
+              Choose File
             </button>
           </div>
         </div>
