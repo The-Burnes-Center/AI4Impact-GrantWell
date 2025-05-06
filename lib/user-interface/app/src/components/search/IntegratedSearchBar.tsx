@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { SpaceBetween, Spinner } from '@cloudscape-design/components';
+import { Spinner } from '@cloudscape-design/components';
 import useGrantRecommendations from '../../hooks/useGrantRecommendations';
 import { GrantRecommendation } from '../../hooks/useGrantRecommendations';
 import { Auth } from 'aws-amplify';
 import { LuPin } from "react-icons/lu";
 import { LuPinOff } from "react-icons/lu";
+import { LuChevronDown, LuChevronRight } from "react-icons/lu";
 
 // Define interface for pinned grants
 interface PinnableGrant extends GrantRecommendation {
@@ -24,7 +23,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   onSelectDocument,
   isLoading 
 }) => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -47,6 +45,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     recommendations, 
     getRecommendationsUsingREST 
   } = useGrantRecommendations();
+  
+  const [expandedGrants, setExpandedGrants] = useState<Record<string, boolean>>({});
   
   // Check if user is admin
   const checkUserIsAdmin = async () => {
@@ -165,6 +165,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     if (!assistantInput.trim()) return;
     
     setIsAssistantLoading(true);
+    setExpandedGrants({}); // Reset expanded states when loading new recommendations
     
     // Call the actual recommendation API
     getRecommendationsUsingREST(assistantInput)
@@ -185,18 +186,18 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       });
   };
   
-  // Handle navigation to grant
-  const handleAssistantGrantClick = (summaryUrl: string) => {
-    navigate(`/landing-page/basePage/checklists/${encodeURIComponent(summaryUrl)}`);
-    setShowResults(false);
+  // Handle selection of a grant
+  const handleAssistantGrantClick = (summaryUrl: string, grantName: string) => {
+    setSearchTerm(grantName);
+    
+    // Find the matching document for onSelectDocument
+    const matchedDoc = documents.find(doc => doc.value === summaryUrl);
+    if (matchedDoc) {
+      onSelectDocument(matchedDoc);
+    }
+    
     setShowAssistant(false);
-  };
-  
-  // Handle starting a chat with a grant
-  const handleStartChatWithGrant = (summaryUrl: string) => {
-    navigate(`/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(summaryUrl)}`);
-    setShowResults(false);
-    setShowAssistant(false);
+    setShowResults(false); // Close the dropdown
   };
 
   // Handle opening the simplified recommendation assistant
@@ -205,9 +206,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     
     if (query) {
       setAssistantInput(query);
-      // Removed the setTimeout and automatic search trigger here
     } else {
-      // Clear previous results if no query
       setRecommendedGrants([]);
     }
   };
@@ -302,6 +301,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '8px',
+    width: '100%',
   };
 
   const grantCardTitleStyle: React.CSSProperties = {
@@ -310,38 +310,22 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     color: '#006499',
   };
 
-  const grantCardDetailStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: '13px',
-    color: '#666',
-    marginTop: '4px',
-  };
-
-  const grantCardRequirementsStyle: React.CSSProperties = {
-    margin: '12px 0',
-    paddingLeft: '20px',
-    fontSize: '13px',
-  };
-
-  const grantCardActionsStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '8px',
-    marginTop: '12px',
+  // Helper function to normalize grant name
+  const normalizeGrantName = (name: string): string => {
+    return name?.trim() || '';
   };
 
   // Function to check if a specific NOFO is pinned
   const isNofoPinned = (nofoName: string): boolean => {
     // Normalize the name by trimming
-    const normalizedName = nofoName?.trim() || '';
+    const normalizedName = normalizeGrantName(nofoName);
     
     // If name is empty, we can't identify this grant
     if (!normalizedName) return false;
     
     return pinnedGrants.some(pg => {
       // Normalize pinned grant name
-      const pinnedName = pg.name?.trim() || '';
+      const pinnedName = normalizeGrantName(pg.name);
       
       // Match by name
       return normalizedName === pinnedName;
@@ -357,7 +341,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     if (!isAdmin) return;
     
     // Normalize grant name
-    const normalizedName = grant.name?.trim() || '';
+    const normalizedName = normalizeGrantName(grant.name);
     
     // Skip if we can't identify this grant
     if (!normalizedName) {
@@ -382,8 +366,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     
     // Save to localStorage
     localStorage.setItem('pinnedGrants', JSON.stringify(updatedPinnedGrants));
-    
-    console.log('Pinned grant:', normalizedName, 'Total pinned:', updatedPinnedGrants.length);
   };
   
   // Handle unpinning a grant (for admins only)
@@ -395,7 +377,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     if (!isAdmin) return;
     
     // Normalize the name
-    const normalizedName = grantName?.trim() || '';
+    const normalizedName = normalizeGrantName(grantName);
     
     // Skip if we can't identify this grant
     if (!normalizedName) {
@@ -405,7 +387,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     
     // Create a completely new array for React state update
     const updatedPinnedGrants = pinnedGrants.filter(grant => {
-      const pinnedName = grant.name?.trim() || '';
+      const pinnedName = normalizeGrantName(grant.name);
       return pinnedName !== normalizedName;
     });
     
@@ -413,9 +395,22 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     
     // Save to localStorage
     localStorage.setItem('pinnedGrants', JSON.stringify(updatedPinnedGrants));
-    
-    console.log('Unpinned grant:', normalizedName, 'Remaining pinned:', updatedPinnedGrants.length);
   };
+
+  // Reusable search icon component
+  const SearchIcon = ({ color }: { color?: string }) => (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill={color || "#666666"}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
+      />
+    </svg>
+  );
 
   // Styles
   const searchContainerStyle: React.CSSProperties = {
@@ -519,16 +514,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     verticalAlign: 'middle',
   };
   
-  const recommendedBadgeStyle: React.CSSProperties = {
-    display: 'inline-block',
-    fontSize: '11px',
-    backgroundColor: '#0073bb',
-    color: 'white',
-    padding: '2px 6px',
-    borderRadius: '10px',
-    marginLeft: '6px',
-  };
-  
   // Pin/unpin button styles
   const pinButtonStyle: React.CSSProperties = {
     background: 'none',
@@ -548,22 +533,52 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     color: '#E74C3C', // Red color for unpinning
   };
 
+  // Toggle the expanded state of a grant
+  const toggleGrantExpanded = (grantKey: string, event: React.MouseEvent) => {
+    // Stop event propagation
+    if (event) {
+      event.stopPropagation(); // Prevent triggering card click
+      event.preventDefault(); // Ensure the event doesn't bubble up
+      event.nativeEvent.stopImmediatePropagation(); // Ensure other handlers don't fire
+    }
+    
+    setExpandedGrants(prev => {
+      const isCurrentlyExpanded = !!prev[grantKey];
+      
+      return {
+        ...prev,
+        [grantKey]: !isCurrentlyExpanded
+      };
+    });
+  };
+
+  // Reusable component for Grant Assistant buttons
+  const AssistantButton = ({ query }: { query?: string }) => (
+    <button 
+      style={assistantButtonStyle}
+      onClick={() => openRecommendationAssistant(query)}
+      onMouseOver={(e) => {
+        e.currentTarget.style.backgroundColor = '#005A94';
+      }}
+      onMouseOut={(e) => {
+        e.currentTarget.style.backgroundColor = '#0073BB';
+      }}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" stroke="white" strokeWidth="2"/>
+        <path d="M8 12H8.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M12 12H12.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M16 12H16.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+      Get Personalized Grant Recommendations
+    </button>
+  );
+
   return (
     <div style={searchContainerStyle} ref={searchRef}>
       <div style={inputContainerStyle}>
         <div style={searchIconStyle}>
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
-              fill="#666666"
-            />
-          </svg>
+          <SearchIcon color="#0073BB" />
         </div>
         <input
           ref={inputRef}
@@ -593,7 +608,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       
       {showResults && !showAssistant && (
         <div style={resultsContainerStyle}>
-          {/* Empty state prompt */}
           {searchTerm.length === 0 && (
             <div style={emptyPromptStyle}>
               <div style={{
@@ -603,9 +617,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 justifyContent: 'center',
                 gap: '10px'
               }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="#0073BB"/>
-                </svg>
+                <SearchIcon color="#0073BB" />
                 <span style={{ 
                   fontSize: '16px', 
                   fontWeight: '500',
@@ -630,24 +642,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   Try: "Transportation Infrastructure" or "EPA Clean Energy"
                 </span>
               </div>
-              <button 
-                style={assistantButtonStyle}
-                onClick={() => openRecommendationAssistant()}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = '#005A94';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = '#0073BB';
-                }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" stroke="white" strokeWidth="2"/>
-                  <path d="M8 12H8.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M12 12H12.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M16 12H16.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-                Get Personalized Grant Recommendations
-              </button>
+              <AssistantButton query={undefined} />
             </div>
           )}
           
@@ -784,24 +779,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               <p style={{ marginTop: '10px' }}>
                 Try different keywords or use our grant assistant for more help.
               </p>
-              <button 
-                style={assistantButtonStyle}
-                onClick={() => openRecommendationAssistant(searchTerm)}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = '#005A94';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = '#0073BB';
-                }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" stroke="white" strokeWidth="2"/>
-                  <path d="M8 12H8.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M12 12H12.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M16 12H16.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-                Get Personalized Grant Recommendations
-              </button>
+              <AssistantButton query={searchTerm} />
             </div>
           )}
         </div>
@@ -868,58 +846,85 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     // Ensure we display the full name rather than potentially truncated or generic names
                     const grantName = grant.name || '';
                     
-                    // Check if this grant is already pinned
-                    const isPinned = isNofoPinned(grantName);
+                    // Create a unique key for this grant
+                    const grantKey = `grant-${grantName}-${index}`;
+                    
+                    // Check if this grant's details are expanded
+                    const isExpanded = !!expandedGrants[grantKey];
                     
                     return (
-                      <div key={`grant-${grantName}-${index}`} style={grantCardStyle}>
+                      <div 
+                        key={grantKey} 
+                        style={{
+                          ...grantCardStyle,
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => handleAssistantGrantClick(grant.summaryUrl, grantName)}
+                      >
                         <div style={grantCardHeaderStyle}>
                           <div style={grantCardTitleStyle}>
                             {grantName}
                           </div>
-                          
-                        </div>
-                        
-                        <div style={{ fontSize: '13px', color: '#666', marginTop: '8px' }}>
-                          <span style={{ fontWeight: 'bold' }}>Why this matches:</span> {grant.matchReason}
-                        </div>
-                        
-                        <ul style={grantCardRequirementsStyle}>
-                          {grant.keyRequirements.map((req, i) => (
-                            <li key={i}>{req}</li>
-                          ))}
-                        </ul>
-                        
-                        <div style={grantCardActionsStyle}>
                           <button 
-                            onClick={() => handleAssistantGrantClick(grant.summaryUrl)}
-                            style={{
-                              backgroundColor: '#0073BB',
-                              color: 'white',
-                              border: 'none',
-                              padding: '6px 12px',
-                              borderRadius: '4px',
+                            type="button"
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              fontSize: '13px', 
+                              color: '#666', 
                               cursor: 'pointer',
-                              fontSize: '13px'
+                              padding: '4px 8px',
+                              backgroundColor: '#f5f5f5',
+                              borderRadius: '4px',
+                              border: 'none',
+                              width: 'auto',
+                              textAlign: 'left',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onClick={(e) => toggleGrantExpanded(grantKey, e)}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#e0f0ff';
+                              e.currentTarget.style.color = '#0073BB';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#f5f5f5';
+                              e.currentTarget.style.color = '#666';
                             }}
                           >
-                            View Requirements
-                          </button>
-                          <button 
-                            onClick={() => handleStartChatWithGrant(grant.summaryUrl)}
-                            style={{
-                              backgroundColor: '#f0f0f0',
-                              color: '#333',
-                              border: 'none',
-                              padding: '6px 12px',
-                              borderRadius: '4px',
-                              cursor: 'pointer',
-                              fontSize: '13px'
-                            }}
-                          >
-                            Start Narrative Draft
+                            {isExpanded ? 
+                              <LuChevronDown size={16} style={{ marginRight: '4px', flexShrink: 0 }} /> : 
+                              <LuChevronRight size={16} style={{ marginRight: '4px', flexShrink: 0 }} />
+                            }
+                            <span style={{ fontWeight: 'bold' }}>Grant details</span>
                           </button>
                         </div>
+                        
+                        {isExpanded && (
+                          <div style={{ 
+                            fontSize: '13px', 
+                            color: '#666', 
+                            marginTop: '12px',
+                            padding: '12px',
+                            backgroundColor: '#fafafa',
+                            border: '1px solid #f0f0f0',
+                            borderRadius: '4px',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                          }}>
+                            {grant.keyRequirements.length > 0 ? (
+                              <ul style={{ 
+                                margin: '0 0 0 20px',
+                                padding: '0',
+                                fontSize: '13px',
+                              }}>
+                                {grant.keyRequirements.map((req, i) => (
+                                  <li key={i}>{req}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p style={{ margin: '0' }}>No detailed requirements available for this grant.</p>
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   })}

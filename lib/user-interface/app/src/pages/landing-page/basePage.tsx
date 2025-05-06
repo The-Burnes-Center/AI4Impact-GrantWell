@@ -141,9 +141,15 @@ export default function Welcome({ theme }) {
 
   // Handle selecting a NOFO document
   const handleNOFOSelect = (href, selectedNOFO) => {
+    // Add current timestamp to the selectedNOFO object
+    const nofoWithTimestamp = {
+      ...selectedNOFO,
+      lastViewed: new Date().toLocaleString()
+    };
+    
     // Update recently viewed NOFOs in localStorage
     const updatedHistory = [
-      selectedNOFO,
+      nofoWithTimestamp,
       ...recentlyViewedNOFOs.filter(
         (item) => item.value !== selectedNOFO.value
       ),
