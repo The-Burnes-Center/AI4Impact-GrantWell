@@ -5,10 +5,10 @@
  * Connects to both WebSocket and REST API endpoints for grant recommendation functionality.
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth } from 'aws-amplify';
-import awsExports from '../../../aws-exports.json';
+import { AppContext } from '../common/app-context';
 
 // Types for grant recommendations
 export interface GrantRecommendation {
@@ -32,6 +32,7 @@ export interface RecommendationResponse {
  * React hook for getting grant recommendations
  */
 export const useGrantRecommendations = () => {
+  const appContext = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState<RecommendationResponse | null>(null);
@@ -44,6 +45,10 @@ export const useGrantRecommendations = () => {
    */
   const getRecommendationsUsingWebSocket = useCallback(async (query: string, userPreferences = {}) => {
     try {
+      if (!appContext) {
+        throw new Error('Application context not available');
+      }
+      
       setLoading(true);
       setError(null);
       
@@ -51,8 +56,8 @@ export const useGrantRecommendations = () => {
       const session = await Auth.currentSession();
       const idToken = session.getIdToken().getJwtToken();
       
-      // Create WebSocket connection using the endpoint from aws-exports.json
-      const websocketEndpoint = awsExports.wsEndpoint;
+      // Create WebSocket connection using the endpoint from app context
+      const websocketEndpoint = appContext.wsEndpoint;
       const ws = new WebSocket(`${websocketEndpoint}?Authorization=${idToken}`);
       setSocket(ws);
       
@@ -122,7 +127,7 @@ export const useGrantRecommendations = () => {
       setLoading(false);
       throw error;
     }
-  }, []);
+  }, [appContext]);
   
   /**
    * Gets grant recommendations using REST API
@@ -130,6 +135,10 @@ export const useGrantRecommendations = () => {
    */
   const getRecommendationsUsingREST = useCallback(async (query: string, userPreferences = {}) => {
     try {
+      if (!appContext) {
+        throw new Error('Application context not available');
+      }
+      
       setLoading(true);
       setError(null);
       
@@ -137,8 +146,8 @@ export const useGrantRecommendations = () => {
       const session = await Auth.currentSession();
       const idToken = session.getIdToken().getJwtToken();
       
-      // Make API request using the endpoint from aws-exports.json
-      const restEndpoint = awsExports.httpEndpoint;
+      // Make API request using the endpoint from app context
+      const restEndpoint = appContext.httpEndpoint;
       // Ensure endpoint ends with slash for proper URL construction
       const endpoint = restEndpoint.endsWith('/') ? restEndpoint : `${restEndpoint}/`;
       const response = await fetch(`${endpoint}grant-recommendations`, {
@@ -168,7 +177,7 @@ export const useGrantRecommendations = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [appContext]);
   
   return {
     loading,
