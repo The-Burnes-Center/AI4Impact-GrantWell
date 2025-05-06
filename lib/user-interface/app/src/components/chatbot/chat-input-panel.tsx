@@ -1,13 +1,4 @@
 import {
-  Button,
-  Container,
-  Icon,
-  Select,
-  SelectProps,
-  SpaceBetween,
-  Spinner,
-} from "@cloudscape-design/components";
-import {
   Dispatch,
   SetStateAction,
   useContext,
@@ -33,13 +24,18 @@ import {
   ChatInputState,
 } from "./types";
 
-import {
-  assembleHistory
-} from "./utils";
+import { assembleHistory } from "./utils";
 
 import { Utils } from "../../common/utils";
-import { SessionRefreshContext } from "../../common/session-refresh-context"
+import { SessionRefreshContext } from "../../common/session-refresh-context";
 import { useNotifications } from "../notif-manager";
+// Import icons we'll need
+import {
+  FaMicrophone,
+  FaMicrophoneSlash,
+  FaFile,
+  FaAngleDoubleRight,
+} from "react-icons/fa";
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -48,6 +44,12 @@ export interface ChatInputPanelProps {
   messageHistory: ChatBotHistoryItem[];
   setMessageHistory: (history: ChatBotHistoryItem[]) => void;
   documentIdentifier: string;
+}
+
+// Define type for select option
+interface SelectOption {
+  label: string;
+  value: string;
 }
 
 export abstract class ChatScrollState {
@@ -63,24 +65,83 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     useSpeechRecognition();
   const [state, setState] = useState<ChatInputState>({
     value: "",
-
   });
   const { notifications, addNotification } = useNotifications();
-  const [readyState, setReadyState] = useState<ReadyState>(
-    ReadyState.OPEN
-  );
+  const [readyState, setReadyState] = useState<ReadyState>(ReadyState.OPEN);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
 
-  const [
-    selectedDataSource,
-    setSelectedDataSource
-  ] = useState({ label: "Bedrock Knowledge Base", value: "kb" } as SelectProps.ChangeDetail["selectedOption"]);
+  const [selectedDataSource, setSelectedDataSource] = useState<SelectOption>({
+    label: "Bedrock Knowledge Base",
+    value: "kb",
+  });
+
+  // Styles for custom components
+  const containerStyle = {
+    padding: "16px",
+    backgroundColor: "#ffffff",
+    borderRadius: "8px",
+    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+    marginBottom: "16px",
+  };
+
+  const buttonStyle = {
+    padding: "8px 16px",
+    backgroundColor: "#006499",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "14px",
+    fontWeight: 500,
+  };
+
+  const disabledButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "#cccccc",
+    cursor: "not-allowed",
+  };
+
+  const iconButtonStyle = {
+    padding: "8px",
+    backgroundColor: "transparent",
+    border: "none",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#006499",
+  };
+
+  const linkButtonStyle = {
+    padding: "8px 16px",
+    backgroundColor: "transparent",
+    color: "#006499",
+    border: "none",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "14px",
+    fontWeight: 500,
+    textDecoration: "none",
+  };
+
+  const spinnerStyle = {
+    display: "inline-block",
+    width: "16px",
+    height: "16px",
+    border: "2px solid rgba(255,255,255,0.3)",
+    borderRadius: "50%",
+    borderTopColor: "white",
+    animation: "spin 1s linear infinite",
+  };
 
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
   }, [props.messageHistory]);
-
-
 
   /** Speech recognition */
   useEffect(() => {
@@ -88,7 +149,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       setState((state) => ({ ...state, value: transcript }));
     }
   }, [transcript]);
-
 
   /**Some amount of auto-scrolling for convenience */
   useEffect(() => {
@@ -101,8 +161,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       const isScrollToTheEnd =
         Math.abs(
           window.innerHeight +
-          window.scrollY -
-          document.documentElement.scrollHeight
+            window.scrollY -
+            document.documentElement.scrollHeight
         ) <= 10;
 
       if (!isScrollToTheEnd) {
@@ -137,7 +197,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   /**Sends a message to the chat API */
   const handleSendMessage = async () => {
     if (!props.documentIdentifier) {
-      addNotification('error', 'No Document selected. Please select a document to proceed.');
+      addNotification(
+        "error",
+        "No Document selected. Please select a document to proceed."
+      );
       return;
     }
     if (props.running) return;
@@ -145,7 +208,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     ChatScrollState.userHasScrolled = false;
 
     let username;
-    await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+    await Auth.currentAuthenticatedUser().then(
+      (value) => (username = value.username)
+    );
     if (!username) return;
 
     const messageToSend = state.value.trim();
@@ -157,13 +222,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
     try {
       props.setRunning(true);
-      let receivedData = '';
+      let receivedData = "";
 
       let newChatEntry = [];
 
       const isFirstMessage = messageHistoryRef.current.length === 1;
 
-      if(isFirstMessage){
+      if (isFirstMessage) {
         newChatEntry = [
           messageHistoryRef.current[0],
           {
@@ -175,7 +240,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       } else {
         newChatEntry = [
           {
-            type:ChatBotMessageType.Human,
+            type: ChatBotMessageType.Human,
             content: messageToSend,
             metadata: {},
           },
@@ -201,15 +266,15 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       if (messageHistoryRef.current.length < 3) {
         firstTime = true;
       }
-      // old non-auth url -> const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/'; 
-      // old shared url with auth -> wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/     
+      // old non-auth url -> const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
+      // old shared url with auth -> wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/
       // first deployment URL 'wss://zrkw21d01g.execute-api.us-east-1.amazonaws.com/prod/';
-      const TEST_URL = appContext.wsEndpoint + "/"
+      const TEST_URL = appContext.wsEndpoint + "/";
 
-      // Get a JWT token for the API to authenticate on      
-      const TOKEN = await Utils.authenticate()
+      // Get a JWT token for the API to authenticate on
+      const TOKEN = await Utils.authenticate();
 
-      const wsUrl = TEST_URL + '?Authorization=' + TOKEN;
+      const wsUrl = TEST_URL + "?Authorization=" + TOKEN;
       const ws = new WebSocket(wsUrl);
 
       let incomingMetadata: boolean = false;
@@ -217,26 +282,28 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
       /**If there is no response after a minute, time out the response to try again. */
       setTimeout(() => {
-        if (receivedData == '') {
-          ws.close()
+        if (receivedData == "") {
+          ws.close();
           messageHistoryRef.current.pop();
           messageHistoryRef.current.push({
             type: ChatBotMessageType.AI,
-            content: 'Response timed out!',
+            content: "Response timed out!",
             metadata: {},
-          })
+          });
         }
-      }, 60000)
+      }, 60000);
 
       // Event listener for when the connection is open
 
       // The system prompt here will be over written by the one in functions.ts. Make sure to change the prompt there.
-      ws.addEventListener('open', function open() {
+      ws.addEventListener("open", function open() {
         const message = JSON.stringify({
-          "action": "getChatbotResponse",
-          "data": {
+          action: "getChatbotResponse",
+          data: {
             userMessage: messageToSend,
-            chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
+            chatHistory: assembleHistory(
+              messageHistoryRef.current.slice(0, -2)
+            ),
             systemPrompt: `
             You are an AI assistant working for the Federal Funds and Infrastructure Office (FFIO) in Massachusetts. Your primary role is to collaboratively help users craft narrative documents for grant applications, using the Notice of Funding Opportunity (NOFO) document and gathered information from the summary in your knowledge base as context.
             **  Important Guidelines:**
@@ -288,19 +355,18 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             **Avoid Mentioning Internal Processes:**
             1. Do not reference any internal functions, system messages, error messages, or technical issues in your responses.
             2. If you encounter a lack of information, simply and politely ask the user for clarification or the necessary details.    `,
-            projectId: 'rsrs111111',
+            projectId: "rsrs111111",
             user_id: username,
             session_id: props.session.id,
             retrievalSource: selectedDataSource.value,
             documentIdentifier: props.documentIdentifier,
-          }
+          },
         });
 
         ws.send(message);
-
       });
       // Event listener for incoming messages
-      ws.addEventListener('message', async function incoming(data) {
+      ws.addEventListener("message", async function incoming(data) {
         /**This is a custom tag from the API that denotes that an error occured
          * and the next chunk will be an error message. */
         if (data.data.includes("<!ERROR!>:")) {
@@ -311,7 +377,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         /**This is a custom tag from the API that denotes when the model response
          * ends and when the sources are coming in
          */
-        if (data.data == '!<|EOF_STREAM|>!') {
+        if (data.data == "!<|EOF_STREAM|>!") {
           incomingMetadata = true;
           return;
         }
@@ -321,24 +387,27 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           let sourceData = JSON.parse(data.data);
           sourceData = sourceData.map((item) => {
             if (item.title == "") {
-              return { title: item.uri.slice((item.uri as string).lastIndexOf("/") + 1), uri: item.uri }
+              return {
+                title: item.uri.slice(
+                  (item.uri as string).lastIndexOf("/") + 1
+                ),
+                uri: item.uri,
+              };
             } else {
-              return item
+              return item;
             }
-          })
-          sources = { "Sources": sourceData }
+          });
+          sources = { Sources: sourceData };
         }
 
-        // Update the chat history state with the new message        
+        // Update the chat history state with the new message
         messageHistoryRef.current = [
           ...messageHistoryRef.current.slice(0, -2),
 
           {
             type: ChatBotMessageType.Human,
             content: messageToSend,
-            metadata: {
-
-            },
+            metadata: {},
           },
           {
             type: ChatBotMessageType.AI,
@@ -349,22 +418,23 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         props.setMessageHistory(messageHistoryRef.current);
       });
       // Handle possible errors
-      ws.addEventListener('error', function error(err) {
-        console.error('WebSocket error:', err);
+      ws.addEventListener("error", function error(err) {
+        console.error("WebSocket error:", err);
       });
       // Handle WebSocket closure
-      ws.addEventListener('close', async function close() {
+      ws.addEventListener("close", async function close() {
         // if this is a new session, the backend will update the session list, so
-        // we need to refresh        
+        // we need to refresh
         if (firstTime) {
           Utils.delay(1500).then(() => setNeedsRefresh(true));
         }
         props.setRunning(false);
       });
-
     } catch (error) {
-      console.error('Error sending message:', error);
-      alert('Sorry, something has gone horribly wrong! Please try again or refresh the page.');
+      console.error("Error sending message:", error);
+      alert(
+        "Sorry, something has gone horribly wrong! Please try again or refresh the page."
+      );
       props.setRunning(false);
     }
   };
@@ -379,26 +449,53 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
   const navigate = useNavigate();
 
+  // Define keyframes for spinner animation for injecting into the document
+  useEffect(() => {
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
+
   return (
-    <SpaceBetween direction="vertical" size="l">
-      <Container>
+    <div
+      className={styles.chat_input_container}
+      style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+    >
+      <div style={containerStyle}>
         <div className={styles.input_textarea_container}>
-          <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
+          <div style={{ display: "flex", alignItems: "center" }}>
             {browserSupportsSpeechRecognition ? (
-              <Button
-                iconName={listening ? "microphone-off" : "microphone"}
-                variant="icon"
-                ariaLabel="microphone-access"
+              <button
+                style={iconButtonStyle}
+                aria-label="microphone-access"
                 onClick={() =>
                   listening
                     ? SpeechRecognition.stopListening()
                     : SpeechRecognition.startListening()
                 }
-              />
+              >
+                {listening ? (
+                  <FaMicrophoneSlash size={16} />
+                ) : (
+                  <FaMicrophone size={16} />
+                )}
+              </button>
             ) : (
-              <Icon name="microphone-off" variant="disabled" />
+              <FaMicrophoneSlash
+                size={16}
+                style={{ color: "#cccccc", margin: "8px" }}
+              />
             )}
-          </SpaceBetween>
+          </div>
           <TextareaAutosize
             className={styles.input_textarea}
             maxRows={6}
@@ -418,7 +515,15 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             placeholder={"Send a message"}
           />
           <div style={{ marginLeft: "8px" }}>
-            <Button
+            <button
+              style={
+                readyState !== ReadyState.OPEN ||
+                props.running ||
+                state.value.trim().length === 0 ||
+                props.session.loading
+                  ? disabledButtonStyle
+                  : buttonStyle
+              }
               disabled={
                 readyState !== ReadyState.OPEN ||
                 props.running ||
@@ -426,40 +531,47 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 props.session.loading
               }
               onClick={handleSendMessage}
-              iconAlign="right"
-              iconName={!props.running ? "angle-right-double" : undefined}
-              variant="primary"
             >
               {props.running ? (
                 <>
                   Loading&nbsp;&nbsp;
-                  <Spinner />
+                  <div style={spinnerStyle} />
                 </>
               ) : (
-                "Send"
+                <>
+                  Send
+                  <FaAngleDoubleRight size={14} />
+                </>
               )}
-            </Button>
+            </button>
           </div>
         </div>
-      </Container>
-      <div className={styles.input_controls}>
+      </div>
+      <div
+        className={styles.input_controls}
+        style={{ display: "flex", justifyContent: "space-between" }}
+      >
         <div>
-          <Button 
-            variant="link" 
-            onClick={() => navigate(`/chatbot/document-editor/${props.session.id}?folder=${encodeURIComponent(props.documentIdentifier)}`)}
-            iconName="file"
+          <button
+            style={linkButtonStyle}
+            onClick={() =>
+              navigate(
+                `/chatbot/document-editor/${
+                  props.session.id
+                }?folder=${encodeURIComponent(props.documentIdentifier)}`
+              )
+            }
           >
+            <FaFile size={14} />
             Open Document Editor
-          </Button>
+          </button>
         </div>
         <div className={styles.input_controls_right}>
-          <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
-            <div style={{ paddingTop: "1px" }}>
-            </div>
-          </SpaceBetween>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <div style={{ paddingTop: "1px" }}></div>
+          </div>
         </div>
       </div>
-    </SpaceBetween>
+    </div>
   );
 }
-
