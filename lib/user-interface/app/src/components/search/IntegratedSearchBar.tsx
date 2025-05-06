@@ -205,10 +205,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     
     if (query) {
       setAssistantInput(query);
-      // Small delay to ensure UI is visible before submitting
-      setTimeout(() => {
-        handleAssistantSubmit();
-      }, 100);
+      // Removed the setTimeout and automatic search trigger here
     } else {
       // Clear previous results if no query
       setRecommendedGrants([]);
@@ -867,6 +864,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     Here are the top grants that match your needs:
                   </div>
                   {recommendedGrants.map((grant, index) => {
+                    // Get the proper grant name from the grant object
+                    // Ensure we display the full name rather than potentially truncated or generic names
                     const grantName = grant.name || '';
                     
                     // Check if this grant is already pinned
@@ -876,6 +875,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                       <div key={`grant-${grantName}-${index}`} style={grantCardStyle}>
                         <div style={grantCardHeaderStyle}>
                           <div style={grantCardTitleStyle}>
+                            {/* Display the full grant name properly formatted */}
                             {grantName}
                           </div>
                           
@@ -912,11 +912,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               )}
                             </div>
                           )}
-                        </div>
-                        
-                        <div style={grantCardDetailStyle}>
-                          <div>Funding: {grant.fundingAmount}</div>
-                          <div>Deadline: {grant.deadline}</div>
                         </div>
                         
                         <div style={{ fontSize: '13px', color: '#666', marginTop: '8px' }}>
@@ -963,13 +958,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     );
                   })}
                 </div>
-              ) : assistantInput && !isAssistantLoading ? (
-                <div style={{ textAlign: 'center', padding: '30px 0', color: '#666' }}>
-                  No matching grants found. Try describing your needs in more detail or with different keywords.
-                </div>
               ) : (
                 <div style={{ textAlign: 'center', padding: '30px 0', color: '#666' }}>
-                  Describe your specific grant needs above to find the best matching opportunities.
+                  {/* Only show "no matching grants" if a search was actually performed */}
+                  {assistantInput && !isAssistantLoading && recommendedGrants.length === 0 && isAssistantLoading === false ? (
+                    "No matching grants found. Try describing your needs in more detail or with different keywords."
+                  ) : (
+                    "Describe your specific grant needs above and click 'Find Grants' to discover matching opportunities."
+                  )}
                 </div>
               )}
             </div>
