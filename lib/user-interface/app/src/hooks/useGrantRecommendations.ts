@@ -8,6 +8,7 @@
 import { useCallback, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth } from 'aws-amplify';
+import awsExports from '../../../aws-exports.json';
 
 // Types for grant recommendations
 export interface GrantRecommendation {
@@ -50,8 +51,8 @@ export const useGrantRecommendations = () => {
       const session = await Auth.currentSession();
       const idToken = session.getIdToken().getJwtToken();
       
-      // Create WebSocket connection
-      const websocketEndpoint = process.env.REACT_APP_WEBSOCKET_ENDPOINT;
+      // Create WebSocket connection using the endpoint from aws-exports.json
+      const websocketEndpoint = awsExports.wsEndpoint;
       const ws = new WebSocket(`${websocketEndpoint}?Authorization=${idToken}`);
       setSocket(ws);
       
@@ -136,9 +137,11 @@ export const useGrantRecommendations = () => {
       const session = await Auth.currentSession();
       const idToken = session.getIdToken().getJwtToken();
       
-      // Make API request
-      const restEndpoint = process.env.REACT_APP_API_ENDPOINT;
-      const response = await fetch(`${restEndpoint}/grant-recommendations`, {
+      // Make API request using the endpoint from aws-exports.json
+      const restEndpoint = awsExports.httpEndpoint;
+      // Ensure endpoint ends with slash for proper URL construction
+      const endpoint = restEndpoint.endsWith('/') ? restEndpoint : `${restEndpoint}/`;
+      const response = await fetch(`${endpoint}grant-recommendations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
