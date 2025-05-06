@@ -166,7 +166,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     
     setIsAssistantLoading(true);
     
-    // Call the actual recommendation API instead of using mock data
+    // Call the actual recommendation API
     getRecommendationsUsingREST(assistantInput)
       .then((response) => {
         if (response && response.grants) {
