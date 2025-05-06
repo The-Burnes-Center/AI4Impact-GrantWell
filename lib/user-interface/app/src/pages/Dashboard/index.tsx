@@ -154,9 +154,7 @@ const Dashboard: React.FC = () => {
     }
 
     try {
-      // This should be implemented in the API client
-      // For now, we'll just simulate success
-      // await apiClient.users.inviteUser(inviteEmail);
+      await apiClient.userManagement.inviteUser(inviteEmail);
       
       alert(`Invitation sent to ${inviteEmail}`);
       setInviteEmail("");

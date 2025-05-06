@@ -295,35 +295,6 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    // Add List Users Lambda Function and API Route
-    const listUsersFunction = new lambda.Function(this, "ListUsersFunction", {
-      runtime: lambda.Runtime.NODEJS_18_X,
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "functions/user-management/list-users")
-      ),
-      handler: "index.handler",
-      environment: {
-        USER_POOL_ID: props.authentication.userPool.userPoolId,
-      },
-      timeout: cdk.Duration.seconds(30),
-    });
-
-    props.authentication.userPool.grant(
-      listUsersFunction,
-      "cognito-idp:ListUsers"
-    );
-
-    const listUsersIntegration = new HttpLambdaIntegration(
-      "ListUsersIntegration",
-      listUsersFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/user-management/list-users",
-      methods: [apigwv2.HttpMethod.GET],
-      integration: listUsersIntegration,
-      authorizer: httpAuthorizer,
-    });
-
     new cdk.CfnOutput(this, "WS-API - apiEndpoint", {
       value: websocketBackend.wsAPI.apiEndpoint || "",
     });

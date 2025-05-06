@@ -110,35 +110,6 @@ export class LandingPageClient {
     }
   }
 
-  // Invites a new user to the application
-  async inviteUser(email: string) {
-    try {
-      const token = await Utils.authenticate();
-      const response = await fetch(
-        `${this.baseUrl}/user-management/invite-user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || `Error: ${response.status}`);
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Error inviting user:", error);
-      throw error;
-    }
-  }
-
   // Renames a NOFO folder in S3
   async renameNOFO(oldName: string, newName: string) {
     try {
@@ -190,40 +161,6 @@ export class LandingPageClient {
       return data;
     } catch (error) {
       console.error("Error deleting NOFO:", error);
-      throw error;
-    }
-  }
-
-  // Gets the list of users from Cognito
-  async getUsers() {
-    try {
-      console.log("getUsers: Getting authentication token");
-      const token = await Utils.authenticate();
-
-      const url = `${this.baseUrl}/user-management/list-users`;
-      console.log("getUsers: Making API request to:", url);
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
-
-      console.log("getUsers: Received response status:", response.status);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("getUsers: Error response:", errorText);
-        throw new Error(`Error: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log("getUsers: Successfully parsed response data");
-      return data;
-    } catch (error) {
-      console.error("Error retrieving users:", error);
       throw error;
     }
   }
