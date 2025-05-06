@@ -875,43 +875,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                       <div key={`grant-${grantName}-${index}`} style={grantCardStyle}>
                         <div style={grantCardHeaderStyle}>
                           <div style={grantCardTitleStyle}>
-                            {/* Display the full grant name properly formatted */}
                             {grantName}
                           </div>
                           
-                          {isAdmin && (
-                            <div>
-                              {isPinned ? (
-                                <button 
-                                  onClick={(e) => handleUnpinGrant(grantName, e)}
-                                  style={unpinButtonStyle}
-                                  title="Unpin grant"
-                                  onMouseOver={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#f8e0e0';
-                                  }}
-                                  onMouseOut={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                  }}
-                                >
-                                  <LuPinOff size={20} color="#E74C3C" />
-                                </button>
-                              ) : (
-                                <button 
-                                  onClick={(e) => handlePinGrant(grant, e)}
-                                  style={pinButtonStyle}
-                                  title="Pin grant to top of recommendations"
-                                  onMouseOver={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#e0f0ff';
-                                  }}
-                                  onMouseOut={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                  }}
-                                >
-                                  <LuPin size={20} color="#0073BB" />
-                                </button>
-                              )}
-                            </div>
-                          )}
                         </div>
                         
                         <div style={{ fontSize: '13px', color: '#666', marginTop: '8px' }}>
@@ -960,8 +926,11 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 </div>
               ) : (
                 <div style={{ textAlign: 'center', padding: '30px 0', color: '#666' }}>
-                  {/* Only show "no matching grants" if a search was actually performed */}
-                  {assistantInput && !isAssistantLoading && recommendedGrants.length === 0 && isAssistantLoading === false ? (
+                  {/* Only show "no matching grants" if a search was actually performed AND submitted */}
+                  {assistantInput && 
+                   !isAssistantLoading && 
+                   recommendedGrants.length === 0 && 
+                   Object.keys(recommendations || {}).length > 0 ? (
                     "No matching grants found. Try describing your needs in more detail or with different keywords."
                   ) : (
                     "Describe your specific grant needs above and click 'Find Grants' to discover matching opportunities."
