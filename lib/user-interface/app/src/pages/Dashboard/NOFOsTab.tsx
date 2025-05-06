@@ -5,6 +5,7 @@ import { RowActions } from "./index";
 export interface NOFO {
   id: number;
   name: string;
+  status: "active" | "archived";
 }
 
 interface NOFOsTabProps {
@@ -29,6 +30,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedNofo, setSelectedNofo] = useState<NOFO | null>(null);
   const [editedNofoName, setEditedNofoName] = useState("");
+  const [editedNofoStatus, setEditedNofoStatus] = useState<"active" | "archived">("active");
+  
+  // Upload state
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [customGrantName, setCustomGrantName] = useState("");
 
   // Filter data based on search query
   const filteredNofos = nofos.filter((nofo) =>
@@ -39,6 +45,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const handleEditNofo = (nofo: NOFO) => {
     setSelectedNofo(nofo);
     setEditedNofoName(nofo.name);
+    setEditedNofoStatus(nofo.status || "active");
     setEditModalOpen(true);
   };
 
@@ -52,24 +59,27 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     if (!selectedNofo || !editedNofoName.trim()) return;
 
     try {
-      // Call API to update NOFO name
+      // Call API to update NOFO name and status
       await apiClient.landingPage.renameNOFO(
         selectedNofo.name,
         editedNofoName.trim()
       );
+      
+      // Update NOFO status
+      await apiClient.landingPage.updateNOFOStatus(editedNofoName.trim(), editedNofoStatus);
 
       // Update local state after successful API call
       setNofos(
         nofos.map((nofo) =>
           nofo.id === selectedNofo.id
-            ? { ...nofo, name: editedNofoName.trim() }
+            ? { ...nofo, name: editedNofoName.trim(), status: editedNofoStatus }
             : nofo
         )
       );
 
       // Show success notification
       alert(
-        `Grant renamed successfully from "${selectedNofo.name}" to "${editedNofoName}"`
+        `Grant updated successfully`
       );
 
       // Reset state
@@ -78,7 +88,32 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setEditedNofoName("");
     } catch (error) {
       console.error("Error updating grant:", error);
-      alert("Failed to rename grant. Please try again.");
+      alert("Failed to update grant. Please try again.");
+    }
+  };
+
+  // Toggle NOFO status
+  const toggleNofoStatus = async (nofo: NOFO) => {
+    const newStatus = nofo.status === "active" ? "archived" : "active";
+    
+    try {
+      // Call API to update NOFO status
+      await apiClient.landingPage.updateNOFOStatus(nofo.name, newStatus);
+      
+      // Update local state after successful API call
+      setNofos(
+        nofos.map((item) =>
+          item.id === nofo.id
+            ? { ...item, status: newStatus }
+            : item
+        )
+      );
+
+      // Show success notification
+      alert(`Grant status changed to ${newStatus}`);
+    } catch (error) {
+      console.error("Error updating grant status:", error);
+      alert("Failed to update grant status. Please try again.");
     }
   };
 
@@ -105,10 +140,71 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     }
   };
 
+  // File selection handler
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      setSelectedFile(file);
+      // Set default custom name from file name without extension
+      const defaultName = file.name.split(".").slice(0, -1).join("");
+      setCustomGrantName(defaultName);
+    }
+  };
+
   // Upload NOFO implementation
   const uploadNOFO = async () => {
-    setUploadNofoModalOpen(false);
+    if (!selectedFile) {
+      alert("Please select a file first");
+      return;
+    }
 
+    if (!customGrantName.trim()) {
+      alert("Grant name cannot be empty");
+      return;
+    }
+
+    try {
+      // Use the custom grant name for the folder
+      const folderName = customGrantName.trim();
+      
+      let newFilePath;
+      if (selectedFile.type === "text/plain") {
+        newFilePath = `${folderName}/Grant-File-TXT`;
+      } else if (selectedFile.type === "application/pdf") {
+        newFilePath = `${folderName}/Grant-File-PDF`;
+      } else {
+        newFilePath = `${folderName}/Grant-File`;
+      }
+
+      const signedUrl = await apiClient.landingPage.getUploadURL(
+        newFilePath,
+        selectedFile.type
+      );
+      await apiClient.landingPage.uploadFileToS3(signedUrl, selectedFile);
+
+      alert("Grant file uploaded successfully!");
+
+      // Refresh NOFO list after successful upload
+      const nofoResult = await apiClient.landingPage.getNOFOs();
+      const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
+        id: index,
+        name: nofo,
+        status: "active" // Default new grants to active
+      }));
+      setNofos(nofoData);
+      
+      // Reset state
+      setSelectedFile(null);
+      setCustomGrantName("");
+      setUploadNofoModalOpen(false);
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Failed to upload the grant file.");
+    }
+  };
+
+  // Legacy file selection method (directly from file dialog)
+  const openFileDialog = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = ".pdf,.txt";
@@ -118,36 +214,9 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
 
       if (!file) return;
 
-      try {
-        const documentName = file.name.split(".").slice(0, -1).join("");
-        let newFilePath;
-        if (file.type === "text/plain") {
-          newFilePath = `${documentName}/Grant-File-TXT`;
-        } else if (file.type === "application/pdf") {
-          newFilePath = `${documentName}/Grant-File-PDF`;
-        } else {
-          newFilePath = `${documentName}/Grant-File`;
-        }
-
-        const signedUrl = await apiClient.landingPage.getUploadURL(
-          newFilePath,
-          file.type
-        );
-        await apiClient.landingPage.uploadFileToS3(signedUrl, file);
-
-        alert("Grant file uploaded successfully!");
-
-        // Refresh NOFO list after successful upload
-        const nofoResult = await apiClient.landingPage.getNOFOs();
-        const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
-          id: index,
-          name: nofo,
-        }));
-        setNofos(nofoData);
-      } catch (error) {
-        console.error("Upload failed:", error);
-        alert("Failed to upload the grant file.");
-      }
+      setSelectedFile(file);
+      const defaultName = file.name.split(".").slice(0, -1).join("");
+      setCustomGrantName(defaultName);
     };
 
     fileInput.click();
@@ -158,20 +227,33 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       <div className="data-table">
         <div className="table-header">
           <div className="header-cell nofo-name">Grant Name</div>
-          <div className="header-cell">Agency</div>
-          <div className="header-cell">Created</div>
-          <div className="header-cell">Current Status</div>
-          <div className="header-cell">Deadline</div>
+          <div className="header-cell">Status</div>
           <div className="header-cell actions-cell"></div>
         </div>
         {filteredNofos.length > 0 ? (
           filteredNofos.map((nofo) => (
             <div className="table-row" key={nofo.id}>
               <div className="row-cell nofo-name">{nofo.name}</div>
-              <div className="row-cell"></div>
-              <div className="row-cell"></div>
-              <div className="row-cell"></div>
-              <div className="row-cell"></div>
+              <div className="row-cell">
+                <div 
+                  className={`status-badge ${nofo.status || 'active'}`} 
+                  onClick={() => toggleNofoStatus(nofo)}
+                  style={{
+                    display: 'inline-block',
+                    padding: '4px 12px',
+                    borderRadius: '12px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    textTransform: 'capitalize',
+                    background: (nofo.status || 'active') === 'active' ? '#e6f7ed' : '#f0f0f0',
+                    color: (nofo.status || 'active') === 'active' ? '#0a6634' : '#666666',
+                    border: (nofo.status || 'active') === 'active' ? '1px solid #b7e3c7' : '1px solid #dddddd',
+                  }}
+                >
+                  {nofo.status || "active"}
+                </div>
+              </div>
               <div className="row-cell actions-cell">
                 <RowActions
                   onEdit={() => handleEditNofo(nofo)}
@@ -202,6 +284,21 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               className="form-input"
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="nofo-status">Status</label>
+            <select
+              id="nofo-status"
+              value={editedNofoStatus}
+              onChange={(e) => setEditedNofoStatus(e.target.value as "active" | "archived")}
+              className="form-input"
+            >
+              <option value="active">Active</option>
+              <option value="archived">Archived</option>
+            </select>
+            <div style={{ fontSize: '13px', color: '#666', marginTop: '5px' }}>
+              Active grants are visible to users. Archived grants are hidden.
+            </div>
+          </div>
           <div className="modal-actions">
             <button
               className="modal-button secondary"
@@ -213,7 +310,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               className="modal-button primary"
               onClick={confirmEditNofo}
               disabled={
-                !editedNofoName.trim() || editedNofoName === selectedNofo?.name
+                !editedNofoName.trim() || 
+                (editedNofoName === selectedNofo?.name && editedNofoStatus === selectedNofo?.status)
               }
             >
               Save Changes
@@ -251,22 +349,89 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       {/* Upload NOFO Modal */}
       <Modal
         isOpen={uploadNofoModalOpen}
-        onClose={() => setUploadNofoModalOpen(false)}
+        onClose={() => {
+          setUploadNofoModalOpen(false);
+          setSelectedFile(null);
+          setCustomGrantName("");
+        }}
         title="Upload Grant"
       >
         <div className="modal-form">
           <p>
-            Upload a new grant file in PDF or TXT format. The file name will be used as the grant name.
+            Upload a new grant file in PDF or TXT format.
           </p>
+          
+          <div className="note-box" style={{ 
+            backgroundColor: '#f8f9fa', 
+            border: '1px solid #e9ecef', 
+            borderRadius: '4px', 
+            padding: '12px 15px', 
+            fontSize: '14px', 
+            color: '#495057',
+            marginBottom: '20px'
+          }}>
+            <strong>Note:</strong> Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it'll be ready for your review!
+          </div>
+          
+          <div className="form-group" style={{ marginBottom: '20px' }}>
+            <label htmlFor="file-upload" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+              Select File:
+            </label>
+            <input
+              id="file-upload"
+              type="file"
+              accept=".pdf,.txt"
+              onChange={handleFileSelect}
+              style={{ display: 'block', marginBottom: '15px' }}
+            />
+            {selectedFile && (
+              <div style={{ fontSize: '14px', color: '#555', marginTop: '5px' }}>
+                Selected: {selectedFile.name}
+              </div>
+            )}
+          </div>
+          
+          {selectedFile && (
+            <div className="form-group" style={{ marginBottom: '20px' }}>
+              <label htmlFor="custom-grant-name" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                Grant Name:
+              </label>
+              <input
+                type="text"
+                id="custom-grant-name"
+                value={customGrantName}
+                onChange={(e) => setCustomGrantName(e.target.value)}
+                placeholder="Enter grant name"
+                style={{ 
+                  width: '100%', 
+                  padding: '8px', 
+                  borderRadius: '4px',
+                  border: '1px solid #ccc'
+                }}
+              />
+              <div style={{ fontSize: '13px', color: '#666', marginTop: '5px' }}>
+                This name will be used to identify the grant in the system.
+              </div>
+            </div>
+          )}
+          
           <div className="modal-actions">
             <button
               className="modal-button secondary"
-              onClick={() => setUploadNofoModalOpen(false)}
+              onClick={() => {
+                setUploadNofoModalOpen(false);
+                setSelectedFile(null);
+                setCustomGrantName("");
+              }}
             >
               Cancel
             </button>
-            <button className="modal-button primary" onClick={uploadNOFO}>
-              Choose File
+            <button 
+              className="modal-button primary" 
+              onClick={uploadNOFO}
+              disabled={!selectedFile || !customGrantName.trim()}
+            >
+              Upload Grant
             </button>
           </div>
         </div>

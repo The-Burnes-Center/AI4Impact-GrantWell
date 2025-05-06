@@ -164,4 +164,30 @@ export class LandingPageClient {
       throw error;
     }
   }
+
+  // Updates a NOFO's status (active or archived)
+  async updateNOFOStatus(nofoName: string, status: "active" | "archived") {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(`${this.baseUrl}/s3-nofo-status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ nofoName, status }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `Error: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error updating NOFO status:", error);
+      throw error;
+    }
+  }
 }
