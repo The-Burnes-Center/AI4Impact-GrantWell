@@ -667,7 +667,7 @@ export default function Welcome({ theme }) {
             onMouseLeave={buttonLeaveStyle}
             aria-label="Start Chat"
           >
-            Ask AI
+            Get Grant Help
           </button>
         </div>
 

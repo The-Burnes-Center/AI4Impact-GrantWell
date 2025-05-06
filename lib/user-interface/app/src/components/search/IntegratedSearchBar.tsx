@@ -38,6 +38,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const [assistantInput, setAssistantInput] = useState('');
   const [recommendedGrants, setRecommendedGrants] = useState<GrantRecommendation[]>([]);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
+  const [nonGrantMessage, setNonGrantMessage] = useState('');
   
   // Use grant recommendations hook only for the Grant Assistant
   const { 
@@ -170,16 +171,24 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     // Call the actual recommendation API
     getRecommendationsUsingREST(assistantInput)
       .then((response) => {
-        if (response && response.grants) {
+        if (response && response.isNotGrantRelated) {
+          // Handle non-grant-related queries
+          setRecommendedGrants([]);
+          // Set a message indicating this is not a grant-related query
+          setNonGrantMessage(response.message || "Please ask about grants or funding opportunities.");
+        } else if (response && response.grants) {
           setRecommendedGrants(response.grants);
+          setNonGrantMessage("");
         } else {
           // Handle empty response
           setRecommendedGrants([]);
+          setNonGrantMessage("");
         }
       })
       .catch((error) => {
         console.error('Error getting recommendations:', error);
         setRecommendedGrants([]);
+        setNonGrantMessage("");
       })
       .finally(() => {
         setIsAssistantLoading(false);
@@ -216,6 +225,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     setShowAssistant(false);
     setAssistantInput('');
     setRecommendedGrants([]);
+    setNonGrantMessage('');
   };
 
   const assistantContainerStyle: React.CSSProperties = {
@@ -570,7 +580,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         <path d="M12 12H12.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
         <path d="M16 12H16.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
       </svg>
-      Get Personalized Grant Recommendations
+      Describe your needs & Discover Grants
     </button>
   );
 
@@ -623,7 +633,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   fontWeight: '500',
                   color: '#0073BB'
                 }}>
-                  Search by NOFO name or keywords to find grants
+                  Search by Grant name or keywords to find grants
                 </span>
               </div>
               <div style={{
@@ -791,12 +801,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           <div style={assistantContainerStyle}>
             <div style={assistantHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: '16px', color: '#0073BB' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" stroke="#0073BB" strokeWidth="2"/>
-                  <path d="M8 12H8.01" stroke="#0073BB" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M12 12H12.01" stroke="#0073BB" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M16 12H16.01" stroke="#0073BB" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
                 Describe Your Grant Needs
               </h3>
               <button 
@@ -834,6 +838,35 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   <Spinner size="normal" />
                   <div style={{ marginTop: '15px', color: '#666' }}>
                     Finding the best grant matches for your needs...
+                  </div>
+                </div>
+              ) : nonGrantMessage ? (
+                <div style={{ 
+                  textAlign: 'center', 
+                  padding: '30px 20px', 
+                  color: '#666',
+                  backgroundColor: '#fef6e6',
+                  border: '1px solid #fcebc9',
+                  borderRadius: '8px',
+                  margin: '10px 0'
+                }}>
+                  <div style={{ 
+                    fontSize: '18px', 
+                    color: '#e67700', 
+                    marginBottom: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center' 
+                  }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px' }}>
+                      <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#e67700" strokeWidth="2" />
+                      <path d="M12 8V12" stroke="#e67700" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M12 16V16.01" stroke="#e67700" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                    <span>Grant Assistant Notice</span>
+                  </div>
+                  <div style={{ fontSize: '14px' }}>
+                    {nonGrantMessage}
                   </div>
                 </div>
               ) : recommendedGrants.length > 0 ? (
@@ -935,6 +968,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   {assistantInput && 
                    !isAssistantLoading && 
                    recommendedGrants.length === 0 && 
+                   !nonGrantMessage &&
                    Object.keys(recommendations || {}).length > 0 ? (
                     "No matching grants found. Try describing your needs in more detail or with different keywords."
                   ) : (
