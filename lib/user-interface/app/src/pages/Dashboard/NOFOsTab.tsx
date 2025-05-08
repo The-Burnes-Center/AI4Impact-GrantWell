@@ -15,6 +15,8 @@ interface NOFOsTabProps {
   setNofos: React.Dispatch<React.SetStateAction<NOFO[]>>;
   uploadNofoModalOpen: boolean;
   setUploadNofoModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  showGrantSuccessBanner?: (grantName: string) => void;
+  useNotifications?: any;
 }
 
 export const NOFOsTab: React.FC<NOFOsTabProps> = ({
@@ -24,6 +26,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   setNofos,
   uploadNofoModalOpen,
   setUploadNofoModalOpen,
+  showGrantSuccessBanner,
+  useNotifications
 }) => {
   // NOFO editing state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -35,6 +39,9 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   // Upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
+
+  // Access notifications if available
+  const addNotification = useNotifications?.addNotification;
 
   // Filter data based on search query
   const filteredNofos = nofos.filter((nofo) =>
@@ -154,12 +161,20 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   // Upload NOFO implementation
   const uploadNOFO = async () => {
     if (!selectedFile) {
-      alert("Please select a file first");
+      if (addNotification) {
+        addNotification("error", "Please select a file first");
+      } else {
+        alert("Please select a file first");
+      }
       return;
     }
 
     if (!customGrantName.trim()) {
-      alert("Grant name cannot be empty");
+      if (addNotification) {
+        addNotification("error", "Grant name cannot be empty");
+      } else {
+        alert("Grant name cannot be empty");
+      }
       return;
     }
 
@@ -182,7 +197,14 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       );
       await apiClient.landingPage.uploadFileToS3(signedUrl, selectedFile);
 
-      alert("Grant file uploaded successfully!");
+      // Use the banner if available, otherwise fall back to alert
+      if (showGrantSuccessBanner) {
+        showGrantSuccessBanner(folderName);
+      } else if (addNotification) {
+        addNotification("success", `Grant "${folderName}" added successfully!`);
+      } else {
+        alert("Grant file uploaded successfully!");
+      }
 
       // Refresh NOFO list after successful upload
       const nofoResult = await apiClient.landingPage.getNOFOs();
@@ -199,7 +221,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setUploadNofoModalOpen(false);
     } catch (error) {
       console.error("Upload failed:", error);
-      alert("Failed to upload the grant file.");
+      if (addNotification) {
+        addNotification("error", "Failed to upload the grant file.");
+      } else {
+        alert("Failed to upload the grant file.");
+      }
     }
   };
 
@@ -228,7 +254,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         <div className="table-header">
           <div className="header-cell nofo-name">Grant Name</div>
           <div className="header-cell">Status</div>
-          <div className="header-cell actions-cell"></div>
+          <div className="header-cell actions-cell">Actions</div>
         </div>
         {filteredNofos.length > 0 ? (
           filteredNofos.map((nofo) => (
@@ -238,18 +264,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                 <div 
                   className={`status-badge ${nofo.status || 'active'}`} 
                   onClick={() => toggleNofoStatus(nofo)}
-                  style={{
-                    display: 'inline-block',
-                    padding: '4px 12px',
-                    borderRadius: '12px',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    textTransform: 'capitalize',
-                    background: (nofo.status || 'active') === 'active' ? '#e6f7ed' : '#f0f0f0',
-                    color: (nofo.status || 'active') === 'active' ? '#0a6634' : '#666666',
-                    border: (nofo.status || 'active') === 'active' ? '1px solid #b7e3c7' : '1px solid #dddddd',
-                  }}
                 >
                   {nofo.status || "active"}
                 </div>

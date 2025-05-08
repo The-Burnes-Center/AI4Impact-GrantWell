@@ -10,7 +10,7 @@ import IntegratedSearchBar from '../../components/search/IntegratedSearchBar';
 export default function Welcome({ theme }) {
   // **State Variables**
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false); // Track admin status
+  const [isAdmin, setIsAdmin] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
@@ -51,7 +51,7 @@ export default function Welcome({ theme }) {
     cursor: "pointer",
     transition: "all 0.2s ease",
     fontWeight: "500",
-    margin: "0 5px", // Reduced from 10px to 5px
+    margin: "0 5px",
     boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
   };
 
@@ -170,8 +170,8 @@ export default function Welcome({ theme }) {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)", // 3 columns instead of 2
-        gap: "20px", // Slightly reduced gap for 3 columns
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gap: "20px",
         marginBottom: "30px",
       }}
     >
@@ -191,7 +191,7 @@ export default function Welcome({ theme }) {
         recentlyViewedNOFOs.slice(0, 6).map(
           (
             nofo,
-            index // Show up to 6 items
+            index
           ) => (
             <div
               key={index}
@@ -203,7 +203,7 @@ export default function Welcome({ theme }) {
                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                 transition: "all 0.2s ease",
                 cursor: "pointer",
-                height: "100%", // Make all cards the same height
+                height: "100%",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -272,14 +272,14 @@ export default function Welcome({ theme }) {
     description,
     buttonText = "",
     buttonAction = null,
-    imageSrc = null, // Default to null if not provided
+    imageSrc = null,
     imageAlt = "",
     height,
     backgroundColor = "#06293d",
     mainTextColor = "#ffffff",
     bodyTextColor = "#ffffff",
     titleFontSize = "24px",
-    buttonVariant = "normal", // Default to "normal"
+    buttonVariant = "normal",
     linkUrl = null,
     imagePosition = "right",
     titleAlign = "left",
@@ -334,7 +334,7 @@ export default function Welcome({ theme }) {
             justifyContent: "center",
             flexDirection: "column",
             textAlign: titleAlign,
-            width: buttonText ? "70%" : "80%", // Adjust width based on whether there's a button
+            width: buttonText ? "70%" : "80%",
           }}
         >
           {title && (
@@ -402,24 +402,24 @@ export default function Welcome({ theme }) {
   const ContentBox = ({ children, backgroundColor = "#f1f6f9" }) => (
     <div
       style={{
-        width: "100vw", // Full screen width
-        backgroundColor, // Customizable background color
+        width: "100vw",
+        backgroundColor,
         position: "relative",
         left: "50%",
         right: "50%",
         marginLeft: "-50vw",
         marginRight: "-50vw",
-        boxSizing: "border-box", // Ensure padding doesn't expand width
-        padding: "20px 0", // Add padding for vertical spacing
+        boxSizing: "border-box",
+        padding: "20px 0",
         marginTop: "0px",
         marginBottom: "0px",
       }}
     >
       <div
         style={{
-          maxWidth: "950px", // Center-aligned content width
-          margin: "0 auto", // Center horizontally
-          padding: "0 40px", // Respect page margins
+          maxWidth: "950px",
+          margin: "0 auto",
+          padding: "0 40px",
           boxSizing: "border-box",
         }}
       >
@@ -428,7 +428,6 @@ export default function Welcome({ theme }) {
     </div>
   );
 
-  // Replace the existing Cards component with this:
   const ResourcesPanel = () => (
     <div
       style={{
@@ -476,7 +475,7 @@ export default function Welcome({ theme }) {
             borderRadius: "8px",
             backgroundColor: "#f9f9f9",
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-            textAlign: "center", // Center all text content
+            textAlign: "center", 
           }}
         >
           <a
@@ -492,7 +491,7 @@ export default function Welcome({ theme }) {
                 display: "block",
                 marginBottom: "8px",
                 color: mainTextColor,
-                textAlign: "center", // Center the title specifically
+                textAlign: "center",
               }}
             >
               {resource.title}
@@ -502,7 +501,7 @@ export default function Welcome({ theme }) {
             style={{
               fontSize: "14px",
               color: bodyTextColor,
-              textAlign: "center", // Center the description specifically
+              textAlign: "center",
             }}
           >
             {resource.description}
@@ -610,13 +609,13 @@ export default function Welcome({ theme }) {
             display: "flex",
             flexDirection: "row",
             gap: "5px", 
-            marginTop: "40px", // Increased from 20px to 40px for better spacing
+            marginTop: "40px",
             marginBottom: "45px",
             width: "100%",
-            padding: "0 50px", // Add 50px padding on left and right
+            padding: "0 50px",
             boxSizing: "border-box",
-            flexWrap: "wrap", // Allows wrapping on smaller screens
-            justifyContent: "center", // Centers items when wrapped
+            flexWrap: "wrap",
+            justifyContent: "center",
           }}
         >
           <button
