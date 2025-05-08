@@ -7,9 +7,10 @@ import {
   useSearchParams,
   useNavigate,
 } from "react-router-dom";
-import { FileText, HelpCircle, CheckSquare } from "lucide-react";
+import { HelpCircle, Upload } from "lucide-react";
 import { ApiClient } from "../../../common/api-client/api-client";
 import { AppContext } from "../../../common/app-context";
+import UploadModal from "../../../components/chatbot/upload-modal";
 
 // Styles for components
 const styles: Record<string, React.CSSProperties> = {
@@ -19,47 +20,58 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     padding: "16px 24px",
     borderBottom: "1px solid #e5e7eb",
+    backgroundColor: "white",
   },
   headerTitle: {
-    fontSize: "28px",
-    fontWeight: "700",
+    fontSize: "24px",
+    fontWeight: 600,
     color: "#111827",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     maxWidth: "60%",
+    margin: 0,
   },
   headerActions: {
     display: "flex",
     gap: "12px",
   },
-  actionButton: {
-    padding: "8px 16px",
-    borderRadius: "6px",
-    border: "none",
-    cursor: "pointer",
+  uploadButton: {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    fontSize: "14px",
-    fontWeight: "500",
-  },
-  primaryButton: {
-    backgroundColor: "#1a73e8",
+    padding: "8px 16px",
+    backgroundColor: "#0073bb",
     color: "white",
+    border: "none",
+    borderRadius: "6px",
+    fontSize: "14px",
+    fontWeight: 500,
+    cursor: "pointer",
   },
-  secondaryButton: {
+  helpButton: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "8px 16px",
     backgroundColor: "#f3f4f6",
     color: "#4b5563",
-  },
-  accentButton: {
-    backgroundColor: "#0aa5ff",
-    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    fontSize: "14px",
+    fontWeight: 500,
+    cursor: "pointer",
   },
   helpPanel: {
     padding: "20px",
     height: "100%",
-    overflowY: "auto" as const,
+    overflowY: "auto",
+  },
+  helpTitle: {
+    color: "#0073bb",
+    fontSize: "18px",
+    fontWeight: 600,
+    marginBottom: "16px",
   },
   helpText: {
     color: "#4b5563",
@@ -70,7 +82,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: "600",
     marginTop: "20px",
     marginBottom: "8px",
-    color: "#1a73e8",
+    color: "#0073bb",
   },
   helpList: {
     paddingLeft: "20px",
@@ -80,7 +92,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "8px",
   },
   helpLink: {
-    color: "#1a73e8",
+    color: "#0073bb",
     textDecoration: "none",
   },
 };
@@ -94,6 +106,7 @@ export default function Playground() {
   const appContext = useContext(AppContext);
   const [helpOpen, setHelpOpen] = useState(false);
   const navigate = useNavigate();
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchNofoName = async () => {
@@ -124,22 +137,8 @@ export default function Playground() {
     fetchNofoName();
   }, [documentIdentifier, appContext]);
 
-  const goToDocumentEditor = () => {
-    if (documentIdentifier) {
-      navigate(
-        `/document-editor/${documentIdentifier}?folder=${encodeURIComponent(
-          documentIdentifier
-        )}`
-      );
-    } else {
-      navigate(`/document-editor/new`);
-    }
-  };
-
-  const goToRequirements = () => {
-    if (documentIdentifier) {
-      navigate(`/landing-page/basePage/checklists/${documentIdentifier}`);
-    }
+  const handleUploadData = () => {
+    setUploadModalOpen(true);
   };
 
   return (
@@ -150,23 +149,14 @@ export default function Playground() {
             {isLoading ? "Loading..." : nofoName}
           </h1>
           <div style={styles.headerActions}>
-            <button
-              style={{ ...styles.actionButton, ...styles.primaryButton }}
-              onClick={goToDocumentEditor}
-            >
-              <FileText size={16} /> Open Document Editor
+            <button style={styles.uploadButton} onClick={handleUploadData}>
+              <Upload size={16} /> Upload Data
             </button>
             <button
-              style={{ ...styles.actionButton, ...styles.accentButton }}
-              onClick={goToRequirements}
+              style={styles.helpButton}
+              onClick={() => setHelpOpen(!helpOpen)}
             >
-              <CheckSquare size={16} /> View Key Requirements
-            </button>
-            <button
-              style={{ ...styles.actionButton, ...styles.secondaryButton }}
-              onClick={() => setHelpOpen((prevState) => !prevState)}
-            >
-              <HelpCircle size={16} /> View Help
+              <HelpCircle size={16} /> {helpOpen ? "Hide Help" : "View Help"}
             </button>
           </div>
         </div>
@@ -226,6 +216,11 @@ export default function Playground() {
           style={{ height: "100%", display: "flex", flexDirection: "column" }}
         >
           <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
+          <UploadModal
+            isOpen={uploadModalOpen}
+            onClose={() => setUploadModalOpen(false)}
+            documentIdentifier={documentIdentifier}
+          />
         </div>
       }
     />

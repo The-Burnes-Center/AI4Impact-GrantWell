@@ -5,14 +5,12 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router";
-// Import icons
 import {
   Plus as FaPlus,
   Trash2 as FaTrash,
@@ -69,24 +67,14 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: "#1a73e8",
     color: "white",
   },
-  primaryButtonHover: {
-    backgroundColor: "#1558b3",
-  },
   dangerButton: {
     backgroundColor: "#ef4444",
     color: "white",
-  },
-  dangerButtonHover: {
-    backgroundColor: "#dc2626",
   },
   disabledButton: {
     backgroundColor: "#e5e7eb",
     color: "#9ca3af",
     cursor: "not-allowed",
-  },
-  searchContainer: {
-    position: "relative",
-    marginBottom: "16px",
   },
   tableContainer: {
     flex: 1,
@@ -119,9 +107,6 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: "1px solid #e5e7eb",
     whiteSpace: "nowrap",
   },
-  tableRowHover: {
-    backgroundColor: "#f9fafb",
-  },
   checkboxCell: {
     width: "48px",
     textAlign: "center" as const,
@@ -132,9 +117,6 @@ const styles: Record<string, React.CSSProperties> = {
   link: {
     color: "#1a73e8",
     textDecoration: "none",
-  },
-  linkHover: {
-    textDecoration: "underline",
   },
   dateCell: {
     display: "flex",
@@ -204,9 +186,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "14px",
     cursor: "pointer",
   },
-  paginationButtonHover: {
-    backgroundColor: "#f9fafb",
-  },
   paginationButtonDisabled: {
     backgroundColor: "#f3f4f6",
     color: "#9ca3af",
@@ -252,12 +231,14 @@ const styles: Record<string, React.CSSProperties> = {
 export interface SessionsProps {
   readonly toolsOpen: boolean;
   readonly documentIdentifier: string | null;
+  onSessionSelect?: (sessionId: string) => void;
 }
 
 interface Session {
   session_id: string;
   title: string;
   time_stamp: string;
+  document_identifier?: string;
 }
 
 export default function Sessions(props: SessionsProps) {
@@ -278,12 +259,11 @@ export default function Sessions(props: SessionsProps) {
 
   const getSessions = useCallback(async () => {
     if (!appContext) return;
-    let username;
-    const apiClient = new ApiClient(appContext);
+
     try {
-      await Auth.currentAuthenticatedUser().then(
-        (value) => (username = value.username)
-      );
+      const apiClient = new ApiClient(appContext);
+      const username = (await Auth.currentAuthenticatedUser()).username;
+
       if (username) {
         const result = await apiClient.sessions.getSessions(
           username,
@@ -293,7 +273,7 @@ export default function Sessions(props: SessionsProps) {
         setSessions(result);
       }
     } catch (e) {
-      console.log(e);
+      console.error("Error fetching sessions:", e);
       setSessions([]);
     }
   }, [appContext, documentIdentifier]);
@@ -301,38 +281,41 @@ export default function Sessions(props: SessionsProps) {
   useEffect(() => {
     if (!appContext) return;
 
-    (async () => {
+    const loadSessions = async () => {
       setIsLoading(true);
       await getSessions();
       setIsLoading(false);
-    })();
+    };
+
+    loadSessions();
   }, [appContext, getSessions, props.toolsOpen, documentIdentifier]);
 
   const deleteSelectedSessions = async () => {
-    if (!appContext) return;
-    let username;
-    await Auth.currentAuthenticatedUser().then(
-      (value) => (username = value.username)
-    );
-    setIsLoading(true);
-    const apiClient = new ApiClient(appContext);
-    await Promise.all(
-      selectedItems.map((s) =>
-        apiClient.sessions.deleteSession(s.session_id, username)
-      )
-    );
-    setSelectedItems([]);
-    setShowModalDelete(false);
-    await getSessions();
-    setIsLoading(false);
+    if (!appContext || selectedItems.length === 0) return;
+
+    try {
+      setIsLoading(true);
+      const apiClient = new ApiClient(appContext);
+      const username = (await Auth.currentAuthenticatedUser()).username;
+
+      await Promise.all(
+        selectedItems.map((session) =>
+          apiClient.sessions.deleteSession(session.session_id, username)
+        )
+      );
+
+      setSelectedItems([]);
+      setShowModalDelete(false);
+      await getSessions();
+    } catch (e) {
+      console.error("Error deleting sessions:", e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedItems(paginatedItems);
-    } else {
-      setSelectedItems([]);
-    }
+    setSelectedItems(e.target.checked ? paginatedItems : []);
   };
 
   const handleSelectItem = (
@@ -340,33 +323,32 @@ export default function Sessions(props: SessionsProps) {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.checked) {
-      setSelectedItems([...selectedItems, item]);
+      setSelectedItems((prev) => [...prev, item]);
     } else {
-      setSelectedItems(
-        selectedItems.filter((i) => i.session_id !== item.session_id)
+      setSelectedItems((prev) =>
+        prev.filter((i) => i.session_id !== item.session_id)
       );
     }
   };
 
   const handleSort = (field: "title" | "time_stamp") => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      setSortField(field);
-      setSortDirection("asc");
-    }
+    setSortDirection((prev) =>
+      sortField === field ? (prev === "asc" ? "desc" : "asc") : "asc"
+    );
+    setSortField(field);
   };
 
   const sortedSessions = useMemo(() => {
     return [...sessions].sort((a, b) => {
+      const sortMultiplier = sortDirection === "asc" ? 1 : -1;
+
       if (sortField === "title") {
-        return sortDirection === "asc"
-          ? a.title.localeCompare(b.title)
-          : b.title.localeCompare(a.title);
+        return sortMultiplier * a.title.localeCompare(b.title);
       } else {
-        return sortDirection === "asc"
-          ? new Date(a.time_stamp).getTime() - new Date(b.time_stamp).getTime()
-          : new Date(b.time_stamp).getTime() - new Date(a.time_stamp).getTime();
+        return (
+          sortMultiplier *
+          (new Date(a.time_stamp).getTime() - new Date(b.time_stamp).getTime())
+        );
       }
     });
   }, [sessions, sortField, sortDirection]);
@@ -375,23 +357,30 @@ export default function Sessions(props: SessionsProps) {
 
   const paginatedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return sortedSessions.slice(startIndex, endIndex);
+    return sortedSessions.slice(startIndex, startIndex + pageSize);
   }, [sortedSessions, currentPage, pageSize]);
 
   const getSortIcon = (field: "title" | "time_stamp") => {
-    if (sortField !== field) return <FaSort className="h-4 w-4" />;
-    return sortDirection === "asc" ? (
-      <FaSortUp className="h-4 w-4" />
-    ) : (
-      <FaSortDown className="h-4 w-4" />
-    );
+    if (sortField !== field) return <FaSort />;
+    return sortDirection === "asc" ? <FaSortUp /> : <FaSortDown />;
   };
 
   const formatSessionTime = (timestamp: string) => {
     return DateTime.fromISO(new Date(timestamp).toISOString()).toLocaleString(
       DateTime.DATETIME_SHORT
     );
+  };
+
+  const handleSessionClick = (item: Session) => {
+    if (props.onSessionSelect) {
+      props.onSessionSelect(item.session_id);
+    }
+
+    const queryParam = item.document_identifier
+      ? `?folder=${encodeURIComponent(item.document_identifier)}`
+      : "";
+
+    navigate(`/chatbot/playground/${item.session_id}${queryParam}`);
   };
 
   return (
@@ -405,7 +394,7 @@ export default function Sessions(props: SessionsProps) {
             </div>
             <div style={styles.modalContent}>
               Do you want to delete{" "}
-              {selectedItems.length == 1
+              {selectedItems.length === 1
                 ? `session ${selectedItems[0].session_id}?`
                 : `${selectedItems.length} sessions?`}
             </div>
@@ -433,41 +422,41 @@ export default function Sessions(props: SessionsProps) {
           <div>
             <h1 style={styles.headerTitle}>Sessions</h1>
             <p style={styles.headerDescription}>
-              View or delete any of your past 100 sessions
+              Manage and access your previous chat conversations
             </p>
           </div>
           <div style={styles.buttonContainer}>
             <button
               style={{ ...styles.button, ...styles.primaryButton }}
               onClick={() => {
-                navigate(
-                  `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
-                    documentIdentifier || ""
-                  )}`
-                );
+                const queryParams = props.documentIdentifier
+                  ? `?folder=${encodeURIComponent(props.documentIdentifier)}`
+                  : "";
+                navigate(`/landing-page/basePage${queryParams}`);
               }}
             >
               <FaPlus size={16} /> New Session
             </button>
             <button
-              style={{ ...styles.button, ...styles.primaryButton }}
-              onClick={() => getSessions()}
-            >
-              <FaSync size={16} /> Refresh
-            </button>
-            <button
               style={{
                 ...styles.button,
-                ...(selectedItems.length > 0
-                  ? styles.dangerButton
-                  : styles.disabledButton),
+                ...styles.dangerButton,
+                ...(selectedItems.length === 0 ? styles.disabledButton : {}),
               }}
+              onClick={() => setShowModalDelete(true)}
               disabled={selectedItems.length === 0}
-              onClick={() => {
-                if (selectedItems.length > 0) setShowModalDelete(true);
-              }}
             >
               <FaTrash size={16} /> Delete
+            </button>
+            <button
+              style={{ ...styles.button }}
+              onClick={async () => {
+                setIsLoading(true);
+                await getSessions();
+                setIsLoading(false);
+              }}
+            >
+              <FaSync size={16} /> Refresh
             </button>
           </div>
         </div>
@@ -518,7 +507,7 @@ export default function Sessions(props: SessionsProps) {
             </thead>
             <tbody>
               {paginatedItems.map((item) => (
-                <tr key={item.session_id} style={{ ...styles.tableRow }}>
+                <tr key={item.session_id}>
                   <td style={{ ...styles.tableCell, ...styles.checkboxCell }}>
                     <input
                       type="checkbox"
@@ -530,12 +519,34 @@ export default function Sessions(props: SessionsProps) {
                     />
                   </td>
                   <td style={styles.tableCell}>
-                    <Link
-                      to={`/chatbot/playground/${item.session_id}`}
-                      style={styles.link}
+                    <button
+                      onClick={() => {
+                        if (props.onSessionSelect) {
+                          props.onSessionSelect(item.session_id);
+                        }
+
+                        const queryParam = item.document_identifier
+                          ? `?folder=${encodeURIComponent(
+                              item.document_identifier
+                            )}`
+                          : "";
+
+                        navigate(
+                          `/chatbot/playground/${item.session_id}${queryParam}`
+                        );
+                      }}
+                      style={{
+                        ...styles.link,
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        cursor: "pointer",
+                        textAlign: "left",
+                        fontSize: "inherit",
+                      }}
                     >
                       {item.title}
-                    </Link>
+                    </button>
                   </td>
                   <td style={styles.tableCell}>
                     <div style={styles.dateCell}>

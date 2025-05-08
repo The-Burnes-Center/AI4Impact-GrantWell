@@ -38,27 +38,44 @@ const styles = {
     gap: "16px",
   },
   inputBorder: {
-    border: "1px solid #d1d5db",
-    borderRadius: "8px",
+    border: "1px solid #e2e5ec",
+    borderRadius: "10px",
     overflow: "hidden",
-    backgroundColor: "#f9fafb",
+    backgroundColor: "white",
     display: "flex",
     alignItems: "center",
     width: "100%",
+    margin: "0 auto",
+    boxShadow: "0 1px 6px rgba(0, 0, 0, 0.05) inset",
   },
   micButton: {
-    padding: "10px",
+    padding: "8px",
     background: "none",
     border: "none",
     cursor: "pointer",
-    color: "#6b7280",
+    color: "#4b5563",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "36px",
+    height: "36px",
+    borderRadius: "50%",
+    margin: "0 4px",
+    transition: "background-color 0.2s ease",
   },
   micActive: {
     color: "#ef4444",
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
   },
   micDisabled: {
-    color: "#d1d5db",
+    color: "#9ca3af",
     cursor: "not-allowed",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "36px",
+    height: "36px",
+    margin: "0 4px",
   },
   inputTextarea: {
     flex: 1,
@@ -78,19 +95,26 @@ const styles = {
     color: "#6b7280",
   },
   sendButton: {
-    padding: "10px 16px",
+    padding: "8px",
     border: "none",
     cursor: "pointer",
-    backgroundColor: "#1a73e8",
+    backgroundColor: "#0073bb",
     color: "white",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: "50%",
+    width: "40px",
+    height: "40px",
+    margin: "0 4px",
+    transition: "all 0.2s ease",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
   },
   sendButtonDisabled: {
     backgroundColor: "#e5e7eb",
     color: "#9ca3af",
     cursor: "not-allowed",
+    boxShadow: "none",
   },
   spinner: {
     animation: "spin 1s linear infinite",
@@ -116,7 +140,6 @@ export abstract class ChatScrollState {
   static userHasScrolled = false;
   static skipNextScrollEvent = false;
   static skipNextHistoryUpdate = false;
-  static messageAreaRef: React.RefObject<HTMLDivElement> | null = null;
 }
 
 export default function ChatInputPanel(props: ChatInputPanelProps) {
@@ -130,6 +153,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   const { notifications, addNotification } = useNotifications();
   const [readyState, setReadyState] = useState<ReadyState>(ReadyState.OPEN);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
+  const [isHovered, setIsHovered] = useState(false);
+  const [micHovered, setMicHovered] = useState(false);
 
   const [selectedDataSource, setSelectedDataSource] = useState<SelectOption>({
     label: "Bedrock Knowledge Base",
@@ -147,27 +172,32 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [transcript]);
 
-  // Scrolling detection logic
+  /**Some amount of auto-scrolling for convenience */
   useEffect(() => {
-    const messageAreaElement = ChatScrollState.messageAreaRef?.current;
-    if (!messageAreaElement) return;
-
-    const onAreaScroll = () => {
+    const onWindowScroll = () => {
       if (ChatScrollState.skipNextScrollEvent) {
         ChatScrollState.skipNextScrollEvent = false;
         return;
       }
-      // Check if user has scrolled up
-      const isScrolledToBottom =
-        messageAreaElement.scrollHeight - messageAreaElement.scrollTop <=
-        messageAreaElement.clientHeight + 100; // Add some tolerance
 
-      ChatScrollState.userHasScrolled = !isScrolledToBottom;
+      const isScrollToTheEnd =
+        Math.abs(
+          window.innerHeight +
+            window.scrollY -
+            document.documentElement.scrollHeight
+        ) <= 10;
+
+      if (!isScrollToTheEnd) {
+        ChatScrollState.userHasScrolled = true;
+      } else {
+        ChatScrollState.userHasScrolled = false;
+      }
     };
 
-    messageAreaElement.addEventListener("scroll", onAreaScroll);
+    window.addEventListener("scroll", onWindowScroll);
+
     return () => {
-      messageAreaElement.removeEventListener("scroll", onAreaScroll);
+      window.removeEventListener("scroll", onWindowScroll);
     };
   }, []);
 
@@ -177,15 +207,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       return;
     }
 
-    if (
-      !ChatScrollState.userHasScrolled &&
-      props.messageHistory.length > 0 &&
-      ChatScrollState.messageAreaRef?.current
-    ) {
+    if (!ChatScrollState.userHasScrolled && props.messageHistory.length > 0) {
       ChatScrollState.skipNextScrollEvent = true;
-      const messageAreaElement = ChatScrollState.messageAreaRef.current;
-      // Scroll to the bottom for messages
-      messageAreaElement.scrollTop = messageAreaElement.scrollHeight;
+      window.scrollTo({
+        top: document.documentElement.scrollHeight + 1000,
+        behavior: "instant",
+      });
     }
   }, [props.messageHistory]);
 
@@ -201,14 +228,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     if (props.running) return;
     if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
-
-    // Scroll to bottom immediately when sending a message
-    if (ChatScrollState.messageAreaRef?.current) {
-      const messageAreaElement = ChatScrollState.messageAreaRef.current;
-      setTimeout(() => {
-        messageAreaElement.scrollTop = messageAreaElement.scrollHeight;
-      }, 100);
-    }
 
     let username;
     await Auth.currentAuthenticatedUser().then(
@@ -448,13 +467,18 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   };
 
   return (
-    <div style={styles.inputBorder}>
+    <div
+      style={{
+        ...styles.inputBorder,
+      }}
+    >
       {/* Microphone button */}
       {browserSupportsSpeechRecognition ? (
         <button
           style={{
             ...styles.micButton,
             ...(listening ? styles.micActive : {}),
+            ...(micHovered && !listening ? { backgroundColor: "#f3f4f6" } : {}),
           }}
           aria-label="Toggle microphone"
           onClick={() =>
@@ -462,12 +486,14 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               ? SpeechRecognition.stopListening()
               : SpeechRecognition.startListening()
           }
+          onMouseEnter={() => setMicHovered(true)}
+          onMouseLeave={() => setMicHovered(false)}
         >
-          {listening ? <MicOff size={20} /> : <Mic size={20} />}
+          {listening ? <MicOff size={18} /> : <Mic size={18} />}
         </button>
       ) : (
         <span style={styles.micDisabled}>
-          <MicOff size={20} />
+          <MicOff size={18} />
         </span>
       )}
 
@@ -476,13 +502,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         style={{
           flex: 1,
           resize: "none",
-          padding: "12px 14px",
+          padding: "10px 12px",
           border: "none",
           outline: "none",
           fontFamily: "inherit",
-          fontSize: "15px",
+          fontSize: "14px",
           backgroundColor: "transparent",
-          lineHeight: "1.5",
+          color: "#1f2937",
         }}
         maxRows={4}
         minRows={1}
@@ -498,13 +524,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           }
         }}
         value={state.value}
-        placeholder="Send a message..."
+        placeholder="Type your message here..."
       />
-
-      {/* Upload button */}
-      <button style={styles.uploadButton} title="Attach files">
-        <Upload size={20} />
-      </button>
 
       {/* Send button */}
       <button
@@ -514,7 +535,16 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           state.value.trim().length === 0 ||
           props.session.loading
             ? { ...styles.sendButton, ...styles.sendButtonDisabled }
-            : styles.sendButton),
+            : {
+                ...styles.sendButton,
+                ...(isHovered
+                  ? {
+                      backgroundColor: "#005d96",
+                      transform: "translateY(-2px)",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+                    }
+                  : {}),
+              }),
         }}
         disabled={
           readyState !== ReadyState.OPEN ||
@@ -523,11 +553,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           props.session.loading
         }
         onClick={handleSendMessage}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {props.running ? (
-          <Loader size={20} style={styles.spinner} />
+          <Loader size={18} style={styles.spinner} />
         ) : (
-          <Send size={20} />
+          <Send size={18} style={{ transform: "translateX(1px)" }} />
         )}
       </button>
     </div>

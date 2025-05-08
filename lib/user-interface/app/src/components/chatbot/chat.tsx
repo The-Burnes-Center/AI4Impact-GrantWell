@@ -24,19 +24,15 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: "column",
     height: "100%",
     position: "relative",
-    overflow: "hidden",
-  },
-  topInputContainer: {
-    backgroundColor: "white",
-    padding: "15px 20px",
-    borderBottom: "1px solid #e2e8f0",
-    zIndex: 10,
+    paddingBottom: "100px",
+    backgroundColor: "#fbfbfd",
   },
   messageArea: {
     flex: 1,
     overflowY: "auto",
     padding: "20px",
-    paddingBottom: "120px",
+    paddingBottom: "100px",
+    backgroundColor: "#fbfbfd",
   },
   messageList: {
     display: "flex",
@@ -84,15 +80,19 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "20px",
   },
   inputContainer: {
-    backgroundColor: "transparent",
-    padding: "0",
-    position: "absolute",
-    bottom: "30px",
+    border: "none",
+    backgroundColor: "#f8fafc",
+    padding: "10px",
+    position: "fixed",
+    bottom: "20px",
     left: "50%",
     transform: "translateX(-50%)",
-    width: "85%",
-    maxWidth: "1000px",
-    zIndex: 10,
+    width: "70%",
+    maxWidth: "800px",
+    zIndex: 100,
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+    borderRadius: "12px",
+    borderTop: "3px solid #0073bb",
   },
   // Modal Styles
   modalOverlay: {
@@ -132,9 +132,9 @@ const styles: Record<string, React.CSSProperties> = {
   modalContent: {
     display: "flex",
     flexDirection: "column",
-    gap: "16px",
+    gap: "12px",
     fontSize: "16px",
-    lineHeight: "1.6",
+    lineHeight: "1.4",
   },
   closeButton: {
     background: "transparent",
@@ -150,7 +150,8 @@ const styles: Record<string, React.CSSProperties> = {
     transition: "background-color 0.2s",
   },
   checkboxContainer: {
-    marginTop: "8px",
+    marginTop: "0px",
+    marginBottom: "0px",
     display: "flex",
     alignItems: "center",
     fontWeight: 500,
@@ -162,22 +163,8 @@ const styles: Record<string, React.CSSProperties> = {
     accentColor: "#1a73e8",
   },
   listItem: {
-    marginBottom: "10px",
+    marginBottom: "5px",
     paddingLeft: "5px",
-  },
-  bottomInputContainer: {
-    position: "fixed",
-    bottom: "20px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    width: "90%",
-    maxWidth: "1000px",
-    zIndex: 10,
-    backgroundColor: "white",
-    padding: "16px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-    border: "1px solid #e2e8f0",
   },
 };
 
@@ -200,15 +187,6 @@ export default function Chat(props: {
   const [showPopup, setShowPopup] = useState<boolean>(true);
   const [doNotShowAgain, setDoNotShowAgain] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const messageAreaRef = useRef<HTMLDivElement>(null);
-
-  // Set the message area ref for scrolling
-  useEffect(() => {
-    ChatScrollState.messageAreaRef = messageAreaRef;
-    return () => {
-      ChatScrollState.messageAreaRef = null;
-    };
-  }, []);
 
   // Check localStorage on component mount
   useEffect(() => {
@@ -369,25 +347,26 @@ export default function Chat(props: {
                 For GrantWell to work best, upload supplementary data through
                 the "upload data" link to best help us craft a narrative that
                 reflects your organization.
+                <br></br>
+                <br></br>
+                Examples of data could include:
+                <ul
+                  style={{
+                    paddingLeft: "24px",
+                    marginBottom: "16px",
+                    marginTop: "4px",
+                  }}
+                >
+                  <li style={styles.listItem}>Last year's annual report</li>
+                  <li style={styles.listItem}>Latest accomplishments</li>
+                  <li style={styles.listItem}>
+                    Previously submitted proposals for this grant
+                  </li>
+                  <li style={styles.listItem}>Project narrative template</li>
+                </ul>
               </p>
-              Examples of data could include:
-              <ul
-                style={{
-                  paddingLeft: "24px",
-                  marginBottom: "6px",
-                  marginTop: "4px",
-                }}
-              >
-                <li style={styles.listItem}>Last year's annual report</li>
-                <li style={styles.listItem}>Latest accomplishments</li>
-                <li style={styles.listItem}>
-                  Previously submitted proposals for this grant
-                </li>
-                <li style={styles.listItem}>Project narrative template</li>
-              </ul>
               <p
                 style={{
-                  marginBottom: "2px",
                   fontWeight: 500,
                   color: "#1a73e8",
                 }}
@@ -396,8 +375,8 @@ export default function Chat(props: {
                 conversation with the chatbot.
               </p>
               <p style={{ fontSize: "14px", color: "#666", marginTop: "4px" }}>
-                Click the "?" icon in the upper right corner to access this
-                information again.
+                Click the "View Help" Button in the upper right corner to access
+                this information again.
               </p>
               <div style={styles.checkboxContainer}>
                 <input
@@ -417,7 +396,7 @@ export default function Chat(props: {
       )}
 
       {/* Chat content area */}
-      <div style={styles.messageArea} ref={messageAreaRef}>
+      <div style={styles.messageArea}>
         <div style={styles.messageList}>
           {messageHistory.length === 0 && !session?.loading && (
             <div style={styles.infoAlert}>
@@ -464,8 +443,8 @@ export default function Chat(props: {
         </div>
       </div>
 
-      {/* Bottom input container */}
-      <div style={styles.bottomInputContainer}>
+      {/* Chat input area */}
+      <div style={styles.inputContainer}>
         <ChatInputPanel
           session={session}
           running={running}
