@@ -1,19 +1,20 @@
-
 export interface ChatBotConfiguration {
-  streaming: boolean;
-  showMetadata: boolean;
-  maxTokens: number;
+  conversationStyle: string;
+  model: string;
   temperature: number;
-  topP: number;  
+  maxTokens: number;
+  topP: number;
+  stopSequences?: string[];
+  anthropicVersion?: string;
 }
 
 export interface ChatInputState {
-  value: string;  
+  value: string;
 }
 
 export enum ChatBotMessageType {
-  AI = "ai",
-  Human = "human",
+  Human = "Human",
+  AI = "AI",
 }
 
 export interface ChatBotHistoryItem {
@@ -21,23 +22,18 @@ export interface ChatBotHistoryItem {
   content: string;
   metadata: Record<
     string,
-    | string
-    | boolean
-    | number
-    | null
-    | undefined    
-    | string[]
-    | string[][]
+    string | boolean | number | null | undefined | string[] | string[][]
   >;
 }
 
 export interface FeedbackData {
-  sessionId: string;  
+  sessionId: string;
   feedback: number;
   prompt: string;
-  completion: string;    
-  topic: string,
-  problem: string,
-  comment: string,
-  sources: string     
+  completion: string;
+  topic: string;
+  problem: string;
+  comment: string;
+  sources: string;
+  documentIdentifier: string;
 }

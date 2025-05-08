@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChatBotHistoryItem, ChatBotMessageType, FeedbackData } from "./types";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
@@ -6,17 +7,186 @@ import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
-import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notif-manager";
 // Import icons
-import { FaInfoCircle, FaSpinner, FaTimes } from "react-icons/fa";
+import {
+  FileText,
+  HelpCircle,
+  Loader as FaSpinner,
+  X as FaTimes,
+} from "lucide-react";
+
+// Styles for components
+const styles: Record<string, React.CSSProperties> = {
+  chatContainer: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    position: "relative",
+    overflow: "hidden",
+  },
+  topInputContainer: {
+    backgroundColor: "white",
+    padding: "15px 20px",
+    borderBottom: "1px solid #e2e8f0",
+    zIndex: 10,
+  },
+  messageArea: {
+    flex: 1,
+    overflowY: "auto",
+    padding: "20px",
+    paddingBottom: "120px",
+  },
+  messageList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  },
+  infoAlert: {
+    backgroundColor: "#f0f4f8",
+    border: "1px solid #d0e0f0",
+    borderRadius: "6px",
+    padding: "12px 16px",
+    marginBottom: "16px",
+    display: "flex",
+    alignItems: "flex-start",
+    color: "#2c5282",
+    fontSize: "14px",
+  },
+  infoIcon: {
+    marginRight: "10px",
+    marginTop: "2px",
+    flexShrink: 0,
+    color: "#3182ce",
+  },
+  loadingContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "30px 0",
+    color: "#718096",
+  },
+  spinner: {
+    display: "inline-block",
+    width: "20px",
+    height: "20px",
+    border: "3px solid rgba(0, 0, 0, 0.1)",
+    borderRadius: "50%",
+    borderTopColor: "#3182ce",
+    animation: "spin 1s linear infinite",
+    marginRight: "8px",
+  },
+  welcomeText: {
+    textAlign: "center",
+    color: "#718096",
+    fontStyle: "italic",
+    padding: "20px",
+  },
+  inputContainer: {
+    backgroundColor: "transparent",
+    padding: "0",
+    position: "absolute",
+    bottom: "30px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "85%",
+    maxWidth: "1000px",
+    zIndex: 10,
+  },
+  // Modal Styles
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  },
+  modal: {
+    backgroundColor: "white",
+    borderRadius: "12px",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
+    width: "800px",
+    maxWidth: "90%",
+    maxHeight: "85vh",
+    overflowY: "auto",
+    padding: "32px",
+    position: "relative",
+  },
+  modalHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    fontSize: "24px",
+    fontWeight: 600,
+    marginBottom: "20px",
+    paddingBottom: "16px",
+    borderBottom: "1px solid #e1e4e8",
+    color: "#1a73e8",
+  },
+  modalContent: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+    fontSize: "16px",
+    lineHeight: "1.6",
+  },
+  closeButton: {
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "18px",
+    color: "#718096",
+    padding: "6px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "background-color 0.2s",
+  },
+  checkboxContainer: {
+    marginTop: "8px",
+    display: "flex",
+    alignItems: "center",
+    fontWeight: 500,
+  },
+  checkbox: {
+    marginRight: "10px",
+    width: "16px",
+    height: "16px",
+    accentColor: "#1a73e8",
+  },
+  listItem: {
+    marginBottom: "10px",
+    paddingLeft: "5px",
+  },
+  bottomInputContainer: {
+    position: "fixed",
+    bottom: "20px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "90%",
+    maxWidth: "1000px",
+    zIndex: 10,
+    backgroundColor: "white",
+    padding: "16px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    border: "1px solid #e2e8f0",
+  },
+};
 
 export default function Chat(props: {
   sessionId?: string;
   documentIdentifier?: string;
 }) {
   const appContext = useContext(AppContext);
+  const navigate = useNavigate();
   const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
@@ -30,152 +200,13 @@ export default function Chat(props: {
   const [showPopup, setShowPopup] = useState<boolean>(true);
   const [doNotShowAgain, setDoNotShowAgain] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const messageAreaRef = useRef<HTMLDivElement>(null);
 
-  // Styles for components
-  const containerStyle = {
-    height: "calc(100vh - 100px)",
-    display: "flex",
-    flexDirection: "column" as const,
-  };
-
-  const messagesContainerStyle = {
-    flex: 1,
-    overflowY: "auto" as const,
-    paddingBottom: "20px",
-  };
-
-  const messageSpacingStyle = {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "16px",
-  };
-
-  const alertStyle = {
-    backgroundColor: "#f5f8fa",
-    border: "1px solid #d1d5da",
-    borderRadius: "4px",
-    padding: "16px",
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    fontSize: "14px",
-    color: "#24292e",
-  };
-
-  const alertIconStyle = {
-    color: "#0366d6",
-    fontSize: "18px",
-  };
-
-  const welcomeTextStyle = {
-    textAlign: "center" as const,
-    padding: "20px",
-    color: "#6a737d",
-    fontStyle: "italic",
-  };
-
-  const loadingStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "8px",
-    color: "#6a737d",
-  };
-
-  const spinnerStyle = {
-    animation: "spin 1s linear infinite",
-    display: "inline-block",
-    color: "#0366d6",
-  };
-
-  const inputContainerStyle = {
-    position: "sticky" as const,
-    bottom: 0,
-    backgroundColor: "white",
-    paddingTop: "10px",
-    borderTop: "1px solid #e1e4e8",
-  };
-
-  const modalOverlayStyle = {
-    position: "fixed" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: showPopup ? "flex" : "none",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  };
-
-  const modalStyle = {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    width: "600px",
-    maxWidth: "90%",
-    maxHeight: "80vh",
-    overflowY: "auto" as const,
-    padding: "24px",
-    position: "relative" as const,
-  };
-
-  const modalHeaderStyle = {
-    fontSize: "20px",
-    fontWeight: 600,
-    marginBottom: "16px",
-    paddingBottom: "12px",
-    borderBottom: "1px solid #e1e4e8",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  };
-
-  const modalContentStyle = {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "12px",
-  };
-
-  const closeButtonStyle = {
-    background: "transparent",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "18px",
-    padding: "4px",
-    color: "#6a737d",
-  };
-
-  const checkboxContainerStyle = {
-    marginTop: "16px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  };
-
-  const checkboxStyle = {
-    marginRight: "8px",
-  };
-
-  const listItemStyle = {
-    marginLeft: "20px",
-    marginBottom: "8px",
-  };
-
-  // Add keyframes for spinner animation
+  // Set the message area ref for scrolling
   useEffect(() => {
-    const styleSheet = document.createElement("style");
-    styleSheet.textContent = `
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(styleSheet);
-
+    ChatScrollState.messageAreaRef = messageAreaRef;
     return () => {
-      document.head.removeChild(styleSheet);
+      ChatScrollState.messageAreaRef = null;
     };
   }, []);
 
@@ -312,73 +343,85 @@ export default function Chat(props: {
   };
 
   return (
-    <div className={styles.chat_container} style={containerStyle}>
-      {/* Custom Modal */}
-      <div style={modalOverlayStyle}>
-        <div ref={modalRef} style={modalStyle}>
-          <div style={modalHeaderStyle}>
-            <div>Welcome to GrantWell!</div>
-            <button
-              style={closeButtonStyle}
-              onClick={handleModalDismiss}
-              aria-label="Close"
-            >
-              <FaTimes />
-            </button>
-          </div>
-          <div style={modalContentStyle}>
-            <p>
-              Welcome to the GrantWell chatbot interface! The purpose of this
-              chatbot is to prompt you through the project narrative section of
-              your grant.
-            </p>
-            <p>
-              The chatbot will begin by prompting you for some basic
-              information.
-            </p>
-            <p>
-              For GrantWell to work best, upload supplementary data through the
-              "upload data' link to best help us craft a narrative that reflects
-              your organization.
-            </p>
-            <p>Examples of data could include:</p>
-            <ul>
-              <li style={listItemStyle}>Last year's annual report</li>
-              <li style={listItemStyle}>Latest accomplishments</li>
-              <li style={listItemStyle}>
-                Previously submitted proposals for this grant
-              </li>
-              <li style={listItemStyle}>Project narrative template</li>
-            </ul>
-            <p>
-              Ensure you upload all supplementary data before beginning
-              conversation with the chatbot.
-            </p>
-            <p>
-              Click the "i" icon in the upper right corner to access this
-              information again.
-            </p>
-            <div style={checkboxContainerStyle}>
-              <input
-                type="checkbox"
-                id="doNotShowAgain"
-                checked={doNotShowAgain}
-                onChange={handleDoNotShowAgainChange}
-                style={checkboxStyle}
-              />
-              <label htmlFor="doNotShowAgain">
-                Do not show this message again
-              </label>
+    <div style={styles.chatContainer}>
+      {/* Welcome Modal */}
+      {showPopup && (
+        <div style={styles.modalOverlay}>
+          <div ref={modalRef} style={styles.modal}>
+            <div style={styles.modalHeader}>
+              <span>Welcome to GrantWell!</span>
+              <button
+                style={styles.closeButton}
+                onClick={handleModalDismiss}
+                aria-label="Close"
+              >
+                <FaTimes size={20} />
+              </button>
+            </div>
+
+            <div style={styles.modalContent}>
+              <p>
+                Welcome to the GrantWell chatbot interface! The purpose of this
+                chatbot is to prompt you through the project narrative section
+                of your grant. The chatbot will begin by prompting you for some
+                basic information.
+                <br></br>
+                For GrantWell to work best, upload supplementary data through
+                the "upload data" link to best help us craft a narrative that
+                reflects your organization.
+              </p>
+              Examples of data could include:
+              <ul
+                style={{
+                  paddingLeft: "24px",
+                  marginBottom: "6px",
+                  marginTop: "4px",
+                }}
+              >
+                <li style={styles.listItem}>Last year's annual report</li>
+                <li style={styles.listItem}>Latest accomplishments</li>
+                <li style={styles.listItem}>
+                  Previously submitted proposals for this grant
+                </li>
+                <li style={styles.listItem}>Project narrative template</li>
+              </ul>
+              <p
+                style={{
+                  marginBottom: "2px",
+                  fontWeight: 500,
+                  color: "#1a73e8",
+                }}
+              >
+                Ensure you upload as much as supplementary data before beginning
+                conversation with the chatbot.
+              </p>
+              <p style={{ fontSize: "14px", color: "#666", marginTop: "4px" }}>
+                Click the "?" icon in the upper right corner to access this
+                information again.
+              </p>
+              <div style={styles.checkboxContainer}>
+                <input
+                  type="checkbox"
+                  id="doNotShowAgain"
+                  checked={doNotShowAgain}
+                  onChange={handleDoNotShowAgainChange}
+                  style={styles.checkbox}
+                />
+                <label htmlFor="doNotShowAgain">
+                  Do not show this message again
+                </label>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <div style={messagesContainerStyle}>
-        <div style={messageSpacingStyle}>
-          {messageHistory.length == 0 && !session?.loading && (
-            <div style={alertStyle}>
-              <FaInfoCircle style={alertIconStyle} aria-label="Info" />
+      {/* Chat content area */}
+      <div style={styles.messageArea} ref={messageAreaRef}>
+        <div style={styles.messageList}>
+          {messageHistory.length === 0 && !session?.loading && (
+            <div style={styles.infoAlert}>
+              <HelpCircle size={20} style={styles.infoIcon} />
               <span>
                 AI Models can make mistakes. Be mindful in validating important
                 information.
@@ -407,22 +450,22 @@ export default function Chat(props: {
               }
             />
           ))}
-        </div>
 
-        <div className={styles.welcome_text} style={welcomeTextStyle}>
-          {messageHistory.length == 0 && !session?.loading && (
-            <div>{CHATBOT_NAME}</div>
+          {messageHistory.length === 0 && !session?.loading && (
+            <div style={styles.welcomeText}>{CHATBOT_NAME}</div>
           )}
+
           {session?.loading && (
-            <div style={loadingStyle}>
-              <FaSpinner style={spinnerStyle} />
+            <div style={styles.loadingContainer}>
+              <div style={styles.spinner}></div>
               <span>Loading session</span>
             </div>
           )}
         </div>
       </div>
 
-      <div className={styles.input_container} style={inputContainerStyle}>
+      {/* Bottom input container */}
+      <div style={styles.bottomInputContainer}>
         <ChatInputPanel
           session={session}
           running={running}

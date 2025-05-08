@@ -1,23 +1,33 @@
-import {  
-  ChatBotHistoryItem,  
-  ChatBotMessageType,
-} from "./types";
-
+import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 
 function pairwise(arr: ChatBotHistoryItem[], func) {
   for (var i = 0; i < arr.length - 1; i++) {
-    func(arr[i], arr[i + 1])
+    func(arr[i], arr[i + 1]);
   }
 }
 
 /**Assembles local message history copy into a format suitable for the chat API */
+// export function assembleHistory(history: ChatBotHistoryItem[]) {
+//   var hist: Object[] = [];
+//   for (var i = 0; i < history.length - 1; i++) {
+//     if (history[i].type == ChatBotMessageType.Human) {
+//       hist.push({ "user": history[i].content, "chatbot": history[i+1].content, "metadata" : JSON.stringify(history[i+1].metadata)})
+//     }
+//   }
+
+//   return hist;
+// }
+
+/**
+ * Assembles the chat history into a format expected by the API
+ */
 export function assembleHistory(history: ChatBotHistoryItem[]) {
-  var hist: Object[] = [];
-  for (var i = 0; i < history.length - 1; i++) {
-    if (history[i].type == ChatBotMessageType.Human) {
-      hist.push({ "user": history[i].content, "chatbot": history[i+1].content, "metadata" : JSON.stringify(history[i+1].metadata)})
-    }
-  }   
-  
-  return hist;
+  if (!history || history.length === 0) return [];
+
+  return history.map((item) => {
+    return {
+      role: item.type === ChatBotMessageType.Human ? "human" : "assistant",
+      content: item.content,
+    };
+  });
 }

@@ -57,6 +57,11 @@ function App() {
                 element={<DocumentEditor />}
               />
             </Route>
+            {/* Direct route to document editor */}
+            <Route
+              path="document-editor/:projectId"
+              element={<DocumentEditor />}
+            />
             <Route path="/admin" element={<Outlet />}>
               <Route path="data" element={<DataPage />} />
               <Route path="user-feedback" element={<UserFeedbackPage />} />

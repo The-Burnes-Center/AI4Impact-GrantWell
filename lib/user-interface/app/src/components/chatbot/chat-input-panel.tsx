@@ -1,4 +1,4 @@
-import {
+import React, {
   Dispatch,
   SetStateAction,
   useContext,
@@ -16,8 +16,6 @@ import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
-import styles from "../../styles/chat.module.scss";
-
 import {
   ChatBotHistoryItem,
   ChatBotMessageType,
@@ -29,13 +27,75 @@ import { assembleHistory } from "./utils";
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
 import { useNotifications } from "../notif-manager";
-// Import icons we'll need
-import {
-  FaMicrophone,
-  FaMicrophoneSlash,
-  FaFile,
-  FaAngleDoubleRight,
-} from "react-icons/fa";
+// Import icons
+import { Mic, MicOff, Send, Upload, Loader } from "lucide-react";
+
+// Styles for the components
+const styles = {
+  inputContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  },
+  inputBorder: {
+    border: "1px solid #d1d5db",
+    borderRadius: "8px",
+    overflow: "hidden",
+    backgroundColor: "#f9fafb",
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+  },
+  micButton: {
+    padding: "10px",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    color: "#6b7280",
+  },
+  micActive: {
+    color: "#ef4444",
+  },
+  micDisabled: {
+    color: "#d1d5db",
+    cursor: "not-allowed",
+  },
+  inputTextarea: {
+    flex: 1,
+    resize: "none",
+    padding: "12px",
+    border: "none",
+    outline: "none",
+    fontFamily: "inherit",
+    fontSize: "14px",
+    backgroundColor: "transparent",
+  },
+  uploadButton: {
+    padding: "10px",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    color: "#6b7280",
+  },
+  sendButton: {
+    padding: "10px 16px",
+    border: "none",
+    cursor: "pointer",
+    backgroundColor: "#1a73e8",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sendButtonDisabled: {
+    backgroundColor: "#e5e7eb",
+    color: "#9ca3af",
+    cursor: "not-allowed",
+  },
+  spinner: {
+    animation: "spin 1s linear infinite",
+  },
+};
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -56,6 +116,7 @@ export abstract class ChatScrollState {
   static userHasScrolled = false;
   static skipNextScrollEvent = false;
   static skipNextHistoryUpdate = false;
+  static messageAreaRef: React.RefObject<HTMLDivElement> | null = null;
 }
 
 export default function ChatInputPanel(props: ChatInputPanelProps) {
@@ -75,70 +136,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     value: "kb",
   });
 
-  // Styles for custom components
-  const containerStyle = {
-    padding: "16px",
-    backgroundColor: "#ffffff",
-    borderRadius: "8px",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-    marginBottom: "16px",
-  };
-
-  const buttonStyle = {
-    padding: "8px 16px",
-    backgroundColor: "#006499",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: "14px",
-    fontWeight: 500,
-  };
-
-  const disabledButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: "#cccccc",
-    cursor: "not-allowed",
-  };
-
-  const iconButtonStyle = {
-    padding: "8px",
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#006499",
-  };
-
-  const linkButtonStyle = {
-    padding: "8px 16px",
-    backgroundColor: "transparent",
-    color: "#006499",
-    border: "none",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: "14px",
-    fontWeight: 500,
-    textDecoration: "none",
-  };
-
-  const spinnerStyle = {
-    display: "inline-block",
-    width: "16px",
-    height: "16px",
-    border: "2px solid rgba(255,255,255,0.3)",
-    borderRadius: "50%",
-    borderTopColor: "white",
-    animation: "spin 1s linear infinite",
-  };
-
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
   }, [props.messageHistory]);
@@ -150,32 +147,27 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [transcript]);
 
-  /**Some amount of auto-scrolling for convenience */
+  // Scrolling detection logic
   useEffect(() => {
-    const onWindowScroll = () => {
+    const messageAreaElement = ChatScrollState.messageAreaRef?.current;
+    if (!messageAreaElement) return;
+
+    const onAreaScroll = () => {
       if (ChatScrollState.skipNextScrollEvent) {
         ChatScrollState.skipNextScrollEvent = false;
         return;
       }
+      // Check if user has scrolled up
+      const isScrolledToBottom =
+        messageAreaElement.scrollHeight - messageAreaElement.scrollTop <=
+        messageAreaElement.clientHeight + 100; // Add some tolerance
 
-      const isScrollToTheEnd =
-        Math.abs(
-          window.innerHeight +
-            window.scrollY -
-            document.documentElement.scrollHeight
-        ) <= 10;
-
-      if (!isScrollToTheEnd) {
-        ChatScrollState.userHasScrolled = true;
-      } else {
-        ChatScrollState.userHasScrolled = false;
-      }
+      ChatScrollState.userHasScrolled = !isScrolledToBottom;
     };
 
-    window.addEventListener("scroll", onWindowScroll);
-
+    messageAreaElement.addEventListener("scroll", onAreaScroll);
     return () => {
-      window.removeEventListener("scroll", onWindowScroll);
+      messageAreaElement.removeEventListener("scroll", onAreaScroll);
     };
   }, []);
 
@@ -185,12 +177,15 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       return;
     }
 
-    if (!ChatScrollState.userHasScrolled && props.messageHistory.length > 0) {
+    if (
+      !ChatScrollState.userHasScrolled &&
+      props.messageHistory.length > 0 &&
+      ChatScrollState.messageAreaRef?.current
+    ) {
       ChatScrollState.skipNextScrollEvent = true;
-      window.scrollTo({
-        top: document.documentElement.scrollHeight + 1000,
-        behavior: "instant",
-      });
+      const messageAreaElement = ChatScrollState.messageAreaRef.current;
+      // Scroll to the bottom for messages
+      messageAreaElement.scrollTop = messageAreaElement.scrollHeight;
     }
   }, [props.messageHistory]);
 
@@ -206,6 +201,14 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     if (props.running) return;
     if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
+
+    // Scroll to bottom immediately when sending a message
+    if (ChatScrollState.messageAreaRef?.current) {
+      const messageAreaElement = ChatScrollState.messageAreaRef.current;
+      setTimeout(() => {
+        messageAreaElement.scrollTop = messageAreaElement.scrollHeight;
+      }, 100);
+    }
 
     let username;
     await Auth.currentAuthenticatedUser().then(
@@ -407,12 +410,17 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           {
             type: ChatBotMessageType.Human,
             content: messageToSend,
-            metadata: {},
+            metadata: {
+              timestamp: new Date().toISOString(),
+            },
           },
           {
             type: ChatBotMessageType.AI,
             content: receivedData,
-            metadata: sources,
+            metadata: {
+              ...sources,
+              timestamp: new Date().toISOString(),
+            },
           },
         ];
         props.setMessageHistory(messageHistoryRef.current);
@@ -439,139 +447,89 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     }
   };
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
-
-  const navigate = useNavigate();
-
-  // Define keyframes for spinner animation for injecting into the document
-  useEffect(() => {
-    const styleSheet = document.createElement("style");
-    styleSheet.textContent = `
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(styleSheet);
-
-    return () => {
-      document.head.removeChild(styleSheet);
-    };
-  }, []);
-
   return (
-    <div
-      className={styles.chat_input_container}
-      style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-    >
-      <div style={containerStyle}>
-        <div className={styles.input_textarea_container}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {browserSupportsSpeechRecognition ? (
-              <button
-                style={iconButtonStyle}
-                aria-label="microphone-access"
-                onClick={() =>
-                  listening
-                    ? SpeechRecognition.stopListening()
-                    : SpeechRecognition.startListening()
-                }
-              >
-                {listening ? (
-                  <FaMicrophoneSlash size={16} />
-                ) : (
-                  <FaMicrophone size={16} />
-                )}
-              </button>
-            ) : (
-              <FaMicrophoneSlash
-                size={16}
-                style={{ color: "#cccccc", margin: "8px" }}
-              />
-            )}
-          </div>
-          <TextareaAutosize
-            className={styles.input_textarea}
-            maxRows={6}
-            minRows={1}
-            spellCheck={true}
-            autoFocus
-            onChange={(e) =>
-              setState((state) => ({ ...state, value: e.target.value }))
-            }
-            onKeyDown={(e) => {
-              if (e.key == "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
-            }}
-            value={state.value}
-            placeholder={"Send a message"}
-          />
-          <div style={{ marginLeft: "8px" }}>
-            <button
-              style={
-                readyState !== ReadyState.OPEN ||
-                props.running ||
-                state.value.trim().length === 0 ||
-                props.session.loading
-                  ? disabledButtonStyle
-                  : buttonStyle
-              }
-              disabled={
-                readyState !== ReadyState.OPEN ||
-                props.running ||
-                state.value.trim().length === 0 ||
-                props.session.loading
-              }
-              onClick={handleSendMessage}
-            >
-              {props.running ? (
-                <>
-                  Loading&nbsp;&nbsp;
-                  <div style={spinnerStyle} />
-                </>
-              ) : (
-                <>
-                  Send
-                  <FaAngleDoubleRight size={14} />
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        className={styles.input_controls}
-        style={{ display: "flex", justifyContent: "space-between" }}
+    <div style={styles.inputBorder}>
+      {/* Microphone button */}
+      {browserSupportsSpeechRecognition ? (
+        <button
+          style={{
+            ...styles.micButton,
+            ...(listening ? styles.micActive : {}),
+          }}
+          aria-label="Toggle microphone"
+          onClick={() =>
+            listening
+              ? SpeechRecognition.stopListening()
+              : SpeechRecognition.startListening()
+          }
+        >
+          {listening ? <MicOff size={20} /> : <Mic size={20} />}
+        </button>
+      ) : (
+        <span style={styles.micDisabled}>
+          <MicOff size={20} />
+        </span>
+      )}
+
+      {/* Text input */}
+      <TextareaAutosize
+        style={{
+          flex: 1,
+          resize: "none",
+          padding: "12px 14px",
+          border: "none",
+          outline: "none",
+          fontFamily: "inherit",
+          fontSize: "15px",
+          backgroundColor: "transparent",
+          lineHeight: "1.5",
+        }}
+        maxRows={4}
+        minRows={1}
+        spellCheck={true}
+        autoFocus
+        onChange={(e) =>
+          setState((state) => ({ ...state, value: e.target.value }))
+        }
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+          }
+        }}
+        value={state.value}
+        placeholder="Send a message..."
+      />
+
+      {/* Upload button */}
+      <button style={styles.uploadButton} title="Attach files">
+        <Upload size={20} />
+      </button>
+
+      {/* Send button */}
+      <button
+        style={{
+          ...(readyState !== ReadyState.OPEN ||
+          props.running ||
+          state.value.trim().length === 0 ||
+          props.session.loading
+            ? { ...styles.sendButton, ...styles.sendButtonDisabled }
+            : styles.sendButton),
+        }}
+        disabled={
+          readyState !== ReadyState.OPEN ||
+          props.running ||
+          state.value.trim().length === 0 ||
+          props.session.loading
+        }
+        onClick={handleSendMessage}
       >
-        <div>
-          <button
-            style={linkButtonStyle}
-            onClick={() =>
-              navigate(
-                `/chatbot/document-editor/${
-                  props.session.id
-                }?folder=${encodeURIComponent(props.documentIdentifier)}`
-              )
-            }
-          >
-            <FaFile size={14} />
-            Open Document Editor
-          </button>
-        </div>
-        <div className={styles.input_controls_right}>
-          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <div style={{ paddingTop: "1px" }}></div>
-          </div>
-        </div>
-      </div>
+        {props.running ? (
+          <Loader size={20} style={styles.spinner} />
+        ) : (
+          <Send size={20} />
+        )}
+      </button>
     </div>
   );
 }
