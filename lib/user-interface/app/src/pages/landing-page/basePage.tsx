@@ -532,19 +532,23 @@ export default function Welcome({ theme }) {
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             marginBottom: "30px",
             position: "relative",
+            width: "100%",
           }}
         >
-          {/* Logo and Title */}
+          {/* Logo and Title on same line */}
           <div
             style={{
               display: "flex",
               flexDirection: "row",
+              justifyContent: "center",
               alignItems: "center",
               gap: "15px",
+              marginBottom: "10px",
             }}
           >
             <img
@@ -552,38 +556,33 @@ export default function Welcome({ theme }) {
               alt="State Seal"
               style={logoStyle}
             />
-            <div
+            <h1
               style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
+                fontSize: "52px",
+                margin: 0,
+                color: mainTextColor,
+                fontWeight: "600",
               }}
             >
-              <h1
-                style={{
-                  fontSize: "52px",
-                  margin: 0,
-                  color: mainTextColor,
-                  fontWeight: "600",
-                }}
-              >
-                GrantWell
-              </h1>
-              <p
-                style={{
-                  fontSize: "14px",
-                  color: mainTextColor,
-                  margin: "-2px 3px 0 8px",
-                  fontStyle: "italic",
-                  maxWidth: "230px",
-                  lineHeight: "1.4",
-                }}
-              >
-                An AI tool to help Massachusetts communities secure federal
-                grants
-              </p>
-            </div>
+              GrantWell
+            </h1>
           </div>
+          
+          {/* Subtitle below both */}
+          <p
+            style={{
+              fontSize: "16px",
+              color: mainTextColor,
+              margin: "5px 0 0 0",
+              fontStyle: "italic",
+              maxWidth: "450px",
+              lineHeight: "1.4",
+              textAlign: "center",
+            }}
+          >
+            An AI tool to help Massachusetts communities secure federal
+            grants
+          </p>
         </div>
 
         {/* Welcome message */}
@@ -610,7 +609,7 @@ export default function Welcome({ theme }) {
           style={{
             display: "flex",
             flexDirection: "row",
-            gap: "5px", // Reduced from 10px to 5px
+            gap: "5px", 
             marginTop: "40px", // Increased from 20px to 40px for better spacing
             marginBottom: "45px",
             width: "100%",
