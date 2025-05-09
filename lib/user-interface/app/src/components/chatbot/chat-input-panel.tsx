@@ -27,8 +27,7 @@ import { assembleHistory } from "./utils";
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
 import { useNotifications } from "../notif-manager";
-// Import icons
-import { Mic, MicOff, Send, Upload, Loader } from "lucide-react";
+import { Mic, MicOff, Send, Loader } from "lucide-react";
 
 // Styles for the components
 const styles = {
@@ -172,7 +171,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [transcript]);
 
-  /**Some amount of auto-scrolling for convenience */
   useEffect(() => {
     const onWindowScroll = () => {
       if (ChatScrollState.skipNextScrollEvent) {
@@ -288,9 +286,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       if (messageHistoryRef.current.length < 3) {
         firstTime = true;
       }
-      // old non-auth url -> const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
-      // old shared url with auth -> wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/
-      // first deployment URL 'wss://zrkw21d01g.execute-api.us-east-1.amazonaws.com/prod/';
+
       const TEST_URL = appContext.wsEndpoint + "/";
 
       // Get a JWT token for the API to authenticate on
@@ -377,7 +373,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             **Avoid Mentioning Internal Processes:**
             1. Do not reference any internal functions, system messages, error messages, or technical issues in your responses.
             2. If you encounter a lack of information, simply and politely ask the user for clarification or the necessary details.    `,
-            projectId: "rsrs111111",
+            projectId: "apck1608",
             user_id: username,
             session_id: props.session.id,
             retrievalSource: selectedDataSource.value,

@@ -5,7 +5,6 @@ import { FileUploader } from "../../common/file-uploader";
 import {
   X,
   Upload,
-  FilePlus,
   Trash2,
   FileText,
   RefreshCw,
@@ -748,7 +747,7 @@ export default function UploadModal({
                 <button
                   style={styles.refreshButton}
                   onClick={fetchExistingFiles}
-                  disabled={loadingFiles || isOpen === false}
+                  disabled={loadingFiles || !isOpen}
                 >
                   <RefreshCw size={14} />{" "}
                   {loadingFiles ? "Loading..." : "Refresh"}

@@ -13,9 +13,9 @@ import DataPage from "./pages/admin/data-view-page";
 import UserFeedbackPage from "./pages/admin/user-feedback-page";
 import SessionPage from "./pages/chatbot/sessions/sessions";
 import Welcome from "./pages/landing-page/basePage";
-import Checklists from "./pages/requirements-gathering/checklist"; // Import the new Checklists page
-import DocumentEditor from "./pages/document-editor/document-editor"; // Import the document editor component
-import Dashboard from "./pages/Dashboard"; // Import the Dashboard component
+import Checklists from "./pages/requirements-gathering/checklist";
+import DocumentEditor from "./pages/document-editor/document-editor";
+import Dashboard from "./pages/Dashboard";
 import { useState } from "react";
 import "./styles/app.scss";
 import { Mode } from "@cloudscape-design/global-styles";

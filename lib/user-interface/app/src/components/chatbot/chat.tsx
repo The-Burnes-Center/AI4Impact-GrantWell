@@ -9,11 +9,8 @@ import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notif-manager";
-// Import icons
 import {
-  FileText,
   HelpCircle,
-  Loader as FaSpinner,
   X as FaTimes,
 } from "lucide-react";
 
@@ -173,7 +170,6 @@ export default function Chat(props: {
   documentIdentifier?: string;
 }) {
   const appContext = useContext(AppContext);
-  const navigate = useNavigate();
   const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),

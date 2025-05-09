@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
   ChevronLeft,
   ChevronRight,
   MessageSquare,
-  FileText,
   List,
   CheckSquare,
   Edit,

@@ -5,7 +5,6 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
@@ -385,7 +384,6 @@ export default function Sessions(props: SessionsProps) {
 
   return (
     <div style={styles.container}>
-      {/* Delete confirmation modal */}
       {showModalDelete && (
         <div style={styles.modalOverlay}>
           <div style={styles.modal}>

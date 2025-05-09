@@ -68,17 +68,17 @@ export default function ChatMessage(props: ChatMessageProps) {
   }, []);
 
   // Styles for the components
-  const containerStyle = {
+  const containerStyle: React.CSSProperties = {
     padding: "16px",
     borderRadius: "8px",
     backgroundColor: "transparent",
     marginBottom: "16px",
-    position: "relative" as const,
+    position: "relative",
     display: "flex",
     flexDirection:
       props.message?.type === ChatBotMessageType.Human
         ? "row-reverse"
-        : ("row" as const),
+        : "row",
     alignItems: "flex-start",
   };
 

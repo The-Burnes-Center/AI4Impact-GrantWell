@@ -37,6 +37,7 @@
     "cdk-nag": "^2.31.3",
     "constructs": "^10.4.2",
     "docx": "^8.5.0",
+    "lucide-react": "^0.509.0",
     "pdf-parser": "^1.0.5",
     "pdfjs-dist": "^4.7.76",
     "react": "^18.3.1",
