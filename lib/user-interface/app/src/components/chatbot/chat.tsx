@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { ChatBotHistoryItem, ChatBotMessageType, FeedbackData } from "./types";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import ChatMessage from "./chat-message";
-import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
+import ChatInputPanel from "./chat-input-panel";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notif-manager";
 import {

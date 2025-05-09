@@ -1,4 +1,4 @@
-import React, {
+import {
   Dispatch,
   SetStateAction,
   useContext,
@@ -7,14 +7,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { Auth } from "aws-amplify";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
-import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import {
   ChatBotHistoryItem,
@@ -425,17 +423,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           {
             type: ChatBotMessageType.Human,
             content: messageToSend,
-            metadata: {
-              timestamp: new Date().toISOString(),
-            },
+            metadata: {},
           },
           {
             type: ChatBotMessageType.AI,
             content: receivedData,
-            metadata: {
-              ...sources,
-              timestamp: new Date().toISOString(),
-            },
+            metadata: sources,
           },
         ];
         props.setMessageHistory(messageHistoryRef.current);
