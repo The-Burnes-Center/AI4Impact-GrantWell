@@ -141,7 +141,6 @@ export default function Welcome({ theme }) {
 
   // Handle selecting a NOFO document
   const handleNOFOSelect = (href, selectedNOFO) => {
-    // Add current timestamp to the selectedNOFO object
     const nofoWithTimestamp = {
       ...selectedNOFO,
       lastViewed: new Date().toLocaleString()
@@ -260,7 +259,7 @@ export default function Welcome({ theme }) {
           }}
         >
           You haven't viewed any NOFOs recently. Select or upload a document at
-          the panel to get started.
+          the admin dashboard to get started.
         </p>
       )}
     </div>
@@ -303,8 +302,8 @@ export default function Welcome({ theme }) {
     imageWidth?: any;
   }) => {
     const bannerButtonStyle: CSSProperties = {
-      backgroundColor: buttonVariant === "primary" ? "#006499" : "#FF9B00",
-      color: "white",
+      backgroundColor: buttonVariant === "primary" ? "#006499" : "white",
+      color: "#006499",
       border: "none",
       padding: "10px 15px",
       borderRadius: "4px",
@@ -526,7 +525,6 @@ export default function Welcome({ theme }) {
           paddingBottom: "0",
         }}
       >
-        {/* Header with logo and title */}
         {/* Header Section */}
         <div
           style={{
@@ -539,7 +537,6 @@ export default function Welcome({ theme }) {
             width: "100%",
           }}
         >
-          {/* Logo and Title on same line */}
           <div
             style={{
               display: "flex",
@@ -574,27 +571,13 @@ export default function Welcome({ theme }) {
               color: mainTextColor,
               margin: "5px 0 0 0",
               fontStyle: "italic",
-              maxWidth: "450px",
+              maxWidth: "500px",
               lineHeight: "1.4",
               textAlign: "center",
             }}
           >
-            An AI tool to help Massachusetts communities secure federal
-            grants
+            An AI tool to help Massachusetts communities secure federal grants
           </p>
-        </div>
-
-        {/* Welcome message */}
-        <div
-          style={{
-            textAlign: "center",
-            margin: "50px auto 25px auto",
-            fontSize: "18px",
-            color: mainTextColor,
-            fontWeight: "500",
-          }}
-        >
-          Hello, find grants and funding opportunities
         </div>
 
         {/* New integrated search bar */}
