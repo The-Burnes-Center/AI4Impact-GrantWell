@@ -275,6 +275,22 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    const nofoRenameAPIIntegration = new HttpLambdaIntegration('NofoRenameAPIIntegration', lambdaFunctions.nofoRenameFunction);
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-rename",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoRenameAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoDeleteAPIIntegration = new HttpLambdaIntegration('NofoDeleteAPIIntegration', lambdaFunctions.nofoDeleteFunction);
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-delete",
+      methods: [apigwv2.HttpMethod.DELETE],
+      integration: nofoDeleteAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     const inviteUserFunction = new lambda.Function(this, 'InviteUserFunction', {
 
       runtime: lambda.Runtime.NODEJS_18_X,

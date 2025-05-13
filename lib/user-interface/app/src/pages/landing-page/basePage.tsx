@@ -108,6 +108,29 @@ export default function Welcome({ theme }) {
     setRecentlyViewedNOFOs(storedHistory);
   }, []);
 
+  // Filter out archived NOFOs from history when documents change
+  useEffect(() => {
+    if (documents.length === 0) return;
+    
+    // Get current stored history directly from localStorage
+    const currentHistory = JSON.parse(localStorage.getItem("recentlyViewedNOFOs")) || [];
+    
+    // Get the current list of NOFO names
+    const activeNofoNames = documents.map(doc => doc.label);
+    
+    // Filter out any NOFOs that are no longer in the active list
+    const filteredHistory = currentHistory.filter(nofo => 
+      activeNofoNames.includes(nofo.label)
+    );
+    
+    // Only update if something changed
+    if (JSON.stringify(filteredHistory) !== JSON.stringify(currentHistory)) {
+      setRecentlyViewedNOFOs(filteredHistory);
+      localStorage.setItem("recentlyViewedNOFOs", JSON.stringify(filteredHistory));
+      console.log(`Filtered out ${currentHistory.length - filteredHistory.length} archived NOFOs from history`);
+    }
+  }, [documents]);
+
   // Fetch NOFO documents from S3
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -127,6 +150,15 @@ export default function Welcome({ theme }) {
     try {
       const result = await apiClient.landingPage.getNOFOs();
       const folders = result.folders || [];
+      console.log(`Received ${folders.length} active NOFOs for landing page display`);
+      
+      // For debugging: Check if we have nofoData with status information too
+      if (result.nofoData) {
+        const activeCount = result.nofoData.filter(nofo => nofo.status === 'active').length;
+        const archivedCount = result.nofoData.filter(nofo => nofo.status === 'archived').length;
+        console.log(`NOFO status breakdown - Active: ${activeCount}, Archived: ${archivedCount}`);
+      }
+      
       setDocuments(
         folders.map((document) => ({
           label: document,

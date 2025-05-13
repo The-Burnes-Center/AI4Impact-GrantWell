@@ -148,14 +148,24 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     if (!selectedNofo || !editedNofoName.trim()) return;
 
     try {
-      // Call API to update NOFO name and status
-      await apiClient.landingPage.renameNOFO(
-        selectedNofo.name,
-        editedNofoName.trim()
-      );
+      console.log(`Editing NOFO: ${selectedNofo.name} -> ${editedNofoName.trim()}, status: ${editedNofoStatus}`);
       
-      // Update NOFO status
-      await apiClient.landingPage.updateNOFOStatus(editedNofoName.trim(), editedNofoStatus);
+      // Call API to update NOFO name if it changed
+      if (selectedNofo.name !== editedNofoName.trim()) {
+        console.log(`Renaming NOFO from ${selectedNofo.name} to ${editedNofoName.trim()}`);
+        await apiClient.landingPage.renameNOFO(
+          selectedNofo.name,
+          editedNofoName.trim()
+        );
+      }
+      
+      // Update NOFO status if it changed
+      if (selectedNofo.status !== editedNofoStatus) {
+        console.log(`Updating status from ${selectedNofo.status} to ${editedNofoStatus}`);
+        await apiClient.landingPage.updateNOFOStatus(editedNofoName.trim(), editedNofoStatus);
+      } else {
+        console.log(`Status unchanged: ${editedNofoStatus}`);
+      }
 
       // Update local state after successful API call
       setNofos(
@@ -167,9 +177,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       );
 
       // Show success notification
-      alert(
-        `Grant updated successfully`
-      );
+      if (addNotification) {
+        addNotification("success", "Grant updated successfully");
+      } else {
+        alert("Grant updated successfully");
+      }
 
       // Reset state
       setEditModalOpen(false);
@@ -177,7 +189,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setEditedNofoName("");
     } catch (error) {
       console.error("Error updating grant:", error);
-      alert("Failed to update grant. Please try again.");
+      if (addNotification) {
+        addNotification("error", "Failed to update grant. Please try again.");
+      } else {
+        alert("Failed to update grant. Please try again.");
+      }
     }
   };
 
@@ -185,9 +201,13 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const toggleNofoStatus = async (nofo: NOFO) => {
     const newStatus = nofo.status === "active" ? "archived" : "active";
     
+    console.log(`Toggling NOFO ${nofo.name} status from ${nofo.status} to ${newStatus}`);
+    
     try {
       // Call API to update NOFO status
-      await apiClient.landingPage.updateNOFOStatus(nofo.name, newStatus);
+      console.log(`Sending API request to update status for ${nofo.name} to ${newStatus}`);
+      const result = await apiClient.landingPage.updateNOFOStatus(nofo.name, newStatus);
+      console.log("API response:", result);
       
       // Update local state after successful API call
       setNofos(
@@ -199,10 +219,18 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       );
 
       // Show success notification
-      alert(`Grant status changed to ${newStatus}`);
+      if (addNotification) {
+        addNotification("success", `Grant status changed to ${newStatus}`);
+      } else {
+        alert(`Grant status changed to ${newStatus}`);
+      }
     } catch (error) {
       console.error("Error updating grant status:", error);
-      alert("Failed to update grant status. Please try again.");
+      if (addNotification) {
+        addNotification("error", "Failed to update grant status. Please try again.");
+      } else {
+        alert("Failed to update grant status. Please try again.");
+      }
     }
   };
 
@@ -262,6 +290,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
 
     try {
       const folderName = customGrantName.trim();
+      console.log(`Uploading new NOFO: ${folderName}`);
       
       let newFilePath;
       if (selectedFile.type === "text/plain") {
@@ -277,6 +306,10 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         selectedFile.type
       );
       await apiClient.landingPage.uploadFileToS3(signedUrl, selectedFile);
+      
+      // Set initial status to active for the new NOFO
+      console.log(`Setting initial status for ${folderName} to 'active'`);
+      await apiClient.landingPage.updateNOFOStatus(folderName, "active");
 
       // Use the banner if available, otherwise fall back to alert
       if (showGrantSuccessBanner) {
@@ -289,12 +322,23 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
 
       // Refresh NOFO list after successful upload
       const nofoResult = await apiClient.landingPage.getNOFOs();
-      const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
-        id: index,
-        name: nofo,
-        status: "active" // Default new grants to active
-      }));
-      setNofos(nofoData);
+      if (nofoResult.nofoData) {
+        // Use the new nofoData that includes status information
+        const nofoData = nofoResult.nofoData.map((nofo, index) => ({
+          id: index,
+          name: nofo.name,
+          status: nofo.status || 'active'
+        }));
+        setNofos(nofoData);
+      } else {
+        // Fallback for backward compatibility
+        const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
+          id: index,
+          name: nofo,
+          status: "active" // Default new grants to active
+        }));
+        setNofos(nofoData);
+      }
       
       // Reset state
       setSelectedFile(null);
@@ -325,7 +369,33 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               <div className="row-cell">
                 <div 
                   className={`status-badge ${nofo.status || 'active'}`} 
-                  onClick={() => toggleNofoStatus(nofo)}
+                  onClick={() => {
+                    console.log(`Clicked on status badge for ${nofo.name}, current status: ${nofo.status}`);
+                    toggleNofoStatus(nofo);
+                  }}
+                  title="Click to toggle between active and archived"
+                  style={{ 
+                    cursor: 'pointer',
+                    display: 'inline-block',
+                    padding: '4px 10px',
+                    borderRadius: '12px',
+                    fontSize: '0.85rem',
+                    fontWeight: 'bold',
+                    textTransform: 'capitalize',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                    backgroundColor: nofo.status === 'archived' ? '#f7e6e6' : '#e6f7e6',
+                    color: nofo.status === 'archived' ? '#c62828' : '#2e7d32',
+                    border: `1px solid ${nofo.status === 'archived' ? '#ffcdd2' : '#c8e6c9'}`
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.15)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
+                  }}
                 >
                   {nofo.status || "active"}
                 </div>
@@ -592,19 +662,24 @@ const Dashboard: React.FC = () => {
     const fetchNofos = async () => {
       try {
         // Fetch NOFOs from API
+        console.log("Fetching NOFOs data from API...");
         const nofoResult = await apiClient.landingPage.getNOFOs();
+        console.log("API response:", nofoResult);
 
         // Convert to required format
         if (nofoResult.nofoData) {
           // Use the new nofoData that includes status information
+          console.log("Using nofoData with status information:", nofoResult.nofoData);
           const nofoData = nofoResult.nofoData.map((nofo, index) => ({
             id: index,
             name: nofo.name,
             status: nofo.status || 'active'
           }));
+          console.log("Mapped NOFO data with status:", nofoData);
           setNofos(nofoData);
         } else {
           // Fallback for backward compatibility
+          console.log("No nofoData found, using fallback with folders:", nofoResult.folders);
           const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
             id: index,
             name: nofo,
