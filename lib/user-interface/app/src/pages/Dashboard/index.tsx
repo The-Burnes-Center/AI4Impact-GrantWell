@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";

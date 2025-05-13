@@ -727,7 +727,7 @@ const Checklists: React.FC = () => {
     };
 
     fetchData();
-  }, [documentIdentifier, apiClient.landingPage]);
+  }, [documentIdentifier]);
 
   const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
     documentIdentifier || ""
