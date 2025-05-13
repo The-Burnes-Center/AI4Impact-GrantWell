@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -20,7 +20,8 @@ import {
   LuFileX,
   LuTriangle,
   LuInfo,
-  LuFile
+  LuFile,
+  LuRefreshCw
 } from "react-icons/lu";
 import "./styles.css";
 
@@ -102,16 +103,9 @@ export const RowActions: React.FC<{
 };
 
 /**
- * Modal component for confirmations and forms
+ * Custom hook for modal effects
  */
-export const Modal: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}> = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
-
+function useModalEffects(isOpen: boolean, onClose: () => void) {
   // Prevent body scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -128,9 +122,31 @@ export const Modal: React.FC<{
       if (e.key === 'Escape') onClose();
     };
     
-    window.addEventListener('keydown', handleEscape);
+    if (isOpen) {
+      window.addEventListener('keydown', handleEscape);
+    }
     return () => window.removeEventListener('keydown', handleEscape);
-  }, [onClose]);
+  }, [isOpen, onClose]);
+}
+
+/**
+ * Modal component for confirmations and forms
+ */
+export const Modal = React.memo(({ 
+  isOpen, 
+  onClose, 
+  title, 
+  children 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  title: string; 
+  children: React.ReactNode; 
+}) => {
+  // Use the custom hook for side effects
+  useModalEffects(isOpen, onClose);
+  
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -145,7 +161,10 @@ export const Modal: React.FC<{
       </div>
     </div>
   );
-};
+});
+
+// Set display name for React DevTools
+Modal.displayName = 'Modal';
 
 interface NOFOsTabProps {
   nofos: NOFO[];
@@ -193,7 +212,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         setPinnedGrants(JSON.parse(savedPinnedGrants));
       }
     } catch (error) {
-      console.error("Error loading pinned grants:", error);
+      // Remove console.error
     }
   }, []);
 
@@ -235,7 +254,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     
     // Skip if we can't identify this grant
     if (!normalizedName) {
-      console.warn('Cannot pin grant with no name');
       return;
     }
     
@@ -274,7 +292,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     
     // Skip if we can't identify this grant
     if (!normalizedName) {
-      console.warn('Cannot unpin grant with no name');
       return;
     }
     
@@ -313,11 +330,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     if (!selectedNofo || !editedNofoName.trim()) return;
 
     try {
-      console.log(`Editing NOFO: ${selectedNofo.name} -> ${editedNofoName.trim()}, status: ${editedNofoStatus}`);
-      
       // Call API to update NOFO name if it changed
       if (selectedNofo.name !== editedNofoName.trim()) {
-        console.log(`Renaming NOFO from ${selectedNofo.name} to ${editedNofoName.trim()}`);
         await apiClient.landingPage.renameNOFO(
           selectedNofo.name,
           editedNofoName.trim()
@@ -326,10 +340,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       
       // Update NOFO status if it changed
       if (selectedNofo.status !== editedNofoStatus) {
-        console.log(`Updating status from ${selectedNofo.status} to ${editedNofoStatus}`);
         await apiClient.landingPage.updateNOFOStatus(editedNofoName.trim(), editedNofoStatus);
-      } else {
-        console.log(`Status unchanged: ${editedNofoStatus}`);
       }
 
       // Update local state after successful API call
@@ -353,7 +364,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setSelectedNofo(null);
       setEditedNofoName("");
     } catch (error) {
-      console.error("Error updating grant:", error);
       if (addNotification) {
         addNotification("error", "Failed to update grant. Please try again.");
       } else {
@@ -366,13 +376,9 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const toggleNofoStatus = async (nofo: NOFO) => {
     const newStatus = nofo.status === "active" ? "archived" : "active";
     
-    console.log(`Toggling NOFO ${nofo.name} status from ${nofo.status} to ${newStatus}`);
-    
     try {
       // Call API to update NOFO status
-      console.log(`Sending API request to update status for ${nofo.name} to ${newStatus}`);
       const result = await apiClient.landingPage.updateNOFOStatus(nofo.name, newStatus);
-      console.log("API response:", result);
       
       // Update local state after successful API call
       setNofos(
@@ -390,7 +396,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         alert(`Grant status changed to ${newStatus}`);
       }
     } catch (error) {
-      console.error("Error updating grant status:", error);
       if (addNotification) {
         addNotification("error", "Failed to update grant status. Please try again.");
       } else {
@@ -421,7 +426,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setDeleteModalOpen(false);
       setSelectedNofo(null);
     } catch (error) {
-      console.error("Error deleting grant:", error);
       if (addNotification) {
         addNotification("error", "Failed to delete grant. Please try again.");
       } else {
@@ -441,7 +445,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     }
   };
 
-  // Upload NOFO implementation
+  // Function to upload NOFO without automatic refresh
   const uploadNOFO = async () => {
     if (!selectedFile) {
       if (addNotification) {
@@ -463,7 +467,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
 
     try {
       const folderName = customGrantName.trim();
-      console.log(`Uploading new NOFO: ${folderName}`);
       
       let newFilePath;
       if (selectedFile.type === "text/plain") {
@@ -481,7 +484,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       await apiClient.landingPage.uploadFileToS3(signedUrl, selectedFile);
       
       // Set initial status to active for the new NOFO
-      console.log(`Setting initial status for ${folderName} to 'active'`);
       await apiClient.landingPage.updateNOFOStatus(folderName, "active");
 
       // Use the banner if available, otherwise fall back to alert
@@ -493,32 +495,13 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         alert("Grant file uploaded successfully!");
       }
 
-      // Refresh NOFO list after successful upload
-      const nofoResult = await apiClient.landingPage.getNOFOs();
-      if (nofoResult.nofoData) {
-        // Use the new nofoData that includes status information
-        const nofoData = nofoResult.nofoData.map((nofo, index) => ({
-          id: index,
-          name: nofo.name,
-          status: nofo.status || 'active'
-        }));
-        setNofos(nofoData);
-      } else {
-        // Fallback for backward compatibility
-        const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
-          id: index,
-          name: nofo,
-          status: "active" // Default new grants to active
-        }));
-        setNofos(nofoData);
-      }
-      
       // Reset state
       setSelectedFile(null);
       setCustomGrantName("");
       setUploadNofoModalOpen(false);
+      
+      // We won't automatically refresh - that's now handled by the parent's showGrantSuccessBanner
     } catch (error) {
-      console.error("Upload failed:", error);
       if (addNotification) {
         addNotification("error", "Failed to upload the grant file.");
       } else {
@@ -812,6 +795,7 @@ const Dashboard: React.FC = () => {
   const [invitedEmail, setInvitedEmail] = useState("");
   const [showGrantBanner, setShowGrantBanner] = useState(false);
   const [addedGrantName, setAddedGrantName] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Modal states
   const [uploadNofoModalOpen, setUploadNofoModalOpen] = useState(false);
@@ -848,12 +832,14 @@ const Dashboard: React.FC = () => {
           result?.signInUserSession?.idToken?.payload["custom:role"];
         if (adminRole && adminRole.includes("Admin")) {
           setIsAdmin(true);
+          // Only fetch NOFOs if user is admin
+          fetchNofos();
         } else {
           // Redirect non-admin users
           navigate("/");
         }
       } catch (e) {
-        console.error("Error checking admin status:", e);
+        // Error handling without console.error
         navigate("/");
       } finally {
         setLoading(false);
@@ -863,45 +849,49 @@ const Dashboard: React.FC = () => {
     checkAdmin();
   }, [navigate]);
 
-  // Fetch NOFOs data
-  useEffect(() => {
-    if (!isAdmin) return;
+  // Fetch NOFOs data - now as a separate function
+  const fetchNofos = async () => {
+    try {
+      setIsRefreshing(true);
+      // Fetch NOFOs from API
+      const nofoResult = await apiClient.landingPage.getNOFOs();
 
-    const fetchNofos = async () => {
-      try {
-        // Fetch NOFOs from API
-        console.log("Fetching NOFOs data from API...");
-        const nofoResult = await apiClient.landingPage.getNOFOs();
-        console.log("API response:", nofoResult);
-
-        // Convert to required format
-        if (nofoResult.nofoData) {
-          // Use the new nofoData that includes status information
-          console.log("Using nofoData with status information:", nofoResult.nofoData);
-          const nofoData = nofoResult.nofoData.map((nofo, index) => ({
-            id: index,
-            name: nofo.name,
-            status: nofo.status || 'active'
-          }));
-          console.log("Mapped NOFO data with status:", nofoData);
-          setNofos(nofoData);
-        } else {
-          // Fallback for backward compatibility
-          console.log("No nofoData found, using fallback with folders:", nofoResult.folders);
-          const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
-            id: index,
-            name: nofo,
-            status: 'active' // Default status
-          }));
-          setNofos(nofoData);
-        }
-      } catch (error) {
-        console.error("Error fetching grants:", error);
+      // Convert to required format
+      if (nofoResult.nofoData) {
+        // Use the new nofoData that includes status information
+        const nofoData = nofoResult.nofoData.map((nofo, index) => ({
+          id: index,
+          name: nofo.name,
+          status: nofo.status || 'active'
+        }));
+        setNofos(nofoData);
+      } else {
+        // Fallback for backward compatibility
+        const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
+          id: index,
+          name: nofo,
+          status: 'active' // Default status
+        }));
+        setNofos(nofoData);
       }
-    };
+      
+      // Show success notification on manual refresh
+      if (isRefreshing) {
+        addNotification("success", "Dashboard refreshed successfully");
+      }
+    } catch (error) {
+      if (isRefreshing) {
+        addNotification("error", "Failed to refresh dashboard data");
+      }
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
+  // Handle manual refresh
+  const handleRefresh = () => {
     fetchNofos();
-  }, [isAdmin, apiClient.landingPage]);
+  };
 
   // Upload NOFO handler
   const handleUploadNofo = () => {
@@ -938,7 +928,6 @@ const Dashboard: React.FC = () => {
       setInviteEmail("");
       setInviteUserModalOpen(false);
     } catch (error) {
-      console.error("Error sending invitation:", error);
       addNotification("error", "Failed to send invitation. Please try again.");
     }
   };
@@ -953,6 +942,9 @@ const Dashboard: React.FC = () => {
     setTimeout(() => {
       setShowGrantBanner(false);
     }, 5000);
+    
+    // Refresh data after adding a grant
+    fetchNofos();
   };
 
   // Filter handler
@@ -1194,9 +1186,23 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Header */}
+      {/* Header with Refresh Button */}
       <div className="dashboard-header">
         <h1>Admin Dashboard</h1>
+        <button 
+          className="action-button refresh-button"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+        >
+          {isRefreshing ? (
+            <span className="refresh-loading">Refreshing...</span>
+          ) : (
+            <>
+              <LuRefreshCw size={16} className="button-icon refresh-icon" />
+              <span>Refresh</span>
+            </>
+          )}
+        </button>
       </div>
 
       {/* Invitation Success Banner */}
