@@ -1,10 +1,35 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { useNotifications } from "../../components/notif-manager";
+import { 
+  LuPin, 
+  LuPinOff, 
+  LuSearch, 
+  LuFilter, 
+  LuMail, 
+  LuUpload, 
+  LuCheck, 
+  LuX,
+  LuMenu,
+  LuPencil,
+  LuTrash,
+  LuArchive,
+  LuFileX,
+  LuTriangle,
+  LuInfo,
+  LuFile
+} from "react-icons/lu";
 import "./styles.css";
+
+// Define interface for pinned grants
+interface PinnableGrant {
+  id: string;
+  name: string;
+  isPinned: boolean;
+}
 
 export interface NOFO {
   id: number;
@@ -20,25 +45,33 @@ export const RowActions: React.FC<{
   onDelete: () => void;
 }> = ({ onEdit, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Handle click outside to close menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
-    <div className="row-actions">
+    <div className="row-actions" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="actions-button"
         aria-label="Actions"
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="12" cy="6" r="2" fill="#333" />
-          <circle cx="12" cy="12" r="2" fill="#333" />
-          <circle cx="12" cy="18" r="2" fill="#333" />
-        </svg>
+        <LuMenu size={20} />
       </button>
       {isOpen && (
         <div className="actions-menu">
@@ -47,16 +80,20 @@ export const RowActions: React.FC<{
               onEdit();
               setIsOpen(false);
             }}
+            className="menu-item"
           >
-            Edit
+            <LuPencil size={16} className="menu-icon" />
+            <span>Edit</span>
           </button>
           <button
             onClick={() => {
               onDelete();
               setIsOpen(false);
             }}
+            className="menu-item"
           >
-            Delete
+            <LuTrash size={16} className="menu-icon" />
+            <span>Delete</span>
           </button>
         </div>
       )}
@@ -75,13 +112,33 @@ export const Modal: React.FC<{
 }> = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
+  // Prevent body scrolling when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  // Close on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>{title}</h2>
-          <button className="modal-close-button" onClick={onClose}>
-            ×
+          <button className="modal-close-button" onClick={onClose} aria-label="Close modal">
+            <LuX size={20} />
           </button>
         </div>
         <div className="modal-body">{children}</div>
@@ -121,14 +178,122 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   // Upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
+  
+  // Pinned NOFOs state
+  const [pinnedGrants, setPinnedGrants] = useState<PinnableGrant[]>([]);
 
   // Access notifications if available
   const addNotification = useNotifications?.addNotification;
+
+  // Load pinned grants from localStorage on component mount
+  useEffect(() => {
+    try {
+      const savedPinnedGrants = localStorage.getItem('pinnedGrants');
+      if (savedPinnedGrants) {
+        setPinnedGrants(JSON.parse(savedPinnedGrants));
+      }
+    } catch (error) {
+      console.error("Error loading pinned grants:", error);
+    }
+  }, []);
 
   // Filter data based on search query
   const filteredNofos = nofos.filter((nofo) =>
     nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Helper function to normalize grant name
+  const normalizeGrantName = (name: string): string => {
+    return name?.trim() || '';
+  };
+
+  // Function to check if a specific NOFO is pinned
+  const isNofoPinned = (nofoName: string): boolean => {
+    // Normalize the name by trimming
+    const normalizedName = normalizeGrantName(nofoName);
+    
+    // If name is empty, we can't identify this grant
+    if (!normalizedName) return false;
+    
+    return pinnedGrants.some(pg => {
+      // Normalize pinned grant name
+      const pinnedName = normalizeGrantName(pg.name);
+      
+      // Match by name
+      return normalizedName === pinnedName;
+    });
+  };
+
+  // Handle pinning a grant
+  const handlePinGrant = (nofo: NOFO, event?: React.MouseEvent) => {
+    if (event) {
+      event.stopPropagation(); // Prevent triggering the parent click handler
+    }
+    
+    // Normalize grant name
+    const normalizedName = normalizeGrantName(nofo.name);
+    
+    // Skip if we can't identify this grant
+    if (!normalizedName) {
+      console.warn('Cannot pin grant with no name');
+      return;
+    }
+    
+    // Check if grant is already pinned
+    if (isNofoPinned(normalizedName)) {
+      return; // Already pinned
+    }
+    
+    const pinnableGrant: PinnableGrant = {
+      id: nofo.id.toString(),
+      name: normalizedName,
+      isPinned: true
+    };
+    
+    // Create a completely new array for React state update
+    const updatedPinnedGrants = [...pinnedGrants, pinnableGrant];
+    setPinnedGrants(updatedPinnedGrants);
+    
+    // Save to localStorage
+    localStorage.setItem('pinnedGrants', JSON.stringify(updatedPinnedGrants));
+    
+    // Show notification
+    if (addNotification) {
+      addNotification("success", `Grant "${normalizedName}" pinned successfully`);
+    }
+  };
+  
+  // Handle unpinning a grant
+  const handleUnpinGrant = (nofoName: string, event?: React.MouseEvent) => {
+    if (event) {
+      event.stopPropagation(); // Prevent triggering the parent click handler
+    }
+    
+    // Normalize the name
+    const normalizedName = normalizeGrantName(nofoName);
+    
+    // Skip if we can't identify this grant
+    if (!normalizedName) {
+      console.warn('Cannot unpin grant with no name');
+      return;
+    }
+    
+    // Create a completely new array for React state update
+    const updatedPinnedGrants = pinnedGrants.filter(grant => {
+      const pinnedName = normalizeGrantName(grant.name);
+      return pinnedName !== normalizedName;
+    });
+    
+    setPinnedGrants(updatedPinnedGrants);
+    
+    // Save to localStorage
+    localStorage.setItem('pinnedGrants', JSON.stringify(updatedPinnedGrants));
+    
+    // Show notification
+    if (addNotification) {
+      addNotification("info", `Grant "${normalizedName}" unpinned`);
+    }
+  };
 
   // NOFO Handlers
   const handleEditNofo = (nofo: NOFO) => {
@@ -246,14 +411,22 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setNofos(nofos.filter((nofo) => nofo.id !== selectedNofo.id));
 
       // Show success notification
-      alert(`Grant "${selectedNofo.name}" deleted successfully`);
+      if (addNotification) {
+        addNotification("success", `Grant "${selectedNofo.name}" deleted successfully`);
+      } else {
+        alert(`Grant "${selectedNofo.name}" deleted successfully`);
+      }
 
       // Reset state
       setDeleteModalOpen(false);
       setSelectedNofo(null);
     } catch (error) {
       console.error("Error deleting grant:", error);
-      alert("Failed to delete grant. Please try again.");
+      if (addNotification) {
+        addNotification("error", "Failed to delete grant. Please try again.");
+      } else {
+        alert("Failed to delete grant. Please try again.");
+      }
     }
   };
 
@@ -355,62 +528,91 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   };
 
   return (
-    <>
-      <div className="data-table">
+    <div className="tab-content">
+      {/* NOFO Table Header */}
+      <div className="table-container">
         <div className="table-header">
-          <div className="header-cell nofo-name">Grant Name</div>
+          <div className="header-cell">Name</div>
           <div className="header-cell">Status</div>
-          <div className="header-cell actions-cell">Actions</div>
+          <div className="header-cell">Actions</div>
         </div>
-        {filteredNofos.length > 0 ? (
-          filteredNofos.map((nofo) => (
-            <div className="table-row" key={nofo.id}>
-              <div className="row-cell nofo-name">{nofo.name}</div>
+
+        {/* NOFO Table Rows */}
+        <div className="table-body">
+          {filteredNofos.length === 0 && (
+            <div className="no-data">
+              <LuFileX size={24} className="no-data-icon" />
+              <p>No grants found</p>
+            </div>
+          )}
+          {filteredNofos.map((nofo) => (
+            <div key={nofo.id} className="table-row">
+              <div className="row-cell">
+                <span className="nofo-name">{nofo.name}</span>
+                {isNofoPinned(nofo.name) && (
+                  <span className="pinned-badge">
+                    <LuPin size={14} />
+                    <span>Pinned</span>
+                  </span>
+                )}
+              </div>
               <div className="row-cell">
                 <div 
                   className={`status-badge ${nofo.status || 'active'}`} 
-                  onClick={() => {
-                    console.log(`Clicked on status badge for ${nofo.name}, current status: ${nofo.status}`);
-                    toggleNofoStatus(nofo);
-                  }}
+                  onClick={() => toggleNofoStatus(nofo)}
                   title="Click to toggle between active and archived"
-                  style={{ 
-                    cursor: 'pointer',
-                    display: 'inline-block',
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '0.85rem',
-                    fontWeight: 'bold',
-                    textTransform: 'capitalize',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                    backgroundColor: nofo.status === 'archived' ? '#f7e6e6' : '#e6f7e6',
-                    color: nofo.status === 'archived' ? '#c62828' : '#2e7d32',
-                    border: `1px solid ${nofo.status === 'archived' ? '#ffcdd2' : '#c8e6c9'}`
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.15)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
-                  }}
                 >
-                  {nofo.status || "active"}
+                  <span className="status-icon">
+                    {nofo.status === 'active' ? <LuCheck size={14} /> : <LuArchive size={14} />}
+                  </span>
+                  <span>{nofo.status || "active"}</span>
                 </div>
               </div>
-              <div className="row-cell actions-cell">
-                <RowActions
-                  onEdit={() => handleEditNofo(nofo)}
-                  onDelete={() => handleDeleteNofo(nofo)}
-                />
+              <div className="row-cell actions">
+                {/* Pin/Unpin Button */}
+                {isNofoPinned(nofo.name) ? (
+                  <button 
+                    className="action-button unpin"
+                    onClick={(e) => handleUnpinGrant(nofo.name, e)}
+                    title="Unpin grant"
+                    aria-label="Unpin grant"
+                  >
+                    <LuPinOff size={18} />
+                  </button>
+                ) : (
+                  <button 
+                    className="action-button pin"
+                    onClick={(e) => handlePinGrant(nofo, e)}
+                    title="Pin grant"
+                    aria-label="Pin grant"
+                  >
+                    <LuPin size={18} />
+                  </button>
+                )}
+                
+                {/* Edit Button */}
+                <button
+                  className="action-button edit"
+                  onClick={() => handleEditNofo(nofo)}
+                  aria-label="Edit grant"
+                >
+                  <LuPencil size={16} className="button-icon" />
+                  <span>Edit</span>
+                </button>
+                
+                {/* Delete Button */}
+                <button
+                  className="action-button delete"
+                  onClick={() => handleDeleteNofo(nofo)}
+                  aria-label="Delete grant"
+                >
+                  <LuTrash size={16} className="button-icon" />
+                  <span>Delete</span>
+                </button>
               </div>
             </div>
-          ))
-        ) : (
-          <div className="no-data">No grants found</div>
-        )}
+          ))}
+        </div>
       </div>
 
       {/* Edit NOFO Modal */}
@@ -428,20 +630,23 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               value={editedNofoName}
               onChange={(e) => setEditedNofoName(e.target.value)}
               className="form-input"
+              placeholder="Enter grant name"
             />
           </div>
           <div className="form-group">
             <label htmlFor="nofo-status">Status</label>
-            <select
-              id="nofo-status"
-              value={editedNofoStatus}
-              onChange={(e) => setEditedNofoStatus(e.target.value as "active" | "archived")}
-              className="form-input"
-            >
-              <option value="active">Active</option>
-              <option value="archived">Archived</option>
-            </select>
-            <div style={{ fontSize: '13px', color: '#666', marginTop: '5px' }}>
+            <div className="select-wrapper">
+              <select
+                id="nofo-status"
+                value={editedNofoStatus}
+                onChange={(e) => setEditedNofoStatus(e.target.value as "active" | "archived")}
+                className="form-input"
+              >
+                <option value="active">Active</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+            <div className="field-note">
               Active grants are visible to users. Archived grants are hidden.
             </div>
           </div>
@@ -473,10 +678,13 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         title="Delete Grant"
       >
         <div className="modal-form">
-          <p>
-            Are you sure you want to delete{" "}
-            <strong>{selectedNofo?.name}</strong>?
-          </p>
+          <div className="delete-confirmation">
+            <LuTriangle size={32} className="warning-icon" />
+            <p>
+              Are you sure you want to delete{" "}
+              <strong>{selectedNofo?.name}</strong>?
+            </p>
+          </div>
           <p className="warning-text">This action cannot be undone.</p>
           <div className="modal-actions">
             <button
@@ -503,59 +711,52 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         title="Upload Grant"
       >
         <div className="modal-form">
-          <p>
+          <p className="modal-description">
             Upload a new grant file in PDF or TXT format.
           </p>
           
-          <div className="note-box" style={{ 
-            backgroundColor: '#f8f9fa', 
-            border: '1px solid #e9ecef', 
-            borderRadius: '4px', 
-            padding: '12px 15px', 
-            fontSize: '14px', 
-            color: '#495057',
-            marginBottom: '20px'
-          }}>
-            <strong>Note:</strong> Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it'll be ready for your review!
+          <div className="info-box">
+            <LuInfo size={18} className="info-icon" />
+            <span>
+              Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it'll be ready for your review!
+            </span>
           </div>
           
-          <div className="form-group" style={{ marginBottom: '20px' }}>
-            <label htmlFor="file-upload" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-              Select File:
-            </label>
-            <input
-              id="file-upload"
-              type="file"
-              accept=".pdf,.txt"
-              onChange={handleFileSelect}
-              style={{ display: 'block', marginBottom: '15px' }}
-            />
+          <div className="form-group">
+            <label htmlFor="file-upload">Select File</label>
+            <div className="file-upload-container">
+              <input
+                id="file-upload"
+                type="file"
+                accept=".pdf,.txt"
+                onChange={handleFileSelect}
+                className="file-input"
+              />
+              <div className="file-upload-button">
+                <LuUpload size={16} className="button-icon" />
+                <span>Choose File</span>
+              </div>
+            </div>
             {selectedFile && (
-              <div style={{ fontSize: '14px', color: '#555', marginTop: '5px' }}>
-                Selected: {selectedFile.name}
+              <div className="selected-file">
+                <LuFile size={16} className="file-icon" />
+                <span>{selectedFile.name}</span>
               </div>
             )}
           </div>
           
           {selectedFile && (
-            <div className="form-group" style={{ marginBottom: '20px' }}>
-              <label htmlFor="custom-grant-name" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                Grant Name:
-              </label>
+            <div className="form-group">
+              <label htmlFor="custom-grant-name">Grant Name</label>
               <input
                 type="text"
                 id="custom-grant-name"
                 value={customGrantName}
                 onChange={(e) => setCustomGrantName(e.target.value)}
+                className="form-input"
                 placeholder="Enter grant name"
-                style={{ 
-                  width: '100%', 
-                  padding: '8px', 
-                  borderRadius: '4px',
-                  border: '1px solid #ccc'
-                }}
               />
-              <div style={{ fontSize: '13px', color: '#666', marginTop: '5px' }}>
+              <div className="field-note">
                 This name will be used to identify the grant in the system.
               </div>
             </div>
@@ -577,12 +778,13 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               onClick={uploadNOFO}
               disabled={!selectedFile || !customGrantName.trim()}
             >
-              Upload Grant
+              <LuUpload size={16} className="button-icon" />
+              <span>Upload Grant</span>
             </button>
           </div>
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 
@@ -622,9 +824,15 @@ const Dashboard: React.FC = () => {
 
   // Hooks
   const navigate = useNavigate();
+  const location = useLocation();
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const { addNotification } = useNotifications();
+
+  // Scroll to top when route changes or component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // Check admin permissions on component mount
   useEffect(() => {
@@ -925,6 +1133,7 @@ const Dashboard: React.FC = () => {
               value={itemsPerPage} 
               onChange={handleItemsPerPageChange}
               aria-label="Items per page"
+              className="form-input"
             >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -959,7 +1168,7 @@ const Dashboard: React.FC = () => {
 
   // Show loading state
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading">Loading Dashboard...</div>;
   }
 
   // Redirect happens in useEffect if not admin
@@ -992,98 +1201,34 @@ const Dashboard: React.FC = () => {
 
       {/* Invitation Success Banner */}
       {showSuccessBanner && (
-        <div 
-          style={{
-            backgroundColor: "#e6f7ed",
-            color: "#0a6634",
-            padding: "12px 24px",
-            borderRadius: "4px",
-            margin: "0 24px 16px 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <svg 
-              width="20" 
-              height="20" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ marginRight: "12px" }}
-            >
-              <path 
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" 
-                fill="#0a6634"
-              />
-            </svg>
-            <span style={{ fontWeight: "500" }}>
-              Success! An invitation has been sent to {invitedEmail}
-            </span>
+        <div className="success-banner">
+          <div className="success-banner-content">
+            <LuCheck size={20} className="success-icon" />
+            <span>Success! An invitation has been sent to {invitedEmail}</span>
           </div>
           <button 
             onClick={() => setShowSuccessBanner(false)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "#0a6634",
-              fontWeight: "bold"
-            }}
+            className="banner-close-button"
             aria-label="Close notification"
           >
-            ✕
+            <LuX size={18} />
           </button>
         </div>
       )}
 
       {/* Grant Added Success Banner */}
       {showGrantBanner && (
-        <div 
-          style={{
-            backgroundColor: "#e6f7ed",
-            color: "#0a6634",
-            padding: "12px 24px",
-            borderRadius: "4px",
-            margin: "0 24px 16px 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <svg 
-              width="20" 
-              height="20" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ marginRight: "12px" }}
-            >
-              <path 
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" 
-                fill="#0a6634"
-              />
-            </svg>
-            <span style={{ fontWeight: "500" }}>
-              Success! Grant "{addedGrantName}" has been added
-            </span>
+        <div className="success-banner">
+          <div className="success-banner-content">
+            <LuCheck size={20} className="success-icon" />
+            <span>Success! Grant "{addedGrantName}" has been added</span>
           </div>
           <button 
             onClick={() => setShowGrantBanner(false)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "#0a6634",
-              fontWeight: "bold"
-            }}
+            className="banner-close-button"
             aria-label="Close notification"
           >
-            ✕
+            <LuX size={18} />
           </button>
         </div>
       )}
@@ -1095,189 +1240,118 @@ const Dashboard: React.FC = () => {
         </button>
       </div>
 
-      {/* Combined search and actions bar */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: '25px',
-        gap: '15px'
-      }}>
-        {/* Search bar - now with max-width */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          maxWidth: '60%',
-          flex: '1'
-        }}>
-          <div className="search-input-wrapper">
-            <span className="search-icon">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+      {/* Main content container - prevents double scrollbar */}
+      <div className="dashboard-content">
+        {/* Combined search and actions bar */}
+        <div className="search-actions-container">
+          {/* Search bar */}
+          <div className="search-filter-container">
+            <div className="search-input-wrapper">
+              <LuSearch className="search-icon" size={18} />
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search grants..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            <div className="filter-container">
+              <button 
+                ref={filterButtonRef}
+                className={`filter-button ${statusFilter !== "all" ? "active" : ""}`}
+                onClick={toggleFilterMenu}
+                aria-label="Filter options"
               >
-                <path
-                  d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
-                  fill="#666666"
-                />
-              </svg>
-            </span>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search grants..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div style={{ position: 'relative' }}>
-            <button 
-              ref={filterButtonRef}
-              className={`filter-button ${statusFilter !== "all" ? "active" : ""}`}
-              onClick={toggleFilterMenu}
-              aria-label="Filter options"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M4.25 5.66C4.35 5.79 9.99 12.99 9.99 12.99V19C9.99 19.55 10.44 20 11 20H13.01C13.56 20 14.02 19.55 14.02 19V12.98C14.02 12.98 19.51 5.96 19.77 5.64C20.03 5.32 20 5 20 5C20 4.45 19.55 4 18.99 4H5.01C4.4 4 4 4.48 4 5C4 5.2 4.06 5.44 4.25 5.66Z"
-                  fill="#666666"
-                />
-              </svg>
-              {statusFilter !== "all" && (
-                <span className="filter-badge">1</span>
+                <LuFilter size={18} />
+                {statusFilter !== "all" && (
+                  <span className="filter-badge">1</span>
+                )}
+              </button>
+
+              {filterMenuOpen && (
+                <div ref={filterMenuRef} className="filter-menu">
+                  <div className="filter-menu-header">
+                    Filter by Status
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => applyFilter("all")}
+                      className={`filter-option ${statusFilter === "all" ? "selected" : ""}`}
+                    >
+                      <div className="filter-option-content">
+                        <span className="filter-option-check">
+                          {statusFilter === "all" ? "✓" : ""}
+                        </span>
+                        All Grants
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => applyFilter("active")}
+                      className={`filter-option ${statusFilter === "active" ? "selected" : ""}`}
+                    >
+                      <div className="filter-option-content">
+                        <span className="filter-option-check">
+                          {statusFilter === "active" ? "✓" : ""}
+                        </span>
+                        Active Grants
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => applyFilter("archived")}
+                      className={`filter-option ${statusFilter === "archived" ? "selected" : ""}`}
+                    >
+                      <div className="filter-option-content">
+                        <span className="filter-option-check">
+                          {statusFilter === "archived" ? "✓" : ""}
+                        </span>
+                        Archived Grants
+                      </div>
+                    </button>
+                  </div>
+                </div>
               )}
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="action-buttons">
+            <button
+              className="action-button invite-button"
+              onClick={handleInviteUser}
+            >
+              <LuMail size={16} className="button-icon" />
+              <span>Invite User</span>
             </button>
-
-            {filterMenuOpen && (
-              <div ref={filterMenuRef} className="filter-menu">
-                <div className="filter-menu-header">
-                  Filter by Status
-                </div>
-                <div>
-                  <button
-                    onClick={() => applyFilter("all")}
-                    className={`filter-option ${statusFilter === "all" ? "selected" : ""}`}
-                  >
-                    <div className="filter-option-content">
-                      <span className="filter-option-check">
-                        {statusFilter === "all" ? "✓" : ""}
-                      </span>
-                      All Grants
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => applyFilter("active")}
-                    className={`filter-option ${statusFilter === "active" ? "selected" : ""}`}
-                  >
-                    <div className="filter-option-content">
-                      <span className="filter-option-check">
-                        {statusFilter === "active" ? "✓" : ""}
-                      </span>
-                      Active Grants
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => applyFilter("archived")}
-                    className={`filter-option ${statusFilter === "archived" ? "selected" : ""}`}
-                  >
-                    <div className="filter-option-content">
-                      <span className="filter-option-check">
-                        {statusFilter === "archived" ? "✓" : ""}
-                      </span>
-                      Archived Grants
-                    </div>
-                  </button>
-                </div>
-              </div>
-            )}
+            
+            <button
+              className="action-button add-button"
+              onClick={handleUploadNofo}
+            >
+              <LuUpload size={16} className="button-icon" />
+              <span>Add Grant</span>
+            </button>
           </div>
         </div>
 
-        {/* Action buttons now side by side with search */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '15px'
-        }}>
-          <button
-            className="action-button"
-            onClick={handleInviteUser}
-            style={{ 
-              backgroundColor: '#4a90e2', 
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '500',
-              fontSize: '14px',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#3a80d2';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#4a90e2';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
-          >
-            Invite User
-          </button>
-          <button
-            className="action-button"
-            onClick={handleUploadNofo}
-            style={{ 
-              backgroundColor: '#0073BB',
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '500',
-              fontSize: '14px',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#005d94';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#0073BB';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
-          >
-            Add Grant
-          </button>
-        </div>
+        {/* Tab Content */}
+        <NOFOsTab
+          nofos={getPaginatedData().items}
+          searchQuery={searchQuery}
+          apiClient={apiClient}
+          setNofos={setNofos}
+          uploadNofoModalOpen={uploadNofoModalOpen}
+          setUploadNofoModalOpen={setUploadNofoModalOpen}
+          showGrantSuccessBanner={showGrantSuccessBanner}
+          useNotifications={{ addNotification }}
+        />
+
+        {/* Pagination Controls */}
+        <PaginationControls />
       </div>
-
-      {/* Tab Content */}
-      <NOFOsTab
-        nofos={getPaginatedData().items}
-        searchQuery={searchQuery}
-        apiClient={apiClient}
-        setNofos={setNofos}
-        uploadNofoModalOpen={uploadNofoModalOpen}
-        setUploadNofoModalOpen={setUploadNofoModalOpen}
-        showGrantSuccessBanner={showGrantSuccessBanner}
-        useNotifications={{ addNotification }}
-      />
-
-      {/* Pagination Controls */}
-      <PaginationControls />
 
       {/* Invite User Modal */}
       <Modal
@@ -1286,12 +1360,12 @@ const Dashboard: React.FC = () => {
         title="Invite New User"
       >
         <div className="modal-form">
-          <p style={{ marginBottom: '20px', color: '#555' }}>
+          <p className="modal-description">
             Enter the email address of the user you want to invite. They will receive an email
             with instructions to set up their account.
           </p>
           <div className="form-group">
-            <label htmlFor="invite-email" style={{ fontWeight: '600', color: '#0073BB', marginBottom: '8px', display: 'block' }}>Email Address:</label>
+            <label htmlFor="invite-email">Email Address</label>
             <input
               type="email"
               id="invite-email"
@@ -1299,28 +1373,12 @@ const Dashboard: React.FC = () => {
               onChange={(e) => setInviteEmail(e.target.value)}
               className="form-input"
               placeholder="user@example.com"
-              style={{ 
-                width: '100%', 
-                padding: '10px', 
-                border: '1px solid #ccc', 
-                borderRadius: '4px',
-                fontSize: '16px'
-              }}
             />
           </div>
-          <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', gap: '10px' }}>
+          <div className="modal-actions">
             <button
               className="modal-button secondary"
               onClick={() => setInviteUserModalOpen(false)}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: 'white',
-                color: '#444',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px'
-              }}
             >
               Cancel
             </button>
@@ -1328,16 +1386,6 @@ const Dashboard: React.FC = () => {
               className="modal-button primary"
               onClick={sendInvite}
               disabled={!inviteEmail.trim() || !/\S+@\S+\.\S+/.test(inviteEmail)}
-              style={{
-                padding: '8px 20px',
-                backgroundColor: '#0275d8',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '600'
-              }}
             >
               Send Invitation
             </button>
