@@ -266,6 +266,15 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    // Add REST API route for NOFO status updates
+    const nofoStatusAPIIntegration = new HttpLambdaIntegration('NofoStatusAPIIntegration', lambdaFunctions.nofoStatusFunction);
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-status",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoStatusAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     const inviteUserFunction = new lambda.Function(this, 'InviteUserFunction', {
 
       runtime: lambda.Runtime.NODEJS_18_X,

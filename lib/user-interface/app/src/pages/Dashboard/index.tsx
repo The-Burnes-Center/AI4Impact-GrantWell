@@ -595,12 +595,23 @@ const Dashboard: React.FC = () => {
         const nofoResult = await apiClient.landingPage.getNOFOs();
 
         // Convert to required format
-        const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
-          id: index,
-          name: nofo,
-        }));
-
-        setNofos(nofoData);
+        if (nofoResult.nofoData) {
+          // Use the new nofoData that includes status information
+          const nofoData = nofoResult.nofoData.map((nofo, index) => ({
+            id: index,
+            name: nofo.name,
+            status: nofo.status || 'active'
+          }));
+          setNofos(nofoData);
+        } else {
+          // Fallback for backward compatibility
+          const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
+            id: index,
+            name: nofo,
+            status: 'active' // Default status
+          }));
+          setNofos(nofoData);
+        }
       } catch (error) {
         console.error("Error fetching grants:", error);
       }

@@ -40,6 +40,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly getNOFOSummary: lambda.Function;
   public readonly processAndSummarizeNOFO: lambda.Function;
   public readonly grantRecommendationFunction: lambda.Function;
+  public readonly nofoStatusFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -452,18 +453,36 @@ export class LambdaFunctionStack extends cdk.Stack {
         timeout: cdk.Duration.seconds(60),
       }
     );
-    nofoUploadS3APIHandlerFunction.addToRolePolicy(
+
+    // Add the NOFO status update function
+    const nofoStatusHandlerFunction = new lambda.Function(
+      scope,
+      "NofoStatusHandlerFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "landing-page/nofo-status")
+        ),
+        handler: "index.handler",
+        environment: {
+          BUCKET: props.ffioNofosBucket.bucketName,
+        },
+        timeout: cdk.Duration.seconds(30),
+      }
+    );
+
+    nofoStatusHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:*"],
+        actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
         resources: [
           props.ffioNofosBucket.bucketArn,
           props.ffioNofosBucket.bucketArn + "/*",
         ],
       })
     );
-    this.uploadNOFOS3Function = nofoUploadS3APIHandlerFunction;
-    // end
+
+    this.nofoStatusFunction = nofoStatusHandlerFunction;
 
     const uploadS3APIHandlerFunction = new lambda.Function(
       scope,
