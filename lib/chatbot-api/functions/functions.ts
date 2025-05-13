@@ -437,7 +437,6 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     this.getNOFOSummary = RequirementsForNOFOs;
 
-    // NOFO UPLOAD ATTEMPT
     const nofoUploadS3APIHandlerFunction = new lambda.Function(
       scope,
       "nofoUploadS3FilesHandlerFunction",
@@ -453,6 +452,18 @@ export class LambdaFunctionStack extends cdk.Stack {
         timeout: cdk.Duration.seconds(60),
       }
     );
+
+    nofoUploadS3APIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:*"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+    this.uploadNOFOS3Function = nofoUploadS3APIHandlerFunction;
 
     // Add the NOFO status update function
     const nofoStatusHandlerFunction = new lambda.Function(
