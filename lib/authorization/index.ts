@@ -43,10 +43,10 @@ export class AuthorizationStack extends Construct {
           'Below, you will find the necessary information for signing into the tool:<br>' +
           '<strong>First-Time Sign-In:</strong><br>' +
           'Please use the following link when signing in for the first time:<br>' +
-          '<a href="https://gw-auth.auth.us-east-1.amazoncognito.com/login?client_id=375cvc5uaol6jm9jm1jte11kpr&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://d17w6od3455cz1.cloudfront.net">First Time Sign-In Link</a><br><br>' +
+          '<a href="https://gw-nonprod-auth.auth.us-east-1.amazoncognito.com/login?client_id=7tuh07poa2m62icf16gq3qodhk&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://d30n41wvu5wsur.cloudfront.net">First Time Sign-In Link</a><br><br>' +
           '<strong>Regular Access:</strong><br>' +
           'Once registered, you can use the regular custom deployment link:<br>' +
-          '<a href="https://d17w6od3455cz1.cloudfront.net">Regular Custom Deployment Link</a><br><br>' +
+          '<a href="https://d30n41wvu5wsur.cloudfront.net">Regular Custom Deployment Link</a><br><br>' +
           '<strong>Login Credentials:</strong><br>' +
           'Username: {username}<br>' +
           'Temporary Password: {####}<br><br>' +
