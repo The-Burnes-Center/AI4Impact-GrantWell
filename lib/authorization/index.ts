@@ -40,13 +40,9 @@ export class AuthorizationStack extends Construct {
           'Hello,<br><br>' +
           'I am pleased to inform you that the new custom deployment link for the GrantWell tool is now ready for testing. All future updates and changes will be applied to this new link.<br>' +
           'Please note that the tool is still under development, so you may encounter errors. We kindly request that you record any feedback regarding the tool’s performance.<br>' +
-          'Below, you will find the necessary information for signing into the tool:<br>' +
-          '<strong>First-Time Sign-In:</strong><br>' +
-          'Please use the following link when signing in for the first time:<br>' +
-          '<a href="https://gw-nonprod-auth.auth.us-east-1.amazoncognito.com/login?client_id=7tuh07poa2m62icf16gq3qodhk&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://d30n41wvu5wsur.cloudfront.net">First Time Sign-In Link</a><br><br>' +
-          '<strong>Regular Access:</strong><br>' +
-          'Once registered, you can use the regular custom deployment link:<br>' +
-          '<a href="https://d30n41wvu5wsur.cloudfront.net">Regular Custom Deployment Link</a><br><br>' +
+          'Below, you will find the necessary information for signing into the tool:<br><br>' +
+          '<strong>Sign-In Link:</strong><br>' +
+          '<a href="https://gw-nonprod-auth.auth.us-east-1.amazoncognito.com/login?client_id=7tuh07poa2m62icf16gq3qodhk&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://d30n41wvu5wsur.cloudfront.net">Deployment Link</a><br><br>' +
           '<strong>Login Credentials:</strong><br>' +
           'Username: {username}<br>' +
           'Temporary Password: {####}<br><br>' +
