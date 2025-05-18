@@ -809,9 +809,7 @@ const Checklists: React.FC = () => {
                 <ActionButton
                   onClick={() =>
                     navigate(
-                      `/document-editor/${documentIdentifier}?folder=${encodeURIComponent(
-                        folderParam || documentIdentifier || ""
-                      )}`
+                      `/document-editor?nofo=${encodeURIComponent(documentIdentifier || '')}`
                     )
                   }
                   icon={<DocumentEditorIcon />}
@@ -826,7 +824,7 @@ const Checklists: React.FC = () => {
                       : THEME.shadows.small,
                   }}
                 >
-                  Document Editor
+                  Grant Application
                 </ActionButton>
               </div>
             </div>

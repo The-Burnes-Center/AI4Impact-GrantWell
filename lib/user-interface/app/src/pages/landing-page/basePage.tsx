@@ -653,16 +653,14 @@ export default function Welcome({ theme }) {
           <button
             onClick={() =>
               navigate(
-                `/chatbot/document-editor/${uuidv4()}?folder=${encodeURIComponent(
-                  selectedDocument.value
-                )}`
+                `/document-editor?nofo=${encodeURIComponent(selectedDocument?.label || '')}`
               )
             }
             disabled={!selectedDocument}
             style={selectedDocument ? buttonStyle : disabledButtonStyle}
             onMouseEnter={buttonHoverStyle}
             onMouseLeave={buttonLeaveStyle}
-            aria-label="Start Document Editor"
+            aria-label="Start New Application"
           >
             Write Project Narrative
           </button>

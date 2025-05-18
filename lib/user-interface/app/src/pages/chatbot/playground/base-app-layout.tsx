@@ -240,9 +240,7 @@ export default function BaseAppLayout({
               <button
                 onClick={() =>
                   navigate(
-                    `/document-editor${
-                      documentIdentifier ? `/${documentIdentifier}` : ""
-                    }`
+                    `/document-editor${documentIdentifier ? `?nofo=${encodeURIComponent(documentIdentifier)}` : ''}`
                   )
                 }
                 style={{
@@ -252,7 +250,7 @@ export default function BaseAppLayout({
               >
                 <Edit size={20} />
                 {sidebarOpen && (
-                  <span style={styles.navLinkText}>Document Editor</span>
+                  <span style={styles.navLinkText}>Grant Application</span>
                 )}
               </button>
 

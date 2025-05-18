@@ -1,0 +1,198 @@
+.review-app-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  padding: 32px 32px 40px 32px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.compliance-check {
+  display: flex;
+  align-items: center;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 18px 24px;
+  margin-bottom: 28px;
+  gap: 18px;
+}
+.compliance-check.failed {
+  background: #fef9c3;
+  border: 1px solid #fde68a;
+}
+.compliance-icon {
+  font-size: 28px;
+  color: #10b981;
+  margin-right: 10px;
+}
+.compliance-check.failed .compliance-icon {
+  color: #f59e42;
+}
+.compliance-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-right: 12px;
+}
+.compliance-desc {
+  color: #4b5563;
+  font-size: 15px;
+}
+
+.review-sections-list {
+  margin-bottom: 32px;
+}
+.review-section-card {
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 18px;
+  padding: 0 0 12px 0;
+}
+.review-section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px 0 20px;
+}
+.review-section-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+  flex: 1;
+}
+.section-status {
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 8px;
+}
+.section-status.complete {
+  color: #10b981;
+}
+.section-status.incomplete {
+  color: #f59e42;
+}
+.edit-btn {
+  background: #e0e7ff;
+  color: #2563eb;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.edit-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+.review-section-content {
+  padding: 10px 20px 0 20px;
+  color: #374151;
+  font-size: 15px;
+  min-height: 32px;
+}
+
+.review-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+.stat-box {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 16px 24px;
+  flex: 1;
+  text-align: center;
+}
+.stat-label {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+.stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.review-next-steps {
+  background: #f0f7ff;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+.next-steps-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 10px;
+}
+.review-next-steps ol {
+  margin: 0;
+  padding-left: 20px;
+  color: #4b5563;
+  font-size: 15px;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+}
+.save-btn {
+  background: #f3f4f6;
+  color: #2563eb;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.save-btn:hover {
+  background: #e0e7ff;
+}
+.export-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.export-btn:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+.export-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .review-app-container {
+    padding: 16px 4px 24px 4px;
+  }
+  .review-section-header, .review-section-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .review-stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+} 

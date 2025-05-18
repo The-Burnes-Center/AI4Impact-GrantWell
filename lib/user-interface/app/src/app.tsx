@@ -14,7 +14,13 @@ import UserFeedbackPage from "./pages/admin/user-feedback-page";
 import SessionPage from "./pages/chatbot/sessions/sessions";
 import Welcome from "./pages/landing-page/basePage";
 import Checklists from "./pages/requirements-gathering/checklist";
-import DocumentEditor from "./pages/document-editor/document-editor";
+import GrantWellWelcome from "./pages/document-editor/GrantWellWelcome";
+import ProjectBasics from "./pages/document-editor/ProjectBasics";
+import QuickQuestionnaire from "./pages/document-editor/QuickQuestionnaire";
+import DraftCreated from "./pages/document-editor/DraftCreated";
+import SectionEditor from "./pages/document-editor/SectionEditor";
+import DraftPreview from "./pages/document-editor/DraftPreview";
+import ReviewApplication from "./pages/document-editor/ReviewApplication";
 import Dashboard from "./pages/Dashboard";
 import { useState } from "react";
 import "./styles/app.scss";
@@ -53,15 +59,18 @@ function App() {
               <Route path="playground/:sessionId" element={<Playground />} />
               <Route path="sessions" element={<SessionPage />} />
               <Route
-                path="document-editor/:projectId"
-                element={<DocumentEditor />}
+                path="document-editor"
+                element={<GrantWellWelcome />}
               />
             </Route>
-            {/* Direct route to document editor */}
-            <Route
-              path="document-editor/:projectId"
-              element={<DocumentEditor />}
-            />
+            {/* Document editor routes */}
+            <Route path="/document-editor" element={<GrantWellWelcome />} />
+            <Route path="/document-editor/project-basics" element={<ProjectBasics />} />
+            <Route path="/document-editor/questionnaire" element={<QuickQuestionnaire />} />
+            <Route path="/document-editor/draft-created" element={<DraftCreated />} />
+            <Route path="/document-editor/section/:sectionIndex" element={<SectionEditor />} />
+            <Route path="/document-editor/draft-preview" element={<DraftPreview />} />
+            <Route path="/document-editor/review" element={<ReviewApplication />} />
             <Route path="/admin" element={<Outlet />}>
               <Route path="data" element={<DataPage />} />
               <Route path="user-feedback" element={<UserFeedbackPage />} />

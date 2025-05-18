@@ -229,13 +229,11 @@ export default function NavigationPanel({
             variant="primary"
             onClick={() =>
               navigate(
-                `/chatbot/document-editor/${uuidv4()}?folder=${encodeURIComponent(
-                  identifier
-                )}`
+                `/document-editor?nofo=${encodeURIComponent(identifier || '')}`
               )
             }
           >
-            New Document Editor
+            Start New Application
           </Button>
         </div>
 
