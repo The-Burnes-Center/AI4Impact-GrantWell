@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import '../styles/project-basics.css';
+import React, { useState, useEffect } from "react";
+
+interface ProjectBasicsProps {
+  onContinue: () => void;
+  selectedNofo: string | null;
+}
 
 interface ProjectBasicsFormData {
   projectName: string;
@@ -11,153 +14,313 @@ interface ProjectBasicsFormData {
   contactEmail: string;
 }
 
-const ProjectBasics: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [selectedNofo, setSelectedNofo] = useState<string | null>(null);
+const ProjectBasics: React.FC<ProjectBasicsProps> = ({
+  onContinue,
+  selectedNofo,
+}) => {
   const [formData, setFormData] = useState<ProjectBasicsFormData>({
-    projectName: '',
-    municipalityName: '',
-    requestedAmount: '',
-    projectDuration: '',
-    contactName: '',
-    contactEmail: '',
+    projectName: "",
+    municipalityName: "",
+    requestedAmount: "",
+    projectDuration: "",
+    contactName: "",
+    contactEmail: "",
   });
 
-  // Parse query parameters to get the selected NOFO
+  // Load previous data if available
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const nofo = searchParams.get('nofo');
-    if (nofo) {
-      setSelectedNofo(decodeURIComponent(nofo));
+    const savedBasics = localStorage.getItem("projectBasics");
+    if (savedBasics) {
+      setFormData(JSON.parse(savedBasics));
     }
-  }, [location]);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleContinue = () => {
-    // Save form data to localStorage or state management
-    localStorage.setItem('projectBasics', JSON.stringify(formData));
-    
-    // Navigate to the questionnaire with the collected data
-    const queryParams = selectedNofo ? `?nofo=${encodeURIComponent(selectedNofo)}` : '';
-    navigate(`/document-editor/questionnaire${queryParams}`, { 
-      state: { 
-        projectBasics: formData,
-        nofo: selectedNofo 
-      } 
-    });
+    // Save form data to localStorage
+    localStorage.setItem("projectBasics", JSON.stringify(formData));
+    onContinue();
   };
 
   return (
-    <div className="project-basics-container">
-      <div className="project-basics-card">
-        <div className="project-basics-header">
-          <h1>Project Basics</h1>
+    <div
+      style={{
+        maxWidth: "800px",
+        margin: "0 auto",
+        padding: "32px 0",
+      }}
+    >
+      <div
+        style={{
+          background: "white",
+          borderRadius: "8px",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            background: "#4361ee",
+            color: "white",
+            padding: "20px 24px",
+          }}
+        >
+          <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 600 }}>
+            Project Basics
+          </h1>
         </div>
-        
-        <div className="project-basics-content">
-          <p className="instruction-text">
-            Let's start with some basic information about your project.
+
+        <div style={{ padding: "24px" }}>
+          <div style={{ marginBottom: "24px", color: "#4a5568" }}>
+            Let's start with some basic information about your project. These
+            details will help us create your draft application.
             {selectedNofo && (
-              <span className="selected-nofo">Selected NOFO: {selectedNofo}</span>
+              <span
+                style={{
+                  display: "block",
+                  marginTop: "8px",
+                  color: "#4361ee",
+                  fontWeight: 500,
+                }}
+              >
+                Selected NOFO: {selectedNofo}
+              </span>
             )}
-          </p>
-          
-          <div className="form-group">
-            <label htmlFor="projectName">Project Name</label>
+          </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+                color: "#2d3748",
+              }}
+            >
+              Project Name
+            </label>
             <input
               type="text"
               id="projectName"
               name="projectName"
               value={formData.projectName}
               onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "12px",
+                border: "1px solid #e2e8f0",
+                borderRadius: "6px",
+                fontSize: "16px",
+              }}
               placeholder="Downtown Revitalization Project"
-              className="form-control"
             />
-            <small className="form-text">Keep it clear and descriptive. 5-10 words recommended</small>
+            <span
+              style={{
+                display: "block",
+                fontSize: "12px",
+                color: "#718096",
+                marginTop: "4px",
+              }}
+            >
+              Keep it clear and descriptive. 5-10 words recommended
+            </span>
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="municipalityName">Municipality Name</label>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+                color: "#2d3748",
+              }}
+            >
+              Municipality Name
+            </label>
             <input
               type="text"
               id="municipalityName"
               name="municipalityName"
               value={formData.municipalityName}
               onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "12px",
+                border: "1px solid #e2e8f0",
+                borderRadius: "6px",
+                fontSize: "16px",
+              }}
               placeholder="City of Oakridge"
-              className="form-control"
             />
           </div>
-          
-          <div className="form-row">
-            <div className="form-group half-width">
-              <label htmlFor="requestedAmount">Requested Amount</label>
+
+          <div
+            style={{
+              display: "flex",
+              gap: "16px",
+              marginBottom: "20px",
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ flex: "1", minWidth: "260px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 500,
+                  color: "#2d3748",
+                }}
+              >
+                Requested Amount
+              </label>
               <input
                 type="text"
                 id="requestedAmount"
                 name="requestedAmount"
                 value={formData.requestedAmount}
                 onChange={handleInputChange}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: "6px",
+                  fontSize: "16px",
+                }}
                 placeholder="$250,000"
-                className="form-control"
               />
             </div>
-            
-            <div className="form-group half-width">
-              <label htmlFor="projectDuration">Project Duration</label>
+            <div style={{ flex: "1", minWidth: "260px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 500,
+                  color: "#2d3748",
+                }}
+              >
+                Project Duration
+              </label>
               <input
                 type="text"
                 id="projectDuration"
                 name="projectDuration"
                 value={formData.projectDuration}
                 onChange={handleInputChange}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: "6px",
+                  fontSize: "16px",
+                }}
                 placeholder="18 months"
-                className="form-control"
               />
             </div>
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="contactName">Primary Contact Name</label>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+                color: "#2d3748",
+              }}
+            >
+              Primary Contact Name
+            </label>
             <input
               type="text"
               id="contactName"
               name="contactName"
               value={formData.contactName}
               onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "12px",
+                border: "1px solid #e2e8f0",
+                borderRadius: "6px",
+                fontSize: "16px",
+              }}
               placeholder="Jane Smith"
-              className="form-control"
             />
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="contactEmail">Contact Email</label>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+                color: "#2d3748",
+              }}
+            >
+              Contact Email
+            </label>
             <input
               type="email"
               id="contactEmail"
               name="contactEmail"
               value={formData.contactEmail}
               onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "12px",
+                border: "1px solid #e2e8f0",
+                borderRadius: "6px",
+                fontSize: "16px",
+              }}
               placeholder="jsmith@oakridge.gov"
-              className="form-control"
             />
           </div>
         </div>
-        
-        <div className="form-actions">
-          <button 
-            className="continue-button"
+
+        <div
+          style={{
+            padding: "16px 24px",
+            borderTop: "1px solid #e2e8f0",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
             onClick={handleContinue}
+            style={{
+              padding: "12px 24px",
+              background: "#4361ee",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              fontSize: "16px",
+              fontWeight: 500,
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
           >
-            Continue <span className="arrow-icon">→</span>
+            Continue
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ marginLeft: "8px" }}
+            >
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
           </button>
         </div>
       </div>
@@ -165,4 +328,4 @@ const ProjectBasics: React.FC = () => {
   );
 };
 
-export default ProjectBasics; 
+export default ProjectBasics;

@@ -4,7 +4,7 @@ import { Auth } from 'aws-amplify';
 import { ApiClient } from '../../common/api-client/api-client';
 import { AppContext } from '../../common/app-context';
 import { v4 as uuidv4 } from 'uuid';
-import '../styles/base-page.css';
+import '../../styles/base-page.css';
 import IntegratedSearchBar from '../../components/search/IntegratedSearchBar';
 
 export default function Welcome({ theme }) {

@@ -10,6 +10,7 @@ import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import "../../styles/checklists.css";
 import { v4 as uuidv4 } from "uuid";
+import RequirementsNavigation from "./checklist-navigation";
 
 // Types
 interface TabContent {
@@ -29,14 +30,7 @@ interface LlmData {
   deadlines: string;
 }
 
-interface ButtonProps {
-  onClick: () => void;
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-  icon?: React.ReactNode;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
-}
+// Removed unused ButtonProps interface
 
 interface TabProps {
   id: string;
@@ -128,28 +122,7 @@ const styles = {
     color: THEME.colors.textSecondary,
     fontStyle: "italic",
   },
-  button: {
-    backgroundColor: THEME.colors.primary,
-    color: THEME.colors.white,
-    padding: "14px 18px",
-    border: "none",
-    borderRadius: THEME.borderRadius.small,
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "600",
-    fontFamily: THEME.fonts.base,
-    boxShadow: THEME.shadows.small,
-    transition: THEME.transitions.default,
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "10px",
-  },
-  buttonHover: {
-    backgroundColor: THEME.colors.primaryHover,
-    boxShadow: THEME.shadows.medium,
-  },
+  // Removed unused button styles
   tabsContainer: {
     marginTop: "20px",
     marginBottom: "24px",
@@ -269,21 +242,7 @@ const styles = {
     lineHeight: "1.6",
     color: THEME.colors.textSecondary,
   },
-  tipBox: {
-    backgroundColor: THEME.colors.warningLight,
-    padding: "16px",
-    borderRadius: THEME.borderRadius.small,
-    marginTop: "12px",
-    border: `1px solid ${THEME.colors.warning}`,
-    fontSize: "15px",
-    lineHeight: "1.5",
-  },
-  tipHeader: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    marginBottom: "6px",
-  },
+  // No tooltip styles needed
 };
 
 // CSS to be injected for markdown and spinner
@@ -466,30 +425,7 @@ const ClockIcon = () => (
   </svg>
 );
 
-const LightbulbIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M9 21H15"
-      stroke={THEME.colors.warning}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M12 3C8.68629 3 6 5.68629 6 9C6 10.415 6.41549 11.7281 7.10812 12.8103C7.07546 12.8703 7.04756 12.9341 7.02591 13H7L8.02513 18H15.9749L17 13H16.974C16.9524 12.9341 16.9245 12.8703 16.8919 12.8103C17.5845 11.7281 18 10.415 18 9C18 5.68629 15.3137 3 12 3Z"
-      stroke={THEME.colors.warning}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+// Removed unused LightbulbIcon
 
 const InfoIcon = () => (
   <svg
@@ -515,95 +451,9 @@ const InfoIcon = () => (
   </svg>
 );
 
-const ChatbotIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M21 12C21 16.9706 16.9706 21 12 21C10.8354 21 9.71871 20.7817 8.69489 20.3797C8.2892 20.2095 7.86371 20.5378 7.4 20.9C6.4 21.8 5.3 21.9 4.5 21.9C5.5 21 6 19.1 5.5 17.9C4.56293 16.2241 4 14.1912 4 12C4 7.02944 8.02944 3 13 3C17.9706 3 21 7.02944 21 12Z"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path d="M9 12H9.01" stroke="white" strokeWidth="2" strokeLinecap="round" />
-    <path
-      d="M13 12H13.01"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M17 12H17.01"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
+// Removed unused icons
 
-const DocumentEditorIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M12 12H19M19 12L16 9M19 12L16 15"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-// Component for Action Button
-const ActionButton: React.FC<ButtonProps> = ({
-  onClick,
-  children,
-  style = {},
-  icon,
-  onMouseEnter,
-  onMouseLeave,
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <button
-      style={
-        isHovered
-          ? { ...styles.button, ...styles.buttonHover, ...style }
-          : { ...styles.button, ...style }
-      }
-      onClick={onClick}
-      onMouseEnter={() => {
-        setIsHovered(true);
-        onMouseEnter?.();
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        onMouseLeave?.();
-      }}
-    >
-      {icon}
-      {children}
-    </button>
-  );
-};
+// Removed unused ActionButton component
 
 // Component for Tab
 const Tab: React.FC<TabProps> = ({ id, activeId, onClick, children, icon }) => {
@@ -650,9 +500,9 @@ const Checklists: React.FC = () => {
   });
   const [isLoading, setLoading] = useState(true);
   const [activeTabId, setActiveTabId] = useState("eligibility");
-  const [showTip, setShowTip] = useState<number | null>(null);
-  const [isHoveredChat, setIsHoveredChat] = useState(false);
-  const [isHoveredDoc, setIsHoveredDoc] = useState(false);
+  // No tooltips or hover elements
+
+  const [showHelp, setShowHelp] = useState(false);
 
   // Add CSS styles to document on mount
   useEffect(() => {
@@ -761,202 +611,370 @@ const Checklists: React.FC = () => {
   };
 
   return (
-    <div className="checklist-container" style={styles.mainContainer}>
-      <div style={styles.container} className="full-height-content">
-        {isLoading ? (
-          <div style={styles.loadingContainer}>
-            <div className="spinner"></div>
-            <p style={{ ...styles.paragraph, marginTop: "20px" }}>
-              Loading application requirements...
-            </p>
-          </div>
-        ) : (
-          <>
-            <div style={styles.headerContainer}>
-              <div style={styles.headerContent}>
-                <h1 style={styles.heading}>
-                  <span>Application Requirements for </span>
-                  <span style={{ color: THEME.colors.accent }}>
-                    {llmData.grantName}
-                  </span>
-                </h1>
-                <p style={styles.paragraph}>
-                  We've extracted the Eligibility Criteria, Required Documents,
-                  Project Narrative Components, and Key Deadlines for this
-                  grant.
-                </p>
-                <p style={styles.italicParagraph}>
-                  Use the tabs below to navigate through each section.
-                </p>
-              </div>
-              <div style={styles.buttonContainer}>
-                <ActionButton
-                  onClick={() => navigate(linkUrl)}
-                  icon={<ChatbotIcon />}
-                  onMouseEnter={() => setIsHoveredChat(true)}
-                  onMouseLeave={() => setIsHoveredChat(false)}
-                  style={{
-                    backgroundColor: isHoveredChat
-                      ? THEME.colors.primaryHover
-                      : THEME.colors.primary,
-                    boxShadow: isHoveredChat
-                      ? THEME.shadows.medium
-                      : THEME.shadows.small,
-                  }}
-                >
-                  Go to Chatbot
-                </ActionButton>
-                <ActionButton
-                  onClick={() =>
-                    navigate(
-                      `/document-editor?nofo=${encodeURIComponent(documentIdentifier || '')}`
-                    )
-                  }
-                  icon={<DocumentEditorIcon />}
-                  onMouseEnter={() => setIsHoveredDoc(true)}
-                  onMouseLeave={() => setIsHoveredDoc(false)}
-                  style={{
-                    backgroundColor: isHoveredDoc
-                      ? THEME.colors.primaryHover
-                      : THEME.colors.primary,
-                    boxShadow: isHoveredDoc
-                      ? THEME.shadows.medium
-                      : THEME.shadows.small,
-                  }}
-                >
-                  Grant Application
-                </ActionButton>
-              </div>
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+      {/* Navigation Sidebar */}
+      <RequirementsNavigation documentIdentifier={folderParam} />
+
+      {/* Main Content */}
+      <div style={{ flex: 1, overflow: "auto" }}>
+        <div style={styles.mainContainer}>
+          {isLoading ? (
+            <div style={styles.loadingContainer}>
+              <h2>Loading NOFO data...</h2>
+              <p>Retrieving information about this NOFO...</p>
             </div>
-
-            {/* Tabs Navigation */}
-            <div style={styles.tabsContainer}>
-              <div style={styles.tabsHeader}>
-                <Tab
-                  id="eligibility"
-                  activeId={activeTabId}
-                  onClick={handleTabClick}
-                  icon={<UserIcon />}
-                >
-                  Eligibility Criteria
-                </Tab>
-                <Tab
-                  id="documents"
-                  activeId={activeTabId}
-                  onClick={handleTabClick}
-                  icon={<DocumentIcon />}
-                >
-                  Required Documents
-                </Tab>
-                <Tab
-                  id="narrative"
-                  activeId={activeTabId}
-                  onClick={handleTabClick}
-                  icon={<ListIcon />}
-                >
-                  Project Narrative Components
-                </Tab>
-                <Tab
-                  id="deadlines"
-                  activeId={activeTabId}
-                  onClick={handleTabClick}
-                  icon={<ClockIcon />}
-                >
-                  Key Deadlines
-                </Tab>
-              </div>
-              <div style={styles.tabContent}>
-                <div style={styles.contentArea}>
+          ) : (
+            <div style={styles.container}>
+              <div style={styles.headerContainer}>
+                <div style={{ ...styles.headerContent, paddingRight: "120px" }}>
+                  <h1 style={styles.heading}>
+                    <span>Application Requirements for </span>
+                    <span style={{ color: THEME.colors.accent }}>
+                      {llmData.grantName}
+                    </span>
+                  </h1>
                   <p style={styles.paragraph}>
-                    {tabContents[activeTabId].title}
+                    Key requirement checkpoints for this Notice of Funding
+                    Opportunity (NOFO). Review these requirements to ensure
+                    eligibility and understand what documents and narrative
+                    sections you'll need to prepare.
                   </p>
-                  <div style={styles.markdownContainer}>
-                    <ReactMarkdown
-                      className="custom-markdown"
-                      components={{
-                        ul: ({ node, ...props }) => {
-                          // Create a counter that will be used by list items
-                          let itemCount = 0;
-                          return <ul {...props} />;
-                        },
-                        li: ({ node, ...props }) => {
-                          // Get the content string and check if it contains "project design"
-                          const itemContent = String(props.children || "");
-                          const isProjectDesign =
-                            activeTabId === "narrative" &&
-                            itemContent
-                              .toLowerCase()
-                              .includes("project design");
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "32px",
+                    right: "32px",
+                  }}
+                >
+                  <button
+                    onClick={() => setShowHelp(!showHelp)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "8px 16px",
+                      backgroundColor: THEME.colors.info,
+                      color: THEME.colors.white,
+                      border: "none",
+                      borderRadius: THEME.borderRadius.small,
+                      cursor: "pointer",
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      boxShadow: THEME.shadows.small,
+                    }}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke="white"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M12 8L12 15"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M12 18.01L12.01 17.9989"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    View Help
+                  </button>
+                </div>
+              </div>
 
-                          return (
-                            <li
-                              {...props}
-                              onMouseEnter={() =>
-                                isProjectDesign && setShowTip(1)
-                              }
-                              onMouseLeave={() => setShowTip(null)}
-                              style={{ marginBottom: "20px" }}
-                            >
-                              {props.children}
-                              {showTip === 1 && isProjectDesign && (
-                                <div style={styles.tipBox}>
-                                  <div style={styles.tipHeader}>
-                                    <LightbulbIcon />
-                                    <strong>Tip:</strong>
-                                  </div>
-                                  Your project design should clearly align with
-                                  the grant priorities. Include specific,
-                                  measurable objectives and a timeline with key
-                                  milestones.
-                                </div>
-                              )}
-                            </li>
-                          );
-                        },
+              {showHelp && (
+                <div
+                  style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 1000,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "600px",
+                      backgroundColor: THEME.colors.white,
+                      borderRadius: THEME.borderRadius.medium,
+                      padding: "24px",
+                      boxShadow: THEME.shadows.large,
+                      maxHeight: "80vh",
+                      overflow: "auto",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "16px",
                       }}
                     >
-                      {tabContents[activeTabId].content}
-                    </ReactMarkdown>
+                      <h2
+                        style={{
+                          fontSize: "20px",
+                          fontWeight: 600,
+                          color: THEME.colors.heading,
+                          margin: 0,
+                        }}
+                      >
+                        How to use this page
+                      </h2>
+                      <button
+                        onClick={() => setShowHelp(false)}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "20px",
+                          color: THEME.colors.textSecondary,
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
 
-                    {/* Eligibility help prompt */}
-                    {activeTabId === "eligibility" && (
-                      <div style={styles.infoBox}>
-                        <InfoIcon />
-                        <div>
-                          <p style={styles.infoTitle}>
-                            Not sure if your organization qualifies?
-                          </p>
-                          <p style={styles.infoText}>
-                            Our AI-powered chatbot can help assess your
-                            organization's eligibility based on these criteria.
-                            Click the "Go to Chatbot" button at the top right
-                            and ask: "Is my organization eligible for this
-                            grant?"
-                          </p>
+                    <div
+                      style={{
+                        fontSize: "16px",
+                        lineHeight: 1.5,
+                        color: THEME.colors.text,
+                      }}
+                    >
+                      <h3
+                        style={{
+                          fontSize: "18px",
+                          fontWeight: 600,
+                          marginTop: "24px",
+                          marginBottom: "8px",
+                          color: THEME.colors.heading,
+                        }}
+                      >
+                        Navigation Panel
+                      </h3>
+                      <p>
+                        The left sidebar allows you to navigate between
+                        different tools:
+                      </p>
+                      <ul
+                        style={{
+                          marginTop: "8px",
+                          marginBottom: "16px",
+                          paddingLeft: "24px",
+                        }}
+                      >
+                        <li style={{ marginBottom: "8px" }}>
+                          <strong>Chat / Ask AI</strong>: Opens the AI assistant
+                          to ask questions about the grant or get help with your
+                          application.
+                        </li>
+                        <li style={{ marginBottom: "8px" }}>
+                          <strong>Grant Application</strong>: Takes you to the
+                          document editor to start drafting your grant
+                          application.
+                        </li>
+                        <li style={{ marginBottom: "16px" }}>
+                          <strong>Recently Viewed</strong>: Shows NOFOs you've
+                          recently viewed for quick access.
+                        </li>
+                      </ul>
+
+                      <h3
+                        style={{
+                          fontSize: "18px",
+                          fontWeight: 600,
+                          marginTop: "24px",
+                          marginBottom: "8px",
+                          color: THEME.colors.heading,
+                        }}
+                      >
+                        Content Tabs
+                      </h3>
+                      <p>This page is organized into four key sections:</p>
+                      <ul
+                        style={{
+                          marginTop: "8px",
+                          marginBottom: "16px",
+                          paddingLeft: "24px",
+                        }}
+                      >
+                        <li style={{ marginBottom: "8px" }}>
+                          <strong>Eligibility</strong>: Lists who can apply for
+                          this grant.
+                        </li>
+                        <li style={{ marginBottom: "8px" }}>
+                          <strong>Required Documents</strong>: Shows all
+                          documents you'll need to prepare.
+                        </li>
+                        <li style={{ marginBottom: "8px" }}>
+                          <strong>Narrative Sections</strong>: Outlines the
+                          sections your grant narrative must include.
+                        </li>
+                        <li style={{ marginBottom: "8px" }}>
+                          <strong>Key Deadlines</strong>: Important dates for
+                          your application.
+                        </li>
+                      </ul>
+
+                      <h3
+                        style={{
+                          fontSize: "18px",
+                          fontWeight: 600,
+                          marginTop: "24px",
+                          marginBottom: "8px",
+                          color: THEME.colors.heading,
+                        }}
+                      >
+                        Tips
+                      </h3>
+                      <ul
+                        style={{
+                          marginTop: "8px",
+                          marginBottom: "16px",
+                          paddingLeft: "24px",
+                        }}
+                      >
+                        <li style={{ marginBottom: "8px" }}>
+                          Use the Chat / Ask AI feature when you need
+                          clarification about any requirement.
+                        </li>
+                        <li>
+                          Once you're familiar with the requirements, proceed to
+                          the Grant Application page to start drafting.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <button
+                      onClick={() => setShowHelp(false)}
+                      style={{
+                        marginTop: "24px",
+                        padding: "10px 16px",
+                        backgroundColor: THEME.colors.primary,
+                        color: THEME.colors.white,
+                        border: "none",
+                        borderRadius: THEME.borderRadius.small,
+                        cursor: "pointer",
+                        fontWeight: 500,
+                        fontSize: "16px",
+                        display: "block",
+                        width: "100%",
+                      }}
+                    >
+                      Got it
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div style={styles.tabsContainer}>
+                <div style={styles.tabsHeader}>
+                  <Tab
+                    id="eligibility"
+                    activeId={activeTabId}
+                    onClick={handleTabClick}
+                    icon={<UserIcon />}
+                  >
+                    Eligibility
+                  </Tab>
+                  <Tab
+                    id="documents"
+                    activeId={activeTabId}
+                    onClick={handleTabClick}
+                    icon={<DocumentIcon />}
+                  >
+                    Required Documents
+                  </Tab>
+                  <Tab
+                    id="narrative"
+                    activeId={activeTabId}
+                    onClick={handleTabClick}
+                    icon={<ListIcon />}
+                  >
+                    Narrative Sections
+                  </Tab>
+                  <Tab
+                    id="deadlines"
+                    activeId={activeTabId}
+                    onClick={handleTabClick}
+                    icon={<ClockIcon />}
+                  >
+                    Key Deadlines
+                  </Tab>
+                </div>
+
+                <div style={styles.tabContent}>
+                  <div style={styles.contentArea}>
+                    <p style={styles.paragraph}>
+                      {tabContents[activeTabId].title}
+                    </p>
+                    <div style={styles.markdownContainer}>
+                      <ReactMarkdown
+                        className="custom-markdown"
+                        components={{
+                          ul: ({ node, ...props }) => <ul {...props} />,
+                          li: ({ node, ...props }) => {
+                            return (
+                              <li {...props} style={{ marginBottom: "20px" }}>
+                                {props.children}
+                              </li>
+                            );
+                          },
+                        }}
+                      >
+                        {tabContents[activeTabId].content}
+                      </ReactMarkdown>
+
+                      {/* Eligibility help prompt */}
+                      {activeTabId === "eligibility" && (
+                        <div style={styles.infoBox}>
+                          <InfoIcon />
+                          <div>
+                            <p style={styles.infoTitle}>
+                              Not sure if your organization qualifies?
+                            </p>
+                            <p style={styles.infoText}>
+                              Our AI-powered chatbot can help assess your
+                              organization's eligibility based on these
+                              criteria. Click the "Chat / Ask AI" button in the
+                              navigation panel and ask: "Is my organization
+                              eligible for this grant?"
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Help Box */}
-            <div style={styles.helpBox}>
-              <div style={styles.helpContent}>
-                <div style={styles.helpIcon}>i</div>
-                <div>
-                  <h3 style={styles.helpTitle}>Need Help?</h3>
-                  <p style={styles.helpText}>
-                    Use the buttons at the top to navigate to the chatbot for
-                    interactive help or the document editor to start drafting
-                    your project proposal.
-                  </p>
-                </div>
-              </div>
+              <p style={styles.italicParagraph}>
+                Note: Always refer to the official NOFO documentation for final
+                requirements and details.
+              </p>
             </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
