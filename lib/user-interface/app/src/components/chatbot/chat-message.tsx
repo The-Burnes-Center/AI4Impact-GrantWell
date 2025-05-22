@@ -4,7 +4,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
 import {
-  ChatBotConfiguration,
   ChatBotHistoryItem,
   ChatBotMessageType,
 } from "./types";
