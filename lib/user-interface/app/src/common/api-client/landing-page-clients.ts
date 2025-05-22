@@ -58,6 +58,32 @@ export class LandingPageClient {
     }
   }
 
+  // Return NOFO questions from S3 bucket
+  async getNOFOQuestions(documentKey) {
+    try {
+      const token = await Utils.authenticate();
+      const url = new URL(`${this.API}/s3-nofo-questions`);
+      url.searchParams.append("documentKey", documentKey);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error retrieving NOFO questions:", error);
+      throw error;
+    }
+  }
+
   // Fetches a signed upload URL from the backend Lambda for uploading a file to S3
   async getUploadURL(fileName: string, fileType: string): Promise<string> {
     if (!fileType) {

@@ -27,9 +27,8 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
 
 export interface ChatbotAPIProps {
-  readonly authentication: AuthorizationStack; 
+  readonly authentication: AuthorizationStack;
 }
-
 
 export class ChatBotApi extends Construct {
   public readonly httpAPI: RestBackendAPI;
@@ -79,15 +78,21 @@ export class ChatBotApi extends Construct {
         lambdaFunctions.chatFunction
       ),
     });
-    
+
     // Add the WebSocket route for grant recommendations
-    websocketBackend.wsAPI.addRoute('getGrantRecommendations', {
-      integration: new WebSocketLambdaIntegration('grantRecommendationsIntegration', lambdaFunctions.chatFunction),
+    websocketBackend.wsAPI.addRoute("getGrantRecommendations", {
+      integration: new WebSocketLambdaIntegration(
+        "grantRecommendationsIntegration",
+        lambdaFunctions.chatFunction
+      ),
     });
-    
-    websocketBackend.wsAPI.addRoute('$connect', {
-      integration: new WebSocketLambdaIntegration('chatbotConnectionIntegration', lambdaFunctions.chatFunction),
-      authorizer: wsAuthorizer
+
+    websocketBackend.wsAPI.addRoute("$connect", {
+      integration: new WebSocketLambdaIntegration(
+        "chatbotConnectionIntegration",
+        lambdaFunctions.chatFunction
+      ),
+      authorizer: wsAuthorizer,
     });
     websocketBackend.wsAPI.addRoute("$default", {
       integration: new WebSocketLambdaIntegration(
@@ -258,7 +263,10 @@ export class ChatBotApi extends Construct {
     });
 
     // Add REST API route for grant recommendations
-    const grantRecommendationAPIIntegration = new HttpLambdaIntegration('GrantRecommendationAPIIntegration', lambdaFunctions.grantRecommendationFunction);
+    const grantRecommendationAPIIntegration = new HttpLambdaIntegration(
+      "GrantRecommendationAPIIntegration",
+      lambdaFunctions.grantRecommendationFunction
+    );
     restBackend.restAPI.addRoutes({
       path: "/grant-recommendations",
       methods: [apigwv2.HttpMethod.POST],
@@ -267,7 +275,10 @@ export class ChatBotApi extends Construct {
     });
 
     // Add REST API route for NOFO status updates
-    const nofoStatusAPIIntegration = new HttpLambdaIntegration('NofoStatusAPIIntegration', lambdaFunctions.nofoStatusFunction);
+    const nofoStatusAPIIntegration = new HttpLambdaIntegration(
+      "NofoStatusAPIIntegration",
+      lambdaFunctions.nofoStatusFunction
+    );
     restBackend.restAPI.addRoutes({
       path: "/s3-nofo-status",
       methods: [apigwv2.HttpMethod.POST],
@@ -275,7 +286,22 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    const nofoRenameAPIIntegration = new HttpLambdaIntegration('NofoRenameAPIIntegration', lambdaFunctions.nofoRenameFunction);
+    // Add REST API route for NOFO questions
+    const nofoQuestionsAPIIntegration = new HttpLambdaIntegration(
+      "NofoQuestionsAPIIntegration",
+      lambdaFunctions.getNOFOQuestions
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-questions",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: nofoQuestionsAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoRenameAPIIntegration = new HttpLambdaIntegration(
+      "NofoRenameAPIIntegration",
+      lambdaFunctions.nofoRenameFunction
+    );
     restBackend.restAPI.addRoutes({
       path: "/s3-nofo-rename",
       methods: [apigwv2.HttpMethod.POST],
@@ -283,7 +309,10 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    const nofoDeleteAPIIntegration = new HttpLambdaIntegration('NofoDeleteAPIIntegration', lambdaFunctions.nofoDeleteFunction);
+    const nofoDeleteAPIIntegration = new HttpLambdaIntegration(
+      "NofoDeleteAPIIntegration",
+      lambdaFunctions.nofoDeleteFunction
+    );
     restBackend.restAPI.addRoutes({
       path: "/s3-nofo-delete",
       methods: [apigwv2.HttpMethod.DELETE],
@@ -291,8 +320,7 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    const inviteUserFunction = new lambda.Function(this, 'InviteUserFunction', {
-
+    const inviteUserFunction = new lambda.Function(this, "InviteUserFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "functions/user-management/invite-user")

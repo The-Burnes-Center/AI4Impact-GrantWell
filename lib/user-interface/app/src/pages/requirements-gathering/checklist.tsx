@@ -691,7 +691,7 @@ const Checklists: React.FC = () => {
                         strokeLinecap="round"
                       />
                     </svg>
-                    View Help
+                    Help
                   </button>
                 </div>
               </div>
