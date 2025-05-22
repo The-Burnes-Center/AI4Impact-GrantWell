@@ -7,7 +7,6 @@ import { LuPin } from "react-icons/lu";
 import { LuPinOff } from "react-icons/lu";
 import { LuChevronDown, LuChevronRight } from "react-icons/lu";
 
-// Define interface for pinned grants
 interface PinnableGrant extends GrantRecommendation {
   isPinned: boolean;
 }
@@ -32,8 +31,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const [isAdmin, setIsAdmin] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  
-  // Simplified assistant states
   const [showAssistant, setShowAssistant] = useState(false);
   const [assistantInput, setAssistantInput] = useState('');
   const [recommendedGrants, setRecommendedGrants] = useState<GrantRecommendation[]>([]);
@@ -48,6 +45,10 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   } = useGrantRecommendations();
   
   const [expandedGrants, setExpandedGrants] = useState<Record<string, boolean>>({});
+  
+  // Add state for 'How to use?' modal
+  const [showHowToModal, setShowHowToModal] = useState(false);
+  const howToRef = useRef<HTMLDivElement>(null);
   
   // Check if user is admin
   const checkUserIsAdmin = async () => {
@@ -115,9 +116,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Total items (pinned grants + filtered documents)
     const totalItems = filteredPinnedGrants.length + filteredDocuments.length;
-    
+
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       setSelectedIndex(prev => (prev < totalItems - 1 ? prev + 1 : prev));
@@ -128,10 +128,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       e.preventDefault();
       if (selectedIndex >= 0) {
         if (selectedIndex < filteredPinnedGrants.length) {
-          // Select a pinned grant
           handlePinnedGrantSelect(filteredPinnedGrants[selectedIndex]);
         } else if (selectedIndex < filteredPinnedGrants.length + filteredDocuments.length) {
-          // Select a document
           const docIndex = selectedIndex - filteredPinnedGrants.length;
           onSelectDocument(filteredDocuments[docIndex]);
         }
@@ -456,6 +454,30 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
     transition: 'all 0.2s ease',
     backgroundColor: '#ffffff',
+    cursor: isLoading ? 'not-allowed' : 'text',
+    opacity: isLoading ? 0.7 : 1,
+  };
+
+  const clearButtonStyle: React.CSSProperties = {
+    position: 'absolute',
+    right: '15px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    background: 'none',
+    border: 'none',
+    cursor: isLoading ? 'not-allowed' : 'pointer',
+    padding: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#666',
+    transition: 'color 0.2s ease',
+    opacity: isLoading ? 0.7 : 1,
+  };
+
+  const clearButtonHoverStyle: React.CSSProperties = {
+    ...clearButtonStyle,
+    color: '#333',
   };
 
   const resultsContainerStyle: React.CSSProperties = {
@@ -466,7 +488,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     backgroundColor: '#fff',
     borderRadius: '0 0 15px 15px',
     boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
-    maxHeight: '400px',
+    maxHeight: '600px',
+    minHeight: '200px',
     overflowY: 'auto',
     zIndex: 10,
     marginTop: '5px',
@@ -575,14 +598,26 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       }}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" stroke="white" strokeWidth="2"/>
+        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" strokeWidth="2"/>
         <path d="M8 12H8.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
         <path d="M12 12H12.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
         <path d="M16 12H16.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
       </svg>
-      Describe your needs & Discover Grants
+      Grant Assistant
     </button>
   );
+
+  // Close modal on outside click
+  useEffect(() => {
+    if (!showHowToModal) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (howToRef.current && !howToRef.current.contains(event.target as Node)) {
+        setShowHowToModal(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showHowToModal]);
 
   return (
     <div style={searchContainerStyle} ref={searchRef}>
@@ -594,24 +629,243 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           ref={inputRef}
           type="text"
           placeholder="Search for grants or funding opportunities..."
-          style={inputStyle}
+          style={{
+            ...inputStyle,
+            cursor: isLoading || documents.some(doc => doc.label === searchTerm) ? 'not-allowed' : 'text',
+            opacity: isLoading || documents.some(doc => doc.label === searchTerm) ? 0.7 : 1,
+          }}
           value={searchTerm}
           onChange={e => {
-            setSearchTerm(e.target.value);
-            setShowResults(true);
-            // Close assistant when typing in search
-            if (showAssistant) {
-              closeAssistant();
+            // Only allow changes if no NOFO is selected
+            if (!documents.some(doc => doc.label === searchTerm)) {
+              setSearchTerm(e.target.value);
+              setShowResults(true);
+              // Close assistant when typing in search
+              if (showAssistant) {
+                closeAssistant();
+              }
             }
           }}
           onFocus={() => {
-            setShowResults(true);
+            if (!isLoading && !documents.some(doc => doc.label === searchTerm)) {
+              setShowResults(true);
+            }
           }}
           onKeyDown={handleKeyDown}
+          disabled={isLoading || documents.some(doc => doc.label === searchTerm)}
         />
+        {searchTerm && !isLoading && (
+          <button
+            style={clearButtonStyle}
+            onClick={() => {
+              setSearchTerm('');
+              setShowResults(false);
+              setSelectedIndex(-1);
+              setFilteredDocuments(documents);
+              setFilteredPinnedGrants(pinnedGrants);
+              setShowAssistant(false);
+              setAssistantInput('');
+              setRecommendedGrants([]);
+              setNonGrantMessage('');
+              setExpandedGrants({});
+              // Reset the document selection with null to ensure parent state is cleared
+              onSelectDocument(null);
+              inputRef.current?.focus();
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#333';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = '#666';
+            }}
+            title="Clear search"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor"/>
+            </svg>
+          </button>
+        )}
         {isLoading && (
           <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)' }}>
             <Spinner size="normal" />
+          </div>
+        )}
+      </div>
+      
+      {/* CTA Buttons: View Key Requirements, Write Project Narrative, Get Grant Help */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '10px',
+          margin: '28px 0 8px 0',
+          width: '100%',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
+        <button
+          onClick={() => {
+            if (searchTerm && documents.some(doc => doc.label === searchTerm)) {
+              const selectedDoc = documents.find(doc => doc.label === searchTerm);
+              if (selectedDoc) {
+                window.location.href = `/landing-page/basePage/checklists/${encodeURIComponent(selectedDoc.value)}`;
+              }
+            }
+          }}
+          disabled={!searchTerm || !documents.some(doc => doc.label === searchTerm)}
+          style={{
+            background: searchTerm && documents.some(doc => doc.label === searchTerm) ? '#0073BB' : '#f0f0f0',
+            color: searchTerm && documents.some(doc => doc.label === searchTerm) ? 'white' : '#888',
+            border: 'none',
+            borderRadius: '20px',
+            padding: '10px 22px',
+            fontSize: '15px',
+            fontWeight: 500,
+            cursor: searchTerm && documents.some(doc => doc.label === searchTerm) ? 'pointer' : 'not-allowed',
+            transition: 'background 0.2s',
+            minWidth: '180px',
+          }}
+          aria-label="View Key Requirements"
+        >
+          View Key Requirements
+        </button>
+        <button
+          onClick={() => {
+            if (searchTerm && documents.some(doc => doc.label === searchTerm)) {
+              const selectedDoc = documents.find(doc => doc.label === searchTerm);
+              if (selectedDoc) {
+                window.location.href = `/document-editor?nofo=${encodeURIComponent(selectedDoc.label)}`;
+              }
+            }
+          }}
+          disabled={!searchTerm || !documents.some(doc => doc.label === searchTerm)}
+          style={{
+            background: searchTerm && documents.some(doc => doc.label === searchTerm) ? '#0073BB' : '#f0f0f0',
+            color: searchTerm && documents.some(doc => doc.label === searchTerm) ? 'white' : '#888',
+            border: 'none',
+            borderRadius: '20px',
+            padding: '10px 22px',
+            fontSize: '15px',
+            fontWeight: 500,
+            cursor: searchTerm && documents.some(doc => doc.label === searchTerm) ? 'pointer' : 'not-allowed',
+            transition: 'background 0.2s',
+            minWidth: '180px',
+          }}
+          aria-label="Write Project Narrative"
+        >
+          Write Project Narrative
+        </button>
+        <button
+          onClick={() => {
+            if (searchTerm && documents.some(doc => doc.label === searchTerm)) {
+              const selectedDoc = documents.find(doc => doc.label === searchTerm);
+              if (selectedDoc) {
+                const uuid = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+                window.location.href = `/chatbot/playground/${uuid}?folder=${encodeURIComponent(selectedDoc.value)}`;
+              }
+            }
+          }}
+          disabled={!searchTerm || !documents.some(doc => doc.label === searchTerm)}
+          style={{
+            background: searchTerm && documents.some(doc => doc.label === searchTerm) ? '#0073BB' : '#f0f0f0',
+            color: searchTerm && documents.some(doc => doc.label === searchTerm) ? 'white' : '#888',
+            border: 'none',
+            borderRadius: '20px',
+            padding: '10px 22px',
+            fontSize: '15px',
+            fontWeight: 500,
+            cursor: searchTerm && documents.some(doc => doc.label === searchTerm) ? 'pointer' : 'not-allowed',
+            transition: 'background 0.2s',
+            minWidth: '180px',
+          }}
+          aria-label="Get Grant Help"
+        >
+          Get Grant Help
+        </button>
+      </div>
+      
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '650px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          margin: '14px 0 20px 0',
+        }}
+        onMouseEnter={() => setShowHowToModal(true)}
+        onMouseLeave={() => setShowHowToModal(false)}
+      >
+        <button
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            background: 'none',
+            border: 'none',
+            color: '#0073BB',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: 500,
+            gap: '5px',
+            padding: 0,
+            transition: 'color 0.15s',
+          }}
+          tabIndex={0}
+          aria-haspopup="dialog"
+          aria-expanded={showHowToModal}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ marginRight: '2px' }} xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="#0073BB" strokeWidth="2" fill="none" />
+            <rect x="11" y="10" width="2" height="6" rx="1" fill="#0073BB" />
+            <rect x="11" y="7" width="2" height="2" rx="1" fill="#0073BB" />
+          </svg>
+          How to use?
+        </button>
+        {showHowToModal && (
+          <div
+            ref={howToRef}
+            style={{
+              position: 'absolute',
+              top: '32px',
+              right: 0,
+              minWidth: '320px',
+              maxWidth: '500px',
+              background: '#fff',
+              border: '1px solid #e0e0e0',
+              borderRadius: '10px',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.13)',
+              padding: '20px 20px 16px 20px',
+              zIndex: 1000,
+              fontSize: '13px',
+              color: '#444',
+              animation: 'fadeIn 0.2s',
+            }}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontWeight: 600, color: '#0073BB', fontSize: '14px' }}>How to Use?</span>
+            </div>
+            <div style={{
+              background: '#f6fafd',
+              border: '1px solid #e0e0e0',
+              borderRadius: '7px',
+              color: '#0073BB',
+              fontWeight: 500,
+              fontSize: '13.5px',
+              padding: '10px 12px',
+              marginBottom: '12px',
+              textAlign: 'center',
+            }}>
+              Select a grant to unlock features above
+            </div>
+            <ul style={{ margin: '10px 0 0 18px', padding: 0, color: '#666', fontSize: '12.5px', lineHeight: 1.7 }}>
+              <li><b style={{ color: '#0073BB' }}>View Key Requirements:</b> View summary of eligibility, required documents, narrative sections, and deadlines for the selected grant.</li>
+              <li><b style={{ color: '#0073BB' }}>Write Project Narrative:</b> Open the editor to draft and edit your grant application narrative.</li>
+              <li><b style={{ color: '#0073BB' }}>Get Grant Help:</b> Open the GrantWell AI chatbot to ask questions about the grant.</li>
+            </ul>
           </div>
         )}
       </div>
@@ -620,37 +874,76 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         <div style={resultsContainerStyle}>
           {searchTerm.length === 0 && (
             <div style={emptyPromptStyle}>
-              <div style={{
-                padding: '15px 0',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px'
+                            <div style={{
+                backgroundColor: '#f8f9fa',
+                borderRadius: '8px',
+                padding: '15px',
+                margin: '15px 0',
+                border: '1px solid #e9ecef'
               }}>
-                <SearchIcon color="#0073BB" />
-                <span style={{ 
-                  fontSize: '16px', 
-                  fontWeight: '500',
-                  color: '#0073BB'
+                <h4 style={{ 
+                  margin: '0 0 10px 0',
+                  fontSize: '14px',
+                  color: '#495057'
                 }}>
-                  Search by Grant name or keywords to find grants
-                </span>
-              </div>
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '8px',
-                justifyContent: 'center',
-                margin: '0 0 15px 0'
-              }}>
-                <span style={{ 
-                  fontSize: '14px', 
+                  How to Search:
+                </h4>
+                <ul style={{
+                  margin: '0',
+                  padding: '0 0 0 20px',
+                  fontSize: '13px',
                   color: '#666',
-                  fontStyle: 'italic',
-                  textAlign: 'center'
+                  listStyleType: 'none'
                 }}>
-                  Try: "Transportation Infrastructure" or "EPA Clean Energy"
-                </span>
+                  <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'flex-start' }}>
+                    <span style={{ 
+                      backgroundColor: '#0073BB',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '12px',
+                      marginRight: '8px',
+                      flexShrink: 0
+                    }}>1</span>
+                    <span>Type a grant name or keywords (e.g., "Transportation Infrastructure")</span>
+                  </li>
+                  <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'flex-start' }}>
+                    <span style={{ 
+                      backgroundColor: '#0073BB',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '12px',
+                      marginRight: '8px',
+                      flexShrink: 0
+                    }}>2</span>
+                    <span>Browse through matching grants in the dropdown</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'flex-start' }}>
+                    <span style={{ 
+                      backgroundColor: '#0073BB',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '12px',
+                      marginRight: '8px',
+                      flexShrink: 0
+                    }}>3</span>
+                    <span>Or use the Grant Assistant below for personalized recommendations</span>
+                  </li>
+                </ul>
               </div>
               <AssistantButton query={undefined} />
             </div>
@@ -666,7 +959,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   style={selectedIndex === index ? selectedPinnedItemStyle : pinnedItemStyle}
                   onClick={() => {
                     handlePinnedGrantSelect(grant);
-                    // Do not close the dropdown
                   }}
                   onMouseEnter={() => setSelectedIndex(index)}
                 >
@@ -699,14 +991,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             </>
           )}
           
-          {/* Regular NOFOs section */}
           {searchTerm.length > 0 && filteredDocuments.length > 0 && (
             <>
               <div style={sectionHeaderStyle}>Available Grants</div>
               {filteredDocuments.map((doc, index) => {
                 const docName = doc.label || '';
                 
-                // Check if this specific document is pinned
                 const isPinned = isNofoPinned(docName);
                 
                 return (
@@ -714,9 +1004,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     key={`doc-${docName}-${index}`}
                     style={selectedIndex === index + filteredPinnedGrants.length ? selectedItemStyle : resultItemStyle}
                     onClick={() => {
-                      setSearchTerm(docName); // Set the search term
+                      setSearchTerm(docName);
                       onSelectDocument(doc); 
-                      // Close the dropdown
                       setShowResults(false);
                     }}
                     onMouseEnter={() => setSelectedIndex(index + filteredPinnedGrants.length)}
@@ -812,7 +1101,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               </button>
             </div>
             
-            {/* Simple input form */}
             <form onSubmit={handleAssistantSubmit} style={assistantInputContainerStyle}>
               <input
                 type="text"
@@ -831,7 +1119,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               </button>
             </form>
             
-            {/* Grant recommendation results */}
             <div style={grantsContainerStyle}>
               {isAssistantLoading ? (
                 <div style={{ textAlign: 'center', padding: '40px 0' }}>
@@ -875,14 +1162,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     Here are the top grants that match your needs:
                   </div>
                   {recommendedGrants.map((grant, index) => {
-                    // Get the proper grant name from the grant object
-                    // Ensure we display the full name rather than potentially truncated or generic names
                     const grantName = grant.name || '';
-                    
-                    // Create a unique key for this grant
                     const grantKey = `grant-${grantName}-${index}`;
-                    
-                    // Check if this grant's details are expanded
                     const isExpanded = !!expandedGrants[grantKey];
                     
                     return (
@@ -964,7 +1245,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 </div>
               ) : (
                 <div style={{ textAlign: 'center', padding: '30px 0', color: '#666' }}>
-                  {/* Only show "no matching grants" if a search was actually performed AND submitted */}
                   {assistantInput && 
                    !isAssistantLoading && 
                    recommendedGrants.length === 0 && 

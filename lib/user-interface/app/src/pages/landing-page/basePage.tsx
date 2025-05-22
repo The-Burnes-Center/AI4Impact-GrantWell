@@ -482,9 +482,9 @@ export default function Welcome({ theme }) {
       {[
         {
           title: "Federal Grant Finder",
-          href: "https://www.usdigitalresponse.org/grant/grant-finder",
+          href: "https://simpler.grants.gov/",
           description:
-            "Find grants you are eligible for with U.S. Digital Response's Federal Grants Finder.",
+            "Find grants you are eligible for with Grants.gov Federal Grants Finder.",
         },
         {
           title: "Register for Federal Funds Partnership Meetings",
@@ -603,12 +603,12 @@ export default function Welcome({ theme }) {
               color: mainTextColor,
               margin: "5px 0 0 0",
               fontStyle: "italic",
-              maxWidth: "500px",
+              maxWidth: "600px",
               lineHeight: "1.4",
               textAlign: "center",
             }}
           >
-            An AI tool to help Massachusetts communities secure federal grants
+            An AI tool to help Massachusetts communities pursue federal funding opportunities 
           </p>
         </div>
 
@@ -618,69 +618,6 @@ export default function Welcome({ theme }) {
           onSelectDocument={setSelectedDocument}
           isLoading={loading}
         />
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "5px", 
-            marginTop: "40px",
-            marginBottom: "45px",
-            width: "100%",
-            padding: "0 50px",
-            boxSizing: "border-box",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
-        >
-          <button
-            onClick={() =>
-              handleNOFOSelect(
-                `/landing-page/basePage/checklists/${encodeURIComponent(
-                  selectedDocument.value
-                )}`,
-                selectedDocument
-              )
-            }
-            disabled={!selectedDocument}
-            style={selectedDocument ? buttonStyle : disabledButtonStyle}
-            onMouseEnter={buttonHoverStyle}
-            onMouseLeave={buttonLeaveStyle}
-            aria-label="View Key Requirements"
-          >
-            View Key Requirements
-          </button>
-          <button
-            onClick={() =>
-              navigate(
-                `/document-editor?nofo=${encodeURIComponent(selectedDocument?.label || '')}`
-              )
-            }
-            disabled={!selectedDocument}
-            style={selectedDocument ? buttonStyle : disabledButtonStyle}
-            onMouseEnter={buttonHoverStyle}
-            onMouseLeave={buttonLeaveStyle}
-            aria-label="Start New Application"
-          >
-            Write Project Narrative
-          </button>
-          <button
-            onClick={() =>
-              navigate(
-                `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
-                  selectedDocument.value
-                )}`
-              )
-            }
-            disabled={!selectedDocument}
-            style={selectedDocument ? buttonStyle : disabledButtonStyle}
-            onMouseEnter={buttonHoverStyle}
-            onMouseLeave={buttonLeaveStyle}
-            aria-label="Start Chat"
-          >
-            Get Grant Help
-          </button>
-        </div>
 
         <ContentBox backgroundColor="#F6FCFF">
           <HistoryPanel />
@@ -712,6 +649,7 @@ export default function Welcome({ theme }) {
           description=""
           imageSrc="/images/burnesLogo.png"
           imageAlt="Burnes Center Logo"
+          linkUrl={"https://burnes.northeastern.edu/"}
           titleAlign="left"
           imagePosition="right"
           imageWidth="200px"
