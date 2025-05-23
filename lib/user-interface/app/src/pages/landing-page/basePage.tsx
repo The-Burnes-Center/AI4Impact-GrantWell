@@ -14,6 +14,7 @@ export default function Welcome({ theme }) {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
+  const [showHowToModal, setShowHowToModal] = useState(false);
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -618,6 +619,182 @@ export default function Welcome({ theme }) {
           onSelectDocument={setSelectedDocument}
           isLoading={loading}
         />
+        
+        {/* CTA Buttons: View Key Requirements, Write Project Narrative, Get Grant Help */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '10px',
+            margin: '28px 0 8px 0',
+            width: '100%',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
+          <button
+            onClick={() => {
+              if (selectedDocument) {
+                window.location.href = `/landing-page/basePage/checklists/${encodeURIComponent(selectedDocument.value)}`;
+              }
+            }}
+            disabled={!selectedDocument}
+            style={{
+              background: selectedDocument ? '#0073BB' : '#f0f0f0',
+              color: selectedDocument ? 'white' : '#888',
+              border: 'none',
+              borderRadius: '20px',
+              padding: '10px 22px',
+              fontSize: '15px',
+              fontWeight: 500,
+              cursor: selectedDocument ? 'pointer' : 'not-allowed',
+              transition: 'background 0.2s',
+              minWidth: '180px',
+            }}
+            aria-label="View Key Requirements"
+          >
+            View Key Requirements
+          </button>
+
+          <button
+            onClick={() => {
+              if (selectedDocument) {
+                window.location.href = `/document-editor?nofo=${encodeURIComponent(selectedDocument.value)}`;
+              }
+            }}
+            disabled={!selectedDocument}
+            style={{
+              background: selectedDocument ? '#0073BB' : '#f0f0f0',
+              color: selectedDocument ? 'white' : '#888',
+              border: 'none',
+              borderRadius: '20px',
+              padding: '10px 22px',
+              fontSize: '15px',
+              fontWeight: 500,
+              cursor: selectedDocument ? 'pointer' : 'not-allowed',
+              transition: 'background 0.2s',
+              minWidth: '180px',
+            }}
+            aria-label="Write Project Narrative"
+          >
+            Write Project Narrative
+          </button>
+
+          <button
+            onClick={() => {
+              if (selectedDocument) {
+                const newSessionId = uuidv4();
+                window.location.href = `/chatbot/playground/${newSessionId}?folder=${encodeURIComponent(selectedDocument.value)}`;
+              }
+            }}
+            disabled={!selectedDocument}
+            style={{
+              background: selectedDocument ? '#0073BB' : '#f0f0f0',
+              color: selectedDocument ? 'white' : '#888',
+              border: 'none',
+              borderRadius: '20px',
+              padding: '10px 22px',
+              fontSize: '15px',
+              fontWeight: 500,
+              cursor: selectedDocument ? 'pointer' : 'not-allowed',
+              transition: 'background 0.2s',
+              minWidth: '180px',
+            }}
+            aria-label="Get Grant Help"
+          >
+            Get Grant Help
+          </button>
+        </div>
+
+        {/* How to Use hover bar */}
+        <div
+          style={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '10px',
+          }}
+          onMouseEnter={() => setShowHowToModal(true)}
+          onMouseLeave={() => setShowHowToModal(false)}
+        >
+          <button
+            onClick={() => setShowHowToModal(!showHowToModal)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#0073BB',
+              fontSize: '14px',
+              cursor: 'pointer',
+              padding: '5px 10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+              transition: 'color 0.15s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#005A94';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = '#0073BB';
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 8L12 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M12 18.01L12.01 17.9989" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            How to use?
+          </button>
+
+          {showHowToModal && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '32px',
+                right: '50%',
+                transform: 'translateX(50%)',
+                minWidth: '320px',
+                maxWidth: '500px',
+                background: '#fff',
+                border: '1px solid #e0e0e0',
+                borderRadius: '10px',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.13)',
+                padding: '20px 20px 16px 20px',
+                zIndex: 1000,
+                fontSize: '13px',
+                color: '#444',
+                animation: 'fadeIn 0.2s',
+              }}
+              role="dialog"
+              aria-modal="true"
+            >
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontWeight: 600, color: '#0073BB', fontSize: '14px' }}>How to Use?</span>
+              </div>
+              <div style={{
+                background: '#f6fafd',
+                border: '1px solid #e0e0e0',
+                borderRadius: '7px',
+                color: '#0073BB',
+                fontWeight: 500,
+                fontSize: '13.5px',
+                padding: '10px 12px',
+                marginBottom: '12px',
+                textAlign: 'center',
+              }}>
+                Select a grant to unlock features above
+              </div>
+              <ul style={{ margin: '10px 0 0 18px', padding: 0, color: '#666', fontSize: '12.5px', lineHeight: 1.7 }}>
+                <li><b style={{ color: '#0073BB' }}>View Key Requirements:</b> View summary of eligibility, required documents, narrative sections, and deadlines for the selected grant.</li>
+                <li><b style={{ color: '#0073BB' }}>Write Project Narrative:</b> Open the editor to draft and edit your grant application narrative.</li>
+                <li><b style={{ color: '#0073BB' }}>Get Grant Help:</b> Open the GrantWell AI chatbot to ask questions about the grant.</li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Add spacing before next section */}
+        <div style={{ marginBottom: '20px' }} />
 
         <ContentBox backgroundColor="#F6FCFF">
           <HistoryPanel />
