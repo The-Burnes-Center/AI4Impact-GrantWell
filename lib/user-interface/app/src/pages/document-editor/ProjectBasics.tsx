@@ -7,9 +7,10 @@ interface ProjectBasicsProps {
 
 interface ProjectBasicsFormData {
   projectName: string;
-  municipalityName: string;
+  organizationName: string;
   requestedAmount: string;
-  projectDuration: string;
+  location: string;
+  zipCode: string;
   contactName: string;
   contactEmail: string;
 }
@@ -20,9 +21,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 }) => {
   const [formData, setFormData] = useState<ProjectBasicsFormData>({
     projectName: "",
-    municipalityName: "",
+    organizationName: "",
     requestedAmount: "",
-    projectDuration: "",
+    location: "",
+    zipCode: "",
     contactName: "",
     contactEmail: "",
   });
@@ -54,7 +56,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       style={{
         maxWidth: "800px",
         margin: "0 auto",
-        padding: "32px 0",
+        padding: "16px 0",
       }}
     >
       <div
@@ -81,18 +83,6 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           <div style={{ marginBottom: "24px", color: "#4a5568" }}>
             Let's start with some basic information about your project. These
             details will help us create your draft application.
-            {selectedNofo && (
-              <span
-                style={{
-                  display: "block",
-                  marginTop: "8px",
-                  color: "#4361ee",
-                  fontWeight: 500,
-                }}
-              >
-                Selected NOFO: {selectedNofo}
-              </span>
-            )}
           </div>
 
           <div style={{ marginBottom: "20px" }}>
@@ -142,13 +132,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 color: "#2d3748",
               }}
             >
-              Municipality Name
+              Organization Name
             </label>
             <input
               type="text"
-              id="municipalityName"
-              name="municipalityName"
-              value={formData.municipalityName}
+              id="organizationName"
+              name="organizationName"
+              value={formData.organizationName}
               onChange={handleInputChange}
               style={{
                 width: "100%",
@@ -157,7 +147,46 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 borderRadius: "6px",
                 fontSize: "16px",
               }}
-              placeholder="City of Oakridge"
+              placeholder="Municipality, Tribe, or Community Organization"
+            />
+            <span
+              style={{
+                display: "block",
+                fontSize: "12px",
+                color: "#718096",
+                marginTop: "4px",
+              }}
+            >
+              Enter the name of your municipality, tribal nation, or community
+              organization
+            </span>
+          </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 500,
+                color: "#2d3748",
+              }}
+            >
+              Requested Amount
+            </label>
+            <input
+              type="text"
+              id="requestedAmount"
+              name="requestedAmount"
+              value={formData.requestedAmount}
+              onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "12px",
+                border: "1px solid #e2e8f0",
+                borderRadius: "6px",
+                fontSize: "16px",
+              }}
+              placeholder="$250,000"
             />
           </div>
 
@@ -178,13 +207,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   color: "#2d3748",
                 }}
               >
-                Requested Amount
+                Location
               </label>
               <input
                 type="text"
-                id="requestedAmount"
-                name="requestedAmount"
-                value={formData.requestedAmount}
+                id="location"
+                name="location"
+                value={formData.location}
                 onChange={handleInputChange}
                 style={{
                   width: "100%",
@@ -193,7 +222,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   borderRadius: "6px",
                   fontSize: "16px",
                 }}
-                placeholder="$250,000"
+                placeholder="City, State"
               />
             </div>
             <div style={{ flex: "1", minWidth: "260px" }}>
@@ -205,13 +234,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   color: "#2d3748",
                 }}
               >
-                Project Duration
+                Zip Code
               </label>
               <input
                 type="text"
-                id="projectDuration"
-                name="projectDuration"
-                value={formData.projectDuration}
+                id="zipCode"
+                name="zipCode"
+                value={formData.zipCode}
                 onChange={handleInputChange}
                 style={{
                   width: "100%",
@@ -220,7 +249,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   borderRadius: "6px",
                   fontSize: "16px",
                 }}
-                placeholder="18 months"
+                placeholder="12345"
               />
             </div>
           </div>
@@ -287,9 +316,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             padding: "16px 24px",
             borderTop: "1px solid #e2e8f0",
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
           }}
         >
+          <div></div>
           <button
             onClick={handleContinue}
             style={{

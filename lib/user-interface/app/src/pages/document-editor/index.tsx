@@ -1,5 +1,6 @@
 // index.tsx
 import React, { useState, useEffect, useCallback, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../common/app-context";
 import DocumentNavigation from "./document-navigation";
 import ProjectBasics from "./ProjectBasics";
@@ -8,10 +9,12 @@ import DraftView from "./DraftView";
 import SectionEditor from "./SectionsEditor";
 import ReviewApplication from "./ReviewApplication";
 import WelcomeModal from "./WelcomeModal";
+import UploadDocuments from "./UploadDocuments";
 import "../../styles/document-editor.css";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import { ApiClient } from "../../common/api-client/api-client";
 
 // Types
 interface DocumentData {
@@ -106,7 +109,9 @@ const DocumentEditor: React.FC = () => {
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [nofoName, setNofoName] = useState<string>("");
   const [isNofoLoading, setIsNofoLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const appContext = useContext(AppContext);
+  const navigate = useNavigate();
 
   const { documentData, isLoading, error, saveDocument } =
     useDocumentStorage(selectedNofo);
@@ -132,18 +137,50 @@ const DocumentEditor: React.FC = () => {
     setCurrentStep(step);
   };
 
+  // Handle back navigation based on current step
+  const handleBackNavigation = () => {
+    switch (currentStep) {
+      case "projectBasics":
+        navigate("/"); // Go back to landing page from first step
+        break;
+      case "questionnaire":
+        navigateToStep("projectBasics");
+        break;
+      case "uploadDocuments":
+        navigateToStep("questionnaire");
+        break;
+      case "draftCreated":
+        navigateToStep("uploadDocuments");
+        break;
+      case "sectionEditor":
+        navigateToStep("draftCreated");
+        break;
+      case "reviewApplication":
+        navigateToStep("sectionEditor");
+        break;
+      default:
+        // If on welcome or another page, go back to landing
+        navigate("/");
+        break;
+    }
+  };
+
   // Create new document flow
   const startNewDocument = useCallback(() => {
     if (!selectedNofo) {
       setShowWelcomeModal(true);
       return;
     }
+    setShowWelcomeModal(false); // Close the modal
     setCurrentStep("projectBasics");
   }, [selectedNofo]);
 
   // Handle welcome modal close
   const handleWelcomeModalClose = () => {
     setShowWelcomeModal(false);
+    if (selectedNofo) {
+      setCurrentStep("projectBasics");
+    }
   };
 
   // Handle save progress
@@ -155,20 +192,36 @@ const DocumentEditor: React.FC = () => {
   // Fetch NOFO details
   useEffect(() => {
     const fetchNofoName = async () => {
-      if (!selectedNofo || !appContext) return;
+      if (!selectedNofo) return;
       setIsNofoLoading(true);
+
       try {
-        // Mock API call
-        setTimeout(() => {
-          setNofoName("Downtown Revitalization Program");
-          setIsNofoLoading(false);
-        }, 500);
+        // Use API client to fetch NOFO details
+        if (appContext && selectedNofo) {
+          const apiClient = new ApiClient(appContext);
+          const documentId = selectedNofo;
+          const result = await apiClient.landingPage.getNOFOSummary(documentId);
+
+          // Set the name from the API response
+          if (result && result.data && result.data.GrantName) {
+            setNofoName(result.data.GrantName);
+          } else {
+            // Fallback if API doesn't return a name
+            setNofoName("Grant Application");
+          }
+        } else {
+          // Fallback if context or selectedNofo not available
+          setNofoName("Grant Application");
+        }
+
+        setIsNofoLoading(false);
       } catch (error) {
-        const folderName = selectedNofo.split("/").pop();
-        setNofoName(folderName || "NOFO");
+        console.error("Error fetching NOFO details:", error);
+        setNofoName("Grant Application");
         setIsNofoLoading(false);
       }
     };
+
     fetchNofoName();
   }, [selectedNofo, appContext]);
 
@@ -181,12 +234,36 @@ const DocumentEditor: React.FC = () => {
             style={{
               minHeight: "70vh",
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              padding: "20px",
+              textAlign: "center",
             }}
           >
+            <h2
+              style={{
+                fontSize: "24px",
+                marginBottom: "16px",
+                color: "#2d3748",
+              }}
+            >
+              Welcome to GrantWell
+            </h2>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#4a5568",
+                maxWidth: "600px",
+                lineHeight: "1.6",
+                marginBottom: "24px",
+              }}
+            >
+              Get started with your grant application by clicking the button
+              below.
+            </p>
             <button
-              onClick={startNewDocument}
+              onClick={() => setShowWelcomeModal(true)}
               style={{
                 padding: "12px 24px",
                 background: "#4361ee",
@@ -195,6 +272,8 @@ const DocumentEditor: React.FC = () => {
                 borderRadius: "6px",
                 fontSize: "16px",
                 cursor: "pointer",
+                boxShadow: "0 2px 4px rgba(67, 97, 238, 0.3)",
+                fontWeight: "500",
               }}
             >
               Start New Application
@@ -211,8 +290,17 @@ const DocumentEditor: React.FC = () => {
       case "questionnaire":
         return (
           <QuickQuestionnaire
+            onContinue={() => navigateToStep("uploadDocuments")}
+            selectedNofo={selectedNofo}
+            onNavigate={navigateToStep}
+          />
+        );
+      case "uploadDocuments":
+        return (
+          <UploadDocuments
             onContinue={() => navigateToStep("draftCreated")}
             selectedNofo={selectedNofo}
+            onNavigate={navigateToStep}
           />
         );
       case "draftCreated":
@@ -243,17 +331,25 @@ const DocumentEditor: React.FC = () => {
     }
   };
 
-  const steps = ["Project Basics", "Questionnaire", "Section Editor", "Review"];
+  const steps = [
+    "Project Basics",
+    "Questionnaire",
+    "Upload Documents",
+    "Section Editor",
+    "Review",
+  ];
   const activeStep = (() => {
     switch (currentStep) {
       case "projectBasics":
         return 0;
       case "questionnaire":
         return 1;
-      case "sectionEditor":
+      case "uploadDocuments":
         return 2;
-      case "reviewApplication":
+      case "sectionEditor":
         return 3;
+      case "reviewApplication":
+        return 4;
       default:
         return 0;
     }
@@ -282,61 +378,126 @@ const DocumentEditor: React.FC = () => {
   }
 
   return (
-    <div className="document-editor-root">
+    <div
+      className="document-editor-root"
+      style={{ display: "flex", minHeight: "100vh" }}
+    >
       <DocumentNavigation
         documentIdentifier={selectedNofo}
         currentStep={currentStep}
         onNavigate={navigateToStep}
+        isOpen={sidebarOpen}
+        setIsOpen={setSidebarOpen}
       />
 
       <div
-        className="document-editor-header"
+        className="document-content"
         style={{
-          background: "#fff",
-          borderBottom: "1px solid #e5e7eb",
+          marginLeft: sidebarOpen ? "240px" : "60px",
+          transition: "margin-left 0.3s ease",
+          width: "calc(100% - " + (sidebarOpen ? "240px" : "60px") + ")",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <div
-          className="document-editor-header-inner"
+          className="document-editor-header"
           style={{
-            padding: "16px 10px 0 0",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
+            background: "#fff",
+            borderBottom: "0",
             width: "100%",
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
           }}
         >
-          <h1
-            className="document-editor-nofo-title"
-            style={{
-              marginBottom: "8px",
-              textAlign: "left",
-              width: "100%",
-              paddingLeft: "16px",
-            }}
-          >
-            {isNofoLoading ? "Loading..." : nofoName}
-          </h1>
           <div
+            className="document-editor-header-inner"
             style={{
+              padding: "16px 16px 16px 16px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
               width: "100%",
-              background: "#f5f8ff",
-              borderRadius: "8px",
-              padding: "16px 0",
-              marginBottom: "8px",
             }}
           >
-            <Stepper activeStep={activeStep} alternativeLabel>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%",
+                marginBottom: "0",
+              }}
+            >
+              <h1
+                className="document-editor-nofo-title"
+                style={{
+                  marginBottom: "0",
+                  textAlign: "left",
+                  fontSize: "22px",
+                  fontWeight: "600",
+                }}
+              >
+                {isNofoLoading ? "Loading..." : nofoName}
+              </h1>
+            </div>
           </div>
         </div>
 
-        <div className="document-editor-workspace">
+        <div
+          style={{
+            width: "100%",
+            background: "#f1f5fb",
+            borderRadius: "0",
+            padding: "20px 0",
+            marginTop: "0",
+            marginBottom: "0",
+            boxShadow: "0px 1px 2px rgba(0,0,0,0.05)",
+            position: "sticky",
+            top: "60px",
+            zIndex: 9,
+          }}
+        >
+          <Stepper
+            activeStep={activeStep}
+            alternativeLabel
+            sx={{
+              "& .MuiStepConnector-line": {
+                borderTopWidth: "2px",
+                borderColor: "#e2e8f0",
+              },
+              "& .MuiStepLabel-label": {
+                marginTop: "8px",
+                fontSize: "14px",
+                fontWeight: 500,
+              },
+              "& .MuiStepLabel-iconContainer": {
+                "& .MuiStepIcon-root": {
+                  width: "32px",
+                  height: "32px",
+                  color: "#e2e8f0",
+                  "&.Mui-active": {
+                    color: "#4361ee",
+                  },
+                  "&.Mui-completed": {
+                    color: "#4361ee",
+                  },
+                },
+              },
+            }}
+          >
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </div>
+
+        <div
+          className="document-editor-workspace"
+          style={{ flex: 1, padding: "20px" }}
+        >
           {isLoading ? (
             <div
               style={{

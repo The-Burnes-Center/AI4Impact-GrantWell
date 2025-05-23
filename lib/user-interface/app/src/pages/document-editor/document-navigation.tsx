@@ -1,28 +1,49 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 interface DocumentNavigationProps {
   documentIdentifier?: string;
   currentStep: string;
   onNavigate: (step: string) => void;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
   documentIdentifier,
   currentStep,
   onNavigate,
+  isOpen,
+  setIsOpen,
 }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
   // Handle chat navigation
   const handleChatNavigation = () => {
-    // Mock navigation to chat feature
-    console.log("Navigating to chat with document:", documentIdentifier);
+    const newSessionId = uuidv4();
+    const queryParams = documentIdentifier
+      ? `?folder=${encodeURIComponent(documentIdentifier)}`
+      : "";
+    navigate(`/chatbot/playground/${newSessionId}${queryParams}`);
+  };
+
+  // Handle requirements navigation
+  const handleRequirementsNavigation = () => {
+    const queryParams = documentIdentifier
+      ? `?nofo=${encodeURIComponent(documentIdentifier)}`
+      : "";
+    navigate(
+      `/landing-page/basePage/checklists/${encodeURIComponent(
+        documentIdentifier || ""
+      )}`
+    );
   };
 
   return (
     <div
       style={{
-        width: sidebarOpen ? "240px" : "60px",
+        width: isOpen ? "240px" : "60px",
         background: "#1a202c",
         color: "white",
         display: "flex",
@@ -31,6 +52,11 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
         borderRight: "1px solid #23272f",
         transition: "width 0.3s ease",
         overflow: "hidden",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        zIndex: 50,
+        minHeight: "100%",
       }}
     >
       <div
@@ -42,13 +68,13 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
           justifyContent: "space-between",
         }}
       >
-        {sidebarOpen && (
+        {isOpen && (
           <div style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
             Navigation
           </div>
         )}
         <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+          onClick={() => setIsOpen(!isOpen)}
           style={{
             background: "none",
             border: "none",
@@ -75,7 +101,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
               strokeLinejoin: "round",
             }}
           >
-            {sidebarOpen ? (
+            {isOpen ? (
               <path d="M15 18l-6-6 6-6"></path>
             ) : (
               <path d="M9 18l6-6-6-6"></path>
@@ -92,7 +118,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
         }}
       >
         <div>
-          {sidebarOpen && (
+          {isOpen && (
             <div
               style={{
                 padding: "0 16px 8px 16px",
@@ -139,13 +165,13 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
             >
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
-            {sidebarOpen && (
+            {isOpen && (
               <span style={{ marginLeft: "12px" }}>Chat / Ask AI</span>
             )}
           </button>
 
           <button
-            onClick={() => {}}
+            onClick={handleRequirementsNavigation}
             style={{
               width: "100%",
               display: "flex",
@@ -179,7 +205,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
               <line x1="9" y1="12" x2="15" y2="12"></line>
               <line x1="9" y1="15" x2="15" y2="15"></line>
             </svg>
-            {sidebarOpen && (
+            {isOpen && (
               <span style={{ marginLeft: "12px" }}>Key Requirements</span>
             )}
           </button>
@@ -188,7 +214,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
         {/* Only show these navigation items when in document creation flow */}
         {currentStep !== "welcome" && (
           <div style={{ marginTop: "24px" }}>
-            {sidebarOpen && (
+            {isOpen && (
               <div
                 style={{
                   padding: "0 16px 8px 16px",
@@ -237,13 +263,14 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
               </svg>
-              {sidebarOpen && (
+              {isOpen && (
                 <span style={{ marginLeft: "12px" }}>Project Basics</span>
               )}
             </button>
 
             {[
               "questionnaire",
+              "uploadDocuments",
               "draftCreated",
               "sectionEditor",
               "reviewApplication",
@@ -282,8 +309,56 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-                {sidebarOpen && (
+                {isOpen && (
                   <span style={{ marginLeft: "12px" }}>Questionnaire</span>
+                )}
+              </button>
+            )}
+
+            {[
+              "uploadDocuments",
+              "draftCreated",
+              "sectionEditor",
+              "reviewApplication",
+            ].includes(currentStep) && (
+              <button
+                onClick={() => onNavigate("uploadDocuments")}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  marginBottom: "8px",
+                  background:
+                    currentStep === "uploadDocuments" ? "#2563eb" : "none",
+                  color:
+                    currentStep === "uploadDocuments" ? "white" : "#cbd5e1",
+                  border: "none",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  transition: "background 0.2s, color 0.2s",
+                  textAlign: "left",
+                }}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    stroke: "currentColor",
+                    fill: "none",
+                    strokeWidth: 2,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                  }}
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                {isOpen && (
+                  <span style={{ marginLeft: "12px" }}>Upload Documents</span>
                 )}
               </button>
             )}
@@ -323,7 +398,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-                {sidebarOpen && (
+                {isOpen && (
                   <span style={{ marginLeft: "12px" }}>Section Editor</span>
                 )}
               </button>
@@ -365,57 +440,11 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-                {sidebarOpen && (
-                  <span style={{ marginLeft: "12px" }}>Review</span>
-                )}
+                {isOpen && <span style={{ marginLeft: "12px" }}>Review</span>}
               </button>
             )}
           </div>
         )}
-      </div>
-
-      {/* Save button (mobile-friendly) */}
-      <div
-        style={{
-          padding: "16px",
-          borderTop: "1px solid #2d3748",
-        }}
-      >
-        <button
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: sidebarOpen ? "center" : "center",
-            padding: sidebarOpen ? "10px 16px" : "10px",
-            background: "#4361ee",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            fontSize: sidebarOpen ? "14px" : "0",
-            cursor: "pointer",
-            transition: "background 0.2s",
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            style={{
-              width: "20px",
-              height: "20px",
-              stroke: "currentColor",
-              fill: "none",
-              strokeWidth: 2,
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              marginRight: sidebarOpen ? "8px" : "0",
-            }}
-          >
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-            <polyline points="17 21 17 13 7 13 7 21"></polyline>
-            <polyline points="7 3 7 8 15 8"></polyline>
-          </svg>
-          {sidebarOpen && "Save Progress"}
-        </button>
       </div>
     </div>
   );

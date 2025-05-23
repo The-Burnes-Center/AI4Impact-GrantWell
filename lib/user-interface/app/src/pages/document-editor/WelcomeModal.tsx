@@ -61,40 +61,189 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({
         </button>
 
         <div style={{ padding: "32px" }}>
-          <h1
+          <div
             style={{
-              color: "#2c3e50",
-              fontSize: "40px",
-              margin: "0 0 8px",
               textAlign: "center",
+              marginBottom: "24px",
             }}
           >
-            GrantWell
-          </h1>
-          <h2
-            style={{
-              color: "#666",
-              fontSize: "20px",
-              margin: "0 0 32px",
-              textAlign: "center",
-              fontWeight: "normal",
-            }}
-          >
-            Grant Writing Made Simple
-          </h2>
+            <h1
+              style={{
+                color: "#2c3e50",
+                fontSize: "36px",
+                margin: "0 0 8px",
+                fontWeight: "700",
+              }}
+            >
+              Welcome to GrantWell
+            </h1>
+            <h2
+              style={{
+                color: "#4361ee",
+                fontSize: "18px",
+                margin: "0",
+                fontWeight: "500",
+              }}
+            >
+              AI-Powered Grant Writing Assistant
+            </h2>
+          </div>
 
-          <p
+          <div
             style={{
-              color: "#666",
-              lineHeight: 1.6,
-              marginBottom: "32px",
-              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              marginBottom: "24px",
             }}
           >
-            Welcome to GrantWell, your step-by-step assistant for creating
-            successful grant applications. We'll guide you through each part of
-            the process with simple instructions and helpful examples.
-          </p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "12px",
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "#4361ee",
+                  color: "white",
+                  borderRadius: "50%",
+                  width: "28px",
+                  height: "28px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  flexShrink: 0,
+                }}
+              >
+                1
+              </div>
+              <div>
+                <h3
+                  style={{
+                    margin: "0 0 4px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#2d3748",
+                  }}
+                >
+                  Answer Simple Questions
+                </h3>
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#4a5568",
+                    fontSize: "14px",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  We'll guide you through key questions about your project to
+                  gather the essential information.
+                </p>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "12px",
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "#4361ee",
+                  color: "white",
+                  borderRadius: "50%",
+                  width: "28px",
+                  height: "28px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  flexShrink: 0,
+                }}
+              >
+                2
+              </div>
+              <div>
+                <h3
+                  style={{
+                    margin: "0 0 4px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#2d3748",
+                  }}
+                >
+                  Upload Supporting Documents
+                </h3>
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#4a5568",
+                    fontSize: "14px",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Add any supporting documents that will help our AI understand
+                  your project better.
+                </p>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "12px",
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "#4361ee",
+                  color: "white",
+                  borderRadius: "50%",
+                  width: "28px",
+                  height: "28px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  flexShrink: 0,
+                }}
+              >
+                3
+              </div>
+              <div>
+                <h3
+                  style={{
+                    margin: "0 0 4px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#2d3748",
+                  }}
+                >
+                  Review & Edit AI-Generated Content
+                </h3>
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#4a5568",
+                    fontSize: "14px",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Our AI will generate high-quality content that you can refine
+                  to perfect your application.
+                </p>
+              </div>
+            </div>
+          </div>
 
           <button
             onClick={onStart}
@@ -110,54 +259,36 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({
               cursor: "pointer",
               transition: "background-color 0.2s",
               marginBottom: "24px",
-              fontWeight: 500,
+              fontWeight: "600",
+              boxShadow: "0 2px 4px rgba(67, 97, 238, 0.3)",
             }}
           >
-            Start New Application <span style={{ marginLeft: "8px" }}>→</span>
+            Go to Application <span style={{ marginLeft: "8px" }}>→</span>
           </button>
 
           <div
             style={{
+              textAlign: "center",
+              color: "#718096",
+              fontSize: "14px",
               display: "flex",
               flexDirection: "column",
-              gap: "16px",
-              marginBottom: "32px",
+              gap: "8px",
             }}
           >
-            <button
-              style={{
-                padding: "12px",
-                backgroundColor: "#f8f9fa",
-                border: "1px solid #dee2e6",
-                borderRadius: "6px",
-                color: "#2c3e50",
-                cursor: "pointer",
-                transition: "all 0.2s",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-              }}
-            >
-              <span style={{ fontSize: "20px" }}>▶</span> Watch How It Works (2
-              min)
-            </button>
-          </div>
-
-          <div
-            style={{
-              textAlign: "center",
-              color: "#666",
-              fontSize: "14px",
-            }}
-          >
-            Need help? Contact{" "}
-            <a
-              href="mailto:FedFundsInfra@mass.gov"
-              style={{ color: "#4361ee", textDecoration: "none" }}
-            >
-              FedFundsInfra@mass.gov
-            </a>
+            <p style={{ margin: 0 }}>
+              Need help? Contact{" "}
+              <a
+                href="mailto:FedFundsInfra@mass.gov"
+                style={{
+                  color: "#4361ee",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                FedFundsInfra@mass.gov
+              </a>
+            </p>
           </div>
         </div>
       </div>

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AppContext } from "../../common/app-context";
+import { ApiClient } from "../../common/api-client/api-client";
 
 interface SectionEditorProps {
   onContinue: () => void;
@@ -20,37 +22,88 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [sectionAnswers, setSectionAnswers] = useState<{
     [key: string]: string;
   }>({});
+  const [loading, setLoading] = useState(true);
+  const appContext = useContext(AppContext);
 
-  // Mock sections for demo
+  // Load sections from NOFO summary API
   useEffect(() => {
-    const mockSections = [
-      {
-        name: "Project Summary",
-        description: "A brief summary of your project.",
-      },
-      {
-        name: "Statement of Need",
-        description: "Explain the problem your project will solve.",
-      },
-      {
-        name: "Goals & Objectives",
-        description: "List the goals and objectives of your project.",
-      },
-      {
-        name: "Project Activities",
-        description: "Describe the main activities you will complete.",
-      },
-      { name: "Evaluation Plan", description: "How will you measure success?" },
-    ];
+    const fetchSections = async () => {
+      setLoading(true);
 
-    setSections(mockSections);
+      try {
+        if (appContext && selectedNofo) {
+          const apiClient = new ApiClient(appContext);
+          const result = await apiClient.landingPage.getNOFOSummary(
+            selectedNofo
+          );
+
+          if (result && result.data && result.data.ProjectNarrativeSections) {
+            // Convert API sections to the format used by this component
+            const apiSections = result.data.ProjectNarrativeSections;
+
+            if (Array.isArray(apiSections) && apiSections.length > 0) {
+              const formattedSections = apiSections.map((section) => ({
+                name: section.item || "Untitled Section",
+                description: section.description || "No description provided.",
+              }));
+
+              setSections(formattedSections);
+            } else {
+              // Fallback to default sections if none found in API
+              setDefaultSections();
+            }
+          } else {
+            // Fallback to default sections if API doesn't return narrative sections
+            setDefaultSections();
+          }
+        } else {
+          // Fallback to default sections if no context or NOFO
+          setDefaultSections();
+        }
+      } catch (error) {
+        console.error("Error loading NOFO narrative sections:", error);
+        setDefaultSections();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Helper to set default sections when API data is unavailable
+    const setDefaultSections = () => {
+      const defaultSections = [
+        {
+          name: "Project Summary",
+          description: "A brief summary of your project.",
+        },
+        {
+          name: "Statement of Need",
+          description: "Explain the problem your project will solve.",
+        },
+        {
+          name: "Goals & Objectives",
+          description: "List the goals and objectives of your project.",
+        },
+        {
+          name: "Project Activities",
+          description: "Describe the main activities you will complete.",
+        },
+        {
+          name: "Evaluation Plan",
+          description: "How will you measure success?",
+        },
+      ];
+
+      setSections(defaultSections);
+    };
+
+    fetchSections();
 
     // Load saved answers
     const saved = localStorage.getItem("sectionAnswers");
     if (saved) {
       setSectionAnswers(JSON.parse(saved));
     }
-  }, []);
+  }, [selectedNofo, appContext]);
 
   // Update editor content when active section changes
   useEffect(() => {
@@ -80,6 +133,43 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       const updated = { ...sectionAnswers, [sectionKey]: value };
       setSectionAnswers(updated);
       localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+    }
+  };
+
+  const handleSaveProgress = () => {
+    // Save the current section content
+    if (sections[activeSection]) {
+      const sectionKey = sections[activeSection].name;
+      const updated = { ...sectionAnswers, [sectionKey]: editorContent };
+      setSectionAnswers(updated);
+      localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+
+      // Visual feedback for save
+      const saveButton = document.getElementById("save-button");
+      if (saveButton) {
+        const originalText = saveButton.innerText;
+        saveButton.innerText = "Saved!";
+        setTimeout(() => {
+          saveButton.innerText = originalText;
+        }, 1500);
+      }
+    }
+  };
+
+  const handleSaveAndContinue = () => {
+    // Save the current section content
+    if (sections[activeSection]) {
+      const sectionKey = sections[activeSection].name;
+      const updated = { ...sectionAnswers, [sectionKey]: editorContent };
+      setSectionAnswers(updated);
+      localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+    }
+
+    // Move to the next section or continue to review
+    if (activeSection < sections.length - 1) {
+      setActiveSection(activeSection + 1);
+    } else {
+      onContinue();
     }
   };
 
@@ -497,6 +587,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <button
+              id="save-button"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -508,6 +599,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 fontSize: "14px",
                 cursor: "pointer",
               }}
+              onClick={handleSaveProgress}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -577,9 +669,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                     fontSize: "14px",
                     cursor: "pointer",
                   }}
-                  onClick={() => setActiveSection(activeSection + 1)}
+                  onClick={handleSaveAndContinue}
                 >
-                  Next Section
+                  Save and Review
                   <svg
                     viewBox="0 0 24 24"
                     style={{
