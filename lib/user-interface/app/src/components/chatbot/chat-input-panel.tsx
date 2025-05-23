@@ -144,6 +144,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
   const { needsRefresh, setNeedsRefresh } = useContext(SessionRefreshContext);
   const [micPermissionDenied, setMicPermissionDenied] = useState(false);
+  const [micListeningTimeout, setMicListeningTimeout] = useState<NodeJS.Timeout | null>(null);
   const { notifications, addNotification } = useNotifications();
 
   // Enhanced speech recognition config
@@ -172,10 +173,14 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     value: "kb",
   });
 
-  // Handle microphone permission check
+  // Handle microphone permission check with enhanced error handling
   const handleMicrophoneToggle = async () => {
     if (listening) {
       SpeechRecognition.stopListening();
+      if (micListeningTimeout) {
+        clearTimeout(micListeningTimeout);
+        setMicListeningTimeout(null);
+      }
       return;
     }
 
@@ -190,6 +195,18 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         language: "en-US",
       });
 
+      // Set a timeout to automatically stop listening after 30 seconds
+      const timeout = setTimeout(() => {
+        if (listening) {
+          SpeechRecognition.stopListening();
+          addNotification(
+            "info",
+            "Speech recognition stopped after 30 seconds. Click the microphone button to start again."
+          );
+        }
+      }, 30000);
+
+      setMicListeningTimeout(timeout);
       setMicPermissionDenied(false);
     } catch (error) {
       console.error("Microphone permission error:", error);
@@ -212,14 +229,17 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [transcript]);
 
-  // Clear any permission errors when component unmounts
+  // Clear any permission errors and timeouts when component unmounts
   useEffect(() => {
     return () => {
       if (listening) {
         SpeechRecognition.stopListening();
       }
+      if (micListeningTimeout) {
+        clearTimeout(micListeningTimeout);
+      }
     };
-  }, [listening]);
+  }, [listening, micListeningTimeout]);
 
   useEffect(() => {
     const onWindowScroll = () => {
@@ -526,7 +546,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           aria-label={
             micPermissionDenied
               ? "Microphone access denied"
-              : "Toggle microphone"
+              : listening
+              ? "Stop listening"
+              : "Start listening"
           }
           onClick={handleMicrophoneToggle}
           onMouseEnter={() => setMicHovered(true)}
@@ -534,7 +556,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           title={
             micPermissionDenied
               ? "Microphone access denied. Click to try again."
-              : "Toggle speech recognition"
+              : listening
+              ? "Click to stop speech recognition"
+              : "Click to start speech recognition"
           }
         >
           {micPermissionDenied ? (
@@ -552,6 +576,27 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         >
           <MicOff size={18} />
         </span>
+      )}
+
+      {/* Add visual feedback for speech recognition */}
+      {listening && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "100%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            color: "white",
+            padding: "8px 16px",
+            borderRadius: "4px",
+            fontSize: "14px",
+            marginBottom: "8px",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Listening... Click to stop
+        </div>
       )}
 
       {/* Text input */}
