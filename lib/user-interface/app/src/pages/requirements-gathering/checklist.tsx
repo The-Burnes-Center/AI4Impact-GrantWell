@@ -500,9 +500,13 @@ const Checklists: React.FC = () => {
   });
   const [isLoading, setLoading] = useState(true);
   const [activeTabId, setActiveTabId] = useState("eligibility");
-  // No tooltips or hover elements
-
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showHelp, setShowHelp] = useState(false);
+
+  // Toggle sidebar function
+  const handleSidebarToggle = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   // Add CSS styles to document on mount
   useEffect(() => {
@@ -613,10 +617,21 @@ const Checklists: React.FC = () => {
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
       {/* Navigation Sidebar */}
-      <RequirementsNavigation documentIdentifier={folderParam} />
+      <RequirementsNavigation
+        documentIdentifier={folderParam}
+        sidebarOpen={sidebarOpen}
+        onSidebarToggle={handleSidebarToggle}
+      />
 
       {/* Main Content */}
-      <div style={{ flex: 1, overflow: "auto" }}>
+      <div
+        style={{
+          flex: 1,
+          overflow: "auto",
+          marginLeft: sidebarOpen ? "240px" : "72px",
+          transition: "margin-left 0.3s ease",
+        }}
+      >
         <div style={styles.mainContainer}>
           {isLoading ? (
             <div style={styles.loadingContainer}>

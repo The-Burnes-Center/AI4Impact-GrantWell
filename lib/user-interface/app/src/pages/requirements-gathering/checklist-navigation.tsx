@@ -5,6 +5,8 @@ import { ChevronLeft, ChevronRight, MessageSquare, Edit } from "lucide-react";
 
 interface NavigationProps {
   documentIdentifier?: string;
+  sidebarOpen: boolean;
+  onSidebarToggle: () => void;
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -17,6 +19,10 @@ const styles: Record<string, React.CSSProperties> = {
     overflow: "hidden",
     borderRight: "1px solid #1f3b5a",
     height: "100vh",
+    position: "fixed",
+    zIndex: 100,
+    top: 0,
+    left: 0,
   },
   sidebarExpanded: {
     width: "240px",
@@ -81,8 +87,9 @@ const styles: Record<string, React.CSSProperties> = {
 
 export default function RequirementsNavigation({
   documentIdentifier,
+  sidebarOpen,
+  onSidebarToggle,
 }: NavigationProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<any[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -131,10 +138,7 @@ export default function RequirementsNavigation({
         {sidebarOpen && (
           <div style={{ fontWeight: "bold", fontSize: "16px" }}>Navigation</div>
         )}
-        <button
-          style={styles.sidebarToggle}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
+        <button style={styles.sidebarToggle} onClick={onSidebarToggle}>
           {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
         </button>
       </div>
