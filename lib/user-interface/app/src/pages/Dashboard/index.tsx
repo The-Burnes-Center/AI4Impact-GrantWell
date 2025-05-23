@@ -199,23 +199,33 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
   
-  // Pinned NOFOs state
-  const [pinnedGrants, setPinnedGrants] = useState<PinnableGrant[]>([]);
-
   // Access notifications if available
   const addNotification = useNotifications?.addNotification;
 
-  // Load pinned grants from localStorage on component mount
+  // Load pinned status from server when component mounts
   useEffect(() => {
-    try {
-      const savedPinnedGrants = localStorage.getItem('pinnedGrants');
-      if (savedPinnedGrants) {
-        setPinnedGrants(JSON.parse(savedPinnedGrants));
+    const loadPinnedStatus = async () => {
+      try {
+        const result = await apiClient.landingPage.getNOFOs();
+        if (result.nofoData) {
+          // Update the nofos state with pinned status from server
+          setNofos(
+            nofos.map(nofo => {
+              const serverNofo = result.nofoData.find(n => n.name === nofo.name);
+              return {
+                ...nofo,
+                isPinned: serverNofo?.isPinned || false
+              };
+            })
+          );
+        }
+      } catch (error) {
+        console.error("Error loading pinned status:", error);
       }
-    } catch (error) {
-      // Remove console.error
-    }
-  }, []);
+    };
+
+    loadPinnedStatus();
+  }, []); // Empty dependency array means this runs once on mount
 
   // Filter data based on search query
   const filteredNofos = nofos.filter((nofo) =>
