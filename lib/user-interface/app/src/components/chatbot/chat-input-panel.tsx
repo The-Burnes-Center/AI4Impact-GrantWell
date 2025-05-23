@@ -25,7 +25,7 @@ import { assembleHistory } from "./utils";
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
 import { useNotifications } from "../notif-manager";
-import { Mic, MicOff, Send, Loader } from "lucide-react";
+import { Mic, MicOff, Send, Loader, AlertCircle } from "lucide-react";
 
 // Styles for the components
 const styles = {
@@ -43,7 +43,13 @@ const styles = {
     alignItems: "center",
     width: "100%",
     margin: "0 auto",
-    boxShadow: "0 1px 6px rgba(0, 0, 0, 0.05) inset",
+    boxShadow: "0 1px 6px rgba(0, 0, 0, 0.04)",
+    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+    padding: "0 6px",
+  },
+  inputBorderFocused: {
+    borderColor: "#0073bb",
+    boxShadow: "0 1px 8px rgba(0, 115, 187, 0.1)",
   },
   micButton: {
     padding: "8px",
@@ -92,26 +98,21 @@ const styles = {
     color: "#6b7280",
   },
   sendButton: {
-    padding: "8px",
+    padding: "10px 14px",
+    background: "none",
     border: "none",
     cursor: "pointer",
-    backgroundColor: "#0073bb",
-    color: "white",
+    color: "#0073bb",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "50%",
-    width: "40px",
-    height: "40px",
-    margin: "0 4px",
     transition: "all 0.2s ease",
-    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+    outline: "none",
+    borderRadius: "4px",
   },
   sendButtonDisabled: {
-    backgroundColor: "#e5e7eb",
-    color: "#9ca3af",
+    color: "#d1d5db",
     cursor: "not-allowed",
-    boxShadow: "none",
   },
   spinner: {
     animation: "spin 1s linear infinite",
@@ -142,21 +143,63 @@ export abstract class ChatScrollState {
 export default function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
   const { needsRefresh, setNeedsRefresh } = useContext(SessionRefreshContext);
-  const { transcript, listening, browserSupportsSpeechRecognition } =
-    useSpeechRecognition();
+  const [micPermissionDenied, setMicPermissionDenied] = useState(false);
+  const { notifications, addNotification } = useNotifications();
+
+  // Enhanced speech recognition config
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
+  } = useSpeechRecognition({
+    clearTranscriptOnListen: true,
+    commands: [],
+  });
+
   const [state, setState] = useState<ChatInputState>({
     value: "",
   });
-  const { notifications, addNotification } = useNotifications();
   const [readyState, setReadyState] = useState<ReadyState>(ReadyState.OPEN);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
   const [isHovered, setIsHovered] = useState(false);
   const [micHovered, setMicHovered] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const [selectedDataSource, setSelectedDataSource] = useState<SelectOption>({
     label: "Bedrock Knowledge Base",
     value: "kb",
   });
+
+  // Handle microphone permission check
+  const handleMicrophoneToggle = async () => {
+    if (listening) {
+      SpeechRecognition.stopListening();
+      return;
+    }
+
+    try {
+      // Request microphone permission explicitly
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach((track) => track.stop()); // Stop the tracks after permission check
+
+      // Start listening with enhanced settings
+      await SpeechRecognition.startListening({
+        continuous: true,
+        language: "en-US",
+      });
+
+      setMicPermissionDenied(false);
+    } catch (error) {
+      console.error("Microphone permission error:", error);
+      setMicPermissionDenied(true);
+      addNotification(
+        "error",
+        "Microphone access denied. Please enable microphone access in your browser settings."
+      );
+    }
+  };
 
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
@@ -168,6 +211,15 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       setState((state) => ({ ...state, value: transcript }));
     }
   }, [transcript]);
+
+  // Clear any permission errors when component unmounts
+  useEffect(() => {
+    return () => {
+      if (listening) {
+        SpeechRecognition.stopListening();
+      }
+    };
+  }, [listening]);
 
   useEffect(() => {
     const onWindowScroll = () => {
@@ -459,29 +511,45 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     <div
       style={{
         ...styles.inputBorder,
+        ...(isInputFocused ? styles.inputBorderFocused : {}),
       }}
     >
-      {/* Microphone button */}
+      {/* Microphone button with enhanced feedback */}
       {browserSupportsSpeechRecognition ? (
         <button
           style={{
             ...styles.micButton,
             ...(listening ? styles.micActive : {}),
             ...(micHovered && !listening ? { backgroundColor: "#f3f4f6" } : {}),
+            ...(micPermissionDenied ? { color: "#ef4444" } : {}),
           }}
-          aria-label="Toggle microphone"
-          onClick={() =>
-            listening
-              ? SpeechRecognition.stopListening()
-              : SpeechRecognition.startListening()
+          aria-label={
+            micPermissionDenied
+              ? "Microphone access denied"
+              : "Toggle microphone"
           }
+          onClick={handleMicrophoneToggle}
           onMouseEnter={() => setMicHovered(true)}
           onMouseLeave={() => setMicHovered(false)}
+          title={
+            micPermissionDenied
+              ? "Microphone access denied. Click to try again."
+              : "Toggle speech recognition"
+          }
         >
-          {listening ? <MicOff size={18} /> : <Mic size={18} />}
+          {micPermissionDenied ? (
+            <AlertCircle size={18} />
+          ) : listening ? (
+            <MicOff size={18} />
+          ) : (
+            <Mic size={18} />
+          )}
         </button>
       ) : (
-        <span style={styles.micDisabled}>
+        <span
+          style={styles.micDisabled}
+          title="Your browser doesn't support speech recognition"
+        >
           <MicOff size={18} />
         </span>
       )}
@@ -512,6 +580,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             handleSendMessage();
           }
         }}
+        onFocus={() => setIsInputFocused(true)}
+        onBlur={() => setIsInputFocused(false)}
         value={state.value}
         placeholder="Type your message here..."
       />
@@ -528,9 +598,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 ...styles.sendButton,
                 ...(isHovered
                   ? {
-                      backgroundColor: "#005d96",
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+                      color: "#005d96",
+                      backgroundColor: "#f0f7fc",
+                      transform: "scale(1.05)",
                     }
                   : {}),
               }),
@@ -544,11 +614,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         onClick={handleSendMessage}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        aria-label="Send message"
       >
         {props.running ? (
-          <Loader size={18} style={styles.spinner} />
+          <Loader size={20} style={{ ...styles.spinner, color: "#0073bb" }} />
         ) : (
-          <Send size={18} style={{ transform: "translateX(1px)" }} />
+          <Send size={20} />
         )}
       </button>
     </div>

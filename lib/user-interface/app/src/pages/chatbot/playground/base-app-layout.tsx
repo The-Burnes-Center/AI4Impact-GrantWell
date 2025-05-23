@@ -53,6 +53,11 @@ const styles: Record<string, React.CSSProperties> = {
     transition: "width 0.3s ease",
     overflow: "hidden",
     borderRight: "1px solid #1f3b5a",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    height: "100vh",
+    zIndex: 100,
   },
   sidebarExpanded: {
     width: "240px",
@@ -240,7 +245,11 @@ export default function BaseAppLayout({
               <button
                 onClick={() =>
                   navigate(
-                    `/document-editor${documentIdentifier ? `?nofo=${encodeURIComponent(documentIdentifier)}` : ''}`
+                    `/document-editor${
+                      documentIdentifier
+                        ? `?nofo=${encodeURIComponent(documentIdentifier)}`
+                        : ""
+                    }`
                   )
                 }
                 style={{
@@ -285,6 +294,9 @@ export default function BaseAppLayout({
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
+            marginLeft: sidebarOpen ? "240px" : "72px",
+            transition: "margin-left 0.3s ease",
+            width: "calc(100% - " + (sidebarOpen ? "240px" : "72px") + ")",
           }}
         >
           {/* Header area */}
