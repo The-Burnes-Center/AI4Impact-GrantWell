@@ -6,6 +6,9 @@ import { Auth } from 'aws-amplify';
 import { LuPin } from "react-icons/lu";
 import { LuPinOff } from "react-icons/lu";
 import { LuChevronDown, LuChevronRight } from "react-icons/lu";
+import { ApiClient } from '../../common/api-client/api-client';
+import { AppContext } from '../../common/app-context';
+import { useContext } from 'react';
 
 interface PinnableGrant extends GrantRecommendation {
   isPinned: boolean;
@@ -22,6 +25,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   onSelectDocument,
   isLoading 
 }) => {
+  const appContext = useContext(AppContext);
+  const apiClient = new ApiClient(appContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -72,16 +77,34 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     checkAdmin();
   }, []);
 
-  // Load pinned grants from localStorage on component mount
+  // Load pinned grants from API on component mount
   useEffect(() => {
-    try {
-      const savedPinnedGrants = localStorage.getItem('pinnedGrants');
-      if (savedPinnedGrants) {
-        setPinnedGrants(JSON.parse(savedPinnedGrants));
+    const loadPinnedGrants = async () => {
+      try {
+        const result = await apiClient.landingPage.getNOFOs();
+        if (result.nofoData) {
+          const pinnedGrants = result.nofoData
+            .filter(nofo => nofo.isPinned)
+            .map(nofo => ({
+              id: nofo.name,
+              name: nofo.name,
+              isPinned: true,
+              matchScore: 80,
+              eligibilityMatch: true,
+              matchReason: "Admin selected",
+              fundingAmount: "Varies",
+              deadline: "See details",
+              keyRequirements: [],
+              summaryUrl: `${nofo.name}/`
+            }));
+          setPinnedGrants(pinnedGrants);
+        }
+      } catch (error) {
+        console.error("Error loading pinned grants:", error);
       }
-    } catch (error) {
-      console.error("Error loading pinned grants:", error);
-    }
+    };
+    
+    loadPinnedGrants();
   }, []);
 
   // Close dropdown when clicking outside
@@ -341,7 +364,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   };
 
   // Handle pinning a grant (for admins only)
-  const handlePinGrant = (grant: GrantRecommendation, event?: React.MouseEvent) => {
+  const handlePinGrant = async (grant: GrantRecommendation, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation(); // Prevent triggering the parent click handler
     }
@@ -357,27 +380,27 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       return;
     }
     
-    // Check if grant is already pinned
-    if (isNofoPinned(normalizedName)) {
-      return; // Already pinned
+    try {
+      // Call API to update NOFO pinned status
+      await apiClient.landingPage.updateNOFOStatus(normalizedName, undefined, true);
+      
+      // Create a pinnable grant object
+      const pinnableGrant: PinnableGrant = {
+        ...grant,
+        name: normalizedName,
+        isPinned: true
+      };
+      
+      // Update local state
+      const updatedPinnedGrants = [...pinnedGrants, pinnableGrant];
+      setPinnedGrants(updatedPinnedGrants);
+    } catch (error) {
+      console.error('Failed to pin grant:', error);
     }
-    
-    const pinnableGrant: PinnableGrant = {
-      ...grant,
-      name: normalizedName,
-      isPinned: true
-    };
-    
-    // Create a completely new array for React state update
-    const updatedPinnedGrants = [...pinnedGrants, pinnableGrant];
-    setPinnedGrants(updatedPinnedGrants);
-    
-    // Save to localStorage
-    localStorage.setItem('pinnedGrants', JSON.stringify(updatedPinnedGrants));
   };
   
   // Handle unpinning a grant (for admins only)
-  const handleUnpinGrant = (grantName: string, event?: React.MouseEvent) => {
+  const handleUnpinGrant = async (grantName: string, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation(); // Prevent triggering the parent click handler
     }
@@ -393,16 +416,20 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       return;
     }
     
-    // Create a completely new array for React state update
-    const updatedPinnedGrants = pinnedGrants.filter(grant => {
-      const pinnedName = normalizeGrantName(grant.name);
-      return pinnedName !== normalizedName;
-    });
-    
-    setPinnedGrants(updatedPinnedGrants);
-    
-    // Save to localStorage
-    localStorage.setItem('pinnedGrants', JSON.stringify(updatedPinnedGrants));
+    try {
+      // Call API to update NOFO pinned status
+      await apiClient.landingPage.updateNOFOStatus(normalizedName, undefined, false);
+      
+      // Update local state
+      const updatedPinnedGrants = pinnedGrants.filter(grant => {
+        const pinnedName = normalizeGrantName(grant.name);
+        return pinnedName !== normalizedName;
+      });
+      
+      setPinnedGrants(updatedPinnedGrants);
+    } catch (error) {
+      console.error('Failed to unpin grant:', error);
+    }
   };
 
   // Reusable search icon component
