@@ -36,6 +36,7 @@ export interface NOFO {
   id: number;
   name: string;
   status: "active" | "archived";
+  isPinned?: boolean;
 }
 
 /**
@@ -227,88 +228,67 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   };
 
   // Function to check if a specific NOFO is pinned
-  const isNofoPinned = (nofoName: string): boolean => {
-    // Normalize the name by trimming
-    const normalizedName = normalizeGrantName(nofoName);
-    
-    // If name is empty, we can't identify this grant
-    if (!normalizedName) return false;
-    
-    return pinnedGrants.some(pg => {
-      // Normalize pinned grant name
-      const pinnedName = normalizeGrantName(pg.name);
-      
-      // Match by name
-      return normalizedName === pinnedName;
-    });
+  const isNofoPinned = (nofo: NOFO): boolean => {
+    return !!nofo.isPinned;
   };
 
   // Handle pinning a grant
-  const handlePinGrant = (nofo: NOFO, event?: React.MouseEvent) => {
+  const handlePinGrant = async (nofo: NOFO, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation(); // Prevent triggering the parent click handler
     }
     
-    // Normalize grant name
-    const normalizedName = normalizeGrantName(nofo.name);
-    
-    // Skip if we can't identify this grant
-    if (!normalizedName) {
-      return;
-    }
-    
-    // Check if grant is already pinned
-    if (isNofoPinned(normalizedName)) {
-      return; // Already pinned
-    }
-    
-    const pinnableGrant: PinnableGrant = {
-      id: nofo.id.toString(),
-      name: normalizedName,
-      isPinned: true
-    };
-    
-    // Create a completely new array for React state update
-    const updatedPinnedGrants = [...pinnedGrants, pinnableGrant];
-    setPinnedGrants(updatedPinnedGrants);
-    
-    // Save to localStorage
-    localStorage.setItem('pinnedGrants', JSON.stringify(updatedPinnedGrants));
-    
-    // Show notification
-    if (addNotification) {
-      addNotification("success", `Grant "${normalizedName}" pinned successfully`);
+    try {
+      // Call API to update NOFO pinned status
+      await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, true);
+      
+      // Update local state after successful API call
+      setNofos(
+        nofos.map((item) =>
+          item.id === nofo.id
+            ? { ...item, isPinned: true }
+            : item
+        )
+      );
+
+      // Show success notification
+      if (addNotification) {
+        addNotification("success", `Grant "${nofo.name}" pinned successfully`);
+      }
+    } catch (error) {
+      if (addNotification) {
+        addNotification("error", "Failed to pin grant. Please try again.");
+      }
     }
   };
   
   // Handle unpinning a grant
-  const handleUnpinGrant = (nofoName: string, event?: React.MouseEvent) => {
+  const handleUnpinGrant = async (nofo: NOFO, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation(); // Prevent triggering the parent click handler
     }
     
-    // Normalize the name
-    const normalizedName = normalizeGrantName(nofoName);
-    
-    // Skip if we can't identify this grant
-    if (!normalizedName) {
-      return;
-    }
-    
-    // Create a completely new array for React state update
-    const updatedPinnedGrants = pinnedGrants.filter(grant => {
-      const pinnedName = normalizeGrantName(grant.name);
-      return pinnedName !== normalizedName;
-    });
-    
-    setPinnedGrants(updatedPinnedGrants);
-    
-    // Save to localStorage
-    localStorage.setItem('pinnedGrants', JSON.stringify(updatedPinnedGrants));
-    
-    // Show notification
-    if (addNotification) {
-      addNotification("info", `Grant "${normalizedName}" unpinned`);
+    try {
+      // Call API to update NOFO pinned status
+      await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, false);
+      
+      // Update local state after successful API call
+      setNofos(
+        nofos.map((item) =>
+          item.id === nofo.id
+            ? { ...item, isPinned: false }
+            : item
+        )
+      );
+
+      // Show success notification
+      if (addNotification) {
+        addNotification("info", `Grant "${nofo.name}" unpinned`);
+      }
+    } catch (error) {
+      if (addNotification) {
+        addNotification("error", "Failed to unpin grant. Please try again.");
+      }
     }
   };
 
@@ -532,7 +512,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
             <div key={nofo.id} className="table-row">
               <div className="row-cell">
                 <span className="nofo-name">{nofo.name}</span>
-                {isNofoPinned(nofo.name) && (
+                {isNofoPinned(nofo) && (
                   <span className="pinned-badge">
                     <LuPin size={14} />
                     <span>Pinned</span>
@@ -553,10 +533,10 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               </div>
               <div className="row-cell actions">
                 {/* Pin/Unpin Button */}
-                {isNofoPinned(nofo.name) ? (
+                {isNofoPinned(nofo) ? (
                   <button 
                     className="action-button unpin"
-                    onClick={(e) => handleUnpinGrant(nofo.name, e)}
+                    onClick={(e) => handleUnpinGrant(nofo, e)}
                     title="Unpin grant"
                     aria-label="Unpin grant"
                   >
