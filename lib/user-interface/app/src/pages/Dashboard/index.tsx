@@ -202,31 +202,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   // Access notifications if available
   const addNotification = useNotifications?.addNotification;
 
-  // Load pinned status from server when component mounts
-  useEffect(() => {
-    const loadPinnedStatus = async () => {
-      try {
-        const result = await apiClient.landingPage.getNOFOs();
-        if (result.nofoData) {
-          // Update the nofos state with pinned status from server
-          setNofos(
-            nofos.map(nofo => {
-              const serverNofo = result.nofoData.find(n => n.name === nofo.name);
-              return {
-                ...nofo,
-                isPinned: serverNofo?.isPinned || false
-              };
-            })
-          );
-        }
-      } catch (error) {
-        console.error("Error loading pinned status:", error);
-      }
-    };
-
-    loadPinnedStatus();
-  }, []); // Empty dependency array means this runs once on mount
-
   // Filter data based on search query
   const filteredNofos = nofos.filter((nofo) =>
     nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -808,9 +783,9 @@ const Dashboard: React.FC = () => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // Check admin permissions on component mount
+  // Check admin permissions and fetch NOFOs on component mount
   useEffect(() => {
-    const checkAdmin = async () => {
+    const checkAdminAndFetchData = async () => {
       try {
         const result = await Auth.currentAuthenticatedUser();
         if (!result || Object.keys(result).length === 0) {
@@ -823,7 +798,7 @@ const Dashboard: React.FC = () => {
         if (adminRole && adminRole.includes("Admin")) {
           setIsAdmin(true);
           // Only fetch NOFOs if user is admin
-          fetchNofos();
+          await fetchNofos();
         } else {
           // Redirect non-admin users
           navigate("/");
@@ -836,23 +811,23 @@ const Dashboard: React.FC = () => {
       }
     };
 
-    checkAdmin();
+    checkAdminAndFetchData();
   }, [navigate]);
 
-  // Fetch NOFOs data - now as a separate function
+  // Fetch NOFOs data
   const fetchNofos = async () => {
     try {
       setIsRefreshing(true);
       // Fetch NOFOs from API
       const nofoResult = await apiClient.landingPage.getNOFOs();
 
-      // Convert to required format
+      // Convert to required format and include pinned status
       if (nofoResult.nofoData) {
-        // Use the new nofoData that includes status information
         const nofoData = nofoResult.nofoData.map((nofo, index) => ({
           id: index,
           name: nofo.name,
-          status: nofo.status || 'active'
+          status: nofo.status || 'active',
+          isPinned: nofo.isPinned || false
         }));
         setNofos(nofoData);
       } else {
@@ -860,7 +835,8 @@ const Dashboard: React.FC = () => {
         const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
           id: index,
           name: nofo,
-          status: 'active' // Default status
+          status: 'active',
+          isPinned: false
         }));
         setNofos(nofoData);
       }
@@ -876,11 +852,6 @@ const Dashboard: React.FC = () => {
     } finally {
       setIsRefreshing(false);
     }
-  };
-
-  // Handle manual refresh
-  const handleRefresh = () => {
-    fetchNofos();
   };
 
   // Upload NOFO handler
@@ -1181,7 +1152,7 @@ const Dashboard: React.FC = () => {
         <h1>Admin Dashboard</h1>
         <button 
           className="action-button refresh-button"
-          onClick={handleRefresh}
+          onClick={fetchNofos}
           disabled={isRefreshing}
         >
           {isRefreshing ? (
