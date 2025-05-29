@@ -55,7 +55,8 @@ function App() {
               />
             </Route>
             {/* Document editor routes - use the new DocumentEditor component */}
-            <Route path="/document-editor/*" element={<DocumentEditor />} />
+            <Route path="/document-editor" element={<DocumentEditor />} />
+            <Route path="/document-editor/:sessionId" element={<DocumentEditor />} />
             <Route path="/admin" element={<Outlet />}>
               <Route path="data" element={<DataPage />} />
               <Route path="user-feedback" element={<UserFeedbackPage />} />

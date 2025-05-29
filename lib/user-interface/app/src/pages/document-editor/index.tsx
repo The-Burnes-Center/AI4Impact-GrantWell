@@ -1,6 +1,7 @@
 // index.tsx
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import DocumentNavigation from "./document-navigation";
 import ProjectBasics from "./ProjectBasics";
@@ -8,7 +9,7 @@ import QuickQuestionnaire from "./QuickQuestionnaire";
 import DraftView from "./DraftView";
 import SectionEditor from "./SectionsEditor";
 import ReviewApplication from "./ReviewApplication";
-import WelcomeModal from "./WelcomeModal";
+import WelcomePage from "./WelcomePage";
 import UploadDocuments from "./UploadDocuments";
 import "../../styles/document-editor.css";
 import Stepper from "@mui/material/Stepper";
@@ -20,6 +21,7 @@ import { ApiClient } from "../../common/api-client/api-client";
 interface DocumentData {
   id?: string;
   nofoId: string;
+  sessionId: string;
   sections: Record<string, any>;
   projectBasics?: ProjectBasics;
   lastModified: string;
@@ -44,20 +46,22 @@ const useDocumentStorage = (nofoId: string | null) => {
   const [documentData, setDocumentData] = useState<DocumentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { sessionId } = useParams();
 
   const loadDocument = useCallback(async () => {
-    if (!nofoId) return;
+    if (!nofoId || !sessionId) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
-      const savedData = localStorage.getItem(`${STORAGE_PREFIX}${nofoId}`);
+      const savedData = localStorage.getItem(`${STORAGE_PREFIX}${nofoId}_${sessionId}`);
       if (savedData) {
         setDocumentData(JSON.parse(savedData));
       } else {
         setDocumentData({
           nofoId,
+          sessionId,
           sections: {},
           lastModified: new Date().toISOString(),
         });
@@ -68,11 +72,11 @@ const useDocumentStorage = (nofoId: string | null) => {
     } finally {
       setIsLoading(false);
     }
-  }, [nofoId]);
+  }, [nofoId, sessionId]);
 
   const saveDocument = useCallback(
     async (data: Partial<DocumentData>) => {
-      if (!nofoId || !documentData) return;
+      if (!nofoId || !sessionId || !documentData) return;
 
       try {
         const updatedData = {
@@ -81,7 +85,7 @@ const useDocumentStorage = (nofoId: string | null) => {
           lastModified: new Date().toISOString(),
         };
         localStorage.setItem(
-          `${STORAGE_PREFIX}${nofoId}`,
+          `${STORAGE_PREFIX}${nofoId}_${sessionId}`,
           JSON.stringify(updatedData)
         );
         setDocumentData(updatedData);
@@ -92,7 +96,7 @@ const useDocumentStorage = (nofoId: string | null) => {
         return false;
       }
     },
-    [nofoId, documentData]
+    [nofoId, sessionId, documentData]
   );
 
   useEffect(() => {
@@ -106,42 +110,48 @@ const useDocumentStorage = (nofoId: string | null) => {
 const DocumentEditor: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<string>("welcome");
   const [selectedNofo, setSelectedNofo] = useState<string | null>(null);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [nofoName, setNofoName] = useState<string>("");
   const [isNofoLoading, setIsNofoLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
+  const { sessionId } = useParams();
 
   const { documentData, isLoading, error, saveDocument } =
     useDocumentStorage(selectedNofo);
 
-  // Extract NOFO from URL parameters
+  // Extract NOFO from URL parameters and handle session
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const nofo = searchParams.get("nofo");
+    
     if (nofo) {
       setSelectedNofo(decodeURIComponent(nofo));
     }
   }, []);
-
-  // Show welcome modal when no NOFO is selected
-  useEffect(() => {
-    if (!selectedNofo) {
-      setShowWelcomeModal(true);
-    }
-  }, [selectedNofo]);
 
   // Handle navigation through document creation flow
   const navigateToStep = (step: string) => {
     setCurrentStep(step);
   };
 
+  // Create new document flow
+  const startNewDocument = useCallback(() => {
+    if (!selectedNofo) {
+      return;
+    }
+    
+    // Generate new session ID when starting a new document
+    const newSessionId = uuidv4();
+    navigate(`/document-editor/${newSessionId}?nofo=${encodeURIComponent(selectedNofo)}`, { replace: true });
+    setCurrentStep("projectBasics");
+  }, [selectedNofo, navigate]);
+
   // Handle back navigation based on current step
   const handleBackNavigation = () => {
     switch (currentStep) {
       case "projectBasics":
-        navigate("/"); // Go back to landing page from first step
+        setCurrentStep("welcome"); // Go back to welcome page
         break;
       case "questionnaire":
         navigateToStep("projectBasics");
@@ -159,27 +169,9 @@ const DocumentEditor: React.FC = () => {
         navigateToStep("sectionEditor");
         break;
       default:
-        // If on welcome or another page, go back to landing
+        // If on welcome page, go back to landing
         navigate("/");
         break;
-    }
-  };
-
-  // Create new document flow
-  const startNewDocument = useCallback(() => {
-    if (!selectedNofo) {
-      setShowWelcomeModal(true);
-      return;
-    }
-    setShowWelcomeModal(false); // Close the modal
-    setCurrentStep("projectBasics");
-  }, [selectedNofo]);
-
-  // Handle welcome modal close
-  const handleWelcomeModalClose = () => {
-    setShowWelcomeModal(false);
-    if (selectedNofo) {
-      setCurrentStep("projectBasics");
     }
   };
 
@@ -230,55 +222,15 @@ const DocumentEditor: React.FC = () => {
     switch (currentStep) {
       case "welcome":
         return (
-          <div
-            style={{
-              minHeight: "70vh",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "20px",
-              textAlign: "center",
+          <WelcomePage
+            onContinue={() => {
+              if (selectedNofo) {
+                startNewDocument();
+              } else {
+                navigate("/");
+              }
             }}
-          >
-            <h2
-              style={{
-                fontSize: "24px",
-                marginBottom: "16px",
-                color: "#2d3748",
-              }}
-            >
-              Welcome to GrantWell
-            </h2>
-            <p
-              style={{
-                fontSize: "16px",
-                color: "#4a5568",
-                maxWidth: "600px",
-                lineHeight: "1.6",
-                marginBottom: "24px",
-              }}
-            >
-              Get started with your grant application by clicking the button
-              below.
-            </p>
-            <button
-              onClick={() => setShowWelcomeModal(true)}
-              style={{
-                padding: "12px 24px",
-                background: "#4361ee",
-                color: "white",
-                border: "none",
-                borderRadius: "6px",
-                fontSize: "16px",
-                cursor: "pointer",
-                boxShadow: "0 2px 4px rgba(67, 97, 238, 0.3)",
-                fontWeight: "500",
-              }}
-            >
-              Start New Application
-            </button>
-          </div>
+          />
         );
       case "projectBasics":
         return (
@@ -382,67 +334,71 @@ const DocumentEditor: React.FC = () => {
       className="document-editor-root"
       style={{ display: "flex", minHeight: "100vh" }}
     >
-      <DocumentNavigation
-        documentIdentifier={selectedNofo}
-        currentStep={currentStep}
-        onNavigate={navigateToStep}
-        isOpen={sidebarOpen}
-        setIsOpen={setSidebarOpen}
-      />
+      {currentStep !== "welcome" && (
+        <DocumentNavigation
+          documentIdentifier={selectedNofo}
+          currentStep={currentStep}
+          onNavigate={navigateToStep}
+          isOpen={sidebarOpen}
+          setIsOpen={setSidebarOpen}
+        />
+      )}
 
       <div
         className="document-content"
         style={{
-          marginLeft: sidebarOpen ? "240px" : "60px",
+          marginLeft: currentStep !== "welcome" ? (sidebarOpen ? "240px" : "60px") : "0",
           transition: "margin-left 0.3s ease",
-          width: "calc(100% - " + (sidebarOpen ? "240px" : "60px") + ")",
+          width: currentStep !== "welcome" ? `calc(100% - ${sidebarOpen ? "240px" : "60px"})` : "100%",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <div
-          className="document-editor-header"
-          style={{
-            background: "#fff",
-            borderBottom: "0",
-            width: "100%",
-            position: "sticky",
-            top: 0,
-            zIndex: 10,
-          }}
-        >
+        {currentStep !== "welcome" && (
           <div
-            className="document-editor-header-inner"
+            className="document-editor-header"
             style={{
-              padding: "16px 16px 16px 16px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
+              background: "#fff",
+              borderBottom: "0",
               width: "100%",
+              position: "sticky",
+              top: 0,
+              zIndex: 10,
             }}
           >
             <div
+              className="document-editor-header-inner"
               style={{
+                padding: "16px",
                 display: "flex",
-                alignItems: "center",
+                flexDirection: "column",
+                alignItems: "flex-start",
                 width: "100%",
-                marginBottom: "0",
               }}
             >
-              <h1
-                className="document-editor-nofo-title"
+              <div
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
                   marginBottom: "0",
-                  textAlign: "left",
-                  fontSize: "22px",
-                  fontWeight: "600",
                 }}
               >
-                {isNofoLoading ? "Loading..." : nofoName}
-              </h1>
+                <h1
+                  className="document-editor-nofo-title"
+                  style={{
+                    marginBottom: "0",
+                    textAlign: "left",
+                    fontSize: "22px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {isNofoLoading ? "Loading..." : nofoName}
+                </h1>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div
           style={{
@@ -496,7 +452,7 @@ const DocumentEditor: React.FC = () => {
 
         <div
           className="document-editor-workspace"
-          style={{ flex: 1, padding: "20px" }}
+          style={{ flex: 1, padding: currentStep === "welcome" ? "0" : "20px" }}
         >
           {isLoading ? (
             <div
@@ -527,14 +483,6 @@ const DocumentEditor: React.FC = () => {
           )}
         </div>
       </div>
-
-      {showWelcomeModal && (
-        <WelcomeModal
-          isOpen={showWelcomeModal}
-          onClose={handleWelcomeModalClose}
-          onStart={startNewDocument}
-        />
-      )}
     </div>
   );
 };
