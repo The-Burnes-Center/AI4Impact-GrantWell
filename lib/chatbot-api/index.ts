@@ -79,14 +79,6 @@ export class ChatBotApi extends Construct {
       ),
     });
 
-    // Add the WebSocket route for grant recommendations
-    websocketBackend.wsAPI.addRoute("getGrantRecommendations", {
-      integration: new WebSocketLambdaIntegration(
-        "grantRecommendationsIntegration",
-        lambdaFunctions.chatFunction
-      ),
-    });
-
     websocketBackend.wsAPI.addRoute("$connect", {
       integration: new WebSocketLambdaIntegration(
         "chatbotConnectionIntegration",

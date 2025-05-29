@@ -127,7 +127,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.grantRecommendationFunction = grantRecommendationFunction;
 
-    // Update WebSocket chat function to include the grant recommendation function name
+    // Update WebSocket chat function
     const websocketAPIFunction = new lambda.Function(
       scope,
       "ChatHandlerFunction",
@@ -139,8 +139,6 @@ export class LambdaFunctionStack extends cdk.Stack {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
           PROMPT: PROMPT_TEXT,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
-          GRANT_RECOMMENDATION_FUNCTION:
-            this.grantRecommendationFunction.functionName,
           SESSION_HANDLER: this.sessionFunction.functionName,
         },
         timeout: cdk.Duration.seconds(300),
