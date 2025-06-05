@@ -16,14 +16,15 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import { ApiClient } from "../../common/api-client/api-client";
+import { Auth } from "aws-amplify";
+import { DraftsClient, DocumentDraft } from "../../common/api-client/drafts-client";
 
 // Types
 interface DocumentData {
-  id?: string;
+  id: string;
   nofoId: string;
-  sessionId: string;
   sections: Record<string, any>;
-  projectBasics?: ProjectBasics;
+  projectBasics?: any;
   lastModified: string;
 }
 
@@ -34,11 +35,11 @@ interface ProjectBasics {
 }
 
 // Constants
-const STORAGE_PREFIX = "document_";
 const ERROR_MESSAGES = {
   LOAD_FAILED: "Failed to load document data",
   SAVE_FAILED: "Failed to save document data",
   NO_NOFO: "No NOFO selected",
+  START_FAILED: "Failed to start new document",
 } as const;
 
 // Custom hooks
@@ -47,36 +48,53 @@ const useDocumentStorage = (nofoId: string | null) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { sessionId } = useParams();
+  const appContext = useContext(AppContext);
 
   const loadDocument = useCallback(async () => {
-    if (!nofoId || !sessionId) return;
+    if (!nofoId || !sessionId || !appContext) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
-      const savedData = localStorage.getItem(`${STORAGE_PREFIX}${nofoId}_${sessionId}`);
-      if (savedData) {
-        setDocumentData(JSON.parse(savedData));
-      } else {
-        setDocumentData({
-          nofoId,
-          sessionId,
-          sections: {},
-          lastModified: new Date().toISOString(),
+      // Load from database
+      const draftsClient = new DraftsClient(appContext);
+      const username = (await Auth.currentAuthenticatedUser()).username;
+      
+      if (username) {
+        const draft = await draftsClient.getDraft({
+          sessionId: sessionId,
+          userId: username,
         });
+
+        if (draft) {
+          setDocumentData({
+            id: draft.sessionId,
+            nofoId: draft.documentIdentifier,
+            sections: draft.sections || {},
+            projectBasics: draft.projectBasics,
+            lastModified: draft.lastModified || new Date().toISOString(),
+          });
+        } else {
+          setDocumentData({
+            id: sessionId,
+            nofoId: nofoId,
+            sections: {},
+            lastModified: new Date().toISOString(),
+          });
+        }
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Failed to load document:', error);
       setError(ERROR_MESSAGES.LOAD_FAILED);
-      console.error(ERROR_MESSAGES.LOAD_FAILED, err);
     } finally {
       setIsLoading(false);
     }
-  }, [nofoId, sessionId]);
+  }, [nofoId, sessionId, appContext]);
 
   const saveDocument = useCallback(
     async (data: Partial<DocumentData>) => {
-      if (!nofoId || !sessionId || !documentData) return;
+      if (!nofoId || !sessionId || !documentData || !appContext) return false;
 
       try {
         const updatedData = {
@@ -84,10 +102,23 @@ const useDocumentStorage = (nofoId: string | null) => {
           ...data,
           lastModified: new Date().toISOString(),
         };
-        localStorage.setItem(
-          `${STORAGE_PREFIX}${nofoId}_${sessionId}`,
-          JSON.stringify(updatedData)
-        );
+
+        // Save to database
+        const draftsClient = new DraftsClient(appContext);
+        const username = (await Auth.currentAuthenticatedUser()).username;
+        
+        if (username) {
+          await draftsClient.updateDraft({
+            sessionId: sessionId,
+            userId: username,
+            title: `Application for ${nofoId}`,
+            documentIdentifier: nofoId,
+            sections: updatedData.sections,
+            projectBasics: updatedData.projectBasics,
+            lastModified: updatedData.lastModified,
+          });
+        }
+
         setDocumentData(updatedData);
         return true;
       } catch (err) {
@@ -96,14 +127,14 @@ const useDocumentStorage = (nofoId: string | null) => {
         return false;
       }
     },
-    [nofoId, sessionId, documentData]
+    [nofoId, sessionId, documentData, appContext]
   );
 
   useEffect(() => {
     loadDocument();
   }, [loadDocument]);
 
-  return { documentData, isLoading, error, saveDocument };
+  return { documentData, setDocumentData, isLoading, error, setError };
 };
 
 // Main Component
@@ -117,8 +148,7 @@ const DocumentEditor: React.FC = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams();
 
-  const { documentData, isLoading, error, saveDocument } =
-    useDocumentStorage(selectedNofo);
+  const { documentData, setDocumentData, isLoading, error, setError } = useDocumentStorage(selectedNofo);
 
   // Extract NOFO from URL parameters and handle session
   useEffect(() => {
@@ -130,56 +160,90 @@ const DocumentEditor: React.FC = () => {
     }
   }, []);
 
-  // Handle navigation through document creation flow
-  const navigateToStep = (step: string) => {
-    setCurrentStep(step);
-  };
-
   // Create new document flow
-  const startNewDocument = useCallback(() => {
-    if (!selectedNofo) {
+  const startNewDocument = useCallback(async () => {
+    if (!selectedNofo || !appContext) {
       return;
     }
     
-    // Generate new session ID when starting a new document
-    const newSessionId = uuidv4();
-    navigate(`/document-editor/${newSessionId}?nofo=${encodeURIComponent(selectedNofo)}`, { replace: true });
-    setCurrentStep("projectBasics");
-  }, [selectedNofo, navigate]);
+    try {
+      // Generate new session ID when starting a new document
+      const newSessionId = uuidv4();
+      
+      // Create a new draft in the database
+      const draftsClient = new DraftsClient(appContext);
+      const username = (await Auth.currentAuthenticatedUser()).username;
+      
+      if (username) {
+        await draftsClient.createDraft({
+          sessionId: newSessionId,
+          userId: username,
+          title: `Application for ${selectedNofo}`,
+          documentIdentifier: selectedNofo,
+          sections: {},
+        });
+      }
 
-  // Handle back navigation based on current step
-  const handleBackNavigation = () => {
-    switch (currentStep) {
-      case "projectBasics":
-        setCurrentStep("welcome"); // Go back to welcome page
-        break;
-      case "questionnaire":
-        navigateToStep("projectBasics");
-        break;
-      case "uploadDocuments":
-        navigateToStep("questionnaire");
-        break;
-      case "draftCreated":
-        navigateToStep("uploadDocuments");
-        break;
-      case "sectionEditor":
-        navigateToStep("draftCreated");
-        break;
-      case "reviewApplication":
-        navigateToStep("sectionEditor");
-        break;
-      default:
-        // If on welcome page, go back to landing
-        navigate("/");
-        break;
+      // Navigate to the document editor with the new session ID
+      navigate(`/document-editor/${newSessionId}`);
+    } catch (error) {
+      console.error('Failed to start new document:', error);
+      setError(ERROR_MESSAGES.START_FAILED);
+    }
+  }, [selectedNofo, appContext, navigate]);
+
+  // Handle navigation through document creation flow
+  const navigateToStep = async (step: string) => {
+    if (!documentData || !appContext) return;
+
+    try {
+      // Save current step data
+      const draftsClient = new DraftsClient(appContext);
+      const username = (await Auth.currentAuthenticatedUser()).username;
+      
+      if (username && sessionId) {
+        await draftsClient.updateDraft({
+          sessionId: sessionId,
+          userId: username,
+          title: `Application for ${selectedNofo}`,
+          documentIdentifier: selectedNofo || '',
+          sections: documentData.sections,
+          projectBasics: documentData.projectBasics,
+        });
+      }
+
+      // Navigate to the next step
+      navigate(`/document-editor/${sessionId}/${step}`);
+    } catch (error) {
+      console.error('Failed to navigate to step:', error);
+      setError(ERROR_MESSAGES.SAVE_FAILED);
     }
   };
 
   // Handle save progress
   const handleSaveProgress = useCallback(async () => {
-    if (!documentData) return;
-    await saveDocument(documentData);
-  }, [documentData, saveDocument]);
+    if (!documentData || !appContext) return;
+
+    try {
+      // Save to database
+      const draftsClient = new DraftsClient(appContext);
+      const username = (await Auth.currentAuthenticatedUser()).username;
+      
+      if (username && sessionId) {
+        await draftsClient.updateDraft({
+          sessionId: sessionId,
+          userId: username,
+          title: `Application for ${selectedNofo}`,
+          documentIdentifier: selectedNofo || '',
+          sections: documentData.sections,
+          projectBasics: documentData.projectBasics,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to save progress:', error);
+      setError(ERROR_MESSAGES.SAVE_FAILED);
+    }
+  }, [documentData, appContext, sessionId, selectedNofo]);
 
   // Fetch NOFO details
   useEffect(() => {

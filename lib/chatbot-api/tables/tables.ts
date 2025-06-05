@@ -11,6 +11,7 @@ import { AttributeType, Table, ProjectionType } from 'aws-cdk-lib/aws-dynamodb';
 export class TableStack extends Stack {
   public readonly historyTable: Table;
   public readonly feedbackTable: Table;
+  public readonly draftTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -53,5 +54,21 @@ export class TableStack extends Stack {
     });
 
     this.feedbackTable = userFeedbackTable;
+
+    // Define the Draft Table with TimeIndex GSI
+    const draftTable = new Table(this, 'DraftTable', {
+      partitionKey: { name: 'user_id', type: AttributeType.STRING },
+      sortKey: { name: 'session_id', type: AttributeType.STRING },
+    });
+
+    // Add a global secondary index to DraftTable by time_stamp
+    draftTable.addGlobalSecondaryIndex({
+      indexName: 'TimeIndex',
+      partitionKey: { name: 'user_id', type: AttributeType.STRING },
+      sortKey: { name: 'time_stamp', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    this.draftTable = draftTable;
   }
 }

@@ -21,6 +21,7 @@ interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
   readonly sessionTable: Table;
   readonly feedbackTable: Table;
+  readonly draftTable: Table;
   readonly feedbackBucket: s3.Bucket;
   readonly ffioNofosBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -44,9 +45,45 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoStatusFunction: lambda.Function;
   public readonly nofoRenameFunction: lambda.Function;
   public readonly nofoDeleteFunction: lambda.Function;
+  public readonly draftFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
+
+    // Add draft editor Lambda function
+    const draftAPIHandlerFunction = new lambda.Function(
+      scope,
+      "DraftHandlerFunction",
+      {
+        runtime: lambda.Runtime.PYTHON_3_12,
+        code: lambda.Code.fromAsset(path.join(__dirname, "draft-editor")),
+        handler: "lambda_function.lambda_handler",
+        environment: {
+          DRAFT_TABLE_NAME: props.draftTable.tableName,
+        },
+        timeout: cdk.Duration.seconds(30),
+      }
+    );
+
+    draftAPIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+        ],
+        resources: [
+          props.draftTable.tableArn,
+          props.draftTable.tableArn + "/index/*",
+        ],
+      })
+    );
+
+    this.draftFunction = draftAPIHandlerFunction;
 
     const sessionAPIHandlerFunction = new lambda.Function(
       scope,

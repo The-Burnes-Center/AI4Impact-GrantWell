@@ -1,10 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface WelcomePageProps {
   onContinue: () => void;
 }
 
 const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
+  const navigate = useNavigate();
+
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
       <div
@@ -215,9 +218,28 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
               transition: "background-color 0.2s",
               fontWeight: "600",
               boxShadow: "0 2px 4px rgba(67, 97, 238, 0.3)",
+              marginBottom: "16px",
             }}
           >
-            Start Your Application
+            Start New Application
+          </button>
+          <button
+            onClick={() => navigate("/document-editor/drafts")}
+            style={{
+              display: "block",
+              width: "100%",
+              padding: "16px",
+              backgroundColor: "white",
+              color: "#4361ee",
+              border: "2px solid #4361ee",
+              borderRadius: "8px",
+              fontSize: "18px",
+              cursor: "pointer",
+              transition: "background-color 0.2s",
+              fontWeight: "600",
+            }}
+          >
+            View Existing Drafts
           </button>
         </div>
       </div>

@@ -58,6 +58,7 @@ export class ChatBotApi extends Construct {
       wsApiEndpoint: websocketBackend.wsAPIStage.url,
       sessionTable: tables.historyTable,
       feedbackTable: tables.feedbackTable,
+      draftTable: tables.draftTable,
       feedbackBucket: buckets.feedbackBucket,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
@@ -121,6 +122,22 @@ export class ChatBotApi extends Construct {
         apigwv2.HttpMethod.DELETE,
       ],
       integration: sessionAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add draft editor Lambda integration
+    const draftAPIIntegration = new HttpLambdaIntegration(
+      "DraftAPIIntegration",
+      lambdaFunctions.draftFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-draft",
+      methods: [
+        apigwv2.HttpMethod.GET,
+        apigwv2.HttpMethod.POST,
+        apigwv2.HttpMethod.DELETE,
+      ],
+      integration: draftAPIIntegration,
       authorizer: httpAuthorizer,
     });
 
