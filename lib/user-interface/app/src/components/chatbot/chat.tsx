@@ -246,18 +246,18 @@ export default function Chat(props: {
           (value) => value.username
         );
         if (!username) return;
-        const hist = await apiClient.sessions.getSession(
-          props.sessionId,
-          username
-        );
+        const hist = await apiClient.sessions.getSession({
+          sessionId: props.sessionId,
+          userId: username
+        });
 
-        if (hist && hist.length > 0) {
-          setMessageHistory(hist);
+        if (hist?.chatHistory && hist.chatHistory.length > 0) {
+          setMessageHistory(hist.chatHistory);
           window.scrollTo({
             top: 0,
             behavior: "instant",
           });
-        } else if (hist.length == 0) {
+        } else if (!hist?.chatHistory || hist.chatHistory.length === 0) {
           const summaryResult = await apiClient.landingPage.getNOFOSummary(
             props.documentIdentifier
           );
