@@ -20,7 +20,7 @@ dynamodb = boto3.resource("dynamodb", region_name='us-east-1')
 table = dynamodb.Table(DDB_TABLE_NAME)
 
 # Define a function to add a draft or update an existing one in the DynamoDB table
-def add_draft(session_id, user_id, sections, title, document_identifier):
+def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, last_modified=None):
     try:
         # Attempt to add an item to the DynamoDB table with provided details
         item = {
@@ -30,7 +30,8 @@ def add_draft(session_id, user_id, sections, title, document_identifier):
             "time_stamp": str(datetime.now()),  # Current timestamp as a string
             'document_identifier': document_identifier,  # Identifier for the document being drafted
             'sections': sections or {},  # Dictionary of section name to content
-            'last_modified': str(datetime.now()),  # Last modification timestamp
+            'project_basics': project_basics or {},  # Project basics data
+            'last_modified': last_modified or str(datetime.now()),  # Last modification timestamp
             'status': 'draft'  # Status of the draft (draft, completed, archived)
         }
 
@@ -94,7 +95,7 @@ def get_draft(session_id, user_id):
     return response_to_client
 
 # Define a function to update a draft in the DynamoDB table
-def update_draft(session_id, user_id, section_name, section_content):
+def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, last_modified=None):
     try:
         # Fetch current draft details
         draft_response = get_draft(session_id, user_id)
@@ -103,20 +104,35 @@ def update_draft(session_id, user_id, section_name, section_content):
 
         draft_data = json.loads(draft_response['body'])
         
-        # Get current sections or initialize if not present
-        current_sections = draft_data.get('sections', {})
+        # Prepare update expression and attribute values
+        update_parts = []
+        expression_values = {}
         
-        # Update the specified section
-        current_sections[section_name] = section_content
+        if sections is not None:
+            update_parts.append("sections = :sections")
+            expression_values[":sections"] = sections
+            
+        if title is not None:
+            update_parts.append("title = :title")
+            expression_values[":title"] = title.strip()
+            
+        if document_identifier is not None:
+            update_parts.append("document_identifier = :doc_id")
+            expression_values[":doc_id"] = document_identifier
+            
+        if project_basics is not None:
+            update_parts.append("project_basics = :project_basics")
+            expression_values[":project_basics"] = project_basics
+            
+        # Always update last_modified
+        update_parts.append("last_modified = :last_modified")
+        expression_values[":last_modified"] = last_modified or str(datetime.now())
         
-        # Update the item in DynamoDB with sections and last_modified timestamp
+        # Update the item in DynamoDB
         response = table.update_item(
             Key={"user_id": user_id, "session_id": session_id},
-            UpdateExpression="set sections = :sections, last_modified = :last_modified",
-            ExpressionAttributeValues={
-                ":sections": current_sections,
-                ":last_modified": str(datetime.now())
-            },
+            UpdateExpression="set " + ", ".join(update_parts),
+            ExpressionAttributeValues=expression_values,
             ReturnValues="UPDATED_NEW"
         )
         return {
@@ -312,10 +328,10 @@ def lambda_handler(event, context):
         user_id = data.get('user_id')
         session_id = data.get('session_id')
         sections = data.get('sections', {})
-        section_name = data.get('section_name')
-        section_content = data.get('section_content')
         title = data.get('title', f"Draft on {str(datetime.now())}")
         document_identifier = data.get('document_identifier')
+        project_basics = data.get('project_basics')
+        last_modified = data.get('last_modified')
 
         if not operation:
             return {
@@ -331,7 +347,7 @@ def lambda_handler(event, context):
                     'headers': {'Access-Control-Allow-Origin': '*'},
                     'body': json.dumps('session_id and user_id are required for add_draft operation')
                 }
-            return add_draft(session_id, user_id, sections, title, document_identifier)
+            return add_draft(session_id, user_id, sections, title, document_identifier, project_basics, last_modified)
         elif operation == 'get_draft':
             if not all([session_id, user_id]):
                 return {
@@ -347,7 +363,15 @@ def lambda_handler(event, context):
                     'headers': {'Access-Control-Allow-Origin': '*'},
                     'body': json.dumps('session_id and user_id are required for update_draft operation')
                 }
-            return update_draft(session_id, user_id, section_name, section_content)
+            return update_draft(
+                session_id=session_id,
+                user_id=user_id,
+                sections=sections,
+                title=title,
+                document_identifier=document_identifier,
+                project_basics=project_basics,
+                last_modified=last_modified
+            )
         elif operation == 'list_drafts_by_user_id':
             if not user_id:
                 return {

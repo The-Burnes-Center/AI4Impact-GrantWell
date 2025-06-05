@@ -120,7 +120,7 @@ export class DraftsClient {
         document_identifier: draft.documentIdentifier,
         sections: draft.sections || {},
         project_basics: draft.projectBasics || {},
-        last_modified: new Date().toISOString(),
+        last_modified: draft.lastModified || new Date().toISOString(),
       }),
     });
 

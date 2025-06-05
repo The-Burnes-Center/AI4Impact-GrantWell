@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 interface ProjectBasicsProps {
   onContinue: () => void;
   selectedNofo: string | null;
+  documentData?: any;
+  onUpdateData?: (data: any) => void;
 }
 
 interface ProjectBasicsFormData {
@@ -18,6 +20,8 @@ interface ProjectBasicsFormData {
 const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   onContinue,
   selectedNofo,
+  documentData,
+  onUpdateData
 }) => {
   const [formData, setFormData] = useState<ProjectBasicsFormData>({
     projectName: "",
@@ -29,13 +33,12 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
     contactEmail: "",
   });
 
-  // Load previous data if available
+  // Load existing data if available
   useEffect(() => {
-    const savedBasics = localStorage.getItem("projectBasics");
-    if (savedBasics) {
-      setFormData(JSON.parse(savedBasics));
+    if (documentData?.projectBasics) {
+      setFormData(documentData.projectBasics);
     }
-  }, []);
+  }, [documentData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,8 +49,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   };
 
   const handleContinue = () => {
-    // Save form data to localStorage
-    localStorage.setItem("projectBasics", JSON.stringify(formData));
+    // Update parent component's data
+    if (onUpdateData) {
+      onUpdateData({
+        projectBasics: formData
+      });
+    }
+    
+    // Navigate to next step
     onContinue();
   };
 

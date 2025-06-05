@@ -150,15 +150,24 @@ const DocumentEditor: React.FC = () => {
 
   const { documentData, setDocumentData, isLoading, error, setError } = useDocumentStorage(selectedNofo);
 
-  // Extract NOFO from URL parameters and handle session
+  // Extract NOFO and step from URL parameters and handle session
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const nofo = searchParams.get("nofo");
+    const stepFromUrl = searchParams.get("step");
     
     if (nofo) {
       setSelectedNofo(decodeURIComponent(nofo));
     }
-  }, []);
+
+    // Set the current step if it's a valid step
+    if (stepFromUrl && ["projectBasics", "questionnaire", "uploadDocuments", "draftCreated", "sectionEditor", "reviewApplication"].includes(stepFromUrl)) {
+      setCurrentStep(stepFromUrl);
+    } else {
+      // If no valid step is provided, show welcome page
+      setCurrentStep("welcome");
+    }
+  }, [window.location.search]); // Add dependency on URL search params
 
   // Create new document flow
   const startNewDocument = useCallback(async () => {
@@ -181,11 +190,14 @@ const DocumentEditor: React.FC = () => {
           title: `Application for ${selectedNofo}`,
           documentIdentifier: selectedNofo,
           sections: {},
+          projectBasics: {}, // Initialize empty project basics
+          lastModified: new Date().toISOString(),
         });
       }
 
-      // Navigate to the document editor with the new session ID
-      navigate(`/document-editor/${newSessionId}`);
+      // Navigate to project basics step with the new session ID and nofo
+      setCurrentStep("projectBasics"); // Set the step in state
+      navigate(`/document-editor/${newSessionId}?step=projectBasics&nofo=${encodeURIComponent(selectedNofo)}`);
     } catch (error) {
       console.error('Failed to start new document:', error);
       setError(ERROR_MESSAGES.START_FAILED);
@@ -194,7 +206,12 @@ const DocumentEditor: React.FC = () => {
 
   // Handle navigation through document creation flow
   const navigateToStep = async (step: string) => {
-    if (!documentData || !appContext) return;
+    if (!documentData || !appContext) {
+      // If no document data, just navigate without saving
+      const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : '';
+      navigate(`/document-editor/${sessionId}?step=${step}${nofoParam}`);
+      return;
+    }
 
     try {
       // Save current step data
@@ -207,13 +224,15 @@ const DocumentEditor: React.FC = () => {
           userId: username,
           title: `Application for ${selectedNofo}`,
           documentIdentifier: selectedNofo || '',
-          sections: documentData.sections,
-          projectBasics: documentData.projectBasics,
+          sections: documentData.sections || {},
+          projectBasics: documentData.projectBasics || {},
+          lastModified: new Date().toISOString(),
         });
-      }
 
-      // Navigate to the next step
-      navigate(`/document-editor/${sessionId}/${step}`);
+        // Only navigate if save was successful
+        const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : '';
+        navigate(`/document-editor/${sessionId}?step=${step}${nofoParam}`);
+      }
     } catch (error) {
       console.error('Failed to navigate to step:', error);
       setError(ERROR_MESSAGES.SAVE_FAILED);
@@ -301,6 +320,15 @@ const DocumentEditor: React.FC = () => {
           <ProjectBasics
             onContinue={() => navigateToStep("questionnaire")}
             selectedNofo={selectedNofo}
+            documentData={documentData}
+            onUpdateData={(data) => {
+              if (documentData) {
+                setDocumentData({
+                  ...documentData,
+                  ...data
+                });
+              }
+            }}
           />
         );
       case "questionnaire":

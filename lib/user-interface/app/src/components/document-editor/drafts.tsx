@@ -401,7 +401,7 @@ export default function Drafts(props: DraftsProps) {
           <div style={styles.buttonContainer}>
             <button
               style={{ ...styles.button, ...styles.primaryButton }}
-              onClick={() => navigate(`/document-editor/welcome`)}
+              onClick={() => navigate(`/document-editor`)}
             >
               <FaPlus size={16} /> New Draft
             </button>
