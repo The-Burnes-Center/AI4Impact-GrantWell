@@ -178,6 +178,6 @@ export class DraftsClient {
     }
 
     const data = await response.json();
-    return data;
+    return JSON.parse(data.body); // Parse the body from the Lambda response
   }
 } 

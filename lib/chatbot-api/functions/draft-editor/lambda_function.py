@@ -239,7 +239,7 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
         while len(items) < limit:
             query_params = {
                 'IndexName': 'TimeIndex',
-                'ProjectionExpression': 'session_id, title, time_stamp, document_identifier, status, last_modified',
+                'ProjectionExpression': 'session_id, title, document_identifier, status, last_modified',
                 'KeyConditionExpression': Key('user_id').eq(user_id),
                 'ScanIndexForward': False,
                 'Limit': limit - len(items),
@@ -305,14 +305,14 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
         }
 
     # Sort the items by 'last_modified' in descending order to ensure the latest drafts appear first
-    sorted_items = sorted(items, key=lambda x: x.get('last_modified', x['time_stamp']), reverse=True)
+    sorted_items = sorted(items, key=lambda x: x.get('last_modified', ''), reverse=True)
     sorted_items = list(map(lambda x: {
         "draft_id": x["session_id"],
         "title": x["title"].strip(),
         "document_identifier": x.get("document_identifier", ""),
         "status": x.get("status", "draft"),
-        "created_at": x["time_stamp"],
-        "last_modified": x.get("last_modified", x["time_stamp"])
+        "created_at": x.get("last_modified", ""),
+        "last_modified": x.get("last_modified", "")
     }, sorted_items))
 
     # Prepare the HTTP response object with a status code, headers, and body

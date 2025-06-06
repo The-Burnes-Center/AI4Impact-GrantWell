@@ -61,11 +61,11 @@ export class TableStack extends Stack {
       sortKey: { name: 'session_id', type: AttributeType.STRING },
     });
 
-    // Add a global secondary index to DraftTable by time_stamp
+    // Add a global secondary index to DraftTable by last_modified
     draftTable.addGlobalSecondaryIndex({
       indexName: 'TimeIndex',
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
-      sortKey: { name: 'time_stamp', type: AttributeType.STRING },
+      sortKey: { name: 'last_modified', type: AttributeType.STRING },
       projectionType: ProjectionType.ALL,
     });
 
