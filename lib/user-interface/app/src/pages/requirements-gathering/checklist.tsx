@@ -634,9 +634,57 @@ const Checklists: React.FC = () => {
       >
         <div style={styles.mainContainer}>
           {isLoading ? (
-            <div style={styles.loadingContainer}>
-              <h2>Loading NOFO data...</h2>
-              <p>Retrieving information about this NOFO...</p>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '400px',
+              width: '100%',
+              maxWidth: '800px',
+              margin: '40px auto',
+              padding: '40px 20px',
+              backgroundColor: '#ffffff',
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+            }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                marginBottom: '32px'
+              }}>
+                <div className="loading-spinner" />
+              </div>
+              <h2 style={{
+                fontSize: '28px',
+                fontWeight: '600',
+                color: '#333',
+                marginBottom: '16px',
+                textAlign: 'center'
+              }}>Loading NOFO Data</h2>
+              <p style={{
+                fontSize: '16px',
+                color: '#666',
+                marginBottom: '32px',
+                textAlign: 'center'
+              }}>Retrieving grant information and requirements...</p>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                backgroundColor: '#f0f7ff',
+                padding: '16px 24px',
+                borderRadius: '8px',
+                maxWidth: '600px'
+              }}>
+                <span style={{ fontSize: '24px' }}>💡</span>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#0073BB',
+                  margin: 0,
+                  lineHeight: '1.5'
+                }}>Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.</p>
+              </div>
             </div>
           ) : (
             <div style={styles.container}>
