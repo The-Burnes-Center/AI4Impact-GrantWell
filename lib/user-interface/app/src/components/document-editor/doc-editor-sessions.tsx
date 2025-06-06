@@ -193,7 +193,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         setSessions(result.map(draft => ({
           draft_id: draft.sessionId,
           title: draft.title,
-          created_at: draft.lastModified, // Using lastModified as created_at since it's not available
+          created_at: draft.lastModified,
           last_modified: draft.lastModified,
           document_identifier: draft.documentIdentifier
         })));

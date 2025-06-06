@@ -174,19 +174,27 @@ export class DraftsClient {
     });
 
     if (response.status !== 200) {
-      throw new Error('Failed to fetch drafts');
+      const errorData = await response.json();
+      throw new Error(`Failed to fetch drafts: ${errorData.body || 'Unknown error'}`);
     }
 
     const data = await response.json();
+    if (!data.body) {
+      throw new Error('Invalid response format: missing body');
+    }
+
     const drafts = JSON.parse(data.body);
+    if (!Array.isArray(drafts)) {
+      throw new Error('Invalid response format: body is not an array');
+    }
     
     // Transform the response to match the expected format
     return drafts.map((draft: any) => ({
-      sessionId: draft.draft_id,
+      sessionId: draft.sessionId,
       userId: userId,
       title: draft.title,
-      documentIdentifier: draft.document_identifier,
-      lastModified: draft.last_modified
+      documentIdentifier: draft.documentIdentifier,
+      lastModified: draft.lastModified
     }));
   }
 } 

@@ -307,12 +307,10 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
     # Sort the items by 'last_modified' in descending order to ensure the latest drafts appear first
     sorted_items = sorted(items, key=lambda x: x.get('last_modified', ''), reverse=True)
     sorted_items = list(map(lambda x: {
-        "draft_id": x["session_id"],
+        "sessionId": x["session_id"],
         "title": x["title"].strip(),
-        "document_identifier": x.get("document_identifier", ""),
-        "status": x.get("status", "draft"),
-        "created_at": x.get("last_modified", ""),
-        "last_modified": x.get("last_modified", "")
+        "documentIdentifier": x.get("document_identifier", ""),
+        "lastModified": x.get("last_modified", "")
     }, sorted_items))
 
     # Prepare the HTTP response object with a status code, headers, and body
