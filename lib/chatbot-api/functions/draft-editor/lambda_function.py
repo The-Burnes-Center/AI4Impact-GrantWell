@@ -26,21 +26,33 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
         item = {
             "user_id": user_id,
             "session_id": session_id,
-            "title": title.strip(),
+            "title": title.strip() if title else "",
             "document_identifier": document_identifier,
-            "sections": sections,
+            "sections": sections or {},
             "project_basics": project_basics or {},
             "questionnaire": questionnaire or {},
             "last_modified": last_modified or str(datetime.now()),
+            "status": "draft"  # Adding default status
         }
         
         # Put the item in DynamoDB
         table.put_item(Item=item)
         
+        # Return only the fields we project in queries
+        response_item = {
+            "sessionId": session_id,
+            "title": item["title"],
+            "documentIdentifier": item["document_identifier"],
+            "lastModified": item["last_modified"]
+        }
+        
         return {
             'statusCode': 200,
-            'headers': {'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps(item)
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response_item)
         }
     except ClientError as error:
         print("Caught error: DynamoDB error - could not add draft")
@@ -96,52 +108,66 @@ def get_draft(session_id, user_id):
 # Define a function to update a draft in the DynamoDB table
 def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, questionnaire=None, last_modified=None):
     try:
-        # Fetch current draft details
-        draft_response = get_draft(session_id, user_id)
-        if 'statusCode' in draft_response and draft_response['statusCode'] != 200:
-            return draft_response  # Return the error from get_draft if any
-
-        draft_data = json.loads(draft_response['body'])
-        
         # Prepare update expression and attribute values
         update_parts = []
         expression_values = {}
+        expression_names = {}
         
         if sections is not None:
-            update_parts.append("sections = :sections")
+            update_parts.append("#sec = :sections")
             expression_values[":sections"] = sections
+            expression_names["#sec"] = "sections"
             
         if title is not None:
-            update_parts.append("title = :title")
-            expression_values[":title"] = title.strip()
+            update_parts.append("#ttl = :title")
+            expression_values[":title"] = title.strip() if title else ""
+            expression_names["#ttl"] = "title"
             
         if document_identifier is not None:
-            update_parts.append("document_identifier = :doc_id")
+            update_parts.append("#doc = :doc_id")
             expression_values[":doc_id"] = document_identifier
+            expression_names["#doc"] = "document_identifier"
             
         if project_basics is not None:
-            update_parts.append("project_basics = :project_basics")
+            update_parts.append("#pb = :project_basics")
             expression_values[":project_basics"] = project_basics
+            expression_names["#pb"] = "project_basics"
             
         if questionnaire is not None:
-            update_parts.append("questionnaire = :questionnaire")
+            update_parts.append("#q = :questionnaire")
             expression_values[":questionnaire"] = questionnaire
+            expression_names["#q"] = "questionnaire"
             
         # Always update last_modified
-        update_parts.append("last_modified = :last_modified")
+        update_parts.append("#lm = :last_modified")
         expression_values[":last_modified"] = last_modified or str(datetime.now())
+        expression_names["#lm"] = "last_modified"
         
         # Update the item in DynamoDB
         response = table.update_item(
             Key={"user_id": user_id, "session_id": session_id},
             UpdateExpression="set " + ", ".join(update_parts),
             ExpressionAttributeValues=expression_values,
-            ReturnValues="UPDATED_NEW"
+            ExpressionAttributeNames=expression_names,
+            ReturnValues="ALL_NEW"
         )
+        
+        # Return only the fields we project in queries
+        updated_item = response.get("Attributes", {})
+        response_item = {
+            "sessionId": session_id,
+            "title": updated_item.get("title", ""),
+            "documentIdentifier": updated_item.get("document_identifier", ""),
+            "lastModified": updated_item.get("last_modified", "")
+        }
+        
         return {
             'statusCode': 200,
-            'headers': {'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps(response.get("Attributes", {}))
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response_item)
         }
     except ClientError as error:
         print("Caught error: DynamoDB error - could not update draft")
@@ -240,7 +266,14 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
         while len(items) < limit:
             query_params = {
                 'IndexName': 'LastModifiedIndex',
-                'ProjectionExpression': 'session_id, title, document_identifier, status, last_modified',
+                'ProjectionExpression': '#sid, #ttl, #doc_id, #st, #lm',
+                'ExpressionAttributeNames': {
+                    '#sid': 'session_id',
+                    '#ttl': 'title',
+                    '#doc_id': 'document_identifier',
+                    '#st': 'status',
+                    '#lm': 'last_modified'
+                },
                 'KeyConditionExpression': Key('user_id').eq(user_id),
                 'ScanIndexForward': False,
                 'Limit': limit - len(items),
@@ -266,8 +299,8 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
         # Sort the items by 'last_modified' in descending order to ensure the latest drafts appear first
         sorted_items = sorted(items, key=lambda x: x.get('last_modified', ''), reverse=True)
         sorted_items = list(map(lambda x: {
-            "sessionId": x["session_id"],
-            "title": x["title"].strip(),
+            "sessionId": x.get("session_id"),
+            "title": x.get("title", "").strip(),
             "documentIdentifier": x.get("document_identifier", ""),
             "lastModified": x.get("last_modified", "")
         }, sorted_items))
