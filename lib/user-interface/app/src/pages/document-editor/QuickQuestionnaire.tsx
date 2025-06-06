@@ -111,13 +111,6 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
       [name]: value,
     };
     setFormData(updatedFormData);
-
-    // Save to session
-    if (onUpdateData) {
-      onUpdateData({
-        questionnaire: updatedFormData
-      });
-    }
   };
 
   const handleCreateDraft = async () => {

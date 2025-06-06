@@ -314,7 +314,7 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
             },
-            'body': json.dumps(sorted_items)  # Properly serialize the response
+            'body': json.dumps(sorted_items)
         }
 
     except ClientError as error:
