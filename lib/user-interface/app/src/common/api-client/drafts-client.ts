@@ -159,42 +159,54 @@ export class DraftsClient {
 
   // Lists all document drafts
   async getDrafts(userId: string, documentIdentifier?: string | null, all: boolean = false): Promise<DocumentDraft[]> {
-    const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-draft', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + auth,
-      },
-      body: JSON.stringify({
-        operation: all ? 'list_all_drafts_by_user_id' : 'list_drafts_by_user_id',
-        user_id: userId,
-        document_identifier: documentIdentifier || undefined
-      })
-    });
+    try {
+      const auth = await Utils.authenticate();
+      const response = await fetch(this.API + '/user-draft', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth,
+        },
+        body: JSON.stringify({
+          operation: all ? 'list_all_drafts_by_user_id' : 'list_drafts_by_user_id',
+          user_id: userId,
+          document_identifier: documentIdentifier || undefined
+        })
+      });
 
-    if (response.status !== 200) {
-      const errorData = await response.json();
-      throw new Error(`Failed to fetch drafts: ${errorData.body || 'Unknown error'}`);
-    }
+      const data = await response.json();
+      
+      if (response.status !== 200) {
+        const errorMessage = data.error || data.body || 'Unknown error';
+        console.error('Draft API Error:', {
+          status: response.status,
+          data: data
+        });
+        throw new Error(`Failed to fetch drafts: ${errorMessage}`);
+      }
 
-    const data = await response.json();
-    if (!data.body) {
-      throw new Error('Invalid response format: missing body');
-    }
+      if (!data.body) {
+        console.error('Invalid response format:', data);
+        throw new Error('Invalid response format: missing body');
+      }
 
-    const drafts = JSON.parse(data.body);
-    if (!Array.isArray(drafts)) {
-      throw new Error('Invalid response format: body is not an array');
+      const drafts = JSON.parse(data.body);
+      if (!Array.isArray(drafts)) {
+        console.error('Invalid drafts format:', drafts);
+        throw new Error('Invalid response format: body is not an array');
+      }
+      
+      // Transform the response to match the expected format
+      return drafts.map((draft: any) => ({
+        sessionId: draft.sessionId,
+        userId: userId,
+        title: draft.title,
+        documentIdentifier: draft.documentIdentifier,
+        lastModified: draft.lastModified
+      }));
+    } catch (error) {
+      console.error('Error in getDrafts:', error);
+      throw error;
     }
-    
-    // Transform the response to match the expected format
-    return drafts.map((draft: any) => ({
-      sessionId: draft.sessionId,
-      userId: userId,
-      title: draft.title,
-      documentIdentifier: draft.documentIdentifier,
-      lastModified: draft.lastModified
-    }));
   }
 } 
