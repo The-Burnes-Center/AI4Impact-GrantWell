@@ -28,6 +28,14 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
     navigate(`/chatbot/playground/${newSessionId}${queryParams}`);
   };
 
+  // Handle drafts navigation
+  const handleDraftsNavigation = () => {
+    const queryParams = documentIdentifier
+      ? `?nofo=${encodeURIComponent(documentIdentifier)}`
+      : "";
+    navigate(`/document-editor/drafts${queryParams}`);
+  };
+
   // Handle requirements navigation
   const handleRequirementsNavigation = () => {
     const queryParams = documentIdentifier
@@ -167,6 +175,45 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
             </svg>
             {isOpen && (
               <span style={{ marginLeft: "12px" }}>Chat / Ask AI</span>
+            )}
+          </button>
+
+          <button
+            onClick={handleDraftsNavigation}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              padding: "12px 16px",
+              borderRadius: "8px",
+              marginBottom: "8px",
+              background: currentStep === "drafts" ? "#2563eb" : "none",
+              color: currentStep === "drafts" ? "white" : "#cbd5e1",
+              border: "none",
+              fontSize: "16px",
+              cursor: "pointer",
+              transition: "background 0.2s, color 0.2s",
+              textAlign: "left",
+            }}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              style={{
+                width: "20px",
+                height: "20px",
+                stroke: "currentColor",
+                fill: "none",
+                strokeWidth: 2,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+              }}
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            {isOpen && (
+              <span style={{ marginLeft: "12px" }}>Drafts</span>
             )}
           </button>
 

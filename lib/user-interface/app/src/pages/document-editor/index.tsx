@@ -337,6 +337,15 @@ const DocumentEditor: React.FC = () => {
             onContinue={() => navigateToStep("uploadDocuments")}
             selectedNofo={selectedNofo}
             onNavigate={navigateToStep}
+            documentData={documentData}
+            onUpdateData={(data) => {
+              if (documentData) {
+                setDocumentData({
+                  ...documentData,
+                  ...data
+                });
+              }
+            }}
           />
         );
       case "uploadDocuments":

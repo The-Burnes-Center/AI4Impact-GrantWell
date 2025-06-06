@@ -16,6 +16,7 @@ import Welcome from "./pages/landing-page/basePage";
 import Checklists from "./pages/requirements-gathering/checklist";
 import DocumentEditor from "./pages/document-editor";
 import DraftsPage from "./pages/document-editor/drafts";
+import DocEditorSessionsPage from "./pages/document-editor/doc-editor-sessions-page";
 import Dashboard from "./pages/Dashboard";
 import { useState } from "react";
 import "./styles/app.scss";
@@ -58,7 +59,7 @@ function App() {
             {/* Document editor routes - use the new DocumentEditor component */}
             <Route path="/document-editor" element={<DocumentEditor />} />
             <Route path="/document-editor/:sessionId" element={<DocumentEditor />} />
-            <Route path="/document-editor/drafts" element={<DraftsPage />} />
+            <Route path="/document-editor/drafts" element={<DocEditorSessionsPage />} />
             <Route path="/admin" element={<Outlet />}>
               <Route path="data" element={<DataPage />} />
               <Route path="user-feedback" element={<UserFeedbackPage />} />

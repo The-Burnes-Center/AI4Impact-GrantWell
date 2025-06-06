@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
+import { DraftsClient } from "../../common/api-client/drafts-client";
+import { Auth } from "aws-amplify";
+import { useParams } from "react-router-dom";
 
 interface QuickQuestionnaireProps {
   onContinue: () => void;
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
+  documentData?: any;
+  onUpdateData?: (data: any) => void;
 }
 
 interface QuestionData {
@@ -21,6 +26,8 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   onContinue,
   selectedNofo,
   onNavigate,
+  documentData,
+  onUpdateData
 }) => {
   const [formData, setFormData] = useState<QuestionnaireFormData>({});
   const [questions, setQuestions] = useState<QuestionData[]>([]);
@@ -28,6 +35,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [noQuestionsFound, setNoQuestionsFound] = useState(false);
   const appContext = useContext(AppContext);
+  const { sessionId } = useParams();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -83,36 +91,42 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
         initialFormData[`question_${q.id}`] = "";
       });
 
-      // Load saved answers if available
-      const savedQuestionnaire = localStorage.getItem("quickQuestionnaire");
-      if (savedQuestionnaire) {
-        try {
-          const savedData = JSON.parse(savedQuestionnaire);
-          Object.keys(savedData).forEach((key) => {
-            initialFormData[key] = savedData[key];
-          });
-        } catch (e) {
-          console.error("Error parsing saved questionnaire data", e);
-        }
+      // Load saved answers from documentData if available
+      if (documentData?.questionnaire) {
+        Object.keys(documentData.questionnaire).forEach((key) => {
+          initialFormData[key] = documentData.questionnaire[key];
+        });
       }
 
       setFormData(initialFormData);
     };
 
     fetchQuestions();
-  }, [selectedNofo, appContext]);
+  }, [selectedNofo, appContext, documentData]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    const updatedFormData = {
+      ...formData,
       [name]: value,
-    }));
+    };
+    setFormData(updatedFormData);
+
+    // Save to session
+    if (onUpdateData) {
+      onUpdateData({
+        questionnaire: updatedFormData
+      });
+    }
   };
 
-  const handleCreateDraft = () => {
-    // Save questionnaire data to localStorage
-    localStorage.setItem("quickQuestionnaire", JSON.stringify(formData));
+  const handleCreateDraft = async () => {
+    // Save questionnaire data to session
+    if (onUpdateData) {
+      onUpdateData({
+        questionnaire: formData
+      });
+    }
     onContinue();
   };
 

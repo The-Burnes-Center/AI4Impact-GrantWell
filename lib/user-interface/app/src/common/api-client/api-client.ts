@@ -4,6 +4,7 @@ import { KnowledgeManagementClient } from "./knowledge-management-client";
 import { UserFeedbackClient } from "./user-feedback-client";
 import { LandingPageClient } from "./landing-page-clients";
 import { UserManagementClient } from "./user-management-client";
+import { DraftsClient } from "./drafts-client";
 
 export class ApiClient {
   private _sessionsClient: SessionsClient | undefined;
@@ -11,6 +12,7 @@ export class ApiClient {
   private _userFeedbackClient: UserFeedbackClient | undefined;
   private _landingPageClient: LandingPageClient | undefined;
   private _userManagementClient: UserManagementClient | undefined;
+  private _draftsClient: DraftsClient | undefined;
 
   /** Construct the Knowledge Management sub-client */
   public get knowledgeManagement() {
@@ -34,6 +36,14 @@ export class ApiClient {
       this._sessionsClient = new SessionsClient(this._appConfig);
     }
     return this._sessionsClient;
+  }
+
+  /** Construct the Drafts sub-client */
+  public get drafts() {
+    if (!this._draftsClient) {
+      this._draftsClient = new DraftsClient(this._appConfig);
+    }
+    return this._draftsClient;
   }
 
   /** Construct the Feedback sub-client */

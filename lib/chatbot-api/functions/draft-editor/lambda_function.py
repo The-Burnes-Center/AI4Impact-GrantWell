@@ -379,7 +379,9 @@ def lambda_handler(event, context):
                     'headers': {'Access-Control-Allow-Origin': '*'},
                     'body': json.dumps('user_id is required for list_drafts_by_user_id operation')
                 }
-            return list_drafts_by_user_id(user_id, document_identifier=document_identifier)
+            # Convert undefined to None for document_identifier
+            doc_id = None if document_identifier == 'undefined' else document_identifier
+            return list_drafts_by_user_id(user_id, document_identifier=doc_id)
         elif operation == 'list_all_drafts_by_user_id':
             if not user_id:
                 return {
@@ -387,7 +389,9 @@ def lambda_handler(event, context):
                     'headers': {'Access-Control-Allow-Origin': '*'},
                     'body': json.dumps('user_id is required for list_all_drafts_by_user_id operation')
                 }
-            return list_drafts_by_user_id(user_id, document_identifier=document_identifier, limit=100)
+            # Convert undefined to None for document_identifier
+            doc_id = None if document_identifier == 'undefined' else document_identifier
+            return list_drafts_by_user_id(user_id, document_identifier=doc_id, limit=100)
         elif operation == 'delete_draft':
             if not all([session_id, user_id]):
                 return {
