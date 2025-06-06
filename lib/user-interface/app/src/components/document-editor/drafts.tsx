@@ -248,7 +248,12 @@ export default function Drafts(props: DraftsProps) {
 
       if (username) {
         const result = await draftsClient.getDrafts(username, documentIdentifier, true);
-        setDrafts(result);
+        setDrafts(result.map(draft => ({
+          sessionId: draft.sessionId,
+          title: draft.title,
+          lastModified: draft.lastModified || new Date().toISOString(),
+          documentIdentifier: draft.documentIdentifier
+        })));
       }
     } catch (e) {
       console.error("Error fetching drafts:", e);
