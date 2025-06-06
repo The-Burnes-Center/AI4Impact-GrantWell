@@ -55,21 +55,13 @@ export class TableStack extends Stack {
 
     this.feedbackTable = userFeedbackTable;
 
-    // Define the Draft Table with TimeIndex GSI
+    // Define the Draft Table with LastModifiedIndex GSI
     const draftTable = new Table(this, 'DraftTable', {
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
       sortKey: { name: 'session_id', type: AttributeType.STRING },
     });
 
-    // Keep the existing TimeIndex for now
-    draftTable.addGlobalSecondaryIndex({
-      indexName: 'TimeIndex',
-      partitionKey: { name: 'user_id', type: AttributeType.STRING },
-      sortKey: { name: 'time_stamp', type: AttributeType.STRING },
-      projectionType: ProjectionType.ALL,
-    });
-
-    // Add the new LastModifiedIndex
+    // Add global secondary index to DraftTable by last_modified
     draftTable.addGlobalSecondaryIndex({
       indexName: 'LastModifiedIndex',
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
