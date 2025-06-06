@@ -191,11 +191,11 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       if (username) {
         const result = await apiClient.drafts.getDrafts(username, documentIdentifier);
         setSessions(result.map(draft => ({
-          draft_id: draft.draft_id,
+          draft_id: draft.sessionId,
           title: draft.title,
-          created_at: draft.created_at,
-          last_modified: draft.last_modified,
-          document_identifier: draft.document_identifier
+          created_at: draft.lastModified, // Using lastModified as created_at since it's not available
+          last_modified: draft.lastModified,
+          document_identifier: draft.documentIdentifier
         })));
       }
     } catch (e) {

@@ -29,10 +29,10 @@ export default function DocEditorSessionsPage() {
           if (result && result.length > 0) {
             const sortedDrafts = [...result].sort(
               (a, b) =>
-                new Date(b.last_modified || b.created_at).getTime() -
-                new Date(a.last_modified || a.created_at).getTime()
+                new Date(b.lastModified).getTime() -
+                new Date(a.lastModified).getTime()
             );
-            setLatestDraftId(sortedDrafts[0].draft_id);
+            setLatestDraftId(sortedDrafts[0].sessionId);
           } else {
             setLatestDraftId(uuidv4());
           }
