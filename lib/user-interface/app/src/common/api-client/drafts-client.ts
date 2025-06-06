@@ -158,7 +158,7 @@ export class DraftsClient {
   }
 
   // Lists all document drafts
-  async getDrafts(userId: string, documentIdentifier?: string | null, all: boolean = false): Promise<any[]> {
+  async getDrafts(userId: string, documentIdentifier?: string | null, all: boolean = false): Promise<DocumentDraft[]> {
     const auth = await Utils.authenticate();
     const response = await fetch(this.API + '/user-draft', {
       method: 'POST',
@@ -178,6 +178,15 @@ export class DraftsClient {
     }
 
     const data = await response.json();
-    return JSON.parse(data.body); // Parse the body from the Lambda response
+    const drafts = JSON.parse(data.body);
+    
+    // Transform the response to match the expected format
+    return drafts.map((draft: any) => ({
+      sessionId: draft.draft_id,
+      userId: userId,
+      title: draft.title,
+      documentIdentifier: draft.document_identifier,
+      lastModified: draft.last_modified
+    }));
   }
 } 
