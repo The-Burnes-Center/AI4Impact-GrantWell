@@ -209,26 +209,33 @@ def delete_draft(session_id, user_id):
         if error_code == "ResourceNotFoundException":
             return {
                 'statusCode': 404,
-                "id": session_id,
-                "deleted": False,
                 'headers': {'Access-Control-Allow-Origin': '*'},
-                "body": json.dumps(f"No record found with session id: {session_id}")
+                'body': json.dumps({
+                    'id': session_id,
+                    'deleted': False,
+                    'message': f"No record found with session id: {session_id}"
+                })
             }
         else:
             return {
                 'statusCode': 500,
-                "id": session_id,
-                "deleted": False,
                 'headers': {'Access-Control-Allow-Origin': '*'},
-                "body": json.dumps(f"Error occurred: {error}")
+                'body': json.dumps({
+                    'id': session_id,
+                    'deleted': False,
+                    'message': f"Error occurred: {error}"
+                })
             }
 
     # If no exceptions are raised, return a response indicating that the deletion was successful.
     return {
         'statusCode': 200,
-        "id": session_id,
         'headers': {'Access-Control-Allow-Origin': '*'},
-        "deleted": True
+        'body': json.dumps({
+            'id': session_id,
+            'deleted': True,
+            'message': 'Draft deleted successfully'
+        })
     }
 
 # Define a function to delete all drafts for a user from the DynamoDB table
@@ -260,7 +267,6 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
 
     try:
         last_evaluated_key = None  # Initialize the key to control the pagination loop
-        print(f"Starting list_drafts_by_user_id for user_id: {user_id}, document_identifier: {document_identifier}")
 
         # Keep fetching until we have 15 items or there are no more items to fetch
         while len(items) < limit:
@@ -285,17 +291,13 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
             if last_evaluated_key:
                 query_params['ExclusiveStartKey'] = last_evaluated_key
 
-            print(f"Executing DynamoDB query with params: {query_params}")
             response = table.query(**query_params)
-            print(f"DynamoDB response: {response}")
-
             items.extend(response.get("Items", []))
 
             last_evaluated_key = response.get("LastEvaluatedKey")  # Update the pagination key
             if not last_evaluated_key:  # Break the loop if there are no more items to fetch
                 break
 
-        print(f"Found {len(items)} items")
         # Sort the items by 'last_modified' in descending order to ensure the latest drafts appear first
         sorted_items = sorted(items, key=lambda x: x.get('last_modified', ''), reverse=True)
         sorted_items = list(map(lambda x: {
@@ -305,17 +307,15 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
             "lastModified": x.get("last_modified", "")
         }, sorted_items))
 
-        print(f"Returning sorted items: {sorted_items}")
-        # Prepare the HTTP response object with a status code, headers, and body
-        response = {
-            'statusCode': 200,  # HTTP status code indicating a successful operation
+        # Return the sorted items directly in the body
+        return {
+            'statusCode': 200,
             'headers': {
-                'Access-Control-Allow-Origin': '*',  # CORS header allowing access from any domain
+                'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
             },
-            'body': json.dumps(sorted_items)  # Convert the sorted list of items to JSON format for the response body
+            'body': sorted_items  # Don't JSON stringify, let API Gateway handle it
         }
-        return response  # Return the response object
 
     except ClientError as error:
         print(f"DynamoDB ClientError: {str(error)}")
@@ -325,39 +325,39 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
             return {
                 'statusCode': 404,
                 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-                'body': json.dumps({"error": f"No record found for user id: {user_id}"})
+                'body': {"error": f"No record found for user id: {user_id}"}
             }
         elif error_code == "ProvisionedThroughputExceededException":
             return {
                 'statusCode': 429,
                 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-                'body': json.dumps({"error": "Request limit exceeded"})
+                'body': {"error": "Request limit exceeded"}
             }
         elif error_code == "ValidationException":
             return {
                 'statusCode': 400,
                 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-                'body': json.dumps({"error": f"Invalid input parameters: {error_message}"})
+                'body': {"error": f"Invalid input parameters: {error_message}"}
             }
         else:
             return {
                 'statusCode': 500,
                 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-                'body': json.dumps({"error": f"Internal server error: {error_code} - {error_message}"})
+                'body': {"error": f"Internal server error: {error_code} - {error_message}"}
             }
     except KeyError as key_error:
         print(f"KeyError: {str(key_error)}")
         return {
             'statusCode': 500,
             'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-            'body': json.dumps({"error": f"Key error: {str(key_error)}"})
+            'body': {"error": f"Key error: {str(key_error)}"}
         }
     except Exception as general_error:
         print(f"Unexpected error: {str(general_error)}")
         return {
             'statusCode': 500,
             'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-            'body': json.dumps({"error": f"An unexpected error occurred: {str(general_error)}"})
+            'body': {"error": f"An unexpected error occurred: {str(general_error)}"}
         }
 
 # Main Lambda handler function

@@ -236,18 +236,28 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     if (!appContext) return;
 
     try {
+      setIsLoading(true);
       const apiClient = new ApiClient(appContext);
       const username = (await Auth.currentAuthenticatedUser()).username;
 
-      for (const session of selectedItems) {
-        await apiClient.drafts.deleteDraft(username, session.draft_id);
+      if (!username) {
+        throw new Error("User not authenticated");
       }
+
+      await Promise.all(
+        selectedItems.map(session =>
+          apiClient.drafts.deleteDraft(session.draft_id, username)
+        )
+      );
 
       setSelectedItems([]);
       setShowModalDelete(false);
       await getSessions();
     } catch (e) {
       console.error("Error deleting sessions:", e);
+      // You might want to show an error notification here
+    } finally {
+      setIsLoading(false);
     }
   };
 

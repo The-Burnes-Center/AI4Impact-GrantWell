@@ -151,10 +151,27 @@ export class DraftsClient {
           user_id: userId
         })
       });
-    } catch {
-      return "FAILED";
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Response was not JSON");
+      }
+
+      const data = await response.json();
+      
+      if (!data.deleted) {
+        throw new Error(data.message || 'Failed to delete draft');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error deleting draft:', error);
+      throw error;
     }
-    return "DONE";
   }
 
   // Lists all document drafts
@@ -185,25 +202,37 @@ export class DraftsClient {
         throw new Error(`Failed to fetch drafts: ${errorMessage}`);
       }
 
-      if (!data.body) {
-        console.error('Invalid response format:', data);
-        throw new Error('Invalid response format: missing body');
+      // If data is an array directly, use it
+      if (Array.isArray(data)) {
+        return data.map((draft: any) => ({
+          sessionId: draft.sessionId,
+          userId: userId,
+          title: draft.title,
+          documentIdentifier: draft.documentIdentifier,
+          lastModified: draft.lastModified
+        }));
       }
 
-      const drafts = JSON.parse(data.body);
-      if (!Array.isArray(drafts)) {
-        console.error('Invalid drafts format:', drafts);
-        throw new Error('Invalid response format: body is not an array');
+      // If data has a body property
+      if (data.body) {
+        const drafts = typeof data.body === 'string' ? JSON.parse(data.body) : data.body;
+        
+        if (!Array.isArray(drafts)) {
+          console.error('Invalid drafts format:', drafts);
+          throw new Error('Invalid response format: body is not an array');
+        }
+        
+        return drafts.map((draft: any) => ({
+          sessionId: draft.sessionId,
+          userId: userId,
+          title: draft.title,
+          documentIdentifier: draft.documentIdentifier,
+          lastModified: draft.lastModified
+        }));
       }
-      
-      // Transform the response to match the expected format
-      return drafts.map((draft: any) => ({
-        sessionId: draft.sessionId,
-        userId: userId,
-        title: draft.title,
-        documentIdentifier: draft.documentIdentifier,
-        lastModified: draft.lastModified
-      }));
+
+      // If we get here, we don't have a valid response format
+      throw new Error('Invalid response format: missing body');
     } catch (error) {
       console.error('Error in getDrafts:', error);
       throw error;

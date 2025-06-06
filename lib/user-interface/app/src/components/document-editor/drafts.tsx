@@ -359,7 +359,10 @@ export default function Drafts(props: DraftsProps) {
       props.onDraftSelect(item.sessionId);
     }
 
-    navigate(`/document-editor/${item.sessionId}`);
+    // Navigate to project basics step with the session ID and nofo
+    const nofo = item.documentIdentifier || props.documentIdentifier;
+    const queryParams = `?step=projectBasics&nofo=${encodeURIComponent(nofo || '')}`;
+    navigate(`/document-editor/${item.sessionId}${queryParams}`);
   };
 
   return (
