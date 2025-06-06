@@ -238,7 +238,7 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
         # Keep fetching until we have 15 items or there are no more items to fetch
         while len(items) < limit:
             query_params = {
-                'IndexName': 'TimeIndex',
+                'IndexName': 'LastModifiedIndex',
                 'ProjectionExpression': 'session_id, title, document_identifier, status, last_modified',
                 'KeyConditionExpression': Key('user_id').eq(user_id),
                 'ScanIndexForward': False,
