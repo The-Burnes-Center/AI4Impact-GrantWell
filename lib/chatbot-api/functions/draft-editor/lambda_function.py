@@ -202,6 +202,20 @@ def delete_draft(session_id, user_id):
     try:
         # Attempt to delete an item from the DynamoDB table based on the provided session_id and user_id.
         table.delete_item(Key={"user_id": user_id, "session_id": session_id})
+        
+        # If no exceptions are raised, return a response indicating that the deletion was successful.
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps({
+                'id': session_id,
+                'deleted': True,
+                'message': 'Draft deleted successfully'
+            })
+        }
     except ClientError as error:
         print("Caught error: DynamoDB error - could not delete draft")
         # Handle specific DynamoDB client errors. If the item cannot be found or another error occurs, return the appropriate message.
@@ -209,7 +223,10 @@ def delete_draft(session_id, user_id):
         if error_code == "ResourceNotFoundException":
             return {
                 'statusCode': 404,
-                'headers': {'Access-Control-Allow-Origin': '*'},
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
                 'body': json.dumps({
                     'id': session_id,
                     'deleted': False,
@@ -219,24 +236,16 @@ def delete_draft(session_id, user_id):
         else:
             return {
                 'statusCode': 500,
-                'headers': {'Access-Control-Allow-Origin': '*'},
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
                 'body': json.dumps({
                     'id': session_id,
                     'deleted': False,
                     'message': f"Error occurred: {error}"
                 })
             }
-
-    # If no exceptions are raised, return a response indicating that the deletion was successful.
-    return {
-        'statusCode': 200,
-        'headers': {'Access-Control-Allow-Origin': '*'},
-        'body': json.dumps({
-            'id': session_id,
-            'deleted': True,
-            'message': 'Draft deleted successfully'
-        })
-    }
 
 # Define a function to delete all drafts for a user from the DynamoDB table
 def delete_user_drafts(user_id):

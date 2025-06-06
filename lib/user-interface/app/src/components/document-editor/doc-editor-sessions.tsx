@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 import { FaSort, FaSortUp, FaSortDown, FaPlus, FaTrash, FaSync } from "react-icons/fa";
 import { Calendar } from "react-feather";
 import { useNavigate } from "react-router-dom";
+import { Utils } from "../../common/utils";
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -295,9 +296,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   };
 
   const formatSessionTime = (timestamp: string) => {
-    return DateTime.fromISO(new Date(timestamp).toISOString()).toLocaleString(
-      DateTime.DATETIME_SHORT
-    );
+    return Utils.formatTimestamp(timestamp);
   };
 
   return (

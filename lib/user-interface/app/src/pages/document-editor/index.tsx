@@ -18,6 +18,7 @@ import StepLabel from "@mui/material/StepLabel";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
 import { DraftsClient, DocumentDraft } from "../../common/api-client/drafts-client";
+import { Utils } from "../../common/utils";
 
 // Types
 interface DocumentData {
@@ -195,7 +196,7 @@ const DocumentEditor: React.FC = () => {
           sections: {},
           projectBasics: {}, // Initialize empty project basics
           questionnaire: {},
-          lastModified: new Date().toISOString(),
+          lastModified: Utils.getCurrentTimestamp(),
         });
       }
 
@@ -231,7 +232,7 @@ const DocumentEditor: React.FC = () => {
           sections: documentData.sections || {},
           projectBasics: documentData.projectBasics || {},
           questionnaire: documentData.questionnaire || {},
-          lastModified: new Date().toISOString(),
+          lastModified: Utils.getCurrentTimestamp(),
         });
 
         // Only navigate if save was successful

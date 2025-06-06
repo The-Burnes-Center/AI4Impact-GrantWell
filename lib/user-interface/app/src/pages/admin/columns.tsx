@@ -1,5 +1,4 @@
 import { AdminDataType } from "../../common/types";
-import { DateTime } from "luxon";
 import { Utils } from "../../common/utils";
 
 const FILES_COLUMN_DEFINITIONS = [
@@ -12,10 +11,7 @@ const FILES_COLUMN_DEFINITIONS = [
   {
     id: "createdAt",
     header: "Upload date",
-    cell: (item) =>
-      DateTime.fromISO(new Date(item.LastModified).toISOString()).toLocaleString(
-        DateTime.DATETIME_SHORT
-      ),
+    cell: (item) => Utils.formatTimestamp(item.LastModified),
   },
   {
     id: "size",
@@ -40,10 +36,7 @@ const FEEDBACK_COLUMN_DEFINITIONS = [
   {
     id: "createdAt",
     header: "Submission date",
-    cell: (item) =>
-      DateTime.fromISO(new Date(item.CreatedAt).toISOString()).toLocaleString(
-        DateTime.DATETIME_SHORT
-      ),
+    cell: (item) => Utils.formatTimestamp(item.CreatedAt),
   },
   {
     id: "prompt",
@@ -51,7 +44,6 @@ const FEEDBACK_COLUMN_DEFINITIONS = [
     cell: (item) => item.UserPrompt,
     isRowHeader: true
   },
-
 ];
 
 /** This is exposed as a function because the code that this is based off of

@@ -1,4 +1,6 @@
 import {Auth} from 'aws-amplify'
+import { DateTime } from "luxon";
+
 export class Utils {
   // static isDevelopment() {
   //   return import.meta.env.MODE === "development";
@@ -138,5 +140,30 @@ export class Utils {
       console.error('Error getting current user session:', error);
       throw new Error('Authentication failed');
     }
+  }
+
+  /**
+   * Get current timestamp in ISO format
+   */
+  static getCurrentTimestamp(): string {
+    return new Date().toISOString();
+  }
+
+  /**
+   * Format a timestamp for display
+   * @param timestamp ISO timestamp string
+   * @returns Formatted date string
+   */
+  static formatTimestamp(timestamp: string): string {
+    return DateTime.fromISO(timestamp).toLocaleString(DateTime.DATETIME_SHORT);
+  }
+
+  /**
+   * Parse a timestamp string to ISO format
+   * @param timestamp Timestamp string
+   * @returns ISO formatted timestamp
+   */
+  static parseTimestamp(timestamp: string): string {
+    return new Date(timestamp).toISOString();
   }
 }

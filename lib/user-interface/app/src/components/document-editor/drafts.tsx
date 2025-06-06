@@ -19,6 +19,7 @@ import {
   ArrowUpDown as FaSort,
   Calendar,
 } from "lucide-react";
+import { Utils } from "../../common/utils";
 
 // Styles for the drafts component
 const styles: Record<string, React.CSSProperties> = {
@@ -349,9 +350,7 @@ export default function Drafts(props: DraftsProps) {
   };
 
   const formatDraftTime = (timestamp: string) => {
-    return DateTime.fromISO(new Date(timestamp).toISOString()).toLocaleString(
-      DateTime.DATETIME_SHORT
-    );
+    return Utils.formatTimestamp(timestamp);
   };
 
   const handleDraftClick = (item: Draft) => {
