@@ -8,6 +8,7 @@ export interface DocumentDraft {
   documentIdentifier: string;
   sections?: Record<string, any>;
   projectBasics?: any;
+  questionnaire?: any;
   lastModified?: string;
 }
 
@@ -99,6 +100,7 @@ export class DraftsClient {
       documentIdentifier: output.document_identifier || '',
       sections: output.sections || {},
       projectBasics: output.project_basics || {},
+      questionnaire: output.questionnaire || {},
       lastModified: output.last_modified || new Date().toISOString(),
     };
   }
@@ -120,6 +122,7 @@ export class DraftsClient {
         document_identifier: draft.documentIdentifier,
         sections: draft.sections || {},
         project_basics: draft.projectBasics || {},
+        questionnaire: draft.questionnaire || {},
         last_modified: draft.lastModified || new Date().toISOString(),
       }),
     });

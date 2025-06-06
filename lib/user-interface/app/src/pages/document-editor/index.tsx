@@ -25,6 +25,7 @@ interface DocumentData {
   nofoId: string;
   sections: Record<string, any>;
   projectBasics?: any;
+  questionnaire?: any;
   lastModified: string;
 }
 
@@ -73,6 +74,7 @@ const useDocumentStorage = (nofoId: string | null) => {
             nofoId: draft.documentIdentifier,
             sections: draft.sections || {},
             projectBasics: draft.projectBasics,
+            questionnaire: draft.questionnaire,
             lastModified: draft.lastModified || new Date().toISOString(),
           });
         } else {
@@ -115,6 +117,7 @@ const useDocumentStorage = (nofoId: string | null) => {
             documentIdentifier: nofoId,
             sections: updatedData.sections,
             projectBasics: updatedData.projectBasics,
+            questionnaire: updatedData.questionnaire,
             lastModified: updatedData.lastModified,
           });
         }
@@ -191,6 +194,7 @@ const DocumentEditor: React.FC = () => {
           documentIdentifier: selectedNofo,
           sections: {},
           projectBasics: {}, // Initialize empty project basics
+          questionnaire: {},
           lastModified: new Date().toISOString(),
         });
       }
@@ -226,6 +230,7 @@ const DocumentEditor: React.FC = () => {
           documentIdentifier: selectedNofo || '',
           sections: documentData.sections || {},
           projectBasics: documentData.projectBasics || {},
+          questionnaire: documentData.questionnaire || {},
           lastModified: new Date().toISOString(),
         });
 
@@ -256,6 +261,7 @@ const DocumentEditor: React.FC = () => {
           documentIdentifier: selectedNofo || '',
           sections: documentData.sections,
           projectBasics: documentData.projectBasics,
+          questionnaire: documentData.questionnaire,
         });
       }
     } catch (error) {

@@ -160,9 +160,10 @@ export interface DocEditorSessionsProps {
 }
 
 interface Session {
-  session_id: string;
+  draft_id: string;
   title: string;
-  time_stamp: string;
+  created_at: string;
+  last_modified: string;
   document_identifier?: string;
 }
 
@@ -174,7 +175,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const [pageSize, setPageSize] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [showModalDelete, setShowModalDelete] = useState(false);
-  const [sortField, setSortField] = useState<"title" | "time_stamp">("time_stamp");
+  const [sortField, setSortField] = useState<"title" | "last_modified">("last_modified");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const navigate = useNavigate();
 
@@ -190,9 +191,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       if (username) {
         const result = await apiClient.drafts.getDrafts(username, documentIdentifier);
         setSessions(result.map(draft => ({
-          session_id: draft.draft_id,
+          draft_id: draft.draft_id,
           title: draft.title,
-          time_stamp: draft.last_modified || draft.created_at,
+          created_at: draft.created_at,
+          last_modified: draft.last_modified,
           document_identifier: draft.document_identifier
         })));
       }
@@ -218,7 +220,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     if (event.target.checked) {
       setSelectedItems([...selectedItems, item]);
     } else {
-      setSelectedItems(selectedItems.filter((i) => i.session_id !== item.session_id));
+      setSelectedItems(selectedItems.filter((i) => i.draft_id !== item.draft_id));
     }
   };
 
@@ -238,7 +240,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       const username = (await Auth.currentAuthenticatedUser()).username;
 
       for (const session of selectedItems) {
-        await apiClient.drafts.deleteDraft(username, session.session_id);
+        await apiClient.drafts.deleteDraft(username, session.draft_id);
       }
 
       setSelectedItems([]);
@@ -249,7 +251,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     }
   };
 
-  const handleSort = (field: "title" | "time_stamp") => {
+  const handleSort = (field: "title" | "last_modified") => {
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
@@ -263,7 +265,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     const bValue = b[sortField];
     const direction = sortDirection === "asc" ? 1 : -1;
 
-    if (sortField === "time_stamp") {
+    if (sortField === "last_modified") {
       return (
         (new Date(aValue).getTime() - new Date(bValue).getTime()) * direction
       );
@@ -277,7 +279,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     currentPage * pageSize
   );
 
-  const getSortIcon = (field: "title" | "time_stamp") => {
+  const getSortIcon = (field: "title" | "last_modified") => {
     if (sortField !== field) return <FaSort />;
     return sortDirection === "asc" ? <FaSortUp /> : <FaSortDown />;
   };
@@ -299,7 +301,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             <div style={styles.modalContent}>
               Do you want to delete{" "}
               {selectedItems.length === 1
-                ? `draft ${selectedItems[0].session_id}?`
+                ? `draft ${selectedItems[0].draft_id}?`
                 : `${selectedItems.length} drafts?`}
             </div>
             <div style={styles.modalFooter}>
@@ -387,22 +389,22 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             <th style={styles.tableHeader}>
               <button
                 style={styles.tableHeaderButton}
-                onClick={() => handleSort("time_stamp")}
+                onClick={() => handleSort("last_modified")}
               >
-                Last Modified {getSortIcon("time_stamp")}
+                Last Modified {getSortIcon("last_modified")}
               </button>
             </th>
           </tr>
         </thead>
         <tbody>
           {paginatedItems.map((item) => (
-            <tr key={item.session_id}>
+            <tr key={item.draft_id}>
               <td style={{ ...styles.tableCell, ...styles.checkboxCell }}>
                 <input
                   type="checkbox"
                   style={styles.checkbox}
                   checked={selectedItems.some(
-                    (i) => i.session_id === item.session_id
+                    (i) => i.draft_id === item.draft_id
                   )}
                   onChange={(e) => handleSelectItem(item, e)}
                 />
@@ -411,7 +413,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                 <button
                   onClick={() => {
                     if (props.onSessionSelect) {
-                      props.onSessionSelect(item.session_id);
+                      props.onSessionSelect(item.draft_id);
                     }
 
                     const queryParam = item.document_identifier
@@ -436,7 +438,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               <td style={styles.tableCell}>
                 <div style={styles.dateCell}>
                   <Calendar size={16} style={styles.calendarIcon} />
-                  {formatSessionTime(item.time_stamp)}
+                  {formatSessionTime(item.last_modified)}
                 </div>
               </td>
             </tr>

@@ -20,45 +20,44 @@ dynamodb = boto3.resource("dynamodb", region_name='us-east-1')
 table = dynamodb.Table(DDB_TABLE_NAME)
 
 # Define a function to add a draft or update an existing one in the DynamoDB table
-def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, last_modified=None):
+def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None):
     try:
-        # Attempt to add an item to the DynamoDB table with provided details
+        # Create a new item in DynamoDB
         item = {
-            'user_id': user_id,  # Identifier for the user
-            'session_id': session_id,  # Unique identifier for the draft session
-            "title": title.strip(),  # Title of the draft
-            "time_stamp": str(datetime.now()),  # Current timestamp as a string
-            'document_identifier': document_identifier,  # Identifier for the document being drafted
-            'sections': sections or {},  # Dictionary of section name to content
-            'project_basics': project_basics or {},  # Project basics data
-            'last_modified': last_modified or str(datetime.now()),  # Last modification timestamp
-            'status': 'draft'  # Status of the draft (draft, completed, archived)
+            "user_id": user_id,
+            "session_id": session_id,
+            "title": title.strip(),
+            "document_identifier": document_identifier,
+            "sections": sections,
+            "project_basics": project_basics or {},
+            "questionnaire": questionnaire or {},
+            "last_modified": last_modified or str(datetime.now()),
         }
-
-        response = table.put_item(Item=item)
-        # Return any attributes returned by the DynamoDB operation, default to an empty dictionary if none
+        
+        # Put the item in DynamoDB
+        table.put_item(Item=item)
+        
         return {
             'statusCode': 200,
             'headers': {'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps({'message': 'Draft created successfully'})
+            'body': json.dumps(item)
         }
     except ClientError as error:
-        # Check for specific DynamoDB client errors
-        print("Caught error: DynamoDB error - could not add new draft")
-        if error.response["Error"]["Code"] == "ResourceNotFoundException":
-            # Return an error message if the DynamoDB resource (e.g., table, item) is not found
-            return {
-                'statusCode': 404,
-                'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps(f"No record found with session id: {session_id}")
-            }
-        else:
-            # Return a general error message for other client errors encountered
-            return {
-                'statusCode': 500,
-                'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps(str(error))
-            }
+        print("Caught error: DynamoDB error - could not add draft")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'error': str(error),
+            'body': 'Failed to add the draft due to a database error.'
+        }
+    except Exception as general_error:
+        print("Caught error: DynamoDB error - could not add draft")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'error': str(general_error),
+            'body': 'An unexpected error occurred while adding the draft.'
+        }
 
 # A function to retrieve a draft from DynamoDB based on session_id and user_id
 def get_draft(session_id, user_id):
@@ -95,7 +94,7 @@ def get_draft(session_id, user_id):
     return response_to_client
 
 # Define a function to update a draft in the DynamoDB table
-def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, last_modified=None):
+def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, questionnaire=None, last_modified=None):
     try:
         # Fetch current draft details
         draft_response = get_draft(session_id, user_id)
@@ -123,6 +122,10 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
         if project_basics is not None:
             update_parts.append("project_basics = :project_basics")
             expression_values[":project_basics"] = project_basics
+            
+        if questionnaire is not None:
+            update_parts.append("questionnaire = :questionnaire")
+            expression_values[":questionnaire"] = questionnaire
             
         # Always update last_modified
         update_parts.append("last_modified = :last_modified")
@@ -264,25 +267,25 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
             return {
                 'statusCode': 404,
                 'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': f"No record found for user id: {user_id}"
+                'body': json.dumps(f"No record found for user id: {user_id}")
             }
         elif error_code == "ProvisionedThroughputExceededException":
             return {
                 'statusCode': 429,
                 'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': "Request limit exceeded"
+                'body': json.dumps("Request limit exceeded")
             }
         elif error_code == "ValidationException":
             return {
                 'statusCode': 400,
                 'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': "Invalid input parameters"
+                'body': json.dumps("Invalid input parameters")
             }
         else:
             return {
                 'statusCode': 500,
                 'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': "Internal server error"
+                'body': json.dumps("Internal server error")
             }
     except KeyError as key_error:
         print("Caught error: DynamoDB error - could not list user drafts")
@@ -290,7 +293,7 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
         return {
             'statusCode': 500,
             'headers': {'Access-Control-Allow-Origin': '*'},
-            'body': f"Key error: {str(key_error)}"
+            'body': json.dumps(f"Key error: {str(key_error)}")
         }
     except Exception as general_error:
         print("Caught error: DynamoDB error - could not list user drafts")
@@ -302,13 +305,13 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
         }
 
     # Sort the items by 'last_modified' in descending order to ensure the latest drafts appear first
-    sorted_items = sorted(items, key=lambda x: x['last_modified'], reverse=True)
+    sorted_items = sorted(items, key=lambda x: x.get('last_modified', x['time_stamp']), reverse=True)
     sorted_items = list(map(lambda x: {
-        "time_stamp": x["time_stamp"],
-        "session_id": x["session_id"],
+        "draft_id": x["session_id"],
         "title": x["title"].strip(),
         "document_identifier": x.get("document_identifier", ""),
         "status": x.get("status", "draft"),
+        "created_at": x["time_stamp"],
         "last_modified": x.get("last_modified", x["time_stamp"])
     }, sorted_items))
 
@@ -331,6 +334,7 @@ def lambda_handler(event, context):
         title = data.get('title', f"Draft on {str(datetime.now())}")
         document_identifier = data.get('document_identifier')
         project_basics = data.get('project_basics')
+        questionnaire = data.get('questionnaire')
         last_modified = data.get('last_modified')
 
         if not operation:
@@ -347,7 +351,7 @@ def lambda_handler(event, context):
                     'headers': {'Access-Control-Allow-Origin': '*'},
                     'body': json.dumps('session_id and user_id are required for add_draft operation')
                 }
-            return add_draft(session_id, user_id, sections, title, document_identifier, project_basics, last_modified)
+            return add_draft(session_id, user_id, sections, title, document_identifier, project_basics, questionnaire, last_modified)
         elif operation == 'get_draft':
             if not all([session_id, user_id]):
                 return {
@@ -370,6 +374,7 @@ def lambda_handler(event, context):
                 title=title,
                 document_identifier=document_identifier,
                 project_basics=project_basics,
+                questionnaire=questionnaire,
                 last_modified=last_modified
             )
         elif operation == 'list_drafts_by_user_id':
