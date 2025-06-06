@@ -314,7 +314,7 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
             },
-            'body': sorted_items  # Don't JSON stringify, let API Gateway handle it
+            'body': json.dumps(sorted_items)  # Properly serialize the response
         }
 
     except ClientError as error:
