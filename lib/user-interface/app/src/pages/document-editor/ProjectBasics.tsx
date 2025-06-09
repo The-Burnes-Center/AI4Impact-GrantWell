@@ -118,7 +118,6 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 borderRadius: "6px",
                 fontSize: "16px",
               }}
-              placeholder="Downtown Revitalization Project"
             />
             <span
               style={{
@@ -128,7 +127,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 marginTop: "4px",
               }}
             >
-              Keep it clear and descriptive. 5-10 words recommended
+              Keep it clear and descriptive. 5-10 words recommended.
             </span>
           </div>
 
@@ -156,7 +155,6 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 borderRadius: "6px",
                 fontSize: "16px",
               }}
-              placeholder="Municipality, Tribe, or Community Organization"
             />
             <span
               style={{
@@ -166,8 +164,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 marginTop: "4px",
               }}
             >
-              Enter the name of your municipality, tribal nation, or community
-              organization
+              Enter the name of your municipality, tribal nation, or community organization.
             </span>
           </div>
 
@@ -195,8 +192,17 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 borderRadius: "6px",
                 fontSize: "16px",
               }}
-              placeholder="$250,000"
             />
+            <span
+              style={{
+                display: "block",
+                fontSize: "12px",
+                color: "#718096",
+                marginTop: "4px",
+              }}
+            >
+              Enter the total funding amount you're requesting for this project. Example: "$250,000"
+            </span>
           </div>
 
           <div
@@ -231,8 +237,17 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   borderRadius: "6px",
                   fontSize: "16px",
                 }}
-                placeholder="City, State"
               />
+              <span
+                style={{
+                  display: "block",
+                  fontSize: "12px",
+                  color: "#718096",
+                  marginTop: "4px",
+                }}
+              >
+                Enter the city and state where the project will take place. Example: "Boston, MA"
+              </span>
             </div>
             <div style={{ flex: "1", minWidth: "260px" }}>
               <label
@@ -258,8 +273,17 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   borderRadius: "6px",
                   fontSize: "16px",
                 }}
-                placeholder="12345"
               />
+              <span
+                style={{
+                  display: "block",
+                  fontSize: "12px",
+                  color: "#718096",
+                  marginTop: "4px",
+                }}
+              >
+                Enter the ZIP code for the project location. Example: "02119"
+              </span>
             </div>
           </div>
 
@@ -287,8 +311,17 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 borderRadius: "6px",
                 fontSize: "16px",
               }}
-              placeholder="Jane Smith"
             />
+            <span
+              style={{
+                display: "block",
+                fontSize: "12px",
+                color: "#718096",
+                marginTop: "4px",
+              }}
+            >
+              Enter the name of the primary person responsible for this grant application.
+            </span>
           </div>
 
           <div style={{ marginBottom: "20px" }}>
@@ -315,8 +348,17 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 borderRadius: "6px",
                 fontSize: "16px",
               }}
-              placeholder="jsmith@oakridge.gov"
             />
+            <span
+              style={{
+                display: "block",
+                fontSize: "12px",
+                color: "#718096",
+                marginTop: "4px",
+              }}
+            >
+              Enter a valid email address for project-related communications.
+            </span>
           </div>
         </div>
 
