@@ -291,8 +291,7 @@ export default function Welcome({ theme }) {
             textAlign: "center",
           }}
         >
-          You haven't viewed any NOFOs recently. Select or upload a document at
-          the admin dashboard to get started.
+          You haven't viewed any NOFOs recently.
         </p>
       )}
     </div>

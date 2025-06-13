@@ -1,60 +1,135 @@
-# Welcome to GrantWell
+# GrantWell
 
-## Overview
-GrantWell is a generative AI-powered grant-writing assistant designed to streamline the process of applying for federal funding. GrantWell scans lengthy Notices of Funding Opportunities (NOFOs) for municipalities looking to apply for a given grant and assists users with drafting their project's narrative. Currently, it is released for internal use for the Massachusetts Federal Funds and Infrastructure (FFIO) staff.
+An AI-powered grant-writing assistant designed to streamline the process of applying for federal funding, specifically for Massachusetts communities pursuing federal funding opportunities.
 
-## GrantWell Features
-GrantWell is organized into the following key pages:
-1. **Landing Page**: For browsing and selecting NOFOs.
-2. **Requirements Gathering Page**: For reviewing summarized NOFO documents and uploading relevant backend files.
-3. **Chatbot Interface**: For engaging with the AI to draft grant narratives.
-4. **Document Editor**: For collaboratively drafting, editing, and finalizing grant narratives.
-5. **Dashboard**: For administrators to manage NOFOs, users, and track progress.
+## Demo
 
-## Landing Page
-The landing page of GrantWell provides users with a streamlined interface to browse and select from available NOFOs. It shows recently viewed NOFOs and allows users to search through the catalog. Administrators can upload new NOFOs that they want summarized by the system.
+The application features multiple interactive interfaces including a landing page, requirements gathering page, chatbot interface, and document editor.
 
-<img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/landingpage.gif?raw=true" alt="Landing page gif" width="500">
+## What It Does
 
-## Requirements Gathering Page
-Grant applicants can review the output of the summarized NOFO document on this page, organized into intuitive sections for eligibility criteria, required documents, narrative sections, and deadlines.
+- **Smart Grant Matching**  
+  AI-powered system that analyzes and matches grants to user needs, providing personalized recommendations based on project requirements.
 
-<img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/reqpage.gif?raw=true" alt="Requirements page gif" width="500">
+  <img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/landingpage.gif?raw=true" alt="Landing page gif" width="500">
 
-## Chatbot Interface
-The AI chatbot assists applicants in drafting grant narratives by prompting for details about the applying organization and incorporating information from uploaded documents. The interface provides contextual help and allows for uploading additional reference materials during the conversation.
+- **Requirements Analysis**  
+  Automatically scans and summarizes Notices of Funding Opportunities (NOFOs), presenting key information about eligibility, required documents, narrative sections, and deadlines.
 
-<img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/chatbotreal-compress.gif?raw=true" alt="Chatbot interface gif" width="500">
+  <img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/reqpage.gif?raw=true" alt="Requirements page gif" width="500">
 
-## Document Editor
-The document editor provides a collaborative environment for drafting and refining grant narratives. It features:
-- Section-based organization following NOFO requirements
-- AI assistance for content generation and improvement
-- Progress tracking for narrative completion
-- Export capabilities for finished documents
+- **AI-Powered Writing Assistant**  
+  Interactive chatbot that assists in drafting grant narratives by prompting for organization details and incorporating information from uploaded documents.
+  
+  <img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/chatbotreal-compress.gif?raw=true" alt="Chatbot interface gif" width="500">
 
-## Dashboard
-The administrative dashboard allows for:
-- Managing NOFOs (adding, editing, archiving)
-- Tracking progress across multiple grant applications
-- User management and access control
-- System usage analytics
+- **Document Editor**  
+  Section-based editor for drafting and refining grant narratives with AI assistance, progress tracking, and export capabilities.
+
+- **User Management**  
+  Administrative dashboard for managing NOFOs, tracking progress across multiple grant applications, and controlling user access.
+
+## Architecture
+
+<img src="https://raw.githubusercontent.com/Anuttan/Grantwell-MVP/main/lib/user-interface/app/public/images/architecture.png" alt="System Architecture" width="500">
+
+For more information about the architecture, visit the [AWS GenAI LLM Chatbot](https://aws-samples.github.io/aws-genai-llm-chatbot/).
+
+## Tech Stack
+
+| Layer          | Tools & Frameworks                                      |
+|----------------|---------------------------------------------------------|
+| **Frontend**   | React, TypeScript, AWS Amplify, Cloudscape Design System |
+| **Backend**    | AWS Lambda, AWS API Gateway, AWS CDK                     |
+| **AI/ML**      | AWS Bedrock, Mistral, Claude                            |
+| **Auth**       | AWS Cognito                                             |
+| **Storage**    | AWS S3, DynamoDB                                        |
+| **DevOps**     | AWS CDK for infrastructure as code                      |
+
+## Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/The-Burnes-Center/AI4Impact-GrantWell.git
+cd AI4Impact-GrantWell
+
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+```
+
+> Environment variables and AWS credentials need to be configured for full functionality.
+
+### Prerequisites
+- Node.js (Latest LTS version recommended)
+- AWS CLI configured with appropriate credentials
+- AWS CDK installed globally (`npm install -g aws-cdk`)
+
+## Core Modules
+
+| Module              | Description                                                                 |
+|---------------------|-----------------------------------------------------------------------------|
+| `landing-page`      | Browse and select from available NOFOs with smart search capabilities        |
+| `requirements`      | Review summarized NOFO documents and upload relevant backend files           |
+| `chatbot`          | AI-powered interface for drafting grant narratives                           |
+| `document-editor`  | Collaborative environment for drafting and finalizing grant narratives       |
+| `dashboard`        | Administrative interface for managing NOFOs, users, and tracking progress     |
+
+
+## Grant Writing Flow
+
+1. **Grant Selection** → Browse and select from available NOFOs
+2. **Project Basics** → Enter basic project information
+3. **Questionnaire** → Complete project-specific questions
+4. **Document Upload** → Submit supporting documentation
+5. **Section Editor** → Draft and refine narrative sections
+6. **Review** → Final review and export of completed application
+
+## Security & Privacy
+
+- AWS Cognito-based authentication
+- Self-signup disabled - users must be invited by administrators
+- Secure file storage in AWS S3
+- Role-based access control with admin privileges
+- Encrypted data transmission
+- PDFs are preferred for file uploads (ZIP files not supported)
+
+## Roadmap
+
+- [ ] Enhanced grant matching algorithms
+- [ ] Collaborative editing features
+- [ ] Advanced document version control
+- [ ] Expanded analytics and reporting
+
+## Contributing
+
+This is an internal tool for Massachusetts Federal Funds and Infrastructure (FFIO) staff. Please contact the administrators for access and contribution guidelines.
+
+
+## License
+
+MIT License – see `LICENSE.md` for details.
+
+## Authors & Acknowledgements
+
+- Built by the GrantWell Team
+  - [Anjith Prakash](https://github.com/Anuttan)
+  - [Jai Surya Kode](https://github.com/KodeJaiSurya)
+  - [Deepika Mettu](https://github.com/deepikasai-mettu)
+  - [Serena Green](https://github.com/serenagreenx)
+  - [Shreya Thalvayapati](https://github.com/shreyathal)
+- In partnership with the Burnes Center for Social Change
+- For the Massachusetts Federal Funds and Infrastructure Office
 
 ## Important Notes
-- This tool is functional but has undergone minimal user testing. Bugs may arise; please report any issues through the feedback form available in the application.
-- Ensure you upload your supplementary data before starting a conversation with the chatbot. The AI's knowledge is limited to the documents in the knowledge base.
-- NOFO documents must be properly named before uploading to GrantWell. The documents will show up in the system as the file's name at the time of upload.
-- PDFs are preferred for file uploads. GrantWell _cannot_ read .zip files.
+
+- This tool is functional but has undergone minimal user testing. Please report any issues through the feedback form available in the application.
+- Ensure you upload your supplementary data before starting a conversation with the chatbot.
+- NOFO documents must be properly named before uploading to GrantWell.
 - Always fact-check any information provided by GrantWell that you are uncertain about.
 
-## Architecture 
-<img src="https://raw.githubusercontent.com/Anuttan/Grantwell-MVP/main/lib/user-interface/app/public/images/architecture.png" alt="FFIO Architecture" width="500">
+## Feedback
 
-For more information, visit the [AWS GenAI LLM Chatbot](https://aws-samples.github.io/aws-genai-llm-chatbot/).
-
-## Developers
-- [Anjith Prakash](https://github.com/Anuttan)
-- [Jai Surya Kode](https://github.com/KodeJaiSurya)
-- [Deepika Mettu](https://github.com/deepikasai-mettu)
-- [Serena Green](https://github.com/serenagreenx)
-- [Shreya Thalvayapati](https://github.com/shreyathal)
+Help us make GrantWell better by sharing your thoughts and suggestions through our [feedback form](https://forms.gle/M2PHgWTVVRrRubpc7).
