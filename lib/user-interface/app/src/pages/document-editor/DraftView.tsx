@@ -1,14 +1,70 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AppContext } from "../../common/app-context";
+import { ApiClient } from "../../common/api-client/api-client";
+import { Auth } from "aws-amplify";
 
 interface DraftViewProps {
   onStartEditing: () => void;
   selectedNofo: string | null;
+  sessionId: string;
 }
 
 const DraftView: React.FC<DraftViewProps> = ({
   onStartEditing,
   selectedNofo,
+  sessionId,
 }) => {
+  const [draftData, setDraftData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const appContext = useContext(AppContext);
+
+  useEffect(() => {
+    const fetchDraftData = async () => {
+      if (!appContext || !selectedNofo || !sessionId) return;
+
+      try {
+        const apiClient = new ApiClient(appContext);
+        const username = (await Auth.currentAuthenticatedUser()).username;
+        
+        // Get draft from database
+        const currentDraft = await apiClient.drafts.getDraft({
+          sessionId: sessionId,
+          userId: username
+        });
+
+        if (currentDraft) {
+          setDraftData(currentDraft);
+        }
+      } catch (error) {
+        console.error("Error loading draft data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDraftData();
+  }, [appContext, selectedNofo, sessionId]);
+
+  if (isLoading) {
+    return (
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "60vh"
+      }}>
+        <div style={{
+          width: "40px",
+          height: "40px",
+          border: "4px solid #f3f3f3",
+          borderTop: "4px solid #3498db",
+          borderRadius: "50%",
+          animation: "spin 1s linear infinite"
+        }}></div>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -87,6 +143,55 @@ const DraftView: React.FC<DraftViewProps> = ({
           We've created a starting draft of your grant application based on your
           answers. Now you can review and improve each section.
         </p>
+
+        {draftData && (
+          <div
+            style={{
+              background: "#f0f4ff",
+              padding: "24px",
+              borderRadius: "8px",
+              textAlign: "left",
+              marginBottom: "24px",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "18px",
+                fontWeight: 600,
+                color: "#1e40af",
+                marginBottom: "16px",
+              }}
+            >
+              Draft Overview:
+            </h2>
+            <div style={{ marginBottom: "16px" }}>
+              <strong style={{ color: "#4b5563" }}>Title:</strong>{" "}
+              <span style={{ color: "#4b5563" }}>{draftData.title}</span>
+            </div>
+            {draftData.projectBasics && (
+              <div style={{ marginBottom: "16px" }}>
+                <strong style={{ color: "#4b5563" }}>Project Basics:</strong>
+                <ul style={{ margin: "8px 0", paddingLeft: "20px", color: "#4b5563" }}>
+                  {Object.entries(draftData.projectBasics).map(([key, value]: [string, any]) => (
+                    <li key={key}>
+                      <strong>{key}:</strong> {value}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {draftData.sections && (
+              <div>
+                <strong style={{ color: "#4b5563" }}>Sections:</strong>
+                <ul style={{ margin: "8px 0", paddingLeft: "20px", color: "#4b5563" }}>
+                  {Object.keys(draftData.sections).map((sectionName) => (
+                    <li key={sectionName}>{sectionName}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
 
         <div
           style={{

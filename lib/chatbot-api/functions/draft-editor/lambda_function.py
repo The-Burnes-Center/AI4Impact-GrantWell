@@ -152,12 +152,16 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             ReturnValues="ALL_NEW"
         )
         
-        # Return only the fields we project in queries
+        # Return the complete updated item
         updated_item = response.get("Attributes", {})
         response_item = {
             "sessionId": session_id,
+            "userId": user_id,
             "title": updated_item.get("title", ""),
             "documentIdentifier": updated_item.get("document_identifier", ""),
+            "sections": updated_item.get("sections", {}),
+            "projectBasics": updated_item.get("project_basics", {}),
+            "questionnaire": updated_item.get("questionnaire", {}),
             "lastModified": updated_item.get("last_modified", "")
         }
         

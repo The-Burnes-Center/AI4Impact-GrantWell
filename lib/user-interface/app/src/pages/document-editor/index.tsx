@@ -370,6 +370,7 @@ const DocumentEditor: React.FC = () => {
             <DraftView
               onStartEditing={() => navigateToStep("sectionEditor")}
               selectedNofo={selectedNofo}
+              sessionId={sessionId || ''}
             />
           </div>
         );

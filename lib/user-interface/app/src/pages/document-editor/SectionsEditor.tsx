@@ -200,31 +200,36 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         sessionId: sessionId
       });
 
-      if (result && result[section.name]) {
+      if (result && result.sections && result.sections[section.name]) {
         // Update the editor content with the generated section
-        setEditorContent(result[section.name]);
+        setEditorContent(result.sections[section.name]);
 
         // Update the section answers state
-        const updated = { ...sectionAnswers, [section.name]: result[section.name] };
+        const updated = { ...sectionAnswers, [section.name]: result.sections[section.name] };
         setSectionAnswers(updated);
 
         // Save to localStorage
         localStorage.setItem("sectionAnswers", JSON.stringify(updated));
 
         // Update the draft in the database with the new section
-        await apiClient.drafts.updateDraft({
+        const updatedDraft = await apiClient.drafts.updateDraft({
           sessionId: sessionId,
           userId: username,
           title: currentDraft.title,
           documentIdentifier: selectedNofo,
           sections: {
             ...currentDraft.sections,
-            [section.name]: result[section.name]
+            [section.name]: result.sections[section.name]
           },
           projectBasics: currentDraft.projectBasics,
           questionnaire: currentDraft.questionnaire,
           lastModified: new Date().toISOString()
         });
+
+        // Verify the update was successful
+        if (!updatedDraft.sections || !updatedDraft.sections[section.name]) {
+          throw new Error('Failed to save section to database');
+        }
       } else {
         throw new Error('No content generated for this section');
       }
