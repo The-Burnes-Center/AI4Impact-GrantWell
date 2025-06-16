@@ -22,7 +22,8 @@ export interface RoutesProps {
   getNOFOsFunction: lambda.Function;
   getNOFOSummaryFunction: lambda.Function;
   kbSyncFunction: lambda.Function;
-  grantRecommendationFunction: lambda.Function; // Add the grant recommendation function prop
+  grantRecommendationFunction: lambda.Function;
+  draftGeneratorFunction: lambda.Function; // Add draft generator function prop
 }
 
 export class Routes extends Construct {
@@ -169,6 +170,40 @@ export class Routes extends Construct {
       path: '/grant-recommendations',
       methods: [apigwv2.HttpMethod.POST, apigwv2.HttpMethod.OPTIONS],
       integration: grantRecommendationIntegration,
+    });
+
+    // Draft Generation Lambda Integration
+    // Create a new dedicated Lambda function for the REST API endpoint
+    const draftGeneratorAPIFunction = new lambda.Function(this, 'DraftGeneratorAPIFunction', {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, 'draft-generation')),
+      handler: 'index.handler',
+      environment: {
+        DRAFT_GENERATOR_FUNCTION: props.draftGeneratorFunction.functionName,
+      },
+      timeout: Duration.seconds(30),
+    });
+
+    // Grant the API function permission to invoke the Draft Generator function
+    draftGeneratorAPIFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['lambda:InvokeFunction'],
+        resources: [props.draftGeneratorFunction.functionArn],
+      })
+    );
+
+    // Create the API integration
+    const draftGeneratorIntegration = new HttpLambdaIntegration(
+      'DraftGeneratorIntegration',
+      draftGeneratorAPIFunction
+    );
+
+    // Add the route to the HTTP API
+    props.httpApi.addRoutes({
+      path: '/draft-generation',
+      methods: [apigwv2.HttpMethod.POST, apigwv2.HttpMethod.OPTIONS],
+      integration: draftGeneratorIntegration,
     });
   }
 }

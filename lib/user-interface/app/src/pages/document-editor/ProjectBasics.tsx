@@ -56,6 +56,9 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       });
     }
     
+    // Save to localStorage for draft generation
+    localStorage.setItem('projectBasics', JSON.stringify(formData));
+    
     // Navigate to next step
     onContinue();
   };

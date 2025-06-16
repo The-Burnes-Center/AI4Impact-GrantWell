@@ -1,4 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
+import { AppContext } from "../../common/app-context";
+import { ApiClient } from "../../common/api-client/api-client";
+import { Auth } from "aws-amplify";
 
 interface UploadDocumentsProps {
   onContinue: () => void;
@@ -18,9 +21,11 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   selectedNofo,
   onNavigate,
 }) => {
+  const appContext = useContext(AppContext);
   const [files, setFiles] = useState<FileInfo[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [additionalInfo, setAdditionalInfo] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,15 +111,57 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     setAdditionalInfo(e.target.value);
   };
 
-  const handleSubmit = () => {
-    // Here you would typically save the files and additional info
-    // For now, just save the additional info to localStorage as an example
-    if (additionalInfo) {
-      localStorage.setItem("upload_additional_info", additionalInfo);
-    }
+  const handleSubmit = async () => {
+    if (!appContext || !selectedNofo) return;
+    
+    try {
+      setIsLoading(true);
+      const apiClient = new ApiClient(appContext);
+      const username = (await Auth.currentAuthenticatedUser()).username;
 
-    // Continue to the next step
-    onContinue();
+      // Get project basics and questionnaire from the database
+      const currentDraft = await apiClient.drafts.getDraft({
+        sessionId: selectedNofo,
+        userId: username
+      });
+
+      if (!currentDraft) {
+        throw new Error('No draft found');
+      }
+
+      // Generate draft sections using data from the database
+      const result = await apiClient.drafts.generateDraft({
+        query: "Generate all sections for the grant application",
+        documentIdentifier: selectedNofo,
+        projectBasics: currentDraft.projectBasics || {},
+        questionnaire: currentDraft.questionnaire || {}
+      });
+
+      if (!result) {
+        throw new Error('Failed to generate sections');
+      }
+
+      // Update the draft with generated sections
+      await apiClient.drafts.updateDraft({
+        ...currentDraft,
+        sections: result,
+        additionalInfo: additionalInfo,
+        uploadedFiles: files.map(f => ({
+          name: f.name,
+          size: f.size,
+          type: f.type,
+          lastModified: f.lastModified
+        }))
+      });
+
+      // Continue to the next step
+      onContinue();
+    } catch (error) {
+      console.error('Error creating draft:', error);
+      alert('Failed to create draft. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -332,36 +379,39 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         </button>
         <button
           onClick={handleSubmit}
+          disabled={isLoading}
           style={{
             display: "flex",
             alignItems: "center",
             padding: "12px 24px",
-            background: "#4361ee",
+            background: isLoading ? "#a0aec0" : "#4361ee",
             color: "white",
             border: "none",
             borderRadius: "6px",
             fontSize: "16px",
             fontWeight: 500,
-            cursor: "pointer",
+            cursor: isLoading ? "not-allowed" : "pointer",
             boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
           }}
         >
-          Create Draft
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ marginLeft: "8px" }}
-          >
-            <path d="M5 12h14"></path>
-            <path d="m12 5 7 7-7 7"></path>
-          </svg>
+          {isLoading ? "Creating Draft..." : "Create Draft"}
+          {!isLoading && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ marginLeft: "8px" }}
+            >
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          )}
         </button>
       </div>
     </div>

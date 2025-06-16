@@ -329,6 +329,18 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    // Add REST API route for draft generation
+    const draftGeneratorAPIIntegration = new HttpLambdaIntegration(
+      "DraftGeneratorAPIIntegration",
+      lambdaFunctions.draftGeneratorFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/draft-generation",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: draftGeneratorAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     const inviteUserFunction = new lambda.Function(this, "InviteUserFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset(

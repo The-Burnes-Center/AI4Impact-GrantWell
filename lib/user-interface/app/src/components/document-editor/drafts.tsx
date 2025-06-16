@@ -224,6 +224,16 @@ interface Draft {
   title: string;
   lastModified: string;
   documentIdentifier?: string;
+  sections?: Record<string, string>;
+  projectBasics?: Record<string, any>;
+  questionnaire?: Record<string, any>;
+  additionalInfo?: string;
+  uploadedFiles?: Array<{
+    name: string;
+    size: number;
+    type: string;
+    lastModified: number;
+  }>;
 }
 
 export default function Drafts(props: DraftsProps) {
@@ -253,7 +263,10 @@ export default function Drafts(props: DraftsProps) {
           sessionId: draft.sessionId,
           title: draft.title,
           lastModified: draft.lastModified || new Date().toISOString(),
-          documentIdentifier: draft.documentIdentifier
+          documentIdentifier: draft.documentIdentifier,
+          sections: draft.sections,
+          projectBasics: draft.projectBasics,
+          questionnaire: draft.questionnaire,
         })));
       }
     } catch (e) {

@@ -120,6 +120,10 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
         questionnaire: formData
       });
     }
+
+    // Save to localStorage for draft generation
+    localStorage.setItem('questionnaire', JSON.stringify(formData));
+    
     onContinue();
   };
 

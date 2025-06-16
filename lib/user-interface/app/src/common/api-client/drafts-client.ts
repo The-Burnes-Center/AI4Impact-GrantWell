@@ -238,4 +238,37 @@ export class DraftsClient {
       throw error;
     }
   }
+
+  // Generates draft sections based on project basics and questionnaire
+  async generateDraft(params: {
+    query: string;
+    documentIdentifier: string;
+    projectBasics?: any;
+    questionnaire?: any;
+    sessionId: string;
+  }): Promise<Record<string, any>> {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + '/draft-generator', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify({
+        query: params.query,
+        document_identifier: params.documentIdentifier,
+        project_basics: params.projectBasics || {},
+        questionnaire: params.questionnaire || {},
+        session_id: params.sessionId
+      }),
+    });
+
+    if (response.status !== 200) {
+      const errorMessage = await response.json();
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    return data.sections || {};
+  }
 } 

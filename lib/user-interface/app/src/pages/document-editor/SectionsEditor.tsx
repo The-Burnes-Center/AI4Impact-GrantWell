@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
+import { Auth } from "aws-amplify";
 
 interface SectionEditorProps {
   onContinue: () => void;
   selectedNofo: string | null;
+  sessionId: string;
 }
 
 interface Section {
@@ -15,6 +17,7 @@ interface Section {
 const SectionEditor: React.FC<SectionEditorProps> = ({
   onContinue,
   selectedNofo,
+  sessionId,
 }) => {
   const [activeSection, setActiveSection] = useState(0);
   const [editorContent, setEditorContent] = useState("");
@@ -173,23 +176,56 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }
   };
 
-  const handleRegenerateContent = () => {
+  const handleRegenerateContent = async () => {
     const section = sections[activeSection];
-    if (!section) return;
+    if (!section || !appContext || !selectedNofo) return;
 
-    const newContent =
-      "This is a regenerated draft for the " +
-      section.name +
-      " section. \n\nOur project addresses the critical infrastructure needs in downtown Oakridge. The current sidewalks and lighting systems are over 30 years old and have deteriorated significantly, causing safety concerns for pedestrians.\n\nStatistical data from our recent community survey shows that 68% of residents avoid downtown after dark due to poor lighting, and local businesses report a 22% decline in evening revenue compared to five years ago.";
+    try {
+      const apiClient = new ApiClient(appContext);
+      const username = (await Auth.currentAuthenticatedUser()).username;
+      
+      // Get the current draft from the database
+      const currentDraft = await apiClient.drafts.getDraft({
+        sessionId: sessionId,
+        userId: username
+      });
 
-    setEditorContent(newContent);
+      if (!currentDraft) {
+        throw new Error('No draft found');
+      }
 
-    // Also save the regenerated content
-    if (sections[activeSection]) {
-      const sectionKey = sections[activeSection].name;
-      const updated = { ...sectionAnswers, [sectionKey]: newContent };
-      setSectionAnswers(updated);
-      localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+      // Generate draft sections using data from the database
+      const result = await apiClient.drafts.generateDraft({
+        query: `Generate content for the ${section.name} section. ${section.description}`,
+        documentIdentifier: selectedNofo,
+        projectBasics: currentDraft.projectBasics || {},
+        questionnaire: currentDraft.questionnaire || {},
+        sessionId: sessionId
+      });
+
+      if (result && result[section.name]) {
+        setEditorContent(result[section.name]);
+
+        // Save the regenerated content
+        const sectionKey = sections[activeSection].name;
+        const updated = { ...sectionAnswers, [sectionKey]: result[section.name] };
+        setSectionAnswers(updated);
+        
+        // Update the draft in the database
+        await apiClient.drafts.updateDraft({
+          ...currentDraft,
+          sections: {
+            ...currentDraft.sections,
+            [sectionKey]: result[section.name]
+          }
+        });
+      } else {
+        throw new Error('No content generated for this section');
+      }
+    } catch (error) {
+      console.error('Error generating content:', error);
+      // Show error to user
+      alert('Failed to generate content. Please try again.');
     }
   };
 
