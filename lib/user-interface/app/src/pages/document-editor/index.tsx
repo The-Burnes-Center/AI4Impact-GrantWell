@@ -219,26 +219,37 @@ const DocumentEditor: React.FC = () => {
     }
 
     try {
-      // Save current step data
-      const draftsClient = new DraftsClient(appContext);
-      const username = (await Auth.currentAuthenticatedUser()).username;
-      
-      if (username && sessionId) {
-        await draftsClient.updateDraft({
-          sessionId: sessionId,
-          userId: username,
-          title: `Application for ${selectedNofo}`,
-          documentIdentifier: selectedNofo || '',
-          sections: documentData.sections || {},
-          projectBasics: documentData.projectBasics || {},
-          questionnaire: documentData.questionnaire || {},
-          lastModified: Utils.getCurrentTimestamp(),
-        });
+      // Only save if we have new data to save
+      if (Object.keys(documentData).length > 0) {
+        const draftsClient = new DraftsClient(appContext);
+        const username = (await Auth.currentAuthenticatedUser()).username;
+        
+        if (username && sessionId) {
+          // Get current draft to preserve existing sections
+          const currentDraft = await draftsClient.getDraft({
+            sessionId: sessionId,
+            userId: username
+          });
 
-        // Only navigate if save was successful
-        const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : '';
-        navigate(`/document-editor/${sessionId}?step=${step}${nofoParam}`);
+          await draftsClient.updateDraft({
+            sessionId: sessionId,
+            userId: username,
+            title: `Application for ${selectedNofo}`,
+            documentIdentifier: selectedNofo || '',
+            sections: {
+              ...currentDraft?.sections,  // Preserve existing sections
+              ...documentData.sections    // Add any new sections
+            },
+            projectBasics: documentData.projectBasics || currentDraft?.projectBasics,
+            questionnaire: documentData.questionnaire || currentDraft?.questionnaire,
+            lastModified: Utils.getCurrentTimestamp(),
+          });
+        }
       }
+
+      // Navigate to the next step
+      const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : '';
+      navigate(`/document-editor/${sessionId}?step=${step}${nofoParam}`);
     } catch (error) {
       console.error('Failed to navigate to step:', error);
       setError(ERROR_MESSAGES.SAVE_FAILED);
