@@ -7,6 +7,7 @@ interface SectionEditorProps {
   onContinue: () => void;
   selectedNofo: string | null;
   sessionId: string;
+  onNavigate: (step: string) => void;
 }
 
 interface Section {
@@ -18,6 +19,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   onContinue,
   selectedNofo,
   sessionId,
+  onNavigate,
 }) => {
   const [activeSection, setActiveSection] = useState(0);
   const [editorContent, setEditorContent] = useState("");

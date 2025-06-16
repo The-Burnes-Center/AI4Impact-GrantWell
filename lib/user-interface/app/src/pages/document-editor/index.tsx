@@ -361,6 +361,7 @@ const DocumentEditor: React.FC = () => {
             onContinue={() => navigateToStep("draftCreated")}
             selectedNofo={selectedNofo}
             onNavigate={navigateToStep}
+            sessionId={sessionId || ''}
           />
         );
       case "draftCreated":
@@ -377,6 +378,8 @@ const DocumentEditor: React.FC = () => {
           <SectionEditor
             onContinue={() => navigateToStep("reviewApplication")}
             selectedNofo={selectedNofo}
+            sessionId={sessionId || ''}
+            onNavigate={navigateToStep}
           />
         );
       case "reviewApplication":
@@ -384,6 +387,8 @@ const DocumentEditor: React.FC = () => {
           <ReviewApplication
             onExport={() => alert("Application exported!")}
             selectedNofo={selectedNofo}
+            sessionId={sessionId || ''}
+            onNavigate={navigateToStep}
           />
         );
       default:
