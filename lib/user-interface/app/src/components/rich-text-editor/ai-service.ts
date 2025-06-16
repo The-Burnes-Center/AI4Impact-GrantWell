@@ -109,7 +109,7 @@ export class AiService {
         ...currentDraft,
         sections: result
       });
-
+      
       return {
         content: JSON.stringify(result),
         success: true

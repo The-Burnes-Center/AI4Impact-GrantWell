@@ -121,16 +121,19 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       const apiClient = new ApiClient(appContext);
       const username = (await Auth.currentAuthenticatedUser()).username;
 
+      console.log('Fetching current draft from DB:', { sessionId, username });
       // Get project basics and questionnaire from the database
       const currentDraft = await apiClient.drafts.getDraft({
         sessionId: sessionId,
         userId: username
       });
+      console.log('Fetched current draft:', currentDraft);
 
       if (!currentDraft) {
         throw new Error('No draft found');
       }
 
+      console.log('Generating draft sections...');
       // Generate draft sections using data from the database
       const result = await apiClient.drafts.generateDraft({
         query: "Generate all sections for the grant application",
@@ -139,11 +142,13 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         questionnaire: currentDraft.questionnaire || {},
         sessionId: sessionId
       });
+      console.log('Generated draft sections:', result);
 
       if (!result) {
         throw new Error('Failed to generate sections');
       }
 
+      console.log('Updating draft in DB with new sections, additionalInfo, and uploadedFiles...');
       // Update the draft with generated sections
       await apiClient.drafts.updateDraft({
         ...currentDraft,
@@ -156,6 +161,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           lastModified: f.lastModified
         }))
       });
+      console.log('Draft updated successfully. Navigating to next step.');
 
       // Continue to the next step
       onContinue();

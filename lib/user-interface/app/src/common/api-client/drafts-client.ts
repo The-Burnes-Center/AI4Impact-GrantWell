@@ -117,6 +117,7 @@ export class DraftsClient {
   // Updates a document draft
   async updateDraft(draft: DocumentDraft) {
     const auth = await Utils.authenticate();
+    console.log('Updating draft with:', draft);
     const response = await fetch(this.API + '/user-draft', {
       method: 'POST',
       headers: {
@@ -133,15 +134,21 @@ export class DraftsClient {
         project_basics: draft.projectBasics || {},
         questionnaire: draft.questionnaire || {},
         last_modified: draft.lastModified || new Date().toISOString(),
+        additionalInfo: draft.additionalInfo,
+        uploadedFiles: draft.uploadedFiles
       }),
     });
 
+    console.log('Update draft response status:', response.status);
     if (response.status !== 200) {
       const errorMessage = await response.json();
+      console.error('Update draft error:', errorMessage);
       throw new Error(errorMessage);
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('Update draft response data:', data);
+    return data;
   }
 
   // Deletes a document draft
@@ -257,6 +264,7 @@ export class DraftsClient {
     sessionId: string;
   }): Promise<Record<string, any>> {
     const auth = await Utils.authenticate();
+    console.log('Calling /draft-generation with:', params);
     const response = await fetch(this.API + '/draft-generation', {
       method: 'POST',
       headers: {
@@ -272,12 +280,15 @@ export class DraftsClient {
       }),
     });
 
+    console.log('Draft generation response status:', response.status);
     if (response.status !== 200) {
       const errorMessage = await response.json();
+      console.error('Draft generation error:', errorMessage);
       throw new Error(errorMessage);
     }
 
     const data = await response.json();
+    console.log('Draft generation response data:', data);
     return data.sections || {};
   }
 } 
