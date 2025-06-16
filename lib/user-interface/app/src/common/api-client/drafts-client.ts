@@ -265,10 +265,10 @@ export class DraftsClient {
       },
       body: JSON.stringify({
         query: params.query,
-        document_identifier: params.documentIdentifier,
-        project_basics: params.projectBasics || {},
+        documentIdentifier: params.documentIdentifier,
+        projectBasics: params.projectBasics || {},
         questionnaire: params.questionnaire || {},
-        session_id: params.sessionId
+        sessionId: params.sessionId
       }),
     });
 
