@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AppContext } from "../../common/app-context";
+import { ApiClient } from "../../common/api-client/api-client";
+import { Auth } from "aws-amplify";
 
 interface ReviewApplicationProps {
   onExport: () => void;
   selectedNofo: string | null;
+  sessionId: string;
+  onNavigate: (step: string) => void;
 }
 
 interface Section {
@@ -13,6 +18,8 @@ interface Section {
 const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   onExport,
   selectedNofo,
+  sessionId,
+  onNavigate,
 }) => {
   const [sections, setSections] = useState<Section[]>([]);
   const [sectionAnswers, setSectionAnswers] = useState<{
@@ -24,36 +31,47 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     pageCount: 0,
     complete: 0,
   });
+  const appContext = useContext(AppContext);
 
   useEffect(() => {
-    // Load sections and answers from localStorage
-    const mockSections = [
-      {
-        name: "Project Summary",
-        description: "A brief summary of your project.",
-      },
-      {
-        name: "Statement of Need",
-        description: "Explain the problem your project will solve.",
-      },
-      {
-        name: "Goals & Objectives",
-        description: "List the goals and objectives of your project.",
-      },
-      {
-        name: "Project Activities",
-        description: "Describe the main activities you will complete.",
-      },
-      { name: "Evaluation Plan", description: "How will you measure success?" },
-    ];
+    const fetchDraftData = async () => {
+      if (!appContext || !selectedNofo) return;
 
-    setSections(mockSections);
+      try {
+        const apiClient = new ApiClient(appContext);
+        const username = (await Auth.currentAuthenticatedUser()).username;
+        
+        // Get draft from database
+        const currentDraft = await apiClient.drafts.getDraft({
+          sessionId: sessionId,
+          userId: username
+        });
 
-    const savedSections = localStorage.getItem("sectionAnswers");
-    if (savedSections) {
-      setSectionAnswers(JSON.parse(savedSections));
-    }
-  }, []);
+        if (currentDraft) {
+          // Set sections from draft
+          if (currentDraft.sections) {
+            setSectionAnswers(currentDraft.sections);
+          }
+
+          // Set sections from NOFO summary
+          const result = await apiClient.landingPage.getNOFOSummary(selectedNofo);
+          if (result?.data?.ProjectNarrativeSections) {
+            const apiSections = result.data.ProjectNarrativeSections;
+            if (Array.isArray(apiSections) && apiSections.length > 0) {
+              setSections(apiSections.map(section => ({
+                name: section.item || "Untitled Section",
+                description: section.description || "No description provided."
+              })));
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error loading draft data:", error);
+      }
+    };
+
+    fetchDraftData();
+  }, [appContext, selectedNofo, sessionId]);
 
   useEffect(() => {
     // Compliance: all sections must be non-empty
@@ -74,7 +92,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   }, [sections, sectionAnswers]);
 
   const goToSection = (idx: number) => {
-    // Handle navigation to section editor
+    onNavigate("sections");
   };
 
   return (
@@ -455,6 +473,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         }}
       >
         <button
+          onClick={() => onNavigate("sections")}
           style={{
             display: "flex",
             alignItems: "center",

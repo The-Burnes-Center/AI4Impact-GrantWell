@@ -7,6 +7,7 @@ interface UploadDocumentsProps {
   onContinue: () => void;
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
+  sessionId: string;
 }
 
 interface FileInfo {
@@ -20,6 +21,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   onContinue,
   selectedNofo,
   onNavigate,
+  sessionId,
 }) => {
   const appContext = useContext(AppContext);
   const [files, setFiles] = useState<FileInfo[]>([]);
@@ -121,7 +123,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
       // Get project basics and questionnaire from the database
       const currentDraft = await apiClient.drafts.getDraft({
-        sessionId: selectedNofo,
+        sessionId: sessionId,
         userId: username
       });
 
@@ -134,7 +136,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         query: "Generate all sections for the grant application",
         documentIdentifier: selectedNofo,
         projectBasics: currentDraft.projectBasics || {},
-        questionnaire: currentDraft.questionnaire || {}
+        questionnaire: currentDraft.questionnaire || {},
+        sessionId: sessionId
       });
 
       if (!result) {

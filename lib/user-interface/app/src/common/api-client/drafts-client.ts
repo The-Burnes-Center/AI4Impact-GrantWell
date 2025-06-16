@@ -9,6 +9,15 @@ export interface DocumentDraft {
   sections?: Record<string, any>;
   projectBasics?: any;
   questionnaire?: any;
+  additionalInfo?: string;
+  uploadedFiles?: Array<{
+    name: string;
+    size: number;
+    type: string;
+    lastModified: number;
+  }>;
+  createdAt?: string;
+  updatedAt?: string;
   lastModified?: string;
 }
 
