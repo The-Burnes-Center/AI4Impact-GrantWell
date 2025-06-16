@@ -103,12 +103,31 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
     fetchSections();
 
-    // Load saved answers
-    const saved = localStorage.getItem("sectionAnswers");
-    if (saved) {
-      setSectionAnswers(JSON.parse(saved));
-    }
-  }, [selectedNofo, appContext]);
+    // Fetch draft from API and initialize sectionAnswers
+    const fetchDraftSections = async () => {
+      try {
+        if (appContext && sessionId) {
+          const apiClient = new ApiClient(appContext);
+          const username = (await Auth.currentAuthenticatedUser()).username;
+          const draft = await apiClient.drafts.getDraft({
+            sessionId: sessionId,
+            userId: username
+          });
+          if (draft && draft.sections) {
+            setSectionAnswers(draft.sections);
+            localStorage.setItem("sectionAnswers", JSON.stringify(draft.sections));
+          } else {
+            setSectionAnswers({});
+          }
+        }
+      } catch (error) {
+        console.error("Error loading draft sections from API:", error);
+        setSectionAnswers({});
+      }
+    };
+
+    fetchDraftSections();
+  }, [selectedNofo, appContext, sessionId]);
 
   // Update editor content when active section changes
   useEffect(() => {

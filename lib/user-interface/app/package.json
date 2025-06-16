@@ -36,6 +36,7 @@
     "aws-amplify": "^5.3.12",
     "bootstrap": "^5.3.3",
     "esbuild": "^0.25.1",
+    "jspdf": "^3.0.1",
     "lucide-react": "^0.509.0",
     "luxon": "^3.4.3",
     "marked": "^15.0.11",
