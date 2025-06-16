@@ -257,7 +257,7 @@ export class DraftsClient {
     sessionId: string;
   }): Promise<Record<string, any>> {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/draft-generator', {
+    const response = await fetch(this.API + '/draft-generation', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
