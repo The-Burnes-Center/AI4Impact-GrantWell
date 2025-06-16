@@ -117,11 +117,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       const savedContent = sectionAnswers[sectionKey] || "";
       if (savedContent) {
         setEditorContent(savedContent);
-      } else if (activeSection === 0) {
-        // Default content for first section
-        setEditorContent(
-          "The Downtown Revitalization Project aims to transform the city center of Oakridge into a vibrant, safe, and accessible community hub. The project will address critical infrastructure needs while promoting economic growth and community engagement."
-        );
       } else {
         setEditorContent("");
       }
@@ -206,20 +201,29 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       });
 
       if (result && result[section.name]) {
+        // Update the editor content with the generated section
         setEditorContent(result[section.name]);
 
-        // Save the regenerated content
-        const sectionKey = sections[activeSection].name;
-        const updated = { ...sectionAnswers, [sectionKey]: result[section.name] };
+        // Update the section answers state
+        const updated = { ...sectionAnswers, [section.name]: result[section.name] };
         setSectionAnswers(updated);
-        
-        // Update the draft in the database
+
+        // Save to localStorage
+        localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+
+        // Update the draft in the database with the new section
         await apiClient.drafts.updateDraft({
-          ...currentDraft,
+          sessionId: sessionId,
+          userId: username,
+          title: currentDraft.title,
+          documentIdentifier: selectedNofo,
           sections: {
             ...currentDraft.sections,
-            [sectionKey]: result[section.name]
-          }
+            [section.name]: result[section.name]
+          },
+          projectBasics: currentDraft.projectBasics,
+          questionnaire: currentDraft.questionnaire,
+          lastModified: new Date().toISOString()
         });
       } else {
         throw new Error('No content generated for this section');
