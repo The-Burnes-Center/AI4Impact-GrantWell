@@ -152,7 +152,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       // Update the draft with generated sections
       await apiClient.drafts.updateDraft({
         ...currentDraft,
-        sections: result,
+        sections: {
+          ...currentDraft.sections,  // Preserve existing sections
+          ...result  // Add new sections
+        },
         additionalInfo: additionalInfo,
         uploadedFiles: files.map(f => ({
           name: f.name,
