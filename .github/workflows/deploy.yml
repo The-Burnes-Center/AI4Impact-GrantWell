@@ -46,12 +46,12 @@ jobs:
 
     # Step 7: Deploy the CDK stack (from the root folder)
     - name: Deploy CDK stack
-      run: cdk deploy gw-nonprod-stack --require-approval never  # Replace "My stack name" with your actual stack name
+      run: cdk deploy gw-stack --require-approval never  # Replace "My stack name" with your actual stack name
 
     # Step 8: Fetch CloudFormation outputs and save to a file
     - name: Fetch CloudFormation Outputs
       run: |
-        aws cloudformation describe-stacks --stack-name gw-nonprod-stack --query "Stacks[0].Outputs" > stack-outputs.json
+        aws cloudformation describe-stacks --stack-name gw-stack --query "Stacks[0].Outputs" > stack-outputs.json
         cat stack-outputs.json  # Just to verify in logs if needed
         
     # Step 9: Upload the output file as an artifact (optional)

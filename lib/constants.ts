@@ -7,7 +7,7 @@ export const AUTHENTICATION = true;
 
 // Change these as needed
 // Must be unique globally or the deployment will fail
-export const cognitoDomainName = "gw-nonprod-auth";
+export const cognitoDomainName = "gw-auth";
 
 // This can be anything that would be understood easily, but you must use the same name
 // when setting up a sign-in provider in Cognito
@@ -15,4 +15,4 @@ export const cognitoDomainName = "gw-nonprod-auth";
 export const OIDCIntegrationName = "";
 
 // This MUST be unique to your account and is case sensitive
-export const stackName = "gw-nonprod-stack";
+export const stackName = "gw-stack";
