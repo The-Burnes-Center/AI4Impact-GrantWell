@@ -34,7 +34,7 @@
     "aws-amplify": "^6.13.0",
     "aws-cdk-lib": "^2.178.2",
     "aws-sdk": "^2.1691.0",
-    "axios": "^1.7.7",
+    "axios": "^1.10.0",
     "babel-plugin-polyfill-corejs3": "^0.10.6",
     "bootstrap": "^5.3.3",
     "cdk-nag": "^2.31.3",

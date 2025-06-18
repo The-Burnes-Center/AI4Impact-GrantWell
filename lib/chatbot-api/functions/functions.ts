@@ -720,7 +720,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           GRANTS_GOV_API_KEY: props.grantsGovApiKey,
         },
-        timeout: cdk.Duration.minutes(5),
+        timeout: cdk.Duration.minutes(15),
       }
     );
 

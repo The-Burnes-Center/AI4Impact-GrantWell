@@ -221,10 +221,13 @@ export class LandingPageClient {
   async triggerAutomatedScraper() {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.baseUrl}/automated-nofo-scraper`, {
-        method: "POST",
+      
+      const url = `${this.baseUrl}automated-nofo-scraper`;
+      
+      const response = await fetch(url, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: token,
         },
       });
@@ -232,7 +235,7 @@ export class LandingPageClient {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || `Error: ${response.status}`);
+        throw new Error(data.message || data.error || `Error: ${response.status}`);
       }
 
       return data;
