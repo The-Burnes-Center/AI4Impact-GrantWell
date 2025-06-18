@@ -28,6 +28,7 @@ import * as path from "path";
 
 export interface ChatbotAPIProps {
   readonly authentication: AuthorizationStack;
+  readonly grantsGovApiKey: string;
 }
 
 export class ChatBotApi extends Construct {
@@ -63,6 +64,7 @@ export class ChatBotApi extends Construct {
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       ffioNofosBucket: buckets.ffioNofosBucket,
+      grantsGovApiKey: props.grantsGovApiKey,
     });
 
     const wsAuthorizer = new WebSocketLambdaAuthorizer(
@@ -366,6 +368,18 @@ export class ChatBotApi extends Construct {
       path: "/user-management/invite-user",
       methods: [apigwv2.HttpMethod.POST],
       integration: inviteUserIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for automated NOFO scraper
+    const automatedNofoScraperAPIIntegration = new HttpLambdaIntegration(
+      "AutomatedNofoScraperAPIIntegration",
+      lambdaFunctions.automatedNofoScraperFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/automated-nofo-scraper",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: automatedNofoScraperAPIIntegration,
       authorizer: httpAuthorizer,
     });
 

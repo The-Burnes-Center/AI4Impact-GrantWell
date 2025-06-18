@@ -14,11 +14,20 @@ export class GenAiMvpStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Set environment variable for Grants.gov API key
+    const grantsGovApiKey = process.env.GRANTS_GOV_API_KEY;
+    if (!grantsGovApiKey) {
+      throw new Error('GRANTS_GOV_API_KEY environment variable is required');
+    }
+
     // Create the authorization stack
     const authentication = new AuthorizationStack(this, "Authorization");
 
     // Create the chatbot API and pass the authentication stack
-    const chatbotAPI = new ChatBotApi(this, "ChatbotAPI", { authentication });
+    const chatbotAPI = new ChatBotApi(this, "ChatbotAPI", { 
+      authentication,
+      grantsGovApiKey 
+    });
 
     // Create the user interface and pass necessary properties
     const userInterface = new UserInterface(this, "UserInterface", {

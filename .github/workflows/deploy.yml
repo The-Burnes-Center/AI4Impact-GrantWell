@@ -44,17 +44,24 @@ jobs:
     - name: Bootstrap AWS environment
       run: cdk bootstrap
 
-    # Step 7: Deploy the CDK stack (from the root folder)
+    # Step 7: Set environment variables from GitHub secrets
+    - name: Set environment variables
+      run: |
+        echo "GRANTS_GOV_API_KEY=${{ secrets.GRANTS_GOV_API_KEY }}" >> $GITHUB_ENV
+
+    # Step 8: Deploy the CDK stack (from the root folder)
     - name: Deploy CDK stack
       run: cdk deploy gw-stack --require-approval never  # Replace "My stack name" with your actual stack name
+      env:
+        GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
 
-    # Step 8: Fetch CloudFormation outputs and save to a file
+    # Step 9: Fetch CloudFormation outputs and save to a file
     - name: Fetch CloudFormation Outputs
       run: |
         aws cloudformation describe-stacks --stack-name gw-stack --query "Stacks[0].Outputs" > stack-outputs.json
         cat stack-outputs.json  # Just to verify in logs if needed
         
-    # Step 9: Upload the output file as an artifact (optional)
+    # Step 10: Upload the output file as an artifact (optional)
     - name: Upload Outputs as Artifact
       uses: actions/upload-artifact@v4
       with:

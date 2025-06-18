@@ -12,6 +12,8 @@ import { PROMPT_TEXT } from "./prompt";
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as events from "aws-cdk-lib/aws-events";
+import * as targets from "aws-cdk-lib/aws-events-targets";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
@@ -26,6 +28,7 @@ interface LambdaFunctionStackProps {
   readonly ffioNofosBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
   readonly knowledgeBaseSource: bedrock.CfnDataSource;
+  readonly grantsGovApiKey: string;
 }
 
 export class LambdaFunctionStack extends cdk.Stack {
@@ -47,6 +50,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoDeleteFunction: lambda.Function;
   public readonly draftFunction: lambda.Function;
   public readonly draftGeneratorFunction: lambda.Function;
+  public readonly automatedNofoScraperFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -701,5 +705,52 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.draftGeneratorFunction = draftGeneratorFunction;
+
+    // Add automated NOFO scraper function
+    const automatedNofoScraperFunction = new lambda.Function(
+      scope,
+      "AutomatedNofoScraperFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "landing-page/automated-nofo-scraper")
+        ),
+        handler: "index.handler",
+        environment: {
+          BUCKET: props.ffioNofosBucket.bucketName,
+          GRANTS_GOV_API_KEY: props.grantsGovApiKey,
+        },
+        timeout: cdk.Duration.minutes(5),
+      }
+    );
+
+    // S3 permissions for automated NOFO scraper
+    automatedNofoScraperFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          `${props.ffioNofosBucket.bucketArn}/*`,
+        ],
+      })
+    );
+
+    // Create EventBridge rule to run the scraper daily at 9 AM UTC
+    const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
+      schedule: events.Schedule.cron({
+        minute: '0',
+        hour: '9',
+        day: '*',
+        month: '*',
+        year: '*',
+      }),
+      description: 'Trigger automated NOFO scraper daily at 9 AM UTC',
+    });
+
+    // Add the Lambda function as a target for the EventBridge rule
+    scraperRule.addTarget(new targets.LambdaFunction(automatedNofoScraperFunction));
+
+    this.automatedNofoScraperFunction = automatedNofoScraperFunction;
   }
 }

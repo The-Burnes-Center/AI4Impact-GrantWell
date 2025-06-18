@@ -216,4 +216,29 @@ export class LandingPageClient {
       throw error;
     }
   }
+
+  // Triggers the automated NOFO scraper
+  async triggerAutomatedScraper() {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(`${this.baseUrl}/automated-nofo-scraper`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `Error: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error triggering automated NOFO scraper:", error);
+      throw error;
+    }
+  }
 }

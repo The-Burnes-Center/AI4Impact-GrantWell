@@ -21,7 +21,8 @@ import {
   LuTriangle,
   LuInfo,
   LuFile,
-  LuRefreshCw
+  LuRefreshCw,
+  LuDownload
 } from "react-icons/lu";
 import "./styles.css";
 
@@ -767,6 +768,9 @@ const Dashboard: React.FC = () => {
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
 
+  // Automated NOFO scraper state
+  const [isScraping, setIsScraping] = useState(false);
+
   // Refs for click outside detection
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
@@ -890,6 +894,28 @@ const Dashboard: React.FC = () => {
       setInviteUserModalOpen(false);
     } catch (error) {
       addNotification("error", "Failed to send invitation. Please try again.");
+    }
+  };
+
+  // Automated NOFO scraper handler
+  const handleAutomatedScraper = async () => {
+    try {
+      setIsScraping(true);
+      addNotification("info", "Starting automated NOFO scraping...");
+      
+      const response = await apiClient.landingPage.triggerAutomatedScraper();
+      
+      if (response.result && response.result.processed > 0) {
+        addNotification("success", `Successfully processed ${response.result.processed} new NOFOs!`);
+        // Refresh the NOFOs list to show new items
+        await fetchNofos();
+      } else {
+        addNotification("info", "No new NOFOs found to process.");
+      }
+    } catch (error) {
+      addNotification("error", "Failed to run automated NOFO scraper. Please try again.");
+    } finally {
+      setIsScraping(false);
     }
   };
 
@@ -1300,6 +1326,15 @@ const Dashboard: React.FC = () => {
             >
               <LuUpload size={16} className="button-icon" />
               <span>Add Grant</span>
+            </button>
+
+            <button
+              className="action-button scraper-button"
+              onClick={handleAutomatedScraper}
+              disabled={isScraping}
+            >
+              <LuDownload size={16} className="button-icon" />
+              <span>{isScraping ? "Scraping..." : "Auto-Scrape NOFOs"}</span>
             </button>
           </div>
         </div>
