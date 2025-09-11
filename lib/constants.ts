@@ -45,3 +45,19 @@ const getStackName = () => {
 };
 
 export const stackName = getStackName();
+
+// Environment-specific OpenSearch index name for Knowledge Base
+const getKnowledgeBaseIndexName = () => {
+  const environment = process.env.ENVIRONMENT;
+  
+  if (environment === 'production') {
+    return 'knowledge-base-index-prod';
+  } else if (environment === 'staging') {
+    return 'knowledge-base-index-staging';
+  }
+  
+  // Fallback for local development
+  return 'knowledge-base-index-dev';
+};
+
+export const knowledgeBaseIndexName = getKnowledgeBaseIndexName();

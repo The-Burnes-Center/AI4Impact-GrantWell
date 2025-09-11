@@ -10,7 +10,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cr from 'aws-cdk-lib/custom-resources';
 import { Construct } from "constructs";
 import { aws_opensearchserverless as opensearchserverless } from 'aws-cdk-lib';
-import { stackName } from "../../constants";
+import { stackName, knowledgeBaseIndexName } from "../../constants";
 
 export interface OpenSearchStackProps {}
 
@@ -120,7 +120,7 @@ export class OpenSearchStack extends cdk.Stack {
       role: indexFunctionRole,
       environment: {
         COLLECTION_ENDPOINT: `${openSearchCollection.attrId}.${cdk.Stack.of(this).region}.aoss.amazonaws.com`,
-        INDEX_NAME: `knowledge-base-index`,
+        INDEX_NAME: knowledgeBaseIndexName,
         EMBEDDING_DIM: "1024",
         REGION: cdk.Stack.of(this).region,
       },

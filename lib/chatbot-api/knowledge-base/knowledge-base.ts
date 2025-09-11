@@ -11,7 +11,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { aws_bedrock as bedrock } from 'aws-cdk-lib';
 
 import { Construct } from "constructs";
-import { stackName } from "../../constants"
+import { stackName, knowledgeBaseIndexName } from "../../constants"
 import { OpenSearchStack } from "../opensearch/opensearch"
 
 export interface KnowledgeBaseStackProps {
@@ -80,7 +80,7 @@ export class KnowledgeBaseStack extends cdk.Stack {
             textField: 'text_field',
             vectorField: 'vector_field',
           },
-          vectorIndexName: 'knowledge-base-index',
+          vectorIndexName: knowledgeBaseIndexName,
         },
       },
 
