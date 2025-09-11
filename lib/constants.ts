@@ -34,13 +34,18 @@ const getStackName = () => {
   // Check for environment variable set by GitHub Actions
   const environment = process.env.ENVIRONMENT;
   
+  console.log(`[Constants] ENVIRONMENT variable: ${environment}`);
+  
   if (environment === 'production') {
+    console.log('[Constants] Using production stack name: gw-stack-prod');
     return 'gw-stack-prod';
   } else if (environment === 'staging') {
+    console.log('[Constants] Using staging stack name: gw-stack-staging');
     return 'gw-stack-staging';
   }
   
   // Fallback for local development
+  console.log('[Constants] Using dev stack name: gw-stack-dev');
   return 'gw-stack-dev';
 };
 
@@ -50,13 +55,18 @@ export const stackName = getStackName();
 const getKnowledgeBaseIndexName = () => {
   const environment = process.env.ENVIRONMENT;
   
+  console.log(`[Constants] ENVIRONMENT for index: ${environment}`);
+  
   if (environment === 'production') {
+    console.log('[Constants] Using production index: knowledge-base-index-prod');
     return 'knowledge-base-index-prod';
   } else if (environment === 'staging') {
+    console.log('[Constants] Using staging index: knowledge-base-index-staging');
     return 'knowledge-base-index-staging';
   }
   
   // Fallback for local development
+  console.log('[Constants] Using dev index: knowledge-base-index-dev');
   return 'knowledge-base-index-dev';
 };
 
