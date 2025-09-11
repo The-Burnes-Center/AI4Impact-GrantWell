@@ -4,16 +4,16 @@
  */
 
 export const AUTHENTICATION = true;
+const ENVIRONMENT = process.env.ENVIRONMENT;
 
 // Change these as needed
 // Must be unique globally or the deployment will fail
 // Environment-specific domain names for branch-based deployment
 const getCognitoDomainName = () => {
-  const environment = process.env.ENVIRONMENT;
   
-  if (environment === 'production') {
+  if (ENVIRONMENT === 'production') {
     return 'gw-auth-prod';
-  } else if (environment === 'staging') {
+  } else if (ENVIRONMENT === 'staging') {
     return 'gw-auth-staging';
   }
   
@@ -31,12 +31,9 @@ export const OIDCIntegrationName = "";
 // This MUST be unique to your account and is case sensitive
 // Environment-specific stack names for branch-based deployment
 const getStackName = () => {
-  // Check for environment variable set by GitHub Actions
-  const environment = 'production';
-  
-  if (environment === 'production') {
+  if (ENVIRONMENT === 'production') {
     return 'gw-stack-prod';
-  } else if (environment === 'staging') {
+  } else if (ENVIRONMENT === 'staging') {
     return 'gw-stack-staging';
   }
   
@@ -48,11 +45,9 @@ export const stackName = getStackName();
 
 // Environment-specific OpenSearch index name for Knowledge Base
 const getKnowledgeBaseIndexName = () => {
-  const environment = 'production';
-  
-  if (environment === 'production') {
+  if (ENVIRONMENT === 'production') {
     return 'knowledge-base-index-prod';
-  } else if (environment === 'staging') {
+  } else if (ENVIRONMENT === 'staging') {
     return 'knowledge-base-index-staging';
   }
   
