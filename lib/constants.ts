@@ -7,7 +7,21 @@ export const AUTHENTICATION = true;
 
 // Change these as needed
 // Must be unique globally or the deployment will fail
-export const cognitoDomainName = "gw-auth";
+// Environment-specific domain names for branch-based deployment
+const getCognitoDomainName = () => {
+  const environment = process.env.ENVIRONMENT;
+  
+  if (environment === 'production') {
+    return 'gw-auth-prod';
+  } else if (environment === 'staging') {
+    return 'gw-auth-staging';
+  }
+  
+  // Fallback for local development
+  return 'gw-auth-dev';
+};
+
+export const cognitoDomainName = getCognitoDomainName();
 
 // This can be anything that would be understood easily, but you must use the same name
 // when setting up a sign-in provider in Cognito
@@ -15,4 +29,19 @@ export const cognitoDomainName = "gw-auth";
 export const OIDCIntegrationName = "";
 
 // This MUST be unique to your account and is case sensitive
-export const stackName = "gw-stack";
+// Environment-specific stack names for branch-based deployment
+const getStackName = () => {
+  // Check for environment variable set by GitHub Actions
+  const environment = process.env.ENVIRONMENT;
+  
+  if (environment === 'production') {
+    return 'gw-stack-prod';
+  } else if (environment === 'staging') {
+    return 'gw-stack-staging';
+  }
+  
+  // Fallback for local development
+  return 'gw-stack-dev';
+};
+
+export const stackName = getStackName();

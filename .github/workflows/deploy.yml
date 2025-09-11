@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - dev
       
   workflow_dispatch:
   
@@ -11,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+      STACK_NAME: ${{ github.ref == 'refs/heads/main' && 'gw-stack-prod' || 'gw-stack-staging' }}
+      SERVICE_ROLE_ARN: ${{ github.ref == 'refs/heads/main' && secrets.SERVICE_ROLE_ARN_PROD || secrets.SERVICE_ROLE_ARN_STAGING }}
     
     permissions:
       id-token: write
@@ -25,8 +29,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: ${{ secrets.SERVICE_ROLE_ARN }}
-        role-session-name: ${{ github.actor }}
+        role-to-assume: ${{ env.SERVICE_ROLE_ARN }}
+        role-session-name: ${{ github.actor }}-${{ env.ENVIRONMENT }}
         aws-region: us-east-1
 
     # Step 3: Set up Node.js with the version required by your project
@@ -47,31 +51,23 @@ jobs:
         npm run build:theme
         npm install -g aws-cdk
 
-    # Step 6: Configure AWS credentials
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: ${{ secrets.SERVICE_ROLE_ARN }}
-        role-session-name: ${{ github.actor }}
-        aws-region: us-east-1
-
-    # Step 7: Bootstrap the AWS environment (from the root folder)
+    # Step 6: Bootstrap the AWS environment (from the root folder)
     - name: Bootstrap AWS environment
       run: cdk bootstrap
 
-    # Step 8: Deploy the CDK stack (from the root folder)
-    - name: Deploy CDK stack
-      run: cdk deploy gw-stack --require-approval never  # Replace "My stack name" with your actual stack name
+    # Step 7: Deploy the CDK stack (from the root folder)
+    - name: Deploy CDK stack to ${{ env.ENVIRONMENT }}
+      run: cdk deploy ${{ env.STACK_NAME }} --require-approval never
 
-    # Step 9: Fetch CloudFormation outputs and save to a file
+    # Step 8: Fetch CloudFormation outputs and save to a file
     - name: Fetch CloudFormation Outputs
       run: |
-        aws cloudformation describe-stacks --stack-name gw-stack --query "Stacks[0].Outputs" > stack-outputs.json
-        cat stack-outputs.json  # Just to verify in logs if needed
+        aws cloudformation describe-stacks --stack-name ${{ env.STACK_NAME }} --query "Stacks[0].Outputs" > stack-outputs-${{ env.ENVIRONMENT }}.json
+        cat stack-outputs-${{ env.ENVIRONMENT }}.json  # Just to verify in logs if needed
         
-    # Step 10: Upload the output file as an artifact (optional)
+    # Step 9: Upload the output file as an artifact (optional)
     - name: Upload Outputs as Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: stack-outputs
-        path: stack-outputs.json
+        name: stack-outputs-${{ env.ENVIRONMENT }}
+        path: stack-outputs-${{ env.ENVIRONMENT }}.json
