@@ -11,22 +11,35 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
+    
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
     # Step 1: Check out the repository's code
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Step 2: Set up Node.js with the version required by your project
+    # Step 2: Configure AWS credentials
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.SERVICE_ROLE_ARN }}
+        role-session-name: ${{ github.actor }}
+        aws-region: us-east-1
+
+    # Step 3: Set up Node.js with the version required by your project
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    # Step 3: Install backend dependencies (from the root folder)
+    # Step 4: Install backend dependencies (from the root folder)
     - name: Install backend dependencies
       run: npm install
 
-    # Step 4: Install frontend dependencies (in 'lib/user-interface/app')
+    # Step 5: Install frontend dependencies (in 'lib/user-interface/app')
     - name: Install frontend dependencies
       run: |
         cd lib/user-interface/app
@@ -34,29 +47,29 @@ jobs:
         npm run build:theme
         npm install -g aws-cdk
 
-    # Step 5: Configure AWS credentials
+    # Step 6: Configure AWS credentials
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        role-to-assume: ${{ secrets.SERVICE_ROLE_ARN }}
+        role-session-name: ${{ github.actor }}
         aws-region: us-east-1
 
-    # Step 6: Bootstrap the AWS environment (from the root folder)
+    # Step 7: Bootstrap the AWS environment (from the root folder)
     - name: Bootstrap AWS environment
       run: cdk bootstrap
 
-    # Step 7: Deploy the CDK stack (from the root folder)
+    # Step 8: Deploy the CDK stack (from the root folder)
     - name: Deploy CDK stack
-      run: cdk deploy gw-stack --require-approval never
+      run: cdk deploy gw-stack --require-approval never  # Replace "My stack name" with your actual stack name
 
-    # Step 8: Fetch CloudFormation outputs and save to a file
+    # Step 9: Fetch CloudFormation outputs and save to a file
     - name: Fetch CloudFormation Outputs
       run: |
         aws cloudformation describe-stacks --stack-name gw-stack --query "Stacks[0].Outputs" > stack-outputs.json
         cat stack-outputs.json  # Just to verify in logs if needed
         
-    # Step 9: Upload the output file as an artifact (optional)
+    # Step 10: Upload the output file as an artifact (optional)
     - name: Upload Outputs as Artifact
       uses: actions/upload-artifact@v4
       with:
