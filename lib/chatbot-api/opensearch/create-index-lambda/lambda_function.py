@@ -62,32 +62,10 @@ def lambda_handler(event, context):
     )
     
     try:
-        print(f"Attempting to create index: {index_name}")
-        response = client.indices.create(index_name, body=payload_json)  
-        print(f"Index creation successful: {response}")
-        print("Waiting 60 seconds for index to be available...")
+        response = client.indices.create(index=index_name, body=payload_json)  
         time.sleep(60)   
-        
-        # Verify the index was created
-        print("Verifying index exists...")
-        exists_response = client.indices.exists(index_name)
-        print(f"Index exists check: {exists_response}")
-        
         return response
     except Exception as e:
-        print(f"Index creation failed for index: {index_name}")
-        print(f"Error type: {type(e).__name__}")
-        print(f"Error message: {str(e)}")
-        
-        # Check if index already exists
-        try:
-            exists = client.indices.exists(index_name)
-            print(f"Index already exists check: {exists}")
-            if exists:
-                print("Index already exists, returning success")
-                return True
-        except Exception as exists_error:
-            print(f"Error checking if index exists: {exists_error}")
-        
-        # Re-raise the original exception to make the custom resource fail visibly
-        raise e
+        print("Index creation failed! It most likely already exists!")
+        print(e)
+        return False

@@ -1,73 +1,67 @@
 name: Deploy Chatbot
+
 on:
   push:
     branches:
       - main
       - dev
-      
   workflow_dispatch:
-  
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
       ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
       STACK_NAME: ${{ github.ref == 'refs/heads/main' && 'gw-stack-prod' || 'gw-stack-staging' }}
-      SERVICE_ROLE_ARN: ${{ github.ref == 'refs/heads/main' && secrets.SERVICE_ROLE_ARN_PROD || secrets.SERVICE_ROLE_ARN_STAGING }}
-    
+
     permissions:
       id-token: write
       contents: read
 
     steps:
-    # Step 1: Check out the repository's code
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # Step 2: Configure AWS credentials
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: ${{ env.SERVICE_ROLE_ARN }}
-        role-session-name: ${{ github.actor }}-${{ env.ENVIRONMENT }}
-        aws-region: us-east-1
+      # 👇 Pick correct role depending on branch
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ github.ref == 'refs/heads/main' && secrets.SERVICE_ROLE_ARN_PROD || secrets.SERVICE_ROLE_ARN_STAGING }}
+          role-session-name: ${{ github.actor }}-${{ env.ENVIRONMENT }}
+          aws-region: us-east-1
 
-    # Step 3: Set up Node.js with the version required by your project
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    # Step 4: Install backend dependencies (from the root folder)
-    - name: Install backend dependencies
-      run: npm install
+      - name: Install backend dependencies
+        run: npm install
 
-    # Step 5: Install frontend dependencies (in 'lib/user-interface/app')
-    - name: Install frontend dependencies
-      run: |
-        cd lib/user-interface/app
-        npm install
-        npm run build:theme
-        npm install -g aws-cdk
+      - name: Install frontend dependencies
+        run: |
+          cd lib/user-interface/app
+          npm install
+          npm run build:theme
+          npm install -g aws-cdk
 
-    # Step 6: Bootstrap the AWS environment (from the root folder)
-    - name: Bootstrap AWS environment
-      run: cdk bootstrap
+      - name: Bootstrap AWS environment
+        run: cdk bootstrap
 
-    # Step 7: Deploy the CDK stack (from the root folder)
-    - name: Deploy CDK stack to ${{ env.ENVIRONMENT }}
-      run: cdk deploy ${{ env.STACK_NAME }} --require-approval never
+      - name: Deploy CDK stack to ${{ env.ENVIRONMENT }}
+        run: cdk deploy ${{ env.STACK_NAME }} --require-approval never
 
-    # Step 8: Fetch CloudFormation outputs and save to a file
-    - name: Fetch CloudFormation Outputs
-      run: |
-        aws cloudformation describe-stacks --stack-name ${{ env.STACK_NAME }} --query "Stacks[0].Outputs" > stack-outputs-${{ env.ENVIRONMENT }}.json
-        cat stack-outputs-${{ env.ENVIRONMENT }}.json  # Just to verify in logs if needed
-        
-    # Step 9: Upload the output file as an artifact (optional)
-    - name: Upload Outputs as Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: stack-outputs-${{ env.ENVIRONMENT }}
-        path: stack-outputs-${{ env.ENVIRONMENT }}.json
+      - name: Fetch CloudFormation Outputs
+        run: |
+          aws cloudformation describe-stacks \
+            --stack-name ${{ env.STACK_NAME }} \
+            --query "Stacks[0].Outputs" > stack-outputs-${{ env.ENVIRONMENT }}.json
+          cat stack-outputs-${{ env.ENVIRONMENT }}.json
+
+      - name: Upload Outputs as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stack-outputs-${{ env.ENVIRONMENT }}
+          path: stack-outputs-${{ env.ENVIRONMENT }}.json
