@@ -1,9 +1,8 @@
-name: Deploy Chatbot
+name: Deploy to Staging
 
 on:
   push:
     branches:
-      - main
       - dev
   workflow_dispatch:
 
@@ -13,8 +12,8 @@ jobs:
 
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
-      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
-      STACK_NAME: ${{ github.ref == 'refs/heads/main' && 'gw-stack-prod' || 'gw-stack-staging' }}
+      ENVIRONMENT: staging
+      STACK_NAME: gw-stack-staging
 
     permissions:
       id-token: write
@@ -24,12 +23,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 👇 Pick correct role depending on branch
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ github.ref == 'refs/heads/main' && secrets.SERVICE_ROLE_ARN_PROD || secrets.SERVICE_ROLE_ARN_STAGING }}
-          role-session-name: ${{ github.actor }}-${{ env.ENVIRONMENT }}
+          role-to-assume: ${{ secrets.SERVICE_ROLE_ARN_STAGING }}
+          role-session-name: ${{ github.actor }}-staging
           aws-region: us-east-1
 
       - name: Set up Node.js
@@ -50,18 +48,18 @@ jobs:
       - name: Bootstrap AWS environment
         run: cdk bootstrap
 
-      - name: Deploy CDK stack to ${{ env.ENVIRONMENT }}
+      - name: Deploy CDK stack to staging
         run: cdk deploy ${{ env.STACK_NAME }} --require-approval never
 
       - name: Fetch CloudFormation Outputs
         run: |
           aws cloudformation describe-stacks \
             --stack-name ${{ env.STACK_NAME }} \
-            --query "Stacks[0].Outputs" > stack-outputs-${{ env.ENVIRONMENT }}.json
-          cat stack-outputs-${{ env.ENVIRONMENT }}.json
+            --query "Stacks[0].Outputs" > stack-outputs-staging.json
+          cat stack-outputs-staging.json
 
       - name: Upload Outputs as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: stack-outputs-${{ env.ENVIRONMENT }}
-          path: stack-outputs-${{ env.ENVIRONMENT }}.json
+          name: stack-outputs-staging
+          path: stack-outputs-staging.json
