@@ -6,7 +6,7 @@
 
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { cognitoDomainName } from '../constants';
+import { cognitoDomainName, emailConfig } from '../constants';
 import { UserPool, UserPoolClient, FeaturePlan} from 'aws-cdk-lib/aws-cognito';
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -39,14 +39,14 @@ export class AuthorizationStack extends Construct {
         emailBody:
           'Hello,<br><br>' +
           'I am pleased to inform you that the new custom deployment link for the GrantWell tool is now ready for testing. All future updates and changes will be applied to this new link.<br><br>' +
-          'Please note that the tool is still under development, so you may encounter errors. We kindly request that you record any feedback regarding the tool’s performance.<br><br>' +
+          'Please note that the tool is still under development, so you may encounter errors. We kindly request that you record any feedback regarding the tool\'s performance.<br><br>' +
           'Below, you will find the necessary information for signing into the tool:<br><br>' +
           '<strong>First-Time Sign-In:</strong><br>' +
           'Please use the following link when signing in for the first time:<br>' +
-          '<a href="https://gw-auth.auth.us-east-1.amazoncognito.com/login?client_id=375cvc5uaol6jm9jm1jte11kpr&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://d17w6od3455cz1.cloudfront.net">First Time Sign-In Link</a><br><br>' +
+          '<a href="' + emailConfig.cognitoLoginUrl + '?client_id=' + emailConfig.clientId + '&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=' + emailConfig.deploymentUrl + '">First Time Sign-In Link</a><br><br>' +
           '<strong>Regular Access:</strong><br>' +
           'Once registered, you can use the regular custom deployment link:<br>' +
-          '<a href="https://d17w6od3455cz1.cloudfront.net">Regular Custom Deployment Link</a><br><br>' +
+          '<a href="' + emailConfig.deploymentUrl + '">Regular Custom Deployment Link</a><br><br>' +
           '<strong>Login Credentials:</strong><br>' +
           'Username: {username}<br>' +
           'Temporary Password: {####}<br><br>' +

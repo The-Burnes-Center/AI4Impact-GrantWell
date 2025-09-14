@@ -62,7 +62,7 @@ def lambda_handler(event, context):
     )
     
     try:
-        response = client.indices.create(index_name, body=payload_json)  
+        response = client.indices.create(index=index_name, body=payload_json)  
         time.sleep(60)   
         return response
     except Exception as e:

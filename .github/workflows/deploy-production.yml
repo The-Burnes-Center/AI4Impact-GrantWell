@@ -1,0 +1,65 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
+      ENVIRONMENT: production
+      STACK_NAME: gw-stack-prod
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.SERVICE_ROLE_ARN_PROD }}
+          role-session-name: ${{ github.actor }}-production
+          aws-region: us-east-1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        run: npm install
+
+      - name: Install frontend dependencies
+        run: |
+          cd lib/user-interface/app
+          npm install
+          npm run build:theme
+          npm install -g aws-cdk
+
+      - name: Bootstrap AWS environment
+        run: cdk bootstrap
+
+      - name: Deploy CDK stack to production
+        run: cdk deploy ${{ env.STACK_NAME }} --require-approval never
+
+      - name: Fetch CloudFormation Outputs
+        run: |
+          aws cloudformation describe-stacks \
+            --stack-name ${{ env.STACK_NAME }} \
+            --query "Stacks[0].Outputs" > stack-outputs-production.json
+          cat stack-outputs-production.json
+
+      - name: Upload Outputs as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stack-outputs-production
+          path: stack-outputs-production.json
