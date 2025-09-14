@@ -56,3 +56,22 @@ const getKnowledgeBaseIndexName = () => {
 };
 
 export const knowledgeBaseIndexName = getKnowledgeBaseIndexName();
+
+// Environment-specific email configuration for user invitations
+const getEmailConfig = () => {
+  if (ENVIRONMENT === 'production') {
+    return {
+      cognitoLoginUrl: 'https://gw-auth-prod.auth.us-east-1.amazoncognito.com/login',
+      clientId: '4nr5drekivlcujtibu90d7uh9n',
+      deploymentUrl: 'https://d1mu5xcqb0ac30.cloudfront.net/'
+    };
+  } else {
+    return {
+      cognitoLoginUrl: 'https://gw-auth-staging.auth.us-east-1.amazoncognito.com/login',
+      clientId: '6fek08iq3lkn8ptqnrhul7raq8',
+      deploymentUrl: 'https://d2zwf0gxpj9c8c.cloudfront.net/'
+    };
+  }
+};
+
+export const emailConfig = getEmailConfig();
