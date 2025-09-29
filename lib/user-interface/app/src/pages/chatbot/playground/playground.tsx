@@ -149,9 +149,12 @@ export default function Playground() {
             {isLoading ? "Loading..." : nofoName}
           </h1>
           <div style={styles.headerActions}>
-            <button style={styles.uploadButton} onClick={handleUploadData}>
-              <Upload size={16} /> Upload Data
-            </button>
+            {/* Upload Data button disabled */}
+            {false && (
+              <button style={styles.uploadButton} onClick={handleUploadData}>
+                <Upload size={16} /> Upload Data
+              </button>
+            )}
             <button
               style={styles.helpButton}
               onClick={() => setHelpOpen(!helpOpen)}
@@ -170,33 +173,20 @@ export default function Playground() {
           </h3>
           <p style={styles.helpText}>
             The purpose of this chatbot is to prompt you through the project
-            narrative section of your grant. For GrantWell to work best, upload
-            supplementary data through the "upload data" button to best help us
-            craft a narrative that reflects your organization.
+            narrative section of your grant. GrantWell will help you craft a
+            narrative that reflects your organization.
           </p>
 
-          <div>
-            <p style={styles.helpText}>Examples of data could include:</p>
-            <ul style={styles.helpList}>
-              <li style={styles.helpListItem}>Last year's annual report</li>
-              <li style={styles.helpListItem}>Latest accomplishments</li>
-              <li style={styles.helpListItem}>
-                Previously submitted proposals for this grant
-              </li>
-              <li style={styles.helpListItem}>Project narrative template</li>
-            </ul>
-          </div>
-
           <p style={styles.helpText}>
-            Ensure you upload all supplementary data before beginning
-            conversation with the chatbot.
+            The chatbot will guide you through creating your project narrative
+            by asking relevant questions and providing suggestions based on
+            grant requirements.
           </p>
 
           <h4 style={styles.helpSubtitle}>Sources</h4>
           <p style={styles.helpText}>
-            If the chatbot references any files you've uploaded, they will show
-            up underneath the relevant message. Add or delete files through the
-            "upload data" button.
+            If the chatbot references any files from the knowledge base, they will show
+            up underneath the relevant message.
           </p>
 
           <h4 style={styles.helpSubtitle}>Session history</h4>
@@ -216,11 +206,14 @@ export default function Playground() {
           style={{ height: "100%", display: "flex", flexDirection: "column" }}
         >
           <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
-          <UploadModal
-            isOpen={uploadModalOpen}
-            onClose={() => setUploadModalOpen(false)}
-            documentIdentifier={documentIdentifier}
-          />
+          {/* Upload Modal disabled */}
+          {false && (
+            <UploadModal
+              isOpen={uploadModalOpen}
+              onClose={() => setUploadModalOpen(false)}
+              documentIdentifier={documentIdentifier}
+            />
+          )}
         </div>
       }
     />

@@ -768,8 +768,8 @@ const Dashboard: React.FC = () => {
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
 
-  // Automated NOFO scraper state
-  const [isScraping, setIsScraping] = useState(false);
+  // DISABLED: Automated NOFO scraper state
+  // const [isScraping, setIsScraping] = useState(false);
 
   // Refs for click outside detection
   const filterMenuRef = useRef<HTMLDivElement>(null);
@@ -897,7 +897,9 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Automated NOFO scraper handler
+  // DISABLED: Automated NOFO scraper handler
+  // Manual triggering has been disabled
+  /*
   const handleAutomatedScraper = async () => {
     try {
       setIsScraping(true);
@@ -918,6 +920,7 @@ const Dashboard: React.FC = () => {
       setIsScraping(false);
     }
   };
+  */
 
   // Handler for showing grant success banner
   const showGrantSuccessBanner = (grantName: string) => {
@@ -1328,6 +1331,8 @@ const Dashboard: React.FC = () => {
               <span>Add Grant</span>
             </button>
 
+            {/* DISABLED: Manual NOFO scraper trigger button */}
+            {/*
             <button
               className="action-button scraper-button"
               onClick={handleAutomatedScraper}
@@ -1336,6 +1341,7 @@ const Dashboard: React.FC = () => {
               <LuDownload size={16} className="button-icon" />
               <span>{isScraping ? "Scraping..." : "Auto-Scrape NOFOs"}</span>
             </button>
+            */}
           </div>
         </div>
 

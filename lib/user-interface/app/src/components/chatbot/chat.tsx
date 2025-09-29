@@ -339,12 +339,12 @@ export default function Chat(props: {
                 of your grant. The chatbot will begin by prompting you for some
                 basic information.
                 <br></br>
-                For GrantWell to work best, upload supplementary data through
-                the "upload data" link to best help us craft a narrative that
-                reflects your organization.
+                GrantWell will help you craft a narrative that reflects your
+                organization using the available knowledge base and grant
+                requirements.
                 <br></br>
                 <br></br>
-                Examples of data could include:
+                The chatbot will guide you through creating sections such as:
                 <ul
                   style={{
                     paddingLeft: "24px",
@@ -352,12 +352,12 @@ export default function Chat(props: {
                     marginTop: "4px",
                   }}
                 >
-                  <li style={styles.listItem}>Last year's annual report</li>
-                  <li style={styles.listItem}>Latest accomplishments</li>
+                  <li style={styles.listItem}>Project description</li>
+                  <li style={styles.listItem}>Goals and objectives</li>
                   <li style={styles.listItem}>
-                    Previously submitted proposals for this grant
+                    Implementation plan and timeline
                   </li>
-                  <li style={styles.listItem}>Project narrative template</li>
+                  <li style={styles.listItem}>Budget justification</li>
                 </ul>
               </p>
               <p

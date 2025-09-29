@@ -6,8 +6,8 @@ This guide explains how to integrate the automated NOFO (Notice of Funding Oppor
 
 ## Features
 
-- **Automated Daily Scraping**: Runs automatically at 9 AM UTC daily via EventBridge
-- **Manual Trigger**: Admin can manually trigger scraping from the dashboard
+- **Automated Daily Scraping**: ⚠️ **CURRENTLY DISABLED** - Automatic scheduling has been disabled
+- **Manual Trigger**: ⚠️ **CURRENTLY DISABLED** - Manual trigger button has been removed from the dashboard
 - **Duplicate Prevention**: Checks if NOFOs already exist before downloading
 - **Rate Limiting**: Respects API rate limits to avoid overwhelming the service
 - **Error Handling**: Comprehensive error handling and logging
@@ -74,14 +74,17 @@ You can monitor the deployment progress in the **Actions** tab of your GitHub re
 After deployment, verify that the following resources were created:
 
 - **Lambda Function**: `AutomatedNofoScraperFunction`
-- **EventBridge Rule**: `AutomatedNofoScraperRule` (runs daily at 9 AM UTC)
+- **EventBridge Rule**: ⚠️ **DISABLED** - `AutomatedNofoScraperRule` (automatic scheduling disabled)
 - **API Gateway Route**: `/automated-nofo-scraper` (for manual triggering)
 - **IAM Permissions**: S3 read/write permissions for the NOFO bucket
 
 ## How It Works
 
-### Automated Flow
+### Automated Flow (CURRENTLY DISABLED)
 
+⚠️ **Note**: Automated scheduling is currently disabled. The scraper can only be triggered manually.
+
+When enabled, the automated flow would work as follows:
 1. **Daily Trigger**: EventBridge triggers the scraper at 9 AM UTC
 2. **Fetch Opportunities**: Retrieves the latest 10 grant opportunities from Simpler.Grants.gov
 3. **Filter Attachments**: Only processes opportunities with exactly one attachment
@@ -90,8 +93,11 @@ After deployment, verify that the following resources were created:
 6. **Create Metadata**: Generates a `summary.json` file with NOFO metadata
 7. **Trigger Processing**: The existing S3 event trigger automatically processes the new NOFO
 
-### Manual Trigger
+### Manual Trigger (CURRENTLY DISABLED)
 
+⚠️ **Note**: Manual triggering is currently disabled. The UI button has been removed from the dashboard.
+
+When enabled, the manual trigger would work as follows:
 1. **Admin Access**: Only admin users can trigger the scraper manually
 2. **Dashboard Button**: Click "Auto-Scrape NOFOs" button in the admin dashboard
 3. **Real-time Feedback**: Shows progress and results in the UI
@@ -99,7 +105,9 @@ After deployment, verify that the following resources were created:
 
 ## API Endpoints
 
-### Manual Trigger Endpoint
+### Manual Trigger Endpoint (CURRENTLY DISABLED)
+
+⚠️ **Note**: While the API endpoint still exists, the UI button has been removed and manual triggering is disabled.
 
 - **URL**: `POST /automated-nofo-scraper`
 - **Authentication**: Required (Admin role)
@@ -190,6 +198,48 @@ The frontend provides real-time feedback:
    - Increase Lambda timeout if needed
 
 4. **Rate Limiting**
+   - Increase `RATE_LIMIT_DELAY` if you encounter rate limiting issues
+
+## Re-enabling the NOFO Scraper
+
+⚠️ **Current Status**: Both automated scheduling and manual triggering are disabled. To re-enable:
+
+### Re-enable Automated Scheduling
+
+1. **Uncomment the EventBridge Rule**: In `lib/chatbot-api/functions/functions.ts`, uncomment the following code block:
+   ```typescript
+   // DISABLED: Create EventBridge rule to run the scraper daily at 9 AM UTC
+   // Automated scheduling has been disabled - manual triggering is still available via API
+   /*
+   const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
+     schedule: events.Schedule.cron({
+       minute: '0',
+       hour: '9',
+       day: '*',
+       month: '*',
+       year: '*',
+     }),
+     description: 'Trigger automated NOFO scraper daily at 9 AM UTC',
+   });
+
+   // Add the Lambda function as a target for the EventBridge rule
+   scraperRule.addTarget(new targets.LambdaFunction(automatedNofoScraperFunction));
+   */
+   ```
+
+### Re-enable Manual Triggering
+
+2. **Uncomment the UI Components**: In `lib/user-interface/app/src/pages/Dashboard/index.tsx`, uncomment:
+   - The `isScraping` state variable
+   - The `handleAutomatedScraper` function
+   - The scraper button in the action buttons section
+
+3. **Deploy the Changes**: 
+   - Run `cdk deploy` for backend changes
+   - Rebuild and deploy the frontend for UI changes
+
+4. **Update Documentation**: Remove the "DISABLED" warnings from this documentation.
+
    - Increase `RATE_LIMIT_DELAY` if hitting API limits
    - Monitor API usage in Grants.gov dashboard
 

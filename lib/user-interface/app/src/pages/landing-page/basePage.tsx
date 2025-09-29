@@ -6,6 +6,7 @@ import { AppContext } from '../../common/app-context';
 import { v4 as uuidv4 } from 'uuid';
 import '../../styles/base-page.css';
 import IntegratedSearchBar from '../../components/search/IntegratedSearchBar';
+import { addToRecentlyViewed, getRecentlyViewed, cleanupRecentlyViewed } from "../../utils/recently-viewed-nofos";
 
 export default function Welcome({ theme }) {
   // **State Variables**
@@ -104,8 +105,7 @@ export default function Welcome({ theme }) {
 
   // Load recently viewed NOFOs from localStorage
   useEffect(() => {
-    const storedHistory =
-      JSON.parse(localStorage.getItem("recentlyViewedNOFOs")) || [];
+    const storedHistory = getRecentlyViewed();
     setRecentlyViewedNOFOs(storedHistory);
   }, []);
 
@@ -113,23 +113,12 @@ export default function Welcome({ theme }) {
   useEffect(() => {
     if (documents.length === 0) return;
     
-    // Get current stored history directly from localStorage
-    const currentHistory = JSON.parse(localStorage.getItem("recentlyViewedNOFOs")) || [];
-    
     // Get the current list of NOFO names
     const activeNofoNames = documents.map(doc => doc.label);
     
-    // Filter out any NOFOs that are no longer in the active list
-    const filteredHistory = currentHistory.filter(nofo => 
-      activeNofoNames.includes(nofo.label)
-    );
-    
-    // Only update if something changed
-    if (JSON.stringify(filteredHistory) !== JSON.stringify(currentHistory)) {
-      setRecentlyViewedNOFOs(filteredHistory);
-      localStorage.setItem("recentlyViewedNOFOs", JSON.stringify(filteredHistory));
-      console.log(`Filtered out ${currentHistory.length - filteredHistory.length} archived NOFOs from history`);
-    }
+    // Clean up recently viewed NOFOs and update state
+    const filteredHistory = cleanupRecentlyViewed(activeNofoNames);
+    setRecentlyViewedNOFOs(filteredHistory);
   }, [documents]);
 
   // Fetch NOFO documents from S3
@@ -174,23 +163,9 @@ export default function Welcome({ theme }) {
 
   // Handle selecting a NOFO document
   const handleNOFOSelect = (href, selectedNOFO) => {
-    const nofoWithTimestamp = {
-      ...selectedNOFO,
-      lastViewed: new Date().toLocaleString()
-    };
-    
-    // Update recently viewed NOFOs in localStorage
-    const updatedHistory = [
-      nofoWithTimestamp,
-      ...recentlyViewedNOFOs.filter(
-        (item) => item.value !== selectedNOFO.value
-      ),
-    ].slice(0, 3); // Keep only the 3 most recent items
+    // Update recently viewed NOFOs using utility function
+    const updatedHistory = addToRecentlyViewed(selectedNOFO);
     setRecentlyViewedNOFOs(updatedHistory);
-    localStorage.setItem(
-      "recentlyViewedNOFOs",
-      JSON.stringify(updatedHistory)
-    );
 
     // Navigate to the selected NOFO
     navigate(href);
@@ -634,7 +609,10 @@ export default function Welcome({ theme }) {
           <button
             onClick={() => {
               if (selectedDocument) {
-                window.location.href = `/landing-page/basePage/checklists/${encodeURIComponent(selectedDocument.value)}`;
+                handleNOFOSelect(
+                  `/landing-page/basePage/checklists/${encodeURIComponent(selectedDocument.value)}`,
+                  selectedDocument
+                );
               }
             }}
             disabled={!selectedDocument}
@@ -658,6 +636,11 @@ export default function Welcome({ theme }) {
           <button
             onClick={() => {
               if (selectedDocument) {
+                // Track the NOFO as recently viewed before navigating to document editor
+                const updatedHistory = addToRecentlyViewed(selectedDocument);
+                setRecentlyViewedNOFOs(updatedHistory);
+                
+                // Navigate to document editor
                 window.location.href = `/document-editor?nofo=${encodeURIComponent(selectedDocument.value)}`;
               }
             }}
@@ -682,6 +665,11 @@ export default function Welcome({ theme }) {
           <button
             onClick={() => {
               if (selectedDocument) {
+                // Track the NOFO as recently viewed before navigating to chatbot
+                const updatedHistory = addToRecentlyViewed(selectedDocument);
+                setRecentlyViewedNOFOs(updatedHistory);
+                
+                // Navigate to chatbot
                 const newSessionId = uuidv4();
                 window.location.href = `/chatbot/playground/${newSessionId}?folder=${encodeURIComponent(selectedDocument.value)}`;
               }
