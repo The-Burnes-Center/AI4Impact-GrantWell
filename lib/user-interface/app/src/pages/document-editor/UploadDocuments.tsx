@@ -31,56 +31,64 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles && selectedFiles.length > 0) {
-      const newFiles: FileInfo[] = [];
-      for (let i = 0; i < selectedFiles.length; i++) {
-        const file = selectedFiles[i];
-        newFiles.push({
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          lastModified: file.lastModified,
-        });
-      }
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    }
+    // Upload functionality disabled
+    return;
+    // const selectedFiles = event.target.files;
+    // if (selectedFiles && selectedFiles.length > 0) {
+    //   const newFiles: FileInfo[] = [];
+    //   for (let i = 0; i < selectedFiles.length; i++) {
+    //     const file = selectedFiles[i];
+    //     newFiles.push({
+    //       name: file.name,
+    //       size: file.size,
+    //       type: file.type,
+    //       lastModified: file.lastModified,
+    //     });
+    //   }
+    //   setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    // }
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setIsDragging(true);
+    // Upload functionality disabled
+    // setIsDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setIsDragging(false);
+    // Upload functionality disabled
+    // setIsDragging(false);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setIsDragging(false);
+    // Upload functionality disabled - no file handling
+    return;
+    // setIsDragging(false);
 
-    const droppedFiles = e.dataTransfer.files;
-    if (droppedFiles && droppedFiles.length > 0) {
-      const newFiles: FileInfo[] = [];
-      for (let i = 0; i < droppedFiles.length; i++) {
-        const file = droppedFiles[i];
-        newFiles.push({
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          lastModified: file.lastModified,
-        });
-      }
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    }
+    // const droppedFiles = e.dataTransfer.files;
+    // if (droppedFiles && droppedFiles.length > 0) {
+    //   const newFiles: FileInfo[] = [];
+    //   for (let i = 0; i < droppedFiles.length; i++) {
+    //     const file = droppedFiles[i];
+    //     newFiles.push({
+    //       name: file.name,
+    //       size: file.size,
+    //       type: file.type,
+    //       lastModified: file.lastModified,
+    //     });
+    //   }
+    //   setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    // }
   };
 
   const openFileSelector = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    // Upload functionality disabled
+    return;
+    // if (fileInputRef.current) {
+    //   fileInputRef.current.click();
+    // }
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -157,12 +165,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           ...result  // Add new sections
         },
         additionalInfo: additionalInfo,
-        uploadedFiles: files.map(f => ({
-          name: f.name,
-          size: f.size,
-          type: f.type,
-          lastModified: f.lastModified
-        }))
+        uploadedFiles: [] // Upload functionality disabled - no files to include
       });
       console.log('Draft updated successfully. Navigating to next step.');
 
@@ -178,11 +181,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
-      <h2 style={{ marginBottom: "16px" }}>Upload Supporting Documents</h2>
+      <h2 style={{ marginBottom: "16px" }}>Supporting Documents</h2>
       <p style={{ color: "#4a5568", marginBottom: "24px" }}>
-        Upload any relevant documents or supporting materials for your grant
-        application. These documents will help strengthen your application and
-        provide additional context.
+        Document upload functionality is currently disabled. You can proceed to create your draft without uploading additional documents.
       </p>
 
       <div
@@ -197,25 +198,20 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         <div style={{ marginBottom: "24px" }}>
           <div
             style={{
-              border: `2px dashed ${isDragging ? "#4361ee" : "#d4daff"}`,
+              border: "2px dashed #e2e8f0",
               borderRadius: "8px",
               padding: "24px",
               textAlign: "center",
-              background: isDragging ? "#ebf0ff" : "#f7fafc",
-              cursor: "pointer",
-              transition: "all 0.2s ease",
+              background: "#f7fafc",
+              opacity: 0.6,
             }}
-            onClick={openFileSelector}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
           >
             <svg
               viewBox="0 0 24 24"
               style={{
                 width: "40px",
                 height: "40px",
-                stroke: "#4361ee",
+                stroke: "#a0aec0",
                 fill: "none",
                 strokeWidth: 2,
                 strokeLinecap: "round",
@@ -228,37 +224,24 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <p style={{ marginBottom: "16px", color: "#4a5568" }}>
-              Drag and drop files here or click to browse
+            <p style={{ marginBottom: "16px", color: "#a0aec0" }}>
+              File upload is currently disabled
             </p>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                openFileSelector();
-              }}
+              disabled
               style={{
-                background: "#4361ee",
-                color: "white",
+                background: "#e2e8f0",
+                color: "#a0aec0",
                 border: "none",
                 padding: "8px 16px",
                 borderRadius: "4px",
                 fontSize: "14px",
-                cursor: "pointer",
+                cursor: "not-allowed",
               }}
             >
-              Select Files
+              Upload Disabled
             </button>
-            <input
-              type="file"
-              multiple
-              style={{ display: "none" }}
-              ref={fileInputRef}
-              onChange={handleFileSelect}
-            />
           </div>
-          <p style={{ fontSize: "12px", color: "#718096", marginTop: "8px" }}>
-            Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG
-          </p>
         </div>
 
         <div style={{ marginBottom: "24px" }}>
@@ -275,55 +258,58 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           </ul>
         </div>
 
-        <div style={{ marginBottom: "24px" }}>
-          <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>Files</h3>
-          {files.length === 0 ? (
-            <p style={{ color: "#718096", fontStyle: "italic" }}>
-              No files uploaded yet
-            </p>
-          ) : (
-            <div>
-              {files.map((file, index) => (
-                <div
-                  key={`${file.name}-${index}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "8px 12px",
-                    backgroundColor: "#f7fafc",
-                    borderRadius: "4px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <span style={{ marginRight: "8px", fontSize: "20px" }}>
-                    {getFileIcon(file.type)}
-                  </span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 500 }}>{file.name}</div>
-                    <div style={{ fontSize: "12px", color: "#718096" }}>
-                      {formatFileSize(file.size)}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setFiles(files.filter((_, i) => i !== index));
-                    }}
+        {/* File list section disabled since upload is disabled */}
+        {false && (
+          <div style={{ marginBottom: "24px" }}>
+            <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>Files</h3>
+            {files.length === 0 ? (
+              <p style={{ color: "#718096", fontStyle: "italic" }}>
+                No files uploaded yet
+              </p>
+            ) : (
+              <div>
+                {files.map((file, index) => (
+                  <div
+                    key={`${file.name}-${index}`}
                     style={{
-                      background: "none",
-                      border: "none",
-                      color: "#a0aec0",
-                      cursor: "pointer",
-                      fontSize: "18px",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "8px 12px",
+                      backgroundColor: "#f7fafc",
+                      borderRadius: "4px",
+                      marginBottom: "8px",
                     }}
-                    title="Remove file"
                   >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                    <span style={{ marginRight: "8px", fontSize: "20px" }}>
+                      {getFileIcon(file.type)}
+                    </span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 500 }}>{file.name}</div>
+                      <div style={{ fontSize: "12px", color: "#718096" }}>
+                        {formatFileSize(file.size)}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setFiles(files.filter((_, i) => i !== index));
+                      }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "#a0aec0",
+                        cursor: "pointer",
+                        fontSize: "18px",
+                      }}
+                      title="Remove file"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <div>
           <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>

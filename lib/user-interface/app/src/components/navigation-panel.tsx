@@ -342,46 +342,51 @@ export default function NavigationPanel({
         <Box />
       </div>
 
-      <Box margin="xs" padding={{ top: "l" }} textAlign="center">
-        <SpaceBetween size="xl">
-          <Box textAlign="right" margin={{ right: "l" }}>
-            <h2
-              style={{ fontSize: "24px", display: "inline", color: "#0073bb" }}
-            >
-              File Upload
-            </h2>
+      {/* File Upload section disabled */}
+      {false && (
+        <>
+          <Box margin="xs" padding={{ top: "l" }} textAlign="center">
+            <SpaceBetween size="xl">
+              <Box textAlign="right" margin={{ right: "l" }}>
+                <h2
+                  style={{ fontSize: "24px", display: "inline", color: "#0073bb" }}
+                >
+                  File Upload
+                </h2>
+              </Box>
+            </SpaceBetween>
           </Box>
-        </SpaceBetween>
-      </Box>
-      <Box margin={{ horizontal: "l" }}>
-        <SpaceBetween size="l">
-          <DataFileUpload tabChangeFunction={() => setActiveTab("file")} />
-          {isAdmin && (
-            <Button
-              variant="link"
-              iconName={
-                activeTab === "backend-controls" ? "caret-down" : "caret-up"
-              }
-              onClick={() =>
-                setActiveTab(
-                  activeTab === "backend-controls" ? "" : "backend-controls"
-                )
-              }
-            >
-              Manage Backend Files
-            </Button>
-          )}
-          {isAdmin && activeTab === "backend-controls" && (
-            <DocumentsTab
-              tabChangeFunction={() => setActiveTab("add-data")}
-              documentType="file"
-              statusRefreshFunction={refreshSyncTime}
-              lastSyncTime={lastSyncTime}
-              setShowUnsyncedAlert={setShowUnsyncedAlert}
-            />
-          )}
-        </SpaceBetween>
-      </Box>
+          <Box margin={{ horizontal: "l" }}>
+            <SpaceBetween size="l">
+              <DataFileUpload tabChangeFunction={() => setActiveTab("file")} />
+              {isAdmin && (
+                <Button
+                  variant="link"
+                  iconName={
+                    activeTab === "backend-controls" ? "caret-down" : "caret-up"
+                  }
+                  onClick={() =>
+                    setActiveTab(
+                      activeTab === "backend-controls" ? "" : "backend-controls"
+                    )
+                  }
+                >
+                  Manage Backend Files
+                </Button>
+              )}
+              {isAdmin && activeTab === "backend-controls" && (
+                <DocumentsTab
+                  tabChangeFunction={() => setActiveTab("add-data")}
+                  documentType="file"
+                  statusRefreshFunction={refreshSyncTime}
+                  lastSyncTime={lastSyncTime}
+                  setShowUnsyncedAlert={setShowUnsyncedAlert}
+                />
+              )}
+            </SpaceBetween>
+          </Box>
+        </>
+      )}
       <div
         style={{
           borderBottom: "1px solid #dedee2",

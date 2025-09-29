@@ -102,30 +102,31 @@ export default function NavigationPanel({ documentIdentifier }) {
         type: "section",
         text: "Resources",
         items: [
-          {
-            type: "link",
-            //text: "Current Files",
-            href: "#",
-            info: (
-              <DocumentsTab
-                tabChangeFunction={() => setActiveTab("add-data")}
-                documentType="file"
-                statusRefreshFunction={refreshSyncTime}
-                lastSyncTime={lastSyncTime}
-                setShowUnsyncedAlert={setShowUnsyncedAlert}
-              />
-            ),
-          },
-          {
-            type: "link",
-            text: "Add Files",
-            href: "#",
-            info: (
-              <DataFileUpload 
-                tabChangeFunction={() => setActiveTab("file")}
-              />
-            ),
-          },
+          // Upload functionality disabled
+          // {
+          //   type: "link",
+          //   //text: "Current Files",
+          //   href: "#",
+          //   info: (
+          //     <DocumentsTab
+          //       tabChangeFunction={() => setActiveTab("add-data")}
+          //       documentType="file"
+          //       statusRefreshFunction={refreshSyncTime}
+          //       lastSyncTime={lastSyncTime}
+          //       setShowUnsyncedAlert={setShowUnsyncedAlert}
+          //     />
+          //   ),
+          // },
+          // {
+          //   type: "link",
+          //   text: "Add Files",
+          //   href: "#",
+          //   info: (
+          //     <DataFileUpload 
+          //       tabChangeFunction={() => setActiveTab("file")}
+          //     />
+          //   ),
+          // },
           {
             type: "link",
             text: "Prompt Engineering Guide",
