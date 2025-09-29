@@ -426,116 +426,121 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             ></textarea>
           </div>
 
-          <button
-            onClick={handleRegenerateContent}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              padding: "12px",
-              background: "#f0f4ff",
-              color: "#4361ee",
-              border: "1px solid #d4daff",
-              borderRadius: "8px",
-              fontSize: "16px",
-              cursor: "pointer",
-              marginBottom: "32px",
-            }}
-          >
-            <svg
-              viewBox="0 0 24 24"
+          {/* Regenerate Content with AI button - DISABLED */}
+          {false && (
+            <button
+              onClick={handleRegenerateContent}
               style={{
-                width: "20px",
-                height: "20px",
-                stroke: "currentColor",
-                fill: "none",
-                strokeWidth: 2,
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                marginRight: "8px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                padding: "12px",
+                background: "#f0f4ff",
+                color: "#4361ee",
+                border: "1px solid #d4daff",
+                borderRadius: "8px",
+                fontSize: "16px",
+                cursor: "pointer",
+                marginBottom: "32px",
               }}
             >
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-              <path d="M3 3v5h5"></path>
-            </svg>
-            Regenerate Content with AI
-          </button>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "2fr 1fr",
-              gap: "24px",
-              marginBottom: "32px",
-            }}
-          >
-            <div>
-              <h3
+              <svg
+                viewBox="0 0 24 24"
                 style={{
-                  fontSize: "18px",
-                  fontWeight: 600,
-                  color: "#111827",
-                  marginBottom: "12px",
+                  width: "20px",
+                  height: "20px",
+                  stroke: "currentColor",
+                  fill: "none",
+                  strokeWidth: 2,
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  marginRight: "8px",
                 }}
               >
-                Content Suggestions
-              </h3>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                <button
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+              Regenerate Content with AI
+            </button>
+          )}
+
+          {/* Content Suggestions and Completion Checklist sections - DISABLED */}
+          {false && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "2fr 1fr",
+                gap: "24px",
+                marginBottom: "32px",
+              }}
+            >
+              <div>
+                <h3
                   style={{
-                    padding: "8px 16px",
-                    background: "white",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: "6px",
-                    color: "#4b5563",
-                    fontSize: "14px",
-                    cursor: "pointer",
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    color: "#111827",
+                    marginBottom: "12px",
                   }}
                 >
-                  Add Community Impact
-                </button>
-                <button
-                  style={{
-                    padding: "8px 16px",
-                    background: "white",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: "6px",
-                    color: "#4b5563",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Add Statistics
-                </button>
-                <button
-                  style={{
-                    padding: "8px 16px",
-                    background: "white",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: "6px",
-                    color: "#4b5563",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Add Economic Impact
-                </button>
-                <button
-                  style={{
-                    padding: "8px 16px",
-                    background: "white",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: "6px",
-                    color: "#4b5563",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Add Comparison
-                </button>
+                  Content Suggestions
+                </h3>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                  <button
+                    style={{
+                      padding: "8px 16px",
+                      background: "white",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "6px",
+                      color: "#4b5563",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Add Community Impact
+                  </button>
+                  <button
+                    style={{
+                      padding: "8px 16px",
+                      background: "white",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "6px",
+                      color: "#4b5563",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Add Statistics
+                  </button>
+                  <button
+                    style={{
+                      padding: "8px 16px",
+                      background: "white",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "6px",
+                      color: "#4b5563",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Add Economic Impact
+                  </button>
+                  <button
+                    style={{
+                      padding: "8px 16px",
+                      background: "white",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "6px",
+                      color: "#4b5563",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Add Comparison
+                  </button>
+                </div>
               </div>
-            </div>
 
             <div>
               <h3
@@ -650,6 +655,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               </div>
             </div>
           </div>
+          )}
 
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <button
