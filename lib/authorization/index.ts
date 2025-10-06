@@ -37,16 +37,16 @@ export class AuthorizationStack extends Construct {
       userInvitation: {
         emailSubject: 'Welcome to GrantWell!',
         emailBody:
-          'Hello,<br><br>' +  
-          'I am pleased to inform you that the new custom deployment link for the GrantWell tool is now ready for testing. All future updates and changes will be applied to this new link.<br><br>' +
-          'Please note that the tool is currently under development, so you may encounter some issues. We kindly request that you provide feedback regarding the tool\'s performance.<br><br>' +
+          'Hello everyone,<br><br>' +
+          'We\'re excited to share that the custom deployment link for the GrantWell tool is now live and ready for testing. All upcoming updates and improvements will be applied to this version moving forward.<br><br>' +
+          'Please note that the tool is still under active development, so you may encounter occasional issues during use. Your feedback will be invaluable in helping us refine and enhance the overall experience.<br><br>' +
           '<strong>Access the Application:</strong><br>' +
-          'You can access GrantWell using the following link:<br>' +
           '<a href="' + emailConfig.deploymentUrl + '">GrantWell Application</a><br><br>' +
           '<strong>Login Credentials:</strong><br>' +
           'Username: {username}<br>' +
           'Temporary Password: {####}<br><br>' +
-          'Thank you,<br>' +
+          'Thank you all for your continued support and collaboration as we move into this next phase of testing.<br><br>' +
+          'Warm regards,<br>' +
           'The GrantWell Team',
         smsMessage: 'Hello {username}, your temporary password for GrantWell is {####}'
       }

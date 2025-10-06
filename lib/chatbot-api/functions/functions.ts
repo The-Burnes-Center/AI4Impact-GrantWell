@@ -403,7 +403,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     //     'bedrock:*',
     //     'textract:*'
     //   ],
-    //   resources: [props.ffioNofosBucket.bucketArn,props.ffioNofosBucket.bucketArn+"/*",'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0']
+    //   resources: [props.ffioNofosBucket.bucketArn,props.ffioNofosBucket.bucketArn+"/*",'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-4-sonnet-20240514-v1:0']
     // }));
     // S3 permissions
     processNOFOAPIHandlerFunction.addToRolePolicy(
