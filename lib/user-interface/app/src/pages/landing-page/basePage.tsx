@@ -795,7 +795,7 @@ export default function Welcome({ theme }) {
         </ContentBox>
 
         {/* Feedback Section */}
-        <InfoBanner
+        {/* <InfoBanner
           title="We Value Your Feedback!"
           height="150px"
           description="Help us make GrantWell better by sharing your thoughts and suggestions."
@@ -804,7 +804,7 @@ export default function Welcome({ theme }) {
             window.open("https://forms.gle/M2PHgWTVVRrRubpc7", "_blank")
           }
           backgroundColor="#006499"
-        />
+        /> */}
 
         {/* Affiliations Section */}
         <InfoBanner

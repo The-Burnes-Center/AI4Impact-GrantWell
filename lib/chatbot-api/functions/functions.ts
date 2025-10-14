@@ -7,7 +7,6 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
 import { stackName } from "../../constants";
-import { PROMPT_TEXT } from "./prompt";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -179,7 +178,6 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
-          PROMPT: PROMPT_TEXT,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SESSION_HANDLER: this.sessionFunction.functionName,
         },
@@ -403,7 +401,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     //     'bedrock:*',
     //     'textract:*'
     //   ],
-    //   resources: [props.ffioNofosBucket.bucketArn,props.ffioNofosBucket.bucketArn+"/*",'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0']
+    //   resources: [props.ffioNofosBucket.bucketArn,props.ffioNofosBucket.bucketArn+"/*",'arn:aws:bedrock:us-east-1::foundation-model/us.anthropic.claude-sonnet-4-20250514-v1:0']
     // }));
     // S3 permissions
     processNOFOAPIHandlerFunction.addToRolePolicy(
