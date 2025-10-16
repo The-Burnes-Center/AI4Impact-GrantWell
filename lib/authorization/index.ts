@@ -53,7 +53,7 @@ export class AuthorizationStack extends Construct {
       userVerification: {
         emailSubject: 'Verify Your Account on GrantWell',
         emailBody:
-          'Hello {username},<br><br>' +
+          'Hello everyone,<br><br>' +
           'We are thrilled to have you join GrantWell! As we are still in development, you might face some occasional issues. Your feedback is invaluable in helping us improve.<br><br>' +
           'The verification code for your new account is {####}. Please enter this code on the verification page to complete the signup process.<br><br>' +
           'Thank you for choosing GrantWell!<br><br>Warm regards,<br>The GrantWell Team',
