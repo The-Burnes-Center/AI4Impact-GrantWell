@@ -182,7 +182,7 @@ export class Routes extends Construct {
       environment: {
         DRAFT_GENERATOR_FUNCTION: props.draftGeneratorFunction.functionName,
       },
-      timeout: Duration.seconds(30),
+      timeout: Duration.minutes(2),
     });
 
     // Grant the API function permission to invoke the Draft Generator function
