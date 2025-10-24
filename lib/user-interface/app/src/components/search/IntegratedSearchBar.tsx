@@ -730,88 +730,25 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 padding: '20px 24px',
                 margin: '15px 0',
                 border: '2px solid #0073BB',
-                boxShadow: '0 2px 8px rgba(0, 115, 187, 0.1)'
+                boxShadow: '0 2px 8px rgba(0, 115, 187, 0.1)',
+                textAlign: 'left'
               }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: '16px'
-                }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '10px' }}>
-                    <circle cx="12" cy="12" r="10" stroke="#0073BB" strokeWidth="2"/>
-                    <path d="M12 8V12L15 15" stroke="#0073BB" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                  <h4 style={{ 
-                    margin: '0',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    color: '#0073BB'
-                  }}>
-                    How to Search:
-                  </h4>
-                </div>
-                <ul style={{
-                  margin: '0',
-                  padding: '0',
+                <p style={{
+                  margin: '0 0 12px 0',
                   fontSize: '14px',
                   color: '#333',
-                  listStyleType: 'none'
+                  lineHeight: '1.6'
                 }}>
-                  <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'flex-start' }}>
-                    <span style={{ 
-                      backgroundColor: '#0073BB',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '24px',
-                      height: '24px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      marginRight: '12px',
-                      flexShrink: 0,
-                      boxShadow: '0 2px 4px rgba(0, 115, 187, 0.3)'
-                    }}>1</span>
-                    <span style={{ lineHeight: '24px' }}>Type a grant name or keywords from our repository</span>
-                  </li>
-                  <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'flex-start' }}>
-                    <span style={{ 
-                      backgroundColor: '#0073BB',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '24px',
-                      height: '24px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      marginRight: '12px',
-                      flexShrink: 0,
-                      boxShadow: '0 2px 4px rgba(0, 115, 187, 0.3)'
-                    }}>2</span>
-                    <span style={{ lineHeight: '24px' }}>Browse through matching grants in the dropdown below</span>
-                  </li>
-                  <li style={{ display: 'flex', alignItems: 'flex-start' }}>
-                    <span style={{ 
-                      backgroundColor: '#0073BB',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '24px',
-                      height: '24px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      marginRight: '12px',
-                      flexShrink: 0,
-                      boxShadow: '0 2px 4px rgba(0, 115, 187, 0.3)'
-                    }}>3</span>
-                    <span style={{ lineHeight: '24px' }}>Or use the Grant Assistant below for personalized recommendations</span>
-                  </li>
-                </ul>
+                  <strong>Know the grant you need?</strong> Type its name above and browse through matching grants in the list.
+                </p>
+                <p style={{
+                  margin: '0',
+                  fontSize: '14px',
+                  color: '#333',
+                  lineHeight: '1.6'
+                }}>
+                  <strong>Not sure where to start?</strong> Click "Grant Assistant" below to describe what you're looking for.
+                </p>
               </div>
               <AssistantButton query={undefined} />
             </div>

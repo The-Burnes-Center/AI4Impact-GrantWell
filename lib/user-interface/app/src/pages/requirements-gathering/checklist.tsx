@@ -824,108 +824,21 @@ const Checklists: React.FC = () => {
                         color: THEME.colors.text,
                       }}
                     >
-                      <h3
-                        style={{
-                          fontSize: "18px",
-                          fontWeight: 600,
-                          marginTop: "24px",
-                          marginBottom: "8px",
-                          color: THEME.colors.heading,
-                        }}
-                      >
-                        Navigation Panel
-                      </h3>
-                      <p>
-                        The left sidebar allows you to navigate between
-                        different tools:
+                      <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
+                        <strong>Reviewing requirements:</strong> Click through the tabs above (Eligibility, Required Documents, Narrative Sections, Key Deadlines) to see what you need for this grant.
                       </p>
-                      <ul
-                        style={{
-                          marginTop: "8px",
-                          marginBottom: "16px",
-                          paddingLeft: "24px",
-                        }}
-                      >
-                        <li style={{ marginBottom: "8px" }}>
-                          <strong>Chat / Ask AI</strong>: Opens the AI assistant
-                          to ask questions about the grant or get help with your
-                          application.
-                        </li>
-                        <li style={{ marginBottom: "8px" }}>
-                          <strong>Grant Application</strong>: Takes you to the
-                          document editor to start drafting your grant
-                          application.
-                        </li>
-                        <li style={{ marginBottom: "16px" }}>
-                          <strong>Recently Viewed</strong>: Shows NOFOs you've
-                          recently viewed for quick access.
-                        </li>
-                      </ul>
-
-                      <h3
-                        style={{
-                          fontSize: "18px",
-                          fontWeight: 600,
-                          marginTop: "24px",
-                          marginBottom: "8px",
-                          color: THEME.colors.heading,
-                        }}
-                      >
-                        Content Tabs
-                      </h3>
-                      <p>This page is organized into four key sections:</p>
-                      <ul
-                        style={{
-                          marginTop: "8px",
-                          marginBottom: "16px",
-                          paddingLeft: "24px",
-                        }}
-                      >
-                        <li style={{ marginBottom: "8px" }}>
-                          <strong>Eligibility</strong>: Lists who can apply for
-                          this grant.
-                        </li>
-                        <li style={{ marginBottom: "8px" }}>
-                          <strong>Required Documents</strong>: Shows all
-                          documents you'll need to prepare.
-                        </li>
-                        <li style={{ marginBottom: "8px" }}>
-                          <strong>Narrative Sections</strong>: Outlines the
-                          sections your grant narrative must include.
-                        </li>
-                        <li style={{ marginBottom: "8px" }}>
-                          <strong>Key Deadlines</strong>: Important dates for
-                          your application.
-                        </li>
-                      </ul>
-
-                      <h3
-                        style={{
-                          fontSize: "18px",
-                          fontWeight: 600,
-                          marginTop: "24px",
-                          marginBottom: "8px",
-                          color: THEME.colors.heading,
-                        }}
-                      >
-                        Tips
-                      </h3>
-                      <ul
-                        style={{
-                          marginTop: "8px",
-                          marginBottom: "16px",
-                          paddingLeft: "24px",
-                        }}
-                      >
-                        <li style={{ marginBottom: "8px" }}>
-                          Use the Chat / Ask AI feature when you need
-                          clarification about any requirement.
-                        </li>
-                        <li>
-                          Once you're familiar with the requirements, proceed to
-                          the Grant Application page to start drafting.
-                        </li>
-                      </ul>
+                      
+                      <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
+                        <strong>Need help understanding something?</strong> Use "Chat with AI" in the left sidebar to ask questions about the grant requirements.
+                      </p>
+                      
+                      <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
+                        <strong>Ready to start writing?</strong> Click "Write Application" in the left sidebar to begin drafting your application.
+                      </p>
+                      
+                      <p style={{ marginBottom: "0", lineHeight: "1.6" }}>
+                        <strong>Want to check recent grants?</strong> Use "Recent Grants" in the left sidebar to quickly access grants you've looked at before.
+                      </p>
                     </div>
 
                     <button
@@ -1019,7 +932,7 @@ const Checklists: React.FC = () => {
                             <p style={styles.infoText}>
                               Our AI-powered chatbot can help assess your
                               organization's eligibility based on these
-                              criteria. Click the "Chat / Ask AI" button in the
+                              criteria. Click the "Chat with AI" button in the
                               navigation panel and ask: "Is my organization
                               eligible for this grant?"
                             </p>

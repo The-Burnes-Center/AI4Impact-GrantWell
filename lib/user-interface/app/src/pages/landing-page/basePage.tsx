@@ -192,7 +192,7 @@ export default function Welcome({ theme }) {
           marginBottom: "20px",
         }}
       >
-        Recently Viewed NOFOs
+        Recent Grants
       </h2>
       {recentlyViewedNOFOs.length > 0 ? (
         recentlyViewedNOFOs.slice(0, 6).map(

@@ -161,7 +161,7 @@ export default function RequirementsNavigation({
           >
             <MessageSquare size={20} />
             {sidebarOpen && (
-              <span style={styles.navLinkText}>Chat / Ask AI</span>
+              <span style={styles.navLinkText}>Chat with AI</span>
             )}
           </button>
 
@@ -182,7 +182,7 @@ export default function RequirementsNavigation({
           >
             <Edit size={20} />
             {sidebarOpen && (
-              <span style={styles.navLinkText}>Grant Application</span>
+              <span style={styles.navLinkText}>Write Application</span>
             )}
           </button>
         </div>
@@ -191,7 +191,7 @@ export default function RequirementsNavigation({
         {sidebarOpen && recentlyViewedNOFOs.length > 0 && (
           <div style={styles.recentlyViewedSection}>
             <div style={styles.sectionHeader}>
-              <span>Recently Viewed</span>
+              <span>Recent Grants</span>
             </div>
             {recentlyViewedNOFOs.slice(0, 3).map((nofo, index) => (
               <button

@@ -183,7 +183,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
             {isOpen && (
-              <span style={{ marginLeft: "12px" }}>Chat / Ask AI</span>
+              <span style={{ marginLeft: "12px" }}>Chat with AI</span>
             )}
           </button>
 

@@ -259,7 +259,7 @@ export default function BaseAppLayout({
               >
                 <Edit size={20} />
                 {sidebarOpen && (
-                  <span style={styles.navLinkText}>Grant Application</span>
+                  <span style={styles.navLinkText}>Write Application</span>
                 )}
               </button>
 

@@ -334,30 +334,22 @@ export default function Chat(props: {
 
             <div style={styles.modalContent}>
               <p>
-                Welcome to the GrantWell chatbot interface! The purpose of this
-                chatbot is to prompt you through the project narrative section
-                of your grant. The chatbot will begin by prompting you for some
-                basic information.
-                <br></br>
-                GrantWell will help you craft a narrative that reflects your
-                organization using the available knowledge base and grant
-                requirements.
+                Welcome to the GrantWell chatbot interface! This AI-powered assistant is your expert guide for understanding and navigating grant applications and NOFOs (Notices of Funding Opportunity).
                 <br></br>
                 <br></br>
-                The chatbot will guide you through creating sections such as:
+                <strong>What the chatbot can do:</strong>
                 <ul
                   style={{
                     paddingLeft: "24px",
                     marginBottom: "16px",
-                    marginTop: "4px",
+                    marginTop: "8px",
                   }}
                 >
-                  <li style={styles.listItem}>Project description</li>
-                  <li style={styles.listItem}>Goals and objectives</li>
-                  <li style={styles.listItem}>
-                    Implementation plan and timeline
-                  </li>
-                  <li style={styles.listItem}>Budget justification</li>
+                  <li style={styles.listItem}>Answer questions about specific grant requirements, eligibility criteria, and NOFO sections</li>
+                  <li style={styles.listItem}>Review and analyze your draft grant narratives and applications for completeness and competitiveness</li>
+                  <li style={styles.listItem}>Assess your organization's eligibility for specific funding opportunities</li>
+                  <li style={styles.listItem}>Explain deadlines, submission requirements, budget rules, cost-sharing, and post-award compliance</li>
+                  <li style={styles.listItem}>Provide specific, actionable feedback tied to evaluation criteria</li>
                 </ul>
               </p>
               <p
@@ -366,12 +358,10 @@ export default function Chat(props: {
                   color: "#1a73e8",
                 }}
               >
-                Ensure you upload as much as supplementary data before beginning
-                conversation with the chatbot.
+                <strong>Pro Tip:</strong> Upload your organizational documents (mission statements, past projects, draft narratives, etc.) and the chatbot can review them against the NOFO requirements to provide detailed feedback.
               </p>
-              <p style={{ fontSize: "14px", color: "#666", marginTop: "4px" }}>
-                Click the "View Help" Button in the upper right corner to access
-                this information again.
+              <p style={{ fontSize: "14px", color: "#666", marginTop: "12px" }}>
+                Click the "View Help" button in the upper right corner to access this information again.
               </p>
               <div style={styles.checkboxContainer}>
                 <input
