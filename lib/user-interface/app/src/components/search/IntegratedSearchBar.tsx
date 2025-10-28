@@ -1351,7 +1351,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   fontWeight: "600",
                 }}
               >
-                All Available Grants
+                All Available Grants ({documents.length})
               </h2>
               <button
                 style={{
@@ -1428,65 +1428,61 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                       </h3>
                       <div
                         style={{
-                          display: "grid",
-                          gridTemplateColumns:
-                            "repeat(auto-fill, minmax(250px, 1fr))",
-                          gap: "16px",
+                          border: "1px solid #e0e0e0",
+                          borderRadius: "8px",
+                          backgroundColor: "#fff",
                         }}
                       >
                         {pinnedGrants.map((grant, index) => (
                           <div
                             key={`pinned-${index}`}
                             style={{
-                              padding: "16px",
-                              border: "2px solid #00a1b2",
-                              borderRadius: "8px",
-                              backgroundColor: "#f0ffff",
+                              padding: "14px 16px",
+                              borderBottom:
+                                index < pinnedGrants.length - 1
+                                  ? "1px solid #e0e0e0"
+                                  : "none",
                               cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                              transition: "background-color 0.2s ease",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
                             }}
                             onClick={() => {
                               handlePinnedGrantSelect(grant);
                               setShowViewAllModal(false);
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.transform =
-                                "translateY(-2px)";
-                              e.currentTarget.style.boxShadow =
-                                "0 4px 8px rgba(0, 0, 0, 0.15)";
+                              e.currentTarget.style.backgroundColor = "#f0ffff";
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = "translateY(0)";
-                              e.currentTarget.style.boxShadow =
-                                "0 2px 4px rgba(0, 0, 0, 0.1)";
+                              e.currentTarget.style.backgroundColor =
+                                "transparent";
                             }}
                           >
                             <div
                               style={{
                                 fontSize: "15px",
-                                fontWeight: "600",
                                 color: "#006499",
-                                marginBottom: "8px",
                                 display: "flex",
-                                alignItems: "flex-start",
-                                gap: "8px",
+                                alignItems: "center",
+                                gap: "10px",
                               }}
                             >
-                              <span style={{ flex: 1 }}>{grant.name}</span>
+                              <span>{grant.name}</span>
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  fontSize: "11px",
+                                  backgroundColor: "#00a1b2",
+                                  color: "white",
+                                  padding: "3px 8px",
+                                  borderRadius: "12px",
+                                }}
+                              >
+                                Pinned
+                              </span>
                             </div>
-                            <span
-                              style={{
-                                display: "inline-block",
-                                fontSize: "11px",
-                                backgroundColor: "#00a1b2",
-                                color: "white",
-                                padding: "3px 8px",
-                                borderRadius: "12px",
-                              }}
-                            >
-                              Pinned
-                            </span>
                           </div>
                         ))}
                       </div>
@@ -1495,36 +1491,11 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
                   {/* All Grants Section */}
                   <div>
-                    <h3
-                      style={{
-                        fontSize: "18px",
-                        color: "#006499",
-                        marginBottom: "16px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ marginRight: "8px" }}
-                      >
-                        <path
-                          d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
-                          fill="#0073BB"
-                        />
-                      </svg>
-                      All Grants ({documents.length})
-                    </h3>
                     <div
                       style={{
-                        display: "grid",
-                        gridTemplateColumns:
-                          "repeat(auto-fill, minmax(250px, 1fr))",
-                        gap: "16px",
+                        border: "1px solid #e0e0e0",
+                        borderRadius: "8px",
+                        backgroundColor: "#fff",
                       }}
                     >
                       {documents.map((doc, index) => {
@@ -1533,13 +1504,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                           <div
                             key={`doc-${index}`}
                             style={{
-                              padding: "16px",
-                              border: "1px solid #e0e0e0",
-                              borderRadius: "8px",
-                              backgroundColor: "#f9f9f9",
+                              padding: "14px 16px",
+                              borderBottom:
+                                index < documents.length - 1
+                                  ? "1px solid #e0e0e0"
+                                  : "none",
                               cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                              transition: "background-color 0.2s ease",
                             }}
                             onClick={() => {
                               setSearchTerm(doc.label);
@@ -1548,25 +1519,17 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               setShowResults(false);
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.transform =
-                                "translateY(-2px)";
-                              e.currentTarget.style.boxShadow =
-                                "0 4px 8px rgba(0, 0, 0, 0.15)";
-                              e.currentTarget.style.backgroundColor = "#ffffff";
+                              e.currentTarget.style.backgroundColor = "#f7faff";
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = "translateY(0)";
-                              e.currentTarget.style.boxShadow =
-                                "0 2px 4px rgba(0, 0, 0, 0.1)";
-                              e.currentTarget.style.backgroundColor = "#f9f9f9";
+                              e.currentTarget.style.backgroundColor =
+                                "transparent";
                             }}
                           >
                             <div
                               style={{
                                 fontSize: "15px",
-                                fontWeight: "600",
                                 color: "#0073BB",
-                                wordBreak: "break-word",
                               }}
                             >
                               {doc.label}

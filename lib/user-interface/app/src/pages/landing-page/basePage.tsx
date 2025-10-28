@@ -204,7 +204,7 @@ export default function Welcome({ theme }) {
           marginBottom: "20px",
         }}
       >
-        Recent Grants
+        Recently viewed funding calls (NOFOs)
       </h2>
       {recentlyViewedNOFOs.length > 0 ? (
         recentlyViewedNOFOs.slice(0, 6).map((nofo, index) => (
@@ -599,50 +599,53 @@ export default function Welcome({ theme }) {
           isLoading={loading}
         />
 
-        {/* CTA Buttons: View Key Requirements, Write Project Narrative, Get Grant Help */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "10px",
-            margin: "28px 0 8px 0",
-            width: "100%",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            onClick={() => {
-              if (selectedDocument) {
+        {/* CTA Buttons or Instructions */}
+        {selectedDocument ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "10px",
+              margin: "28px 0 8px 0",
+              width: "100%",
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <button
+              onClick={() => {
                 handleNOFOSelect(
                   `/landing-page/basePage/checklists/${encodeURIComponent(
                     selectedDocument.value
                   )}`,
                   selectedDocument
                 );
-              }
-            }}
-            disabled={!selectedDocument}
-            style={{
-              background: selectedDocument ? "#0073BB" : "#f0f0f0",
-              color: selectedDocument ? "white" : "#888",
-              border: "none",
-              borderRadius: "20px",
-              padding: "10px 22px",
-              fontSize: "15px",
-              fontWeight: 500,
-              cursor: selectedDocument ? "pointer" : "not-allowed",
-              transition: "background 0.2s",
-              minWidth: "180px",
-            }}
-            aria-label="View Key Requirements"
-          >
-            View Key Requirements
-          </button>
+              }}
+              style={{
+                background: "#0073BB",
+                color: "white",
+                border: "none",
+                borderRadius: "20px",
+                padding: "10px 22px",
+                fontSize: "15px",
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "background 0.2s",
+                minWidth: "180px",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#005A94";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              aria-label="View Key Requirements"
+            >
+              View Key Requirements
+            </button>
 
-          <button
-            onClick={() => {
-              if (selectedDocument) {
+            <button
+              onClick={() => {
                 // Track the NOFO as recently viewed before navigating to document editor
                 const updatedHistory = addToRecentlyViewed(selectedDocument);
                 setRecentlyViewedNOFOs(updatedHistory);
@@ -651,29 +654,32 @@ export default function Welcome({ theme }) {
                 window.location.href = `/document-editor?nofo=${encodeURIComponent(
                   selectedDocument.value
                 )}`;
-              }
-            }}
-            disabled={!selectedDocument}
-            style={{
-              background: selectedDocument ? "#0073BB" : "#f0f0f0",
-              color: selectedDocument ? "white" : "#888",
-              border: "none",
-              borderRadius: "20px",
-              padding: "10px 22px",
-              fontSize: "15px",
-              fontWeight: 500,
-              cursor: selectedDocument ? "pointer" : "not-allowed",
-              transition: "background 0.2s",
-              minWidth: "180px",
-            }}
-            aria-label="Write Project Narrative"
-          >
-            Write Project Narrative
-          </button>
+              }}
+              style={{
+                background: "#0073BB",
+                color: "white",
+                border: "none",
+                borderRadius: "20px",
+                padding: "10px 22px",
+                fontSize: "15px",
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "background 0.2s",
+                minWidth: "180px",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#005A94";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              aria-label="Write Project Narrative"
+            >
+              Write Project Narrative
+            </button>
 
-          <button
-            onClick={() => {
-              if (selectedDocument) {
+            <button
+              onClick={() => {
                 // Track the NOFO as recently viewed before navigating to chatbot
                 const updatedHistory = addToRecentlyViewed(selectedDocument);
                 setRecentlyViewedNOFOs(updatedHistory);
@@ -683,26 +689,106 @@ export default function Welcome({ theme }) {
                 window.location.href = `/chatbot/playground/${newSessionId}?folder=${encodeURIComponent(
                   selectedDocument.value
                 )}`;
-              }
-            }}
-            disabled={!selectedDocument}
+              }}
+              style={{
+                background: "#0073BB",
+                color: "white",
+                border: "none",
+                borderRadius: "20px",
+                padding: "10px 22px",
+                fontSize: "15px",
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "background 0.2s",
+                minWidth: "180px",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#005A94";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              aria-label="Get Grant Help"
+            >
+              Get Grant Help
+            </button>
+          </div>
+        ) : (
+          <div
             style={{
-              background: selectedDocument ? "#0073BB" : "#f0f0f0",
-              color: selectedDocument ? "white" : "#888",
-              border: "none",
-              borderRadius: "20px",
-              padding: "10px 22px",
-              fontSize: "15px",
-              fontWeight: 500,
-              cursor: selectedDocument ? "pointer" : "not-allowed",
-              transition: "background 0.2s",
-              minWidth: "180px",
+              margin: "28px auto 8px auto",
+              padding: "20px 30px",
+              maxWidth: "600px",
+              textAlign: "center",
+              backgroundColor: "#f0f7ff",
+              border: "2px solid #0073BB",
+              borderRadius: "12px",
+              boxShadow: "0 2px 8px rgba(0, 115, 187, 0.1)",
             }}
-            aria-label="Get Grant Help"
           >
-            Get Grant Help
-          </button>
-        </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: "10px",
+              }}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ marginRight: "10px" }}
+              >
+                <path
+                  d="M12 2L2 7L12 12L22 7L12 2Z"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+                <path
+                  d="M2 17L12 22L22 17"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M2 12L12 17L22 12"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  color: "#006499",
+                }}
+              >
+                Get Started
+              </span>
+            </div>
+            <p
+              style={{
+                fontSize: "15px",
+                color: "#333",
+                margin: "0",
+                lineHeight: "1.6",
+              }}
+            >
+              <strong>Select a grant</strong> from the search bar above to
+              unlock tools for viewing requirements, writing narratives, and
+              getting AI assistance.
+            </p>
+          </div>
+        )}
 
         {/* How to Use hover bar */}
         <div
@@ -878,6 +964,17 @@ export default function Welcome({ theme }) {
         {/* Affiliations Section */}
         <InfoBanner
           title="Our Affiliations"
+          height="125px"
+          description=""
+          imageSrc="/images/stateseal-color.png"
+          imageAlt="State Seal"
+          linkUrl={"https://www.mass.gov/"}
+          titleAlign="left"
+          imagePosition="right"
+          imageWidth="100px"
+        />
+        <InfoBanner
+          title=""
           height="125px"
           description=""
           imageSrc="/images/burnesLogo.png"
