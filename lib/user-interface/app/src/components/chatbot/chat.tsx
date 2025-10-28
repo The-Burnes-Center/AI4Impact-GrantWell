@@ -334,10 +334,10 @@ export default function Chat(props: {
 
             <div style={styles.modalContent}>
               <p>
-                Welcome to the GrantWell chatbot interface! This AI-powered assistant is your expert guide for understanding and navigating grant applications and NOFOs (Notices of Funding Opportunity).
+              This AI-powered assistant is your expert guide for understanding a grant.
                 <br></br>
                 <br></br>
-                <strong>What the chatbot can do:</strong>
+                <strong>You can ask Grantwell to:</strong>
                 <ul
                   style={{
                     paddingLeft: "24px",
@@ -345,11 +345,10 @@ export default function Chat(props: {
                     marginTop: "8px",
                   }}
                 >
-                  <li style={styles.listItem}>Answer questions about specific grant requirements, eligibility criteria, and NOFO sections</li>
-                  <li style={styles.listItem}>Review and analyze your draft grant narratives and applications for completeness and competitiveness</li>
+                  <li style={styles.listItem}>Explain specific grant requirements, eligibility criteria, and NOFO sections</li>
+                  <li style={styles.listItem}>Review your draft grant narratives and applications for completeness and competitiveness based on evaluation criteria in the grant</li>
                   <li style={styles.listItem}>Assess your organization's eligibility for specific funding opportunities</li>
                   <li style={styles.listItem}>Explain deadlines, submission requirements, budget rules, cost-sharing, and post-award compliance</li>
-                  <li style={styles.listItem}>Provide specific, actionable feedback tied to evaluation criteria</li>
                 </ul>
               </p>
               <p

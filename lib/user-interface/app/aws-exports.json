@@ -1,22 +1,17 @@
 {
-  "Auth": {
-    "region": "us-east-1",
-    "userPoolId": "us-east-1_sJH1RCPA7",
-    "userPoolWebClientId": "7tuh07poa2m62icf16gq3qodhk",
-    "oauth": {
-      "domain": "gw-nonprod-auth.auth.us-east-1.amazoncognito.com",
-      "scope": [
-        "aws.cognito.signin.user.admin",
-        "email",
-        "openid",
-        "profile"
-      ],
-      "redirectSignIn": "http://localhost:3000/",
-      "redirectSignOut": "http://localhost:3000/",
-      "responseType": "code"
-    }
-  },
-  "httpEndpoint": "https://qtcezgjtvc.execute-api.us-east-1.amazonaws.com/",
-  "wsEndpoint": "wss://6eul7svbkk.execute-api.us-east-1.amazonaws.com/prod",
-  "federatedSignInProvider": ""
+    "Auth": {
+        "region": "us-east-1",
+        "userPoolId": "us-east-1_5tAC8J6Es",
+        "userPoolWebClientId": "6fek08iq3lkn8ptqnrhul7raq8",
+        "oauth": {
+            "domain": "gw-auth-staging.auth.us-east-1.amazoncognito.com",
+            "scope": ["aws.cognito.signin.user.admin", "email", "openid", "profile"],
+            "redirectSignIn": "http://localhost:3000/",
+            "redirectSignOut": "http://localhost:3000/",
+            "responseType": "code"
+        }
+    },
+    "httpEndpoint": "https://czcmoef2o5.execute-api.us-east-1.amazonaws.com/",
+    "wsEndpoint": "wss://2q26zk8hac.execute-api.us-east-1.amazonaws.com/prod",
+    "federatedSignInProvider": ""
 }
