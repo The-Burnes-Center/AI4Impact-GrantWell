@@ -1095,7 +1095,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             >
               <input
                 type="text"
-                placeholder="Describe your project or funding needs to find matching grants from our repository"
+                placeholder="No special terms needed—just ask in your own words."
                 value={assistantInput}
                 onChange={(e) => setAssistantInput(e.target.value)}
                 style={assistantInputStyle}

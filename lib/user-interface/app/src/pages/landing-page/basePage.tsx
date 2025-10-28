@@ -783,9 +783,9 @@ export default function Welcome({ theme }) {
                 lineHeight: "1.6",
               }}
             >
-              <strong>Select a grant</strong> from the search bar above to
-              unlock tools for viewing requirements, writing narratives, and
-              getting AI assistance.
+              Enter your query to find available funding opportunities (NOFOs),
+              review key requirements, and receive writing support through
+              Grantwell.
             </p>
           </div>
         )}
