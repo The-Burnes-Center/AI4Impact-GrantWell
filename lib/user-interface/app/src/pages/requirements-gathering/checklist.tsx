@@ -825,19 +825,23 @@ const Checklists: React.FC = () => {
                       }}
                     >
                       <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
-                        <strong>Reviewing requirements:</strong> Click through the tabs above (Eligibility, Required Documents, Narrative Sections, Key Deadlines) to see what you need for this grant.
+                      Grantwell uses generative AI to extract and summarize the key elements of the grant.
+                      </p>
+
+                      <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
+                        Click through the tabs above (Eligibility, Required Documents, Narrative Sections, Key Deadlines) to see what you need for this grant.
                       </p>
                       
                       <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
-                        <strong>Need help understanding something?</strong> Use "Chat with AI" in the left sidebar to ask questions about the grant requirements.
+                      Have a question? Use “Chat with AI” in the left sidebar to get help understanding the grant requirements. Grantwell will answer your questions based on the grant application.
                       </p>
                       
                       <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
-                        <strong>Ready to start writing?</strong> Click "Write Application" in the left sidebar to begin drafting your application.
+                        Ready to start writing? Click "Write Application" in the left sidebar to begin drafting your application.
                       </p>
                       
                       <p style={{ marginBottom: "0", lineHeight: "1.6" }}>
-                        <strong>Want to check recent grants?</strong> Use "Recent Grants" in the left sidebar to quickly access grants you've looked at before.
+                      Want to see a different grants? Use "Recent Grants" in the left sidebar to quickly access grants you've looked at or return to the home page to search again.
                       </p>
                     </div>
 

@@ -744,7 +744,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search grants from our repository..."
+          placeholder="Search for grants from grants.gov..."
           style={{
             ...inputStyle,
             cursor:

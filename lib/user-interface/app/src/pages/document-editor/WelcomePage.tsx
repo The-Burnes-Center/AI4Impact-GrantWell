@@ -10,32 +10,20 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "48px",
-        }}
-      >
-        <h1
-          style={{
-            color: "#2c3e50",
-            fontSize: "36px",
-            margin: "0 0 16px",
-            fontWeight: "700",
-          }}
-        >
+      <div style={{ textAlign: "center", marginBottom: "32px" }}>
+        <h1 style={{ color: "#2c3e50", fontSize: "42px", fontWeight: "700", margin: "0 0 16px" }}>
           Welcome to GrantWell
         </h1>
-        <h2
-          style={{
-            color: "#4361ee",
-            fontSize: "20px",
-            margin: "0",
-            fontWeight: "500",
-          }}
-        >
+        <h2 style={{ color: "#4361ee", fontSize: "24px", fontWeight: "500", margin: "0 0 24px" }}>
           AI-Powered Grant Writing Assistant
         </h2>
+        <p style={{ color: "#4a5568", fontSize: "16px", lineHeight: 1.6, textAlign: "center", marginBottom: "32px" }}>
+          The GrantWell grant writing tool uses generative AI to guide you through the application process.
+        <br></br>
+          The last grant you searched is pre-loaded. Want to work on a different grant? 
+          <br></br>
+          Return to the home page to find the grant of interest.
+        </p>
       </div>
 
       <div
@@ -196,7 +184,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
                 }}
               >
                 Our AI will generate high-quality content that you can review,
-                refine, and perfect for your grant application.
+                refine, and perfect for your grant application. As you work, your progress will be saved.
               </p>
             </div>
           </div>
