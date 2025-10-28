@@ -1,12 +1,16 @@
-import React, { useContext, useState, useEffect, CSSProperties } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
-import { ApiClient } from '../../common/api-client/api-client';
-import { AppContext } from '../../common/app-context';
-import { v4 as uuidv4 } from 'uuid';
-import '../../styles/base-page.css';
-import IntegratedSearchBar from '../../components/search/IntegratedSearchBar';
-import { addToRecentlyViewed, getRecentlyViewed, cleanupRecentlyViewed } from "../../utils/recently-viewed-nofos";
+import React, { useContext, useState, useEffect, CSSProperties } from "react";
+import { useNavigate } from "react-router-dom";
+import { Auth } from "aws-amplify";
+import { ApiClient } from "../../common/api-client/api-client";
+import { AppContext } from "../../common/app-context";
+import { v4 as uuidv4 } from "uuid";
+import "../../styles/base-page.css";
+import IntegratedSearchBar from "../../components/search/IntegratedSearchBar";
+import {
+  addToRecentlyViewed,
+  getRecentlyViewed,
+  cleanupRecentlyViewed,
+} from "../../utils/recently-viewed-nofos";
 
 export default function Welcome({ theme }) {
   // **State Variables**
@@ -112,10 +116,10 @@ export default function Welcome({ theme }) {
   // Filter out archived NOFOs from history when documents change
   useEffect(() => {
     if (documents.length === 0) return;
-    
+
     // Get the current list of NOFO names
-    const activeNofoNames = documents.map(doc => doc.label);
-    
+    const activeNofoNames = documents.map((doc) => doc.label);
+
     // Clean up recently viewed NOFOs and update state
     const filteredHistory = cleanupRecentlyViewed(activeNofoNames);
     setRecentlyViewedNOFOs(filteredHistory);
@@ -140,15 +144,23 @@ export default function Welcome({ theme }) {
     try {
       const result = await apiClient.landingPage.getNOFOs();
       const folders = result.folders || [];
-      console.log(`Received ${folders.length} active NOFOs for landing page display`);
-      
+      console.log(
+        `Received ${folders.length} active NOFOs for landing page display`
+      );
+
       // For debugging: Check if we have nofoData with status information too
       if (result.nofoData) {
-        const activeCount = result.nofoData.filter(nofo => nofo.status === 'active').length;
-        const archivedCount = result.nofoData.filter(nofo => nofo.status === 'archived').length;
-        console.log(`NOFO status breakdown - Active: ${activeCount}, Archived: ${archivedCount}`);
+        const activeCount = result.nofoData.filter(
+          (nofo) => nofo.status === "active"
+        ).length;
+        const archivedCount = result.nofoData.filter(
+          (nofo) => nofo.status === "archived"
+        ).length;
+        console.log(
+          `NOFO status breakdown - Active: ${activeCount}, Archived: ${archivedCount}`
+        );
       }
-      
+
       setDocuments(
         folders.map((document) => ({
           label: document,
@@ -195,68 +207,61 @@ export default function Welcome({ theme }) {
         Recent Grants
       </h2>
       {recentlyViewedNOFOs.length > 0 ? (
-        recentlyViewedNOFOs.slice(0, 6).map(
-          (
-            nofo,
-            index
-          ) => (
-            <div
-              key={index}
+        recentlyViewedNOFOs.slice(0, 6).map((nofo, index) => (
+          <div
+            key={index}
+            style={{
+              padding: "15px",
+              border: "1px solid #e1e4e8",
+              borderRadius: "8px",
+              backgroundColor: "#f9f9f9",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              transition: "all 0.2s ease",
+              cursor: "pointer",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+            onClick={() =>
+              handleNOFOSelect(
+                `/landing-page/basePage/checklists/${encodeURIComponent(
+                  nofo.value
+                )}`,
+                nofo
+              )
+            }
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
+          >
+            <span
               style={{
-                padding: "15px",
-                border: "1px solid #e1e4e8",
-                borderRadius: "8px",
-                backgroundColor: "#f9f9f9",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                transition: "all 0.2s ease",
-                cursor: "pointer",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-              onClick={() =>
-                handleNOFOSelect(
-                  `/landing-page/basePage/checklists/${encodeURIComponent(
-                    nofo.value
-                  )}`,
-                  nofo
-                )
-              }
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 4px 8px rgba(0, 0, 0, 0.15)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 2px 4px rgba(0, 0, 0, 0.1)";
-                e.currentTarget.style.transform = "translateY(0)";
+                fontSize: "16px",
+                fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px",
+                color: primaryBlue,
               }}
             >
-              <span
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                  display: "block",
-                  marginBottom: "8px",
-                  color: primaryBlue,
-                }}
-              >
-                {nofo.label}
-              </span>
-              <div
-                style={{
-                  fontSize: "14px",
-                  color: "#6c757d",
-                  marginTop: "auto",
-                }}
-              >
-                <span>Last viewed: {nofo.lastViewed}</span>
-              </div>
+              {nofo.label}
+            </span>
+            <div
+              style={{
+                fontSize: "14px",
+                color: "#6c757d",
+                marginTop: "auto",
+              }}
+            >
+              <span>Last viewed: {nofo.lastViewed}</span>
             </div>
-          )
-        )
+          </div>
+        ))
       ) : (
         <p
           style={{
@@ -481,7 +486,7 @@ export default function Welcome({ theme }) {
             borderRadius: "8px",
             backgroundColor: "#f9f9f9",
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-            textAlign: "center", 
+            textAlign: "center",
           }}
         >
           <a
@@ -570,7 +575,7 @@ export default function Welcome({ theme }) {
               GrantWell
             </h1>
           </div>
-          
+
           {/* Subtitle below both */}
           <p
             style={{
@@ -583,50 +588,52 @@ export default function Welcome({ theme }) {
               textAlign: "center",
             }}
           >
-            An AI tool to help Massachusetts communities pursue federal funding opportunities 
+            Free AI powered tool designed for finding and writing grants
           </p>
         </div>
 
         {/* New integrated search bar */}
-        <IntegratedSearchBar 
+        <IntegratedSearchBar
           documents={documents}
           onSelectDocument={setSelectedDocument}
           isLoading={loading}
         />
-        
+
         {/* CTA Buttons: View Key Requirements, Write Project Narrative, Get Grant Help */}
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '10px',
-            margin: '28px 0 8px 0',
-            width: '100%',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
+            display: "flex",
+            flexDirection: "row",
+            gap: "10px",
+            margin: "28px 0 8px 0",
+            width: "100%",
+            justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
           <button
             onClick={() => {
               if (selectedDocument) {
                 handleNOFOSelect(
-                  `/landing-page/basePage/checklists/${encodeURIComponent(selectedDocument.value)}`,
+                  `/landing-page/basePage/checklists/${encodeURIComponent(
+                    selectedDocument.value
+                  )}`,
                   selectedDocument
                 );
               }
             }}
             disabled={!selectedDocument}
             style={{
-              background: selectedDocument ? '#0073BB' : '#f0f0f0',
-              color: selectedDocument ? 'white' : '#888',
-              border: 'none',
-              borderRadius: '20px',
-              padding: '10px 22px',
-              fontSize: '15px',
+              background: selectedDocument ? "#0073BB" : "#f0f0f0",
+              color: selectedDocument ? "white" : "#888",
+              border: "none",
+              borderRadius: "20px",
+              padding: "10px 22px",
+              fontSize: "15px",
               fontWeight: 500,
-              cursor: selectedDocument ? 'pointer' : 'not-allowed',
-              transition: 'background 0.2s',
-              minWidth: '180px',
+              cursor: selectedDocument ? "pointer" : "not-allowed",
+              transition: "background 0.2s",
+              minWidth: "180px",
             }}
             aria-label="View Key Requirements"
           >
@@ -639,23 +646,25 @@ export default function Welcome({ theme }) {
                 // Track the NOFO as recently viewed before navigating to document editor
                 const updatedHistory = addToRecentlyViewed(selectedDocument);
                 setRecentlyViewedNOFOs(updatedHistory);
-                
+
                 // Navigate to document editor
-                window.location.href = `/document-editor?nofo=${encodeURIComponent(selectedDocument.value)}`;
+                window.location.href = `/document-editor?nofo=${encodeURIComponent(
+                  selectedDocument.value
+                )}`;
               }
             }}
             disabled={!selectedDocument}
             style={{
-              background: selectedDocument ? '#0073BB' : '#f0f0f0',
-              color: selectedDocument ? 'white' : '#888',
-              border: 'none',
-              borderRadius: '20px',
-              padding: '10px 22px',
-              fontSize: '15px',
+              background: selectedDocument ? "#0073BB" : "#f0f0f0",
+              color: selectedDocument ? "white" : "#888",
+              border: "none",
+              borderRadius: "20px",
+              padding: "10px 22px",
+              fontSize: "15px",
               fontWeight: 500,
-              cursor: selectedDocument ? 'pointer' : 'not-allowed',
-              transition: 'background 0.2s',
-              minWidth: '180px',
+              cursor: selectedDocument ? "pointer" : "not-allowed",
+              transition: "background 0.2s",
+              minWidth: "180px",
             }}
             aria-label="Write Project Narrative"
           >
@@ -668,24 +677,26 @@ export default function Welcome({ theme }) {
                 // Track the NOFO as recently viewed before navigating to chatbot
                 const updatedHistory = addToRecentlyViewed(selectedDocument);
                 setRecentlyViewedNOFOs(updatedHistory);
-                
+
                 // Navigate to chatbot
                 const newSessionId = uuidv4();
-                window.location.href = `/chatbot/playground/${newSessionId}?folder=${encodeURIComponent(selectedDocument.value)}`;
+                window.location.href = `/chatbot/playground/${newSessionId}?folder=${encodeURIComponent(
+                  selectedDocument.value
+                )}`;
               }
             }}
             disabled={!selectedDocument}
             style={{
-              background: selectedDocument ? '#0073BB' : '#f0f0f0',
-              color: selectedDocument ? 'white' : '#888',
-              border: 'none',
-              borderRadius: '20px',
-              padding: '10px 22px',
-              fontSize: '15px',
+              background: selectedDocument ? "#0073BB" : "#f0f0f0",
+              color: selectedDocument ? "white" : "#888",
+              border: "none",
+              borderRadius: "20px",
+              padding: "10px 22px",
+              fontSize: "15px",
               fontWeight: 500,
-              cursor: selectedDocument ? 'pointer' : 'not-allowed',
-              transition: 'background 0.2s',
-              minWidth: '180px',
+              cursor: selectedDocument ? "pointer" : "not-allowed",
+              transition: "background 0.2s",
+              minWidth: "180px",
             }}
             aria-label="Get Grant Help"
           >
@@ -696,10 +707,10 @@ export default function Welcome({ theme }) {
         {/* How to Use hover bar */}
         <div
           style={{
-            position: 'relative',
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: '10px',
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
           }}
           onMouseEnter={() => setShowHowToModal(true)}
           onMouseLeave={() => setShowHowToModal(false)}
@@ -707,28 +718,50 @@ export default function Welcome({ theme }) {
           <button
             onClick={() => setShowHowToModal(!showHowToModal)}
             style={{
-              background: 'none',
-              border: 'none',
-              color: '#0073BB',
-              fontSize: '14px',
-              cursor: 'pointer',
-              padding: '5px 10px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              transition: 'color 0.15s',
+              background: "none",
+              border: "none",
+              color: "#0073BB",
+              fontSize: "14px",
+              cursor: "pointer",
+              padding: "5px 10px",
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              transition: "color 0.15s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#005A94';
+              e.currentTarget.style.color = "#005A94";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#0073BB';
+              e.currentTarget.style.color = "#0073BB";
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/>
-              <path d="M12 8L12 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              <path d="M12 18.01L12.01 17.9989" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <path
+                d="M12 8L12 15"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <path
+                d="M12 18.01L12.01 17.9989"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
             How to use?
           </button>
@@ -736,52 +769,88 @@ export default function Welcome({ theme }) {
           {showHowToModal && (
             <div
               style={{
-                position: 'absolute',
-                top: '32px',
-                right: '50%',
-                transform: 'translateX(50%)',
-                minWidth: '320px',
-                maxWidth: '500px',
-                background: '#fff',
-                border: '1px solid #e0e0e0',
-                borderRadius: '10px',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.13)',
-                padding: '20px 20px 16px 20px',
+                position: "absolute",
+                top: "32px",
+                right: "50%",
+                transform: "translateX(50%)",
+                minWidth: "320px",
+                maxWidth: "500px",
+                background: "#fff",
+                border: "1px solid #e0e0e0",
+                borderRadius: "10px",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.13)",
+                padding: "20px 20px 16px 20px",
                 zIndex: 1000,
-                fontSize: '13px',
-                color: '#444',
-                animation: 'fadeIn 0.2s',
+                fontSize: "13px",
+                color: "#444",
+                animation: "fadeIn 0.2s",
               }}
               role="dialog"
               aria-modal="true"
             >
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#0073BB', fontSize: '14px' }}>How to Use?</span>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: "8px",
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: 600,
+                    color: "#0073BB",
+                    fontSize: "14px",
+                  }}
+                >
+                  How to Use?
+                </span>
               </div>
-              <div style={{
-                background: '#f6fafd',
-                border: '1px solid #e0e0e0',
-                borderRadius: '7px',
-                color: '#0073BB',
-                fontWeight: 500,
-                fontSize: '13.5px',
-                padding: '10px 12px',
-                marginBottom: '12px',
-                textAlign: 'center',
-              }}>
+              <div
+                style={{
+                  background: "#f6fafd",
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "7px",
+                  color: "#0073BB",
+                  fontWeight: 500,
+                  fontSize: "13.5px",
+                  padding: "10px 12px",
+                  marginBottom: "12px",
+                  textAlign: "center",
+                }}
+              >
                 Select a grant to unlock features above
               </div>
-              <ul style={{ margin: '10px 0 0 18px', padding: 0, color: '#666', fontSize: '12.5px', lineHeight: 1.7 }}>
-                <li><b style={{ color: '#0073BB' }}>View Key Requirements:</b> View summary of eligibility, required documents, narrative sections, and deadlines for the selected grant.</li>
-                <li><b style={{ color: '#0073BB' }}>Write Project Narrative:</b> Open the editor to draft and edit your grant application narrative.</li>
-                <li><b style={{ color: '#0073BB' }}>Get Grant Help:</b> Open the GrantWell AI chatbot to ask questions about the grant.</li>
+              <ul
+                style={{
+                  margin: "10px 0 0 18px",
+                  padding: 0,
+                  color: "#666",
+                  fontSize: "12.5px",
+                  lineHeight: 1.7,
+                }}
+              >
+                <li>
+                  <b style={{ color: "#0073BB" }}>View Key Requirements:</b>{" "}
+                  View summary of eligibility, required documents, narrative
+                  sections, and deadlines for the selected grant.
+                </li>
+                <li>
+                  <b style={{ color: "#0073BB" }}>Write Project Narrative:</b>{" "}
+                  Open the editor to draft and edit your grant application
+                  narrative.
+                </li>
+                <li>
+                  <b style={{ color: "#0073BB" }}>Get Grant Help:</b> Open the
+                  GrantWell AI chatbot to ask questions about the grant.
+                </li>
               </ul>
             </div>
           )}
         </div>
 
         {/* Add spacing before next section */}
-        <div style={{ marginBottom: '20px' }} />
+        <div style={{ marginBottom: "20px" }} />
 
         <ContentBox backgroundColor="#F6FCFF">
           <HistoryPanel />
