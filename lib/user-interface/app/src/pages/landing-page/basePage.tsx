@@ -962,28 +962,102 @@ export default function Welcome({ theme }) {
         /> */}
 
         {/* Affiliations Section */}
-        <InfoBanner
-          title="Our Affiliations"
-          height="125px"
-          description=""
-          imageSrc="/images/stateseal-color.png"
-          imageAlt="State Seal"
-          linkUrl={"https://www.mass.gov/"}
-          titleAlign="left"
-          imagePosition="right"
-          imageWidth="100px"
-        />
-        <InfoBanner
-          title=""
-          height="125px"
-          description=""
-          imageSrc="/images/burnesLogo.png"
-          imageAlt="Burnes Center Logo"
-          linkUrl={"https://burnes.northeastern.edu/"}
-          titleAlign="left"
-          imagePosition="right"
-          imageWidth="200px"
-        />
+        <div
+          style={{
+            backgroundColor: "#06293d",
+            padding: "30px 20px",
+            marginBlockEnd: "0",
+            width: "100vw",
+            position: "relative",
+            left: "50%",
+            right: "50%",
+            marginLeft: "-50vw",
+            marginRight: "-50vw",
+            marginTop: "0px",
+            marginBottom: "0px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              maxWidth: "900px",
+              margin: "0 auto",
+              gap: "40px",
+              flexWrap: "wrap",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "28px",
+                color: "#ffffff",
+                margin: "0",
+                fontWeight: "600",
+                flex: "0 0 auto",
+              }}
+            >
+              Our Affiliations
+            </h2>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "50px",
+                flex: "0 1 auto",
+              }}
+            >
+              <a
+                href="https://www.mass.gov/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "transform 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+              >
+                <img
+                  src="/images/stateseal-color.png"
+                  alt="State Seal"
+                  style={{ width: "100px", height: "auto" }}
+                />
+              </a>
+              <a
+                href="https://burnes.northeastern.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "transform 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+              >
+                <img
+                  src="/images/burnesLogo.png"
+                  alt="Burnes Center Logo"
+                  style={{ width: "200px", height: "auto" }}
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        {/* Creative Commons License */}
         <InfoBanner
           title=""
           height="100px"
@@ -995,6 +1069,7 @@ export default function Welcome({ theme }) {
           titleFontSize="16px"
           imagePosition="left"
           imageWidth="75px"
+          titleAlign="center"
         />
       </div>
     </div>
