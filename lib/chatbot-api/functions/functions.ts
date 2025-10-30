@@ -734,9 +734,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    // DISABLED: Create EventBridge rule to run the scraper daily at 9 AM UTC
-    // Automated scheduling has been disabled - manual triggering is still available via API
-    /*
+    // Create EventBridge rule to run the scraper daily at 9 AM UTC
     const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
       schedule: events.Schedule.cron({
         minute: '0',
@@ -750,7 +748,6 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Add the Lambda function as a target for the EventBridge rule
     scraperRule.addTarget(new targets.LambdaFunction(automatedNofoScraperFunction));
-    */
 
     this.automatedNofoScraperFunction = automatedNofoScraperFunction;
   }
