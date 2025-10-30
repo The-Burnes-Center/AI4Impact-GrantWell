@@ -43,18 +43,20 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
       // Track the NOFO as recently viewed
       addToRecentlyViewed({
         label: documentIdentifier.replace("/", ""), // Remove trailing slash if present
-        value: documentIdentifier
+        value: documentIdentifier,
       });
+
+      // Navigate to requirements page - using both path param and query param for compatibility
+      // Path param is primary, folder param is for consistency with chatbot navigation
+      navigate(
+        `/landing-page/basePage/checklists/${encodeURIComponent(
+          documentIdentifier
+        )}?folder=${encodeURIComponent(documentIdentifier)}`
+      );
+    } else {
+      // If no documentIdentifier, go back to base page
+      navigate("/landing-page/basePage");
     }
-    
-    const queryParams = documentIdentifier
-      ? `?nofo=${encodeURIComponent(documentIdentifier)}`
-      : "";
-    navigate(
-      `/landing-page/basePage/checklists/${encodeURIComponent(
-        documentIdentifier || ""
-      )}`
-    );
   };
 
   return (
@@ -182,9 +184,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
             >
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
-            {isOpen && (
-              <span style={{ marginLeft: "12px" }}>Chat with AI</span>
-            )}
+            {isOpen && <span style={{ marginLeft: "12px" }}>Chat with AI</span>}
           </button>
 
           <button
@@ -221,9 +221,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            {isOpen && (
-              <span style={{ marginLeft: "12px" }}>Drafts</span>
-            )}
+            {isOpen && <span style={{ marginLeft: "12px" }}>Drafts</span>}
           </button>
 
           <button
@@ -262,9 +260,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
               <line x1="16" y1="17" x2="8" y2="17"></line>
               <line x1="10" y1="9" x2="8" y2="9"></line>
             </svg>
-            {isOpen && (
-              <span style={{ marginLeft: "12px" }}>Requirements</span>
-            )}
+            {isOpen && <span style={{ marginLeft: "12px" }}>Requirements</span>}
           </button>
         </div>
 
