@@ -33,7 +33,7 @@ export default function Welcome() {
   };
 
   const mainTextColor = "#006499";
-  const bodyTextColor = "#6c757d";
+  const bodyTextColor = "#5a5a5a";
   const primaryBlue = "#0073bb"; // Match header blue color
 
   const containerStyle: CSSProperties = {
@@ -268,7 +268,7 @@ export default function Welcome() {
             <div
               style={{
                 fontSize: "14px",
-                color: "#6c757d",
+                color: "#5a5a5a",
                 marginTop: "auto",
               }}
             >
