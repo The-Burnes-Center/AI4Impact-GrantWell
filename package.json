@@ -8,7 +8,10 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:a11y": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --rule 'jsx-a11y/*: error'",
+    "lint:fix": "eslint . --ext ts,tsx --fix"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

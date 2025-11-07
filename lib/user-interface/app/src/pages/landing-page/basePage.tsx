@@ -223,6 +223,9 @@ export default function Welcome({ theme }) {
               flexDirection: "column",
               justifyContent: "space-between",
             }}
+            role="button"
+            tabIndex={0}
+            aria-label={`View ${nofo.label}`}
             onClick={() =>
               handleNOFOSelect(
                 `/landing-page/basePage/checklists/${encodeURIComponent(
@@ -231,6 +234,17 @@ export default function Welcome({ theme }) {
                 nofo
               )
             }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleNOFOSelect(
+                  `/landing-page/basePage/checklists/${encodeURIComponent(
+                    nofo.value
+                  )}`,
+                  nofo
+                );
+              }
+            }}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
               e.currentTarget.style.transform = "translateY(-2px)";

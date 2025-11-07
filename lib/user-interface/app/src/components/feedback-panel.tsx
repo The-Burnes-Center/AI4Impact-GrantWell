@@ -71,8 +71,8 @@ export default function EmailPanel(props: FeedbackPanelProps) {
                         URL
                       </Box>
                       
-                      {(JSON.parse(props.selectedFeedback.Sources) as any[]).map((item) =>
-                        <Link href={item.uri} external={true} variant="primary">
+                      {(JSON.parse(props.selectedFeedback.Sources) as any[]).map((item, index) =>
+                        <Link key={index} href={item.uri} external={true} variant="primary">
                           {item.uri.match(/^(?:https?:\/\/)?([\w-]+(\.[\w-]+)+)/)[1]}
                         </Link>)}
                     </SpaceBetween>

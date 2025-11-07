@@ -25,8 +25,22 @@ const onFollow = useOnFollow();
     const newEvent = new CustomEvent("follow", { detail: { href: url, external: false } });
     onFollow(newEvent);
   };
+
+  const handleKeyDown = (event, url) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleFollow(event, url);
+    }
+  };
+
   return (
-    <div onClick={(e)=>handleFollow(e, props.url)} style={{ cursor: 'pointer' }}>
+    <div 
+      onClick={(e)=>handleFollow(e, props.url)} 
+      onKeyDown={(e)=>handleKeyDown(e, props.url)}
+      role="button"
+      tabIndex={0}
+      style={{ cursor: 'pointer' }}
+    >
     <div className={props.theme === Mode.Dark ? "carousel-item-dark-mode" : "carousel-item"}>
       <Card bg="info">
         <Card.Header></Card.Header>

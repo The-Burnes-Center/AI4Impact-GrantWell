@@ -475,6 +475,16 @@ const Tab: React.FC<TabProps> = ({ id, activeId, onClick, children, icon }) => {
         gap: "10px",
       }}
       onClick={() => onClick(id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(id);
+        }
+      }}
+      role="tab"
+      tabIndex={0}
+      aria-selected={isActive}
+      aria-controls={`tabpanel-${id}`}
     >
       {icon}
       {children}

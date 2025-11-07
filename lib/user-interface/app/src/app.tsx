@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import {
   BrowserRouter,
   Outlet,
@@ -15,18 +14,14 @@ import SessionPage from "./pages/chatbot/sessions/sessions";
 import Welcome from "./pages/landing-page/basePage";
 import Checklists from "./pages/requirements-gathering/checklist";
 import DocumentEditor from "./pages/document-editor";
-import DraftsPage from "./pages/document-editor/drafts";
 import DocEditorSessionsPage from "./pages/document-editor/doc-editor-sessions-page";
 import Dashboard from "./pages/Dashboard";
-import { useState } from "react";
 import "./styles/app.scss";
 import { Mode } from "@cloudscape-design/global-styles";
 import { StorageHelper } from "./common/helpers/storage-helper";
 
 function App() {
-  const appContext = useContext(AppContext);
   const Router = BrowserRouter;
-  const [theme, setTheme] = useState<Mode>(StorageHelper.getTheme());
 
   return (
     <div style={{ height: "100%" }}>

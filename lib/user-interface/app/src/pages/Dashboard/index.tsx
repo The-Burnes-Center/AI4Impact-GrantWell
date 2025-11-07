@@ -151,8 +151,21 @@ export const Modal = React.memo(({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div 
+      className="modal-overlay" 
+      onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div 
+        className="modal-content" 
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+        role="document"
+      >
         <div className="modal-header">
           <h2>{title}</h2>
           <button className="modal-close-button" onClick={onClose} aria-label="Close modal">
@@ -1025,7 +1038,7 @@ const Dashboard: React.FC = () => {
     // Page numbers
     const maxVisiblePages = 5;
     let startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
     
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(endPage - maxVisiblePages + 1, 1);

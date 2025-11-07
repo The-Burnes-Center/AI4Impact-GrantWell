@@ -79,7 +79,7 @@ export default function NavigationPanel({ documentIdentifier }) {
   };
 
   const updateItems = async (sessions) => {
-    let newItems: SideNavigationProps.Item[] = [
+    const newItems: SideNavigationProps.Item[] = [
       
       {
         type: "section",

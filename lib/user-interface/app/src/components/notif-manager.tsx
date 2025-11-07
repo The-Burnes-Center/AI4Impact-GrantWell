@@ -12,7 +12,7 @@ export const NotificationContext = createContext({
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = (type, content) : String => {
+  const addNotification = (type, content) : string => {
     const id = uuidv4();  // Generate a UUID for each new notification
 
     setNotifications(prev => [...prev, {

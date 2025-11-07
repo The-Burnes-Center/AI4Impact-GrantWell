@@ -119,7 +119,7 @@ export default function NavigationPanel({
   };
 
   const updateItems = async (sessions) => {
-    let newItems: SideNavigationProps.Item[] = [
+    const newItems: SideNavigationProps.Item[] = [
       {
         type: "section",
         text: "Session History",

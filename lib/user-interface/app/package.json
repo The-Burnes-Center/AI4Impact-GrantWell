@@ -9,6 +9,7 @@
     "build:theme": "node src/style.js",
     "build:dev": "tsc && cross-env NODE_ENV=development vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
     "preview": "vite preview",
     "format": "npx prettier --ignore-path .gitignore --write \"**/*.+(tsx|js|ts|json)\""
   },
@@ -70,6 +71,8 @@
     "autoprefixer": "^10.4.21",
     "cross-env": "^7.0.3",
     "eslint": "^8.45.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "postcss": "^8.5.3",

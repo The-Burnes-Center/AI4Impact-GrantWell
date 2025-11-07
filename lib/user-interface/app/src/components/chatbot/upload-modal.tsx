@@ -620,9 +620,22 @@ export default function UploadModal({
   if (!isOpen) return null;
 
   return (
-    <div style={styles.modalOverlay} onClick={onClose}>
+    <div 
+      style={styles.modalOverlay} 
+      onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
+    >
       <style>{spinKeyframes}</style>
-      <div style={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
+      <div 
+        style={styles.modalContainer} 
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+        role="document"
+      >
         <div style={styles.modalHeader}>
           <h2 style={styles.modalTitle}>Manage Document Files</h2>
           <button style={styles.closeButton} onClick={onClose}>
@@ -630,13 +643,22 @@ export default function UploadModal({
           </button>
         </div>
 
-        <div style={styles.tabContainer}>
+        <div style={styles.tabContainer} role="tablist">
           <div
             style={{
               ...styles.tab,
               ...(activeTab === "upload" ? styles.activeTab : {}),
             }}
             onClick={() => setActiveTab("upload")}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setActiveTab("upload");
+              }
+            }}
+            role="tab"
+            tabIndex={0}
+            aria-selected={activeTab === "upload"}
           >
             Upload New Files
           </div>
@@ -649,6 +671,16 @@ export default function UploadModal({
               setActiveTab("view");
               fetchExistingFiles();
             }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setActiveTab("view");
+                fetchExistingFiles();
+              }
+            }}
+            role="tab"
+            tabIndex={0}
+            aria-selected={activeTab === "view"}
           >
             View Existing Files
           </div>
@@ -667,6 +699,15 @@ export default function UploadModal({
                 onDragLeave={handleDrag}
                 onDrop={handleDrop}
                 onClick={() => document.getElementById("file-input")?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    document.getElementById("file-input")?.click();
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label="Upload files by clicking or dragging and dropping"
               >
                 <Upload size={40} style={styles.uploadIcon} />
                 <p style={styles.dropText}>Drag and drop your files here</p>
@@ -769,6 +810,15 @@ export default function UploadModal({
                     <div
                       style={styles.fileDetails}
                       onClick={() => downloadFile(file.name)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          downloadFile(file.name);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Download ${file.name}`}
                     >
                       <p style={styles.fileName}>
                         {file.name}

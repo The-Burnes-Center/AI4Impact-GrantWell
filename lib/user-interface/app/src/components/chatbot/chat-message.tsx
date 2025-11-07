@@ -49,6 +49,8 @@ export default function ChatMessage(props: ChatMessageProps) {
   const [value, setValue] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  // State for copy popup
+  const [showCopyPopup, setShowCopyPopup] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -339,9 +341,6 @@ export default function ChatMessage(props: ChatMessageProps) {
     Array.isArray(props.message.metadata?.Sources) &&
     props.message.metadata.Sources.length > 0;
 
-  // State for copy popup
-  const [showCopyPopup, setShowCopyPopup] = useState(false);
-
   const handleCopy = () => {
     navigator.clipboard.writeText(props.message.content);
     setShowCopyPopup(true);
@@ -396,8 +395,9 @@ export default function ChatMessage(props: ChatMessageProps) {
               </select>
             </div>
             <div style={formFieldStyle}>
-              <label style={labelStyle}>Please enter feedback here</label>
+              <label htmlFor="feedback-input" style={labelStyle}>Please enter feedback here</label>
               <input
+                id="feedback-input"
                 type="text"
                 style={inputStyle}
                 value={value}
@@ -499,7 +499,6 @@ export default function ChatMessage(props: ChatMessageProps) {
                 ) : null}
 
                 <ReactMarkdown
-                  children={content}
                   remarkPlugins={[remarkGfm]}
                   components={{
                     pre(props) {
@@ -535,7 +534,9 @@ export default function ChatMessage(props: ChatMessageProps) {
                       );
                     },
                   }}
-                />
+                >
+                  {content}
+                </ReactMarkdown>
               </div>
             </div>
 
