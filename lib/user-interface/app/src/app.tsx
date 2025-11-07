@@ -36,7 +36,7 @@ function App() {
               element={<Navigate to={`/landing-page/basePage`} replace />} // root path
             />
             <Route path="/landing-page/basePage" element={<Outlet />}>
-              <Route path="" element={<Welcome theme={theme} />} />
+              <Route path="" element={<Welcome />} />
               {/* Route for the checklists page with a dynamic parameter */}
               <Route
                 path="/landing-page/basePage/checklists/:documentIdentifier"

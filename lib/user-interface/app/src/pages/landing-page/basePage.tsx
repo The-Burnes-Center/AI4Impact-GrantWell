@@ -12,7 +12,7 @@ import {
   cleanupRecentlyViewed,
 } from "../../utils/recently-viewed-nofos";
 
-export default function Welcome({ theme }) {
+export default function Welcome() {
   // **State Variables**
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
