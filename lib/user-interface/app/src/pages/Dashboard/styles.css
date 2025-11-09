@@ -986,7 +986,7 @@ select.form-input {
 
 .action-button.delete {
   background-color: #fff0f0;
-  color: #e74c3c;
+  color: #c0392b;
 }
 
 .action-button.delete:hover {
@@ -1098,12 +1098,12 @@ select.form-input {
 }
 
 .action-button.invite-button {
-  background-color: #4a90e2;
+  background-color: #2b6cb0;
   color: white;
 }
 
 .action-button.invite-button:hover {
-  background-color: #3a80d2;
+  background-color: #2557a0;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
@@ -1118,7 +1118,7 @@ select.form-input {
 }
 
 .action-button.scraper-button {
-  background-color: #28a745;
+  background-color: #1e7e34;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1134,9 +1134,9 @@ select.form-input {
 }
 
 .action-button.scraper-button:hover:not(:disabled) {
-  background-color: #218838;
+  background-color: #196d2e;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+  box-shadow: 0 4px 8px rgba(30, 126, 52, 0.2);
 }
 
 .action-button.scraper-button:disabled {

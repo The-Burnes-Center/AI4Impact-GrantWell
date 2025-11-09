@@ -28,7 +28,7 @@ function App() {
       <Router>
         <GlobalHeader />
         <div style={{ height: "56px", backgroundColor: "#FFFFFF" }}>&nbsp;</div>
-        <div>
+        <main>
           <Routes>
             <Route
               index
@@ -66,7 +66,7 @@ function App() {
               element={<Navigate to={`/landing-page/basePage`} replace />}
             />
           </Routes>
-        </div>
+        </main>
       </Router>
     </div>
   );
