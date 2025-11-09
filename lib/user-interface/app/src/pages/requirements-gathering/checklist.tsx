@@ -485,6 +485,7 @@ const Tab: React.FC<TabProps> = ({ id, activeId, onClick, children, icon }) => {
       tabIndex={0}
       aria-selected={isActive}
       aria-controls={`tabpanel-${id}`}
+      id={`tab-${id}`}
     >
       {icon}
       {children}
@@ -880,7 +881,7 @@ const Checklists: React.FC = () => {
               )}
 
               <div style={styles.tabsContainer}>
-                <div style={styles.tabsHeader}>
+                <div style={styles.tabsHeader} role="tablist" aria-label="Grant requirements">
                   <Tab
                     id="eligibility"
                     activeId={activeTabId}
@@ -915,49 +916,62 @@ const Checklists: React.FC = () => {
                   </Tab>
                 </div>
 
-                <div style={styles.tabContent}>
-                  <div style={styles.contentArea}>
-                    <p style={styles.paragraph}>
-                      {tabContents[activeTabId].title}
-                    </p>
-                    <div style={styles.markdownContainer}>
-                      <ReactMarkdown
-                        className="custom-markdown"
-                        components={{
-                          ul: ({ node, ...props }) => <ul {...props} />,
-                          li: ({ node, ...props }) => {
-                            return (
-                              <li {...props} style={{ marginBottom: "20px" }}>
-                                {props.children}
-                              </li>
-                            );
-                          },
-                        }}
-                      >
-                        {tabContents[activeTabId].content}
-                      </ReactMarkdown>
+                {/* Render all tab panels, but only show the active one */}
+                {Object.keys(tabContents).map((tabId) => (
+                  <div
+                    key={tabId}
+                    style={{
+                      ...styles.tabContent,
+                      display: tabId === activeTabId ? "block" : "none",
+                    }}
+                    role="tabpanel"
+                    id={`tabpanel-${tabId}`}
+                    aria-labelledby={`tab-${tabId}`}
+                    hidden={tabId !== activeTabId}
+                  >
+                    <div style={styles.contentArea}>
+                      <p style={styles.paragraph}>
+                        {tabContents[tabId].title}
+                      </p>
+                      <div style={styles.markdownContainer}>
+                        <ReactMarkdown
+                          className="custom-markdown"
+                          components={{
+                            ul: ({ node, ...props }) => <ul {...props} />,
+                            li: ({ node, ...props }) => {
+                              return (
+                                <li {...props} style={{ marginBottom: "20px" }}>
+                                  {props.children}
+                                </li>
+                              );
+                            },
+                          }}
+                        >
+                          {tabContents[tabId].content}
+                        </ReactMarkdown>
 
-                      {/* Eligibility help prompt */}
-                      {activeTabId === "eligibility" && (
-                        <div style={styles.infoBox}>
-                          <InfoIcon />
-                          <div>
-                            <p style={styles.infoTitle}>
-                              Not sure if your organization qualifies?
-                            </p>
-                            <p style={styles.infoText}>
-                              Our AI-powered chatbot can help assess your
-                              organization's eligibility based on these
-                              criteria. Click the "Chat with AI" button in the
-                              navigation panel and ask: "Is my organization
-                              eligible for this grant?"
-                            </p>
+                        {/* Eligibility help prompt */}
+                        {tabId === "eligibility" && (
+                          <div style={styles.infoBox}>
+                            <InfoIcon />
+                            <div>
+                              <p style={styles.infoTitle}>
+                                Not sure if your organization qualifies?
+                              </p>
+                              <p style={styles.infoText}>
+                                Our AI-powered chatbot can help assess your
+                                organization's eligibility based on these
+                                criteria. Click the "Chat with AI" button in the
+                                navigation panel and ask: "Is my organization
+                                eligible for this grant?"
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
 
               <p style={styles.italicParagraph}>

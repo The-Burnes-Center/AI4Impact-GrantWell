@@ -482,7 +482,11 @@ export default function ChatMessage(props: ChatMessageProps) {
                     style={{ position: "absolute", top: "8px", right: "8px" }}
                   >
                     <div style={{ position: "relative" }}>
-                      <button style={iconButtonStyle} onClick={handleCopy}>
+                      <button 
+                        style={iconButtonStyle} 
+                        onClick={handleCopy}
+                        aria-label="Copy message to clipboard"
+                      >
                         <FaCopy size={16} />
                       </button>
                       {showCopyPopup && (
@@ -554,6 +558,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                       Utils.delay(3000).then(() => removeNotification(id));
                       setSelectedIcon(1);
                     }}
+                    aria-label="Thumbs up - positive feedback"
                   >
                     {selectedIcon === 1 ? (
                       <FaThumbsUp size={16} />
@@ -568,6 +573,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                     onClick={() => {
                       setModalVisible(true);
                     }}
+                    aria-label="Thumbs down - provide feedback"
                   >
                     {selectedIcon === 0 ? (
                       <FaThumbsDown size={16} />

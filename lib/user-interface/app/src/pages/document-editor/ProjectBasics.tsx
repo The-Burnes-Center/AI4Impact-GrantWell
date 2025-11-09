@@ -127,7 +127,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >
@@ -165,7 +165,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >
@@ -203,7 +203,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >
@@ -249,7 +249,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 style={{
                   display: "block",
                   fontSize: "12px",
-                  color: "#718096",
+                  color: "#5a6575",
                   marginTop: "4px",
                 }}
               >
@@ -286,7 +286,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 style={{
                   display: "block",
                   fontSize: "12px",
-                  color: "#718096",
+                  color: "#5a6575",
                   marginTop: "4px",
                 }}
               >
@@ -325,7 +325,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >
@@ -363,7 +363,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >

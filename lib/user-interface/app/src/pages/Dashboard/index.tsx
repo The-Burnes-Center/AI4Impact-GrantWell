@@ -114,7 +114,21 @@ const GrantActionsDropdown: React.FC<{
   onDelete: () => void;
 }> = ({ nofo, onToggleStatus, onEdit, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Check if dropdown should open upward
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - buttonRect.bottom;
+      const dropdownHeight = 150; // Approximate height of dropdown with 3 items
+
+      // If not enough space below, open upward
+      setDropUp(spaceBelow < dropdownHeight);
+    }
+  }, [isOpen]);
 
   // Handle click outside to close menu
   useEffect(() => {
@@ -136,6 +150,7 @@ const GrantActionsDropdown: React.FC<{
   return (
     <div className="grant-actions-dropdown" ref={menuRef}>
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="actions-dropdown-button"
         aria-label="More actions"
@@ -144,7 +159,7 @@ const GrantActionsDropdown: React.FC<{
         <LuMenu size={18} />
       </button>
       {isOpen && (
-        <div className="actions-dropdown-menu">
+        <div className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`}>
           {/* Toggle Status */}
           <button
             onClick={() => {
