@@ -627,14 +627,16 @@ const Checklists: React.FC = () => {
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
       {/* Navigation Sidebar */}
-      <RequirementsNavigation
-        documentIdentifier={folderParam}
-        sidebarOpen={sidebarOpen}
-        onSidebarToggle={handleSidebarToggle}
-      />
+      <nav aria-label="Requirements navigation">
+        <RequirementsNavigation
+          documentIdentifier={folderParam}
+          sidebarOpen={sidebarOpen}
+          onSidebarToggle={handleSidebarToggle}
+        />
+      </nav>
 
       {/* Main Content */}
-      <div
+      <main
         style={{
           flex: 1,
           overflow: "auto",
@@ -965,7 +967,7 @@ const Checklists: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 };

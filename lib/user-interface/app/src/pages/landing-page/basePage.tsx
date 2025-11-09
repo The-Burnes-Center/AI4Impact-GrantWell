@@ -539,7 +539,7 @@ export default function Welcome() {
   // **Render**
   return (
     <div style={containerStyle}>
-      <div
+      <main
         style={{
           maxWidth: "950px",
           margin: "0 auto",
@@ -644,7 +644,7 @@ export default function Welcome() {
                 fontSize: "15px",
                 fontWeight: 500,
                 cursor: "pointer",
-                transition: "background 0.2s",
+                transition: "background 0.2s, box-shadow 0.2s, outline 0.2s",
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
@@ -652,6 +652,16 @@ export default function Welcome() {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outlineOffset = "2px";
+                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
+                e.currentTarget.style.outlineOffset = "0px";
+                e.currentTarget.style.boxShadow = "none";
               }}
               aria-label="View Key Requirements"
             >
@@ -678,7 +688,7 @@ export default function Welcome() {
                 fontSize: "15px",
                 fontWeight: 500,
                 cursor: "pointer",
-                transition: "background 0.2s",
+                transition: "background 0.2s, box-shadow 0.2s, outline 0.2s",
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
@@ -686,6 +696,16 @@ export default function Welcome() {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outlineOffset = "2px";
+                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
+                e.currentTarget.style.outlineOffset = "0px";
+                e.currentTarget.style.boxShadow = "none";
               }}
               aria-label="Write Project Narrative"
             >
@@ -713,7 +733,7 @@ export default function Welcome() {
                 fontSize: "15px",
                 fontWeight: 500,
                 cursor: "pointer",
-                transition: "background 0.2s",
+                transition: "background 0.2s, box-shadow 0.2s, outline 0.2s",
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
@@ -721,6 +741,16 @@ export default function Welcome() {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outlineOffset = "2px";
+                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
+                e.currentTarget.style.outlineOffset = "0px";
+                e.currentTarget.style.boxShadow = "none";
               }}
               aria-label="Get Grant Help"
             >
@@ -974,7 +1004,10 @@ export default function Welcome() {
           }
           backgroundColor="#006499"
         /> */}
+      </main>
 
+      {/* Footer Section */}
+      <footer>
         {/* Affiliations Section */}
         <div
           style={{
@@ -1085,7 +1118,7 @@ export default function Welcome() {
           imageWidth="75px"
           titleAlign="center"
         />
-      </div>
+      </footer>
     </div>
   );
 }

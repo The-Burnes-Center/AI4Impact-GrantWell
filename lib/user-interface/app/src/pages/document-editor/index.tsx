@@ -460,16 +460,18 @@ const DocumentEditor: React.FC = () => {
       style={{ display: "flex", minHeight: "100vh" }}
     >
       {currentStep !== "welcome" && (
-        <DocumentNavigation
-          documentIdentifier={selectedNofo}
-          currentStep={currentStep}
-          onNavigate={navigateToStep}
-          isOpen={sidebarOpen}
-          setIsOpen={setSidebarOpen}
-        />
+        <nav aria-label="Document editor navigation">
+          <DocumentNavigation
+            documentIdentifier={selectedNofo}
+            currentStep={currentStep}
+            onNavigate={navigateToStep}
+            isOpen={sidebarOpen}
+            setIsOpen={setSidebarOpen}
+          />
+        </nav>
       )}
 
-      <div
+      <main
         className="document-content"
         style={{
           marginLeft: currentStep !== "welcome" ? (sidebarOpen ? "240px" : "60px") : "0",
@@ -607,7 +609,7 @@ const DocumentEditor: React.FC = () => {
             renderCurrentStep()
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 };

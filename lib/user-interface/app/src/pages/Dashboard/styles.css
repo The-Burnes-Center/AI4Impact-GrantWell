@@ -158,7 +158,7 @@ html, body {
 
 .table-header {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-columns: 4fr 1fr;
   background-color: #f5f8fc;
   font-weight: 600;
   border-bottom: 1px solid #e0e0e0;
@@ -180,7 +180,7 @@ html, body {
 
 .table-row {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-columns: 4fr 1fr;
   border-bottom: 1px solid #e0e0e0;
   transition: all 0.2s;
 }
@@ -1235,4 +1235,112 @@ select.form-input {
   border-top: 3px solid #0073BB;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+/* Grant Actions Dropdown Styles */
+.grant-actions-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.actions-dropdown-button {
+  background: transparent;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #667085;
+  transition: all 0.2s ease;
+}
+
+.actions-dropdown-button:hover {
+  background-color: #f9fafb;
+  border-color: #98a2b3;
+  color: #344054;
+}
+
+.actions-dropdown-button:focus {
+  outline: 2px solid #FFB700;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(255, 183, 0, 0.2);
+}
+
+.actions-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background: white;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: dropdown-appear 0.15s ease-out;
+}
+
+@keyframes dropdown-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: #344054;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.dropdown-menu-item:hover {
+  background-color: #f9fafb;
+}
+
+.dropdown-menu-item:focus {
+  outline: 2px solid #FFB700;
+  outline-offset: -2px;
+  background-color: #f9fafb;
+}
+
+.dropdown-menu-item .menu-icon {
+  color: #667085;
+  flex-shrink: 0;
+}
+
+.dropdown-menu-item:hover .menu-icon {
+  color: #344054;
+}
+
+.dropdown-menu-item.delete-item {
+  color: #c0392b;
+  border-top: 1px solid #f2f4f7;
+}
+
+.dropdown-menu-item.delete-item:hover {
+  background-color: #fff0f0;
+}
+
+.dropdown-menu-item.delete-item .menu-icon {
+  color: #c0392b;
+}
+
+.dropdown-menu-item.delete-item:hover .menu-icon {
+  color: #a02a1f;
 }
