@@ -16,7 +16,9 @@ import * as targets from "aws-cdk-lib/aws-events-targets";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
-import { S3EventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { S3EventSource, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import * as sqs from "aws-cdk-lib/aws-sqs";
+import * as s3n from "aws-cdk-lib/aws-s3-notifications";
 
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
@@ -378,6 +380,21 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     this.getNOFOsList = getS3APIHandlerFunctionForNOFOs;
 
+    // Create Dead Letter Queue for NOFO processing
+    const nofoProcessingDLQ = new sqs.Queue(scope, "NOFOProcessingDLQ", {
+      retentionPeriod: cdk.Duration.days(14),
+    });
+
+    // Create SQS Queue for NOFO processing
+    const nofoProcessingQueue = new sqs.Queue(scope, "NOFOProcessingQueue", {
+      visibilityTimeout: cdk.Duration.minutes(15), // Matches Lambda timeout
+      receiveMessageWaitTime: cdk.Duration.seconds(20), // Long polling
+      deadLetterQueue: {
+        queue: nofoProcessingDLQ,
+        maxReceiveCount: 3, // Retry 3 times before DLQ
+      },
+    });
+
     const processNOFOAPIHandlerFunction = new lambda.Function(
       scope,
       "ProcessNOFOAPIHandlerFunction",
@@ -444,11 +461,46 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    this.processAndSummarizeNOFO = processNOFOAPIHandlerFunction;
-    processNOFOAPIHandlerFunction.addEventSource(
-      new S3EventSource(props.ffioNofosBucket, {
-        events: [s3.EventType.OBJECT_CREATED],
+    // SQS permissions for Lambda
+    processNOFOAPIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes",
+        ],
+        resources: [nofoProcessingQueue.queueArn],
       })
+    );
+
+    this.processAndSummarizeNOFO = processNOFOAPIHandlerFunction;
+    
+    // Remove S3EventSource and add SqsEventSource instead
+    processNOFOAPIHandlerFunction.addEventSource(
+      new SqsEventSource(nofoProcessingQueue, {
+        batchSize: 1, // Process one file at a time
+        maxConcurrency: 5, // Rate limiting: max 5 concurrent executions
+        reportBatchItemFailures: true, // Enable partial batch failure handling
+      })
+    );
+
+    // Add S3 → SQS notification
+    props.ffioNofosBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.SqsDestination(nofoProcessingQueue),
+      {
+        prefix: "",
+        suffix: "NOFO-File-PDF",
+      }
+    );
+    props.ffioNofosBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.SqsDestination(nofoProcessingQueue),
+      {
+        prefix: "",
+        suffix: "NOFO-File-TXT",
+      }
     );
 
     const RequirementsForNOFOs = new lambda.Function(
