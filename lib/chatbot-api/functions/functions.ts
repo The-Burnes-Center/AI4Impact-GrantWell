@@ -787,6 +787,15 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // Bedrock permissions for automated NOFO scraper (to identify NOFO file from multiple attachments)
+    automatedNofoScraperFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:InvokeModel"],
+        resources: ["*"],
+      })
+    );
+
     // Create EventBridge rule to run the scraper daily at 9 AM UTC
     const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
       schedule: events.Schedule.cron({
