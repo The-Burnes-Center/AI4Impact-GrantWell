@@ -818,23 +818,15 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "HtmlToPdfConverterFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/html-to-pdf-converter"), {
-            bundling: {
-              image: lambda.Runtime.PYTHON_3_12.bundlingImage,
-              command: [
-                'bash', '-c',
-                'pip install -r requirements.txt -t /asset-output && cp -au . /asset-output',
-              ],
-            },
-          }),
-        handler: "lambda_function.lambda_handler",
+          path.join(__dirname, "landing-page/html-to-pdf-converter")),
+        handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },
         timeout: cdk.Duration.minutes(5),
-        memorySize: 1024, // PDF conversion can be memory-intensive
+        memorySize: 1024, // PDF conversion with Chromium can be memory-intensive
       }
     );
 
