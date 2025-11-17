@@ -813,6 +813,16 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.automatedNofoScraperFunction = automatedNofoScraperFunction;
 
+    // Create Chromium Lambda Layer for HTML to PDF conversion
+    const chromiumLayer = new lambda.LayerVersion(scope, "ChromiumLayer", {
+      layerVersionName: "ChromiumLayer",
+      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "layers/chromium-v110.0.0-layer.zip")
+      ),
+      description: "Chromium binaries for Puppeteer in Lambda",
+    });
+
     // Add HTML to PDF converter Lambda function
     const htmlToPdfConverterFunction = new lambda.Function(
       scope,
@@ -822,6 +832,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/html-to-pdf-converter")),
         handler: "index.handler",
+        layers: [chromiumLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },
