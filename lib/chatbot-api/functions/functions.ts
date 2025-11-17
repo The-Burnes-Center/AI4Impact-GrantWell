@@ -820,8 +820,15 @@ export class LambdaFunctionStack extends cdk.Stack {
       {
         runtime: lambda.Runtime.PYTHON_3_12,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/html-to-pdf-converter")
-        ),
+          path.join(__dirname, "landing-page/html-to-pdf-converter"), {
+            bundling: {
+              image: lambda.Runtime.PYTHON_3_12.bundlingImage,
+              command: [
+                'bash', '-c',
+                'pip install -r requirements.txt -t /asset-output && cp -au . /asset-output',
+              ],
+            },
+          }),
         handler: "lambda_function.lambda_handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,

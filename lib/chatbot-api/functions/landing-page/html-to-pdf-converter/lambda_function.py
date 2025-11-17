@@ -8,9 +8,10 @@ them to the final location, then deletes the temporary HTML file.
 
 import json
 import boto3
-from weasyprint import HTML
 import os
 from urllib.parse import unquote
+from io import BytesIO
+from xhtml2pdf import pisa
 
 s3_client = boto3.client('s3')
 
@@ -50,10 +51,20 @@ def lambda_handler(event, context):
             
             print(f'Downloaded HTML for {opportunity_title}, size: {len(html_content)} bytes')
             
-            # Convert HTML to PDF using weasyprint
+            # Convert HTML to PDF using xhtml2pdf (pure Python, no binaries needed)
             try:
-                pdf_buffer = HTML(string=html_content).write_pdf()
-                print(f'Successfully converted HTML to PDF, size: {len(pdf_buffer)} bytes')
+                pdf_buffer = BytesIO()
+                pisa_status = pisa.CreatePDF(
+                    BytesIO(html_content.encode('utf-8')),
+                    dest=pdf_buffer
+                )
+                
+                if pisa_status.err:
+                    raise Exception(f'PDF creation error: {pisa_status.err}')
+                
+                pdf_buffer.seek(0)
+                pdf_bytes = pdf_buffer.getvalue()
+                print(f'Successfully converted HTML to PDF, size: {len(pdf_bytes)} bytes')
             except Exception as pdf_error:
                 print(f'Error converting HTML to PDF: {str(pdf_error)}')
                 raise
@@ -63,7 +74,7 @@ def lambda_handler(event, context):
             s3_client.put_object(
                 Bucket=bucket,
                 Key=final_pdf_key,
-                Body=pdf_buffer,
+                Body=pdf_bytes,
                 ContentType='application/pdf'
             )
             
