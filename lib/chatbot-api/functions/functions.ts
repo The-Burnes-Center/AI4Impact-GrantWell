@@ -52,6 +52,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly draftFunction: lambda.Function;
   public readonly draftGeneratorFunction: lambda.Function;
   public readonly automatedNofoScraperFunction: lambda.Function;
+  public readonly htmlToPdfConverterFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -802,5 +803,47 @@ export class LambdaFunctionStack extends cdk.Stack {
     scraperRule.addTarget(new targets.LambdaFunction(automatedNofoScraperFunction));
 
     this.automatedNofoScraperFunction = automatedNofoScraperFunction;
+
+    // Add HTML to PDF converter Lambda function
+    const htmlToPdfConverterFunction = new lambda.Function(
+      scope,
+      "HtmlToPdfConverterFunction",
+      {
+        runtime: lambda.Runtime.PYTHON_3_12,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "landing-page/html-to-pdf-converter")
+        ),
+        handler: "lambda_function.lambda_handler",
+        environment: {
+          BUCKET: props.ffioNofosBucket.bucketName,
+        },
+        timeout: cdk.Duration.minutes(5),
+        memorySize: 1024, // PDF conversion can be memory-intensive
+      }
+    );
+
+    // S3 permissions for HTML to PDF converter
+    htmlToPdfConverterFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          `${props.ffioNofosBucket.bucketArn}/*`,
+        ],
+      })
+    );
+
+    // Add S3 event notification to trigger HTML-to-PDF conversion
+    props.ffioNofosBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.LambdaDestination(htmlToPdfConverterFunction),
+      {
+        prefix: "pending-conversion/",
+        suffix: ".html",
+      }
+    );
+
+    this.htmlToPdfConverterFunction = htmlToPdfConverterFunction;
   }
 }
