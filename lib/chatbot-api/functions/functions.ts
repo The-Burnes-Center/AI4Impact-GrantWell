@@ -852,14 +852,20 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     // S3 permissions for HTML to PDF converter
+    // ListBucket permission on the bucket itself
+    htmlToPdfConverterFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket"],
+        resources: [props.ffioNofosBucket.bucketArn],
+      })
+    );
+    // Object-level permissions on bucket contents
     htmlToPdfConverterFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
+        resources: [`${props.ffioNofosBucket.bucketArn}/*`],
       })
     );
 
