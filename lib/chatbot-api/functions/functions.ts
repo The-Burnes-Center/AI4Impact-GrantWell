@@ -823,6 +823,16 @@ export class LambdaFunctionStack extends cdk.Stack {
       description: "Chromium binaries for Puppeteer in Lambda",
     });
 
+    // Create Puppeteer Core Lambda Layer for HTML to PDF conversion
+    const puppeteerCoreLayer = new lambda.LayerVersion(scope, "PuppeteerCoreLayer", {
+      layerVersionName: "PuppeteerCoreLayer",
+      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "layers/puppeteer-core-layer.zip")
+      ),
+      description: "Puppeteer Core and dependencies for Lambda",
+    });
+
     // Add HTML to PDF converter Lambda function
     const htmlToPdfConverterFunction = new lambda.Function(
       scope,
@@ -832,7 +842,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/html-to-pdf-converter")),
         handler: "index.handler",
-        layers: [chromiumLayer],
+        layers: [chromiumLayer, puppeteerCoreLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },

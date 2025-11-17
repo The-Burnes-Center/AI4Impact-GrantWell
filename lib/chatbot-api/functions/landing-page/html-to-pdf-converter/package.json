@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@sparticuz/chromium": "^110.0.0",
-    "puppeteer-core": "^23.10.4",
     "@aws-sdk/client-s3": "^3.679.0"
   }
 }
