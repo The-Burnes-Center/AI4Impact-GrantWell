@@ -25,6 +25,7 @@ interface LambdaFunctionStackProps {
   readonly sessionTable: Table;
   readonly feedbackTable: Table;
   readonly draftTable: Table;
+  readonly nofoMetadataTable: Table;
   readonly feedbackBucket: s3.Bucket;
   readonly ffioNofosBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -53,6 +54,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly draftGeneratorFunction: lambda.Function;
   public readonly automatedNofoScraperFunction: lambda.Function;
   public readonly htmlToPdfConverterFunction: lambda.Function;
+  public readonly syncNofoMetadataFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -360,6 +362,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
         },
         timeout: cdk.Duration.minutes(3),
       }
@@ -379,6 +383,23 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+
+    // Grant DynamoDB read permissions
+    getS3APIHandlerFunctionForNOFOs.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:GetItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          props.nofoMetadataTable.tableArn + "/index/*",
+        ],
+      })
+    );
+
     this.getNOFOsList = getS3APIHandlerFunctionForNOFOs;
 
     // Create Dead Letter Queue for NOFO processing
@@ -408,6 +429,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
         },
         timeout: cdk.Duration.minutes(9),
       }
@@ -472,6 +495,22 @@ export class LambdaFunctionStack extends cdk.Stack {
           "sqs:GetQueueAttributes",
         ],
         resources: [nofoProcessingQueue.queueArn],
+      })
+    );
+
+    // Grant DynamoDB write permissions
+    processNOFOAPIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:GetItem",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          props.nofoMetadataTable.tableArn + "/index/*",
+        ],
       })
     );
 
@@ -600,6 +639,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -612,6 +653,23 @@ export class LambdaFunctionStack extends cdk.Stack {
         resources: [
           props.ffioNofosBucket.bucketArn,
           props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+
+    // Grant DynamoDB write permissions
+    nofoStatusHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:Query",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          props.nofoMetadataTable.tableArn + "/index/*",
         ],
       })
     );
@@ -770,6 +828,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           GRANTS_GOV_API_KEY: props.grantsGovApiKey,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
         },
         timeout: cdk.Duration.minutes(15),
       }
@@ -796,6 +856,22 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // Grant DynamoDB write permissions
+    automatedNofoScraperFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:GetItem",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          props.nofoMetadataTable.tableArn + "/index/*",
+        ],
+      })
+    );
+
     // Create EventBridge rule to run the scraper daily at 9 AM UTC
     const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
       schedule: events.Schedule.cron({
@@ -812,6 +888,54 @@ export class LambdaFunctionStack extends cdk.Stack {
     scraperRule.addTarget(new targets.LambdaFunction(automatedNofoScraperFunction));
 
     this.automatedNofoScraperFunction = automatedNofoScraperFunction;
+
+    // Add sync NOFO metadata Lambda function
+    const syncNofoMetadataFunction = new lambda.Function(
+      scope,
+      "SyncNofoMetadataFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "landing-page/sync-nofo-metadata")
+        ),
+        handler: "index.handler",
+        environment: {
+          BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        },
+        timeout: cdk.Duration.minutes(15),
+      }
+    );
+
+    // S3 read permissions
+    syncNofoMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:ListBucket"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          `${props.ffioNofosBucket.bucketArn}/*`,
+        ],
+      })
+    );
+
+    // DynamoDB write permissions
+    syncNofoMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:PutItem",
+          "dynamodb:GetItem",
+          "dynamodb:UpdateItem",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          props.nofoMetadataTable.tableArn + "/index/*",
+        ],
+      })
+    );
+
+    this.syncNofoMetadataFunction = syncNofoMetadataFunction;
 
     // Create Puppeteer Core Lambda Layer for HTML to PDF conversion
     // Note: @sparticuz/chromium v131+ bundles all required dependencies, so no separate Chromium layer is needed

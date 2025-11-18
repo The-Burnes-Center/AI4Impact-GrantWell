@@ -60,6 +60,7 @@ export class ChatBotApi extends Construct {
       sessionTable: tables.historyTable,
       feedbackTable: tables.feedbackTable,
       draftTable: tables.draftTable,
+      nofoMetadataTable: tables.nofoMetadataTable,
       feedbackBucket: buckets.feedbackBucket,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
