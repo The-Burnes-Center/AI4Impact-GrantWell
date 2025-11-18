@@ -44,7 +44,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     GrantRecommendation[]
   >([]);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
-  const [nonGrantMessage, setNonGrantMessage] = useState("");
   const [showViewAllModal, setShowViewAllModal] = useState(false);
 
   // Use grant recommendations hook only for the Grant Assistant
@@ -204,27 +203,16 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     // Call the actual recommendation API
     getRecommendationsUsingREST(assistantInput)
       .then((response) => {
-        if (response && response.isNotGrantRelated) {
-          // Handle non-grant-related queries
-          setRecommendedGrants([]);
-          // Set a message indicating this is not a grant-related query
-          setNonGrantMessage(
-            response.message ||
-              "Please ask about grants or funding opportunities."
-          );
-        } else if (response && response.grants) {
+        if (response && response.grants) {
           setRecommendedGrants(response.grants);
-          setNonGrantMessage("");
         } else {
           // Handle empty response
           setRecommendedGrants([]);
-          setNonGrantMessage("");
         }
       })
       .catch((error) => {
         console.error("Error getting recommendations:", error);
         setRecommendedGrants([]);
-        setNonGrantMessage("");
       })
       .finally(() => {
         setIsAssistantLoading(false);
@@ -261,7 +249,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     setShowAssistant(false);
     setAssistantInput("");
     setRecommendedGrants([]);
-    setNonGrantMessage("");
   };
 
   const assistantContainerStyle: React.CSSProperties = {
@@ -805,7 +792,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               setShowAssistant(false);
               setAssistantInput("");
               setRecommendedGrants([]);
-              setNonGrantMessage("");
               setExpandedGrants({});
               // Reset the document selection with null to ensure parent state is cleared
               onSelectDocument(null);
@@ -1171,58 +1157,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     Finding the best grant matches for your needs...
                   </div>
                 </div>
-              ) : nonGrantMessage ? (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: "30px 20px",
-                    color: "#666",
-                    backgroundColor: "#fef6e6",
-                    border: "1px solid #fcebc9",
-                    borderRadius: "8px",
-                    margin: "10px 0",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      color: "#e67700",
-                      marginBottom: "10px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      style={{ marginRight: "8px" }}
-                    >
-                      <path
-                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                        stroke="#e67700"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M12 8V12"
-                        stroke="#e67700"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M12 16V16.01"
-                        stroke="#e67700"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <span>Grant Assistant Notice</span>
-                  </div>
-                  <div style={{ fontSize: "14px" }}>{nonGrantMessage}</div>
-                </div>
               ) : recommendedGrants.length > 0 ? (
                 <div>
                   <div
@@ -1360,7 +1294,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   {assistantInput &&
                   !isAssistantLoading &&
                   recommendedGrants.length === 0 &&
-                  !nonGrantMessage &&
                   Object.keys(recommendations || {}).length > 0
                     ? "No matching grants found. Try describing your needs in more detail or with different keywords."
                     : "Describe your specific grant needs above and click 'Find Grants' to discover matching opportunities."}
