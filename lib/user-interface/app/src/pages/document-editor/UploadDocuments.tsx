@@ -263,7 +263,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           <div style={{ marginBottom: "24px" }}>
             <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>Files</h3>
             {files.length === 0 ? (
-              <p style={{ color: "#718096", fontStyle: "italic" }}>
+              <p style={{ color: "#5a6575", fontStyle: "italic" }}>
                 No files uploaded yet
               </p>
             ) : (
@@ -285,7 +285,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                     </span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 500 }}>{file.name}</div>
-                      <div style={{ fontSize: "12px", color: "#718096" }}>
+                      <div style={{ fontSize: "12px", color: "#5a6575" }}>
                         {formatFileSize(file.size)}
                       </div>
                     </div>

@@ -62,7 +62,7 @@ export class DraftsClient {
     let validData = false;
     let output;
     let runs = 0;
-    let limit = 3;
+    const limit = 3;
     let errorMessage = "Could not load draft";
 
     while (!validData && runs < limit) {

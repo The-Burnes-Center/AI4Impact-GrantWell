@@ -151,14 +151,14 @@ html, body {
 .table-container {
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 20px;
+  overflow: visible;
+  margin-bottom: 80px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
 }
 
 .table-header {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-columns: 4fr 1fr;
   background-color: #f5f8fc;
   font-weight: 600;
   border-bottom: 1px solid #e0e0e0;
@@ -180,9 +180,15 @@ html, body {
 
 .table-row {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-columns: 4fr 1fr;
   border-bottom: 1px solid #e0e0e0;
   transition: all 0.2s;
+  position: relative;
+  z-index: 1;
+}
+
+.table-row:hover {
+  z-index: 10;
 }
 
 .table-row:last-child {
@@ -986,7 +992,7 @@ select.form-input {
 
 .action-button.delete {
   background-color: #fff0f0;
-  color: #e74c3c;
+  color: #c0392b;
 }
 
 .action-button.delete:hover {
@@ -1098,12 +1104,12 @@ select.form-input {
 }
 
 .action-button.invite-button {
-  background-color: #4a90e2;
+  background-color: #2b6cb0;
   color: white;
 }
 
 .action-button.invite-button:hover {
-  background-color: #3a80d2;
+  background-color: #2557a0;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
@@ -1118,7 +1124,7 @@ select.form-input {
 }
 
 .action-button.scraper-button {
-  background-color: #28a745;
+  background-color: #1e7e34;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1134,9 +1140,9 @@ select.form-input {
 }
 
 .action-button.scraper-button:hover:not(:disabled) {
-  background-color: #218838;
+  background-color: #196d2e;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+  box-shadow: 0 4px 8px rgba(30, 126, 52, 0.2);
 }
 
 .action-button.scraper-button:disabled {
@@ -1235,4 +1241,130 @@ select.form-input {
   border-top: 3px solid #0073BB;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+/* Grant Actions Dropdown Styles */
+.grant-actions-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.actions-dropdown-button {
+  background: transparent;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #667085;
+  transition: all 0.2s ease;
+}
+
+.actions-dropdown-button:hover {
+  background-color: #f9fafb;
+  border-color: #98a2b3;
+  color: #344054;
+}
+
+.actions-dropdown-button:focus {
+  outline: 2px solid #FFB700;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(255, 183, 0, 0.2);
+}
+
+.actions-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background: white;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: dropdown-appear 0.15s ease-out;
+}
+
+/* Drop-up variant for bottom rows */
+.actions-dropdown-menu.drop-up {
+  top: auto;
+  bottom: calc(100% + 4px);
+  animation: dropdown-appear-up 0.15s ease-out;
+}
+
+@keyframes dropdown-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-appear-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: #344054;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.dropdown-menu-item:hover {
+  background-color: #f9fafb;
+}
+
+.dropdown-menu-item:focus {
+  outline: 2px solid #FFB700;
+  outline-offset: -2px;
+  background-color: #f9fafb;
+}
+
+.dropdown-menu-item .menu-icon {
+  color: #667085;
+  flex-shrink: 0;
+}
+
+.dropdown-menu-item:hover .menu-icon {
+  color: #344054;
+}
+
+.dropdown-menu-item.delete-item {
+  color: #c0392b;
+  border-top: 1px solid #f2f4f7;
+}
+
+.dropdown-menu-item.delete-item:hover {
+  background-color: #fff0f0;
+}
+
+.dropdown-menu-item.delete-item .menu-icon {
+  color: #c0392b;
+}
+
+.dropdown-menu-item.delete-item:hover .menu-icon {
+  color: #a02a1f;
 }

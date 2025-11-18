@@ -138,7 +138,11 @@ export default function RequirementsNavigation({
         {sidebarOpen && (
           <div style={{ fontWeight: "bold", fontSize: "16px" }}>Navigation</div>
         )}
-        <button style={styles.sidebarToggle} onClick={onSidebarToggle}>
+        <button 
+          style={styles.sidebarToggle} 
+          onClick={onSidebarToggle}
+          aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+        >
           {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
         </button>
       </div>

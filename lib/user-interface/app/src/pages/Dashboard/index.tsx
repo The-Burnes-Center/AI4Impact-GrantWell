@@ -4,14 +4,14 @@ import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { useNotifications } from "../../components/notif-manager";
-import { 
-  LuPin, 
-  LuPinOff, 
-  LuSearch, 
-  LuFilter, 
-  LuMail, 
-  LuUpload, 
-  LuCheck, 
+import {
+  LuPin,
+  LuPinOff,
+  LuSearch,
+  LuFilter,
+  LuMail,
+  LuUpload,
+  LuCheck,
   LuX,
   LuMenu,
   LuPencil,
@@ -22,7 +22,7 @@ import {
   LuInfo,
   LuFile,
   LuRefreshCw,
-  LuDownload
+  LuDownload,
 } from "react-icons/lu";
 import "./styles.css";
 
@@ -59,11 +59,11 @@ export const RowActions: React.FC<{
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
-    
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
@@ -105,68 +105,193 @@ export const RowActions: React.FC<{
 };
 
 /**
+ * Grant Actions Dropdown - provides status toggle, edit, and delete functionality
+ */
+const GrantActionsDropdown: React.FC<{
+  nofo: NOFO;
+  onToggleStatus: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}> = ({ nofo, onToggleStatus, onEdit, onDelete }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Check if dropdown should open upward
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - buttonRect.bottom;
+      const dropdownHeight = 150; // Approximate height of dropdown with 3 items
+
+      // If not enough space below, open upward
+      setDropUp(spaceBelow < dropdownHeight);
+    }
+  }, [isOpen]);
+
+  // Handle click outside to close menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  return (
+    <div className="grant-actions-dropdown" ref={menuRef}>
+      <button
+        ref={buttonRef}
+        onClick={() => setIsOpen(!isOpen)}
+        className="actions-dropdown-button"
+        aria-label="More actions"
+        aria-expanded={isOpen}
+      >
+        <LuMenu size={18} />
+      </button>
+      {isOpen && (
+        <div className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`}>
+          {/* Toggle Status */}
+          <button
+            onClick={() => {
+              onToggleStatus();
+              setIsOpen(false);
+            }}
+            className="dropdown-menu-item"
+          >
+            {nofo.status === "active" ? (
+              <>
+                <LuArchive size={16} className="menu-icon" />
+                <span>Archive</span>
+              </>
+            ) : (
+              <>
+                <LuCheck size={16} className="menu-icon" />
+                <span>Mark Active</span>
+              </>
+            )}
+          </button>
+
+          {/* Edit */}
+          <button
+            onClick={() => {
+              onEdit();
+              setIsOpen(false);
+            }}
+            className="dropdown-menu-item"
+          >
+            <LuPencil size={16} className="menu-icon" />
+            <span>Edit</span>
+          </button>
+
+          {/* Delete */}
+          <button
+            onClick={() => {
+              onDelete();
+              setIsOpen(false);
+            }}
+            className="dropdown-menu-item delete-item"
+          >
+            <LuTrash size={16} className="menu-icon" />
+            <span>Delete</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/**
  * Custom hook for modal effects
  */
 function useModalEffects(isOpen: boolean, onClose: () => void) {
   // Prevent body scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
   // Close on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    
+
     if (isOpen) {
-      window.addEventListener('keydown', handleEscape);
+      window.addEventListener("keydown", handleEscape);
     }
-    return () => window.removeEventListener('keydown', handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 }
 
 /**
  * Modal component for confirmations and forms
  */
-export const Modal = React.memo(({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children 
-}: { 
-  isOpen: boolean; 
-  onClose: () => void; 
-  title: string; 
-  children: React.ReactNode; 
-}) => {
-  // Use the custom hook for side effects
-  useModalEffects(isOpen, onClose);
-  
-  if (!isOpen) return null;
+export const Modal = React.memo(
+  ({
+    isOpen,
+    onClose,
+    title,
+    children,
+  }: {
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    children: React.ReactNode;
+  }) => {
+    // Use the custom hook for side effects
+    useModalEffects(isOpen, onClose);
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{title}</h2>
-          <button className="modal-close-button" onClick={onClose} aria-label="Close modal">
-            <LuX size={20} />
-          </button>
+    if (!isOpen) return null;
+
+    return (
+      <div
+        className="modal-overlay"
+        onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") onClose();
+        }}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div
+          className="modal-content"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          role="document"
+        >
+          <div className="modal-header">
+            <h2>{title}</h2>
+            <button
+              className="modal-close-button"
+              onClick={onClose}
+              aria-label="Close modal"
+            >
+              <LuX size={20} />
+            </button>
+          </div>
+          <div className="modal-body">{children}</div>
         </div>
-        <div className="modal-body">{children}</div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 // Set display name for React DevTools
-Modal.displayName = 'Modal';
+Modal.displayName = "Modal";
 
 interface NOFOsTabProps {
   nofos: NOFO[];
@@ -187,19 +312,21 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   uploadNofoModalOpen,
   setUploadNofoModalOpen,
   showGrantSuccessBanner,
-  useNotifications
+  useNotifications,
 }) => {
   // NOFO editing state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedNofo, setSelectedNofo] = useState<NOFO | null>(null);
   const [editedNofoName, setEditedNofoName] = useState("");
-  const [editedNofoStatus, setEditedNofoStatus] = useState<"active" | "archived">("active");
-  
+  const [editedNofoStatus, setEditedNofoStatus] = useState<
+    "active" | "archived"
+  >("active");
+
   // Upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
-  
+
   // Access notifications if available
   const addNotification = useNotifications?.addNotification;
 
@@ -210,7 +337,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
 
   // Helper function to normalize grant name
   const normalizeGrantName = (name: string): string => {
-    return name?.trim() || '';
+    return name?.trim() || "";
   };
 
   // Function to check if a specific NOFO is pinned
@@ -223,17 +350,15 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     if (event) {
       event.stopPropagation(); // Prevent triggering the parent click handler
     }
-    
+
     try {
       // Call API to update NOFO pinned status
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, true);
-      
+
       // Update local state after successful API call
       setNofos(
         nofos.map((item) =>
-          item.id === nofo.id
-            ? { ...item, isPinned: true }
-            : item
+          item.id === nofo.id ? { ...item, isPinned: true } : item
         )
       );
 
@@ -247,23 +372,21 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       }
     }
   };
-  
+
   // Handle unpinning a grant
   const handleUnpinGrant = async (nofo: NOFO, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation(); // Prevent triggering the parent click handler
     }
-    
+
     try {
       // Call API to update NOFO pinned status
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, false);
-      
+
       // Update local state after successful API call
       setNofos(
         nofos.map((item) =>
-          item.id === nofo.id
-            ? { ...item, isPinned: false }
-            : item
+          item.id === nofo.id ? { ...item, isPinned: false } : item
         )
       );
 
@@ -303,10 +426,13 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
           editedNofoName.trim()
         );
       }
-      
+
       // Update NOFO status if it changed
       if (selectedNofo.status !== editedNofoStatus) {
-        await apiClient.landingPage.updateNOFOStatus(editedNofoName.trim(), editedNofoStatus);
+        await apiClient.landingPage.updateNOFOStatus(
+          editedNofoName.trim(),
+          editedNofoStatus
+        );
       }
 
       // Update local state after successful API call
@@ -341,17 +467,18 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   // Toggle NOFO status
   const toggleNofoStatus = async (nofo: NOFO) => {
     const newStatus = nofo.status === "active" ? "archived" : "active";
-    
+
     try {
       // Call API to update NOFO status
-      const result = await apiClient.landingPage.updateNOFOStatus(nofo.name, newStatus);
-      
+      const result = await apiClient.landingPage.updateNOFOStatus(
+        nofo.name,
+        newStatus
+      );
+
       // Update local state after successful API call
       setNofos(
         nofos.map((item) =>
-          item.id === nofo.id
-            ? { ...item, status: newStatus }
-            : item
+          item.id === nofo.id ? { ...item, status: newStatus } : item
         )
       );
 
@@ -363,7 +490,10 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       }
     } catch (error) {
       if (addNotification) {
-        addNotification("error", "Failed to update grant status. Please try again.");
+        addNotification(
+          "error",
+          "Failed to update grant status. Please try again."
+        );
       } else {
         alert("Failed to update grant status. Please try again.");
       }
@@ -383,7 +513,10 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
 
       // Show success notification
       if (addNotification) {
-        addNotification("success", `Grant "${selectedNofo.name}" deleted successfully`);
+        addNotification(
+          "success",
+          `Grant "${selectedNofo.name}" deleted successfully`
+        );
       } else {
         alert(`Grant "${selectedNofo.name}" deleted successfully`);
       }
@@ -433,7 +566,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
 
     try {
       const folderName = customGrantName.trim();
-      
+
       let newFilePath;
       if (selectedFile.type === "text/plain") {
         newFilePath = `${folderName}/NOFO-File-TXT`;
@@ -448,7 +581,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         selectedFile.type
       );
       await apiClient.landingPage.uploadFileToS3(signedUrl, selectedFile);
-      
+
       // Set initial status to active for the new NOFO
       await apiClient.landingPage.updateNOFOStatus(folderName, "active");
 
@@ -465,7 +598,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setSelectedFile(null);
       setCustomGrantName("");
       setUploadNofoModalOpen(false);
-      
+
       // We won't automatically refresh - that's now handled by the parent's showGrantSuccessBanner
     } catch (error) {
       if (addNotification) {
@@ -482,7 +615,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       <div className="table-container">
         <div className="table-header">
           <div className="header-cell">Name</div>
-          <div className="header-cell">Status</div>
           <div className="header-cell">Actions</div>
         </div>
 
@@ -505,22 +637,10 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                   </span>
                 )}
               </div>
-              <div className="row-cell">
-                <div 
-                  className={`status-badge ${nofo.status || 'active'}`} 
-                  onClick={() => toggleNofoStatus(nofo)}
-                  title="Click to toggle between active and archived"
-                >
-                  <span className="status-icon">
-                    {nofo.status === 'active' ? <LuCheck size={14} /> : <LuArchive size={14} />}
-                  </span>
-                  <span>{nofo.status || "active"}</span>
-                </div>
-              </div>
               <div className="row-cell actions">
                 {/* Pin/Unpin Button */}
                 {isNofoPinned(nofo) ? (
-                  <button 
+                  <button
                     className="action-button unpin"
                     onClick={(e) => handleUnpinGrant(nofo, e)}
                     title="Unpin grant"
@@ -529,7 +649,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                     <LuPinOff size={18} />
                   </button>
                 ) : (
-                  <button 
+                  <button
                     className="action-button pin"
                     onClick={(e) => handlePinGrant(nofo, e)}
                     title="Pin grant"
@@ -538,26 +658,14 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                     <LuPin size={18} />
                   </button>
                 )}
-                
-                {/* Edit Button */}
-                <button
-                  className="action-button edit"
-                  onClick={() => handleEditNofo(nofo)}
-                  aria-label="Edit grant"
-                >
-                  <LuPencil size={16} className="button-icon" />
-                  <span>Edit</span>
-                </button>
-                
-                {/* Delete Button */}
-                <button
-                  className="action-button delete"
-                  onClick={() => handleDeleteNofo(nofo)}
-                  aria-label="Delete grant"
-                >
-                  <LuTrash size={16} className="button-icon" />
-                  <span>Delete</span>
-                </button>
+
+                {/* Actions Dropdown */}
+                <GrantActionsDropdown
+                  nofo={nofo}
+                  onToggleStatus={() => toggleNofoStatus(nofo)}
+                  onEdit={() => handleEditNofo(nofo)}
+                  onDelete={() => handleDeleteNofo(nofo)}
+                />
               </div>
             </div>
           ))}
@@ -588,7 +696,9 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               <select
                 id="nofo-status"
                 value={editedNofoStatus}
-                onChange={(e) => setEditedNofoStatus(e.target.value as "active" | "archived")}
+                onChange={(e) =>
+                  setEditedNofoStatus(e.target.value as "active" | "archived")
+                }
                 className="form-input"
               >
                 <option value="active">Active</option>
@@ -610,8 +720,9 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               className="modal-button primary"
               onClick={confirmEditNofo}
               disabled={
-                !editedNofoName.trim() || 
-                (editedNofoName === selectedNofo?.name && editedNofoStatus === selectedNofo?.status)
+                !editedNofoName.trim() ||
+                (editedNofoName === selectedNofo?.name &&
+                  editedNofoStatus === selectedNofo?.status)
               }
             >
               Save Changes
@@ -663,14 +774,16 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
           <p className="modal-description">
             Upload a new grant file in PDF or TXT format.
           </p>
-          
+
           <div className="info-box">
             <LuInfo size={18} className="info-icon" />
             <span>
-              Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it'll be ready for your review!
+              Upload a new NOFO to the NOFO dropdown above. It will take 5-7
+              minutes for the document to process and appear in the dropdown.
+              Grab a coffee, and it'll be ready for your review!
             </span>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="file-upload">Select File</label>
             <div className="file-upload-container">
@@ -693,7 +806,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               </div>
             )}
           </div>
-          
+
           {selectedFile && (
             <div className="form-group">
               <label htmlFor="custom-grant-name">Grant Name</label>
@@ -710,7 +823,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               </div>
             </div>
           )}
-          
+
           <div className="modal-actions">
             <button
               className="modal-button secondary"
@@ -722,8 +835,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
             >
               Cancel
             </button>
-            <button 
-              className="modal-button primary" 
+            <button
+              className="modal-button primary"
               onClick={uploadNOFO}
               disabled={!selectedFile || !customGrantName.trim()}
             >
@@ -748,8 +861,10 @@ const Dashboard: React.FC = () => {
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("all");
-  
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "archived"
+  >("all");
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -768,8 +883,8 @@ const Dashboard: React.FC = () => {
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
 
-  // DISABLED: Automated NOFO scraper state
-  // const [isScraping, setIsScraping] = useState(false);
+  // Automated NOFO scraper state
+  const [isScraping, setIsScraping] = useState(false);
 
   // Refs for click outside detection
   const filterMenuRef = useRef<HTMLDivElement>(null);
@@ -830,8 +945,8 @@ const Dashboard: React.FC = () => {
         const nofoData = nofoResult.nofoData.map((nofo, index) => ({
           id: index,
           name: nofo.name,
-          status: nofo.status || 'active',
-          isPinned: nofo.isPinned || false
+          status: nofo.status || "active",
+          isPinned: nofo.isPinned || false,
         }));
         setNofos(nofoData);
       } else {
@@ -839,12 +954,12 @@ const Dashboard: React.FC = () => {
         const nofoData = (nofoResult.folders || []).map((nofo, index) => ({
           id: index,
           name: nofo,
-          status: 'active',
-          isPinned: false
+          status: "active",
+          isPinned: false,
         }));
         setNofos(nofoData);
       }
-      
+
       // Show success notification on manual refresh
       if (isRefreshing) {
         addNotification("success", "Dashboard refreshed successfully");
@@ -877,19 +992,22 @@ const Dashboard: React.FC = () => {
 
     try {
       await apiClient.userManagement.inviteUser(inviteEmail);
-      
+
       // Show success notification instead of alert
-      addNotification("success", `Invitation sent successfully to ${inviteEmail}`);
-      
+      addNotification(
+        "success",
+        `Invitation sent successfully to ${inviteEmail}`
+      );
+
       // Set state for success banner
       setInvitedEmail(inviteEmail);
       setShowSuccessBanner(true);
-      
+
       // Hide the success banner after 5 seconds
       setTimeout(() => {
         setShowSuccessBanner(false);
       }, 5000);
-      
+
       setInviteEmail("");
       setInviteUserModalOpen(false);
     } catch (error) {
@@ -897,14 +1015,12 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // DISABLED: Automated NOFO scraper handler
-  // Manual triggering has been disabled
-  /*
+  // Automated NOFO scraper handler
   const handleAutomatedScraper = async () => {
     try {
       setIsScraping(true);
       addNotification("info", "Starting automated NOFO scraping...");
-      
+
       const response = await apiClient.landingPage.triggerAutomatedScraper();
       
       if (response.result && response.result.processed > 0) {
@@ -920,19 +1036,18 @@ const Dashboard: React.FC = () => {
       setIsScraping(false);
     }
   };
-  */
 
   // Handler for showing grant success banner
   const showGrantSuccessBanner = (grantName: string) => {
     setAddedGrantName(grantName);
     setShowGrantBanner(true);
     addNotification("success", `Grant "${grantName}" added successfully!`);
-    
+
     // Hide the success banner after 5 seconds
     setTimeout(() => {
       setShowGrantBanner(false);
     }, 5000);
-    
+
     // Refresh data after adding a grant
     fetchNofos();
   };
@@ -946,9 +1061,14 @@ const Dashboard: React.FC = () => {
   const applyFilter = (status: "all" | "active" | "archived") => {
     setStatusFilter(status);
     setFilterMenuOpen(false);
-    
+
     // Show notification about filter applied
-    addNotification("info", `Filtered to show ${status === "all" ? "all grants" : `${status} grants only`}`);
+    addNotification(
+      "info",
+      `Filtered to show ${
+        status === "all" ? "all grants" : `${status} grants only`
+      }`
+    );
   };
 
   // Get filtered data based on search query and status filter
@@ -957,14 +1077,14 @@ const Dashboard: React.FC = () => {
     let filtered = nofos.filter((nofo) =>
       nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    
+
     // Then filter by status
     if (statusFilter !== "all") {
-      filtered = filtered.filter((nofo) => 
-        (nofo.status || "active") === statusFilter
+      filtered = filtered.filter(
+        (nofo) => (nofo.status || "active") === statusFilter
       );
     }
-    
+
     return filtered;
   };
 
@@ -972,19 +1092,22 @@ const Dashboard: React.FC = () => {
   const getPaginatedData = () => {
     const filteredData = getFilteredNofos();
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-    
+
     // Adjust current page if it exceeds total pages
     if (currentPage > totalPages && totalPages > 0) {
       setCurrentPage(totalPages);
     }
-    
+
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedItems = filteredData.slice(startIndex, startIndex + itemsPerPage);
-    
+    const paginatedItems = filteredData.slice(
+      startIndex,
+      startIndex + itemsPerPage
+    );
+
     return {
       items: paginatedItems,
       totalItems: filteredData.length,
-      totalPages: totalPages
+      totalPages: totalPages,
     };
   };
 
@@ -994,7 +1117,9 @@ const Dashboard: React.FC = () => {
   };
 
   // Handle items per page change
-  const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleItemsPerPageChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const newItemsPerPage = parseInt(e.target.value);
     setItemsPerPage(newItemsPerPage);
     setCurrentPage(1); // Reset to first page when changing items per page
@@ -1003,19 +1128,19 @@ const Dashboard: React.FC = () => {
   // Pagination controls component
   const PaginationControls = () => {
     const { totalItems, totalPages } = getPaginatedData();
-    
+
     if (totalItems === 0) return null;
-    
+
     const startItem = (currentPage - 1) * itemsPerPage + 1;
     const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-    
+
     // Generate page buttons
     const pageButtons = [];
-    
+
     // Previous button
     pageButtons.push(
-      <button 
-        key="prev" 
+      <button
+        key="prev"
         className="pagination-button"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -1024,41 +1149,43 @@ const Dashboard: React.FC = () => {
         &lsaquo;
       </button>
     );
-    
+
     // Page numbers
     const maxVisiblePages = 5;
     let startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
-    
+    const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(endPage - maxVisiblePages + 1, 1);
     }
-    
+
     // First page button if not visible
     if (startPage > 1) {
       pageButtons.push(
-        <button 
-          key="1" 
+        <button
+          key="1"
           className={`pagination-button ${currentPage === 1 ? "active" : ""}`}
           onClick={() => handlePageChange(1)}
         >
           1
         </button>
       );
-      
+
       // Ellipsis if there's a gap
       if (startPage > 2) {
         pageButtons.push(
-          <span key="ellipsis1" style={{ margin: '0 5px' }}>...</span>
+          <span key="ellipsis1" style={{ margin: "0 5px" }}>
+            ...
+          </span>
         );
       }
     }
-    
+
     // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       pageButtons.push(
-        <button 
-          key={i} 
+        <button
+          key={i}
           className={`pagination-button ${currentPage === i ? "active" : ""}`}
           onClick={() => handlePageChange(i)}
         >
@@ -1066,31 +1193,35 @@ const Dashboard: React.FC = () => {
         </button>
       );
     }
-    
+
     // Last page button if not visible
     if (endPage < totalPages) {
       // Ellipsis if there's a gap
       if (endPage < totalPages - 1) {
         pageButtons.push(
-          <span key="ellipsis2" style={{ margin: '0 5px' }}>...</span>
+          <span key="ellipsis2" style={{ margin: "0 5px" }}>
+            ...
+          </span>
         );
       }
-      
+
       pageButtons.push(
-        <button 
-          key={totalPages} 
-          className={`pagination-button ${currentPage === totalPages ? "active" : ""}`}
+        <button
+          key={totalPages}
+          className={`pagination-button ${
+            currentPage === totalPages ? "active" : ""
+          }`}
           onClick={() => handlePageChange(totalPages)}
         >
           {totalPages}
         </button>
       );
     }
-    
+
     // Next button
     pageButtons.push(
-      <button 
-        key="next" 
+      <button
+        key="next"
         className="pagination-button"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
@@ -1099,20 +1230,18 @@ const Dashboard: React.FC = () => {
         &rsaquo;
       </button>
     );
-    
+
     return (
       <div className="pagination-container">
         <div className="pagination-info">
           Showing {startItem} to {endItem} of {totalItems} grants
         </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="pagination-controls">
-            {pageButtons}
-          </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div className="pagination-controls">{pageButtons}</div>
           <div className="items-per-page">
             <span>Show:</span>
-            <select 
-              value={itemsPerPage} 
+            <select
+              value={itemsPerPage}
               onChange={handleItemsPerPageChange}
               aria-label="Items per page"
               className="form-input"
@@ -1133,7 +1262,7 @@ const Dashboard: React.FC = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         filterMenuOpen &&
-        filterMenuRef.current && 
+        filterMenuRef.current &&
         filterButtonRef.current &&
         !filterMenuRef.current.contains(event.target as Node) &&
         !filterButtonRef.current.contains(event.target as Node)
@@ -1161,205 +1290,208 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard-container">
       {/* Breadcrumb Navigation */}
-      <div className="breadcrumb">
+      <nav aria-label="Breadcrumb" className="breadcrumb">
         <div className="breadcrumb-item">
-          <span 
-            className="breadcrumb-link" 
+          <span
+            className="breadcrumb-link"
             onClick={() => navigate("/")}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             Home
           </span>
         </div>
-        <div className="breadcrumb-item">
-          Dashboard
-        </div>
-      </div>
+        <div className="breadcrumb-item">Dashboard</div>
+      </nav>
 
-      {/* Header with Refresh Button */}
-      <div className="dashboard-header">
-        <h1>Admin Dashboard</h1>
-        <button 
-          className="action-button refresh-button"
-          onClick={fetchNofos}
-          disabled={isRefreshing}
-        >
-          {isRefreshing ? (
-            <span className="refresh-loading">Refreshing...</span>
-          ) : (
-            <>
-              <LuRefreshCw size={16} className="button-icon refresh-icon" />
-              <span>Refresh</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* Invitation Success Banner */}
-      {showSuccessBanner && (
-        <div className="success-banner">
-          <div className="success-banner-content">
-            <LuCheck size={20} className="success-icon" />
-            <span>Success! An invitation has been sent to {invitedEmail}</span>
-          </div>
-          <button 
-            onClick={() => setShowSuccessBanner(false)}
-            className="banner-close-button"
-            aria-label="Close notification"
+      <main>
+        {/* Header with Refresh Button */}
+        <div className="dashboard-header">
+          <h1>Admin Dashboard</h1>
+          <button
+            className="action-button refresh-button"
+            onClick={fetchNofos}
+            disabled={isRefreshing}
           >
-            <LuX size={18} />
+            {isRefreshing ? (
+              <span className="refresh-loading">Refreshing...</span>
+            ) : (
+              <>
+                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <span>Refresh</span>
+              </>
+            )}
           </button>
         </div>
-      )}
 
-      {/* Grant Added Success Banner */}
-      {showGrantBanner && (
-        <div className="success-banner">
-          <div className="success-banner-content">
-            <LuCheck size={20} className="success-icon" />
-            <span>Success! Grant "{addedGrantName}" has been added</span>
-          </div>
-          <button 
-            onClick={() => setShowGrantBanner(false)}
-            className="banner-close-button"
-            aria-label="Close notification"
-          >
-            <LuX size={18} />
-          </button>
-        </div>
-      )}
-
-      {/* Only one tab now, but keeping the styling consistent */}
-      <div className="tab-controls">
-        <button className="tab-button active">
-          Grants
-        </button>
-      </div>
-
-      {/* Main content container - prevents double scrollbar */}
-      <div className="dashboard-content">
-        {/* Combined search and actions bar */}
-        <div className="search-actions-container">
-          {/* Search bar */}
-          <div className="search-filter-container">
-            <div className="search-input-wrapper">
-              <LuSearch className="search-icon" size={18} />
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search grants..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+        {/* Invitation Success Banner */}
+        {showSuccessBanner && (
+          <div className="success-banner">
+            <div className="success-banner-content">
+              <LuCheck size={20} className="success-icon" />
+              <span>
+                Success! An invitation has been sent to {invitedEmail}
+              </span>
             </div>
-            
-            <div className="filter-container">
-              <button 
-                ref={filterButtonRef}
-                className={`filter-button ${statusFilter !== "all" ? "active" : ""}`}
-                onClick={toggleFilterMenu}
-                aria-label="Filter options"
-              >
-                <LuFilter size={18} />
-                {statusFilter !== "all" && (
-                  <span className="filter-badge">1</span>
+            <button
+              onClick={() => setShowSuccessBanner(false)}
+              className="banner-close-button"
+              aria-label="Close notification"
+            >
+              <LuX size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* Grant Added Success Banner */}
+        {showGrantBanner && (
+          <div className="success-banner">
+            <div className="success-banner-content">
+              <LuCheck size={20} className="success-icon" />
+              <span>Success! Grant "{addedGrantName}" has been added</span>
+            </div>
+            <button
+              onClick={() => setShowGrantBanner(false)}
+              className="banner-close-button"
+              aria-label="Close notification"
+            >
+              <LuX size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* Only one tab now, but keeping the styling consistent */}
+        <div className="tab-controls">
+          <button className="tab-button active">Grants</button>
+        </div>
+
+        {/* Main content container - prevents double scrollbar */}
+        <div className="dashboard-content">
+          {/* Combined search and actions bar */}
+          <div className="search-actions-container">
+            {/* Search bar */}
+            <div className="search-filter-container">
+              <div className="search-input-wrapper">
+                <LuSearch className="search-icon" size={18} />
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search grants..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
+              <div className="filter-container">
+                <button
+                  ref={filterButtonRef}
+                  className={`filter-button ${
+                    statusFilter !== "all" ? "active" : ""
+                  }`}
+                  onClick={toggleFilterMenu}
+                  aria-label="Filter options"
+                >
+                  <LuFilter size={18} />
+                  {statusFilter !== "all" && (
+                    <span className="filter-badge">1</span>
+                  )}
+                </button>
+
+                {filterMenuOpen && (
+                  <div ref={filterMenuRef} className="filter-menu">
+                    <div className="filter-menu-header">Filter by Status</div>
+                    <div>
+                      <button
+                        onClick={() => applyFilter("all")}
+                        className={`filter-option ${
+                          statusFilter === "all" ? "selected" : ""
+                        }`}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {statusFilter === "all" ? "✓" : ""}
+                          </span>
+                          All Grants
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => applyFilter("active")}
+                        className={`filter-option ${
+                          statusFilter === "active" ? "selected" : ""
+                        }`}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {statusFilter === "active" ? "✓" : ""}
+                          </span>
+                          Active Grants
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => applyFilter("archived")}
+                        className={`filter-option ${
+                          statusFilter === "archived" ? "selected" : ""
+                        }`}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {statusFilter === "archived" ? "✓" : ""}
+                          </span>
+                          Archived Grants
+                        </div>
+                      </button>
+                    </div>
+                  </div>
                 )}
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="action-buttons">
+              <button
+                className="action-button invite-button"
+                onClick={handleInviteUser}
+              >
+                <LuMail size={16} className="button-icon" />
+                <span>Invite User</span>
               </button>
 
-              {filterMenuOpen && (
-                <div ref={filterMenuRef} className="filter-menu">
-                  <div className="filter-menu-header">
-                    Filter by Status
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => applyFilter("all")}
-                      className={`filter-option ${statusFilter === "all" ? "selected" : ""}`}
-                    >
-                      <div className="filter-option-content">
-                        <span className="filter-option-check">
-                          {statusFilter === "all" ? "✓" : ""}
-                        </span>
-                        All Grants
-                      </div>
-                    </button>
+              <button
+                className="action-button add-button"
+                onClick={handleUploadNofo}
+              >
+                <LuUpload size={16} className="button-icon" />
+                <span>Add Grant</span>
+              </button>
 
-                    <button
-                      onClick={() => applyFilter("active")}
-                      className={`filter-option ${statusFilter === "active" ? "selected" : ""}`}
-                    >
-                      <div className="filter-option-content">
-                        <span className="filter-option-check">
-                          {statusFilter === "active" ? "✓" : ""}
-                        </span>
-                        Active Grants
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => applyFilter("archived")}
-                      className={`filter-option ${statusFilter === "archived" ? "selected" : ""}`}
-                    >
-                      <div className="filter-option-content">
-                        <span className="filter-option-check">
-                          {statusFilter === "archived" ? "✓" : ""}
-                        </span>
-                        Archived Grants
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              )}
+              <button
+                className="action-button scraper-button"
+                onClick={handleAutomatedScraper}
+                disabled={isScraping}
+              >
+                <LuDownload size={16} className="button-icon" />
+                <span>{isScraping ? "Scraping..." : "Auto-Scrape NOFOs"}</span>
+              </button>
             </div>
           </div>
 
-          {/* Action buttons */}
-          <div className="action-buttons">
-            <button
-              className="action-button invite-button"
-              onClick={handleInviteUser}
-            >
-              <LuMail size={16} className="button-icon" />
-              <span>Invite User</span>
-            </button>
-            
-            <button
-              className="action-button add-button"
-              onClick={handleUploadNofo}
-            >
-              <LuUpload size={16} className="button-icon" />
-              <span>Add Grant</span>
-            </button>
+          {/* Tab Content */}
+          <NOFOsTab
+            nofos={getPaginatedData().items}
+            searchQuery={searchQuery}
+            apiClient={apiClient}
+            setNofos={setNofos}
+            uploadNofoModalOpen={uploadNofoModalOpen}
+            setUploadNofoModalOpen={setUploadNofoModalOpen}
+            showGrantSuccessBanner={showGrantSuccessBanner}
+            useNotifications={{ addNotification }}
+          />
 
-            {/* DISABLED: Manual NOFO scraper trigger button */}
-            {/*
-            <button
-              className="action-button scraper-button"
-              onClick={handleAutomatedScraper}
-              disabled={isScraping}
-            >
-              <LuDownload size={16} className="button-icon" />
-              <span>{isScraping ? "Scraping..." : "Auto-Scrape NOFOs"}</span>
-            </button>
-            */}
-          </div>
+          {/* Pagination Controls */}
+          <PaginationControls />
         </div>
-
-        {/* Tab Content */}
-        <NOFOsTab
-          nofos={getPaginatedData().items}
-          searchQuery={searchQuery}
-          apiClient={apiClient}
-          setNofos={setNofos}
-          uploadNofoModalOpen={uploadNofoModalOpen}
-          setUploadNofoModalOpen={setUploadNofoModalOpen}
-          showGrantSuccessBanner={showGrantSuccessBanner}
-          useNotifications={{ addNotification }}
-        />
-
-        {/* Pagination Controls */}
-        <PaginationControls />
-      </div>
+      </main>
 
       {/* Invite User Modal */}
       <Modal
@@ -1369,8 +1501,8 @@ const Dashboard: React.FC = () => {
       >
         <div className="modal-form">
           <p className="modal-description">
-            Enter the email address of the user you want to invite. They will receive an email
-            with instructions to set up their account.
+            Enter the email address of the user you want to invite. They will
+            receive an email with instructions to set up their account.
           </p>
           <div className="form-group">
             <label htmlFor="invite-email">Email Address</label>
@@ -1393,7 +1525,9 @@ const Dashboard: React.FC = () => {
             <button
               className="modal-button primary"
               onClick={sendInvite}
-              disabled={!inviteEmail.trim() || !/\S+@\S+\.\S+/.test(inviteEmail)}
+              disabled={
+                !inviteEmail.trim() || !/\S+@\S+\.\S+/.test(inviteEmail)
+              }
             >
               Send Invitation
             </button>

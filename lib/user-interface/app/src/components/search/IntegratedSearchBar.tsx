@@ -44,7 +44,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     GrantRecommendation[]
   >([]);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
-  const [nonGrantMessage, setNonGrantMessage] = useState("");
   const [showViewAllModal, setShowViewAllModal] = useState(false);
 
   // Use grant recommendations hook only for the Grant Assistant
@@ -204,27 +203,16 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     // Call the actual recommendation API
     getRecommendationsUsingREST(assistantInput)
       .then((response) => {
-        if (response && response.isNotGrantRelated) {
-          // Handle non-grant-related queries
-          setRecommendedGrants([]);
-          // Set a message indicating this is not a grant-related query
-          setNonGrantMessage(
-            response.message ||
-              "Please ask about grants or funding opportunities."
-          );
-        } else if (response && response.grants) {
+        if (response && response.grants) {
           setRecommendedGrants(response.grants);
-          setNonGrantMessage("");
         } else {
           // Handle empty response
           setRecommendedGrants([]);
-          setNonGrantMessage("");
         }
       })
       .catch((error) => {
         console.error("Error getting recommendations:", error);
         setRecommendedGrants([]);
-        setNonGrantMessage("");
       })
       .finally(() => {
         setIsAssistantLoading(false);
@@ -261,7 +249,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     setShowAssistant(false);
     setAssistantInput("");
     setRecommendedGrants([]);
-    setNonGrantMessage("");
   };
 
   const assistantContainerStyle: React.CSSProperties = {
@@ -650,6 +637,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       onMouseOut={(e) => {
         e.currentTarget.style.backgroundColor = "#0073BB";
       }}
+      onFocus={(e) => {
+        e.currentTarget.style.backgroundColor = "#005A94";
+      }}
+      onBlur={(e) => {
+        e.currentTarget.style.backgroundColor = "#0073BB";
+      }}
     >
       <svg
         width="16"
@@ -700,6 +693,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         e.currentTarget.style.backgroundColor = "#005080";
       }}
       onMouseOut={(e) => {
+        e.currentTarget.style.backgroundColor = "#006499";
+      }}
+      onFocus={(e) => {
+        e.currentTarget.style.backgroundColor = "#005080";
+      }}
+      onBlur={(e) => {
         e.currentTarget.style.backgroundColor = "#006499";
       }}
     >
@@ -793,7 +792,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               setShowAssistant(false);
               setAssistantInput("");
               setRecommendedGrants([]);
-              setNonGrantMessage("");
               setExpandedGrants({});
               // Reset the document selection with null to ensure parent state is cleared
               onSelectDocument(null);
@@ -909,7 +907,16 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   onClick={() => {
                     handlePinnedGrantSelect(grant);
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handlePinnedGrantSelect(grant);
+                    }
+                  }}
                   onMouseEnter={() => setSelectedIndex(index)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Select ${grant.name}`}
                 >
                   <div>
                     <div>
@@ -928,6 +935,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                           e.currentTarget.style.backgroundColor = "#f8e0e0";
                         }}
                         onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = "transparent";
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.backgroundColor = "#f8e0e0";
+                        }}
+                        onBlur={(e) => {
                           e.currentTarget.style.backgroundColor = "transparent";
                         }}
                       >
@@ -965,9 +978,20 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         onSelectDocument(doc);
                         setShowResults(false);
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setSearchTerm(docName);
+                          onSelectDocument(doc);
+                          setShowResults(false);
+                        }
+                      }}
                       onMouseEnter={() =>
                         setSelectedIndex(index + filteredPinnedGrants.length)
                       }
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Select ${docName}`}
                     >
                       <div
                         style={{
@@ -999,6 +1023,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                   e.currentTarget.style.backgroundColor =
                                     "transparent";
                                 }}
+                                onFocus={(e) => {
+                                  e.currentTarget.style.backgroundColor =
+                                    "#f8e0e0";
+                                }}
+                                onBlur={(e) => {
+                                  e.currentTarget.style.backgroundColor =
+                                    "transparent";
+                                }}
                               >
                                 <LuPinOff size={20} color="#E74C3C" />
                               </button>
@@ -1027,6 +1059,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                     "#e0f0ff";
                                 }}
                                 onMouseOut={(e) => {
+                                  e.currentTarget.style.backgroundColor =
+                                    "transparent";
+                                }}
+                                onFocus={(e) => {
+                                  e.currentTarget.style.backgroundColor =
+                                    "#e0f0ff";
+                                }}
+                                onBlur={(e) => {
                                   e.currentTarget.style.backgroundColor =
                                     "transparent";
                                 }}
@@ -1099,7 +1139,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 value={assistantInput}
                 onChange={(e) => setAssistantInput(e.target.value)}
                 style={assistantInputStyle}
-                autoFocus
               />
               <button
                 type="submit"
@@ -1117,58 +1156,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   <div style={{ marginTop: "15px", color: "#666" }}>
                     Finding the best grant matches for your needs...
                   </div>
-                </div>
-              ) : nonGrantMessage ? (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: "30px 20px",
-                    color: "#666",
-                    backgroundColor: "#fef6e6",
-                    border: "1px solid #fcebc9",
-                    borderRadius: "8px",
-                    margin: "10px 0",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      color: "#e67700",
-                      marginBottom: "10px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      style={{ marginRight: "8px" }}
-                    >
-                      <path
-                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                        stroke="#e67700"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M12 8V12"
-                        stroke="#e67700"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M12 16V16.01"
-                        stroke="#e67700"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <span>Grant Assistant Notice</span>
-                  </div>
-                  <div style={{ fontSize: "14px" }}>{nonGrantMessage}</div>
                 </div>
               ) : recommendedGrants.length > 0 ? (
                 <div>
@@ -1196,6 +1183,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         onClick={() =>
                           handleAssistantGrantClick(grant.summaryUrl, grantName)
                         }
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleAssistantGrantClick(grant.summaryUrl, grantName);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`View details for ${grantName}`}
                       >
                         <div style={grantCardHeaderStyle}>
                           <div style={grantCardTitleStyle}>{grantName}</div>
@@ -1221,6 +1217,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               e.currentTarget.style.color = "#0073BB";
                             }}
                             onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = "#f5f5f5";
+                              e.currentTarget.style.color = "#666";
+                            }}
+                            onFocus={(e) => {
+                              e.currentTarget.style.backgroundColor = "#e0f0ff";
+                              e.currentTarget.style.color = "#0073BB";
+                            }}
+                            onBlur={(e) => {
                               e.currentTarget.style.backgroundColor = "#f5f5f5";
                               e.currentTarget.style.color = "#666";
                             }}
@@ -1290,7 +1294,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   {assistantInput &&
                   !isAssistantLoading &&
                   recommendedGrants.length === 0 &&
-                  !nonGrantMessage &&
                   Object.keys(recommendations || {}).length > 0
                     ? "No matching grants found. Try describing your needs in more detail or with different keywords."
                     : "Describe your specific grant needs above and click 'Find Grants' to discover matching opportunities."}
@@ -1318,6 +1321,11 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             padding: "20px",
           }}
           onClick={() => setShowViewAllModal(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setShowViewAllModal(false);
+          }}
+          role="dialog"
+          aria-modal="true"
         >
           <div
             style={{
@@ -1331,6 +1339,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
             }}
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+            role="document"
           >
             {/* Modal Header */}
             <div
@@ -1374,6 +1384,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   e.currentTarget.style.backgroundColor = "#f0f0f0";
                 }}
                 onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.backgroundColor = "#f0f0f0";
+                }}
+                onBlur={(e) => {
                   e.currentTarget.style.backgroundColor = "transparent";
                 }}
                 aria-label="Close modal"
@@ -1452,6 +1468,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               handlePinnedGrantSelect(grant);
                               setShowViewAllModal(false);
                             }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                handlePinnedGrantSelect(grant);
+                                setShowViewAllModal(false);
+                              }
+                            }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.backgroundColor = "#f0ffff";
                             }}
@@ -1459,6 +1482,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               e.currentTarget.style.backgroundColor =
                                 "transparent";
                             }}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`Select ${grant.name}`}
                           >
                             <div
                               style={{
@@ -1518,6 +1544,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               setShowViewAllModal(false);
                               setShowResults(false);
                             }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setSearchTerm(doc.label);
+                                onSelectDocument(doc);
+                                setShowViewAllModal(false);
+                                setShowResults(false);
+                              }
+                            }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.backgroundColor = "#f7faff";
                             }}
@@ -1525,6 +1560,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               e.currentTarget.style.backgroundColor =
                                 "transparent";
                             }}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`Select ${doc.label}`}
                           >
                             <div
                               style={{

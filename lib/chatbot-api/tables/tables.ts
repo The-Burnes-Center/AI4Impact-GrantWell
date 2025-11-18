@@ -12,6 +12,7 @@ export class TableStack extends Stack {
   public readonly historyTable: Table;
   public readonly feedbackTable: Table;
   public readonly draftTable: Table;
+  public readonly nofoMetadataTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -70,5 +71,28 @@ export class TableStack extends Stack {
     });
 
     this.draftTable = draftTable;
+
+    // Define the NOFO Metadata Table for caching NOFO information
+    const nofoMetadataTable = new Table(this, 'NOFOMetadataTable', {
+      partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
+    });
+
+    // Add GSI for filtering by status (active/archived)
+    nofoMetadataTable.addGlobalSecondaryIndex({
+      indexName: 'StatusIndex',
+      partitionKey: { name: 'status', type: AttributeType.STRING },
+      sortKey: { name: 'created_at', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    // Add GSI for filtering pinned grants
+    nofoMetadataTable.addGlobalSecondaryIndex({
+      indexName: 'PinnedIndex',
+      partitionKey: { name: 'isPinned', type: AttributeType.STRING },
+      sortKey: { name: 'created_at', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    this.nofoMetadataTable = nofoMetadataTable;
   }
 }

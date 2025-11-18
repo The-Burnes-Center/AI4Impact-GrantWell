@@ -475,6 +475,17 @@ const Tab: React.FC<TabProps> = ({ id, activeId, onClick, children, icon }) => {
         gap: "10px",
       }}
       onClick={() => onClick(id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(id);
+        }
+      }}
+      role="tab"
+      tabIndex={0}
+      aria-selected={isActive}
+      aria-controls={`tabpanel-${id}`}
+      id={`tab-${id}`}
     >
       {icon}
       {children}
@@ -617,14 +628,16 @@ const Checklists: React.FC = () => {
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
       {/* Navigation Sidebar */}
-      <RequirementsNavigation
-        documentIdentifier={folderParam}
-        sidebarOpen={sidebarOpen}
-        onSidebarToggle={handleSidebarToggle}
-      />
+      <nav aria-label="Requirements navigation">
+        <RequirementsNavigation
+          documentIdentifier={folderParam}
+          sidebarOpen={sidebarOpen}
+          onSidebarToggle={handleSidebarToggle}
+        />
+      </nav>
 
       {/* Main Content */}
-      <div
+      <main
         style={{
           flex: 1,
           overflow: "auto",
@@ -868,7 +881,7 @@ const Checklists: React.FC = () => {
               )}
 
               <div style={styles.tabsContainer}>
-                <div style={styles.tabsHeader}>
+                <div style={styles.tabsHeader} role="tablist" aria-label="Grant requirements">
                   <Tab
                     id="eligibility"
                     activeId={activeTabId}
@@ -903,49 +916,62 @@ const Checklists: React.FC = () => {
                   </Tab>
                 </div>
 
-                <div style={styles.tabContent}>
-                  <div style={styles.contentArea}>
-                    <p style={styles.paragraph}>
-                      {tabContents[activeTabId].title}
-                    </p>
-                    <div style={styles.markdownContainer}>
-                      <ReactMarkdown
-                        className="custom-markdown"
-                        components={{
-                          ul: ({ node, ...props }) => <ul {...props} />,
-                          li: ({ node, ...props }) => {
-                            return (
-                              <li {...props} style={{ marginBottom: "20px" }}>
-                                {props.children}
-                              </li>
-                            );
-                          },
-                        }}
-                      >
-                        {tabContents[activeTabId].content}
-                      </ReactMarkdown>
+                {/* Render all tab panels, but only show the active one */}
+                {Object.keys(tabContents).map((tabId) => (
+                  <div
+                    key={tabId}
+                    style={{
+                      ...styles.tabContent,
+                      display: tabId === activeTabId ? "block" : "none",
+                    }}
+                    role="tabpanel"
+                    id={`tabpanel-${tabId}`}
+                    aria-labelledby={`tab-${tabId}`}
+                    hidden={tabId !== activeTabId}
+                  >
+                    <div style={styles.contentArea}>
+                      <p style={styles.paragraph}>
+                        {tabContents[tabId].title}
+                      </p>
+                      <div style={styles.markdownContainer}>
+                        <ReactMarkdown
+                          className="custom-markdown"
+                          components={{
+                            ul: ({ node, ...props }) => <ul {...props} />,
+                            li: ({ node, ...props }) => {
+                              return (
+                                <li {...props} style={{ marginBottom: "20px" }}>
+                                  {props.children}
+                                </li>
+                              );
+                            },
+                          }}
+                        >
+                          {tabContents[tabId].content}
+                        </ReactMarkdown>
 
-                      {/* Eligibility help prompt */}
-                      {activeTabId === "eligibility" && (
-                        <div style={styles.infoBox}>
-                          <InfoIcon />
-                          <div>
-                            <p style={styles.infoTitle}>
-                              Not sure if your organization qualifies?
-                            </p>
-                            <p style={styles.infoText}>
-                              Our AI-powered chatbot can help assess your
-                              organization's eligibility based on these
-                              criteria. Click the "Chat with AI" button in the
-                              navigation panel and ask: "Is my organization
-                              eligible for this grant?"
-                            </p>
+                        {/* Eligibility help prompt */}
+                        {tabId === "eligibility" && (
+                          <div style={styles.infoBox}>
+                            <InfoIcon />
+                            <div>
+                              <p style={styles.infoTitle}>
+                                Not sure if your organization qualifies?
+                              </p>
+                              <p style={styles.infoText}>
+                                Our AI-powered chatbot can help assess your
+                                organization's eligibility based on these
+                                criteria. Click the "Chat with AI" button in the
+                                navigation panel and ask: "Is my organization
+                                eligible for this grant?"
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
 
               <p style={styles.italicParagraph}>
@@ -955,7 +981,7 @@ const Checklists: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 };

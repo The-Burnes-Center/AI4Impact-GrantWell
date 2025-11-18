@@ -235,7 +235,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
       <div
         style={{
           textAlign: "center",
-          color: "#718096",
+          color: "#5a6575",
           fontSize: "14px",
         }}
       >

@@ -65,13 +65,13 @@ export class UserFeedbackClient {
   async getUserFeedback(topic: string, startTime?: string, endTime?: string, nextPageToken?: string) {
 
     const auth = await Utils.authenticate();
-    let params = new URLSearchParams({ topic, startTime, endTime, nextPageToken });
+    const params = new URLSearchParams({ topic, startTime, endTime, nextPageToken });
 
     /** If the parameters are undefined, we don't want those being passed to the API, so 
      * this will delete any undefined parameters if needed. Admittedly, the API should handle this
      * sitation but it sadly does not.
     */
-    let keysForDel = [];
+    const keysForDel = [];
     params.forEach((value, key) => {
       if (value === undefined || value == "undefined") {
         keysForDel.push(key);
@@ -94,7 +94,7 @@ export class UserFeedbackClient {
 
   async deleteFeedback(topic: string, createdAt: string) {
     const auth = await Utils.authenticate();
-    let params = new URLSearchParams({ topic, createdAt });
+    const params = new URLSearchParams({ topic, createdAt });
     await fetch(this.API + '/user-feedback?' + params.toString(), {
       method: 'DELETE',
       headers: {

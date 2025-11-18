@@ -100,8 +100,10 @@ export default function GlobalHeader() {
 
           {
             type: "menu-dropdown",
-            description: userName ?? "",
+            text: userName ?? "User",
+            description: userName ?? "User menu",
             iconName: "user-profile",
+            ariaLabel: userName ? `User menu for ${userName}` : "User menu",
             onItemClick: onUserProfileClick,
             items: [
               ...(isAdmin

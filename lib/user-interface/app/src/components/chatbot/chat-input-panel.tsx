@@ -615,7 +615,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         maxRows={4}
         minRows={1}
         spellCheck={true}
-        autoFocus
         onChange={(e) =>
           setState((state) => ({ ...state, value: e.target.value }))
         }

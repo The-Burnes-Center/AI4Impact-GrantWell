@@ -49,6 +49,8 @@ export default function ChatMessage(props: ChatMessageProps) {
   const [value, setValue] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  // State for copy popup
+  const [showCopyPopup, setShowCopyPopup] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -339,9 +341,6 @@ export default function ChatMessage(props: ChatMessageProps) {
     Array.isArray(props.message.metadata?.Sources) &&
     props.message.metadata.Sources.length > 0;
 
-  // State for copy popup
-  const [showCopyPopup, setShowCopyPopup] = useState(false);
-
   const handleCopy = () => {
     navigator.clipboard.writeText(props.message.content);
     setShowCopyPopup(true);
@@ -396,8 +395,9 @@ export default function ChatMessage(props: ChatMessageProps) {
               </select>
             </div>
             <div style={formFieldStyle}>
-              <label style={labelStyle}>Please enter feedback here</label>
+              <label htmlFor="feedback-input" style={labelStyle}>Please enter feedback here</label>
               <input
+                id="feedback-input"
                 type="text"
                 style={inputStyle}
                 value={value}
@@ -482,7 +482,11 @@ export default function ChatMessage(props: ChatMessageProps) {
                     style={{ position: "absolute", top: "8px", right: "8px" }}
                   >
                     <div style={{ position: "relative" }}>
-                      <button style={iconButtonStyle} onClick={handleCopy}>
+                      <button 
+                        style={iconButtonStyle} 
+                        onClick={handleCopy}
+                        aria-label="Copy message to clipboard"
+                      >
                         <FaCopy size={16} />
                       </button>
                       {showCopyPopup && (
@@ -499,7 +503,6 @@ export default function ChatMessage(props: ChatMessageProps) {
                 ) : null}
 
                 <ReactMarkdown
-                  children={content}
                   remarkPlugins={[remarkGfm]}
                   components={{
                     pre(props) {
@@ -535,7 +538,9 @@ export default function ChatMessage(props: ChatMessageProps) {
                       );
                     },
                   }}
-                />
+                >
+                  {content}
+                </ReactMarkdown>
               </div>
             </div>
 
@@ -553,6 +558,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                       Utils.delay(3000).then(() => removeNotification(id));
                       setSelectedIcon(1);
                     }}
+                    aria-label="Thumbs up - positive feedback"
                   >
                     {selectedIcon === 1 ? (
                       <FaThumbsUp size={16} />
@@ -567,6 +573,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                     onClick={() => {
                       setModalVisible(true);
                     }}
+                    aria-label="Thumbs down - provide feedback"
                   >
                     {selectedIcon === 0 ? (
                       <FaThumbsDown size={16} />

@@ -12,7 +12,7 @@ import {
   cleanupRecentlyViewed,
 } from "../../utils/recently-viewed-nofos";
 
-export default function Welcome({ theme }) {
+export default function Welcome() {
   // **State Variables**
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -33,7 +33,7 @@ export default function Welcome({ theme }) {
   };
 
   const mainTextColor = "#006499";
-  const bodyTextColor = "#6c757d";
+  const bodyTextColor = "#5a5a5a";
   const primaryBlue = "#0073bb"; // Match header blue color
 
   const containerStyle: CSSProperties = {
@@ -223,6 +223,9 @@ export default function Welcome({ theme }) {
               flexDirection: "column",
               justifyContent: "space-between",
             }}
+            role="button"
+            tabIndex={0}
+            aria-label={`View ${nofo.label}`}
             onClick={() =>
               handleNOFOSelect(
                 `/landing-page/basePage/checklists/${encodeURIComponent(
@@ -231,6 +234,17 @@ export default function Welcome({ theme }) {
                 nofo
               )
             }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleNOFOSelect(
+                  `/landing-page/basePage/checklists/${encodeURIComponent(
+                    nofo.value
+                  )}`,
+                  nofo
+                );
+              }
+            }}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
               e.currentTarget.style.transform = "translateY(-2px)";
@@ -254,7 +268,7 @@ export default function Welcome({ theme }) {
             <div
               style={{
                 fontSize: "14px",
-                color: "#6c757d",
+                color: "#5a5a5a",
                 marginTop: "auto",
               }}
             >
@@ -525,7 +539,7 @@ export default function Welcome({ theme }) {
   // **Render**
   return (
     <div style={containerStyle}>
-      <div
+      <main
         style={{
           maxWidth: "950px",
           margin: "0 auto",
@@ -630,7 +644,7 @@ export default function Welcome({ theme }) {
                 fontSize: "15px",
                 fontWeight: 500,
                 cursor: "pointer",
-                transition: "background 0.2s",
+                transition: "background 0.2s, box-shadow 0.2s, outline 0.2s",
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
@@ -638,6 +652,16 @@ export default function Welcome({ theme }) {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outlineOffset = "2px";
+                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
+                e.currentTarget.style.outlineOffset = "0px";
+                e.currentTarget.style.boxShadow = "none";
               }}
               aria-label="View Key Requirements"
             >
@@ -664,7 +688,7 @@ export default function Welcome({ theme }) {
                 fontSize: "15px",
                 fontWeight: 500,
                 cursor: "pointer",
-                transition: "background 0.2s",
+                transition: "background 0.2s, box-shadow 0.2s, outline 0.2s",
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
@@ -672,6 +696,16 @@ export default function Welcome({ theme }) {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outlineOffset = "2px";
+                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
+                e.currentTarget.style.outlineOffset = "0px";
+                e.currentTarget.style.boxShadow = "none";
               }}
               aria-label="Write Project Narrative"
             >
@@ -699,7 +733,7 @@ export default function Welcome({ theme }) {
                 fontSize: "15px",
                 fontWeight: 500,
                 cursor: "pointer",
-                transition: "background 0.2s",
+                transition: "background 0.2s, box-shadow 0.2s, outline 0.2s",
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
@@ -707,6 +741,16 @@ export default function Welcome({ theme }) {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "#0073BB";
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outlineOffset = "2px";
+                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
+                e.currentTarget.style.outlineOffset = "0px";
+                e.currentTarget.style.boxShadow = "none";
               }}
               aria-label="Get Grant Help"
             >
@@ -960,7 +1004,10 @@ export default function Welcome({ theme }) {
           }
           backgroundColor="#006499"
         /> */}
+      </main>
 
+      {/* Footer Section */}
+      <footer>
         {/* Affiliations Section */}
         <div
           style={{
@@ -1071,7 +1118,7 @@ export default function Welcome({ theme }) {
           imageWidth="75px"
           titleAlign="center"
         />
-      </div>
+      </footer>
     </div>
   );
 }

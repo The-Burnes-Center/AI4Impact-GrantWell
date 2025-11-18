@@ -99,6 +99,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <div style={{ marginBottom: "20px" }}>
             <label
+              htmlFor="projectName"
               style={{
                 display: "block",
                 marginBottom: "8px",
@@ -126,7 +127,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >
@@ -136,6 +137,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <div style={{ marginBottom: "20px" }}>
             <label
+              htmlFor="organizationName"
               style={{
                 display: "block",
                 marginBottom: "8px",
@@ -163,7 +165,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >
@@ -173,6 +175,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <div style={{ marginBottom: "20px" }}>
             <label
+              htmlFor="requestedAmount"
               style={{
                 display: "block",
                 marginBottom: "8px",
@@ -200,7 +203,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >
@@ -218,6 +221,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           >
             <div style={{ flex: "1", minWidth: "260px" }}>
               <label
+                htmlFor="location"
                 style={{
                   display: "block",
                   marginBottom: "8px",
@@ -245,7 +249,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 style={{
                   display: "block",
                   fontSize: "12px",
-                  color: "#718096",
+                  color: "#5a6575",
                   marginTop: "4px",
                 }}
               >
@@ -254,6 +258,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             </div>
             <div style={{ flex: "1", minWidth: "260px" }}>
               <label
+                htmlFor="zipCode"
                 style={{
                   display: "block",
                   marginBottom: "8px",
@@ -281,7 +286,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 style={{
                   display: "block",
                   fontSize: "12px",
-                  color: "#718096",
+                  color: "#5a6575",
                   marginTop: "4px",
                 }}
               >
@@ -292,6 +297,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <div style={{ marginBottom: "20px" }}>
             <label
+              htmlFor="contactName"
               style={{
                 display: "block",
                 marginBottom: "8px",
@@ -319,7 +325,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >
@@ -329,6 +335,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <div style={{ marginBottom: "20px" }}>
             <label
+              htmlFor="contactEmail"
               style={{
                 display: "block",
                 marginBottom: "8px",
@@ -356,7 +363,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               style={{
                 display: "block",
                 fontSize: "12px",
-                color: "#718096",
+                color: "#5a6575",
                 marginTop: "4px",
               }}
             >

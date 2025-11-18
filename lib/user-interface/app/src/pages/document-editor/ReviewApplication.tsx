@@ -153,7 +153,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     doc.setFont(undefined, "normal");
     const sectionNames = draftData.sections ? Object.keys(draftData.sections) : [];
     const tocStartY = y;
-    let tocEntries = [];
+    const tocEntries = [];
     sectionNames.forEach((name, idx) => {
       // Store Y position for page number
       const sectionText = `${idx + 1}. ${name}`;
@@ -162,9 +162,9 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       doc.text(sectionText, leftX, y, { align: "left" });
       // Dotted line
       const textWidth = doc.getTextWidth(sectionText);
-      let dotsStart = leftX + textWidth + 5;
-      let dotsEnd = rightX - 25;
-      let dotY = y - 3;
+      const dotsStart = leftX + textWidth + 5;
+      const dotsEnd = rightX - 25;
+      const dotY = y - 3;
       for (let x = dotsStart; x < dotsEnd; x += 4) {
         doc.line(x, dotY, x + 2, dotY);
       }
@@ -177,7 +177,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     y += 30;
 
     // Sections
-    let sectionPageNumbers = [];
+    const sectionPageNumbers = [];
     sectionNames.forEach((name, idx) => {
       // If we're about to overflow, add a page
       if (y > 700) {

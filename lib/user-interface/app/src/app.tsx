@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import {
   BrowserRouter,
   Outlet,
@@ -15,25 +14,21 @@ import SessionPage from "./pages/chatbot/sessions/sessions";
 import Welcome from "./pages/landing-page/basePage";
 import Checklists from "./pages/requirements-gathering/checklist";
 import DocumentEditor from "./pages/document-editor";
-import DraftsPage from "./pages/document-editor/drafts";
 import DocEditorSessionsPage from "./pages/document-editor/doc-editor-sessions-page";
 import Dashboard from "./pages/Dashboard";
-import { useState } from "react";
 import "./styles/app.scss";
 import { Mode } from "@cloudscape-design/global-styles";
 import { StorageHelper } from "./common/helpers/storage-helper";
 
 function App() {
-  const appContext = useContext(AppContext);
   const Router = BrowserRouter;
-  const [theme, setTheme] = useState<Mode>(StorageHelper.getTheme());
 
   return (
     <div style={{ height: "100%" }}>
       <Router>
         <GlobalHeader />
         <div style={{ height: "56px", backgroundColor: "#FFFFFF" }}>&nbsp;</div>
-        <div>
+        <main>
           <Routes>
             <Route
               index
@@ -41,7 +36,7 @@ function App() {
               element={<Navigate to={`/landing-page/basePage`} replace />} // root path
             />
             <Route path="/landing-page/basePage" element={<Outlet />}>
-              <Route path="" element={<Welcome theme={theme} />} />
+              <Route path="" element={<Welcome />} />
               {/* Route for the checklists page with a dynamic parameter */}
               <Route
                 path="/landing-page/basePage/checklists/:documentIdentifier"
@@ -71,7 +66,7 @@ function App() {
               element={<Navigate to={`/landing-page/basePage`} replace />}
             />
           </Routes>
-        </div>
+        </main>
       </Router>
     </div>
   );

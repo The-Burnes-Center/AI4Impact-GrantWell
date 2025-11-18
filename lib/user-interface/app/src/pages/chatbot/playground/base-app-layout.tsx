@@ -195,6 +195,7 @@ export default function BaseAppLayout({
             <button
               style={styles.sidebarToggle}
               onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
             >
               {sidebarOpen ? (
                 <ChevronLeft size={20} />
