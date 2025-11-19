@@ -404,6 +404,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.userDocumentsBucket.bucketName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -419,6 +420,16 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+
+    // Grant permission to invoke KB sync function
+    deleteS3APIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
+      })
+    );
+
     this.deleteS3Function = deleteS3APIHandlerFunction;
 
     const getS3APIHandlerFunction = new lambda.Function(
@@ -823,6 +834,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -836,6 +848,15 @@ export class LambdaFunctionStack extends cdk.Stack {
           props.ffioNofosBucket.bucketArn,
           props.ffioNofosBucket.bucketArn + "/*",
         ],
+      })
+    );
+
+    // Grant permission to invoke KB sync function
+    nofoDeleteHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
       })
     );
 
