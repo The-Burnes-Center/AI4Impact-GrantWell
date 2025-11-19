@@ -45,6 +45,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly uploadNOFOS3Function: lambda.Function;
   public readonly syncKBFunction: lambda.Function;
   public readonly createMetadataFunction: lambda.Function;
+  public readonly backfillNofoMetadataFunction: lambda.Function;
   public readonly getNOFOsList: lambda.Function;
   public readonly getNOFOSummary: lambda.Function;
   public readonly getNOFOQuestions: lambda.Function;
@@ -347,6 +348,39 @@ export class LambdaFunctionStack extends cdk.Stack {
     // );
 
     this.createMetadataFunction = createMetadataFunction;
+
+    // Lambda function to backfill metadata for existing NOFO documents
+    const backfillNofoMetadataFunction = new lambda.Function(
+      scope,
+      "BackfillNofoMetadataFunction",
+      {
+        functionName: `${stackName}-backfillNofoMetadataFunction`,
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "knowledge-management/backfill-nofo-metadata")
+        ),
+        handler: "index.handler",
+        environment: {
+          NOFO_BUCKET: props.ffioNofosBucket.bucketName,
+          BUCKET: props.ffioNofosBucket.bucketName,
+        },
+        timeout: cdk.Duration.minutes(15), // May take time for large buckets
+      }
+    );
+
+    // Grant S3 permissions for listing and reading/writing objects
+    backfillNofoMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket", "s3:GetObject", "s3:PutObject"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+
+    this.backfillNofoMetadataFunction = backfillNofoMetadataFunction;
 
     const deleteS3APIHandlerFunction = new lambda.Function(
       scope,

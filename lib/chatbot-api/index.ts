@@ -277,6 +277,18 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    // Backfill NOFO metadata endpoint
+    const backfillNofoMetadataAPIIntegration = new HttpLambdaIntegration(
+      "BackfillNofoMetadataAPIIntegration",
+      lambdaFunctions.backfillNofoMetadataFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/backfill-nofo-metadata",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: backfillNofoMetadataAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     // Add REST API route for grant recommendations
     const grantRecommendationAPIIntegration = new HttpLambdaIntegration(
       "GrantRecommendationAPIIntegration",
