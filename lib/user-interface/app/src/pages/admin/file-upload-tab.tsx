@@ -10,12 +10,13 @@ import {
   ProgressBarProps,
   SpaceBetween,
 } from "@cloudscape-design/components";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Utils } from "../../common/utils";
 import { FileUploader } from "../../common/file-uploader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Auth } from "aws-amplify";
 
 
 const fileExtensions = new Set([
@@ -71,6 +72,8 @@ export default function DataFileUpload(props: FileUploadTabProps) {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const documentIdentifier = searchParams.get("folder");
   const [files, setFiles] = useState<File[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
   const [fileErrors, setFileErrors] = useState<string[]>([]);
@@ -83,6 +86,26 @@ export default function DataFileUpload(props: FileUploadTabProps) {
   const [currentFileName, setCurrentFileName] = useState<string>("");
   const [uploadPanelDismissed, setUploadPanelDismissed] =
     useState<boolean>(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Helper to extract NOFO name from documentIdentifier
+  const extractNofoName = (docId: string | null): string => {
+    if (!docId) return "";
+    return docId.split("/").pop() || docId;
+  };
+
+  // Get userId on mount
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        setUserId(user.username);
+      } catch (error) {
+        console.error("Error getting user:", error);
+      }
+    };
+    fetchUserId();
+  }, []);
 
   const onSetFiles = (files: File[]) => {
     const errors: string[] = [];
@@ -113,7 +136,7 @@ export default function DataFileUpload(props: FileUploadTabProps) {
   };
 
   const onUpload = async () => {
-    if (!appContext) return;
+    if (!appContext || !userId || !documentIdentifier) return;
     setUploadingStatus("in-progress");
     setUploadProgress(0);
     setUploadingIndex(1);
@@ -121,6 +144,7 @@ export default function DataFileUpload(props: FileUploadTabProps) {
 
     const uploader = new FileUploader();
     // const apiClient = new ApiClient(appContext);
+    const nofoName = extractNofoName(documentIdentifier);
     const totalSize = filesToUpload.reduce((acc, file) => acc + file.size, 0);
     let accumulator = 0;
     let hasError = false;
@@ -134,7 +158,7 @@ export default function DataFileUpload(props: FileUploadTabProps) {
         
         const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
         const fileType = mimeTypes[fileExtension];
-        const result = await apiClient.knowledgeManagement.getUploadURL(file.name,fileType);
+        const result = await apiClient.knowledgeManagement.getUploadURL(file.name, fileType, userId, nofoName);
         try {
           await uploader.upload(
             file,

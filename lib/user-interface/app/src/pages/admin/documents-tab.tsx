@@ -17,6 +17,7 @@ import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import { useNotifications } from "../../components/notif-manager";
+import { Auth } from "aws-amplify";
 
 export interface DocumentsTabProps {
   tabChangeFunction: () => void;
@@ -35,11 +36,31 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const [pages, setPages] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const { addNotification, removeNotification } = useNotifications();
   // const documentIdentifier = new URLSearchParams(location.search).get("folder");
   //const { documentIdentifier } = useParams();
   const [searchParams] = useSearchParams();
   const documentIdentifier = searchParams.get("folder");
+
+  // Helper to extract NOFO name from documentIdentifier
+  const extractNofoName = (docId: string | null): string => {
+    if (!docId) return "";
+    return docId.split("/").pop() || docId;
+  };
+
+  // Get userId on mount
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        setUserId(user.username);
+      } catch (error) {
+        console.error("Error getting user:", error);
+      }
+    };
+    fetchUserId();
+  }, []);
 
   /** Pagination, but this is currently not working.
    * You will likely need to take the items object from useCollection in the
@@ -114,9 +135,11 @@ export default function DocumentsTab(props: DocumentsTabProps) {
 
   const getDocuments = useCallback(
     async (params: { folderPrefix?: string, continuationToken?: string; pageIndex?: number }) => {
+      if (!userId || !documentIdentifier) return;
       setLoading(true);
       try {
-        const result = await apiClient.knowledgeManagement.getDocuments(documentIdentifier, params.continuationToken, params.pageIndex);
+        const nofoName = extractNofoName(documentIdentifier);
+        const result = await apiClient.knowledgeManagement.getDocuments(userId, nofoName, params.continuationToken, params.pageIndex);
         await props.statusRefreshFunction();
   
         // Map over result.Contents instead of result.CommonPrefixes
@@ -137,7 +160,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   
       setLoading(false);
     },
-    [appContext, props.documentType, documentIdentifier]
+    [appContext, props.documentType, documentIdentifier, userId]
   );
   
   
@@ -193,14 +216,19 @@ export default function DocumentsTab(props: DocumentsTabProps) {
 
   /** Deletes selected files */
   const deleteSelectedFiles = async () => {
-    if (!appContext) return;
+    if (!appContext || !userId || !documentIdentifier) return;
     setLoading(true);
     setShowModalDelete(false);
 
     const apiClient = new ApiClient(appContext);
+    const nofoName = extractNofoName(documentIdentifier);
     try {
       await Promise.all(
-        selectedItems.map((s) => apiClient.knowledgeManagement.deleteFile(s.Key!))
+        selectedItems.map((s) => {
+          // Extract filename from Key (format: userId/nofoName/filename)
+          const fileName = s.Key!.split("/").pop() || s.Key!;
+          return apiClient.knowledgeManagement.deleteFile(userId, nofoName, fileName);
+        })
       );
     } catch (e) {
       addNotification("error", "Error deleting files")

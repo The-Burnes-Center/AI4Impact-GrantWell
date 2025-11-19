@@ -6,6 +6,7 @@
 
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from "constructs";
 
 export class S3BucketStack extends cdk.Stack {
@@ -62,5 +63,33 @@ export class S3BucketStack extends cdk.Stack {
         allowedHeaders: ["*"]
       }]
     });
+
+    // Grant permission for CDK custom resource handler to configure bucket notifications
+    // This allows the BucketNotificationsHandler Lambda to configure S3 event notifications
+    // The custom resource handler role needs s3:PutBucketNotification permission
+    // Allow any Lambda in the same account to configure notifications (for CDK custom resources)
+    const createNotificationPolicy = (bucketArn: string) => {
+      return new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        principals: [new iam.ServicePrincipal('lambda.amazonaws.com')],
+        actions: ['s3:PutBucketNotification'],
+        resources: [bucketArn],
+        conditions: {
+          StringEquals: {
+            'aws:SourceAccount': cdk.Stack.of(this).account,
+          },
+        },
+      });
+    };
+
+    // Apply to userDocumentsBucket (has event notifications)
+    this.userDocumentsBucket.addToResourcePolicy(
+      createNotificationPolicy(this.userDocumentsBucket.bucketArn)
+    );
+
+    // Apply to ffioNofosBucket (has multiple event notifications)
+    this.ffioNofosBucket.addToResourcePolicy(
+      createNotificationPolicy(this.ffioNofosBucket.bucketArn)
+    );
   }
 }

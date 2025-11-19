@@ -331,25 +331,20 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     // Add S3 event trigger for user documents bucket
+    // Lambda will filter out metadata files and system files
+    // Note: The bucket policy in buckets.ts grants s3:PutBucketNotification permission
+    // to Lambda functions in the same account to allow CDK custom resource handler
+    // to configure bucket notifications
     props.userDocumentsBucket.addEventNotification(
       s3.EventType.OBJECT_CREATED,
-      new s3n.LambdaDestination(createMetadataFunction),
-      {
-        prefix: "",
-        // Exclude metadata files and system files
-        suffix: "",
-      }
+      new s3n.LambdaDestination(createMetadataFunction)
     );
 
-    // Add S3 event trigger for NOFO bucket (for documents that might not go through processing)
+    // Add S3 event trigger for NOFO bucket
+    // Lambda will filter to only process NOFO-File-PDF and NOFO-File-TXT
     props.ffioNofosBucket.addEventNotification(
       s3.EventType.OBJECT_CREATED,
-      new s3n.LambdaDestination(createMetadataFunction),
-      {
-        prefix: "",
-        // Only trigger for PDF and TXT files, exclude metadata and summary files
-        suffix: "",
-      }
+      new s3n.LambdaDestination(createMetadataFunction)
     );
 
     this.createMetadataFunction = createMetadataFunction;
