@@ -314,6 +314,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           NOFO_BUCKET: props.ffioNofosBucket.bucketName,
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -328,6 +329,15 @@ export class LambdaFunctionStack extends cdk.Stack {
           props.userDocumentsBucket.bucketArn + "/*",
           props.ffioNofosBucket.bucketArn + "/*",
         ],
+      })
+    );
+
+    // Grant permission to invoke KB sync function
+    createMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
       })
     );
 
