@@ -340,12 +340,11 @@ export class LambdaFunctionStack extends cdk.Stack {
       new s3n.LambdaDestination(createMetadataFunction)
     );
 
-    // Add S3 event trigger for NOFO bucket
-    // Lambda will filter to only process NOFO-File-PDF and NOFO-File-TXT
-    props.ffioNofosBucket.addEventNotification(
-      s3.EventType.OBJECT_CREATED,
-      new s3n.LambdaDestination(createMetadataFunction)
-    );
+    // Removed to avoid overlapping notification rules with SQS and other Lambda notifications
+    // props.ffioNofosBucket.addEventNotification(
+    //   s3.EventType.OBJECT_CREATED,
+    //   new s3n.LambdaDestination(createMetadataFunction)
+    // );
 
     this.createMetadataFunction = createMetadataFunction;
 
