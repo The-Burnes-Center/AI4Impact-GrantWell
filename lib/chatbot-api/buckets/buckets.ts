@@ -66,13 +66,13 @@ export class S3BucketStack extends cdk.Stack {
 
     // Grant permission for CDK custom resource handler to configure bucket notifications
     // This allows the BucketNotificationsHandler Lambda to configure S3 event notifications
-    // The custom resource handler role needs s3:PutBucketNotification permission
-    // Allow any Lambda in the same account to configure notifications (for CDK custom resources)
+    // Note: CDK creates a custom resource handler Lambda that needs s3:PutBucketNotification permission
+    // We grant this via bucket policy to allow Lambda service principals from the same account
     const createNotificationPolicy = (bucketArn: string) => {
       return new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         principals: [new iam.ServicePrincipal('lambda.amazonaws.com')],
-        actions: ['s3:PutBucketNotification'],
+        actions: ['s3:PutBucketNotification', 's3:GetBucketNotification'],
         resources: [bucketArn],
         conditions: {
           StringEquals: {
