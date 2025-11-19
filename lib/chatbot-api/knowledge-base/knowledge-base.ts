@@ -16,13 +16,15 @@ import { OpenSearchStack } from "../opensearch/opensearch"
 
 export interface KnowledgeBaseStackProps {
   readonly openSearch: OpenSearchStack,
-  readonly s3bucket : s3.Bucket
+  readonly s3bucket : s3.Bucket,
+  readonly userDocumentsBucket?: s3.Bucket
 }
 
 export class KnowledgeBaseStack extends cdk.Stack {
 
   public readonly knowledgeBase: bedrock.CfnKnowledgeBase;
   public readonly dataSource: bedrock.CfnDataSource;
+  public readonly userDocumentsDataSource?: bedrock.CfnDataSource;
 
   constructor(scope: Construct, id: string, props: KnowledgeBaseStackProps) {
     super(scope, id);
@@ -39,7 +41,7 @@ export class KnowledgeBaseStack extends cdk.Stack {
       )
     )
 
-    // add s3 access to the role
+    // add s3 access to the role for NOFO bucket
     props.openSearch.knowledgeBaseRole.addToPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
@@ -47,6 +49,17 @@ export class KnowledgeBaseStack extends cdk.Stack {
       ],
       resources: [props.s3bucket.bucketArn, props.s3bucket.bucketArn + "/*"]
     }));
+
+    // add s3 access to the role for user documents bucket (if provided)
+    if (props.userDocumentsBucket) {
+      props.openSearch.knowledgeBaseRole.addToPolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          's3:*'
+        ],
+        resources: [props.userDocumentsBucket.bucketArn, props.userDocumentsBucket.bucketArn + "/*"]
+      }));
+    }
 
     // add bedrock access to the role
     props.openSearch.knowledgeBaseRole.addToPolicy(new iam.PolicyStatement({
@@ -119,7 +132,34 @@ export class KnowledgeBaseStack extends cdk.Stack {
 
     dataSource.addDependency(knowledgeBase);    
 
+    // Add second data source for user documents bucket (if provided)
+    let userDocumentsDataSource: bedrock.CfnDataSource | undefined;
+    if (props.userDocumentsBucket) {
+      userDocumentsDataSource = new bedrock.CfnDataSource(scope, 'UserDocumentsDataSource', {
+        dataSourceConfiguration: {
+          type: 'S3',
+          s3Configuration: {
+            bucketArn: props.userDocumentsBucket.bucketArn,
+          },
+        },
+        knowledgeBaseId: knowledgeBase.attrKnowledgeBaseId,
+        name: `${stackName}-kb-user-documents-datasource`,
+        description: 'User uploaded documents data source',
+        vectorIngestionConfiguration: {
+          chunkingConfiguration: {
+            chunkingStrategy: 'FIXED_SIZE',
+            fixedSizeChunkingConfiguration: {
+              maxTokens: 300,
+              overlapPercentage: 10,
+            },
+          },
+        },
+      });
+      userDocumentsDataSource.addDependency(knowledgeBase);
+    }
+
     this.knowledgeBase = knowledgeBase;
     this.dataSource = dataSource;
+    this.userDocumentsDataSource = userDocumentsDataSource;
   }
 }

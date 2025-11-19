@@ -8,23 +8,30 @@ import json
 import boto3
 import os
 
-# Retrieve environment variables for Knowledge Base index and source index
+# Retrieve environment variables for Knowledge Base index and source indices
 kb_index = os.environ['KB_ID']
-source_index = os.environ['SOURCE']
+source_index = os.environ['SOURCE']  # NOFO bucket data source
+user_documents_source = os.environ.get('USER_DOCUMENTS_SOURCE', '')  # User documents bucket data source
 
 # Initialize a Bedrock Agent client
 client = boto3.client('bedrock-agent')
 
-def check_running():
+def check_running(data_source_id):
     """
     Check if any sync jobs for the specified data source and index are currently running.
+
+    Args:
+        data_source_id: The data source ID to check
 
     Returns:
         bool: True if there are any ongoing sync or sync-indexing jobs, False otherwise.
     """
+    if not data_source_id:
+        return False
+    
     # List ongoing sync jobs with status 'IN_PROGRESS'
     syncing = client.list_ingestion_jobs(
-        dataSourceId=source_index,
+        dataSourceId=data_source_id,
         knowledgeBaseId=kb_index,
         filters=[{
             'attribute': 'STATUS',
@@ -35,7 +42,7 @@ def check_running():
     
     # List ongoing sync jobs with status 'STARTING'
     starting = client.list_ingestion_jobs(
-        dataSourceId=source_index,
+        dataSourceId=data_source_id,
         knowledgeBaseId=kb_index,
         filters=[{
             'attribute': 'STATUS',
@@ -50,24 +57,64 @@ def check_running():
     # Check if there are any jobs in the history
     return len(hist) > 0
 
+def check_any_running():
+    """
+    Check if any sync jobs are running for either data source.
+
+    Returns:
+        bool: True if any sync job is running, False otherwise.
+    """
+    nofo_running = check_running(source_index)
+    user_docs_running = check_running(user_documents_source) if user_documents_source else False
+    return nofo_running or user_docs_running
+
 def get_last_sync():
     """
-    Retrieve the last sync time for the specified data source and index.
+    Retrieve the last sync time from either data source (most recent).
 
     Returns:
         dict: A response dictionary with the last sync time.
     """
-    syncs = client.list_ingestion_jobs(
-        dataSourceId=source_index,
-        knowledgeBaseId=kb_index,
-        filters=[{
-            'attribute': 'STATUS',
-            'operator': 'EQ',
-            'values': ['COMPLETE']
-        }]
-    )
-    hist = syncs["ingestionJobSummaries"]
-    time = hist[0]["updatedAt"].strftime('%B %d, %Y, %I:%M%p UTC')
+    all_syncs = []
+    
+    # Get syncs from NOFO bucket data source
+    if source_index:
+        nofo_syncs = client.list_ingestion_jobs(
+            dataSourceId=source_index,
+            knowledgeBaseId=kb_index,
+            filters=[{
+                'attribute': 'STATUS',
+                'operator': 'EQ',
+                'values': ['COMPLETE']
+            }]
+        )
+        if nofo_syncs.get('ingestionJobSummaries'):
+            all_syncs.extend(nofo_syncs['ingestionJobSummaries'])
+    
+    # Get syncs from user documents bucket data source
+    if user_documents_source:
+        user_docs_syncs = client.list_ingestion_jobs(
+            dataSourceId=user_documents_source,
+            knowledgeBaseId=kb_index,
+            filters=[{
+                'attribute': 'STATUS',
+                'operator': 'EQ',
+                'values': ['COMPLETE']
+            }]
+        )
+        if user_docs_syncs.get('ingestionJobSummaries'):
+            all_syncs.extend(user_docs_syncs['ingestionJobSummaries'])
+    
+    if not all_syncs:
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps('No sync history available')
+        }
+    
+    # Sort by updatedAt and get the most recent
+    all_syncs.sort(key=lambda x: x['updatedAt'], reverse=True)
+    time = all_syncs[0]["updatedAt"].strftime('%B %d, %Y, %I:%M%p UTC')
     return {
         'statusCode': 200,
         'headers': {'Access-Control-Allow-Origin': '*'},
@@ -90,15 +137,27 @@ def lambda_handler(event, context):
     resource_path = event.get('rawPath', '')
 
     if not resource_path:
-        if check_running():
+        if check_any_running():
             print("Sync already in progress.")
             return
         else:
-            client.start_ingestion_job(
-                dataSourceId=source_index,
-                knowledgeBaseId=kb_index
-            )
-            print("Started knowledge base sync.")
+            # Start sync for NOFO bucket data source
+            if source_index:
+                client.start_ingestion_job(
+                    dataSourceId=source_index,
+                    knowledgeBaseId=kb_index
+                )
+                print(f"Started NOFO bucket sync for data source: {source_index}")
+            
+            # Start sync for user documents bucket data source
+            if user_documents_source:
+                client.start_ingestion_job(
+                    dataSourceId=user_documents_source,
+                    knowledgeBaseId=kb_index
+                )
+                print(f"Started user documents bucket sync for data source: {user_documents_source}")
+            
+            print("Started knowledge base sync for all data sources.")
             return
     
     # Check admin access    
@@ -122,17 +181,29 @@ def lambda_handler(event, context):
         
     # Check if the request is for syncing Knowledge Base
     if "sync-kb" in resource_path:
-        if check_running():
+        if check_any_running():
             return {
                 'statusCode': 200,
                 'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps('STILL SYNCING')
             }
         else:
-            client.start_ingestion_job(
-                dataSourceId=source_index,
-                knowledgeBaseId=kb_index
-            )
+            # Start sync for NOFO bucket data source
+            if source_index:
+                client.start_ingestion_job(
+                    dataSourceId=source_index,
+                    knowledgeBaseId=kb_index
+                )
+                print(f"Started NOFO bucket sync for data source: {source_index}")
+            
+            # Start sync for user documents bucket data source
+            if user_documents_source:
+                client.start_ingestion_job(
+                    dataSourceId=user_documents_source,
+                    knowledgeBaseId=kb_index
+                )
+                print(f"Started user documents bucket sync for data source: {user_documents_source}")
+            
             return {
                 'statusCode': 200,
                 'headers': {'Access-Control-Allow-Origin': '*'},
@@ -141,7 +212,7 @@ def lambda_handler(event, context):
    
     # Check if the request is for checking the sync status        
     elif "still-syncing" in resource_path:
-        status_msg = 'STILL SYNCING' if check_running() else 'DONE SYNCING'
+        status_msg = 'STILL SYNCING' if check_any_running() else 'DONE SYNCING'
         return {
             'statusCode': 200,
             'headers': {'Access-Control-Allow-Origin': '*'},

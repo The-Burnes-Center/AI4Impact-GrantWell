@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, useCallback } from "react";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { FileUploader } from "../../common/file-uploader";
+import { Auth } from "aws-amplify";
 import {
   X,
   Upload,
@@ -345,21 +346,47 @@ export default function UploadModal({
   const [error, setError] = useState<string | null>(null);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [downloadingFile, setDownloadingFile] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const appContext = useContext(AppContext);
 
+  // Helper to extract NOFO name from documentIdentifier
+  const extractNofoName = (docId: string | null): string => {
+    if (!docId) return "";
+    return docId.split("/").pop() || docId;
+  };
+
+  // Get userId on mount
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        setUserId(user.username);
+      } catch (error) {
+        console.error("Error getting user:", error);
+        setError("Failed to authenticate user. Please refresh the page.");
+      }
+    };
+    if (isOpen) {
+      fetchUserId();
+    }
+  }, [isOpen]);
+
   // Fetch existing files on component mount
   const fetchExistingFiles = useCallback(async () => {
-    if (!appContext || !documentIdentifier) return;
+    if (!appContext || !documentIdentifier || !userId) return;
 
     setLoadingFiles(true);
     setError(null);
 
     try {
       const apiClient = new ApiClient(appContext);
-      // Get list of documents from S3 using the documentIdentifier as the folder prefix
+      const nofoName = extractNofoName(documentIdentifier);
+      
+      // Get list of documents using userId and nofoName
       const result = await apiClient.knowledgeManagement.getDocuments(
-        documentIdentifier
+        userId,
+        nofoName
       );
 
       if (result && result.Contents) {
@@ -380,7 +407,7 @@ export default function UploadModal({
     } finally {
       setLoadingFiles(false);
     }
-  }, [appContext, documentIdentifier]);
+  }, [appContext, documentIdentifier, userId]);
 
   useEffect(() => {
     if (isOpen && activeTab === "view") {
@@ -448,7 +475,7 @@ export default function UploadModal({
   };
 
   const uploadFiles = async () => {
-    if (!appContext || !documentIdentifier || selectedFiles.length === 0)
+    if (!appContext || !documentIdentifier || !userId || selectedFiles.length === 0)
       return;
 
     setUploading(true);
@@ -457,6 +484,7 @@ export default function UploadModal({
 
     const uploader = new FileUploader();
     const apiClient = new ApiClient(appContext);
+    const nofoName = extractNofoName(documentIdentifier);
     const totalSize = selectedFiles.reduce((acc, file) => acc + file.size, 0);
     let uploadedSize = 0;
 
@@ -467,16 +495,13 @@ export default function UploadModal({
           MIME_TYPES[fileExt as keyof typeof MIME_TYPES] ||
           "application/octet-stream";
 
-        // Create a file path that includes the document identifier as a folder
-        const filePath = documentIdentifier
-          ? `${documentIdentifier}/${file.name}`
-          : file.name;
-
         try {
-          // Get upload URL from API
+          // Get upload URL from API (path will be constructed as userId/nofoName/filename)
           const uploadUrl = await apiClient.knowledgeManagement.getUploadURL(
-            filePath,
-            fileType
+            file.name,  // Just the filename
+            fileType,
+            userId,     // User ID
+            nofoName    // NOFO name
           );
 
           // Upload the file
@@ -530,17 +555,18 @@ export default function UploadModal({
   };
 
   const deleteFile = async (fileName: string) => {
-    if (!appContext || !documentIdentifier) return;
+    if (!appContext || !documentIdentifier || !userId) return;
 
     try {
       const apiClient = new ApiClient(appContext);
-      // Form the full file key including the folder path
-      const fileKey = documentIdentifier
-        ? `${documentIdentifier}/${fileName}`
-        : fileName;
+      const nofoName = extractNofoName(documentIdentifier);
 
-      // Delete the file from S3
-      await apiClient.knowledgeManagement.deleteFile(fileKey);
+      // Delete the file from S3 (key will be constructed as userId/nofoName/filename)
+      await apiClient.knowledgeManagement.deleteFile(
+        userId,
+        nofoName,
+        fileName
+      );
 
       // Refresh the file list
       fetchExistingFiles();
@@ -551,17 +577,13 @@ export default function UploadModal({
   };
 
   const downloadFile = async (fileName: string) => {
-    if (!appContext || !documentIdentifier) return;
+    if (!appContext || !documentIdentifier || !userId) return;
 
     try {
       setDownloadingFile(fileName);
       setError(null);
       const apiClient = new ApiClient(appContext);
-
-      // Form the full file key including the folder path
-      const fileKey = documentIdentifier
-        ? `${documentIdentifier}/${fileName}`
-        : fileName;
+      const nofoName = extractNofoName(documentIdentifier);
 
       // Get a pre-signed URL for downloading the file
       try {
@@ -575,8 +597,10 @@ export default function UploadModal({
         // We're reusing the upload URL method which should return a pre-signed S3 URL
         // The proper approach would be to create a specific getDownloadURL method in the API
         const downloadUrl = await apiClient.knowledgeManagement.getUploadURL(
-          fileKey,
-          fileType
+          fileName,  // Just the filename
+          fileType,
+          userId,    // User ID
+          nofoName   // NOFO name
         );
 
         // Create a temporary anchor and trigger download

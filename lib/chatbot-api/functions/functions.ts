@@ -28,8 +28,10 @@ interface LambdaFunctionStackProps {
   readonly nofoMetadataTable: Table;
   readonly feedbackBucket: s3.Bucket;
   readonly ffioNofosBucket: s3.Bucket;
+  readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
   readonly knowledgeBaseSource: bedrock.CfnDataSource;
+  readonly userDocumentsDataSource?: bedrock.CfnDataSource;
   readonly grantsGovApiKey: string;
 }
 
@@ -42,6 +44,8 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly uploadS3Function: lambda.Function;
   public readonly uploadNOFOS3Function: lambda.Function;
   public readonly syncKBFunction: lambda.Function;
+  public readonly createMetadataFunction: lambda.Function;
+  public readonly backfillNofoMetadataFunction: lambda.Function;
   public readonly getNOFOsList: lambda.Function;
   public readonly getNOFOSummary: lambda.Function;
   public readonly getNOFOQuestions: lambda.Function;
@@ -281,6 +285,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SOURCE: props.knowledgeBaseSource.attrDataSourceId,
+          USER_DOCUMENTS_SOURCE: props.userDocumentsDataSource?.attrDataSourceId || "",
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -295,6 +300,98 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     this.syncKBFunction = kbSyncAPIHandlerFunction;
 
+    // Lambda function to create metadata files for uploaded documents
+    const createMetadataFunction = new lambda.Function(
+      scope,
+      "CreateMetadataFunction",
+      {
+        functionName: `${stackName}-createMetadataFunction`,
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "knowledge-management/create-metadata")
+        ),
+        handler: "index.handler",
+        environment: {
+          USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+          NOFO_BUCKET: props.ffioNofosBucket.bucketName,
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+        },
+        timeout: cdk.Duration.seconds(30),
+      }
+    );
+
+    // Grant S3 read/write permissions for both buckets
+    createMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:PutObject"],
+        resources: [
+          props.userDocumentsBucket.bucketArn + "/*",
+          props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+
+    // Grant permission to invoke KB sync function
+    createMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
+      })
+    );
+
+    // Add S3 event trigger for user documents bucket
+    // Lambda will filter out metadata files and system files
+    // Note: The bucket policy in buckets.ts grants s3:PutBucketNotification permission
+    // to Lambda functions in the same account to allow CDK custom resource handler
+    // to configure bucket notifications
+    props.userDocumentsBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.LambdaDestination(createMetadataFunction)
+    );
+
+    // Removed to avoid overlapping notification rules with SQS and other Lambda notifications
+    // props.ffioNofosBucket.addEventNotification(
+    //   s3.EventType.OBJECT_CREATED,
+    //   new s3n.LambdaDestination(createMetadataFunction)
+    // );
+
+    this.createMetadataFunction = createMetadataFunction;
+
+    // Lambda function to backfill metadata for existing NOFO documents
+    const backfillNofoMetadataFunction = new lambda.Function(
+      scope,
+      "BackfillNofoMetadataFunction",
+      {
+        functionName: `${stackName}-backfillNofoMetadataFunction`,
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "knowledge-management/backfill-nofo-metadata")
+        ),
+        handler: "index.handler",
+        environment: {
+          NOFO_BUCKET: props.ffioNofosBucket.bucketName,
+          BUCKET: props.ffioNofosBucket.bucketName,
+        },
+        timeout: cdk.Duration.minutes(15), // May take time for large buckets
+      }
+    );
+
+    // Grant S3 permissions for listing and reading/writing objects
+    backfillNofoMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket", "s3:GetObject", "s3:PutObject"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+
+    this.backfillNofoMetadataFunction = backfillNofoMetadataFunction;
+
     const deleteS3APIHandlerFunction = new lambda.Function(
       scope,
       "DeleteS3FilesHandlerFunction",
@@ -305,7 +402,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         ), // Points to the lambda directory
         handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
         environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
+          BUCKET: props.userDocumentsBucket.bucketName,
+          USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -316,11 +415,21 @@ export class LambdaFunctionStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         actions: ["s3:*"],
         resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
+          props.userDocumentsBucket.bucketArn,
+          props.userDocumentsBucket.bucketArn + "/*",
         ],
       })
     );
+
+    // Grant permission to invoke KB sync function
+    deleteS3APIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
+      })
+    );
+
     this.deleteS3Function = deleteS3APIHandlerFunction;
 
     const getS3APIHandlerFunction = new lambda.Function(
@@ -333,7 +442,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         ), // Points to the lambda directory
         handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
+          BUCKET: props.userDocumentsBucket.bucketName,
+          USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -344,8 +454,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         actions: ["s3:*"],
         resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
+          props.userDocumentsBucket.bucketArn,
+          props.userDocumentsBucket.bucketArn + "/*",
         ],
       })
     );
@@ -724,6 +834,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -740,6 +851,15 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // Grant permission to invoke KB sync function
+    nofoDeleteHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
+      })
+    );
+
     this.nofoDeleteFunction = nofoDeleteHandlerFunction;
 
     const uploadS3APIHandlerFunction = new lambda.Function(
@@ -752,7 +872,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         ), // Points to the lambda directory
         handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
+          BUCKET: props.userDocumentsBucket.bucketName,
+          USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -763,8 +884,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         actions: ["s3:*"],
         resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
+          props.userDocumentsBucket.bucketArn,
+          props.userDocumentsBucket.bucketArn + "/*",
         ],
       })
     );
