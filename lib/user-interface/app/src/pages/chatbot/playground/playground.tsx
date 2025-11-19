@@ -149,8 +149,8 @@ export default function Playground() {
             {isLoading ? "Loading..." : nofoName}
           </h1>
           <div style={styles.headerActions}>
-            {/* Upload Data button disabled */}
-            {false && (
+            {/* Upload Data button - only show if documentIdentifier exists */}
+            {documentIdentifier && (
               <button style={styles.uploadButton} onClick={handleUploadData}>
                 <Upload size={16} /> Upload Data
               </button>
@@ -183,6 +183,13 @@ export default function Playground() {
             grant requirements.
           </p>
 
+          <h4 style={styles.helpSubtitle}>Upload Documents</h4>
+          <p style={styles.helpText}>
+            Click "Upload Data" to upload supporting documents (mission statements, 
+            past projects, organizational charts, etc.) that will help the chatbot 
+            provide more contextual and relevant responses for this grant.
+          </p>
+
           <h4 style={styles.helpSubtitle}>Sources</h4>
           <p style={styles.helpText}>
             If the chatbot references any files from the knowledge base, they will show
@@ -206,8 +213,8 @@ export default function Playground() {
           style={{ height: "100%", display: "flex", flexDirection: "column" }}
         >
           <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
-          {/* Upload Modal disabled */}
-          {false && (
+          {/* Upload Modal - only render if documentIdentifier exists */}
+          {documentIdentifier && (
             <UploadModal
               isOpen={uploadModalOpen}
               onClose={() => setUploadModalOpen(false)}

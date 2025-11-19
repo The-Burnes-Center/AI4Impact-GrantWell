@@ -10,32 +10,41 @@ import os
 
 def lambda_handler(event, context):
     try:
-        # Extract user claims and roles from the event
+        # Extract user claims and userId from the event
         claims = event["requestContext"]["authorizer"]["jwt"]["claims"]
-        roles = json.loads(claims['custom:role'])
-        if "Admin" in roles:
-            print("admin granted!")
-        else:
+        userId = claims.get('cognito:username') or claims.get('username')
+        
+        if not userId:
+            return {
+                'statusCode': 401,
+                'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'message': 'User not authenticated'})
+            }
+        
+        # Extract the payload from the event body
+        payload = json.loads(event['body'])
+        key = payload.get('KEY')  # Format: userId/nofoName/filename
+        
+        # Security: Ensure KEY starts with userId/
+        if not key or not key.startswith(f"{userId}/"):
             return {
                 'statusCode': 403,
                 'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps('User is not authorized to perform this action')
+                'body': json.dumps({'message': 'Unauthorized: Can only delete your own files'})
             }
     except Exception as e:
-        print(f"Error checking user role: {e}")
+        print(f"Error processing request: {e}")
         return {
             'statusCode': 500,
             'headers': {'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps('Unable to check user role, please ensure you have Cognito configured correctly with a custom:role attribute.')
+            'body': json.dumps({'message': f'Unable to process request: {str(e)}'})
         }
-
-    # Extract the payload from the event body
-    payload = json.loads(event['body'])
 
     try:
         # Initialize S3 resource and delete the specified object
         s3 = boto3.resource('s3')
-        s3.Object(os.environ['BUCKET'], payload['KEY']).delete()
+        bucket = os.environ.get('USER_DOCUMENTS_BUCKET') or os.environ['BUCKET']
+        s3.Object(bucket, key).delete()
         return {
             'statusCode': 200,
             'headers': {'Access-Control-Allow-Origin': '*'},

@@ -44,6 +44,7 @@ export class ChatBotApi extends Construct {
     const knowledgeBase = new KnowledgeBaseStack(this, "KnowledgeBaseStack", {
       openSearch: openSearch,
       s3bucket: buckets.ffioNofosBucket,
+      userDocumentsBucket: buckets.userDocumentsBucket,
     });
 
     const restBackend = new RestBackendAPI(this, "RestBackend", {});
@@ -64,7 +65,9 @@ export class ChatBotApi extends Construct {
       feedbackBucket: buckets.feedbackBucket,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
+      userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
       ffioNofosBucket: buckets.ffioNofosBucket,
+      userDocumentsBucket: buckets.userDocumentsBucket,
       grantsGovApiKey: props.grantsGovApiKey,
     });
 

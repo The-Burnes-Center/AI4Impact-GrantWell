@@ -11,6 +11,7 @@ import { Construct } from "constructs";
 export class S3BucketStack extends cdk.Stack {
   public readonly feedbackBucket: s3.Bucket;
   public readonly ffioNofosBucket: s3.Bucket;
+  public readonly userDocumentsBucket: s3.Bucket;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -47,6 +48,18 @@ export class S3BucketStack extends cdk.Stack {
         allowedMethods: [s3.HttpMethods.GET,s3.HttpMethods.POST,s3.HttpMethods.PUT,s3.HttpMethods.DELETE],
         allowedOrigins: ['*'], 
         allowedHeaders: ["*"]     
+      }]
+    });
+    
+    // Bucket for user-uploaded documents (organized by userId/nofoName/)
+    this.userDocumentsBucket = new s3.Bucket(scope, 'UserDocumentsBucket', {
+      versioned: true,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      cors: [{
+        allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.POST, s3.HttpMethods.PUT, s3.HttpMethods.DELETE],
+        allowedOrigins: ['*'],
+        allowedHeaders: ["*"]
       }]
     });
   }
