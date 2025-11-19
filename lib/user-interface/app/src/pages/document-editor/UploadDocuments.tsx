@@ -1,7 +1,31 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
+import { FileUploader } from "../../common/file-uploader";
+
+// File type mapping
+const MIME_TYPES: Record<string, string> = {
+  ".pdf": "application/pdf",
+  ".doc": "application/msword",
+  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ".xls": "application/vnd.ms-excel",
+  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  ".ppt": "application/vnd.ms-powerpoint",
+  ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  ".txt": "text/plain",
+  ".csv": "text/csv",
+  ".html": "text/html",
+  ".json": "application/json",
+  ".xml": "application/xml",
+  ".md": "text/markdown",
+  ".rtf": "application/rtf",
+  ".epub": "application/epub+zip",
+  ".odt": "application/vnd.oasis.opendocument.text",
+  ".tsv": "text/tab-separated-values",
+  ".eml": "message/rfc822",
+  ".msg": "application/vnd.ms-outlook",
+};
 
 interface UploadDocumentsProps {
   onContinue: () => void;
@@ -24,71 +48,145 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   sessionId,
 }) => {
   const appContext = useContext(AppContext);
-  const [files, setFiles] = useState<FileInfo[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Helper to extract NOFO name from documentIdentifier
+  const extractNofoName = (docId: string | null): string => {
+    if (!docId) return "";
+    return docId.split("/").pop() || docId;
+  };
+
+  // Get userId on mount
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        setUserId(user.username);
+      } catch (error) {
+        console.error("Error getting user:", error);
+        setUploadError("Failed to authenticate user. Please refresh the page.");
+      }
+    };
+    fetchUserId();
+  }, []);
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Upload functionality disabled
-    return;
-    // const selectedFiles = event.target.files;
-    // if (selectedFiles && selectedFiles.length > 0) {
-    //   const newFiles: FileInfo[] = [];
-    //   for (let i = 0; i < selectedFiles.length; i++) {
-    //     const file = selectedFiles[i];
-    //     newFiles.push({
-    //       name: file.name,
-    //       size: file.size,
-    //       type: file.type,
-    //       lastModified: file.lastModified,
-    //     });
-    //   }
-    //   setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    // }
+    const selectedFiles = event.target.files;
+    if (selectedFiles && selectedFiles.length > 0) {
+      const newFiles: File[] = Array.from(selectedFiles);
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+      setUploadError(null);
+    }
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // Upload functionality disabled
-    // setIsDragging(true);
+    setIsDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // Upload functionality disabled
-    // setIsDragging(false);
+    setIsDragging(false);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // Upload functionality disabled - no file handling
-    return;
-    // setIsDragging(false);
+    setIsDragging(false);
 
-    // const droppedFiles = e.dataTransfer.files;
-    // if (droppedFiles && droppedFiles.length > 0) {
-    //   const newFiles: FileInfo[] = [];
-    //   for (let i = 0; i < droppedFiles.length; i++) {
-    //     const file = droppedFiles[i];
-    //     newFiles.push({
-    //       name: file.name,
-    //       size: file.size,
-    //       type: file.type,
-    //       lastModified: file.lastModified,
-    //     });
-    //   }
-    //   setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    // }
+    const droppedFiles = e.dataTransfer.files;
+    if (droppedFiles && droppedFiles.length > 0) {
+      const newFiles: File[] = Array.from(droppedFiles);
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+      setUploadError(null);
+    }
   };
 
   const openFileSelector = () => {
-    // Upload functionality disabled
-    return;
-    // if (fileInputRef.current) {
-    //   fileInputRef.current.click();
-    // }
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const uploadFiles = async () => {
+    if (!appContext || !selectedNofo || !userId || files.length === 0) return;
+
+    setUploading(true);
+    setUploadProgress(0);
+    setUploadError(null);
+
+    const uploader = new FileUploader();
+    const apiClient = new ApiClient(appContext);
+    const nofoName = extractNofoName(selectedNofo);
+    const totalSize = files.reduce((acc, file) => acc + file.size, 0);
+    let uploadedSize = 0;
+
+    try {
+      for (const file of files) {
+        const fileExt = "." + file.name.split(".").pop()?.toLowerCase();
+        const fileType =
+          MIME_TYPES[fileExt] || "application/octet-stream";
+
+        try {
+          // Get upload URL from API (path will be constructed as userId/nofoName/filename)
+          const uploadUrl = await apiClient.knowledgeManagement.getUploadURL(
+            file.name,  // Just the filename
+            fileType,
+            userId,     // User ID
+            nofoName    // NOFO name
+          );
+
+          // Upload the file
+          await uploader.upload(
+            file,
+            uploadUrl,
+            fileType,
+            (uploaded: number) => {
+              const progress = Math.round(
+                ((uploadedSize + uploaded) / totalSize) * 100
+              );
+              setUploadProgress(progress);
+            }
+          );
+
+          uploadedSize += file.size;
+        } catch (error) {
+          console.error(`Error uploading file ${file.name}:`, error);
+          setUploadError(`Failed to upload ${file.name}. Please try again.`);
+          setUploading(false);
+          return;
+        }
+      }
+
+      // All files uploaded successfully
+      setUploadProgress(100);
+
+      // Sync KB after upload to ensure documents are indexed
+      try {
+        await apiClient.knowledgeManagement.syncKendra();
+      } catch (syncError) {
+        console.error("Error syncing knowledge base:", syncError);
+        // Non-critical error, don't show to user since files were uploaded successfully
+      }
+
+      // Clear files after successful upload
+      setTimeout(() => {
+        setFiles([]);
+        setUploading(false);
+        setUploadProgress(0);
+      }, 1000);
+    } catch (error) {
+      console.error("Error during upload:", error);
+      setUploadError("An error occurred during upload. Please try again.");
+      setUploading(false);
+    }
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -126,8 +224,16 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     
     try {
       setIsLoading(true);
+      
+      // Upload files first if any are selected
+      if (files.length > 0 && userId) {
+        await uploadFiles();
+        // Wait a moment for upload to complete
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
       const apiClient = new ApiClient(appContext);
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = userId || (await Auth.currentAuthenticatedUser()).username;
 
       console.log('Fetching current draft from DB:', { sessionId, username });
       // Get project basics and questionnaire from the database
@@ -158,6 +264,13 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
       console.log('Updating draft in DB with new sections, additionalInfo, and uploadedFiles...');
       // Update the draft with generated sections
+      // Include uploaded file info in the draft
+      const uploadedFileInfo = files.map(f => ({
+        name: f.name,
+        size: f.size,
+        type: f.type,
+        lastModified: f.lastModified
+      }));
       await apiClient.drafts.updateDraft({
         ...currentDraft,
         sections: {
@@ -165,7 +278,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           ...result  // Add new sections
         },
         additionalInfo: additionalInfo,
-        uploadedFiles: [] // Upload functionality disabled - no files to include
+        uploadedFiles: uploadedFileInfo
       });
       console.log('Draft updated successfully. Navigating to next step.');
 
@@ -183,7 +296,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
       <h2 style={{ marginBottom: "16px" }}>Supporting Documents</h2>
       <p style={{ color: "#4a5568", marginBottom: "24px" }}>
-        Document upload functionality is currently disabled. You can proceed to create your draft without uploading additional documents.
+        Upload supporting documents that will help generate your grant application. These documents will be available to the chatbot for context when creating your draft.
       </p>
 
       <div
@@ -196,14 +309,26 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         }}
       >
         <div style={{ marginBottom: "24px" }}>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileSelect}
+            style={{ display: "none" }}
+          />
           <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={openFileSelector}
             style={{
-              border: "2px dashed #e2e8f0",
+              border: `2px dashed ${isDragging ? "#4361ee" : "#e2e8f0"}`,
               borderRadius: "8px",
               padding: "24px",
               textAlign: "center",
-              background: "#f7fafc",
-              opacity: 0.6,
+              background: isDragging ? "#f0f4ff" : "#f7fafc",
+              cursor: "pointer",
+              transition: "all 0.2s",
             }}
           >
             <svg
@@ -211,7 +336,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               style={{
                 width: "40px",
                 height: "40px",
-                stroke: "#a0aec0",
+                stroke: isDragging ? "#4361ee" : "#4a5568",
                 fill: "none",
                 strokeWidth: 2,
                 strokeLinecap: "round",
@@ -224,24 +349,68 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <p style={{ marginBottom: "16px", color: "#a0aec0" }}>
-              File upload is currently disabled
+            <p style={{ marginBottom: "16px", color: isDragging ? "#4361ee" : "#4a5568" }}>
+              {isDragging
+                ? "Drop files here"
+                : "Drag and drop files here, or click to select"}
             </p>
             <button
-              disabled
+              onClick={(e) => {
+                e.stopPropagation();
+                openFileSelector();
+              }}
               style={{
-                background: "#e2e8f0",
-                color: "#a0aec0",
+                background: "#4361ee",
+                color: "white",
                 border: "none",
                 padding: "8px 16px",
                 borderRadius: "4px",
                 fontSize: "14px",
-                cursor: "not-allowed",
+                cursor: "pointer",
               }}
             >
-              Upload Disabled
+              Select Files
             </button>
           </div>
+          {uploadError && (
+            <div
+              style={{
+                marginTop: "12px",
+                padding: "12px",
+                background: "#fee",
+                border: "1px solid #fcc",
+                borderRadius: "4px",
+                color: "#c33",
+              }}
+            >
+              {uploadError}
+            </div>
+          )}
+          {uploading && (
+            <div style={{ marginTop: "12px" }}>
+              <div
+                style={{
+                  width: "100%",
+                  height: "8px",
+                  background: "#e2e8f0",
+                  borderRadius: "4px",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${uploadProgress}%`,
+                    height: "100%",
+                    background: "#4361ee",
+                    transition: "width 0.3s",
+                  }}
+                />
+              </div>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#4a5568" }}>
+                Uploading... {uploadProgress}%
+              </p>
+            </div>
+          )}
         </div>
 
         <div style={{ marginBottom: "24px" }}>
@@ -258,56 +427,50 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           </ul>
         </div>
 
-        {/* File list section disabled since upload is disabled */}
-        {false && (
+        {/* File list section */}
+        {files.length > 0 && (
           <div style={{ marginBottom: "24px" }}>
-            <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>Files</h3>
-            {files.length === 0 ? (
-              <p style={{ color: "#5a6575", fontStyle: "italic" }}>
-                No files uploaded yet
-              </p>
-            ) : (
-              <div>
-                {files.map((file, index) => (
-                  <div
-                    key={`${file.name}-${index}`}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "8px 12px",
-                      backgroundColor: "#f7fafc",
-                      borderRadius: "4px",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    <span style={{ marginRight: "8px", fontSize: "20px" }}>
-                      {getFileIcon(file.type)}
-                    </span>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 500 }}>{file.name}</div>
-                      <div style={{ fontSize: "12px", color: "#5a6575" }}>
-                        {formatFileSize(file.size)}
-                      </div>
+            <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>Selected Files</h3>
+            <div>
+              {files.map((file, index) => (
+                <div
+                  key={`${file.name}-${index}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "8px 12px",
+                    backgroundColor: "#f7fafc",
+                    borderRadius: "4px",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <span style={{ marginRight: "8px", fontSize: "20px" }}>
+                    {getFileIcon(file.type)}
+                  </span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 500 }}>{file.name}</div>
+                    <div style={{ fontSize: "12px", color: "#5a6575" }}>
+                      {formatFileSize(file.size)}
                     </div>
-                    <button
-                      onClick={() => {
-                        setFiles(files.filter((_, i) => i !== index));
-                      }}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#a0aec0",
-                        cursor: "pointer",
-                        fontSize: "18px",
-                      }}
-                      title="Remove file"
-                    >
-                      ×
-                    </button>
                   </div>
-                ))}
-              </div>
-            )}
+                  <button
+                    onClick={() => {
+                      setFiles(files.filter((_, i) => i !== index));
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#a0aec0",
+                      cursor: "pointer",
+                      fontSize: "18px",
+                    }}
+                    title="Remove file"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
