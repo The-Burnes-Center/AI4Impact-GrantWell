@@ -160,8 +160,13 @@ export default function Welcome() {
         );
       }
 
+      // Sort folders alphabetically (case-insensitive)
+      const sortedFolders = [...folders].sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: 'base' })
+      );
+
       setDocuments(
-        folders.map((document) => ({
+        sortedFolders.map((document) => ({
           label: document,
           value: document + "/",
         }))

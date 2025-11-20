@@ -331,9 +331,17 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const addNotification = useNotifications?.addNotification;
 
   // Filter data based on search query
-  const filteredNofos = nofos.filter((nofo) =>
-    nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredNofos = nofos
+    .filter((nofo) =>
+      nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      // Pinned grants come first
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      // Then sort alphabetically by name (case-insensitive)
+      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+    });
 
   // Helper function to normalize grant name
   const normalizeGrantName = (name: string): string => {
@@ -1084,6 +1092,15 @@ const Dashboard: React.FC = () => {
         (nofo) => (nofo.status || "active") === statusFilter
       );
     }
+
+    // Sort alphabetically: pinned grants first, then alphabetically by name
+    filtered.sort((a, b) => {
+      // Pinned grants come first
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      // Then sort alphabetically by name (case-insensitive)
+      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+    });
 
     return filtered;
   };

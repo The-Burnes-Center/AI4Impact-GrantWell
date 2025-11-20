@@ -102,7 +102,10 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               deadline: "See details",
               keyRequirements: [],
               summaryUrl: `${nofo.name}/`,
-            }));
+            }))
+            .sort((a, b) =>
+              a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+            );
           setPinnedGrants(pinnedGrants);
         }
       } catch (error) {
@@ -132,16 +135,24 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   // Filter documents when search term changes - removed automatic AI recommendations
   useEffect(() => {
-    // Filter existing documents
-    const filtered = documents.filter((doc) =>
-      doc.label.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Filter existing documents and sort alphabetically
+    const filtered = documents
+      .filter((doc) =>
+        doc.label.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })
+      );
     setFilteredDocuments(filtered);
 
-    // Filter pinned grants
-    const filteredPinned = pinnedGrants.filter((grant) =>
-      grant.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Filter pinned grants and sort alphabetically
+    const filteredPinned = pinnedGrants
+      .filter((grant) =>
+        grant.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+      );
     setFilteredPinnedGrants(filteredPinned);
   }, [searchTerm, documents, pinnedGrants]);
 
@@ -1451,68 +1462,74 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                           backgroundColor: "#fff",
                         }}
                       >
-                        {pinnedGrants.map((grant, index) => (
-                          <div
-                            key={`pinned-${index}`}
-                            style={{
-                              padding: "14px 16px",
-                              borderBottom:
-                                index < pinnedGrants.length - 1
-                                  ? "1px solid #e0e0e0"
-                                  : "none",
-                              cursor: "pointer",
-                              transition: "background-color 0.2s ease",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                            }}
-                            onClick={() => {
-                              handlePinnedGrantSelect(grant);
-                              setShowViewAllModal(false);
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                handlePinnedGrantSelect(grant);
-                                setShowViewAllModal(false);
-                              }
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = "#f0ffff";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor =
-                                "transparent";
-                            }}
-                            role="button"
-                            tabIndex={-1}
-                            aria-label={`Select ${grant.name}`}
-                          >
+                        {pinnedGrants
+                          .sort((a, b) =>
+                            a.name.localeCompare(b.name, undefined, {
+                              sensitivity: 'base',
+                            })
+                          )
+                          .map((grant, index, sortedPinned) => (
                             <div
+                              key={`pinned-${grant.name}`}
                               style={{
-                                fontSize: "15px",
-                                color: "#006499",
+                                padding: "14px 16px",
+                                borderBottom:
+                                  index < sortedPinned.length - 1
+                                    ? "1px solid #e0e0e0"
+                                    : "none",
+                                cursor: "pointer",
+                                transition: "background-color 0.2s ease",
                                 display: "flex",
                                 alignItems: "center",
-                                gap: "10px",
+                                justifyContent: "space-between",
                               }}
+                              onClick={() => {
+                                handlePinnedGrantSelect(grant);
+                                setShowViewAllModal(false);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  handlePinnedGrantSelect(grant);
+                                  setShowViewAllModal(false);
+                                }
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = "#f0ffff";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+                              }}
+                              role="button"
+                              tabIndex={-1}
+                              aria-label={`Select ${grant.name}`}
                             >
-                              <span>{grant.name}</span>
-                              <span
+                              <div
                                 style={{
-                                  display: "inline-block",
-                                  fontSize: "11px",
-                                  backgroundColor: "#008798",
-                                  color: "white",
-                                  padding: "3px 8px",
-                                  borderRadius: "12px",
+                                  fontSize: "15px",
+                                  color: "#006499",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "10px",
                                 }}
                               >
-                                Pinned
-                              </span>
+                                <span>{grant.name}</span>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    fontSize: "11px",
+                                    backgroundColor: "#008798",
+                                    color: "white",
+                                    padding: "3px 8px",
+                                    borderRadius: "12px",
+                                  }}
+                                >
+                                  Pinned
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
                       </div>
                     </div>
                   )}
@@ -1526,57 +1543,63 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         backgroundColor: "#fff",
                       }}
                     >
-                      {documents.map((doc, index) => {
-                        const isPinned = isNofoPinned(doc.label);
-                        return (
-                          <div
-                            key={`doc-${index}`}
-                            style={{
-                              padding: "14px 16px",
-                              borderBottom:
-                                index < documents.length - 1
-                                  ? "1px solid #e0e0e0"
-                                  : "none",
-                              cursor: "pointer",
-                              transition: "background-color 0.2s ease",
-                            }}
-                            onClick={() => {
-                              setSearchTerm(doc.label);
-                              onSelectDocument(doc);
-                              setShowViewAllModal(false);
-                              setShowResults(false);
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
+                      {documents
+                        .filter((doc) => !isNofoPinned(doc.label))
+                        .sort((a, b) =>
+                          a.label.localeCompare(b.label, undefined, {
+                            sensitivity: 'base',
+                          })
+                        )
+                        .map((doc, index, sortedDocs) => {
+                          return (
+                            <div
+                              key={`doc-${doc.label}`}
+                              style={{
+                                padding: "14px 16px",
+                                borderBottom:
+                                  index < sortedDocs.length - 1
+                                    ? "1px solid #e0e0e0"
+                                    : "none",
+                                cursor: "pointer",
+                                transition: "background-color 0.2s ease",
+                              }}
+                              onClick={() => {
                                 setSearchTerm(doc.label);
                                 onSelectDocument(doc);
                                 setShowViewAllModal(false);
                                 setShowResults(false);
-                              }
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = "#f7faff";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor =
-                                "transparent";
-                            }}
-                            role="button"
-                            tabIndex={-1}
-                            aria-label={`Select ${doc.label}`}
-                          >
-                            <div
-                              style={{
-                                fontSize: "15px",
-                                color: "#0073BB",
                               }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  setSearchTerm(doc.label);
+                                  onSelectDocument(doc);
+                                  setShowViewAllModal(false);
+                                  setShowResults(false);
+                                }
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = "#f7faff";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+                              }}
+                              role="button"
+                              tabIndex={-1}
+                              aria-label={`Select ${doc.label}`}
                             >
-                              {doc.label}
+                              <div
+                                style={{
+                                  fontSize: "15px",
+                                  color: "#0073BB",
+                                }}
+                              >
+                                {doc.label}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                     </div>
                   </div>
 
