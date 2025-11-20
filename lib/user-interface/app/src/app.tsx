@@ -26,9 +26,35 @@ function App() {
   return (
     <div style={{ height: "100%" }}>
       <Router>
+        {/* Skip Navigation Link for Accessibility */}
+        <a
+          href="#main-content"
+          style={{
+            position: "absolute",
+            left: "-9999px",
+            top: "0",
+            zIndex: 10000,
+            padding: "10px 20px",
+            backgroundColor: "#0073bb",
+            color: "#ffffff",
+            textDecoration: "none",
+            borderRadius: "4px",
+            fontWeight: "600",
+            fontSize: "16px",
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.left = "10px";
+            e.currentTarget.style.top = "10px";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.left = "-9999px";
+          }}
+        >
+          Skip to main content
+        </a>
         <GlobalHeader />
         <div style={{ height: "56px", backgroundColor: "#FFFFFF" }}>&nbsp;</div>
-        <main>
+        <main id="main-content">
           <Routes>
             <Route
               index

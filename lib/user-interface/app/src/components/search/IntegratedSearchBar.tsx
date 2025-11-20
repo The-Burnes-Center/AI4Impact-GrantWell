@@ -744,6 +744,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           ref={inputRef}
           type="text"
           placeholder="Search for grants from grants.gov..."
+          aria-describedby="search-help-know-grant search-help-not-sure"
           style={{
             ...inputStyle,
             cursor:
@@ -851,6 +852,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 }}
               >
                 <p
+                  id="search-help-know-grant"
                   style={{
                     margin: "0 0 12px 0",
                     fontSize: "14px",
@@ -862,6 +864,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   and browse through matching grants in the list.
                 </p>
                 <p
+                  id="search-help-not-sure"
                   style={{
                     margin: "0",
                     fontSize: "14px",
@@ -870,7 +873,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   }}
                 >
                   <strong>Not sure where to start?</strong> Click "Grant
-                  Assistant" below to describe what you're looking for.
+                  Assistant" Button below to describe what you're looking for.
+                  Or click the "View All Grants" Button to browse all grants. 
                 </p>
               </div>
               <div
@@ -908,14 +912,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     handlePinnedGrantSelect(grant);
                   }}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
                       handlePinnedGrantSelect(grant);
                     }
                   }}
                   onMouseEnter={() => setSelectedIndex(index)}
                   role="button"
-                  tabIndex={0}
+                  tabIndex={-1}
                   aria-label={`Select ${grant.name}`}
                 >
                   <div>
@@ -953,134 +957,128 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             </>
           )}
 
-          {/* Available grants section - show all when search is empty OR filtered results */}
-          {(searchTerm.length === 0
-            ? documents.length > 0
-            : filteredDocuments.length > 0) && (
+          {/* Available grants section - ONLY show when user is actively searching */}
+          {searchTerm.length > 0 && filteredDocuments.length > 0 && (
             <>
               <div style={sectionHeaderStyle}>Available Grants</div>
-              {(searchTerm.length === 0 ? documents : filteredDocuments).map(
-                (doc, index) => {
-                  const docName = doc.label || "";
+              {filteredDocuments.map((doc, index) => {
+                const docName = doc.label || "";
 
-                  const isPinned = isNofoPinned(docName);
+                const isPinned = isNofoPinned(docName);
 
-                  return (
-                    <div
-                      key={`doc-${docName}-${index}`}
-                      style={
-                        selectedIndex === index + filteredPinnedGrants.length
-                          ? selectedItemStyle
-                          : resultItemStyle
-                      }
-                      onClick={() => {
+                return (
+                  <div
+                    key={`doc-${docName}-${index}`}
+                    style={
+                      selectedIndex === index + filteredPinnedGrants.length
+                        ? selectedItemStyle
+                        : resultItemStyle
+                    }
+                    onClick={() => {
+                      setSearchTerm(docName);
+                      onSelectDocument(doc);
+                      setShowResults(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
                         setSearchTerm(docName);
                         onSelectDocument(doc);
                         setShowResults(false);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          setSearchTerm(docName);
-                          onSelectDocument(doc);
-                          setShowResults(false);
-                        }
-                      }}
-                      onMouseEnter={() =>
-                        setSelectedIndex(index + filteredPinnedGrants.length)
                       }
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Select ${docName}`}
+                    }}
+                    onMouseEnter={() =>
+                      setSelectedIndex(index + filteredPinnedGrants.length)
+                    }
+                    role="button"
+                    tabIndex={-1}
+                    aria-label={`Select ${docName}`}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          width: "100%",
-                        }}
-                      >
-                        <div>{docName}</div>
+                      <div>{docName}</div>
 
-                        {isAdmin && (
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            {isPinned ? (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleUnpinGrant(docName, e);
-                                }}
-                                style={unpinButtonStyle}
-                                title="Unpin grant"
-                                onMouseOver={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "#f8e0e0";
-                                }}
-                                onMouseOut={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                }}
-                                onFocus={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "#f8e0e0";
-                                }}
-                                onBlur={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                }}
-                              >
-                                <LuPinOff size={20} color="#E74C3C" />
-                              </button>
-                            ) : (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  // Create a grant object from the document
-                                  const grant: GrantRecommendation = {
-                                    id: "", // ID not needed
-                                    name: docName,
-                                    matchScore: 80,
-                                    eligibilityMatch: true,
-                                    matchReason: "Admin selected",
-                                    fundingAmount: "Varies",
-                                    deadline: "See details",
-                                    keyRequirements: [],
-                                    summaryUrl: doc.value,
-                                  };
-                                  handlePinGrant(grant, e);
-                                }}
-                                style={pinButtonStyle}
-                                title="Pin grant to top of recommendations"
-                                onMouseOver={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "#e0f0ff";
-                                }}
-                                onMouseOut={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                }}
-                                onFocus={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "#e0f0ff";
-                                }}
-                                onBlur={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                }}
-                              >
-                                <LuPin size={20} color="#0073BB" />
-                              </button>
-                            )}
-                          </div>
-                        )}
-                      </div>
+                      {isAdmin && (
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          {isPinned ? (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleUnpinGrant(docName, e);
+                              }}
+                              style={unpinButtonStyle}
+                              title="Unpin grant"
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "#f8e0e0";
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+                              }}
+                              onFocus={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "#f8e0e0";
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+                              }}
+                            >
+                              <LuPinOff size={20} color="#E74C3C" />
+                            </button>
+                          ) : (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                // Create a grant object from the document
+                                const grant: GrantRecommendation = {
+                                  id: "", // ID not needed
+                                  name: docName,
+                                  matchScore: 80,
+                                  eligibilityMatch: true,
+                                  matchReason: "Admin selected",
+                                  fundingAmount: "Varies",
+                                  deadline: "See details",
+                                  keyRequirements: [],
+                                  summaryUrl: doc.value,
+                                };
+                                handlePinGrant(grant, e);
+                              }}
+                              style={pinButtonStyle}
+                              title="Pin grant to top of recommendations"
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "#e0f0ff";
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+                              }}
+                              onFocus={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "#e0f0ff";
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+                              }}
+                            >
+                              <LuPin size={20} color="#0073BB" />
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  );
-                }
-              )}
+                  </div>
+                );
+              })}
             </>
           )}
 
@@ -1184,19 +1182,23 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                           handleAssistantGrantClick(grant.summaryUrl, grantName)
                         }
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
+                          if (e.key === "Enter" || e.key === " ") {
                             e.preventDefault();
-                            handleAssistantGrantClick(grant.summaryUrl, grantName);
+                            handleAssistantGrantClick(
+                              grant.summaryUrl,
+                              grantName
+                            );
                           }
                         }}
                         role="button"
-                        tabIndex={0}
+                        tabIndex={-1}
                         aria-label={`View details for ${grantName}`}
                       >
                         <div style={grantCardHeaderStyle}>
                           <div style={grantCardTitleStyle}>{grantName}</div>
                           <button
                             type="button"
+                            tabIndex={-1}
                             style={{
                               display: "flex",
                               alignItems: "center",
@@ -1322,7 +1324,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           }}
           onClick={() => setShowViewAllModal(false)}
           onKeyDown={(e) => {
-            if (e.key === 'Escape') setShowViewAllModal(false);
+            if (e.key === "Escape") setShowViewAllModal(false);
           }}
           role="dialog"
           aria-modal="true"
@@ -1469,7 +1471,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               setShowViewAllModal(false);
                             }}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
+                              if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
                                 handlePinnedGrantSelect(grant);
                                 setShowViewAllModal(false);
@@ -1483,7 +1485,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 "transparent";
                             }}
                             role="button"
-                            tabIndex={0}
+                            tabIndex={-1}
                             aria-label={`Select ${grant.name}`}
                           >
                             <div
@@ -1545,7 +1547,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               setShowResults(false);
                             }}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
+                              if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
                                 setSearchTerm(doc.label);
                                 onSelectDocument(doc);
@@ -1561,7 +1563,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 "transparent";
                             }}
                             role="button"
-                            tabIndex={0}
+                            tabIndex={-1}
                             aria-label={`Select ${doc.label}`}
                           >
                             <div
