@@ -173,6 +173,12 @@ html, body {
   color: #444;
 }
 
+/* Right-align the Actions header to match the action buttons */
+.header-cell:last-child {
+  text-align: right;
+  padding-right: 16px;
+}
+
 .table-body {
   max-height: none;
   overflow-y: visible;
@@ -316,6 +322,7 @@ html, body {
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
+  padding-right: 16px;
 }
 
 /* Row actions menu styling */
@@ -1090,66 +1097,67 @@ select.form-input {
   flex-wrap: wrap;
 }
 
-/* Action button variations */
+/* Action button variations - unified styling with different colors */
 .action-button.invite-button,
-.action-button.add-button {
+.action-button.add-button,
+.action-button.scraper-button {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
   border-radius: 25px;
   font-weight: 500;
+  font-size: 14px;
   transition: all 0.3s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.action-button.invite-button {
-  background-color: #2b6cb0;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
   color: white;
 }
 
-.action-button.invite-button:hover {
+/* Invite User Button - Blue */
+.action-button.invite-button {
+  background-color: #2b6cb0;
+}
+
+.action-button.invite-button:hover:not(:disabled) {
   background-color: #2557a0;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Add Grant Button - Teal/Blue */
 .action-button.add-button {
   background-color: #0073BB;
-  color: white;
 }
 
-.action-button.add-button:hover {
+.action-button.add-button:hover:not(:disabled) {
   background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Auto-Scrape NOFOs Button - Green */
 .action-button.scraper-button {
   background-color: #1e7e34;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
 }
 
 .action-button.scraper-button:hover:not(:disabled) {
   background-color: #196d2e;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(30, 126, 52, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Disabled state for all buttons */
+.action-button.invite-button:disabled,
+.action-button.add-button:disabled,
 .action-button.scraper-button:disabled {
   background-color: #6b737b;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  opacity: 0.6;
 }
 
 .button-icon {
