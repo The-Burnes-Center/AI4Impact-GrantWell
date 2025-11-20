@@ -55,7 +55,7 @@ const THEME = {
     background: "#f9fafb",
     success: "#037f51",
     successLight: "#eafaf1",
-    warning: "#f89c24",
+    warning: "#cc7700",
     warningLight: "#fff8ec",
     info: "#0073bb",
     infoLight: "#e6f7ff",

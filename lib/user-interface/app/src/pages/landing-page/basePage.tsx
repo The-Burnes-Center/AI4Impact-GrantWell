@@ -64,7 +64,7 @@ export default function Welcome() {
   const disabledButtonStyle: CSSProperties = {
     ...buttonStyle,
     backgroundColor: "#f0f0f0",
-    color: "#aaaaaa",
+    color: "#707070",
     cursor: "not-allowed",
     boxShadow: "none",
   };
@@ -280,7 +280,7 @@ export default function Welcome() {
         <p
           style={{
             gridColumn: "span 3", // Span all 3 columns
-            color: "#6c757d",
+            color: "#6b737b",
             fontSize: "16px",
             textAlign: "center",
           }}

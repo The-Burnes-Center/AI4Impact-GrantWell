@@ -82,14 +82,14 @@ const DraftView: React.FC<DraftViewProps> = ({
       <h2 style={{ color: "#1e40af", fontSize: "22px", fontWeight: 700, marginBottom: "16px" }}>
         Draft Created Successfully!
       </h2>
-      <p style={{ color: "#4b5563", fontSize: "16px", marginBottom: "32px" }}>
+      <p style={{ color: "#374151", fontSize: "16px", marginBottom: "32px" }}>
         Your draft has been created. You can now start editing your application.
       </p>
       <button
         onClick={onStartEditing}
         style={{
           padding: "12px 32px",
-          background: "#4361ee",
+          background: "#2c4fdb",
           color: "white",
           border: "none",
           borderRadius: "6px",

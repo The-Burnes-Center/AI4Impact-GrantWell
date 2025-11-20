@@ -44,7 +44,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   headerDescription: {
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#5a6169",
     marginTop: "4px",
   },
   buttonContainer: {
@@ -67,7 +67,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
   },
   dangerButton: {
-    backgroundColor: "#ef4444",
+    backgroundColor: "#d32f2f",
     color: "white",
   },
   disabledButton: {
@@ -121,11 +121,11 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    color: "#6b7280",
+    color: "#5a6169",
     fontSize: "14px",
   },
   calendarIcon: {
-    color: "#9ca3af",
+    color: "#6e747f",
   },
   emptyState: {
     display: "flex",
@@ -133,7 +133,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
     padding: "60px 20px",
-    color: "#6b7280",
+    color: "#5a6169",
     textAlign: "center" as const,
   },
   emptyStateTitle: {
@@ -164,7 +164,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   pageInfo: {
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#5a6169",
   },
   pageSizeSelect: {
     padding: "4px 8px",

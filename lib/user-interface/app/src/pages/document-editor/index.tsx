@@ -440,7 +440,7 @@ const DocumentEditor: React.FC = () => {
           onClick={() => window.location.reload()}
           style={{
             padding: "8px 16px",
-            background: "#4361ee",
+            background: "#2c4fdb",
             color: "white",
             border: "none",
             borderRadius: "4px",
@@ -560,10 +560,10 @@ const DocumentEditor: React.FC = () => {
                   height: "32px",
                   color: "#e2e8f0",
                   "&.Mui-active": {
-                    color: "#4361ee",
+                    color: "#2c4fdb",
                   },
                   "&.Mui-completed": {
-                    color: "#4361ee",
+                    color: "#2c4fdb",
                   },
                 },
               },
@@ -596,13 +596,13 @@ const DocumentEditor: React.FC = () => {
                     width: "40px",
                     height: "40px",
                     border: "4px solid #f3f4f6",
-                    borderTopColor: "#4361ee",
+                    borderTopColor: "#2c4fdb",
                     borderRadius: "50%",
                     animation: "spin 1s linear infinite",
                     margin: "0 auto 16px",
                   }}
                 ></div>
-                <p style={{ color: "#6b7280" }}>Loading document editor...</p>
+                <p style={{ color: "#5a6169" }}>Loading document editor...</p>
               </div>
             </div>
           ) : (

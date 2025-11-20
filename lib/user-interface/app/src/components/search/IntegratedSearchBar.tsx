@@ -552,7 +552,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   const pinnedItemStyle: React.CSSProperties = {
     ...resultItemStyle,
-    borderLeft: "3px solid #00a1b2",
+    borderLeft: "3px solid #008798",
     backgroundColor: "#f0ffff",
   };
 
@@ -580,7 +580,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const pinnedBadgeStyle: React.CSSProperties = {
     display: "inline-block",
     fontSize: "11px",
-    backgroundColor: "#00a1b2",
+    backgroundColor: "#006e7a",
     color: "white",
     padding: "2px 6px",
     borderRadius: "10px",
@@ -1437,7 +1437,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         >
                           <path
                             d="M16 12V4H17V2H7V4H8V12L6 14V16H11.2V22H12.8V16H18V14L16 12Z"
-                            fill="#00a1b2"
+                            fill="#008798"
                           />
                         </svg>
                         Pinned Grants ({pinnedGrants.length})
@@ -1500,7 +1500,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 style={{
                                   display: "inline-block",
                                   fontSize: "11px",
-                                  backgroundColor: "#00a1b2",
+                                  backgroundColor: "#008798",
                                   color: "white",
                                   padding: "3px 8px",
                                   borderRadius: "12px",

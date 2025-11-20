@@ -67,7 +67,7 @@ const styles = {
     transition: "background-color 0.2s ease",
   },
   micActive: {
-    color: "#ef4444",
+    color: "#d32f2f",
     backgroundColor: "rgba(239, 68, 68, 0.1)",
   },
   micDisabled: {
@@ -95,7 +95,7 @@ const styles = {
     background: "none",
     border: "none",
     cursor: "pointer",
-    color: "#6b7280",
+    color: "#5a6169",
   },
   sendButton: {
     padding: "10px 14px",
@@ -541,7 +541,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             ...styles.micButton,
             ...(listening ? styles.micActive : {}),
             ...(micHovered && !listening ? { backgroundColor: "#f3f4f6" } : {}),
-            ...(micPermissionDenied ? { color: "#ef4444" } : {}),
+            ...(micPermissionDenied ? { color: "#d32f2f" } : {}),
           }}
           aria-label={
             micPermissionDenied

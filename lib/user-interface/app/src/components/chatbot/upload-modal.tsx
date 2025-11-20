@@ -119,7 +119,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: "none",
     border: "none",
     cursor: "pointer",
-    color: "#6b7280",
+    color: "#5a6169",
   },
   modalBody: {
     padding: "24px",
@@ -157,7 +157,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   uploadIcon: {
     marginBottom: "8px",
-    color: "#6b7280",
+    color: "#5a6169",
   },
   dropText: {
     fontSize: "16px",
@@ -167,7 +167,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   browseText: {
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#5a6169",
   },
   browseLink: {
     color: "#0073bb",
@@ -194,7 +194,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   progressText: {
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#5a6169",
     display: "flex",
     justifyContent: "space-between",
   },
@@ -218,7 +218,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   fileIcon: {
     marginRight: "12px",
-    color: "#6b7280",
+    color: "#5a6169",
   },
   fileDetails: {
     flex: 1,
@@ -233,18 +233,18 @@ const styles: Record<string, React.CSSProperties> = {
   },
   fileSize: {
     fontSize: "12px",
-    color: "#6b7280",
+    color: "#5a6169",
   },
   deleteButton: {
     background: "none",
     border: "none",
-    color: "#ef4444",
+    color: "#d32f2f",
     cursor: "pointer",
     padding: "8px",
     borderRadius: "4px",
   },
   errorText: {
-    color: "#ef4444",
+    color: "#d32f2f",
     fontSize: "14px",
     marginTop: "8px",
   },
@@ -294,7 +294,7 @@ const styles: Record<string, React.CSSProperties> = {
   emptyState: {
     textAlign: "center",
     padding: "40px 0",
-    color: "#6b7280",
+    color: "#5a6169",
   },
   refreshButton: {
     background: "none",
