@@ -59,6 +59,8 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly automatedNofoScraperFunction: lambda.Function;
   public readonly htmlToPdfConverterFunction: lambda.Function;
   public readonly syncNofoMetadataFunction: lambda.Function;
+  public readonly autoArchiveExpiredNofosFunction: lambda.Function;
+  public readonly backfillExpirationDatesFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -1116,5 +1118,130 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.htmlToPdfConverterFunction = htmlToPdfConverterFunction;
+
+    // Auto-Archive Expired NOFOs Lambda Function
+    const autoArchiveExpiredNofosFunction = new lambda.Function(
+      scope,
+      'AutoArchiveExpiredNofosFunction',
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, 'landing-page/auto-archive-expired-nofos')
+        ),
+        handler: 'index.handler',
+        environment: {
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          BUCKET: props.ffioNofosBucket.bucketName,
+          GRACE_PERIOD_DAYS: '7', // 7 days grace period
+          DRY_RUN: 'false', // Set to 'true' for testing
+        },
+        timeout: cdk.Duration.minutes(15),
+      }
+    );
+
+    // Grant DynamoDB permissions
+    autoArchiveExpiredNofosFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'dynamodb:Query',
+          'dynamodb:UpdateItem',
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          `${props.nofoMetadataTable.tableArn}/index/*`,
+        ],
+      })
+    );
+
+    // Grant S3 permissions
+    autoArchiveExpiredNofosFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          's3:GetObject',
+          's3:PutObject',
+        ],
+        resources: [
+          `${props.ffioNofosBucket.bucketArn}/*`,
+        ],
+      })
+    );
+
+    this.autoArchiveExpiredNofosFunction = autoArchiveExpiredNofosFunction;
+
+    // Create EventBridge rule to run daily at 2 AM UTC
+    const autoArchiveRule = new events.Rule(scope, 'AutoArchiveExpiredNofosRule', {
+      schedule: events.Schedule.cron({
+        minute: '0',
+        hour: '2',
+        day: '*',
+        month: '*',
+        year: '*',
+      }),
+      description: 'Automatically archive expired NOFOs daily',
+    });
+
+    // Add the Lambda function as a target for the EventBridge rule
+    autoArchiveRule.addTarget(new targets.LambdaFunction(autoArchiveExpiredNofosFunction));
+
+    // Backfill Expiration Dates Function
+    const backfillExpirationDatesFunction = new lambda.Function(
+      scope,
+      'BackfillExpirationDatesFunction',
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, 'landing-page/backfill-expiration-dates')
+        ),
+        handler: 'index.handler',
+        environment: {
+          BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          DRY_RUN: 'false', // Set to 'true' for testing
+        },
+        timeout: cdk.Duration.minutes(15),
+      }
+    );
+
+    // Grant permissions
+    backfillExpirationDatesFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          's3:GetObject',
+          's3:PutObject',
+          's3:ListBucket',
+        ],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          `${props.ffioNofosBucket.bucketArn}/*`,
+        ],
+      })
+    );
+
+    backfillExpirationDatesFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'dynamodb:UpdateItem',
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+        ],
+      })
+    );
+
+    backfillExpirationDatesFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'bedrock:InvokeModel',
+        ],
+        resources: ['*'],
+      })
+    );
+
+    this.backfillExpirationDatesFunction = backfillExpirationDatesFunction;
   }
 }
