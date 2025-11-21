@@ -14,10 +14,10 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
         <h1 style={{ color: "#2c3e50", fontSize: "42px", fontWeight: "700", margin: "0 0 16px" }}>
           Welcome to GrantWell
         </h1>
-        <h2 style={{ color: "#4361ee", fontSize: "24px", fontWeight: "500", margin: "0 0 24px" }}>
+        <h2 style={{ color: "#2c4fdb", fontSize: "24px", fontWeight: "500", margin: "0 0 24px" }}>
           AI-Powered Grant Writing Assistant
         </h2>
-        <p style={{ color: "#4a5568", fontSize: "16px", lineHeight: 1.6, textAlign: "center", marginBottom: "32px" }}>
+        <p style={{ color: "#3d4451", fontSize: "16px", lineHeight: 1.6, textAlign: "center", marginBottom: "32px" }}>
           The GrantWell grant writing tool uses generative AI to guide you through the application process.
         <br></br>
           The last grant you searched is pre-loaded. Want to work on a different grant? 
@@ -51,7 +51,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
           >
             <div
               style={{
-                backgroundColor: "#4361ee",
+                backgroundColor: "#2c4fdb",
                 color: "white",
                 borderRadius: "50%",
                 width: "32px",
@@ -80,7 +80,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
               <p
                 style={{
                   margin: 0,
-                  color: "#4a5568",
+                  color: "#3d4451",
                   fontSize: "16px",
                   lineHeight: 1.6,
                 }}
@@ -100,7 +100,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
           >
             <div
               style={{
-                backgroundColor: "#4361ee",
+                backgroundColor: "#2c4fdb",
                 color: "white",
                 borderRadius: "50%",
                 width: "32px",
@@ -129,7 +129,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
               <p
                 style={{
                   margin: 0,
-                  color: "#4a5568",
+                  color: "#3d4451",
                   fontSize: "16px",
                   lineHeight: 1.6,
                 }}
@@ -149,7 +149,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
           >
             <div
               style={{
-                backgroundColor: "#4361ee",
+                backgroundColor: "#2c4fdb",
                 color: "white",
                 borderRadius: "50%",
                 width: "32px",
@@ -178,7 +178,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
               <p
                 style={{
                   margin: 0,
-                  color: "#4a5568",
+                  color: "#3d4451",
                   fontSize: "16px",
                   lineHeight: 1.6,
                 }}
@@ -197,7 +197,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
               display: "block",
               width: "100%",
               padding: "16px",
-              backgroundColor: "#4361ee",
+              backgroundColor: "#2c4fdb",
               color: "white",
               border: "none",
               borderRadius: "8px",
@@ -218,8 +218,8 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
               width: "100%",
               padding: "16px",
               backgroundColor: "white",
-              color: "#4361ee",
-              border: "2px solid #4361ee",
+              color: "#2c4fdb",
+              border: "2px solid #2c4fdb",
               borderRadius: "8px",
               fontSize: "18px",
               cursor: "pointer",
@@ -244,7 +244,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onContinue }) => {
           <a
             href="mailto:FedFundsInfra@mass.gov"
             style={{
-              color: "#4361ee",
+              color: "#2c4fdb",
               textDecoration: "none",
               fontWeight: "500",
             }}

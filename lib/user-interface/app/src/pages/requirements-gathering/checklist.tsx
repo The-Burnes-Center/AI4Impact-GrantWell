@@ -55,7 +55,7 @@ const THEME = {
     background: "#f9fafb",
     success: "#037f51",
     successLight: "#eafaf1",
-    warning: "#f89c24",
+    warning: "#cc7700",
     warningLight: "#fff8ec",
     info: "#0073bb",
     infoLight: "#e6f7ff",
@@ -627,6 +627,30 @@ const Checklists: React.FC = () => {
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+      {/* Skip Navigation Link for Accessibility */}
+      <a
+        href="#main-content"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          top: "10px",
+          zIndex: 9999,
+          padding: "10px 20px",
+          backgroundColor: THEME.colors.primary,
+          color: THEME.colors.white,
+          textDecoration: "none",
+          borderRadius: THEME.borderRadius.small,
+          fontWeight: "600",
+        }}
+        onFocus={(e) => {
+          e.currentTarget.style.left = "10px";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.left = "-9999px";
+        }}
+      >
+        Skip to main content
+      </a>
       {/* Navigation Sidebar */}
       <nav aria-label="Requirements navigation">
         <RequirementsNavigation
@@ -638,6 +662,7 @@ const Checklists: React.FC = () => {
 
       {/* Main Content */}
       <main
+        id="main-content"
         style={{
           flex: 1,
           overflow: "auto",

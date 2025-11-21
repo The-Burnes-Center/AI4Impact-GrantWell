@@ -32,7 +32,7 @@ const styles: Record<string, React.CSSProperties> = {
     margin: "0 0 8px 0",
   },
   headerDescription: {
-    color: "#6b7280",
+    color: "#5a6169",
     margin: 0,
   },
   buttonContainer: {
@@ -111,7 +111,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: "8px",
   },
   calendarIcon: {
-    color: "#6b7280",
+    color: "#5a6169",
   },
   link: {
     color: "#2563eb",

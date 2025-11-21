@@ -55,7 +55,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: "8px",
     padding: "8px 16px",
     backgroundColor: "#f3f4f6",
-    color: "#4b5563",
+    color: "#374151",
     border: "none",
     borderRadius: "6px",
     fontSize: "14px",
@@ -74,7 +74,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "16px",
   },
   helpText: {
-    color: "#4b5563",
+    color: "#374151",
     marginBottom: "16px",
   },
   helpSubtitle: {

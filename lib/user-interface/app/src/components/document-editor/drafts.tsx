@@ -45,7 +45,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   headerDescription: {
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#5a6169",
     marginTop: "4px",
   },
   buttonContainer: {
@@ -68,7 +68,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
   },
   dangerButton: {
-    backgroundColor: "#ef4444",
+    backgroundColor: "#d32f2f",
     color: "white",
   },
   disabledButton: {
@@ -118,7 +118,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: "8px",
   },
   calendarIcon: {
-    color: "#6b7280",
+    color: "#5a6169",
   },
   loadingContainer: {
     display: "flex",
@@ -140,7 +140,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   emptyStateTitle: {
     fontSize: "18px",
-    color: "#6b7280",
+    color: "#5a6169",
     marginBottom: "8px",
   },
   pagination: {

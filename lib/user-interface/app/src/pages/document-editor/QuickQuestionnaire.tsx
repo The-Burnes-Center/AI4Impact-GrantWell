@@ -159,7 +159,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
           style={{
             marginTop: "16px",
             padding: "8px 16px",
-            background: "#4361ee",
+            background: "#2c4fdb",
             color: "white",
             border: "none",
             borderRadius: "4px",
@@ -211,7 +211,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
               background: "white",
               border: "1px solid #e2e8f0",
               borderRadius: "6px",
-              color: "#4a5568",
+              color: "#3d4451",
               fontSize: "16px",
               cursor: "pointer",
             }}
@@ -282,7 +282,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     >
       <p
         style={{
-          color: "#4a5568",
+          color: "#3d4451",
           marginBottom: "24px",
         }}
       >
@@ -348,7 +348,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
             background: "white",
             border: "1px solid #e2e8f0",
             borderRadius: "6px",
-            color: "#4a5568",
+            color: "#3d4451",
             fontSize: "16px",
             cursor: "pointer",
           }}
@@ -376,7 +376,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
             display: "flex",
             alignItems: "center",
             padding: "12px 24px",
-            background: "#4361ee",
+            background: "#2c4fdb",
             color: "white",
             border: "none",
             borderRadius: "6px",

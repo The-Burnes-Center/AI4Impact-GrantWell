@@ -38,6 +38,7 @@ export interface NOFO {
   name: string;
   status: "active" | "archived";
   isPinned?: boolean;
+  expirationDate?: string | null;
 }
 
 /**
@@ -322,6 +323,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const [editedNofoStatus, setEditedNofoStatus] = useState<
     "active" | "archived"
   >("active");
+  const [editedNofoExpirationDate, setEditedNofoExpirationDate] = useState<string>("");
 
   // Upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -331,9 +333,17 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const addNotification = useNotifications?.addNotification;
 
   // Filter data based on search query
-  const filteredNofos = nofos.filter((nofo) =>
-    nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredNofos = nofos
+    .filter((nofo) =>
+      nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      // Pinned grants come first
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      // Then sort alphabetically by name (case-insensitive)
+      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+    });
 
   // Helper function to normalize grant name
   const normalizeGrantName = (name: string): string => {
@@ -406,6 +416,14 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     setSelectedNofo(nofo);
     setEditedNofoName(nofo.name);
     setEditedNofoStatus(nofo.status || "active");
+    // Format expiration date for date input (YYYY-MM-DD format)
+    if (nofo.expirationDate) {
+      const date = new Date(nofo.expirationDate);
+      const formattedDate = date.toISOString().split('T')[0];
+      setEditedNofoExpirationDate(formattedDate);
+    } else {
+      setEditedNofoExpirationDate("");
+    }
     setEditModalOpen(true);
   };
 
@@ -435,11 +453,31 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         );
       }
 
+      // Update expiration date if it changed
+      const newExpirationDate = editedNofoExpirationDate 
+        ? new Date(editedNofoExpirationDate + 'T23:59:59').toISOString() 
+        : null;
+      const oldExpirationDate = selectedNofo.expirationDate || null;
+      
+      if (newExpirationDate !== oldExpirationDate) {
+        await apiClient.landingPage.updateNOFOStatus(
+          editedNofoName.trim(),
+          undefined,
+          undefined,
+          newExpirationDate
+        );
+      }
+
       // Update local state after successful API call
       setNofos(
         nofos.map((nofo) =>
           nofo.id === selectedNofo.id
-            ? { ...nofo, name: editedNofoName.trim(), status: editedNofoStatus }
+            ? { 
+                ...nofo, 
+                name: editedNofoName.trim(), 
+                status: editedNofoStatus,
+                expirationDate: newExpirationDate
+              }
             : nofo
         )
       );
@@ -455,6 +493,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setEditModalOpen(false);
       setSelectedNofo(null);
       setEditedNofoName("");
+      setEditedNofoExpirationDate("");
     } catch (error) {
       if (addNotification) {
         addNotification("error", "Failed to update grant. Please try again.");
@@ -615,6 +654,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       <div className="table-container">
         <div className="table-header">
           <div className="header-cell">Name</div>
+          <div className="header-cell">Expiry Date</div>
           <div className="header-cell">Actions</div>
         </div>
 
@@ -635,6 +675,19 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                     <LuPin size={14} />
                     <span>Pinned</span>
                   </span>
+                )}
+              </div>
+              <div className="row-cell">
+                {nofo.expirationDate ? (
+                  <span className="expiry-date">
+                    {new Date(nofo.expirationDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                ) : (
+                  <span className="expiry-date no-date">N/A</span>
                 )}
               </div>
               <div className="row-cell actions">
@@ -709,6 +762,19 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               Active grants are visible to users. Archived grants are hidden.
             </div>
           </div>
+          <div className="form-group">
+            <label htmlFor="nofo-expiration-date">Expiry Date</label>
+            <input
+              type="date"
+              id="nofo-expiration-date"
+              value={editedNofoExpirationDate}
+              onChange={(e) => setEditedNofoExpirationDate(e.target.value)}
+              className="form-input"
+            />
+            <div className="field-note">
+              Leave empty if no expiration date. Grants will be auto-archived after this date.
+            </div>
+          </div>
           <div className="modal-actions">
             <button
               className="modal-button secondary"
@@ -722,7 +788,10 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               disabled={
                 !editedNofoName.trim() ||
                 (editedNofoName === selectedNofo?.name &&
-                  editedNofoStatus === selectedNofo?.status)
+                  editedNofoStatus === selectedNofo?.status &&
+                  editedNofoExpirationDate === (selectedNofo?.expirationDate 
+                    ? new Date(selectedNofo.expirationDate).toISOString().split('T')[0] 
+                    : ""))
               }
             >
               Save Changes
@@ -947,6 +1016,7 @@ const Dashboard: React.FC = () => {
           name: nofo.name,
           status: nofo.status || "active",
           isPinned: nofo.isPinned || false,
+          expirationDate: nofo.expiration_date || null,
         }));
         setNofos(nofoData);
       } else {
@@ -956,6 +1026,7 @@ const Dashboard: React.FC = () => {
           name: nofo,
           status: "active",
           isPinned: false,
+          expirationDate: null,
         }));
         setNofos(nofoData);
       }
@@ -1084,6 +1155,15 @@ const Dashboard: React.FC = () => {
         (nofo) => (nofo.status || "active") === statusFilter
       );
     }
+
+    // Sort alphabetically: pinned grants first, then alphabetically by name
+    filtered.sort((a, b) => {
+      // Pinned grants come first
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      // Then sort alphabetically by name (case-insensitive)
+      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+    });
 
     return filtered;
   };

@@ -19,7 +19,6 @@ export default function Welcome() {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
-  const [showHowToModal, setShowHowToModal] = useState(false);
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -64,7 +63,7 @@ export default function Welcome() {
   const disabledButtonStyle: CSSProperties = {
     ...buttonStyle,
     backgroundColor: "#f0f0f0",
-    color: "#aaaaaa",
+    color: "#707070",
     cursor: "not-allowed",
     boxShadow: "none",
   };
@@ -161,8 +160,13 @@ export default function Welcome() {
         );
       }
 
+      // Sort folders alphabetically (case-insensitive)
+      const sortedFolders = [...folders].sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: 'base' })
+      );
+
       setDocuments(
-        folders.map((document) => ({
+        sortedFolders.map((document) => ({
           label: document,
           value: document + "/",
         }))
@@ -235,7 +239,7 @@ export default function Welcome() {
               )
             }
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 handleNOFOSelect(
                   `/landing-page/basePage/checklists/${encodeURIComponent(
@@ -280,7 +284,7 @@ export default function Welcome() {
         <p
           style={{
             gridColumn: "span 3", // Span all 3 columns
-            color: "#6c757d",
+            color: "#6b737b",
             fontSize: "16px",
             textAlign: "center",
           }}
@@ -539,7 +543,32 @@ export default function Welcome() {
   // **Render**
   return (
     <div style={containerStyle}>
+      {/* Skip Navigation Link for Accessibility */}
+      <a
+        href="#main-content"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          zIndex: 999,
+          padding: "10px 20px",
+          backgroundColor: primaryBlue,
+          color: "white",
+          textDecoration: "none",
+          borderRadius: "4px",
+          fontWeight: "600",
+        }}
+        onFocus={(e) => {
+          e.currentTarget.style.left = "10px";
+          e.currentTarget.style.top = "10px";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.left = "-9999px";
+        }}
+      >
+        Skip to main content
+      </a>
       <main
+        id="main-content"
         style={{
           maxWidth: "950px",
           margin: "0 auto",
@@ -613,8 +642,8 @@ export default function Welcome() {
           isLoading={loading}
         />
 
-        {/* CTA Buttons or Instructions */}
-        {selectedDocument ? (
+        {/* CTA Buttons - shown when grant is selected */}
+        {selectedDocument && (
           <div
             style={{
               display: "flex",
@@ -656,7 +685,8 @@ export default function Welcome() {
               onFocus={(e) => {
                 e.currentTarget.style.outline = "3px solid #FFB700";
                 e.currentTarget.style.outlineOffset = "2px";
-                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                e.currentTarget.style.boxShadow =
+                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -700,7 +730,8 @@ export default function Welcome() {
               onFocus={(e) => {
                 e.currentTarget.style.outline = "3px solid #FFB700";
                 e.currentTarget.style.outlineOffset = "2px";
-                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                e.currentTarget.style.boxShadow =
+                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -745,7 +776,8 @@ export default function Welcome() {
               onFocus={(e) => {
                 e.currentTarget.style.outline = "3px solid #FFB700";
                 e.currentTarget.style.outlineOffset = "2px";
-                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                e.currentTarget.style.boxShadow =
+                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -757,38 +789,55 @@ export default function Welcome() {
               Get Grant Help
             </button>
           </div>
-        ) : (
+        )}
+
+        {/* Get Started section - always visible */}
+        <section
+          aria-labelledby="get-started-heading"
+          style={{
+            margin: "20px auto 8px auto",
+            padding: "20px 24px",
+            maxWidth: "600px",
+            textAlign: "left",
+            backgroundColor: "#f5f9fc",
+            border: "1px solid #d0e7f7",
+            borderRadius: "8px",
+            boxShadow: "0 1px 3px rgba(0, 115, 187, 0.08)",
+          }}
+        >
+          {/* Main Heading */}
           <div
             style={{
-              margin: "28px auto 8px auto",
-              padding: "20px 30px",
-              maxWidth: "600px",
-              textAlign: "center",
-              backgroundColor: "#f0f7ff",
-              border: "2px solid #0073BB",
-              borderRadius: "12px",
-              boxShadow: "0 2px 8px rgba(0, 115, 187, 0.1)",
+              borderBottom: "1px solid #d0e7f7",
+              paddingBottom: "12px",
+              marginBottom: "16px",
             }}
           >
-            <div
+            <h2
+              id="get-started-heading"
               style={{
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "#006499",
+                margin: "0",
+                textAlign: "center",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                marginBottom: "10px",
+                gap: "8px",
               }}
             >
               <svg
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{ marginRight: "10px" }}
+                aria-hidden="true"
               >
                 <path
                   d="M12 2L2 7L12 12L22 7L12 2Z"
-                  stroke="#0073BB"
+                  stroke="#006499"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -796,188 +845,233 @@ export default function Welcome() {
                 />
                 <path
                   d="M2 17L12 22L22 17"
-                  stroke="#0073BB"
+                  stroke="#006499"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
                 <path
                   d="M2 12L12 17L22 12"
-                  stroke="#0073BB"
+                  stroke="#006499"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
-              <span
-                style={{
-                  fontSize: "18px",
-                  fontWeight: "600",
-                  color: "#006499",
-                }}
-              >
-                Get Started
-              </span>
-            </div>
-            <p
-              style={{
-                fontSize: "15px",
-                color: "#333",
-                margin: "0",
-                lineHeight: "1.6",
-              }}
-            >
-              Enter your query to find available funding opportunities (NOFOs),
-              review key requirements, and receive writing support through
-              Grantwell.
-            </p>
+              Get Started with GrantWell
+            </h2>
           </div>
-        )}
 
-        {/* How to Use hover bar */}
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "10px",
-          }}
-          onMouseEnter={() => setShowHowToModal(true)}
-          onMouseLeave={() => setShowHowToModal(false)}
-        >
-          <button
-            onClick={() => setShowHowToModal(!showHowToModal)}
+          {/* Step 1: Search and Select */}
+          <div
             style={{
-              background: "none",
-              border: "none",
-              color: "#0073BB",
-              fontSize: "14px",
-              cursor: "pointer",
-              padding: "5px 10px",
+              marginBottom: "16px",
               display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              transition: "color 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "#005A94";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "#0073BB";
+              gap: "12px",
+              alignItems: "flex-start",
             }}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                cx="12"
-                cy="12"
-                r="9"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              <path
-                d="M12 8L12 15"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M12 18.01L12.01 17.9989"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-            How to use?
-          </button>
-
-          {showHowToModal && (
             <div
               style={{
-                position: "absolute",
-                top: "32px",
-                right: "50%",
-                transform: "translateX(50%)",
-                minWidth: "320px",
-                maxWidth: "500px",
-                background: "#fff",
-                border: "1px solid #e0e0e0",
-                borderRadius: "10px",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.13)",
-                padding: "20px 20px 16px 20px",
-                zIndex: 1000,
-                fontSize: "13px",
-                color: "#444",
-                animation: "fadeIn 0.2s",
+                flexShrink: 0,
+                width: "20px",
+                height: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              role="dialog"
-              aria-modal="true"
             >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginBottom: "8px",
-                }}
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
               >
-                <span
-                  style={{
-                    fontWeight: 600,
-                    color: "#0073BB",
-                    fontSize: "14px",
-                  }}
-                >
-                  How to Use?
-                </span>
-              </div>
-              <div
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="7"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M16 16L21 21"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+            <div style={{ flex: 1 }}>
+              <h3
                 style={{
-                  background: "#f6fafd",
-                  border: "1px solid #e0e0e0",
-                  borderRadius: "7px",
+                  fontSize: "14px",
+                  fontWeight: "600",
                   color: "#0073BB",
-                  fontWeight: 500,
-                  fontSize: "13.5px",
-                  padding: "10px 12px",
-                  marginBottom: "12px",
-                  textAlign: "center",
+                  margin: "0 0 4px 0",
                 }}
               >
-                Select a grant to unlock features above
+                Search and Select a Grant
+              </h3>
+              <p
+                style={{
+                  fontSize: "13px",
+                  color: "#555",
+                  margin: "0",
+                  lineHeight: "1.5",
+                }}
+              >
+                Use the search bar to find a grant and select it from the
+                results. Once you choose a grant, you’ll unlock the tools you
+                need to work on the application.
+              </p>
+              <div
+                style={{
+                  position: "absolute",
+                  width: "1px",
+                  height: "1px",
+                  padding: "0",
+                  margin: "-1px",
+                  overflow: "hidden",
+                  clip: "rect(0, 0, 0, 0)",
+                  whiteSpace: "nowrap",
+                  border: "0",
+                }}
+                role="note"
+                aria-label="Screen reader note"
+              >
+                Screen-reader note: The search bar is the first interactive
+                element on this page. After selecting a grant, navigate to the
+                next heading or use "next button" to reach the action buttons.
               </div>
+            </div>
+          </div>
+
+          {/* Step 2: Choose Action */}
+          <div
+            style={{
+              marginBottom: "0",
+              display: "flex",
+              gap: "12px",
+              alignItems: "flex-start",
+            }}
+          >
+            <div
+              style={{
+                flexShrink: 0,
+                width: "20px",
+                height: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <rect
+                  x="3"
+                  y="3"
+                  width="8"
+                  height="8"
+                  rx="1"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="3"
+                  y="13"
+                  width="8"
+                  height="8"
+                  rx="1"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="13"
+                  y="3"
+                  width="8"
+                  height="8"
+                  rx="1"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="13"
+                  y="13"
+                  width="8"
+                  height="8"
+                  rx="1"
+                  stroke="#0073BB"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+            <div style={{ flex: 1 }}>
+              <h3
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: "#0073BB",
+                  margin: "0 0 4px 0",
+                }}
+              >
+                Choose an Action
+              </h3>
               <ul
                 style={{
-                  margin: "10px 0 0 18px",
-                  padding: 0,
-                  color: "#666",
-                  fontSize: "12.5px",
-                  lineHeight: 1.7,
+                  margin: "0",
+                  padding: "0 0 0 16px",
+                  color: "#555",
+                  fontSize: "13px",
+                  lineHeight: 1.5,
                 }}
               >
-                <li>
-                  <b style={{ color: "#0073BB" }}>View Key Requirements:</b>{" "}
-                  View summary of eligibility, required documents, narrative
-                  sections, and deadlines for the selected grant.
+                <li style={{ marginBottom: "3px" }}>
+                  <strong style={{ color: "#006499" }}>
+                    View Key Requirements
+                  </strong>{" "}
+                  – Shows eligibility, deadlines, and required documents.
                 </li>
-                <li>
-                  <b style={{ color: "#0073BB" }}>Write Project Narrative:</b>{" "}
-                  Open the editor to draft and edit your grant application
-                  narrative.
+                <li style={{ marginBottom: "3px" }}>
+                  <strong style={{ color: "#006499" }}>
+                    Write Project Narrative
+                  </strong>{" "}
+                  – Opens an AI-assisted editor for drafting your narrative.
                 </li>
-                <li>
-                  <b style={{ color: "#0073BB" }}>Get Grant Help:</b> Open the
-                  GrantWell AI chatbot to ask questions about the grant.
+                <li style={{ marginBottom: "0" }}>
+                  <strong style={{ color: "#006499" }}>Get Grant Help</strong> –
+                  Opens a chatbot that can answer questions and guide you.
                 </li>
               </ul>
+              <div
+                style={{
+                  position: "absolute",
+                  width: "1px",
+                  height: "1px",
+                  padding: "0",
+                  margin: "-1px",
+                  overflow: "hidden",
+                  clip: "rect(0, 0, 0, 0)",
+                  whiteSpace: "nowrap",
+                  border: "0",
+                }}
+                role="note"
+                aria-label="Screen reader note"
+              >
+                Screen-reader note: Each button loads a new page or tool. Use
+                heading navigation to explore the content on each screen.
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        </section>
 
         {/* Add spacing before next section */}
         <div style={{ marginBottom: "20px" }} />
@@ -1103,7 +1197,7 @@ export default function Welcome() {
             </div>
           </div>
         </div>
-        
+
         {/* Creative Commons License */}
         <InfoBanner
           title=""

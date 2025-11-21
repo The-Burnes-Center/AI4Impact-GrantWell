@@ -81,7 +81,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       >
         <div
           style={{
-            background: "#4361ee",
+            background: "#2c4fdb",
             color: "white",
             padding: "20px 24px",
           }}
@@ -92,7 +92,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
         </div>
 
         <div style={{ padding: "24px" }}>
-          <div style={{ marginBottom: "24px", color: "#4a5568" }}>
+          <div style={{ marginBottom: "24px", color: "#3d4451" }}>
             Let's start with some basic information about your project. These
             details will help us create your draft application.
           </div>
@@ -385,7 +385,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             onClick={handleContinue}
             style={{
               padding: "12px 24px",
-              background: "#4361ee",
+              background: "#2c4fdb",
               color: "white",
               border: "none",
               borderRadius: "6px",

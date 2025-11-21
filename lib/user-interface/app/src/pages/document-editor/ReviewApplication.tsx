@@ -237,7 +237,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     >
       <p
         style={{
-          color: "#4a5568",
+          color: "#3d4451",
           marginBottom: "24px",
         }}
       >
@@ -420,7 +420,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
                       alignItems: "center",
                       background: "none",
                       border: "none",
-                      color: "#4361ee",
+                      color: "#2c4fdb",
                       fontSize: "14px",
                       cursor: "pointer",
                       padding: "4px 8px",
@@ -450,14 +450,14 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
               <div
                 style={{
                   padding: "16px",
-                  color: "#4b5563",
+                  color: "#374151",
                 }}
               >
                 <p style={{ margin: 0 }}>
                   {isComplete ? (
                     previewContent
                   ) : (
-                    <span style={{ fontStyle: "italic", color: "#9ca3af" }}>
+                    <span style={{ fontStyle: "italic", color: "#6e747f" }}>
                       No content yet
                     </span>
                   )}
@@ -488,7 +488,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <div
             style={{
               fontSize: "14px",
-              color: "#6b7280",
+              color: "#5a6169",
               marginBottom: "4px",
             }}
           >
@@ -516,7 +516,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <div
             style={{
               fontSize: "14px",
-              color: "#6b7280",
+              color: "#5a6169",
               marginBottom: "4px",
             }}
           >
@@ -544,7 +544,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <div
             style={{
               fontSize: "14px",
-              color: "#6b7280",
+              color: "#5a6169",
               marginBottom: "4px",
             }}
           >
@@ -584,7 +584,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         <ol
           style={{
             marginLeft: "20px",
-            color: "#4b5563",
+            color: "#374151",
             paddingLeft: 0,
           }}
         >
@@ -613,7 +613,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             background: "white",
             border: "1px solid #e5e7eb",
             borderRadius: "6px",
-            color: "#4b5563",
+            color: "#374151",
             fontSize: "16px",
             cursor: "pointer",
           }}
@@ -642,7 +642,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             display: "flex",
             alignItems: "center",
             padding: "12px 24px",
-            background: compliancePassed ? "#4361ee" : "#d1d5db",
+            background: compliancePassed ? "#2c4fdb" : "#d1d5db",
             color: "white",
             border: "none",
             borderRadius: "6px",
