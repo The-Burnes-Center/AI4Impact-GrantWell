@@ -38,6 +38,7 @@ export interface NOFO {
   name: string;
   status: "active" | "archived";
   isPinned?: boolean;
+  expirationDate?: string | null;
 }
 
 /**
@@ -623,6 +624,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       <div className="table-container">
         <div className="table-header">
           <div className="header-cell">Name</div>
+          <div className="header-cell">Expiry Date</div>
           <div className="header-cell">Actions</div>
         </div>
 
@@ -643,6 +645,19 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                     <LuPin size={14} />
                     <span>Pinned</span>
                   </span>
+                )}
+              </div>
+              <div className="row-cell">
+                {nofo.expirationDate ? (
+                  <span className="expiry-date">
+                    {new Date(nofo.expirationDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                ) : (
+                  <span className="expiry-date no-date">N/A</span>
                 )}
               </div>
               <div className="row-cell actions">
@@ -955,6 +970,7 @@ const Dashboard: React.FC = () => {
           name: nofo.name,
           status: nofo.status || "active",
           isPinned: nofo.isPinned || false,
+          expirationDate: nofo.expiration_date || null,
         }));
         setNofos(nofoData);
       } else {
@@ -964,6 +980,7 @@ const Dashboard: React.FC = () => {
           name: nofo,
           status: "active",
           isPinned: false,
+          expirationDate: null,
         }));
         setNofos(nofoData);
       }
