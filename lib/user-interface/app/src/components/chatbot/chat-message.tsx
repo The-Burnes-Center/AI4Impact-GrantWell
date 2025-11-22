@@ -8,8 +8,6 @@ import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 // Import icons
 import {
   FaCopy,
-  FaThumbsUp,
-  FaThumbsDown,
   FaExternalLinkAlt,
   FaChevronDown,
   FaFileAlt,
@@ -19,32 +17,14 @@ import "react-json-view-lite/dist/index.css";
 import "../../styles/app.scss";
 import { useNotifications } from "../notif-manager";
 import { Utils } from "../../common/utils";
-import { feedbackCategories, feedbackTypes } from "../../common/constants";
 
 export interface ChatMessageProps {
   message: ChatBotHistoryItem;
-  onThumbsUp: () => void;
-  onThumbsDown: (
-    feedbackTopic: string,
-    feedbackType: string,
-    feedbackMessage: string
-  ) => void;
 }
 
 export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedIcon, setSelectedIcon] = useState<1 | 0 | null>(null);
   const { addNotification, removeNotification } = useNotifications();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState({
-    label: "Select a Topic",
-    value: "1",
-  });
-  const [selectedFeedbackType, setSelectedFeedbackType] = useState({
-    label: "Select a Problem",
-    value: "1",
-  });
-  const [value, setValue] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   // State for copy popup
@@ -213,64 +193,12 @@ export default function ChatMessage(props: ChatMessageProps) {
     borderBottom: "1px solid #eee",
   };
 
-  const modalOverlayStyle = {
-    position: "fixed" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: modalVisible ? "flex" : "none",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  };
-
-  const modalStyle = {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    width: "500px",
-    maxWidth: "90%",
-    padding: "20px",
-    position: "relative" as const,
-  };
-
-  const modalHeaderStyle = {
-    fontSize: "18px",
-    fontWeight: 600,
-    marginBottom: "16px",
-    borderBottom: "1px solid #eee",
-    paddingBottom: "12px",
-  };
-
-  const modalFooterStyle = {
-    display: "flex",
-    justifyContent: "flex-end",
-    marginTop: "16px",
-    paddingTop: "12px",
-    borderTop: "1px solid #eee",
-    gap: "8px",
-  };
-
   const buttonStyle = {
     padding: "8px 12px",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "14px",
-  };
-
-  const primaryButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: "#006499",
-    color: "white",
-  };
-
-  const linkButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: "transparent",
-    color: "#006499",
   };
 
   const iconButtonStyle = {
@@ -285,35 +213,6 @@ export default function ChatMessage(props: ChatMessageProps) {
     justifyContent: "center",
   };
 
-  const selectStyle = {
-    padding: "8px 12px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    width: "100%",
-    marginBottom: "12px",
-    fontSize: "14px",
-  };
-
-  const inputStyle = {
-    padding: "8px 12px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    width: "100%",
-    marginBottom: "8px",
-    fontSize: "14px",
-  };
-
-  const formFieldStyle = {
-    marginBottom: "16px",
-  };
-
-  const labelStyle = {
-    display: "block",
-    marginBottom: "6px",
-    fontSize: "14px",
-    fontWeight: 500,
-  };
-
   const spinnerStyle = {
     display: "inline-block",
     width: "20px",
@@ -322,12 +221,6 @@ export default function ChatMessage(props: ChatMessageProps) {
     borderRadius: "50%",
     borderTopColor: "#006499",
     animation: "spin 1s linear infinite",
-  };
-
-  const thumbsContainerStyle = {
-    display: "flex",
-    gap: "8px",
-    marginTop: "12px",
   };
 
   const successIndicatorStyle = {
@@ -396,147 +289,6 @@ export default function ChatMessage(props: ChatMessageProps) {
 
   return (
     <div>
-      {/* Modal for feedback */}
-      <div style={modalOverlayStyle}>
-        <div
-          style={modalStyle}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="feedback-modal-title"
-        >
-          <div style={modalHeaderStyle} id="feedback-modal-title">
-            Provide Feedback
-          </div>
-          <div>
-            <div style={formFieldStyle}>
-              <label htmlFor="feedback-topic" style={labelStyle}>
-                Topic
-              </label>
-              <select
-                id="feedback-topic"
-                style={selectStyle}
-                value={selectedTopic.value}
-                onChange={(e) => {
-                  const selected = feedbackCategories.find(
-                    (cat) => cat.value === e.target.value
-                  );
-                  setSelectedTopic(
-                    selected || { label: "Select a Topic", value: "1" }
-                  );
-                }}
-                aria-invalid={selectedTopic.value === "1"}
-                aria-describedby="feedback-topic-error"
-              >
-                {feedbackCategories.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div style={formFieldStyle}>
-              <label htmlFor="feedback-problem" style={labelStyle}>
-                Problem Type
-              </label>
-              <select
-                id="feedback-problem"
-                style={selectStyle}
-                value={selectedFeedbackType.value}
-                onChange={(e) => {
-                  const selected = feedbackTypes.find(
-                    (type) => type.value === e.target.value
-                  );
-                  setSelectedFeedbackType(
-                    selected || { label: "Select a Problem", value: "1" }
-                  );
-                }}
-                aria-invalid={selectedFeedbackType.value === "1"}
-                aria-describedby="feedback-problem-error"
-              >
-                {feedbackTypes.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div style={formFieldStyle}>
-              <label htmlFor="feedback-input" style={labelStyle}>
-                Please enter feedback here
-              </label>
-              <input
-                id="feedback-input"
-                type="text"
-                style={inputStyle}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                aria-invalid={value.trim() === ""}
-                aria-describedby="feedback-input-help"
-              />
-            </div>
-          </div>
-          <div style={modalFooterStyle}>
-            <button
-              style={linkButtonStyle}
-              onClick={() => {
-                setModalVisible(false);
-                setValue("");
-                setSelectedTopic({ label: "Select a Topic", value: "1" });
-                setSelectedFeedbackType({
-                  label: "Select a Topic",
-                  value: "1",
-                });
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              style={primaryButtonStyle}
-              onClick={() => {
-                if (
-                  !selectedTopic.value ||
-                  !selectedFeedbackType.value ||
-                  selectedTopic.value === "1" ||
-                  selectedFeedbackType.value === "1" ||
-                  value.trim() === ""
-                ) {
-                  const id = addNotification(
-                    "error",
-                    "Please fill out all fields."
-                  );
-                  Utils.delay(3000).then(() => removeNotification(id));
-                  return;
-                } else {
-                  setModalVisible(false);
-                  setValue("");
-
-                  const id = addNotification(
-                    "success",
-                    "Your feedback has been submitted."
-                  );
-                  Utils.delay(3000).then(() => removeNotification(id));
-
-                  props.onThumbsDown(
-                    selectedTopic.value,
-                    selectedFeedbackType.value,
-                    value.trim()
-                  );
-                  setSelectedIcon(0);
-
-                  setSelectedTopic({ label: "Select a Topic", value: "1" });
-                  setSelectedFeedbackType({
-                    label: "Select a Problem",
-                    value: "1",
-                  });
-                }
-              }}
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-
       <div style={containerStyle}>
         {props.message?.type === ChatBotMessageType.AI ? (
           <>

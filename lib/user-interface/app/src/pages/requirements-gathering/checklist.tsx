@@ -101,9 +101,10 @@ const styles = {
     color: THEME.colors.heading,
     letterSpacing: "-0.01em",
     fontSize: "32px",
-    lineHeight: "1.2",
+    lineHeight: "1.4",
     margin: 0,
     marginBottom: "20px",
+    wordSpacing: "0.05em",
   },
   paragraph: {
     fontFamily: THEME.fonts.base,
@@ -157,8 +158,7 @@ const styles = {
   },
   mainContainer: {
     backgroundColor: THEME.colors.background,
-    minHeight: "100vh",
-    padding: "16px",
+    padding: "32px 16px 16px 16px",
   },
   loadingContainer: {
     textAlign: "center" as const,
@@ -460,12 +460,11 @@ const Tab: React.FC<TabProps> = ({ id, activeId, onClick, children, icon }) => {
   const isActive = id === activeId;
 
   return (
-    <div
+    <button
       style={{
         padding: "18px 28px",
         cursor: "pointer",
         backgroundColor: isActive ? THEME.colors.primaryLight : "transparent",
-        borderBottom: isActive ? `3px solid ${THEME.colors.primary}` : "none",
         fontWeight: isActive ? "600" : "normal",
         fontSize: "17px",
         transition: THEME.transitions.default,
@@ -473,23 +472,21 @@ const Tab: React.FC<TabProps> = ({ id, activeId, onClick, children, icon }) => {
         display: "flex",
         alignItems: "center",
         gap: "10px",
+        border: "none",
+        borderBottom: isActive
+          ? `3px solid ${THEME.colors.primary}`
+          : `3px solid transparent`,
       }}
       onClick={() => onClick(id)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick(id);
-        }
-      }}
       role="tab"
-      tabIndex={0}
+      tabIndex={isActive ? 0 : -1}
       aria-selected={isActive}
       aria-controls={`tabpanel-${id}`}
       id={`tab-${id}`}
     >
       {icon}
       {children}
-    </div>
+    </button>
   );
 };
 
@@ -554,9 +551,9 @@ const Checklists: React.FC = () => {
       if (e.key !== "Tab") return;
 
       const focusableElements = [
-        closeButtonRef.current, 
+        closeButtonRef.current,
         checkboxRef.current,
-        gotItButtonRef.current
+        gotItButtonRef.current,
       ].filter(Boolean);
       const firstElement = focusableElements[0];
       const lastElement = focusableElements[focusableElements.length - 1];
@@ -666,6 +663,32 @@ const Checklists: React.FC = () => {
   const handleTabClick = (tabId: string) => {
     setActiveTabId(tabId);
     window.location.hash = tabId;
+    // Focus the newly selected tab
+    setTimeout(() => {
+      document.getElementById(`tab-${tabId}`)?.focus();
+    }, 0);
+  };
+
+  // Handle arrow key navigation for tabs
+  const handleTabsKeyDown = (e: React.KeyboardEvent) => {
+    const tabIds = ["eligibility", "documents", "narrative", "deadlines"];
+    const currentIndex = tabIds.indexOf(activeTabId);
+
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      const nextIndex = (currentIndex + 1) % tabIds.length;
+      handleTabClick(tabIds[nextIndex]);
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      const prevIndex = (currentIndex - 1 + tabIds.length) % tabIds.length;
+      handleTabClick(tabIds[prevIndex]);
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      handleTabClick(tabIds[0]);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      handleTabClick(tabIds[tabIds.length - 1]);
+    }
   };
 
   // Handle modal close
@@ -699,7 +722,17 @@ const Checklists: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+    <div
+      style={{
+        display: "flex",
+        height: "100vh",
+        overflow: "hidden",
+        position: "fixed",
+        width: "100%",
+        top: 0,
+        left: 0,
+      }}
+    >
       {/* Skip Navigation Link for Accessibility */}
       <a
         href="#main-content"
@@ -726,9 +759,7 @@ const Checklists: React.FC = () => {
       </a>
       {/* Navigation Sidebar */}
       <nav aria-label="Requirements navigation" aria-hidden={showHelp}>
-        <RequirementsNavigation
-          documentIdentifier={folderParam}
-        />
+        <RequirementsNavigation documentIdentifier={folderParam} />
       </nav>
 
       {/* Main Content */}
@@ -744,56 +775,75 @@ const Checklists: React.FC = () => {
       >
         <div style={styles.mainContainer}>
           {isLoading ? (
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: '400px',
-              width: '100%',
-              maxWidth: '800px',
-              margin: '40px auto',
-              padding: '40px 20px',
-              backgroundColor: '#ffffff',
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                marginBottom: '32px'
-              }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "400px",
+                width: "100%",
+                maxWidth: "800px",
+                margin: "40px auto",
+                padding: "40px 20px",
+                backgroundColor: "#ffffff",
+                borderRadius: "12px",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
+              }}
+            >
+              <div
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  marginBottom: "32px",
+                }}
+              >
                 <div className="loading-spinner" />
               </div>
-              <h2 style={{
-                fontSize: '28px',
-                fontWeight: '600',
-                color: '#333',
-                marginBottom: '16px',
-                textAlign: 'center'
-              }}>Loading NOFO Data</h2>
-              <p style={{
-                fontSize: '16px',
-                color: '#666',
-                marginBottom: '32px',
-                textAlign: 'center'
-              }}>Retrieving grant information and requirements...</p>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                backgroundColor: '#f0f7ff',
-                padding: '16px 24px',
-                borderRadius: '8px',
-                maxWidth: '600px'
-              }}>
-                <span style={{ fontSize: '24px' }}>💡</span>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#0073BB',
-                  margin: 0,
-                  lineHeight: '1.5'
-                }}>Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.</p>
+              <h2
+                style={{
+                  fontSize: "28px",
+                  fontWeight: "600",
+                  color: "#333",
+                  marginBottom: "16px",
+                  textAlign: "center",
+                }}
+              >
+                Loading NOFO Data
+              </h2>
+              <p
+                style={{
+                  fontSize: "16px",
+                  color: "#666",
+                  marginBottom: "32px",
+                  textAlign: "center",
+                }}
+              >
+                Retrieving grant information and requirements...
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  backgroundColor: "#f0f7ff",
+                  padding: "16px 24px",
+                  borderRadius: "8px",
+                  maxWidth: "600px",
+                }}
+              >
+                <span style={{ fontSize: "24px" }}>💡</span>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "#0073BB",
+                    margin: 0,
+                    lineHeight: "1.5",
+                  }}
+                >
+                  Our AI reviews eligibility criteria, deadlines, and
+                  requirements to save you hours of research time.
+                </p>
               </div>
             </div>
           ) : (
@@ -939,10 +989,12 @@ const Checklists: React.FC = () => {
                           transition: "background 0.2s",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(255, 255, 255, 0.3)";
+                          e.currentTarget.style.background =
+                            "rgba(255, 255, 255, 0.3)";
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                          e.currentTarget.style.background =
+                            "rgba(255, 255, 255, 0.2)";
                         }}
                         aria-label="Close help dialog"
                       >
@@ -959,93 +1011,120 @@ const Checklists: React.FC = () => {
                         flex: 1,
                       }}
                     >
-                      <p style={{ 
-                        marginBottom: "20px", 
-                        lineHeight: "1.6",
-                        fontSize: "15px",
-                        color: "#555",
-                      }}>
-                        Grantwell uses generative AI to extract and summarize the key elements of the grant.
+                      <p
+                        style={{
+                          marginBottom: "20px",
+                          lineHeight: "1.6",
+                          fontSize: "15px",
+                          color: "#555",
+                        }}
+                      >
+                        Grantwell uses generative AI to extract and summarize
+                        the key elements of the grant.
                       </p>
 
                       {/* Highlighted box */}
-                      <div style={{
-                        borderLeft: "4px solid #0073BB",
-                        backgroundColor: "#F0F7FF",
-                        padding: "16px 20px",
-                        marginBottom: "24px",
-                        borderRadius: "4px",
-                      }}>
-                        <p style={{ 
-                          margin: 0, 
-                          lineHeight: "1.6",
-                          fontSize: "15px",
-                          color: "#333",
-                        }}>
-                          Click through the tabs above (<strong style={{ fontWeight: 600 }}>Eligibility, Required Documents, Narrative Sections, Key Deadlines</strong>) to see what you need for this grant.
+                      <div
+                        style={{
+                          borderLeft: "4px solid #0073BB",
+                          backgroundColor: "#F0F7FF",
+                          padding: "16px 20px",
+                          marginBottom: "24px",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        <p
+                          style={{
+                            margin: 0,
+                            lineHeight: "1.6",
+                            fontSize: "15px",
+                            color: "#333",
+                          }}
+                        >
+                          Click through the tabs above (
+                          <strong style={{ fontWeight: 600 }}>
+                            Eligibility, Required Documents, Narrative Sections,
+                            Key Deadlines
+                          </strong>
+                          ) to see what you need for this grant.
                         </p>
                       </div>
-                      
+
                       {/* Have a question section */}
                       <div style={{ marginBottom: "20px" }}>
-                        <p style={{ 
-                          margin: 0,
-                          marginBottom: "6px",
-                          fontSize: "15px",
-                          color: "#0073BB",
-                          fontWeight: 600,
-                        }}>
+                        <p
+                          style={{
+                            margin: 0,
+                            marginBottom: "6px",
+                            fontSize: "15px",
+                            color: "#0073BB",
+                            fontWeight: 600,
+                          }}
+                        >
                           Have a question?
                         </p>
-                        <p style={{ 
-                          margin: 0,
-                          lineHeight: "1.6",
-                          fontSize: "15px",
-                          color: "#555",
-                        }}>
-                          Use "Chat with AI" in the left sidebar to get help understanding the grant requirements.
+                        <p
+                          style={{
+                            margin: 0,
+                            lineHeight: "1.6",
+                            fontSize: "15px",
+                            color: "#555",
+                          }}
+                        >
+                          Use "Chat with AI" in the left sidebar to get help
+                          understanding the grant requirements.
                         </p>
                       </div>
-                      
+
                       {/* Ready to start writing section */}
                       <div style={{ marginBottom: "20px" }}>
-                        <p style={{ 
-                          margin: 0,
-                          marginBottom: "6px",
-                          fontSize: "15px",
-                          color: "#0073BB",
-                          fontWeight: 600,
-                        }}>
+                        <p
+                          style={{
+                            margin: 0,
+                            marginBottom: "6px",
+                            fontSize: "15px",
+                            color: "#0073BB",
+                            fontWeight: 600,
+                          }}
+                        >
                           Ready to start writing?
                         </p>
-                        <p style={{ 
-                          margin: 0,
-                          lineHeight: "1.6",
-                          fontSize: "15px",
-                          color: "#555",
-                        }}>
-                          Click "Write Application" in the left sidebar to begin drafting.
+                        <p
+                          style={{
+                            margin: 0,
+                            lineHeight: "1.6",
+                            fontSize: "15px",
+                            color: "#555",
+                          }}
+                        >
+                          Click "Write Application" in the left sidebar to begin
+                          drafting.
                         </p>
                       </div>
-                      
+
                       {/* Want a different grant section */}
                       <div style={{ marginBottom: "24px" }}>
-                        <p style={{ 
-                          margin: 0,
-                          marginBottom: "6px",
-                          fontSize: "15px",
-                          color: "#0073BB",
-                          fontWeight: 600,
-                        }}>
+                        <p
+                          style={{
+                            margin: 0,
+                            marginBottom: "6px",
+                            fontSize: "15px",
+                            color: "#0073BB",
+                            fontWeight: 600,
+                          }}
+                        >
                           Want a different grant?
                         </p>
-                        <p style={{ 
-                          margin: 0,
-                          lineHeight: "1.6",
-                          fontSize: "15px",
-                          color: "#555",
-                        }}>
-                          Use "Recent Grants" to quickly access other grants or return to the home page.
+                        <p
+                          style={{
+                            margin: 0,
+                            lineHeight: "1.6",
+                            fontSize: "15px",
+                            color: "#555",
+                          }}
+                        >
+                          Use "Recent Grants" to quickly access other grants or
+                          return to the home page.
                         </p>
                       </div>
 
@@ -1118,7 +1197,12 @@ const Checklists: React.FC = () => {
               )}
 
               <div style={styles.tabsContainer}>
-                <div style={styles.tabsHeader} role="tablist" aria-label="Grant requirements">
+                <div
+                  style={styles.tabsHeader}
+                  role="tablist"
+                  aria-label="Grant requirements"
+                  onKeyDown={handleTabsKeyDown}
+                >
                   <Tab
                     id="eligibility"
                     activeId={activeTabId}
@@ -1167,9 +1251,7 @@ const Checklists: React.FC = () => {
                     hidden={tabId !== activeTabId}
                   >
                     <div style={styles.contentArea}>
-                      <p style={styles.paragraph}>
-                        {tabContents[tabId].title}
-                      </p>
+                      <p style={styles.paragraph}>{tabContents[tabId].title}</p>
                       <div style={styles.markdownContainer}>
                         <ReactMarkdown
                           className="custom-markdown"

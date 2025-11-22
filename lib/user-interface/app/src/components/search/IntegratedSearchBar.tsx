@@ -654,6 +654,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       onBlur={(e) => {
         e.currentTarget.style.backgroundColor = "#0073BB";
       }}
+      aria-label="Open Grant Assistant to get AI-powered grant recommendations"
     >
       <svg
         width="16"
@@ -712,6 +713,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       onBlur={(e) => {
         e.currentTarget.style.backgroundColor = "#006499";
       }}
+      aria-label="View all available grants"
     >
       <svg
         width="16"
@@ -755,7 +757,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           ref={inputRef}
           type="text"
           placeholder="Search for grants from grants.gov..."
+          aria-label="Search for grants"
           aria-describedby="search-help-know-grant search-help-not-sure"
+          aria-autocomplete="list"
+          aria-controls="search-results-listbox"
+          aria-expanded={showResults}
+          role="combobox"
           style={{
             ...inputStyle,
             cursor:
@@ -815,7 +822,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             onMouseLeave={(e) => {
               e.currentTarget.style.color = "#666";
             }}
-            title="Clear search"
+            aria-label="Clear search"
           >
             <svg
               width="16"

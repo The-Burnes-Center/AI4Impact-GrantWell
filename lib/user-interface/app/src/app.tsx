@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { AppContext } from "./common/app-context";
 import GlobalHeader from "./components/global-header";
@@ -19,6 +20,36 @@ import Dashboard from "./pages/Dashboard";
 import "./styles/app.scss";
 import { Mode } from "@cloudscape-design/global-styles";
 import { StorageHelper } from "./common/helpers/storage-helper";
+import { useEffect } from "react";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Move focus to main content on route change for screen readers
+    const mainContent = document.getElementById("main-content");
+    if (mainContent) {
+      mainContent.setAttribute("tabindex", "-1");
+      mainContent.focus();
+      // Remove tabindex after focusing so it doesn't interfere with normal tab order
+      setTimeout(() => mainContent.removeAttribute("tabindex"), 100);
+    }
+    
+    // Update page title based on route
+    const pageTitles: { [key: string]: string } = {
+      "/": "GrantWell - Home",
+      "/landing-page/basePage": "GrantWell - Home",
+      "/dashboard": "Admin Dashboard - GrantWell",
+      "/chatbot/sessions": "Chat Sessions - GrantWell",
+      "/document-editor": "Document Editor - GrantWell",
+    };
+    
+    const baseTitle = pageTitles[pathname] || "GrantWell";
+    document.title = baseTitle;
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   const Router = BrowserRouter;
@@ -26,6 +57,7 @@ function App() {
   return (
     <div style={{ height: "100%" }}>
       <Router>
+        <ScrollToTop />
         {/* Skip Navigation Link for Accessibility */}
         <a
           href="#main-content"
@@ -54,7 +86,7 @@ function App() {
         </a>
         <GlobalHeader />
         <div style={{ height: "56px", backgroundColor: "#FFFFFF" }}>&nbsp;</div>
-        <main id="main-content">
+        <main id="main-content" role="main">
           <Routes>
             <Route
               index

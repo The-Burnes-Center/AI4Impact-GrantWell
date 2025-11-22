@@ -114,6 +114,7 @@ export default function Playground() {
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
   const checkboxRef = React.useRef<HTMLInputElement>(null);
   const gotItButtonRef = React.useRef<HTMLButtonElement>(null);
+  const helpButtonRef = React.useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const fetchNofoName = async () => {
@@ -220,6 +221,11 @@ export default function Playground() {
       localStorage.setItem("playgroundHelpSeen", "true");
     }
     setHelpOpen(false);
+    
+    // Restore focus to help button after modal closes
+    setTimeout(() => {
+      helpButtonRef.current?.focus();
+    }, 100);
   };
 
   return (
@@ -242,6 +248,7 @@ export default function Playground() {
                 </button>
               )}
               <button
+                ref={helpButtonRef}
                 style={styles.helpButton}
                 onClick={() => setHelpOpen(!helpOpen)}
                 aria-label={helpOpen ? "Close help dialog" : "Open help dialog"}

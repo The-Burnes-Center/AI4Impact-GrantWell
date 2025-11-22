@@ -212,7 +212,7 @@ export default function Welcome() {
       </h2>
       {recentlyViewedNOFOs.length > 0 ? (
         recentlyViewedNOFOs.slice(0, 6).map((nofo, index) => (
-          <div
+          <button
             key={index}
             style={{
               padding: "15px",
@@ -226,10 +226,9 @@ export default function Welcome() {
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
+              width: "100%",
+              textAlign: "left",
             }}
-            role="button"
-            tabIndex={0}
-            aria-label={`View ${nofo.label}`}
             onClick={() =>
               handleNOFOSelect(
                 `/landing-page/basePage/checklists/${encodeURIComponent(
@@ -238,17 +237,6 @@ export default function Welcome() {
                 nofo
               )
             }
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                handleNOFOSelect(
-                  `/landing-page/basePage/checklists/${encodeURIComponent(
-                    nofo.value
-                  )}`,
-                  nofo
-                );
-              }
-            }}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
               e.currentTarget.style.transform = "translateY(-2px)";
@@ -257,6 +245,7 @@ export default function Welcome() {
               e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
               e.currentTarget.style.transform = "translateY(0)";
             }}
+            aria-label={`View ${nofo.label}`}
           >
             <span
               style={{
@@ -278,7 +267,7 @@ export default function Welcome() {
             >
               <span>Last viewed: {nofo.lastViewed}</span>
             </div>
-          </div>
+          </button>
         ))
       ) : (
         <p
@@ -511,7 +500,11 @@ export default function Welcome() {
             href={resource.href}
             target="_blank"
             rel="noopener noreferrer"
-            style={linkStyle}
+            style={{
+              ...linkStyle,
+              textDecoration: "none",
+              display: "block",
+            }}
           >
             <span
               style={{
@@ -525,16 +518,16 @@ export default function Welcome() {
             >
               {resource.title}
             </span>
+            <div
+              style={{
+                fontSize: "14px",
+                color: bodyTextColor,
+                textAlign: "center",
+              }}
+            >
+              {resource.description}
+            </div>
           </a>
-          <div
-            style={{
-              fontSize: "14px",
-              color: bodyTextColor,
-              textAlign: "center",
-            }}
-          >
-            {resource.description}
-          </div>
         </div>
       ))}
     </div>
@@ -955,10 +948,11 @@ export default function Welcome() {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "scale(1)";
                 }}
+                aria-label="Visit Massachusetts Government website"
               >
                 <img
                   src="/images/stateseal-color.png"
-                  alt="State Seal"
+                  alt="Massachusetts State Seal"
                   style={{ width: "100px", height: "auto" }}
                 />
               </a>
@@ -978,10 +972,11 @@ export default function Welcome() {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "scale(1)";
                 }}
+                aria-label="Visit Burnes Center for Social Change at Northeastern University"
               >
                 <img
                   src="/images/burnesLogo.png"
-                  alt="Burnes Center Logo"
+                  alt="Burnes Center for Social Change Logo"
                   style={{ width: "200px", height: "auto" }}
                 />
               </a>

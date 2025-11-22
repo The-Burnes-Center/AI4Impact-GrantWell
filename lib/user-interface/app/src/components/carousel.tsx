@@ -11,6 +11,9 @@ interface CarouselNextProps {
 }
 
 const CarouselNext = ({ theme, documents }: CarouselNextProps) => {
+    // Check if user prefers reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
     const BreakpointSlides: ResponsiveType = {
         desktop: {
             breakpoint: {max: 3000, min: 1024},
@@ -65,7 +68,7 @@ const CarouselNext = ({ theme, documents }: CarouselNextProps) => {
             responsive={BreakpointSlides}
             //itemClass="carousel-item"
             //containerClass="carousel-container"
-            autoPlay={true}
+            autoPlay={!prefersReducedMotion}
             slidesToSlide={1}
             // additionalTransfrom={0}
             // arrows
@@ -80,10 +83,10 @@ const CarouselNext = ({ theme, documents }: CarouselNextProps) => {
             //renderArrowsWhenDisabled={false}
             //renderButtonGroupOutside={false}
             //renderDotsOutside={false}
-            rewind={true}
-            rewindWithAnimation={true}
+            rewind={!prefersReducedMotion}
+            rewindWithAnimation={!prefersReducedMotion}
             //rtl={false}
-            shouldResetAutoplay
+            shouldResetAutoplay={!prefersReducedMotion}
             //showDots={false}
             //swipeable
         >

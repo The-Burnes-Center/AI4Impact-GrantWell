@@ -149,6 +149,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   const [micPermissionDenied, setMicPermissionDenied] = useState(false);
   const [micListeningTimeout, setMicListeningTimeout] = useState<NodeJS.Timeout | null>(null);
   const { notifications, addNotification } = useNotifications();
+  
+  // Ref for chat input to enable auto-focus
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Enhanced speech recognition config
   const {
@@ -224,6 +227,16 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
   }, [props.messageHistory]);
+
+  // Auto-focus chat input on component mount for keyboard accessibility
+  useEffect(() => {
+    // Small delay to ensure component is fully rendered
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   /** Speech recognition */
   useEffect(() => {
@@ -622,6 +635,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
       {/* Text input */}
       <TextareaAutosize
+        ref={inputRef}
         id="chat-input"
         aria-label="Message the GrantWell assistant"
         aria-describedby="chat-input-help"

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { ChatBotHistoryItem, ChatBotMessageType, FeedbackData } from "./types";
+import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
@@ -85,6 +85,7 @@ const styles: Record<string, React.CSSProperties> = {
     transform: "translateX(-50%)",
     width: "70%",
     maxWidth: "800px",
+    minWidth: "280px",
     zIndex: 100,
     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
     borderRadius: "12px",
@@ -283,41 +284,6 @@ export default function Chat(props: {
     })();
   }, [appContext, props.sessionId, props.documentIdentifier]);
 
-  /** Adds some metadata to the user's feedback */
-  const handleFeedback = (
-    feedbackType: 1 | 0,
-    idx: number,
-    message: ChatBotHistoryItem,
-    feedbackTopic?: string,
-    feedbackProblem?: string,
-    feedbackMessage?: string
-  ) => {
-    if (props.sessionId) {
-      const prompt = messageHistory[idx - 1].content;
-      const completion = message.content;
-
-      const feedbackData = {
-        sessionId: props.sessionId,
-        feedback: feedbackType,
-        prompt: prompt,
-        completion: completion,
-        topic: feedbackTopic,
-        problem: feedbackProblem,
-        comment: feedbackMessage,
-        sources: JSON.stringify(message.metadata.Sources),
-        documentIdentifier: props.documentIdentifier,
-      };
-      addUserFeedback(feedbackData);
-    }
-  };
-
-  /** Makes the API call via the ApiClient to submit the feedback */
-  const addUserFeedback = async (feedbackData: FeedbackData) => {
-    if (!appContext) return;
-    const apiClient = new ApiClient(appContext);
-    await apiClient.userFeedback.sendUserFeedback(feedbackData);
-  };
-
   return (
     <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
       {/* Welcome Modal */}
@@ -329,7 +295,7 @@ export default function Chat(props: {
               <button
                 style={styles.closeButton}
                 onClick={handleModalDismiss}
-                aria-label="Close"
+                aria-label="Close welcome dialog"
               >
                 <FaTimes size={20} />
               </button>
@@ -406,21 +372,6 @@ export default function Chat(props: {
             <ChatMessage
               key={idx}
               message={message}
-              onThumbsUp={() => handleFeedback(1, idx, message)}
-              onThumbsDown={(
-                feedbackTopic: string,
-                feedbackType: string,
-                feedbackMessage: string
-              ) =>
-                handleFeedback(
-                  0,
-                  idx,
-                  message,
-                  feedbackTopic,
-                  feedbackType,
-                  feedbackMessage
-                )
-              }
             />
           ))}
 

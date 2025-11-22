@@ -140,6 +140,7 @@ export default function NavigationPanel({
                     )}`}
                     loading={loadingSessions}
                     variant="link"
+                    ariaLabel="View all chatbot sessions"
                   >
                     View All Sessions
                   </RouterButton>
@@ -148,6 +149,7 @@ export default function NavigationPanel({
                     iconName="refresh"
                     loading={loadingSessions}
                     variant="link"
+                    ariaLabel="Reload session list"
                   >
                     Reload Sessions
                   </Button>
@@ -204,13 +206,7 @@ export default function NavigationPanel({
               )
             }
             className="new-chat-button"
-            // style={{
-            //   textAlign: "center",
-            //   justifyContent: "center",
-            //   display: "inline-flex",
-            //   alignItems: "center",
-            //   width: "250px"
-            // }}
+            ariaLabel="Start new chatbot session"
           >
             New Chatbot Session
           </Button>
@@ -232,6 +228,7 @@ export default function NavigationPanel({
                 `/document-editor?nofo=${encodeURIComponent(identifier || '')}`
               )
             }
+            ariaLabel="Start new grant application"
           >
             Start New Application
           </Button>
@@ -271,7 +268,12 @@ export default function NavigationPanel({
         </div>
       </Box>
       <div style={{ position: "absolute", top: 5, right: 5 }}>
-        <Button iconName="angle-left" variant="icon" onClick={onClose} />
+        <Button 
+          iconName="angle-left" 
+          variant="icon" 
+          onClick={onClose}
+          ariaLabel="Close panel"
+        />
       </div>
       <div
         style={{
@@ -444,6 +446,7 @@ export default function NavigationPanel({
                     }
                     loading={loadingSessions}
                     variant="link"
+                    ariaLabel="View all chatbot sessions"
                   >
                     View All Sessions
                   </Button>
@@ -453,6 +456,7 @@ export default function NavigationPanel({
                       iconName="refresh"
                       loading={loadingSessions}
                       variant="link"
+                      ariaLabel="Reload session list"
                     >
                       Reload Sessions
                     </Button>
