@@ -57,7 +57,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "center",
     alignItems: "center",
     padding: "30px 0",
-    color: "#718096",
+    color: "#5a6876",
   },
   spinner: {
     display: "inline-block",
@@ -71,7 +71,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   welcomeText: {
     textAlign: "center",
-    color: "#718096",
+    color: "#5a6876",
     fontStyle: "italic",
     padding: "20px",
   },
@@ -137,7 +137,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: "none",
     cursor: "pointer",
     fontSize: "18px",
-    color: "#718096",
+    color: "#5a6876",
     padding: "6px",
     borderRadius: "50%",
     display: "flex",
@@ -319,7 +319,7 @@ export default function Chat(props: {
   };
 
   return (
-    <div style={styles.chatContainer}>
+    <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
       {/* Welcome Modal */}
       {showPopup && (
         <div style={styles.modalOverlay}>
@@ -383,7 +383,14 @@ export default function Chat(props: {
       )}
 
       {/* Chat content area */}
-      <div style={styles.messageArea}>
+      <div 
+        role="log" 
+        aria-live="polite" 
+        aria-relevant="additions"
+        aria-label="Chat messages"
+        tabIndex={0}
+        style={styles.messageArea}
+      >
         <div style={styles.messageList}>
           {messageHistory.length === 0 && !session?.loading && (
             <div style={styles.infoAlert}>
@@ -430,6 +437,11 @@ export default function Chat(props: {
         </div>
       </div>
 
+      {/* Loading state announcement for screen readers */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {session?.loading ? "Loading chat session" : ""}
+      </div>
+
       {/* Chat input area */}
       <div style={styles.inputContainer}>
         <ChatInputPanel
@@ -441,6 +453,6 @@ export default function Chat(props: {
           documentIdentifier={props.documentIdentifier}
         />
       </div>
-    </div>
+    </section>
   );
 }

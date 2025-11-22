@@ -198,7 +198,8 @@ export default function BaseAppLayout({
             <button
               style={styles.sidebarToggle}
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              aria-label={sidebarOpen ? "Collapse navigation sidebar" : "Expand navigation sidebar"}
+              aria-expanded={sidebarOpen}
             >
               {sidebarOpen ? (
                 <ChevronLeft size={20} />
@@ -223,6 +224,8 @@ export default function BaseAppLayout({
                   ...styles.navButton,
                   ...(activeTab === "chat" ? styles.navButtonActive : {}),
                 }}
+                aria-current={activeTab === "chat" ? "page" : undefined}
+                aria-label="Navigate to chat"
               >
                 <MessageSquare size={20} />
                 {sidebarOpen && <span style={styles.navLinkText}>Chat</span>}
@@ -239,6 +242,8 @@ export default function BaseAppLayout({
                   ...styles.navButton,
                   ...(activeTab === "sessions" ? styles.navButtonActive : {}),
                 }}
+                aria-current={activeTab === "sessions" ? "page" : undefined}
+                aria-label="Navigate to sessions"
               >
                 <List size={20} />
                 {sidebarOpen && (
@@ -260,6 +265,8 @@ export default function BaseAppLayout({
                   ...styles.navButton,
                   ...(activeTab === "editor" ? styles.navButtonActive : {}),
                 }}
+                aria-current={activeTab === "editor" ? "page" : undefined}
+                aria-label="Navigate to write application"
               >
                 <Edit size={20} />
                 {sidebarOpen && (
@@ -281,6 +288,8 @@ export default function BaseAppLayout({
                     ? styles.navButtonActive
                     : {}),
                 }}
+                aria-current={activeTab === "requirements" ? "page" : undefined}
+                aria-label="Navigate to key requirements"
               >
                 <CheckSquare size={20} />
                 {sidebarOpen && (

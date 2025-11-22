@@ -48,6 +48,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "14px",
     fontWeight: 500,
     cursor: "pointer",
+    minHeight: "44px",
   },
   helpButton: {
     display: "flex",
@@ -61,6 +62,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "14px",
     fontWeight: 500,
     cursor: "pointer",
+    minHeight: "44px",
   },
   helpPanel: {
     padding: "20px",
@@ -231,13 +233,19 @@ export default function Playground() {
             <div style={styles.headerActions}>
               {/* Upload Data button - only show if documentIdentifier exists */}
               {documentIdentifier && (
-                <button style={styles.uploadButton} onClick={handleUploadData}>
+                <button 
+                  style={styles.uploadButton} 
+                  onClick={handleUploadData}
+                  aria-label="Upload supporting documents"
+                >
                   <Upload size={16} /> Upload Data
                 </button>
               )}
               <button
                 style={styles.helpButton}
                 onClick={() => setHelpOpen(!helpOpen)}
+                aria-label={helpOpen ? "Close help dialog" : "Open help dialog"}
+                aria-expanded={helpOpen}
               >
                 <HelpCircle size={16} /> Help
               </button>
@@ -330,10 +338,15 @@ export default function Playground() {
                   cursor: "pointer",
                   fontSize: "24px",
                   color: "#ffffff",
-                  padding: "4px 10px",
+                  padding: "8px 12px",
                   borderRadius: "4px",
                   lineHeight: "1",
                   transition: "background 0.2s",
+                  minWidth: "44px",
+                  minHeight: "44px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "rgba(255, 255, 255, 0.3)";
@@ -518,6 +531,7 @@ export default function Playground() {
                   fontSize: "16px",
                   width: "100%",
                   transition: "background 0.2s",
+                  minHeight: "44px",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = "#005A94";

@@ -3,10 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
-import {
-  ChatBotHistoryItem,
-  ChatBotMessageType,
-} from "./types";
+import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 
 // Import icons
 import {
@@ -15,6 +12,7 @@ import {
   FaThumbsDown,
   FaExternalLinkAlt,
   FaChevronDown,
+  FaFileAlt,
 } from "react-icons/fa";
 
 import "react-json-view-lite/dist/index.css";
@@ -70,23 +68,66 @@ export default function ChatMessage(props: ChatMessageProps) {
 
   // Styles for the components
   const containerStyle: React.CSSProperties = {
-    padding: "16px",
+    padding: "4px 16px",
     borderRadius: "8px",
     backgroundColor: "transparent",
-    marginBottom: "16px",
+    marginBottom: "4px",
     position: "relative",
     display: "flex",
     flexDirection:
-      props.message?.type === ChatBotMessageType.Human
-        ? "row-reverse"
-        : "row",
-    alignItems: "flex-start",
+      props.message?.type === ChatBotMessageType.Human ? "row-reverse" : "row",
+    alignItems: "flex-end",
+    gap: "12px",
+  };
+
+  const avatarStyle: React.CSSProperties = {
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "18px",
+    fontWeight: "600",
+    flexShrink: 0,
+    backgroundColor:
+      props.message?.type === ChatBotMessageType.Human ? "#004d7a" : "#0073bb",
+    color: "white",
   };
 
   const aiContainerStyle = {
     display: "flex",
+    flexDirection: "row" as const,
+    flex: 1,
+    alignItems: "flex-end",
+    gap: "8px",
+  };
+
+  const messageWrapperStyle = {
+    display: "flex",
     flexDirection: "column" as const,
-    maxWidth: "80%",
+    flex: 1,
+  };
+
+  const copyButtonContainerStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    paddingBottom: "4px",
+  };
+
+  const copyButtonStyle: React.CSSProperties = {
+    backgroundColor: "transparent",
+    border: "none",
+    cursor: "pointer",
+    padding: "6px",
+    minWidth: "32px",
+    minHeight: "32px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#6b7280",
+    borderRadius: "4px",
+    transition: "all 0.2s ease",
   };
 
   const messageBubbleStyle = {
@@ -132,7 +173,7 @@ export default function ChatMessage(props: ChatMessageProps) {
   };
 
   const dropdownButtonStyle = {
-    padding: "6px 12px",
+    padding: "8px 12px",
     backgroundColor: "#006499",
     color: "white",
     border: "none",
@@ -142,6 +183,7 @@ export default function ChatMessage(props: ChatMessageProps) {
     alignItems: "center",
     gap: "8px",
     fontSize: "14px",
+    minHeight: "44px",
   };
 
   const dropdownMenuStyle = {
@@ -235,7 +277,9 @@ export default function ChatMessage(props: ChatMessageProps) {
     backgroundColor: "transparent",
     border: "none",
     cursor: "pointer",
-    padding: "4px 8px",
+    padding: "8px",
+    minWidth: "44px",
+    minHeight: "44px",
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
@@ -354,11 +398,22 @@ export default function ChatMessage(props: ChatMessageProps) {
     <div>
       {/* Modal for feedback */}
       <div style={modalOverlayStyle}>
-        <div style={modalStyle}>
-          <div style={modalHeaderStyle}>Provide Feedback</div>
+        <div
+          style={modalStyle}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="feedback-modal-title"
+        >
+          <div style={modalHeaderStyle} id="feedback-modal-title">
+            Provide Feedback
+          </div>
           <div>
             <div style={formFieldStyle}>
+              <label htmlFor="feedback-topic" style={labelStyle}>
+                Topic
+              </label>
               <select
+                id="feedback-topic"
                 style={selectStyle}
                 value={selectedTopic.value}
                 onChange={(e) => {
@@ -369,6 +424,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                     selected || { label: "Select a Topic", value: "1" }
                   );
                 }}
+                aria-invalid={selectedTopic.value === "1"}
+                aria-describedby="feedback-topic-error"
               >
                 {feedbackCategories.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -378,7 +435,11 @@ export default function ChatMessage(props: ChatMessageProps) {
               </select>
             </div>
             <div style={formFieldStyle}>
+              <label htmlFor="feedback-problem" style={labelStyle}>
+                Problem Type
+              </label>
               <select
+                id="feedback-problem"
                 style={selectStyle}
                 value={selectedFeedbackType.value}
                 onChange={(e) => {
@@ -389,6 +450,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                     selected || { label: "Select a Problem", value: "1" }
                   );
                 }}
+                aria-invalid={selectedFeedbackType.value === "1"}
+                aria-describedby="feedback-problem-error"
               >
                 {feedbackTypes.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -398,13 +461,17 @@ export default function ChatMessage(props: ChatMessageProps) {
               </select>
             </div>
             <div style={formFieldStyle}>
-              <label htmlFor="feedback-input" style={labelStyle}>Please enter feedback here</label>
+              <label htmlFor="feedback-input" style={labelStyle}>
+                Please enter feedback here
+              </label>
               <input
                 id="feedback-input"
                 type="text"
                 style={inputStyle}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
+                aria-invalid={value.trim() === ""}
+                aria-describedby="feedback-input-help"
               />
             </div>
           </div>
@@ -472,161 +539,207 @@ export default function ChatMessage(props: ChatMessageProps) {
 
       <div style={containerStyle}>
         {props.message?.type === ChatBotMessageType.AI ? (
-          <div style={aiContainerStyle}>
-            <div style={messageBubbleStyle}>
-              <div style={messageContentStyle}>
-                {content?.length === 0 ? (
-                  <div style={spinnerStyle}></div>
-                ) : null}
+          <>
+            {/* Avatar for AI */}
+            <div style={avatarStyle} aria-label="GrantWell assistant">
+              G
+            </div>
+            {/* Wrapper for message and copy button */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-end",
+                gap: "8px",
+                flex: 1,
+                maxWidth: "80%",
+              }}
+            >
+              <div style={aiContainerStyle}>
+                <div style={messageWrapperStyle}>
+                  <div style={messageBubbleStyle}>
+                    <span className="sr-only">Assistant replied: </span>
+                    <div style={messageContentStyle}>
+                      {content?.length === 0 ? (
+                        <div style={spinnerStyle}></div>
+                      ) : null}
 
-                {props.message.content.length > 0 ? (
-                  <div
-                    className={styles.btn_chabot_message_copy}
-                    style={{ position: "absolute", top: "8px", right: "8px" }}
-                  >
-                    <div style={{ position: "relative" }}>
-                      <button 
-                        style={iconButtonStyle} 
-                        onClick={handleCopy}
-                        aria-label="Copy message to clipboard"
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          pre(props) {
+                            const { children, ...rest } = props;
+                            return (
+                              <pre {...rest} className={styles.codeMarkdown}>
+                                {children}
+                              </pre>
+                            );
+                          },
+                          table(props) {
+                            const { children, ...rest } = props;
+                            return (
+                              <table {...rest} className={styles.markdownTable}>
+                                {children}
+                              </table>
+                            );
+                          },
+                          th(props) {
+                            const { children, ...rest } = props;
+                            return (
+                              <th
+                                {...rest}
+                                className={styles.markdownTableCell}
+                              >
+                                {children}
+                              </th>
+                            );
+                          },
+                          td(props) {
+                            const { children, ...rest } = props;
+                            return (
+                              <td
+                                {...rest}
+                                className={styles.markdownTableCell}
+                              >
+                                {children}
+                              </td>
+                            );
+                          },
+                        }}
                       >
-                        <FaCopy size={16} />
-                      </button>
-                      {showCopyPopup && (
-                        <div style={popoverStyle}>
-                          <div style={popoverContentStyle}>
-                            <div style={successIndicatorStyle}>
-                              Copied to clipboard
-                            </div>
+                        {content}
+                      </ReactMarkdown>
+                    </div>
+
+                    {/* Sources section inside the bubble */}
+                    {showSources && (
+                      <>
+                        {/* Separator line */}
+                        <div
+                          style={{
+                            borderTop: "1px solid #e0e0e0",
+                            marginTop: "12px",
+                            paddingTop: "12px",
+                          }}
+                        >
+                          <div
+                            style={{ position: "relative" }}
+                            ref={dropdownRef}
+                          >
+                            <button
+                              style={{
+                                backgroundColor: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                padding: "4px 8px",
+                                fontSize: "13px",
+                                color: "#374151",
+                                fontWeight: 500,
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                minWidth: "44px",
+                                minHeight: "44px",
+                                borderRadius: "4px",
+                                transition: "all 0.2s ease",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "#f3f4f6";
+                                e.currentTarget.style.color = "#0073bb";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+                                e.currentTarget.style.color = "#374151";
+                              }}
+                              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                              aria-label="View source documents"
+                              aria-expanded={isDropdownOpen}
+                              aria-haspopup="true"
+                            >
+                              <FaFileAlt size={12} />
+                              {
+                                (props.message.metadata.Sources as any[]).length
+                              }{" "}
+                              Sources <FaChevronDown size={10} />
+                            </button>
+
+                            {isDropdownOpen && (
+                              <div style={dropdownMenuStyle}>
+                                {(props.message.metadata.Sources as any[]).map(
+                                  (item, index) => (
+                                    <a
+                                      key={index}
+                                      href={item.uri}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={dropdownItemStyle}
+                                    >
+                                      {item.title}{" "}
+                                      <FaExternalLinkAlt
+                                        size={10}
+                                        style={{ marginLeft: "4px" }}
+                                      />
+                                    </a>
+                                  )
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                ) : null}
-
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    pre(props) {
-                      const { children, ...rest } = props;
-                      return (
-                        <pre {...rest} className={styles.codeMarkdown}>
-                          {children}
-                        </pre>
-                      );
-                    },
-                    table(props) {
-                      const { children, ...rest } = props;
-                      return (
-                        <table {...rest} className={styles.markdownTable}>
-                          {children}
-                        </table>
-                      );
-                    },
-                    th(props) {
-                      const { children, ...rest } = props;
-                      return (
-                        <th {...rest} className={styles.markdownTableCell}>
-                          {children}
-                        </th>
-                      );
-                    },
-                    td(props) {
-                      const { children, ...rest } = props;
-                      return (
-                        <td {...rest} className={styles.markdownTableCell}>
-                          {children}
-                        </td>
-                      );
-                    },
-                  }}
-                >
-                  {content}
-                </ReactMarkdown>
-              </div>
-            </div>
-
-            <div style={aiActionsStyle}>
-              <div style={{ display: "flex", gap: "8px" }}>
-                {(selectedIcon === 1 || selectedIcon === null) && (
-                  <button
-                    style={iconButtonStyle}
-                    onClick={() => {
-                      props.onThumbsUp();
-                      const id = addNotification(
-                        "success",
-                        "Thank you for your valuable feedback!"
-                      );
-                      Utils.delay(3000).then(() => removeNotification(id));
-                      setSelectedIcon(1);
-                    }}
-                    aria-label="Thumbs up - positive feedback"
-                  >
-                    {selectedIcon === 1 ? (
-                      <FaThumbsUp size={16} />
-                    ) : (
-                      <FaThumbsUp size={16} />
-                    )}
-                  </button>
-                )}
-                {(selectedIcon === 0 || selectedIcon === null) && (
-                  <button
-                    style={iconButtonStyle}
-                    onClick={() => {
-                      setModalVisible(true);
-                    }}
-                    aria-label="Thumbs down - provide feedback"
-                  >
-                    {selectedIcon === 0 ? (
-                      <FaThumbsDown size={16} />
-                    ) : (
-                      <FaThumbsDown size={16} />
-                    )}
-                  </button>
-                )}
-              </div>
-
-              {showSources && (
-                <div style={footerStyle}>
-                  <div style={{ position: "relative" }} ref={dropdownRef}>
-                    <button
-                      style={dropdownButtonStyle}
-                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    >
-                      Sources <FaChevronDown size={12} />
-                    </button>
-
-                    {isDropdownOpen && (
-                      <div style={dropdownMenuStyle}>
-                        {(props.message.metadata.Sources as any[]).map(
-                          (item, index) => (
-                            <a
-                              key={index}
-                              href={item.uri}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={dropdownItemStyle}
-                            >
-                              {item.title}{" "}
-                              <FaExternalLinkAlt
-                                size={10}
-                                style={{ marginLeft: "4px" }}
-                              />
-                            </a>
-                          )
-                        )}
-                      </div>
+                      </>
                     )}
                   </div>
                 </div>
+              </div>
+
+              {/* Copy button - now next to the bubble */}
+              {props.message.content.length > 0 && (
+                <div style={copyButtonContainerStyle}>
+                  <button
+                    style={copyButtonStyle}
+                    onClick={handleCopy}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#f3f4f6";
+                      e.currentTarget.style.color = "#0073bb";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "transparent";
+                      e.currentTarget.style.color = "#6b7280";
+                    }}
+                    aria-label="Copy message to clipboard"
+                  >
+                    <FaCopy size={14} />
+                  </button>
+                  {showCopyPopup && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        fontSize: "11px",
+                        color: "#059669",
+                        fontWeight: "500",
+                        whiteSpace: "nowrap",
+                        marginLeft: "4px",
+                      }}
+                    >
+                      Copied!
+                    </div>
+                  )}
+                </div>
               )}
             </div>
-          </div>
+          </>
         ) : (
-          <div style={messageBubbleStyle}>
-            <div style={messageContentStyle}>{props.message.content}</div>
-          </div>
+          <>
+            {/* Avatar for User */}
+            <div style={avatarStyle} aria-label="User">
+              U
+            </div>
+            <div style={messageBubbleStyle}>
+              <span className="sr-only">You said: </span>
+              <div style={messageContentStyle}>{props.message.content}</div>
+            </div>
+          </>
         )}
       </div>
 

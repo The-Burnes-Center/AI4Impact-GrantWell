@@ -119,7 +119,12 @@ const styles: Record<string, React.CSSProperties> = {
     background: "none",
     border: "none",
     cursor: "pointer",
-    color: "#5a6169",
+    color: "#4a5159",
+    minWidth: "44px",
+    minHeight: "44px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   modalBody: {
     padding: "24px",
@@ -242,6 +247,11 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     padding: "8px",
     borderRadius: "4px",
+    minWidth: "44px",
+    minHeight: "44px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   errorText: {
     color: "#d32f2f",
@@ -261,10 +271,11 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: "8px",
     marginTop: "16px",
+    minHeight: "44px",
   },
   disabledButton: {
     backgroundColor: "#e5e7eb",
-    color: "#9ca3af",
+    color: "#6c7481",
     cursor: "not-allowed",
   },
   modalFooter: {
@@ -280,6 +291,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500,
     cursor: "pointer",
     marginLeft: "12px",
+    minHeight: "44px",
   },
   cancelButton: {
     backgroundColor: "white",
@@ -329,6 +341,11 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "8px",
     borderRadius: "4px",
     marginRight: "6px",
+    minWidth: "44px",
+    minHeight: "44px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 };
 
@@ -659,10 +676,15 @@ export default function UploadModal({
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
         role="document"
+        aria-labelledby="upload-modal-title"
       >
         <div style={styles.modalHeader}>
-          <h2 style={styles.modalTitle}>Manage Document Files</h2>
-          <button style={styles.closeButton} onClick={onClose}>
+          <h2 id="upload-modal-title" style={styles.modalTitle}>Manage Document Files</h2>
+          <button 
+            style={styles.closeButton} 
+            onClick={onClose}
+            aria-label="Close upload modal"
+          >
             <X size={20} />
           </button>
         </div>
@@ -683,6 +705,8 @@ export default function UploadModal({
             role="tab"
             tabIndex={0}
             aria-selected={activeTab === "upload"}
+            aria-controls="upload-panel"
+            id="upload-tab"
           >
             Upload New Files
           </div>
@@ -705,6 +729,8 @@ export default function UploadModal({
             role="tab"
             tabIndex={0}
             aria-selected={activeTab === "view"}
+            aria-controls="view-panel"
+            id="view-tab"
           >
             View Existing Files
           </div>
@@ -712,7 +738,7 @@ export default function UploadModal({
 
         <div style={styles.modalBody}>
           {activeTab === "upload" ? (
-            <>
+            <div role="tabpanel" aria-labelledby="upload-tab" id="upload-panel">
               <div
                 style={{
                   ...styles.dropZone,
@@ -732,10 +758,11 @@ export default function UploadModal({
                 role="button"
                 tabIndex={0}
                 aria-label="Upload files by clicking or dragging and dropping"
+                aria-describedby="upload-instructions"
               >
                 <Upload size={40} style={styles.uploadIcon} />
                 <p style={styles.dropText}>Drag and drop your files here</p>
-                <p style={styles.browseText}>
+                <p style={styles.browseText} id="upload-instructions">
                   or <span style={styles.browseLink}>browse files</span>
                 </p>
                 <input
@@ -745,10 +772,16 @@ export default function UploadModal({
                   style={styles.fileInput}
                   onChange={handleFileInput}
                   accept={SUPPORTED_EXTENSIONS.join(",")}
+                  aria-label="Select files to upload"
                 />
               </div>
 
-              {error && <p style={styles.errorText}>{error}</p>}
+              {error && <div role="alert" aria-live="assertive" style={styles.errorText}>{error}</div>}
+
+              {/* Loading state announcement */}
+              <div role="status" aria-live="polite" className="sr-only">
+                {uploading ? `Uploading files, ${uploadProgress}% complete` : ""}
+              </div>
 
               {selectedFiles.length > 0 && (
                 <div style={styles.fileList}>
@@ -768,6 +801,7 @@ export default function UploadModal({
                         style={styles.deleteButton}
                         onClick={() => removeFile(index)}
                         disabled={uploading}
+                        aria-label={`Remove ${file.name} from upload queue`}
                       >
                         <Trash2 size={16} />
                       </button>
@@ -783,6 +817,7 @@ export default function UploadModal({
                     }}
                     onClick={uploadFiles}
                     disabled={uploading || selectedFiles.length === 0}
+                    aria-label={uploading ? `Uploading files, ${uploadProgress}% complete` : `Upload ${selectedFiles.length} selected files`}
                   >
                     <Upload size={16} />
                     {uploading
@@ -804,19 +839,25 @@ export default function UploadModal({
                   )}
                 </div>
               )}
-            </>
+            </div>
           ) : (
-            <div style={styles.fileList}>
+            <div style={styles.fileList} role="tabpanel" aria-labelledby="view-tab" id="view-panel">
               <div style={styles.fileListHeader}>
                 <p>Current Files</p>
                 <button
                   style={styles.refreshButton}
                   onClick={fetchExistingFiles}
                   disabled={loadingFiles || !isOpen}
+                  aria-label="Refresh file list"
                 >
                   <RefreshCw size={14} />{" "}
                   {loadingFiles ? "Loading..." : "Refresh"}
                 </button>
+              </div>
+
+              {/* Loading announcement */}
+              <div role="status" aria-live="polite" className="sr-only">
+                {loadingFiles ? "Loading files" : ""}
               </div>
 
               {loadingFiles ? (
@@ -867,6 +908,7 @@ export default function UploadModal({
                       onClick={() => downloadFile(file.name)}
                       disabled={downloadingFile === file.name}
                       title="Download file"
+                      aria-label={`Download ${file.name}`}
                     >
                       {downloadingFile === file.name ? (
                         <div
@@ -893,6 +935,7 @@ export default function UploadModal({
                       onClick={() => deleteFile(file.name)}
                       disabled={downloadingFile === file.name}
                       title="Delete file"
+                      aria-label={`Delete ${file.name}`}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -900,7 +943,7 @@ export default function UploadModal({
                 ))
               )}
 
-              {error && <p style={styles.errorText}>{error}</p>}
+              {error && <div role="alert" aria-live="assertive" style={styles.errorText}>{error}</div>}
             </div>
           )}
         </div>
@@ -912,6 +955,7 @@ export default function UploadModal({
               ...styles.cancelButton,
             }}
             onClick={onClose}
+            aria-label="Close modal"
           >
             Close
           </button>
