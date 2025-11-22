@@ -321,6 +321,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               }}
             >
               <button
+                aria-label="Bold"
                 style={{
                   width: "32px",
                   height: "32px",
@@ -332,11 +333,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   borderRadius: "4px",
                   color: "#374151",
                   cursor: "pointer",
+                  transition: "background 0.2s",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#e5e7eb")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
               >
                 <span style={{ fontWeight: "bold" }}>B</span>
               </button>
               <button
+                aria-label="Italic"
                 style={{
                   width: "32px",
                   height: "32px",
@@ -348,11 +353,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   borderRadius: "4px",
                   color: "#374151",
                   cursor: "pointer",
+                  transition: "background 0.2s",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#e5e7eb")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
               >
                 <span style={{ fontStyle: "italic" }}>I</span>
               </button>
               <button
+                aria-label="Underline"
                 style={{
                   width: "32px",
                   height: "32px",
@@ -364,7 +373,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   borderRadius: "4px",
                   color: "#374151",
                   cursor: "pointer",
+                  transition: "background 0.2s",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#e5e7eb")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
               >
                 <span style={{ textDecoration: "underline" }}>U</span>
               </button>
@@ -377,6 +389,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 }}
               ></div>
               <button
+                aria-label="Bulleted list"
                 style={{
                   width: "32px",
                   height: "32px",
@@ -388,7 +401,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   borderRadius: "4px",
                   color: "#374151",
                   cursor: "pointer",
+                  transition: "background 0.2s",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#e5e7eb")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
               >
                 <svg
                   viewBox="0 0 24 24"

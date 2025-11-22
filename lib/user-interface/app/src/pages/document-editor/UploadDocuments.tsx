@@ -282,8 +282,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       });
       console.log('Draft updated successfully. Navigating to next step.');
 
-      // Continue to the next step
-      onContinue();
+      // Skip the "draft created" step and go directly to section editor
+      onNavigate("sectionEditor");
     } catch (error) {
       console.error('Error creating draft:', error);
       alert('Failed to create draft. Please try again.');
