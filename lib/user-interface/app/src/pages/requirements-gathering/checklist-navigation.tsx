@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { ChevronLeft, ChevronRight, MessageSquare, Edit } from "lucide-react";
+import { MessageSquare, Edit } from "lucide-react";
 
 interface NavigationProps {
   documentIdentifier?: string;
-  sidebarOpen: boolean;
-  onSidebarToggle: () => void;
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -23,24 +21,13 @@ const styles: Record<string, React.CSSProperties> = {
     zIndex: 100,
     top: 0,
     left: 0,
-  },
-  sidebarExpanded: {
     width: "240px",
-  },
-  sidebarCollapsed: {
-    width: "72px",
   },
   sidebarHeader: {
     padding: "16px",
     display: "flex",
     alignItems: "center",
     borderBottom: "1px solid #1f3b5a",
-  },
-  sidebarToggle: {
-    background: "none",
-    border: "none",
-    color: "#ffffff",
-    cursor: "pointer",
   },
   navContainer: {
     flex: 1,
@@ -52,7 +39,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "8px",
     display: "flex",
     alignItems: "center",
-    color: "#a3b5d0",
+    color: "#e2e8f0",
     fontSize: "12px",
     fontWeight: 600,
     textTransform: "uppercase",
@@ -65,7 +52,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "12px",
     marginBottom: "4px",
     background: "transparent",
-    color: "#a3b5d0",
+    color: "#e2e8f0",
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
@@ -87,8 +74,6 @@ const styles: Record<string, React.CSSProperties> = {
 
 export default function RequirementsNavigation({
   documentIdentifier,
-  sidebarOpen,
-  onSidebarToggle,
 }: NavigationProps) {
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<any[]>([]);
   const location = useLocation();
@@ -125,36 +110,24 @@ export default function RequirementsNavigation({
     <div
       style={{
         ...styles.sidebar,
-        ...(sidebarOpen ? styles.sidebarExpanded : styles.sidebarCollapsed),
       }}
     >
-      {/* Sidebar header with toggle button */}
+      {/* Sidebar header */}
       <div
         style={{
           ...styles.sidebarHeader,
-          justifyContent: sidebarOpen ? "space-between" : "center",
+          justifyContent: "center",
         }}
       >
-        {sidebarOpen && (
-          <div style={{ fontWeight: "bold", fontSize: "16px" }}>Navigation</div>
-        )}
-        <button 
-          style={styles.sidebarToggle} 
-          onClick={onSidebarToggle}
-          aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-        >
-          {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-        </button>
+        <div style={{ fontWeight: "bold", fontSize: "16px" }}>Navigation</div>
       </div>
 
       {/* Navigation links */}
       <div style={styles.navContainer}>
         <div>
-          {sidebarOpen && (
-            <div style={styles.sectionHeader}>
-              <span>Menu</span>
-            </div>
-          )}
+          <div style={styles.sectionHeader}>
+            <span>Menu</span>
+          </div>
 
           <button
             onClick={handleChatNavigation}
@@ -164,9 +137,7 @@ export default function RequirementsNavigation({
             }}
           >
             <MessageSquare size={20} />
-            {sidebarOpen && (
-              <span style={styles.navLinkText}>Chat with AI</span>
-            )}
+            <span style={styles.navLinkText}>Chat with AI</span>
           </button>
 
           <button
@@ -185,14 +156,12 @@ export default function RequirementsNavigation({
             }}
           >
             <Edit size={20} />
-            {sidebarOpen && (
-              <span style={styles.navLinkText}>Write Application</span>
-            )}
+            <span style={styles.navLinkText}>Write Application</span>
           </button>
         </div>
 
         {/* Recently Viewed NOFOs Section */}
-        {sidebarOpen && recentlyViewedNOFOs.length > 0 && (
+        {recentlyViewedNOFOs.length > 0 && (
           <div style={styles.recentlyViewedSection}>
             <div style={styles.sectionHeader}>
               <span>Recent Grants</span>

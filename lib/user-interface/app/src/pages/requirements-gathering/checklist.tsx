@@ -511,13 +511,12 @@ const Checklists: React.FC = () => {
   });
   const [isLoading, setLoading] = useState(true);
   const [activeTabId, setActiveTabId] = useState("eligibility");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showHelp, setShowHelp] = useState(false);
-
-  // Toggle sidebar function
-  const handleSidebarToggle = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+  const modalRef = React.useRef<HTMLDivElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const checkboxRef = React.useRef<HTMLInputElement>(null);
+  const gotItButtonRef = React.useRef<HTMLButtonElement>(null);
 
   // Add CSS styles to document on mount
   useEffect(() => {
@@ -529,6 +528,72 @@ const Checklists: React.FC = () => {
       document.head.removeChild(styleEl);
     };
   }, []);
+
+  // Check localStorage and show help modal automatically on first visit
+  useEffect(() => {
+    const hasSeenHelp = localStorage.getItem("checklistsHelpSeen");
+    if (!hasSeenHelp && !isLoading) {
+      setShowHelp(true);
+    }
+  }, [isLoading]);
+
+  // Focus trapping effect for modal
+  useEffect(() => {
+    if (!showHelp) return;
+
+    const modalElement = modalRef.current;
+    if (!modalElement) return;
+
+    // Focus the modal container when modal opens so screen readers read all content
+    setTimeout(() => {
+      modalRef.current?.focus();
+    }, 100);
+
+    // Handle tab key for focus trapping
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusableElements = [
+        closeButtonRef.current, 
+        checkboxRef.current,
+        gotItButtonRef.current
+      ].filter(Boolean);
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (!firstElement || !lastElement) return;
+
+      // If shift+tab on first element, go to last
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement?.focus();
+      }
+      // If tab on last element, go to first
+      else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement?.focus();
+      }
+    };
+
+    // Handle escape key to close modal
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleCloseModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleEscape);
+
+    // Prevent background from being tabbable
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [showHelp]);
 
   // Handle URL hash for direct tab access
   useEffect(() => {
@@ -603,6 +668,14 @@ const Checklists: React.FC = () => {
     window.location.hash = tabId;
   };
 
+  // Handle modal close
+  const handleCloseModal = () => {
+    if (dontShowAgain) {
+      localStorage.setItem("checklistsHelpSeen", "true");
+    }
+    setShowHelp(false);
+  };
+
   // Tab content mapping
   const tabContents: TabContents = {
     eligibility: {
@@ -652,11 +725,9 @@ const Checklists: React.FC = () => {
         Skip to main content
       </a>
       {/* Navigation Sidebar */}
-      <nav aria-label="Requirements navigation">
+      <nav aria-label="Requirements navigation" aria-hidden={showHelp}>
         <RequirementsNavigation
           documentIdentifier={folderParam}
-          sidebarOpen={sidebarOpen}
-          onSidebarToggle={handleSidebarToggle}
         />
       </nav>
 
@@ -666,9 +737,10 @@ const Checklists: React.FC = () => {
         style={{
           flex: 1,
           overflow: "auto",
-          marginLeft: sidebarOpen ? "240px" : "72px",
+          marginLeft: "240px",
           transition: "margin-left 0.3s ease",
         }}
+        aria-hidden={showHelp}
       >
         <div style={styles.mainContainer}>
           {isLoading ? (
@@ -805,7 +877,7 @@ const Checklists: React.FC = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    backgroundColor: "rgba(0, 0, 0, 0.6)",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -813,94 +885,234 @@ const Checklists: React.FC = () => {
                   }}
                 >
                   <div
+                    ref={modalRef}
+                    tabIndex={-1}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="help-modal-title"
+                    aria-describedby="help-modal-description"
                     style={{
-                      width: "600px",
+                      width: "650px",
                       backgroundColor: THEME.colors.white,
-                      borderRadius: THEME.borderRadius.medium,
-                      padding: "24px",
-                      boxShadow: THEME.shadows.large,
-                      maxHeight: "80vh",
-                      overflow: "auto",
+                      borderRadius: "12px",
+                      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+                      maxHeight: "90vh",
+                      overflow: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                      outline: "none",
                     }}
                   >
+                    {/* Header */}
                     <div
                       style={{
+                        backgroundColor: "#0073BB",
+                        padding: "20px 24px",
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        marginBottom: "16px",
                       }}
                     >
                       <h2
+                        id="help-modal-title"
                         style={{
-                          fontSize: "20px",
+                          fontSize: "22px",
                           fontWeight: 600,
-                          color: THEME.colors.heading,
+                          color: "#ffffff",
                           margin: 0,
                         }}
                       >
                         How to use this page
                       </h2>
                       <button
-                        onClick={() => setShowHelp(false)}
+                        ref={closeButtonRef}
+                        onClick={handleCloseModal}
                         style={{
-                          background: "none",
+                          background: "rgba(255, 255, 255, 0.2)",
                           border: "none",
                           cursor: "pointer",
-                          fontSize: "20px",
-                          color: THEME.colors.textSecondary,
+                          fontSize: "24px",
+                          color: "#ffffff",
+                          padding: "4px 10px",
+                          borderRadius: "4px",
+                          lineHeight: "1",
+                          transition: "background 0.2s",
                         }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "rgba(255, 255, 255, 0.3)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                        }}
+                        aria-label="Close help dialog"
                       >
                         ×
                       </button>
                     </div>
 
+                    {/* Content */}
                     <div
+                      id="help-modal-description"
                       style={{
-                        fontSize: "16px",
-                        lineHeight: 1.5,
-                        color: THEME.colors.text,
+                        padding: "28px 32px",
+                        overflowY: "auto",
+                        flex: 1,
                       }}
                     >
-                      <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
-                      Grantwell uses generative AI to extract and summarize the key elements of the grant.
+                      <p style={{ 
+                        marginBottom: "20px", 
+                        lineHeight: "1.6",
+                        fontSize: "15px",
+                        color: "#555",
+                      }}>
+                        Grantwell uses generative AI to extract and summarize the key elements of the grant.
                       </p>
 
-                      <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
-                        Click through the tabs above (Eligibility, Required Documents, Narrative Sections, Key Deadlines) to see what you need for this grant.
-                      </p>
+                      {/* Highlighted box */}
+                      <div style={{
+                        borderLeft: "4px solid #0073BB",
+                        backgroundColor: "#F0F7FF",
+                        padding: "16px 20px",
+                        marginBottom: "24px",
+                        borderRadius: "4px",
+                      }}>
+                        <p style={{ 
+                          margin: 0, 
+                          lineHeight: "1.6",
+                          fontSize: "15px",
+                          color: "#333",
+                        }}>
+                          Click through the tabs above (<strong style={{ fontWeight: 600 }}>Eligibility, Required Documents, Narrative Sections, Key Deadlines</strong>) to see what you need for this grant.
+                        </p>
+                      </div>
                       
-                      <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
-                      Have a question? Use “Chat with AI” in the left sidebar to get help understanding the grant requirements. Grantwell will answer your questions based on the grant application.
-                      </p>
+                      {/* Have a question section */}
+                      <div style={{ marginBottom: "20px" }}>
+                        <p style={{ 
+                          margin: 0,
+                          marginBottom: "6px",
+                          fontSize: "15px",
+                          color: "#0073BB",
+                          fontWeight: 600,
+                        }}>
+                          Have a question?
+                        </p>
+                        <p style={{ 
+                          margin: 0,
+                          lineHeight: "1.6",
+                          fontSize: "15px",
+                          color: "#555",
+                        }}>
+                          Use "Chat with AI" in the left sidebar to get help understanding the grant requirements.
+                        </p>
+                      </div>
                       
-                      <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
-                        Ready to start writing? Click "Write Application" in the left sidebar to begin drafting your application.
-                      </p>
+                      {/* Ready to start writing section */}
+                      <div style={{ marginBottom: "20px" }}>
+                        <p style={{ 
+                          margin: 0,
+                          marginBottom: "6px",
+                          fontSize: "15px",
+                          color: "#0073BB",
+                          fontWeight: 600,
+                        }}>
+                          Ready to start writing?
+                        </p>
+                        <p style={{ 
+                          margin: 0,
+                          lineHeight: "1.6",
+                          fontSize: "15px",
+                          color: "#555",
+                        }}>
+                          Click "Write Application" in the left sidebar to begin drafting.
+                        </p>
+                      </div>
                       
-                      <p style={{ marginBottom: "0", lineHeight: "1.6" }}>
-                      Want to see a different grants? Use "Recent Grants" in the left sidebar to quickly access grants you've looked at or return to the home page to search again.
-                      </p>
+                      {/* Want a different grant section */}
+                      <div style={{ marginBottom: "24px" }}>
+                        <p style={{ 
+                          margin: 0,
+                          marginBottom: "6px",
+                          fontSize: "15px",
+                          color: "#0073BB",
+                          fontWeight: 600,
+                        }}>
+                          Want a different grant?
+                        </p>
+                        <p style={{ 
+                          margin: 0,
+                          lineHeight: "1.6",
+                          fontSize: "15px",
+                          color: "#555",
+                        }}>
+                          Use "Recent Grants" to quickly access other grants or return to the home page.
+                        </p>
+                      </div>
+
+                      {/* Checkbox */}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: "24px",
+                          marginBottom: "20px",
+                        }}
+                      >
+                        <input
+                          ref={checkboxRef}
+                          type="checkbox"
+                          id="dont-show-again"
+                          checked={dontShowAgain}
+                          onChange={(e) => setDontShowAgain(e.target.checked)}
+                          style={{
+                            marginRight: "10px",
+                            cursor: "pointer",
+                            width: "18px",
+                            height: "18px",
+                            accentColor: "#0073BB",
+                          }}
+                          aria-label="Do not show this again"
+                        />
+                        <label
+                          htmlFor="dont-show-again"
+                          style={{
+                            fontSize: "14px",
+                            color: "#666",
+                            cursor: "pointer",
+                            userSelect: "none",
+                          }}
+                        >
+                          Do not show this again
+                        </label>
+                      </div>
+
+                      {/* Got it button */}
+                      <button
+                        ref={gotItButtonRef}
+                        onClick={handleCloseModal}
+                        style={{
+                          padding: "14px 24px",
+                          backgroundColor: "#0073BB",
+                          color: "#ffffff",
+                          border: "none",
+                          borderRadius: "6px",
+                          cursor: "pointer",
+                          fontWeight: 600,
+                          fontSize: "16px",
+                          width: "100%",
+                          transition: "background 0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#005A94";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "#0073BB";
+                        }}
+                        aria-label="Close help dialog"
+                      >
+                        Got it
+                      </button>
                     </div>
-
-                    <button
-                      onClick={() => setShowHelp(false)}
-                      style={{
-                        marginTop: "24px",
-                        padding: "10px 16px",
-                        backgroundColor: THEME.colors.primary,
-                        color: THEME.colors.white,
-                        border: "none",
-                        borderRadius: THEME.borderRadius.small,
-                        cursor: "pointer",
-                        fontWeight: 500,
-                        fontSize: "16px",
-                        display: "block",
-                        width: "100%",
-                      }}
-                    >
-                      Got it
-                    </button>
                   </div>
                 </div>
               )}

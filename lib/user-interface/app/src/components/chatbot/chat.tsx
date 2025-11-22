@@ -179,10 +179,12 @@ export default function Chat(props: {
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );
-  const [showPopup, setShowPopup] = useState<boolean>(true);
+  const [showPopup, setShowPopup] = useState<boolean>(false); // Disabled - now handled by playground
   const [doNotShowAgain, setDoNotShowAgain] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
+  // Popup disabled - now handled at playground level
+  /* 
   // Check localStorage on component mount
   useEffect(() => {
     const shouldShowPopup = localStorage.getItem("showGrantWellPopup");
@@ -190,6 +192,7 @@ export default function Chat(props: {
       setShowPopup(false);
     }
   }, []);
+  */
 
   // Handle checkbox change
   const handleDoNotShowAgainChange = (

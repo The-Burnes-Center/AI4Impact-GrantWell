@@ -289,26 +289,29 @@ export default function ChatMessage(props: ChatMessageProps) {
   const successIndicatorStyle = {
     backgroundColor: "#eafbea",
     color: "#067306",
-    padding: "4px 8px",
+    padding: "6px 12px",
     borderRadius: "4px",
-    fontSize: "14px",
+    fontSize: "13px",
     display: "inline-flex",
     alignItems: "center",
     gap: "6px",
+    whiteSpace: "nowrap" as const,
+    fontWeight: 500,
   };
 
   const popoverStyle = {
     position: "absolute" as const,
     right: "40px",
-    top: "10px",
+    top: "0px",
     zIndex: 100,
   };
 
   const popoverContentStyle = {
-    padding: "4px 8px",
+    padding: "4px",
     backgroundColor: "white",
-    borderRadius: "4px",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    borderRadius: "6px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+    border: "1px solid #e0e0e0",
   };
 
   // Keyframes for spinner animation
