@@ -45,6 +45,10 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   >([]);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
   const [showViewAllModal, setShowViewAllModal] = useState(false);
+  
+  // Ref for View All Grants modal focus trap
+  const viewAllModalRef = useRef<HTMLDivElement>(null);
+  const viewAllModalPreviousFocusRef = useRef<HTMLElement | null>(null);
 
   // Use grant recommendations hook only for the Grant Assistant
   const {
@@ -133,6 +137,70 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     };
   }, []);
 
+  // Focus trap and focus restoration for View All Grants modal
+  useEffect(() => {
+    if (!showViewAllModal) return;
+
+    // Store the currently focused element
+    viewAllModalPreviousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Focus the modal after a short delay
+    setTimeout(() => {
+      const firstFocusable = viewAllModalRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      firstFocusable?.focus();
+    }, 100);
+
+    // Restore focus when modal closes
+    return () => {
+      // Only restore focus if the element still exists in the DOM
+      if (viewAllModalPreviousFocusRef.current && document.body.contains(viewAllModalPreviousFocusRef.current)) {
+        viewAllModalPreviousFocusRef.current.focus();
+      }
+    };
+  }, [showViewAllModal]);
+
+  // Focus trap handler for View All Grants modal
+  useEffect(() => {
+    if (!showViewAllModal || !viewAllModalRef.current) return;
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusableElements = viewAllModalRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      // Check if currently focused element is inside the modal
+      const activeElement = document.activeElement as HTMLElement;
+      const isInsideModal = viewAllModalRef.current?.contains(activeElement);
+
+      // If focus is outside the modal, bring it back
+      if (!isInsideModal) {
+        e.preventDefault();
+        firstElement.focus();
+        return;
+      }
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleTabKey);
+    return () => document.removeEventListener("keydown", handleTabKey);
+  }, [showViewAllModal, documents, pinnedGrants]); // Re-run when grants change
+
   // Filter documents when search term changes - removed automatic AI recommendations
   useEffect(() => {
     // Filter existing documents and sort alphabetically
@@ -154,6 +222,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
       );
     setFilteredPinnedGrants(filteredPinned);
+    
+    // Reset selectedIndex when results change
+    setSelectedIndex(-1);
   }, [searchTerm, documents, pinnedGrants]);
 
   // Handle keyboard navigation
@@ -650,9 +721,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       }}
       onFocus={(e) => {
         e.currentTarget.style.backgroundColor = "#005A94";
+        e.currentTarget.style.outline = "2px solid #2c4fdb";
+        e.currentTarget.style.outlineOffset = "2px";
       }}
       onBlur={(e) => {
         e.currentTarget.style.backgroundColor = "#0073BB";
+        e.currentTarget.style.outline = "none";
+        e.currentTarget.style.outlineOffset = "0";
       }}
       aria-label="Open Grant Assistant to get AI-powered grant recommendations"
     >
@@ -709,9 +784,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       }}
       onFocus={(e) => {
         e.currentTarget.style.backgroundColor = "#005080";
+        e.currentTarget.style.outline = "2px solid #2c4fdb";
+        e.currentTarget.style.outlineOffset = "2px";
       }}
       onBlur={(e) => {
         e.currentTarget.style.backgroundColor = "#006499";
+        e.currentTarget.style.outline = "none";
+        e.currentTarget.style.outlineOffset = "0";
       }}
       aria-label="View all available grants"
     >
@@ -762,6 +841,11 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           aria-autocomplete="list"
           aria-controls="search-results-listbox"
           aria-expanded={showResults}
+          aria-activedescendant={
+            selectedIndex >= 0 && showResults
+              ? `search-result-${selectedIndex}`
+              : undefined
+          }
           role="combobox"
           style={{
             ...inputStyle,
@@ -921,6 +1005,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               ).map((grant, index) => (
                 <div
                   key={`pinned-${index}`}
+                  id={`search-result-${index}`}
                   style={
                     selectedIndex === index
                       ? selectedPinnedItemStyle
@@ -936,8 +1021,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     }
                   }}
                   onMouseEnter={() => setSelectedIndex(index)}
+                  onFocus={(e) => {
+                    e.currentTarget.style.outline = "2px solid #2c4fdb";
+                    e.currentTarget.style.outlineOffset = "2px";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.outline = "none";
+                  }}
                   role="button"
-                  tabIndex={-1}
+                  tabIndex={0}
                   aria-label={`Select ${grant.name}`}
                 >
                   <div>
@@ -961,9 +1053,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.backgroundColor = "#f8e0e0";
+                          e.currentTarget.style.outline = "2px solid #2c4fdb";
+                          e.currentTarget.style.outlineOffset = "2px";
                         }}
                         onBlur={(e) => {
                           e.currentTarget.style.backgroundColor = "transparent";
+                          e.currentTarget.style.outline = "none";
+                          e.currentTarget.style.outlineOffset = "0";
                         }}
                       >
                         <LuPinOff size={20} color="#E74C3C" />
@@ -987,6 +1083,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 return (
                   <div
                     key={`doc-${docName}-${index}`}
+                    id={`search-result-${index + filteredPinnedGrants.length}`}
                     style={
                       selectedIndex === index + filteredPinnedGrants.length
                         ? selectedItemStyle
@@ -1008,8 +1105,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     onMouseEnter={() =>
                       setSelectedIndex(index + filteredPinnedGrants.length)
                     }
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = "2px solid #2c4fdb";
+                      e.currentTarget.style.outlineOffset = "2px";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = "none";
+                    }}
                     role="button"
-                    tabIndex={-1}
+                    tabIndex={0}
                     aria-label={`Select ${docName}`}
                   >
                     <div
@@ -1043,10 +1147,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               onFocus={(e) => {
                                 e.currentTarget.style.backgroundColor =
                                   "#f8e0e0";
+                                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                                e.currentTarget.style.outlineOffset = "2px";
                               }}
                               onBlur={(e) => {
                                 e.currentTarget.style.backgroundColor =
                                   "transparent";
+                                e.currentTarget.style.outline = "none";
+                                e.currentTarget.style.outlineOffset = "0";
                               }}
                             >
                               <LuPinOff size={20} color="#E74C3C" />
@@ -1082,10 +1190,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               onFocus={(e) => {
                                 e.currentTarget.style.backgroundColor =
                                   "#e0f0ff";
+                                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                                e.currentTarget.style.outlineOffset = "2px";
                               }}
                               onBlur={(e) => {
                                 e.currentTarget.style.backgroundColor =
                                   "transparent";
+                                e.currentTarget.style.outline = "none";
+                                e.currentTarget.style.outlineOffset = "0";
                               }}
                             >
                               <LuPin size={20} color="#0073BB" />
@@ -1208,15 +1320,24 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                             );
                           }
                         }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.outline = "2px solid #2c4fdb";
+                          e.currentTarget.style.outlineOffset = "2px";
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.outline = "none";
+                        }}
                         role="button"
-                        tabIndex={-1}
+                        tabIndex={0}
                         aria-label={`View details for ${grantName}`}
                       >
                         <div style={grantCardHeaderStyle}>
                           <div style={grantCardTitleStyle}>{grantName}</div>
                           <button
                             type="button"
-                            tabIndex={-1}
+                            tabIndex={0}
+                            aria-expanded={isExpanded}
+                            aria-label={`${isExpanded ? 'Collapse' : 'Expand'} details for ${grantName}`}
                             style={{
                               display: "flex",
                               alignItems: "center",
@@ -1243,10 +1364,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                             onFocus={(e) => {
                               e.currentTarget.style.backgroundColor = "#e0f0ff";
                               e.currentTarget.style.color = "#0073BB";
+                              e.currentTarget.style.outline = "2px solid #2c4fdb";
+                              e.currentTarget.style.outlineOffset = "2px";
                             }}
                             onBlur={(e) => {
                               e.currentTarget.style.backgroundColor = "#f5f5f5";
                               e.currentTarget.style.color = "#666";
+                              e.currentTarget.style.outline = "none";
+                              e.currentTarget.style.outlineOffset = "0";
                             }}
                           >
                             {isExpanded ? (
@@ -1348,6 +1473,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           aria-modal="true"
         >
           <div
+            ref={viewAllModalRef}
             style={{
               backgroundColor: "white",
               borderRadius: "12px",
@@ -1408,9 +1534,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 }}
                 onFocus={(e) => {
                   e.currentTarget.style.backgroundColor = "#f0f0f0";
+                  e.currentTarget.style.outline = "2px solid #2c4fdb";
+                  e.currentTarget.style.outlineOffset = "2px";
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.outline = "none";
+                  e.currentTarget.style.outlineOffset = "0";
                 }}
                 aria-label="Close modal"
               >
@@ -1509,8 +1639,17 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                   "transparent";
                               }}
                               role="button"
-                              tabIndex={-1}
+                              tabIndex={0}
                               aria-label={`Select ${grant.name}`}
+                              onFocus={(e) => {
+                                e.currentTarget.style.backgroundColor = "#f0ffff";
+                                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                                e.currentTarget.style.outlineOffset = "2px";
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.backgroundColor = "transparent";
+                                e.currentTarget.style.outline = "none";
+                              }}
                             >
                               <div
                                 style={{
@@ -1593,8 +1732,17 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                   "transparent";
                               }}
                               role="button"
-                              tabIndex={-1}
+                              tabIndex={0}
                               aria-label={`Select ${doc.label}`}
+                              onFocus={(e) => {
+                                e.currentTarget.style.backgroundColor = "#f7faff";
+                                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                                e.currentTarget.style.outlineOffset = "2px";
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.backgroundColor = "transparent";
+                                e.currentTarget.style.outline = "none";
+                              }}
                             >
                               <div
                                 style={{

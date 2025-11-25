@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext, useEffect, useCallback, useRef } from "react";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { FileUploader } from "../../common/file-uploader";
@@ -359,6 +359,7 @@ export default function UploadModal({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatusAnnouncement, setUploadStatusAnnouncement] = useState('');
   const [existingFiles, setExistingFiles] = useState<UploadedFile[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loadingFiles, setLoadingFiles] = useState(false);
@@ -366,6 +367,10 @@ export default function UploadModal({
   const [userId, setUserId] = useState<string | null>(null);
 
   const appContext = useContext(AppContext);
+  
+  // Ref for modal container and focus restoration
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   // Helper to extract NOFO name from documentIdentifier
   const extractNofoName = (docId: string | null): string => {
@@ -387,6 +392,70 @@ export default function UploadModal({
     if (isOpen) {
       fetchUserId();
     }
+  }, [isOpen]);
+
+  // Focus trap and focus restoration
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Store the currently focused element
+    previousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Focus the modal after a short delay
+    setTimeout(() => {
+      const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      firstFocusable?.focus();
+    }, 100);
+
+    // Restore focus when modal closes
+    return () => {
+      // Only restore focus if the element still exists in the DOM
+      if (previousFocusRef.current && document.body.contains(previousFocusRef.current)) {
+        previousFocusRef.current.focus();
+      }
+    };
+  }, [isOpen]);
+
+  // Focus trap handler
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return;
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      // Check if currently focused element is inside the modal
+      const activeElement = document.activeElement as HTMLElement;
+      const isInsideModal = modalRef.current?.contains(activeElement);
+
+      // If focus is outside the modal, bring it back
+      if (!isInsideModal) {
+        e.preventDefault();
+        firstElement.focus();
+        return;
+      }
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleTabKey);
+    return () => document.removeEventListener("keydown", handleTabKey);
   }, [isOpen]);
 
   // Fetch existing files on component mount
@@ -498,6 +567,7 @@ export default function UploadModal({
     setUploading(true);
     setUploadProgress(0);
     setError(null);
+    setUploadStatusAnnouncement('Uploading files');
 
     const uploader = new FileUploader();
     const apiClient = new ApiClient(appContext);
@@ -539,6 +609,7 @@ export default function UploadModal({
           console.error(`Error uploading file ${file.name}:`, error);
           setError(`Failed to upload ${file.name}. Please try again.`);
           setUploading(false);
+          setUploadStatusAnnouncement('');
           return;
         }
       }
@@ -546,13 +617,16 @@ export default function UploadModal({
       // All files uploaded successfully
       setSelectedFiles([]);
       setUploadProgress(100);
+      setUploadStatusAnnouncement('Files uploaded. Indexing documents.');
 
       // Sync Kendra after upload to ensure documents are indexed
       try {
         await apiClient.knowledgeManagement.syncKendra();
+        setUploadStatusAnnouncement('Indexing complete. Viewing uploaded files.');
       } catch (syncError) {
         console.error("Error syncing knowledge base:", syncError);
         // Non-critical error, don't show to user since files were uploaded successfully
+        setUploadStatusAnnouncement('Files uploaded successfully. Viewing uploaded files.');
       }
 
       // Refresh the list of existing files
@@ -563,11 +637,13 @@ export default function UploadModal({
       setTimeout(() => {
         setUploading(false);
         setActiveTab("view");
+        setUploadStatusAnnouncement('');
       }, 1000);
     } catch (error) {
       console.error("Error during upload:", error);
       setError("An error occurred during upload. Please try again.");
       setUploading(false);
+      setUploadStatusAnnouncement('');
     }
   };
 
@@ -672,6 +748,7 @@ export default function UploadModal({
     >
       <style>{spinKeyframes}</style>
       <div 
+        ref={modalRef}
         style={styles.modalContainer} 
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
@@ -748,23 +825,48 @@ export default function UploadModal({
                 onDragOver={handleDrag}
                 onDragLeave={handleDrag}
                 onDrop={handleDrop}
-                onClick={() => document.getElementById("file-input")?.click()}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    document.getElementById("file-input")?.click();
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                aria-label="Upload files by clicking or dragging and dropping"
-                aria-describedby="upload-instructions"
+                role="region"
+                aria-label="File upload area with drag and drop"
               >
-                <Upload size={40} style={styles.uploadIcon} />
-                <p style={styles.dropText}>Drag and drop your files here</p>
-                <p style={styles.browseText} id="upload-instructions">
-                  or <span style={styles.browseLink}>browse files</span>
-                </p>
+                {/* Visible button/label for clicking */}
+                <label
+                  htmlFor="file-input"
+                  style={{
+                    display: "inline-flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    padding: "20px",
+                    borderRadius: "8px",
+                    transition: "all 0.2s",
+                    width: "100%",
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.outline = "2px solid #2c4fdb";
+                    e.currentTarget.style.outlineOffset = "2px";
+                    e.currentTarget.style.backgroundColor = "#f0f7ff";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.outline = "none";
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#f0f7ff";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                  tabIndex={0}
+                >
+                  <Upload size={40} style={styles.uploadIcon} aria-hidden="true" />
+                  <p style={styles.dropText}>Drag and drop your files here</p>
+                  <p style={styles.browseText} id="upload-instructions">
+                    or <span style={styles.browseLink}>browse files</span>
+                  </p>
+                </label>
+                
+                {/* Hidden file input, triggered by label */}
                 <input
                   id="file-input"
                   type="file"
@@ -772,15 +874,15 @@ export default function UploadModal({
                   style={styles.fileInput}
                   onChange={handleFileInput}
                   accept={SUPPORTED_EXTENSIONS.join(",")}
-                  aria-label="Select files to upload"
+                  aria-describedby="upload-instructions"
                 />
               </div>
 
-              {error && <div role="alert" aria-live="assertive" style={styles.errorText}>{error}</div>}
+              {error && <div role="alert" style={styles.errorText}>{error}</div>}
 
-              {/* Loading state announcement */}
-              <div role="status" aria-live="polite" className="sr-only">
-                {uploading ? `Uploading files, ${uploadProgress}% complete` : ""}
+              {/* Upload status announcement for screen readers */}
+              <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+                {uploadStatusAnnouncement}
               </div>
 
               {selectedFiles.length > 0 && (
@@ -943,7 +1045,7 @@ export default function UploadModal({
                 ))
               )}
 
-              {error && <div role="alert" aria-live="assertive" style={styles.errorText}>{error}</div>}
+              {error && <div role="alert" style={styles.errorText}>{error}</div>}
             </div>
           )}
         </div>

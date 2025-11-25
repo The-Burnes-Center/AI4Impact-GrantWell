@@ -10,6 +10,7 @@ import DraftView from "./DraftView";
 import SectionEditor from "./SectionsEditor";
 import ReviewApplication from "./ReviewApplication";
 import UploadDocuments from "./UploadDocuments";
+import Modal from "../../components/common/Modal";
 import "../../styles/document-editor.css";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -151,7 +152,8 @@ const DocumentEditor: React.FC = () => {
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
   const { sessionId } = useParams();
-  const modalRef = useRef<HTMLDivElement>(null);
+  
+  // Refs for buttons (used by modal for focus management)
   const startButtonRef = useRef<HTMLButtonElement>(null);
   const draftsButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -182,48 +184,6 @@ const DocumentEditor: React.FC = () => {
       setWelcomeModalOpen(true);
     }
   }, [isLoading, sessionId]);
-
-  // Focus trapping effect for modal
-  useEffect(() => {
-    if (!welcomeModalOpen) return;
-
-    const modalElement = modalRef.current;
-    if (!modalElement) return;
-
-    // Focus the modal container when modal opens
-    setTimeout(() => {
-      startButtonRef.current?.focus();
-    }, 100);
-
-    // Handle tab key for focus trapping
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-
-      const focusableElements = [
-        startButtonRef.current,
-        draftsButtonRef.current,
-      ].filter(Boolean);
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (!firstElement || !lastElement) return;
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement?.focus();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement?.focus();
-        }
-      }
-    };
-
-    modalElement.addEventListener("keydown", handleKeyDown);
-    return () => modalElement.removeEventListener("keydown", handleKeyDown);
-  }, [welcomeModalOpen]);
 
   // Create new document flow
   const startNewDocument = useCallback(async () => {
@@ -648,302 +608,280 @@ const DocumentEditor: React.FC = () => {
       </main>
 
       {/* Welcome Modal */}
-      {welcomeModalOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-            padding: "20px",
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="welcome-modal-title"
-        >
-          <div
-            ref={modalRef}
-            tabIndex={-1}
+      <Modal
+        isOpen={welcomeModalOpen}
+        onClose={() => {
+          setWelcomeModalOpen(false);
+          // Navigate back to checklists when closing the modal
+          if (selectedNofo) {
+            navigate(`/landing-page/basePage/checklists/${selectedNofo}`);
+          }
+        }}
+        title="Welcome to GrantWell"
+        maxWidth="700px"
+      >
+        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+          <h3
             style={{
-              backgroundColor: "white",
-              borderRadius: "16px",
-              maxWidth: "700px",
-              width: "100%",
-              maxHeight: "90vh",
-              overflow: "auto",
-              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-              position: "relative",
+              color: "#0073bb",
+              fontSize: "20px",
+              fontWeight: "600",
+              margin: "0 0 16px",
             }}
           >
-            {/* Modal content */}
-            <div style={{ padding: "48px 40px 40px" }}>
-              <div style={{ textAlign: "center", marginBottom: "32px" }}>
-                <h2
-                  id="welcome-modal-title"
-                  style={{
-                    color: "#111827",
-                    fontSize: "32px",
-                    fontWeight: "700",
-                    margin: "0 0 12px",
-                  }}
-                >
-                  Welcome to GrantWell
-                </h2>
-                <h3
-                  style={{
-                    color: "#0073bb",
-                    fontSize: "20px",
-                    fontWeight: "600",
-                    margin: "0 0 16px",
-                  }}
-                >
-                  AI-Powered Grant Writing Assistant
-                </h3>
-                <p
-                  style={{
-                    color: "#4b5563",
-                    fontSize: "15px",
-                    lineHeight: 1.6,
-                    margin: "0",
-                  }}
-                >
-                  The GrantWell grant writing tool uses generative AI to guide you through the
-                  application process. The last grant you searched is pre-loaded. Want to work
-                  on a different grant? Return to the home page to find the grant of interest.
-                </p>
-              </div>
+            AI-Powered Grant Writing Assistant
+          </h3>
+          <p
+            style={{
+              color: "#4b5563",
+              fontSize: "15px",
+              lineHeight: 1.6,
+              margin: "0",
+            }}
+          >
+            The GrantWell grant writing tool uses generative AI to guide you through the
+            application process. The last grant you searched is pre-loaded. Want to work
+            on a different grant? Return to the home page to find the grant of interest.
+          </p>
+        </div>
 
-              {/* Steps */}
-              <div style={{ marginBottom: "32px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "16px",
-                    marginBottom: "20px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#0073bb",
-                      color: "white",
-                      borderRadius: "50%",
-                      width: "36px",
-                      height: "36px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "18px",
-                      fontWeight: "bold",
-                      flexShrink: 0,
-                    }}
-                  >
-                    1
-                  </div>
-                  <div>
-                    <h4
-                      style={{
-                        margin: "0 0 8px",
-                        fontSize: "17px",
-                        fontWeight: "600",
-                        color: "#1f2937",
-                      }}
-                    >
-                      Answer Simple Questions
-                    </h4>
-                    <p
-                      style={{
-                        margin: 0,
-                        color: "#4b5563",
-                        fontSize: "14px",
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      We'll guide you through key questions about your project to gather the
-                      essential information needed for your grant application.
-                    </p>
-                  </div>
-                </div>
+        {/* Steps */}
+        <div style={{ marginBottom: "32px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "16px",
+              marginBottom: "20px",
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "#0073bb",
+                color: "white",
+                borderRadius: "50%",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "18px",
+                fontWeight: "bold",
+                flexShrink: 0,
+              }}
+            >
+              1
+            </div>
+            <div>
+              <h4
+                style={{
+                  margin: "0 0 8px",
+                  fontSize: "17px",
+                  fontWeight: "600",
+                  color: "#1f2937",
+                }}
+              >
+                Answer Simple Questions
+              </h4>
+              <p
+                style={{
+                  margin: 0,
+                  color: "#4b5563",
+                  fontSize: "14px",
+                  lineHeight: 1.6,
+                }}
+              >
+                We'll guide you through key questions about your project to gather the
+                essential information needed for your grant application.
+              </p>
+            </div>
+          </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "16px",
-                    marginBottom: "20px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#0073bb",
-                      color: "white",
-                      borderRadius: "50%",
-                      width: "36px",
-                      height: "36px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "18px",
-                      fontWeight: "bold",
-                      flexShrink: 0,
-                    }}
-                  >
-                    2
-                  </div>
-                  <div>
-                    <h4
-                      style={{
-                        margin: "0 0 8px",
-                        fontSize: "17px",
-                        fontWeight: "600",
-                        color: "#1f2937",
-                      }}
-                    >
-                      Upload Supporting Documents
-                    </h4>
-                    <p
-                      style={{
-                        margin: 0,
-                        color: "#4b5563",
-                        fontSize: "14px",
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      Add any supporting documents that will help our AI understand your project
-                      better and generate more accurate content.
-                    </p>
-                  </div>
-                </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "16px",
+              marginBottom: "20px",
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "#0073bb",
+                color: "white",
+                borderRadius: "50%",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "18px",
+                fontWeight: "bold",
+                flexShrink: 0,
+              }}
+            >
+              2
+            </div>
+            <div>
+              <h4
+                style={{
+                  margin: "0 0 8px",
+                  fontSize: "17px",
+                  fontWeight: "600",
+                  color: "#1f2937",
+                }}
+              >
+                Upload Supporting Documents
+              </h4>
+              <p
+                style={{
+                  margin: 0,
+                  color: "#4b5563",
+                  fontSize: "14px",
+                  lineHeight: 1.6,
+                }}
+              >
+                Add any supporting documents that will help our AI understand your project
+                better and generate more accurate content.
+              </p>
+            </div>
+          </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "16px",
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#0073bb",
-                      color: "white",
-                      borderRadius: "50%",
-                      width: "36px",
-                      height: "36px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "18px",
-                      fontWeight: "bold",
-                      flexShrink: 0,
-                    }}
-                  >
-                    3
-                  </div>
-                  <div>
-                    <h4
-                      style={{
-                        margin: "0 0 8px",
-                        fontSize: "17px",
-                        fontWeight: "600",
-                        color: "#1f2937",
-                      }}
-                    >
-                      Review & Edit AI-Generated Content
-                    </h4>
-                    <p
-                      style={{
-                        margin: 0,
-                        color: "#4b5563",
-                        fontSize: "14px",
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      Our AI will generate high-quality content that you can review, refine, and
-                      perfect for your grant application. As you work, your progress will be saved.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <button
-                  ref={startButtonRef}
-                  onClick={() => {
-                    setWelcomeModalOpen(false);
-                    if (selectedNofo) {
-                      startNewDocument();
-                    } else {
-                      navigate("/");
-                    }
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "14px 24px",
-                    background: "linear-gradient(135deg, #0073bb 0%, #005d96 100%)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "12px",
-                    fontSize: "16px",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                    boxShadow: "0 2px 4px rgba(0, 115, 187, 0.2)",
-                    minHeight: "44px",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-1px)";
-                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 115, 187, 0.3)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 115, 187, 0.2)";
-                  }}
-                >
-                  Start New Application
-                </button>
-
-                <button
-                  ref={draftsButtonRef}
-                  onClick={() => {
-                    setWelcomeModalOpen(false);
-                    navigate("/document-editor/drafts");
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "14px 24px",
-                    backgroundColor: "white",
-                    color: "#0073bb",
-                    border: "2px solid #0073bb",
-                    borderRadius: "12px",
-                    fontSize: "16px",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                    minHeight: "44px",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#f0f7fc";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "white";
-                  }}
-                >
-                  View Existing Drafts
-                </button>
-              </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "16px",
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "#0073bb",
+                color: "white",
+                borderRadius: "50%",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "18px",
+                fontWeight: "bold",
+                flexShrink: 0,
+              }}
+            >
+              3
+            </div>
+            <div>
+              <h4
+                style={{
+                  margin: "0 0 8px",
+                  fontSize: "17px",
+                  fontWeight: "600",
+                  color: "#1f2937",
+                }}
+              >
+                Review & Edit AI-Generated Content
+              </h4>
+              <p
+                style={{
+                  margin: 0,
+                  color: "#4b5563",
+                  fontSize: "14px",
+                  lineHeight: 1.6,
+                }}
+              >
+                Our AI will generate high-quality content that you can review, refine, and
+                perfect for your grant application. As you work, your progress will be saved.
+              </p>
             </div>
           </div>
         </div>
-      )}
+
+        {/* Buttons */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <button
+            ref={startButtonRef}
+            onClick={() => {
+              setWelcomeModalOpen(false);
+              if (selectedNofo) {
+                startNewDocument();
+              } else {
+                navigate("/");
+              }
+            }}
+            style={{
+              width: "100%",
+              padding: "14px 24px",
+              background: "linear-gradient(135deg, #0073bb 0%, #005d96 100%)",
+              color: "white",
+              border: "none",
+              borderRadius: "12px",
+              fontSize: "16px",
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.2s",
+              boxShadow: "0 2px 4px rgba(0, 115, 187, 0.2)",
+              minHeight: "44px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 115, 187, 0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 115, 187, 0.2)";
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outlineOffset = "2px";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.outline = "none";
+            }}
+          >
+            Start New Application
+          </button>
+
+          <button
+            ref={draftsButtonRef}
+            onClick={() => {
+              setWelcomeModalOpen(false);
+              navigate("/document-editor/drafts");
+            }}
+            style={{
+              width: "100%",
+              padding: "14px 24px",
+              backgroundColor: "white",
+              color: "#0073bb",
+              border: "2px solid #0073bb",
+              borderRadius: "12px",
+              fontSize: "16px",
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.2s",
+              minHeight: "44px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f0f7fc";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "white";
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outlineOffset = "2px";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.outline = "none";
+            }}
+          >
+            View Existing Drafts
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
+
 
 export default DocumentEditor;

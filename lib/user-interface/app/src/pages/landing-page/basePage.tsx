@@ -245,6 +245,18 @@ export default function Welcome() {
               e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
               e.currentTarget.style.transform = "translateY(0)";
             }}
+            onFocus={(e) => {
+              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outlineOffset = "2px";
+              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.outline = "none";
+              e.currentTarget.style.outlineOffset = "0";
+              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
             aria-label={`View ${nofo.label}`}
           >
             <span
@@ -505,6 +517,14 @@ export default function Welcome() {
               textDecoration: "none",
               display: "block",
             }}
+            onFocus={(e) => {
+              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outlineOffset = "2px";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.outline = "none";
+              e.currentTarget.style.outlineOffset = "0";
+            }}
           >
             <span
               style={{
@@ -676,10 +696,10 @@ export default function Welcome() {
                 e.currentTarget.style.backgroundColor = "#0073BB";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outline = "2px solid #2c4fdb";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
-                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                  "0 0 0 4px rgba(44, 79, 219, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -721,10 +741,10 @@ export default function Welcome() {
                 e.currentTarget.style.backgroundColor = "#0073BB";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outline = "2px solid #2c4fdb";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
-                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                  "0 0 0 4px rgba(44, 79, 219, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -767,10 +787,10 @@ export default function Welcome() {
                 e.currentTarget.style.backgroundColor = "#0073BB";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outline = "2px solid #2c4fdb";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
-                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                  "0 0 0 4px rgba(44, 79, 219, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";

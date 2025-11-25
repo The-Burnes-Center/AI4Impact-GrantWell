@@ -478,8 +478,15 @@ const Tab: React.FC<TabProps> = ({ id, activeId, onClick, children, icon }) => {
           : `3px solid transparent`,
       }}
       onClick={() => onClick(id)}
+      onFocus={(e) => {
+        e.currentTarget.style.outline = "2px solid #2c4fdb";
+        e.currentTarget.style.outlineOffset = "2px";
+      }}
+      onBlur={(e) => {
+        e.currentTarget.style.outline = "none";
+      }}
       role="tab"
-      tabIndex={isActive ? 0 : -1}
+      tabIndex={0}
       aria-selected={isActive}
       aria-controls={`tabpanel-${id}`}
       id={`tab-${id}`}
@@ -511,6 +518,7 @@ const Checklists: React.FC = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const modalRef = React.useRef<HTMLDivElement>(null);
+  const modalPreviousFocusRef = React.useRef<HTMLElement | null>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
   const checkboxRef = React.useRef<HTMLInputElement>(null);
   const gotItButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -541,6 +549,9 @@ const Checklists: React.FC = () => {
     const modalElement = modalRef.current;
     if (!modalElement) return;
 
+    // Store the currently focused element for restoration
+    modalPreviousFocusRef.current = document.activeElement as HTMLElement;
+
     // Focus the modal container when modal opens so screen readers read all content
     setTimeout(() => {
       modalRef.current?.focus();
@@ -559,6 +570,17 @@ const Checklists: React.FC = () => {
       const lastElement = focusableElements[focusableElements.length - 1];
 
       if (!firstElement || !lastElement) return;
+
+      // Check if currently focused element is inside the modal
+      const activeElement = document.activeElement as HTMLElement;
+      const isInsideModal = modalRef.current?.contains(activeElement);
+
+      // If focus is outside the modal, bring it back
+      if (!isInsideModal) {
+        e.preventDefault();
+        firstElement?.focus();
+        return;
+      }
 
       // If shift+tab on first element, go to last
       if (e.shiftKey && document.activeElement === firstElement) {
@@ -589,6 +611,12 @@ const Checklists: React.FC = () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
+      
+      // Restore focus to the element that triggered the modal
+      // Only restore focus if the element still exists in the DOM
+      if (modalPreviousFocusRef.current && document.body.contains(modalPreviousFocusRef.current)) {
+        modalPreviousFocusRef.current.focus();
+      }
     };
   }, [showHelp]);
 
@@ -995,6 +1023,17 @@ const Checklists: React.FC = () => {
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background =
                             "rgba(255, 255, 255, 0.2)";
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.background = "#ffffff";
+                          e.currentTarget.style.color = "#0073bb";
+                          e.currentTarget.style.outline = "2px solid #ffffff";
+                          e.currentTarget.style.outlineOffset = "2px";
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                          e.currentTarget.style.color = "#ffffff";
+                          e.currentTarget.style.outline = "none";
                         }}
                         aria-label="Close help dialog"
                       >

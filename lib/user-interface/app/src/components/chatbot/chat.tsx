@@ -183,6 +183,7 @@ export default function Chat(props: {
   const [showPopup, setShowPopup] = useState<boolean>(false); // Disabled - now handled by playground
   const [doNotShowAgain, setDoNotShowAgain] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const modalPreviousFocusRef = useRef<HTMLElement | null>(null);
 
   // Popup disabled - now handled at playground level
   /* 
@@ -228,6 +229,70 @@ export default function Chat(props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [showPopup]);
+
+  // Focus trap and focus restoration for welcome modal
+  useEffect(() => {
+    if (!showPopup) return;
+
+    // Store the currently focused element
+    modalPreviousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Focus the modal after a short delay
+    setTimeout(() => {
+      const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      firstFocusable?.focus();
+    }, 100);
+
+    // Restore focus when modal closes
+    return () => {
+      // Only restore focus if the element still exists in the DOM
+      if (modalPreviousFocusRef.current && document.body.contains(modalPreviousFocusRef.current)) {
+        modalPreviousFocusRef.current.focus();
+      }
+    };
+  }, [showPopup]);
+
+  // Focus trap handler for welcome modal
+  useEffect(() => {
+    if (!showPopup || !modalRef.current) return;
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      // Check if currently focused element is inside the modal
+      const activeElement = document.activeElement as HTMLElement;
+      const isInsideModal = modalRef.current?.contains(activeElement);
+
+      // If focus is outside the modal, bring it back
+      if (!isInsideModal) {
+        e.preventDefault();
+        firstElement.focus();
+        return;
+      }
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleTabKey);
+    return () => document.removeEventListener("keydown", handleTabKey);
   }, [showPopup]);
 
   /** Loads session history */
@@ -296,6 +361,17 @@ export default function Chat(props: {
                 style={styles.closeButton}
                 onClick={handleModalDismiss}
                 aria-label="Close welcome dialog"
+                onFocus={(e) => {
+                  e.currentTarget.style.background = "#ffffff";
+                  e.currentTarget.style.color = "#0073bb";
+                  e.currentTarget.style.outline = "2px solid #ffffff";
+                  e.currentTarget.style.outlineOffset = "2px";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.color = "#ffffff";
+                  e.currentTarget.style.outline = "none";
+                }}
               >
                 <FaTimes size={20} />
               </button>

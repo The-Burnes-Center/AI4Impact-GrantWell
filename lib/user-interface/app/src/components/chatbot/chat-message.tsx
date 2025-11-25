@@ -459,6 +459,18 @@ export default function ChatMessage(props: ChatMessageProps) {
                       e.currentTarget.style.backgroundColor = "transparent";
                       e.currentTarget.style.color = "#6b7280";
                     }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.backgroundColor = "#f3f4f6";
+                      e.currentTarget.style.color = "#0073bb";
+                      e.currentTarget.style.outline = "2px solid #2c4fdb";
+                      e.currentTarget.style.outlineOffset = "2px";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.backgroundColor = "transparent";
+                      e.currentTarget.style.color = "#6b7280";
+                      e.currentTarget.style.outline = "none";
+                      e.currentTarget.style.outlineOffset = "0";
+                    }}
                     aria-label="Copy message to clipboard"
                   >
                     <FaCopy size={14} />

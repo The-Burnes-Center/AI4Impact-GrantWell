@@ -284,7 +284,8 @@ export const Modal = React.memo(
 
       // Restore focus when modal closes
       return () => {
-        if (previousFocusRef.current) {
+        // Only restore focus if the element still exists in the DOM
+        if (previousFocusRef.current && document.body.contains(previousFocusRef.current)) {
           previousFocusRef.current.focus();
         }
       };
@@ -305,6 +306,17 @@ export const Modal = React.memo(
 
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
+
+        // Check if currently focused element is inside the modal
+        const activeElement = document.activeElement as HTMLElement;
+        const isInsideModal = modalRef.current?.contains(activeElement);
+
+        // If focus is outside the modal, bring it back
+        if (!isInsideModal) {
+          e.preventDefault();
+          firstElement.focus();
+          return;
+        }
 
         if (e.shiftKey && document.activeElement === firstElement) {
           e.preventDefault();

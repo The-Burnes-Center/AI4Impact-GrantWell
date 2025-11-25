@@ -303,6 +303,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
         {questions.map((questionItem) => (
           <div key={questionItem.id} style={{ marginBottom: "24px" }}>
             <label
+              htmlFor={`question_${questionItem.id}`}
               style={{
                 display: "block",
                 marginBottom: "12px",
@@ -318,6 +319,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
               name={`question_${questionItem.id}`}
               value={formData[`question_${questionItem.id}`] || ""}
               onChange={handleInputChange}
+              aria-describedby={`question_${questionItem.id}_help`}
               style={{
                 width: "100%",
                 padding: "12px",
@@ -329,6 +331,18 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
               }}
               placeholder="Enter your answer here."
             />
+            <span
+              id={`question_${questionItem.id}_help`}
+              style={{
+                display: "block",
+                fontSize: "14px",
+                color: "#4a5568",
+                marginTop: "6px",
+                lineHeight: "1.4",
+              }}
+            >
+              Provide a detailed answer. You can edit this later in the document editor.
+            </span>
           </div>
         ))}
       </div>

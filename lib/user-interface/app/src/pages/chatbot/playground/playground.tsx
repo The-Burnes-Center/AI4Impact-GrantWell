@@ -111,6 +111,7 @@ export default function Playground() {
   const navigate = useNavigate();
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const modalRef = React.useRef<HTMLDivElement>(null);
+  const modalPreviousFocusRef = React.useRef<HTMLElement | null>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
   const checkboxRef = React.useRef<HTMLInputElement>(null);
   const gotItButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -209,6 +210,66 @@ export default function Playground() {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
     };
+  }, [helpOpen]);
+
+  // Focus trap and focus restoration for help modal
+  useEffect(() => {
+    if (!helpOpen) return;
+
+    // Store the currently focused element
+    modalPreviousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Focus the modal after a short delay
+    setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 100);
+
+    // Restore focus when modal closes
+    return () => {
+      if (modalPreviousFocusRef.current) {
+        modalPreviousFocusRef.current.focus();
+      }
+    };
+  }, [helpOpen]);
+
+  // Focus trap handler for help modal
+  useEffect(() => {
+    if (!helpOpen || !modalRef.current) return;
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      // Check if currently focused element is inside the modal
+      const activeElement = document.activeElement as HTMLElement;
+      const isInsideModal = modalRef.current?.contains(activeElement);
+
+      // If focus is outside the modal, bring it back
+      if (!isInsideModal) {
+        e.preventDefault();
+        firstElement.focus();
+        return;
+      }
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleTabKey);
+    return () => document.removeEventListener("keydown", handleTabKey);
   }, [helpOpen]);
 
   const handleUploadData = () => {
@@ -360,6 +421,17 @@ export default function Playground() {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.background = "#ffffff";
+                  e.currentTarget.style.color = "#0073bb";
+                  e.currentTarget.style.outline = "2px solid #ffffff";
+                  e.currentTarget.style.outlineOffset = "2px";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.color = "#ffffff";
+                  e.currentTarget.style.outline = "none";
                 }}
                 aria-label="Close help dialog"
               >
