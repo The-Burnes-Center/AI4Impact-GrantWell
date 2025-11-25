@@ -96,8 +96,9 @@
 }
 
 .chatbot-float-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 115, 187, 0.3);
+  outline: 2px solid #0073bb;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(0, 115, 187, 0.3), 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .chat-container {
@@ -123,4 +124,20 @@
 .user-message {
   background-color: #EBF5FF;
   align-self: flex-end;
+}
+
+/* Respect prefers-reduced-motion for accessibility - WCAG 2.2 AA */
+@media (prefers-reduced-motion: reduce) {
+  .suggestion-chip,
+  .grant-card,
+  .chatbot-float-button {
+    transition: none !important;
+    transform: none !important;
+  }
+  
+  .suggestion-chip:hover,
+  .grant-card:hover,
+  .chatbot-float-button:hover {
+    transform: none !important;
+  }
 }

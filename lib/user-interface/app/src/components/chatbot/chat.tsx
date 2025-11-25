@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { ChatBotHistoryItem, ChatBotMessageType, FeedbackData } from "./types";
+import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
@@ -57,7 +57,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "center",
     alignItems: "center",
     padding: "30px 0",
-    color: "#718096",
+    color: "#5a6876",
   },
   spinner: {
     display: "inline-block",
@@ -71,7 +71,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   welcomeText: {
     textAlign: "center",
-    color: "#718096",
+    color: "#5a6876",
     fontStyle: "italic",
     padding: "20px",
   },
@@ -85,6 +85,7 @@ const styles: Record<string, React.CSSProperties> = {
     transform: "translateX(-50%)",
     width: "70%",
     maxWidth: "800px",
+    minWidth: "280px",
     zIndex: 100,
     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
     borderRadius: "12px",
@@ -137,7 +138,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: "none",
     cursor: "pointer",
     fontSize: "18px",
-    color: "#718096",
+    color: "#5a6876",
     padding: "6px",
     borderRadius: "50%",
     display: "flex",
@@ -179,10 +180,13 @@ export default function Chat(props: {
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );
-  const [showPopup, setShowPopup] = useState<boolean>(true);
+  const [showPopup, setShowPopup] = useState<boolean>(false); // Disabled - now handled by playground
   const [doNotShowAgain, setDoNotShowAgain] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const modalPreviousFocusRef = useRef<HTMLElement | null>(null);
 
+  // Popup disabled - now handled at playground level
+  /* 
   // Check localStorage on component mount
   useEffect(() => {
     const shouldShowPopup = localStorage.getItem("showGrantWellPopup");
@@ -190,6 +194,7 @@ export default function Chat(props: {
       setShowPopup(false);
     }
   }, []);
+  */
 
   // Handle checkbox change
   const handleDoNotShowAgainChange = (
@@ -224,6 +229,70 @@ export default function Chat(props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [showPopup]);
+
+  // Focus trap and focus restoration for welcome modal
+  useEffect(() => {
+    if (!showPopup) return;
+
+    // Store the currently focused element
+    modalPreviousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Focus the modal after a short delay
+    setTimeout(() => {
+      const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      firstFocusable?.focus();
+    }, 100);
+
+    // Restore focus when modal closes
+    return () => {
+      // Only restore focus if the element still exists in the DOM
+      if (modalPreviousFocusRef.current && document.body.contains(modalPreviousFocusRef.current)) {
+        modalPreviousFocusRef.current.focus();
+      }
+    };
+  }, [showPopup]);
+
+  // Focus trap handler for welcome modal
+  useEffect(() => {
+    if (!showPopup || !modalRef.current) return;
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      // Check if currently focused element is inside the modal
+      const activeElement = document.activeElement as HTMLElement;
+      const isInsideModal = modalRef.current?.contains(activeElement);
+
+      // If focus is outside the modal, bring it back
+      if (!isInsideModal) {
+        e.preventDefault();
+        firstElement.focus();
+        return;
+      }
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleTabKey);
+    return () => document.removeEventListener("keydown", handleTabKey);
   }, [showPopup]);
 
   /** Loads session history */
@@ -280,43 +349,8 @@ export default function Chat(props: {
     })();
   }, [appContext, props.sessionId, props.documentIdentifier]);
 
-  /** Adds some metadata to the user's feedback */
-  const handleFeedback = (
-    feedbackType: 1 | 0,
-    idx: number,
-    message: ChatBotHistoryItem,
-    feedbackTopic?: string,
-    feedbackProblem?: string,
-    feedbackMessage?: string
-  ) => {
-    if (props.sessionId) {
-      const prompt = messageHistory[idx - 1].content;
-      const completion = message.content;
-
-      const feedbackData = {
-        sessionId: props.sessionId,
-        feedback: feedbackType,
-        prompt: prompt,
-        completion: completion,
-        topic: feedbackTopic,
-        problem: feedbackProblem,
-        comment: feedbackMessage,
-        sources: JSON.stringify(message.metadata.Sources),
-        documentIdentifier: props.documentIdentifier,
-      };
-      addUserFeedback(feedbackData);
-    }
-  };
-
-  /** Makes the API call via the ApiClient to submit the feedback */
-  const addUserFeedback = async (feedbackData: FeedbackData) => {
-    if (!appContext) return;
-    const apiClient = new ApiClient(appContext);
-    await apiClient.userFeedback.sendUserFeedback(feedbackData);
-  };
-
   return (
-    <div style={styles.chatContainer}>
+    <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
       {/* Welcome Modal */}
       {showPopup && (
         <div style={styles.modalOverlay}>
@@ -326,7 +360,18 @@ export default function Chat(props: {
               <button
                 style={styles.closeButton}
                 onClick={handleModalDismiss}
-                aria-label="Close"
+                aria-label="Close welcome dialog"
+                onFocus={(e) => {
+                  e.currentTarget.style.background = "#ffffff";
+                  e.currentTarget.style.color = "#0073bb";
+                  e.currentTarget.style.outline = "2px solid #ffffff";
+                  e.currentTarget.style.outlineOffset = "2px";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.color = "#ffffff";
+                  e.currentTarget.style.outline = "none";
+                }}
               >
                 <FaTimes size={20} />
               </button>
@@ -380,7 +425,14 @@ export default function Chat(props: {
       )}
 
       {/* Chat content area */}
-      <div style={styles.messageArea}>
+      <div 
+        role="log" 
+        aria-live="polite" 
+        aria-relevant="additions"
+        aria-label="Chat messages"
+        tabIndex={0}
+        style={styles.messageArea}
+      >
         <div style={styles.messageList}>
           {messageHistory.length === 0 && !session?.loading && (
             <div style={styles.infoAlert}>
@@ -396,21 +448,6 @@ export default function Chat(props: {
             <ChatMessage
               key={idx}
               message={message}
-              onThumbsUp={() => handleFeedback(1, idx, message)}
-              onThumbsDown={(
-                feedbackTopic: string,
-                feedbackType: string,
-                feedbackMessage: string
-              ) =>
-                handleFeedback(
-                  0,
-                  idx,
-                  message,
-                  feedbackTopic,
-                  feedbackType,
-                  feedbackMessage
-                )
-              }
             />
           ))}
 
@@ -427,6 +464,11 @@ export default function Chat(props: {
         </div>
       </div>
 
+      {/* Loading state announcement for screen readers */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {session?.loading ? "Loading chat session" : ""}
+      </div>
+
       {/* Chat input area */}
       <div style={styles.inputContainer}>
         <ChatInputPanel
@@ -438,6 +480,6 @@ export default function Chat(props: {
           documentIdentifier={props.documentIdentifier}
         />
       </div>
-    </div>
+    </section>
   );
 }

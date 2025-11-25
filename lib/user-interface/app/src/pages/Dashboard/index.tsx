@@ -73,18 +73,21 @@ export const RowActions: React.FC<{
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="actions-button"
-        aria-label="Actions"
+        aria-label="Row actions menu"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
       >
         <LuMenu size={20} />
       </button>
       {isOpen && (
-        <div className="actions-menu">
+        <div className="actions-menu" role="menu">
           <button
             onClick={() => {
               onEdit();
               setIsOpen(false);
             }}
             className="menu-item"
+            role="menuitem"
           >
             <LuPencil size={16} className="menu-icon" />
             <span>Edit</span>
@@ -95,6 +98,7 @@ export const RowActions: React.FC<{
               setIsOpen(false);
             }}
             className="menu-item"
+            role="menuitem"
           >
             <LuTrash size={16} className="menu-icon" />
             <span>Delete</span>
@@ -154,13 +158,14 @@ const GrantActionsDropdown: React.FC<{
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="actions-dropdown-button"
-        aria-label="More actions"
+        aria-label={`More actions for ${nofo.name}`}
         aria-expanded={isOpen}
+        aria-haspopup="menu"
       >
         <LuMenu size={18} />
       </button>
       {isOpen && (
-        <div className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`}>
+        <div className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`} role="menu">
           {/* Toggle Status */}
           <button
             onClick={() => {
@@ -168,6 +173,7 @@ const GrantActionsDropdown: React.FC<{
               setIsOpen(false);
             }}
             className="dropdown-menu-item"
+            role="menuitem"
           >
             {nofo.status === "active" ? (
               <>
@@ -189,6 +195,7 @@ const GrantActionsDropdown: React.FC<{
               setIsOpen(false);
             }}
             className="dropdown-menu-item"
+            role="menuitem"
           >
             <LuPencil size={16} className="menu-icon" />
             <span>Edit</span>
@@ -201,6 +208,7 @@ const GrantActionsDropdown: React.FC<{
               setIsOpen(false);
             }}
             className="dropdown-menu-item delete-item"
+            role="menuitem"
           >
             <LuTrash size={16} className="menu-icon" />
             <span>Delete</span>
@@ -253,8 +261,75 @@ export const Modal = React.memo(
     title: string;
     children: React.ReactNode;
   }) => {
+    const modalRef = useRef<HTMLDivElement>(null);
+    const previousFocusRef = useRef<HTMLElement | null>(null);
+
     // Use the custom hook for side effects
     useModalEffects(isOpen, onClose);
+
+    // Focus trap effect
+    useEffect(() => {
+      if (!isOpen) return;
+
+      // Store the currently focused element
+      previousFocusRef.current = document.activeElement as HTMLElement;
+
+      // Focus the modal after a short delay
+      setTimeout(() => {
+        const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        firstFocusable?.focus();
+      }, 100);
+
+      // Restore focus when modal closes
+      return () => {
+        // Only restore focus if the element still exists in the DOM
+        if (previousFocusRef.current && document.body.contains(previousFocusRef.current)) {
+          previousFocusRef.current.focus();
+        }
+      };
+    }, [isOpen]);
+
+    // Focus trap handler
+    useEffect(() => {
+      if (!isOpen || !modalRef.current) return;
+
+      const handleTabKey = (e: KeyboardEvent) => {
+        if (e.key !== 'Tab') return;
+
+        const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        
+        if (!focusableElements || focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        // Check if currently focused element is inside the modal
+        const activeElement = document.activeElement as HTMLElement;
+        const isInsideModal = modalRef.current?.contains(activeElement);
+
+        // If focus is outside the modal, bring it back
+        if (!isInsideModal) {
+          e.preventDefault();
+          firstElement.focus();
+          return;
+        }
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      };
+
+      document.addEventListener('keydown', handleTabKey);
+      return () => document.removeEventListener('keydown', handleTabKey);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -267,15 +342,17 @@ export const Modal = React.memo(
         }}
         role="dialog"
         aria-modal="true"
+        aria-labelledby="modal-title"
       >
         <div
+          ref={modalRef}
           className="modal-content"
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
           role="document"
         >
           <div className="modal-header">
-            <h2>{title}</h2>
+            <h2 id="modal-title">{title}</h2>
             <button
               className="modal-close-button"
               onClick={onClose}
@@ -1268,6 +1345,8 @@ const Dashboard: React.FC = () => {
           key={i}
           className={`pagination-button ${currentPage === i ? "active" : ""}`}
           onClick={() => handlePageChange(i)}
+          aria-label={`Go to page ${i}`}
+          aria-current={currentPage === i ? "page" : undefined}
         >
           {i}
         </button>
@@ -1319,8 +1398,11 @@ const Dashboard: React.FC = () => {
         <div style={{ display: "flex", alignItems: "center" }}>
           <div className="pagination-controls">{pageButtons}</div>
           <div className="items-per-page">
-            <span>Show:</span>
+            <label htmlFor="items-per-page-select" style={{ marginRight: "8px" }}>
+              Show:
+            </label>
             <select
+              id="items-per-page-select"
               value={itemsPerPage}
               onChange={handleItemsPerPageChange}
               aria-label="Items per page"
@@ -1372,15 +1454,22 @@ const Dashboard: React.FC = () => {
       {/* Breadcrumb Navigation */}
       <nav aria-label="Breadcrumb" className="breadcrumb">
         <div className="breadcrumb-item">
-          <span
+          <button
             className="breadcrumb-link"
             onClick={() => navigate("/")}
-            style={{ cursor: "pointer" }}
+            style={{ 
+              cursor: "pointer",
+              background: "none",
+              border: "none",
+              padding: 0,
+              color: "inherit",
+              textDecoration: "underline",
+            }}
           >
             Home
-          </span>
+          </button>
         </div>
-        <div className="breadcrumb-item">Dashboard</div>
+        <div className="breadcrumb-item" aria-current="page">Dashboard</div>
       </nav>
 
       <main>
@@ -1452,7 +1541,11 @@ const Dashboard: React.FC = () => {
             <div className="search-filter-container">
               <div className="search-input-wrapper">
                 <LuSearch className="search-icon" size={18} />
+                <label htmlFor="grant-search" className="visually-hidden">
+                  Search grants
+                </label>
                 <input
+                  id="grant-search"
                   type="text"
                   className="search-input"
                   placeholder="Search grants..."
@@ -1468,16 +1561,18 @@ const Dashboard: React.FC = () => {
                     statusFilter !== "all" ? "active" : ""
                   }`}
                   onClick={toggleFilterMenu}
-                  aria-label="Filter options"
+                  aria-label="Filter grants by status"
+                  aria-expanded={filterMenuOpen}
+                  aria-haspopup="menu"
                 >
                   <LuFilter size={18} />
                   {statusFilter !== "all" && (
-                    <span className="filter-badge">1</span>
+                    <span className="filter-badge" aria-label="1 filter active">1</span>
                   )}
                 </button>
 
                 {filterMenuOpen && (
-                  <div ref={filterMenuRef} className="filter-menu">
+                  <div ref={filterMenuRef} className="filter-menu" role="menu">
                     <div className="filter-menu-header">Filter by Status</div>
                     <div>
                       <button
@@ -1485,6 +1580,8 @@ const Dashboard: React.FC = () => {
                         className={`filter-option ${
                           statusFilter === "all" ? "selected" : ""
                         }`}
+                        role="menuitemradio"
+                        aria-checked={statusFilter === "all"}
                       >
                         <div className="filter-option-content">
                           <span className="filter-option-check">
@@ -1499,6 +1596,8 @@ const Dashboard: React.FC = () => {
                         className={`filter-option ${
                           statusFilter === "active" ? "selected" : ""
                         }`}
+                        role="menuitemradio"
+                        aria-checked={statusFilter === "active"}
                       >
                         <div className="filter-option-content">
                           <span className="filter-option-check">
@@ -1513,6 +1612,8 @@ const Dashboard: React.FC = () => {
                         className={`filter-option ${
                           statusFilter === "archived" ? "selected" : ""
                         }`}
+                        role="menuitemradio"
+                        aria-checked={statusFilter === "archived"}
                       >
                         <div className="filter-option-content">
                           <span className="filter-option-check">

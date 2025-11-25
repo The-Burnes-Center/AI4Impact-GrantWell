@@ -162,7 +162,7 @@ export default function Welcome() {
 
       // Sort folders alphabetically (case-insensitive)
       const sortedFolders = [...folders].sort((a, b) =>
-        a.localeCompare(b, undefined, { sensitivity: 'base' })
+        a.localeCompare(b, undefined, { sensitivity: "base" })
       );
 
       setDocuments(
@@ -212,7 +212,7 @@ export default function Welcome() {
       </h2>
       {recentlyViewedNOFOs.length > 0 ? (
         recentlyViewedNOFOs.slice(0, 6).map((nofo, index) => (
-          <div
+          <button
             key={index}
             style={{
               padding: "15px",
@@ -226,10 +226,9 @@ export default function Welcome() {
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
+              width: "100%",
+              textAlign: "left",
             }}
-            role="button"
-            tabIndex={0}
-            aria-label={`View ${nofo.label}`}
             onClick={() =>
               handleNOFOSelect(
                 `/landing-page/basePage/checklists/${encodeURIComponent(
@@ -238,17 +237,6 @@ export default function Welcome() {
                 nofo
               )
             }
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                handleNOFOSelect(
-                  `/landing-page/basePage/checklists/${encodeURIComponent(
-                    nofo.value
-                  )}`,
-                  nofo
-                );
-              }
-            }}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
               e.currentTarget.style.transform = "translateY(-2px)";
@@ -257,6 +245,19 @@ export default function Welcome() {
               e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
               e.currentTarget.style.transform = "translateY(0)";
             }}
+            onFocus={(e) => {
+              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outlineOffset = "2px";
+              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.outline = "none";
+              e.currentTarget.style.outlineOffset = "0";
+              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
+            aria-label={`View ${nofo.label}`}
           >
             <span
               style={{
@@ -278,7 +279,7 @@ export default function Welcome() {
             >
               <span>Last viewed: {nofo.lastViewed}</span>
             </div>
-          </div>
+          </button>
         ))
       ) : (
         <p
@@ -511,7 +512,19 @@ export default function Welcome() {
             href={resource.href}
             target="_blank"
             rel="noopener noreferrer"
-            style={linkStyle}
+            style={{
+              ...linkStyle,
+              textDecoration: "none",
+              display: "block",
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outlineOffset = "2px";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.outline = "none";
+              e.currentTarget.style.outlineOffset = "0";
+            }}
           >
             <span
               style={{
@@ -525,16 +538,16 @@ export default function Welcome() {
             >
               {resource.title}
             </span>
+            <div
+              style={{
+                fontSize: "14px",
+                color: bodyTextColor,
+                textAlign: "center",
+              }}
+            >
+              {resource.description}
+            </div>
           </a>
-          <div
-            style={{
-              fontSize: "14px",
-              color: bodyTextColor,
-              textAlign: "center",
-            }}
-          >
-            {resource.description}
-          </div>
         </div>
       ))}
     </div>
@@ -683,10 +696,10 @@ export default function Welcome() {
                 e.currentTarget.style.backgroundColor = "#0073BB";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outline = "2px solid #2c4fdb";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
-                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                  "0 0 0 4px rgba(44, 79, 219, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -728,10 +741,10 @@ export default function Welcome() {
                 e.currentTarget.style.backgroundColor = "#0073BB";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outline = "2px solid #2c4fdb";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
-                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                  "0 0 0 4px rgba(44, 79, 219, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -774,10 +787,10 @@ export default function Welcome() {
                 e.currentTarget.style.backgroundColor = "#0073BB";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "3px solid #FFB700";
+                e.currentTarget.style.outline = "2px solid #2c4fdb";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
-                  "0 0 0 4px rgba(255, 183, 0, 0.2)";
+                  "0 0 0 4px rgba(44, 79, 219, 0.2)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -791,285 +804,76 @@ export default function Welcome() {
           </div>
         )}
 
-        {/* Get Started section - always visible */}
+        {/* How it works section - always visible */}
         <section
-          aria-labelledby="get-started-heading"
+          aria-labelledby="how-it-works-heading"
           style={{
             margin: "20px auto 8px auto",
-            padding: "20px 24px",
-            maxWidth: "600px",
-            textAlign: "left",
-            backgroundColor: "#f5f9fc",
-            border: "1px solid #d0e7f7",
-            borderRadius: "8px",
-            boxShadow: "0 1px 3px rgba(0, 115, 187, 0.08)",
+            padding: "0",
+            maxWidth: "650px",
+            textAlign: "center",
           }}
         >
           {/* Main Heading */}
-          <div
+          <h2
+            id="how-it-works-heading"
             style={{
-              borderBottom: "1px solid #d0e7f7",
-              paddingBottom: "12px",
-              marginBottom: "16px",
+              fontSize: "18px",
+              fontWeight: "600",
+              color: "#006499",
+              margin: "0 0 12px 0",
+              textAlign: "center",
             }}
           >
-            <h2
-              id="get-started-heading"
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#006499",
-                margin: "0",
-                textAlign: "center",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-              }}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M12 2L2 7L12 12L22 7L12 2Z"
-                  stroke="#006499"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  fill="none"
-                />
-                <path
-                  d="M2 17L12 22L22 17"
-                  stroke="#006499"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M2 12L12 17L22 12"
-                  stroke="#006499"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Get Started with GrantWell
-            </h2>
-          </div>
+            How it works
+          </h2>
 
-          {/* Step 1: Search and Select */}
-          <div
+          {/* Single paragraph with inline links */}
+          <p
             style={{
-              marginBottom: "16px",
-              display: "flex",
-              gap: "12px",
-              alignItems: "flex-start",
+              fontSize: "15px",
+              color: "#555",
+              lineHeight: "1.6",
+              margin: "0",
             }}
           >
-            <div
-              style={{
-                flexShrink: 0,
-                width: "20px",
-                height: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="11"
-                  cy="11"
-                  r="7"
-                  stroke="#0073BB"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M16 16L21 21"
-                  stroke="#0073BB"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-            <div style={{ flex: 1 }}>
-              <h3
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: "#0073BB",
-                  margin: "0 0 4px 0",
-                }}
-              >
-                Search and Select a Grant
-              </h3>
-              <p
-                style={{
-                  fontSize: "13px",
-                  color: "#555",
-                  margin: "0",
-                  lineHeight: "1.5",
-                }}
-              >
-                Use the search bar to find a grant and select it from the
-                results. Once you choose a grant, you’ll unlock the tools you
-                need to work on the application.
-              </p>
-              <div
-                style={{
-                  position: "absolute",
-                  width: "1px",
-                  height: "1px",
-                  padding: "0",
-                  margin: "-1px",
-                  overflow: "hidden",
-                  clip: "rect(0, 0, 0, 0)",
-                  whiteSpace: "nowrap",
-                  border: "0",
-                }}
-                role="note"
-                aria-label="Screen reader note"
-              >
-                Screen-reader note: The search bar is the first interactive
-                element on this page. After selecting a grant, navigate to the
-                next heading or use "next button" to reach the action buttons.
-              </div>
-            </div>
-          </div>
+            Search for a grant above, select one from the results, then choose
+            an action:{" "}
+            <strong style={{ color: "#0073BB", fontWeight: "600" }}>
+              View Key Requirements
+            </strong>{" "}
+            to see eligibility and other NOFO requirements,{" "}
+            <strong style={{ color: "#0073BB", fontWeight: "600" }}>
+              Write Project Narrative
+            </strong>{" "}
+            to draft your proposal with AI assistance, or{" "}
+            <strong style={{ color: "#0073BB", fontWeight: "600" }}>
+              Get Grant Help
+            </strong>{" "}
+            to chat with our AI assistant.
+          </p>
 
-          {/* Step 2: Choose Action */}
+          {/* Screen reader notes - hidden visually */}
           <div
             style={{
-              marginBottom: "0",
-              display: "flex",
-              gap: "12px",
-              alignItems: "flex-start",
+              position: "absolute",
+              width: "1px",
+              height: "1px",
+              padding: "0",
+              margin: "-1px",
+              overflow: "hidden",
+              clip: "rect(0, 0, 0, 0)",
+              whiteSpace: "nowrap",
+              border: "0",
             }}
+            role="note"
+            aria-label="Screen reader note"
           >
-            <div
-              style={{
-                flexShrink: 0,
-                width: "20px",
-                height: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <rect
-                  x="3"
-                  y="3"
-                  width="8"
-                  height="8"
-                  rx="1"
-                  stroke="#0073BB"
-                  strokeWidth="2"
-                />
-                <rect
-                  x="3"
-                  y="13"
-                  width="8"
-                  height="8"
-                  rx="1"
-                  stroke="#0073BB"
-                  strokeWidth="2"
-                />
-                <rect
-                  x="13"
-                  y="3"
-                  width="8"
-                  height="8"
-                  rx="1"
-                  stroke="#0073BB"
-                  strokeWidth="2"
-                />
-                <rect
-                  x="13"
-                  y="13"
-                  width="8"
-                  height="8"
-                  rx="1"
-                  stroke="#0073BB"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-            <div style={{ flex: 1 }}>
-              <h3
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: "#0073BB",
-                  margin: "0 0 4px 0",
-                }}
-              >
-                Choose an Action
-              </h3>
-              <ul
-                style={{
-                  margin: "0",
-                  padding: "0 0 0 16px",
-                  color: "#555",
-                  fontSize: "13px",
-                  lineHeight: 1.5,
-                }}
-              >
-                <li style={{ marginBottom: "3px" }}>
-                  <strong style={{ color: "#006499" }}>
-                    View Key Requirements
-                  </strong>{" "}
-                  – Shows eligibility, deadlines, and required documents.
-                </li>
-                <li style={{ marginBottom: "3px" }}>
-                  <strong style={{ color: "#006499" }}>
-                    Write Project Narrative
-                  </strong>{" "}
-                  – Opens an AI-assisted editor for drafting your narrative.
-                </li>
-                <li style={{ marginBottom: "0" }}>
-                  <strong style={{ color: "#006499" }}>Get Grant Help</strong> –
-                  Opens a chatbot that can answer questions and guide you.
-                </li>
-              </ul>
-              <div
-                style={{
-                  position: "absolute",
-                  width: "1px",
-                  height: "1px",
-                  padding: "0",
-                  margin: "-1px",
-                  overflow: "hidden",
-                  clip: "rect(0, 0, 0, 0)",
-                  whiteSpace: "nowrap",
-                  border: "0",
-                }}
-                role="note"
-                aria-label="Screen reader note"
-              >
-                Screen-reader note: Each button loads a new page or tool. Use
-                heading navigation to explore the content on each screen.
-              </div>
-            </div>
+            Screen-reader note: The search bar is the first interactive element
+            on this page. After selecting a grant, navigate to the next heading
+            or use "next button" to reach the action buttons. Each button loads
+            a new page or tool. Use heading navigation to explore the content on
+            each screen.
           </div>
         </section>
 
@@ -1164,10 +968,11 @@ export default function Welcome() {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "scale(1)";
                 }}
+                aria-label="Visit Massachusetts Government website"
               >
                 <img
                   src="/images/stateseal-color.png"
-                  alt="State Seal"
+                  alt="Massachusetts State Seal"
                   style={{ width: "100px", height: "auto" }}
                 />
               </a>
@@ -1187,10 +992,11 @@ export default function Welcome() {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "scale(1)";
                 }}
+                aria-label="Visit Burnes Center for Social Change at Northeastern University"
               >
                 <img
                   src="/images/burnesLogo.png"
-                  alt="Burnes Center Logo"
+                  alt="Burnes Center for Social Change Logo"
                   style={{ width: "200px", height: "auto" }}
                 />
               </a>

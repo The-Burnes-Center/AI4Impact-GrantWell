@@ -1159,6 +1159,11 @@ select.form-input {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+.action-button.invite-button:focus {
+  outline: 2px solid #2c4fdb;
+  outline-offset: 2px;
+}
+
 /* Add Grant Button - Teal/Blue */
 .action-button.add-button {
   background-color: #0073BB;
@@ -1170,6 +1175,11 @@ select.form-input {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+.action-button.add-button:focus {
+  outline: 2px solid #2c4fdb;
+  outline-offset: 2px;
+}
+
 /* Auto-Scrape NOFOs Button - Green */
 .action-button.scraper-button {
   background-color: #1e7e34;
@@ -1179,6 +1189,11 @@ select.form-input {
   background-color: #196d2e;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.action-button.scraper-button:focus {
+  outline: 2px solid #2c4fdb;
+  outline-offset: 2px;
 }
 
 /* Disabled state for all buttons */

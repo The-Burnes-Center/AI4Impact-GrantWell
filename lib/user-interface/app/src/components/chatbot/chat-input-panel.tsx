@@ -35,39 +35,39 @@ const styles = {
     gap: "16px",
   },
   inputBorder: {
-    border: "1px solid #e2e5ec",
-    borderRadius: "10px",
+    border: "2px solid #e5e7eb",
+    borderRadius: "16px",
     overflow: "hidden",
     backgroundColor: "white",
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-end",
     width: "100%",
     margin: "0 auto",
-    boxShadow: "0 1px 6px rgba(0, 0, 0, 0.04)",
-    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-    padding: "0 6px",
+    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    padding: "8px 12px",
   },
   inputBorderFocused: {
     borderColor: "#0073bb",
-    boxShadow: "0 1px 8px rgba(0, 115, 187, 0.1)",
+    boxShadow: "0 0 0 3px rgba(0, 115, 187, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.05)",
   },
   micButton: {
-    padding: "8px",
+    padding: "10px",
     background: "none",
     border: "none",
     cursor: "pointer",
-    color: "#4b5563",
+    color: "#6b7280",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: "36px",
-    height: "36px",
-    borderRadius: "50%",
-    margin: "0 4px",
-    transition: "background-color 0.2s ease",
+    minWidth: "44px",
+    minHeight: "44px",
+    borderRadius: "12px",
+    margin: "0 4px 0 0",
+    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
   },
   micActive: {
-    color: "#d32f2f",
+    color: "#ef4444",
     backgroundColor: "rgba(239, 68, 68, 0.1)",
   },
   micDisabled: {
@@ -76,9 +76,9 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: "36px",
-    height: "36px",
-    margin: "0 4px",
+    minWidth: "44px",
+    minHeight: "44px",
+    margin: "0 4px 0 0",
   },
   inputTextarea: {
     flex: 1,
@@ -98,20 +98,23 @@ const styles = {
     color: "#5a6169",
   },
   sendButton: {
-    padding: "10px 14px",
-    background: "none",
+    padding: "12px",
+    background: "linear-gradient(135deg, #0073bb 0%, #005d96 100%)",
     border: "none",
     cursor: "pointer",
-    color: "#0073bb",
+    color: "white",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    transition: "all 0.2s ease",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     outline: "none",
-    borderRadius: "4px",
+    borderRadius: "12px",
+    minWidth: "44px",
+    minHeight: "44px",
   },
   sendButtonDisabled: {
-    color: "#d1d5db",
+    background: "#e5e7eb",
+    color: "#9ca3af",
     cursor: "not-allowed",
   },
   spinner: {
@@ -146,6 +149,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   const [micPermissionDenied, setMicPermissionDenied] = useState(false);
   const [micListeningTimeout, setMicListeningTimeout] = useState<NodeJS.Timeout | null>(null);
   const { notifications, addNotification } = useNotifications();
+  
+  // Ref for chat input to enable auto-focus
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Enhanced speech recognition config
   const {
@@ -221,6 +227,16 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
   }, [props.messageHistory]);
+
+  // Auto-focus chat input on component mount for keyboard accessibility
+  useEffect(() => {
+    // Small delay to ensure component is fully rendered
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   /** Speech recognition */
   useEffect(() => {
@@ -534,22 +550,26 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         ...(isInputFocused ? styles.inputBorderFocused : {}),
       }}
     >
+      <label htmlFor="chat-input" className="sr-only">
+        Message the GrantWell assistant
+      </label>
       {/* Microphone button with enhanced feedback */}
       {browserSupportsSpeechRecognition ? (
         <button
           style={{
             ...styles.micButton,
             ...(listening ? styles.micActive : {}),
-            ...(micHovered && !listening ? { backgroundColor: "#f3f4f6" } : {}),
-            ...(micPermissionDenied ? { color: "#d32f2f" } : {}),
+            ...(micHovered && !listening ? { backgroundColor: "#f3f4f6", color: "#0073bb" } : {}),
+            ...(micPermissionDenied ? { color: "#ef4444" } : {}),
           }}
           aria-label={
             micPermissionDenied
-              ? "Microphone access denied"
+              ? "Microphone access denied. Click to try again."
               : listening
-              ? "Stop listening"
-              : "Start listening"
+              ? "Stop voice input"
+              : "Start voice input"
           }
+          aria-pressed={listening}
           onClick={handleMicrophoneToggle}
           onMouseEnter={() => setMicHovered(true)}
           onMouseLeave={() => setMicHovered(false)}
@@ -562,57 +582,76 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           }
         >
           {micPermissionDenied ? (
-            <AlertCircle size={18} />
+            <AlertCircle size={20} />
           ) : listening ? (
-            <MicOff size={18} />
+            <MicOff size={20} />
           ) : (
-            <Mic size={18} />
+            <Mic size={20} />
           )}
         </button>
       ) : (
         <span
           style={styles.micDisabled}
           title="Your browser doesn't support speech recognition"
+          aria-label="Speech recognition not supported"
         >
-          <MicOff size={18} />
+          <MicOff size={20} />
         </span>
       )}
 
       {/* Add visual feedback for speech recognition */}
       {listening && (
         <div
+          role="status"
+          aria-live="polite"
           style={{
             position: "absolute",
             bottom: "100%",
             left: "50%",
             transform: "translateX(-50%)",
-            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            backgroundColor: "#1f2937",
             color: "white",
-            padding: "8px 16px",
-            borderRadius: "4px",
-            fontSize: "14px",
-            marginBottom: "8px",
+            padding: "10px 18px",
+            borderRadius: "12px",
+            fontSize: "13px",
+            marginBottom: "12px",
             whiteSpace: "nowrap",
+            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
           }}
         >
+          <span style={{
+            width: "6px",
+            height: "6px",
+            borderRadius: "50%",
+            backgroundColor: "#ef4444",
+            animation: "pulse 1.5s ease-in-out infinite",
+          }} />
           Listening... Click to stop
         </div>
       )}
 
       {/* Text input */}
       <TextareaAutosize
+        ref={inputRef}
+        id="chat-input"
+        aria-label="Message the GrantWell assistant"
+        aria-describedby="chat-input-help"
         style={{
           flex: 1,
           resize: "none",
-          padding: "10px 12px",
+          padding: "12px 8px",
           border: "none",
           outline: "none",
           fontFamily: "inherit",
-          fontSize: "14px",
+          fontSize: "15px",
+          lineHeight: "1.5",
           backgroundColor: "transparent",
           color: "#1f2937",
         }}
-        maxRows={4}
+        maxRows={5}
         minRows={1}
         spellCheck={true}
         onChange={(e) =>
@@ -627,8 +666,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         onFocus={() => setIsInputFocused(true)}
         onBlur={() => setIsInputFocused(false)}
         value={state.value}
-        placeholder="Type your message here..."
+        placeholder="Type your message..."
+        aria-placeholder="Type your message..."
       />
+      <span id="chat-input-help" className="sr-only">
+        Press Enter to send, Shift+Enter for new line
+      </span>
 
       {/* Send button */}
       <button
@@ -642,9 +685,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 ...styles.sendButton,
                 ...(isHovered
                   ? {
-                      color: "#005d96",
-                      backgroundColor: "#f0f7fc",
                       transform: "scale(1.05)",
+                      boxShadow: "0 4px 12px rgba(0, 115, 187, 0.3)",
                     }
                   : {}),
               }),
@@ -659,9 +701,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         aria-label="Send message"
+        title="Send message"
       >
         {props.running ? (
-          <Loader size={20} style={{ ...styles.spinner, color: "#0073bb" }} />
+          <Loader size={20} style={{ ...styles.spinner, color: "white" }} />
         ) : (
           <Send size={20} />
         )}

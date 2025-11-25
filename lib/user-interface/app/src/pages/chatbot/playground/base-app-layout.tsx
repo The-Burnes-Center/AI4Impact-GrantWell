@@ -19,6 +19,7 @@ interface BaseAppLayoutProps {
   documentIdentifier?: string;
   toolsWidth?: number;
   sessionId?: string | null;
+  modalOpen?: boolean;
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -87,7 +88,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "8px",
     display: "flex",
     alignItems: "center",
-    color: "#a3b5d0",
+    color: "#e2e8f0",
     fontSize: "12px",
     fontWeight: 600,
     textTransform: "uppercase",
@@ -100,7 +101,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "12px",
     marginBottom: "4px",
     background: "transparent",
-    color: "#a3b5d0",
+    color: "#e2e8f0",
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
@@ -126,6 +127,7 @@ export default function BaseAppLayout({
   documentIdentifier,
   toolsWidth = 300,
   sessionId,
+  modalOpen = false,
 }: BaseAppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
@@ -179,6 +181,7 @@ export default function BaseAppLayout({
             ...styles.sidebar,
             ...(sidebarOpen ? styles.sidebarExpanded : styles.sidebarCollapsed),
           }}
+          aria-hidden={modalOpen}
         >
           {/* Sidebar header with toggle button */}
           <div
@@ -195,7 +198,8 @@ export default function BaseAppLayout({
             <button
               style={styles.sidebarToggle}
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              aria-label={sidebarOpen ? "Collapse navigation sidebar" : "Expand navigation sidebar"}
+              aria-expanded={sidebarOpen}
             >
               {sidebarOpen ? (
                 <ChevronLeft size={20} />
@@ -220,6 +224,8 @@ export default function BaseAppLayout({
                   ...styles.navButton,
                   ...(activeTab === "chat" ? styles.navButtonActive : {}),
                 }}
+                aria-current={activeTab === "chat" ? "page" : undefined}
+                aria-label="Navigate to chat"
               >
                 <MessageSquare size={20} />
                 {sidebarOpen && <span style={styles.navLinkText}>Chat</span>}
@@ -236,6 +242,8 @@ export default function BaseAppLayout({
                   ...styles.navButton,
                   ...(activeTab === "sessions" ? styles.navButtonActive : {}),
                 }}
+                aria-current={activeTab === "sessions" ? "page" : undefined}
+                aria-label="Navigate to sessions"
               >
                 <List size={20} />
                 {sidebarOpen && (
@@ -257,6 +265,8 @@ export default function BaseAppLayout({
                   ...styles.navButton,
                   ...(activeTab === "editor" ? styles.navButtonActive : {}),
                 }}
+                aria-current={activeTab === "editor" ? "page" : undefined}
+                aria-label="Navigate to write application"
               >
                 <Edit size={20} />
                 {sidebarOpen && (
@@ -278,6 +288,8 @@ export default function BaseAppLayout({
                     ? styles.navButtonActive
                     : {}),
                 }}
+                aria-current={activeTab === "requirements" ? "page" : undefined}
+                aria-label="Navigate to key requirements"
               >
                 <CheckSquare size={20} />
                 {sidebarOpen && (
