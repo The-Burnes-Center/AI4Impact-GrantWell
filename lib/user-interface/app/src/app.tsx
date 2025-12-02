@@ -7,6 +7,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { AppContext } from "./common/app-context";
+import BrandBanner from "./components/brand-banner";
 import GlobalHeader from "./components/global-header";
 import Playground from "./pages/chatbot/playground/playground";
 import DataPage from "./pages/admin/data-view-page";
@@ -20,7 +21,16 @@ import Dashboard from "./pages/Dashboard";
 import "./styles/app.scss";
 import { Mode } from "@cloudscape-design/global-styles";
 import { StorageHelper } from "./common/helpers/storage-helper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+// Function to get brand banner height dynamically
+const getBrandBannerHeight = (): number => {
+  const bannerElement = document.querySelector(".ma__brand-banner");
+  if (bannerElement) {
+    return bannerElement.getBoundingClientRect().height;
+  }
+  return 40; // Default fallback height
+};
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -53,6 +63,41 @@ function ScrollToTop() {
 
 function App() {
   const Router = BrowserRouter;
+  const [brandBannerHeight, setBrandBannerHeight] = useState<number>(40);
+  const headerHeight = 56; // Height of GlobalHeader
+
+  // Monitor brand banner height changes
+  useEffect(() => {
+    const updateBannerHeight = () => {
+      const height = getBrandBannerHeight();
+      setBrandBannerHeight(height);
+    };
+
+    // Initial measurement after a short delay to ensure banner is rendered
+    const timer = setTimeout(updateBannerHeight, 100);
+
+    // Watch for changes (e.g., when banner expands/collapses)
+    const observer = new MutationObserver(updateBannerHeight);
+    const bannerElement = document.querySelector(".ma__brand-banner");
+    
+    if (bannerElement) {
+      observer.observe(bannerElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    // Also listen for resize events
+    window.addEventListener("resize", updateBannerHeight);
+
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+      window.removeEventListener("resize", updateBannerHeight);
+    };
+  }, []);
 
   return (
     <div style={{ height: "100%" }}>
@@ -84,8 +129,16 @@ function App() {
         >
           Skip to main content
         </a>
+        <BrandBanner />
         <GlobalHeader />
-        <div style={{ height: "56px", backgroundColor: "#FFFFFF" }}>&nbsp;</div>
+        <div
+          style={{
+            height: `${brandBannerHeight + headerHeight}px`,
+            backgroundColor: "#FFFFFF",
+          }}
+        >
+          &nbsp;
+        </div>
         <main id="main-content" role="main">
           <Routes>
             <Route

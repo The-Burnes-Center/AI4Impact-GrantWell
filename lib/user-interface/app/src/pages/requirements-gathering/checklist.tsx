@@ -517,6 +517,7 @@ const Checklists: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState("eligibility");
   const [showHelp, setShowHelp] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [isNavCollapsed, setIsNavCollapsed] = useState<boolean>(false);
   const modalRef = React.useRef<HTMLDivElement>(null);
   const modalPreviousFocusRef = React.useRef<HTMLElement | null>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -749,15 +750,61 @@ const Checklists: React.FC = () => {
     },
   };
 
+  // Calculate top offset for brand banner + header
+  const [topOffset, setTopOffset] = useState<number>(96); // Default: 40px banner + 56px header
+
+  useEffect(() => {
+    const updateTopOffset = () => {
+      const bannerElement = document.querySelector(".ma__brand-banner");
+      const headerElement = document.querySelector(".awsui-context-top-navigation");
+      
+      let bannerHeight = 40; // Default fallback
+      let headerHeight = 56; // Default fallback
+      
+      if (bannerElement) {
+        bannerHeight = bannerElement.getBoundingClientRect().height;
+      }
+      
+      if (headerElement) {
+        headerHeight = headerElement.getBoundingClientRect().height;
+      }
+      
+      setTopOffset(bannerHeight + headerHeight);
+    };
+
+    // Initial calculation
+    updateTopOffset();
+
+    // Watch for changes
+    const observer = new MutationObserver(updateTopOffset);
+    const bannerElement = document.querySelector(".ma__brand-banner");
+    
+    if (bannerElement) {
+      observer.observe(bannerElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    window.addEventListener("resize", updateTopOffset);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateTopOffset);
+    };
+  }, []);
+
   return (
     <div
       style={{
         display: "flex",
-        height: "100vh",
+        height: `calc(100vh - ${topOffset}px)`, // Adjust height to account for top offset
         overflow: "hidden",
         position: "fixed",
         width: "100%",
-        top: 0,
+        top: `${topOffset}px`, // Position below brand banner + header
         left: 0,
       }}
     >
@@ -787,7 +834,10 @@ const Checklists: React.FC = () => {
       </a>
       {/* Navigation Sidebar */}
       <nav aria-label="Requirements navigation" aria-hidden={showHelp}>
-        <RequirementsNavigation documentIdentifier={folderParam} />
+        <RequirementsNavigation 
+          documentIdentifier={folderParam}
+          onCollapseChange={setIsNavCollapsed}
+        />
       </nav>
 
       {/* Main Content */}
@@ -796,7 +846,7 @@ const Checklists: React.FC = () => {
         style={{
           flex: 1,
           overflow: "auto",
-          marginLeft: "240px",
+          marginLeft: isNavCollapsed ? "60px" : "240px",
           transition: "margin-left 0.3s ease",
         }}
         aria-hidden={showHelp}

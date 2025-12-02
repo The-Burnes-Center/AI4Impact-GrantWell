@@ -12,6 +12,15 @@ import "./styles/global-header.css";
 import { Divider } from "@aws-amplify/ui-react";
 import { useNavigate } from "react-router-dom";
 
+// Function to get brand banner height dynamically
+const getBrandBannerHeight = (): number => {
+  const bannerElement = document.querySelector(".ma__brand-banner");
+  if (bannerElement) {
+    return bannerElement.getBoundingClientRect().height;
+  }
+  return 40; // Default fallback height
+};
+
 const styles = {
   container: {
     "--color-background-top-navigation": "#0f1b2a", // Dark blue background
@@ -25,6 +34,7 @@ export default function GlobalHeader() {
   const [userName, setUserName] = useState<string | null>(null);
   const [theme, setTheme] = useState<Mode>(StorageHelper.getTheme());
   const [isAdmin, setIsAdmin] = useState(false);
+  const [brandBannerHeight, setBrandBannerHeight] = useState<number>(40);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,6 +57,38 @@ export default function GlobalHeader() {
         result?.signInUserSession?.idToken?.payload["custom:role"];
       setIsAdmin(adminRole && adminRole.includes("Admin"));
     })();
+  }, []);
+
+  // Monitor brand banner height changes (for when it expands/collapses)
+  useEffect(() => {
+    const updateBannerHeight = () => {
+      const height = getBrandBannerHeight();
+      setBrandBannerHeight(height);
+    };
+
+    // Initial measurement
+    updateBannerHeight();
+
+    // Watch for changes (e.g., when banner expands/collapses)
+    const observer = new MutationObserver(updateBannerHeight);
+    const bannerElement = document.querySelector(".ma__brand-banner");
+    
+    if (bannerElement) {
+      observer.observe(bannerElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    // Also listen for resize events
+    window.addEventListener("resize", updateBannerHeight);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateBannerHeight);
+    };
   }, []);
 
   // const onChangeThemeClick = () => {
@@ -73,7 +115,7 @@ export default function GlobalHeader() {
       style={{
         ...styles.container,
         zIndex: 1002,
-        top: 0,
+        top: `${brandBannerHeight}px`, // Position below brand banner dynamically
         left: 0,
         right: 0,
         position: "fixed",

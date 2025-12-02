@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -8,7 +8,27 @@ import {
   List,
   CheckSquare,
   Edit,
+  Home,
 } from "lucide-react";
+
+// Function to get brand banner + header height dynamically
+const getTopOffset = (): number => {
+  const bannerElement = document.querySelector(".ma__brand-banner");
+  const headerElement = document.querySelector(".awsui-context-top-navigation");
+  
+  let bannerHeight = 40; // Default fallback
+  let headerHeight = 56; // Default fallback
+  
+  if (bannerElement) {
+    bannerHeight = bannerElement.getBoundingClientRect().height;
+  }
+  
+  if (headerElement) {
+    headerHeight = headerElement.getBoundingClientRect().height;
+  }
+  
+  return bannerHeight + headerHeight;
+};
 
 interface BaseAppLayoutProps {
   header: React.ReactNode;
@@ -51,13 +71,11 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
     display: "flex",
     flexDirection: "column",
-    transition: "width 0.3s ease",
+    transition: "width 0.3s ease, top 0.3s ease, height 0.3s ease",
     overflow: "hidden",
     borderRight: "1px solid #1f3b5a",
     position: "fixed",
-    top: 0,
     left: 0,
-    height: "100vh",
     zIndex: 100,
   },
   sidebarExpanded: {
@@ -130,9 +148,52 @@ export default function BaseAppLayout({
   modalOpen = false,
 }: BaseAppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [topOffset, setTopOffset] = useState<number>(96); // Default: 40px banner + 56px header
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
+
+  // Monitor brand banner + header height changes
+  useEffect(() => {
+    const updateTopOffset = () => {
+      const offset = getTopOffset();
+      setTopOffset(offset);
+    };
+
+    // Initial calculation
+    updateTopOffset();
+
+    // Watch for changes
+    const observer = new MutationObserver(updateTopOffset);
+    const bannerElement = document.querySelector(".ma__brand-banner");
+    
+    if (bannerElement) {
+      observer.observe(bannerElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    // Also observe header changes
+    const headerElement = document.querySelector(".awsui-context-top-navigation");
+    if (headerElement) {
+      observer.observe(headerElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    window.addEventListener("resize", updateTopOffset);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateTopOffset);
+    };
+  }, []);
 
   // Use the sessionId from props, or fall back to URL params if not provided
   const currentSessionId = sessionId || params.sessionId;
@@ -173,13 +234,21 @@ export default function BaseAppLayout({
   const activeTab = getActiveTab();
 
   return (
-    <div style={styles.container}>
+    <div 
+      style={{
+        ...styles.container,
+        height: `calc(100vh - ${topOffset}px)`,
+        marginTop: `${topOffset}px`,
+      }}
+    >
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {/* Sidebar */}
         <div
           style={{
             ...styles.sidebar,
             ...(sidebarOpen ? styles.sidebarExpanded : styles.sidebarCollapsed),
+            top: `${topOffset}px`,
+            height: `calc(100vh - ${topOffset}px)`,
           }}
           aria-hidden={modalOpen}
         >
@@ -217,6 +286,19 @@ export default function BaseAppLayout({
                   <span>Menu</span>
                 </div>
               )}
+
+              {/* Home Button */}
+              <button
+                onClick={() => navigate("/landing-page/basePage")}
+                style={{
+                  ...styles.navButton,
+                }}
+                aria-label="Home"
+                title="Home"
+              >
+                <Home size={20} />
+                {sidebarOpen && <span style={styles.navLinkText}>Home</span>}
+              </button>
 
               <button
                 onClick={handleChatNavigation}
@@ -310,6 +392,7 @@ export default function BaseAppLayout({
             marginLeft: sidebarOpen ? "240px" : "72px",
             transition: "margin-left 0.3s ease",
             width: "calc(100% - " + (sidebarOpen ? "240px" : "72px") + ")",
+            height: "100%",
           }}
         >
           {/* Header area */}

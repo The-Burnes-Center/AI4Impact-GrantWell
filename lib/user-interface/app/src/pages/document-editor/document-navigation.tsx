@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../utils/recently-viewed-nofos";
+import { Home } from "lucide-react";
+
+// Function to get brand banner + header height dynamically
+const getTopOffset = (): number => {
+  const bannerElement = document.querySelector(".ma__brand-banner");
+  const headerElement = document.querySelector(".awsui-context-top-navigation");
+  
+  let bannerHeight = 40; // Default fallback
+  let headerHeight = 56; // Default fallback
+  
+  if (bannerElement) {
+    bannerHeight = bannerElement.getBoundingClientRect().height;
+  }
+  
+  if (headerElement) {
+    headerHeight = headerElement.getBoundingClientRect().height;
+  }
+  
+  return bannerHeight + headerHeight;
+};
 
 interface DocumentNavigationProps {
   documentIdentifier?: string;
@@ -19,6 +39,49 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
   setIsOpen,
 }) => {
   const navigate = useNavigate();
+  const [topOffset, setTopOffset] = useState<number>(96); // Default: 40px banner + 56px header
+
+  // Monitor brand banner + header height changes
+  useEffect(() => {
+    const updateTopOffset = () => {
+      const offset = getTopOffset();
+      setTopOffset(offset);
+    };
+
+    // Initial calculation
+    updateTopOffset();
+
+    // Watch for changes
+    const observer = new MutationObserver(updateTopOffset);
+    const bannerElement = document.querySelector(".ma__brand-banner");
+    
+    if (bannerElement) {
+      observer.observe(bannerElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    // Also observe header changes
+    const headerElement = document.querySelector(".awsui-context-top-navigation");
+    if (headerElement) {
+      observer.observe(headerElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    window.addEventListener("resize", updateTopOffset);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateTopOffset);
+    };
+  }, []);
 
   // Handle chat navigation
   const handleChatNavigation = () => {
@@ -67,15 +130,15 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
         color: "white",
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
         borderRight: "1px solid #23272f",
-        transition: "width 0.3s ease",
+        transition: "width 0.3s ease, top 0.3s ease, height 0.3s ease",
         overflow: "hidden",
         position: "fixed",
-        top: 0,
+        top: `${topOffset}px`,
         left: 0,
         zIndex: 50,
-        minHeight: "100%",
+        height: `calc(100vh - ${topOffset}px)`,
+        minHeight: `calc(100vh - ${topOffset}px)`,
       }}
     >
       <div
@@ -155,6 +218,36 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
               Menu
             </div>
           )}
+
+          {/* Home Button */}
+          <button
+            onClick={() => navigate("/landing-page/basePage")}
+            aria-label="Home"
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              padding: "12px 16px",
+              borderRadius: "8px",
+              marginBottom: "8px",
+              background: "none",
+              color: "#e2e8f0",
+              border: "none",
+              fontSize: "16px",
+              cursor: "pointer",
+              transition: "background 0.2s, color 0.2s",
+              textAlign: "left",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = "#2d3748")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = "none")
+            }
+          >
+            <Home size={20} />
+            {isOpen && <span style={{ marginLeft: "12px" }}>Home</span>}
+          </button>
 
           <button
             onClick={handleChatNavigation}
