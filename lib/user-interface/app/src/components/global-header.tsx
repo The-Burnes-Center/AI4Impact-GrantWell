@@ -23,9 +23,9 @@ const getBrandBannerHeight = (): number => {
 
 const styles = {
   container: {
-    "--color-background-top-navigation": "#0f1b2a", // Dark blue background
+    "--color-background-top-navigation": "#14558f", // Mayflower utility bar color
     "--color-text-top-navigation": "#ffffff", // White text
-    "--color-background-top-navigation-hover": "#1f3b5a", // Slightly lighter blue for hover
+    "--color-background-top-navigation-hover": "#1a6ba8", // Slightly lighter blue for hover
   },
 };
 
@@ -119,18 +119,18 @@ export default function GlobalHeader() {
         left: 0,
         right: 0,
         position: "fixed",
-        backgroundColor: "#0073bb",
+        backgroundColor: "#14558f",
+        height: "40px",
+        minHeight: "40px",
+        maxHeight: "40px",
       }}
       className="awsui-context-top-navigation"
     >
-      <TopNavigation
+      <div style={{ height: "40px", minHeight: "40px", maxHeight: "40px" }}>
+        <TopNavigation
         identity={{
           href: "/",
           title: "GrantWell",
-          logo: {
-            src: "/images/stateseal-color.png",
-            alt: "Massachusetts State Seal",
-          },
         }}
         i18nStrings={{ searchIconAriaLabel: "Global header" }}
         utilities={[
@@ -143,7 +143,6 @@ export default function GlobalHeader() {
           {
             type: "menu-dropdown",
             text: userName ?? "User",
-            description: userName ?? "User menu",
             iconName: "user-profile",
             ariaLabel: userName ? `User menu for ${userName}` : "User menu",
             onItemClick: onUserProfileClick,
@@ -165,6 +164,7 @@ export default function GlobalHeader() {
           },
         ]}
       />
+      </div>
     </div>
   );
 }

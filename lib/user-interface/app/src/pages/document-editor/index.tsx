@@ -142,6 +142,31 @@ const useDocumentStorage = (nofoId: string | null) => {
 };
 
 // Main Component
+// Function to get brand banner + global header + MDS header height dynamically
+const getTopOffset = (): number => {
+  const bannerElement = document.querySelector(".ma__brand-banner");
+  const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
+  const mdsHeaderElement = document.querySelector(".ma__header_slim");
+  
+  let bannerHeight = 40; // Default fallback
+  let globalHeaderHeight = 56; // Default fallback
+  let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
+  
+  if (bannerElement) {
+    bannerHeight = bannerElement.getBoundingClientRect().height;
+  }
+  
+  if (globalHeaderElement) {
+    globalHeaderHeight = globalHeaderElement.getBoundingClientRect().height;
+  }
+  
+  if (mdsHeaderElement) {
+    mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
+  }
+  
+  return bannerHeight + globalHeaderHeight + mdsHeaderHeight;
+};
+
 const DocumentEditor: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<string>("projectBasics");
   const [selectedNofo, setSelectedNofo] = useState<string | null>(null);
@@ -149,6 +174,7 @@ const DocumentEditor: React.FC = () => {
   const [isNofoLoading, setIsNofoLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
+  const [topOffset, setTopOffset] = useState<number>(156); // Default: 40px banner + 56px global header + 60px MDS header
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
   const { sessionId } = useParams();
@@ -158,6 +184,59 @@ const DocumentEditor: React.FC = () => {
   const draftsButtonRef = useRef<HTMLButtonElement>(null);
 
   const { documentData, setDocumentData, isLoading, error, setError } = useDocumentStorage(selectedNofo);
+
+  // Monitor brand banner + global header + MDS header height changes
+  useEffect(() => {
+    const updateTopOffset = () => {
+      const offset = getTopOffset();
+      setTopOffset(offset);
+    };
+
+    // Initial calculation with a small delay to ensure headers are rendered
+    const timer = setTimeout(updateTopOffset, 100);
+    updateTopOffset();
+
+    // Watch for changes
+    const observer = new MutationObserver(updateTopOffset);
+    const bannerElement = document.querySelector(".ma__brand-banner");
+    const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
+    const mdsHeaderElement = document.querySelector(".ma__header_slim");
+    
+    if (bannerElement) {
+      observer.observe(bannerElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    if (globalHeaderElement) {
+      observer.observe(globalHeaderElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    if (mdsHeaderElement) {
+      observer.observe(mdsHeaderElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    window.addEventListener("resize", updateTopOffset);
+
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+      window.removeEventListener("resize", updateTopOffset);
+    };
+  }, []);
 
   // Extract NOFO and step from URL parameters and handle session
   useEffect(() => {
@@ -454,10 +533,23 @@ const DocumentEditor: React.FC = () => {
     );
   }
 
+  // Calculate header height for sticky positioning
+  const headerHeight = 60; // Approximate height of document-editor-header
+  const stepperTop = topOffset + headerHeight;
+
   return (
     <div
       className="document-editor-root"
-      style={{ display: "flex", minHeight: "100vh" }}
+      style={{
+        display: "flex",
+        height: `calc(100vh - ${topOffset}px)`,
+        position: "fixed",
+        top: `${topOffset}px`,
+        left: 0,
+        right: 0,
+        width: "100%",
+        overflow: "hidden",
+      }}
     >
       <nav aria-label="Document editor navigation">
         <DocumentNavigation
@@ -477,6 +569,10 @@ const DocumentEditor: React.FC = () => {
           width: `calc(100% - ${sidebarOpen ? "240px" : "60px"})`,
           display: "flex",
           flexDirection: "column",
+          overflowY: "auto",
+          overflowX: "hidden",
+          height: "100%",
+          flex: 1,
         }}
       >
         <div
@@ -533,7 +629,7 @@ const DocumentEditor: React.FC = () => {
             marginBottom: "0",
             boxShadow: "0px 1px 2px rgba(0,0,0,0.05)",
             position: "sticky",
-            top: "60px",
+            top: `${headerHeight}px`,
             zIndex: 9,
           }}
         >
@@ -575,7 +671,7 @@ const DocumentEditor: React.FC = () => {
 
         <div
           className="document-editor-workspace"
-          style={{ flex: 1, padding: "20px" }}
+          style={{ flex: 1, padding: "20px", paddingBottom: "80px", minHeight: "100%" }}
         >
           {isLoading ? (
             <div
@@ -619,6 +715,7 @@ const DocumentEditor: React.FC = () => {
         }}
         title="Welcome to GrantWell"
         maxWidth="700px"
+        topOffset={topOffset}
       >
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
           <h3

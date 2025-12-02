@@ -1,12 +1,212 @@
 .awsui-context-top-navigation {
-  --color-background-container-content-z79u4u: #006499 !important;
+  --color-background-container-content-z79u4u: #14558f !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  overflow: visible !important;
 }
 
-/* Style the state seal in the header */
-.awsui-context-top-navigation img[alt="Massachusetts State Seal"] {
-  max-height: 30px;
-  margin-right: 10px;
-  background-color: white;
-  border-radius: 50%;
-  padding: 2px;
+/* Make the global header thinner - reduce height */
+/* Target all nested divs and the TopNavigation component */
+.awsui-context-top-navigation > div,
+.awsui-context-top-navigation > div > *,
+.awsui-context-top-navigation [class*="awsui_top-navigation"],
+.awsui-context-top-navigation [class*="awsui_padding-box"],
+.awsui-context-top-navigation [class*="awsui_padding-box"] > * {
+  min-height: 40px !important;
+  height: 40px !important;
+  max-height: 40px !important;
+  block-size: 40px !important;
+}
+
+/* Allow dropdown containers to overflow */
+.awsui-context-top-navigation [class*="awsui_utility-type-menu-dropdown"],
+.awsui-context-top-navigation [class*="awsui_button-dropdown"] {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Override the padding-box block-size calculation */
+.awsui-context-top-navigation [class*="awsui_padding-box"] {
+  block-size: 40px !important;
+  padding: 6px 16px !important;
+  padding-inline-start: 16px !important;
+  padding-inline-end: 16px !important;
+  padding-block-start: 6px !important;
+  padding-block-end: 6px !important;
+}
+
+.awsui-context-top-navigation nav {
+  min-height: 40px !important;
+  height: 40px !important;
+  padding: 6px 16px !important;
+  overflow: visible !important;
+}
+
+/* Reduce padding for identity and utilities sections */
+.awsui-context-top-navigation nav > div {
+  min-height: 28px !important;
+  height: 28px !important;
+  overflow: visible !important;
+}
+
+/* Ensure utility wrapper allows dropdown overflow */
+.awsui-context-top-navigation [class*="awsui_utility-wrapper"] {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Reduce font size and line height for compact header */
+.awsui-context-top-navigation a,
+.awsui-context-top-navigation button {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  padding: 4px 10px !important;
+}
+
+/* Fix dropdown menu visibility - ensure it appears above everything */
+.awsui-context-top-navigation [class*="awsui_button-dropdown"],
+.awsui-context-top-navigation [class*="awsui_button-dropdown"] > * {
+  overflow: visible !important;
+}
+
+/* Ensure dropdown menu container is visible and has proper z-index - only when open */
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"][style*="display: block"],
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"]:not([style*="display: none"]):not(
+    [style*="display:none"]
+  ),
+.awsui-context-top-navigation
+  [class*="awsui_dropdown-content"][style*="display: block"],
+.awsui-context-top-navigation
+  [class*="awsui_dropdown-content-wrapper"][style*="display: block"],
+.awsui-context-top-navigation
+  [class*="awsui_menu-dropdown"][style*="display: block"],
+.awsui-context-top-navigation
+  [class*="awsui_menu-dropdown-content"][style*="display: block"] {
+  z-index: 10050 !important;
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* Fix any portal-rendered dropdowns - only when open */
+[data-awsui-portal] [class*="awsui_dropdown"][style*="display: block"],
+[data-awsui-portal] [class*="awsui_dropdown-content"][style*="display: block"],
+[data-awsui-portal] [class*="awsui_menu-dropdown"][style*="display: block"],
+[data-awsui-portal]
+  [class*="awsui_menu-dropdown-content"][style*="display: block"] {
+  z-index: 10050 !important;
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* Hide portal-rendered dropdowns when closed */
+[data-awsui-portal] [class*="awsui_dropdown"][style*="display: none"],
+[data-awsui-portal] [class*="awsui_dropdown"][style*="display:none"] {
+  display: none !important;
+}
+
+/* Ensure dropdown content wrapper shows all items - only when dropdown is open */
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"][style*="display: block"]
+  [class*="awsui_dropdown-content-wrapper"],
+[data-awsui-portal]
+  [class*="awsui_dropdown"][style*="display: block"]
+  [class*="awsui_dropdown-content-wrapper"] {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+  min-height: auto !important;
+  display: block !important;
+}
+
+/* Hide dropdown content wrapper when closed */
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"][style*="display: none"]
+  [class*="awsui_dropdown-content-wrapper"],
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"][style*="display:none"]
+  [class*="awsui_dropdown-content-wrapper"],
+[data-awsui-portal]
+  [class*="awsui_dropdown"][style*="display: none"]
+  [class*="awsui_dropdown-content-wrapper"],
+[data-awsui-portal]
+  [class*="awsui_dropdown"][style*="display:none"]
+  [class*="awsui_dropdown-content-wrapper"] {
+  display: none !important;
+}
+
+/* Ensure dropdown content container shows all items - only when open */
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"]:not([style*="display: none"])
+  [class*="awsui_dropdown-content"],
+[data-awsui-portal]
+  [class*="awsui_dropdown"]:not([style*="display: none"])
+  [class*="awsui_dropdown-content"] {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+  min-height: auto !important;
+  display: block !important;
+  padding: 0 !important;
+}
+
+/* Ensure dropdown items are fully visible - only when dropdown is open */
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"][style*="display: block"]
+  [class*="awsui_dropdown-content"]
+  [role="menuitem"],
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"][style*="display: block"]
+  [class*="awsui_menu-dropdown-content"]
+  [role="menuitem"],
+[data-awsui-portal]
+  [class*="awsui_dropdown"][style*="display: block"]
+  [class*="awsui_dropdown-content"]
+  [role="menuitem"],
+[data-awsui-portal]
+  [class*="awsui_dropdown"][style*="display: block"]
+  [class*="awsui_menu-dropdown-content"]
+  [role="menuitem"],
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"][style*="display: block"]
+  [class*="awsui_menu-item"],
+[data-awsui-portal]
+  [class*="awsui_dropdown"][style*="display: block"]
+  [class*="awsui_menu-item"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 40px !important;
+  padding: 8px 16px !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 10051 !important;
+}
+
+/* Ensure dropdown itself is visible only when open - respect Cloudscape's display: none */
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"][style*="display: block"],
+.awsui-context-top-navigation
+  [class*="awsui_dropdown"]:not([style*="display: none"]):not(
+    [style*="display:none"]
+  ),
+[data-awsui-portal] [class*="awsui_dropdown"][style*="display: block"],
+[data-awsui-portal]
+  [class*="awsui_dropdown"]:not([style*="display: none"]):not(
+    [style*="display:none"]
+  ) {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Keep dropdown hidden when closed - respect Cloudscape's display: none */
+.awsui-context-top-navigation [class*="awsui_dropdown"][style*="display: none"],
+.awsui-context-top-navigation [class*="awsui_dropdown"][style*="display:none"],
+[data-awsui-portal] [class*="awsui_dropdown"][style*="display: none"],
+[data-awsui-portal] [class*="awsui_dropdown"][style*="display:none"] {
+  display: none !important;
 }

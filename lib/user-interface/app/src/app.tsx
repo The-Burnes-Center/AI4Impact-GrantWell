@@ -9,6 +9,7 @@ import {
 import { AppContext } from "./common/app-context";
 import BrandBanner from "./components/brand-banner";
 import GlobalHeader from "./components/global-header";
+import MDSHeader from "./components/mds-header";
 import Playground from "./pages/chatbot/playground/playground";
 import DataPage from "./pages/admin/data-view-page";
 import UserFeedbackPage from "./pages/admin/user-feedback-page";
@@ -23,13 +24,29 @@ import { Mode } from "@cloudscape-design/global-styles";
 import { StorageHelper } from "./common/helpers/storage-helper";
 import { useEffect, useState } from "react";
 
-// Function to get brand banner height dynamically
-const getBrandBannerHeight = (): number => {
+// Function to get total header height (brand banner + global header + MDS header) dynamically
+const getTotalHeaderHeight = (): number => {
   const bannerElement = document.querySelector(".ma__brand-banner");
+  const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
+  const mdsHeaderElement = document.querySelector(".ma__header_slim");
+  
+  let bannerHeight = 40; // Default fallback
+  let globalHeaderHeight = 56; // Default fallback
+  let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
+  
   if (bannerElement) {
-    return bannerElement.getBoundingClientRect().height;
+    bannerHeight = bannerElement.getBoundingClientRect().height;
   }
-  return 40; // Default fallback height
+  
+  if (globalHeaderElement) {
+    globalHeaderHeight = globalHeaderElement.getBoundingClientRect().height;
+  }
+  
+  if (mdsHeaderElement) {
+    mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
+  }
+  
+  return bannerHeight + globalHeaderHeight + mdsHeaderHeight;
 };
 
 function ScrollToTop() {
@@ -63,22 +80,23 @@ function ScrollToTop() {
 
 function App() {
   const Router = BrowserRouter;
-  const [brandBannerHeight, setBrandBannerHeight] = useState<number>(40);
-  const headerHeight = 56; // Height of GlobalHeader
+  const [totalHeaderHeight, setTotalHeaderHeight] = useState<number>(156); // Default: 40px banner + 56px global header + 60px MDS header
 
-  // Monitor brand banner height changes
+  // Monitor all header heights changes
   useEffect(() => {
-    const updateBannerHeight = () => {
-      const height = getBrandBannerHeight();
-      setBrandBannerHeight(height);
+    const updateTotalHeight = () => {
+      const height = getTotalHeaderHeight();
+      setTotalHeaderHeight(height);
     };
 
-    // Initial measurement after a short delay to ensure banner is rendered
-    const timer = setTimeout(updateBannerHeight, 100);
+    // Initial measurement after a short delay to ensure all headers are rendered
+    const timer = setTimeout(updateTotalHeight, 100);
 
     // Watch for changes (e.g., when banner expands/collapses)
-    const observer = new MutationObserver(updateBannerHeight);
+    const observer = new MutationObserver(updateTotalHeight);
     const bannerElement = document.querySelector(".ma__brand-banner");
+    const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
+    const mdsHeaderElement = document.querySelector(".ma__header_slim");
     
     if (bannerElement) {
       observer.observe(bannerElement, {
@@ -89,13 +107,31 @@ function App() {
       });
     }
 
+    if (globalHeaderElement) {
+      observer.observe(globalHeaderElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    if (mdsHeaderElement) {
+      observer.observe(mdsHeaderElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
     // Also listen for resize events
-    window.addEventListener("resize", updateBannerHeight);
+    window.addEventListener("resize", updateTotalHeight);
 
     return () => {
       clearTimeout(timer);
       observer.disconnect();
-      window.removeEventListener("resize", updateBannerHeight);
+      window.removeEventListener("resize", updateTotalHeight);
     };
   }, []);
 
@@ -131,9 +167,10 @@ function App() {
         </a>
         <BrandBanner />
         <GlobalHeader />
+        <MDSHeader />
         <div
           style={{
-            height: `${brandBannerHeight + headerHeight}px`,
+            height: `${totalHeaderHeight}px`,
             backgroundColor: "#FFFFFF",
           }}
         >

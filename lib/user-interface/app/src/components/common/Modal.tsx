@@ -17,6 +17,7 @@ interface ModalProps {
   children: React.ReactNode;
   width?: string;
   maxWidth?: string;
+  topOffset?: number;
 }
 
 /**
@@ -49,7 +50,7 @@ function useModalEffects(isOpen: boolean, onClose: () => void) {
  * Modal Component
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, width, maxWidth = "600px" }) => {
+  ({ isOpen, onClose, title, children, width, maxWidth = "600px", topOffset = 0 }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -134,8 +135,9 @@ export const Modal = React.memo<ModalProps>(
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          zIndex: 1000,
+          zIndex: 10000,
           padding: "20px",
+          paddingTop: `${topOffset + 20}px`,
         }}
         onClick={onClose}
         onKeyDown={(e) => {
@@ -152,7 +154,7 @@ export const Modal = React.memo<ModalProps>(
             borderRadius: "8px",
             width: width || "100%",
             maxWidth: maxWidth,
-            maxHeight: "90vh",
+            maxHeight: `calc(90vh - ${topOffset}px)`,
             overflow: "auto",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}

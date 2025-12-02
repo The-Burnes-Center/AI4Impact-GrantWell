@@ -11,23 +11,29 @@ import {
   Home,
 } from "lucide-react";
 
-// Function to get brand banner + header height dynamically
+// Function to get brand banner + global header + MDS header height dynamically
 const getTopOffset = (): number => {
   const bannerElement = document.querySelector(".ma__brand-banner");
-  const headerElement = document.querySelector(".awsui-context-top-navigation");
+  const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
+  const mdsHeaderElement = document.querySelector(".ma__header_slim");
   
   let bannerHeight = 40; // Default fallback
-  let headerHeight = 56; // Default fallback
+  let globalHeaderHeight = 56; // Default fallback
+  let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
   
   if (bannerElement) {
     bannerHeight = bannerElement.getBoundingClientRect().height;
   }
   
-  if (headerElement) {
-    headerHeight = headerElement.getBoundingClientRect().height;
+  if (globalHeaderElement) {
+    globalHeaderHeight = globalHeaderElement.getBoundingClientRect().height;
   }
   
-  return bannerHeight + headerHeight;
+  if (mdsHeaderElement) {
+    mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
+  }
+  
+  return bannerHeight + globalHeaderHeight + mdsHeaderHeight;
 };
 
 interface BaseAppLayoutProps {
@@ -148,12 +154,12 @@ export default function BaseAppLayout({
   modalOpen = false,
 }: BaseAppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [topOffset, setTopOffset] = useState<number>(96); // Default: 40px banner + 56px header
+  const [topOffset, setTopOffset] = useState<number>(156); // Default: 40px banner + 56px global header + 60px MDS header
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
 
-  // Monitor brand banner + header height changes
+  // Monitor brand banner + global header + MDS header height changes
   useEffect(() => {
     const updateTopOffset = () => {
       const offset = getTopOffset();
@@ -166,6 +172,8 @@ export default function BaseAppLayout({
     // Watch for changes
     const observer = new MutationObserver(updateTopOffset);
     const bannerElement = document.querySelector(".ma__brand-banner");
+    const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
+    const mdsHeaderElement = document.querySelector(".ma__header_slim");
     
     if (bannerElement) {
       observer.observe(bannerElement, {
@@ -176,10 +184,19 @@ export default function BaseAppLayout({
       });
     }
 
-    // Also observe header changes
-    const headerElement = document.querySelector(".awsui-context-top-navigation");
-    if (headerElement) {
-      observer.observe(headerElement, {
+    // Also observe global header changes
+    if (globalHeaderElement) {
+      observer.observe(globalHeaderElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
+    // Also observe MDS header changes
+    if (mdsHeaderElement) {
+      observer.observe(mdsHeaderElement, {
         attributes: true,
         childList: true,
         subtree: true,
@@ -238,7 +255,11 @@ export default function BaseAppLayout({
       style={{
         ...styles.container,
         height: `calc(100vh - ${topOffset}px)`,
-        marginTop: `${topOffset}px`,
+        position: "fixed",
+        top: `${topOffset}px`,
+        left: 0,
+        right: 0,
+        width: "100%",
       }}
     >
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
