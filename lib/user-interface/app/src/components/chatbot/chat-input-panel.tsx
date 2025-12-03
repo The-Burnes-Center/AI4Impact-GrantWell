@@ -582,11 +582,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           }
         >
           {micPermissionDenied ? (
-            <AlertCircle size={20} />
+            <AlertCircle size={20} aria-hidden="true" />
           ) : listening ? (
-            <MicOff size={20} />
+            <MicOff size={20} aria-hidden="true" />
           ) : (
-            <Mic size={20} />
+            <Mic size={20} aria-hidden="true" />
           )}
         </button>
       ) : (
@@ -595,7 +595,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           title="Your browser doesn't support speech recognition"
           aria-label="Speech recognition not supported"
         >
-          <MicOff size={20} />
+          <MicOff size={20} aria-hidden="true" />
         </span>
       )}
 

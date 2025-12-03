@@ -368,7 +368,7 @@ export default function Welcome() {
           }}
         >
           {title && (
-            <h1
+            <h2
               style={{
                 fontSize: titleFontSize,
                 margin: 1,
@@ -376,7 +376,7 @@ export default function Welcome() {
               }}
             >
               {title}
-            </h1>
+            </h2>
           )}
           <p style={{ fontSize: "13px", color: bodyTextColor }}>
             {description}
@@ -396,6 +396,15 @@ export default function Welcome() {
         )}
       </div>
     );
+    const learnMoreLinkStyle: CSSProperties = {
+      color: mainTextColor === "#ffffff" ? "#ffffff" : "#0073bb",
+      textDecoration: "underline",
+      fontSize: "13px",
+      marginTop: "8px",
+      display: "inline-block",
+      cursor: "pointer",
+    };
+
     return (
       <div
         style={{
@@ -413,17 +422,32 @@ export default function Welcome() {
           marginBottom: "0px",
         }}
       >
-        {linkUrl ? (
-          <a
-            href={linkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: "none", color: "inherit" }}
+        {content}
+        {linkUrl && (
+          <div
+            style={{
+              maxWidth: "900px",
+              margin: "8px auto 0 auto",
+              textAlign: titleAlign,
+            }}
           >
-            {content}
-          </a>
-        ) : (
-          content
+            <a
+              href={linkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={learnMoreLinkStyle}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                e.currentTarget.style.outlineOffset = "2px";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
+                e.currentTarget.style.outlineOffset = "0";
+              }}
+            >
+              Learn More
+            </a>
+          </div>
         )}
       </div>
     );
@@ -490,11 +514,6 @@ export default function Welcome() {
           href: "https://us02web.zoom.us/meeting/register/tZUucuyhrzguHNJkkh-XlmZBlQQKxxG_Acjl",
           description:
             "Stay updated on current funding opportunities by joining our monthly informational sessions.",
-        },
-        {
-          title: "Federal Grant Application Resources",
-          href: "https://www.mass.gov/lists/federal-funds-grant-application-resources",
-          description: "Access categorized grant resources on mass.gov.",
         },
       ].map((resource, index) => (
         <div
@@ -577,11 +596,20 @@ export default function Welcome() {
         onBlur={(e) => {
           e.currentTarget.style.left = "-9999px";
         }}
+        onClick={(e) => {
+          e.preventDefault();
+          const mainContent = document.getElementById("main-content");
+          if (mainContent) {
+            // Scroll to main content
+            mainContent.scrollIntoView({ behavior: "smooth", block: "start" });
+            // Move focus to main content
+            mainContent.focus();
+          }
+        }}
       >
         Skip to main content
       </a>
-      <main
-        id="main-content"
+      <div
         style={{
           maxWidth: "950px",
           margin: "0 auto",
@@ -902,7 +930,7 @@ export default function Welcome() {
           }
           backgroundColor="#006499"
         /> */}
-      </main>
+      </div>
 
       {/* Footer Section */}
       <footer>

@@ -538,6 +538,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       viewBox="0 0 24 24"
       fill={color || "#666666"}
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" />
     </svg>
@@ -555,6 +556,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const inputContainerStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: "block",
+    fontSize: "16px",
+    fontWeight: "500",
+    color: "#006499",
+    marginBottom: "8px",
+    cursor: "pointer",
   };
 
   const searchIconStyle: React.CSSProperties = {
@@ -738,6 +748,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         style={{ marginRight: "8px", verticalAlign: "middle" }}
+        aria-hidden="true"
       >
         <path
           d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
@@ -801,6 +812,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         style={{ marginRight: "8px", verticalAlign: "middle" }}
+        aria-hidden="true"
       >
         <path
           d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
@@ -828,11 +840,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   return (
     <div style={searchContainerStyle} ref={searchRef}>
+      <label htmlFor="grant-search-input" style={labelStyle}>
+        Search for grants
+      </label>
       <div style={inputContainerStyle}>
         <div style={searchIconStyle}>
           <SearchIcon color="#0073BB" />
         </div>
         <input
+          id="grant-search-input"
           ref={inputRef}
           type="text"
           placeholder="Search for grants from grants.gov..."
@@ -914,6 +930,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <path
                 d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
@@ -935,6 +952,20 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           </div>
         )}
       </div>
+
+      {/* Search Results Count Announcement for Screen Readers */}
+      {showResults && !showAssistant && searchTerm.length > 0 && (
+        <div 
+          role="status" 
+          aria-live="polite" 
+          aria-atomic="true" 
+          className="sr-only"
+        >
+          {filteredPinnedGrants.length + filteredDocuments.length === 0
+            ? `No results found for "${searchTerm}"`
+            : `${filteredPinnedGrants.length + filteredDocuments.length} result${filteredPinnedGrants.length + filteredDocuments.length === 1 ? '' : 's'} found`}
+        </div>
+      )}
 
       {/* Search Results */}
       {showResults && !showAssistant && (
@@ -1584,6 +1615,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                           style={{ marginRight: "8px" }}
+                          aria-hidden="true"
                         >
                           <path
                             d="M16 12V4H17V2H7V4H8V12L6 14V16H11.2V22H12.8V16H18V14L16 12Z"

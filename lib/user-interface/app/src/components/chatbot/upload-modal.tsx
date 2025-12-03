@@ -892,7 +892,7 @@ export default function UploadModal({
                   </p>
                   {selectedFiles.map((file, index) => (
                     <div key={index} style={styles.fileItem}>
-                      <FileText size={20} style={styles.fileIcon} />
+                      <FileText size={20} style={styles.fileIcon} aria-hidden="true" />
                       <div style={styles.fileDetails}>
                         <p style={styles.fileName}>{file.name}</p>
                         <p style={styles.fileSize}>
@@ -905,7 +905,7 @@ export default function UploadModal({
                         disabled={uploading}
                         aria-label={`Remove ${file.name} from upload queue`}
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={16} aria-hidden="true" />
                       </button>
                     </div>
                   ))}
@@ -921,7 +921,7 @@ export default function UploadModal({
                     disabled={uploading || selectedFiles.length === 0}
                     aria-label={uploading ? `Uploading files, ${uploadProgress}% complete` : `Upload ${selectedFiles.length} selected files`}
                   >
-                    <Upload size={16} />
+                    <Upload size={16} aria-hidden="true" />
                     {uploading
                       ? `Uploading... ${uploadProgress}%`
                       : "Upload Files"}
@@ -973,7 +973,7 @@ export default function UploadModal({
               ) : (
                 existingFiles.map((file, index) => (
                   <div key={index} style={styles.fileItem}>
-                    <FileText size={20} style={styles.fileIcon} />
+                    <FileText size={20} style={styles.fileIcon} aria-hidden="true" />
                     <div
                       style={styles.fileDetails}
                       onClick={() => downloadFile(file.name)}
@@ -1039,7 +1039,7 @@ export default function UploadModal({
                       title="Delete file"
                       aria-label={`Delete ${file.name}`}
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={16} aria-hidden="true" />
                     </button>
                   </div>
                 ))

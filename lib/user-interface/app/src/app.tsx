@@ -56,10 +56,8 @@ function ScrollToTop() {
     // Move focus to main content on route change for screen readers
     const mainContent = document.getElementById("main-content");
     if (mainContent) {
-      mainContent.setAttribute("tabindex", "-1");
+      // Main element already has tabindex="-1" set permanently
       mainContent.focus();
-      // Remove tabindex after focusing so it doesn't interfere with normal tab order
-      setTimeout(() => mainContent.removeAttribute("tabindex"), 100);
     }
     
     // Update page title based on route
@@ -139,32 +137,6 @@ function App() {
     <div style={{ height: "100%" }}>
       <Router>
         <ScrollToTop />
-        {/* Skip Navigation Link for Accessibility */}
-        <a
-          href="#main-content"
-          style={{
-            position: "absolute",
-            left: "-9999px",
-            top: "0",
-            zIndex: 10000,
-            padding: "10px 20px",
-            backgroundColor: "#0073bb",
-            color: "#ffffff",
-            textDecoration: "none",
-            borderRadius: "4px",
-            fontWeight: "600",
-            fontSize: "16px",
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.left = "10px";
-            e.currentTarget.style.top = "10px";
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.left = "-9999px";
-          }}
-        >
-          Skip to main content
-        </a>
         <BrandBanner />
         <GlobalHeader />
         <MDSHeader />
@@ -176,7 +148,7 @@ function App() {
         >
           &nbsp;
         </div>
-        <main id="main-content" role="main">
+        <main id="main-content" role="main" tabIndex={-1}>
           <Routes>
             <Route
               index

@@ -19,6 +19,65 @@ export default function BrandBanner() {
     };
   }, []);
 
+  // Ensure hidden navigation elements are excluded from keyboard navigation
+  useEffect(() => {
+    const updateHiddenElements = () => {
+      // Find brand banner expansion content
+      const expansionContent = document.getElementById("ma__brand-banner-content");
+      const bannerButton = document.getElementById("ma__brand-banner-button");
+      
+      if (expansionContent && bannerButton) {
+        const isExpanded = bannerButton.getAttribute("aria-expanded") === "true";
+        
+        // Set tabindex="-1" on all interactive elements when collapsed
+        if (!isExpanded) {
+          const interactiveElements = expansionContent.querySelectorAll(
+            'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          interactiveElements.forEach((el) => {
+            if (!el.hasAttribute("tabindex")) {
+              el.setAttribute("tabindex", "-1");
+            }
+          });
+        } else {
+          // Restore tabindex when expanded
+          const interactiveElements = expansionContent.querySelectorAll(
+            'a, button, input, select, textarea, [tabindex="-1"]'
+          );
+          interactiveElements.forEach((el) => {
+            // Remove tabindex="-1" for native interactive elements
+            if (el.tagName === "A" || el.tagName === "BUTTON" || el.tagName === "INPUT" || 
+                el.tagName === "SELECT" || el.tagName === "TEXTAREA") {
+              el.removeAttribute("tabindex");
+            }
+          });
+        }
+      }
+    };
+
+    // Initial update
+    updateHiddenElements();
+
+    // Watch for changes to aria-expanded attribute
+    const observer = new MutationObserver(updateHiddenElements);
+    const bannerButton = document.getElementById("ma__brand-banner-button");
+    
+    if (bannerButton) {
+      observer.observe(bannerButton, {
+        attributes: true,
+        attributeFilter: ["aria-expanded"],
+      });
+    }
+
+    // Also check periodically in case the script updates it
+    const interval = setInterval(updateHiddenElements, 500);
+
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <div
       ref={bannerRef}

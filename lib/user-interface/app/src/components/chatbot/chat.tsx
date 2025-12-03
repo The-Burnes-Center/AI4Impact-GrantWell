@@ -354,9 +354,25 @@ export default function Chat(props: {
       {/* Welcome Modal */}
       {showPopup && (
         <div style={styles.modalOverlay}>
-          <div ref={modalRef} style={styles.modal}>
+          <div 
+            ref={modalRef} 
+            style={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="welcome-modal-title"
+          >
             <div style={styles.modalHeader}>
-              <span>Welcome to GrantWell!</span>
+              <h2 
+                id="welcome-modal-title" 
+                style={{ 
+                  margin: 0, 
+                  fontSize: "24px", 
+                  fontWeight: 600,
+                  color: "#1a73e8"
+                }}
+              >
+                Welcome to GrantWell!
+              </h2>
               <button
                 style={styles.closeButton}
                 onClick={handleModalDismiss}
@@ -373,7 +389,7 @@ export default function Chat(props: {
                   e.currentTarget.style.outline = "none";
                 }}
               >
-                <FaTimes size={20} />
+                <FaTimes size={20} aria-hidden="true" />
               </button>
             </div>
 

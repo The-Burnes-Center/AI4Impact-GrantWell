@@ -26,7 +26,9 @@ export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { addNotification, removeNotification } = useNotifications();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedMenuItemIndex, setSelectedMenuItemIndex] = useState<number>(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuItemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   // State for copy popup
   const [showCopyPopup, setShowCopyPopup] = useState(false);
 
@@ -38,6 +40,7 @@ export default function ChatMessage(props: ChatMessageProps) {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsDropdownOpen(false);
+        setSelectedMenuItemIndex(-1);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -45,6 +48,69 @@ export default function ChatMessage(props: ChatMessageProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Handle keyboard navigation for dropdown menu
+  useEffect(() => {
+    if (!isDropdownOpen) {
+      setSelectedMenuItemIndex(-1);
+      return;
+    }
+
+    const sources = props.message.metadata?.Sources as any[];
+    if (!sources || sources.length === 0) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isDropdownOpen) return;
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setSelectedMenuItemIndex((prev) =>
+            prev < sources.length - 1 ? prev + 1 : 0
+          );
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setSelectedMenuItemIndex((prev) =>
+            prev > 0 ? prev - 1 : sources.length - 1
+          );
+          break;
+        case "Enter":
+        case " ":
+          if (selectedMenuItemIndex >= 0 && selectedMenuItemIndex < sources.length) {
+            e.preventDefault();
+            const menuItem = menuItemsRef.current[selectedMenuItemIndex];
+            if (menuItem) {
+              menuItem.click();
+            }
+          }
+          break;
+        case "Escape":
+          e.preventDefault();
+          setIsDropdownOpen(false);
+          setSelectedMenuItemIndex(-1);
+          // Return focus to button
+          const button = dropdownRef.current?.querySelector("button");
+          button?.focus();
+          break;
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isDropdownOpen, selectedMenuItemIndex, props.message.metadata]);
+
+  // Focus first menu item when dropdown opens
+  useEffect(() => {
+    if (isDropdownOpen && menuItemsRef.current.length > 0) {
+      setSelectedMenuItemIndex(0);
+      setTimeout(() => {
+        menuItemsRef.current[0]?.focus();
+      }, 0);
+    }
+  }, [isDropdownOpen]);
 
   // Styles for the components
   const containerStyle: React.CSSProperties = {
@@ -288,7 +354,13 @@ export default function ChatMessage(props: ChatMessageProps) {
   };
 
   return (
-    <div>
+    <article
+      aria-label={
+        props.message?.type === ChatBotMessageType.AI
+          ? "Assistant message"
+          : "Your message"
+      }
+    >
       <div style={containerStyle}>
         {props.message?.type === ChatBotMessageType.AI ? (
           <>
@@ -404,33 +476,64 @@ export default function ChatMessage(props: ChatMessageProps) {
                                   "transparent";
                                 e.currentTarget.style.color = "#374151";
                               }}
-                              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                              onClick={() => {
+                                setIsDropdownOpen(!isDropdownOpen);
+                                if (!isDropdownOpen) {
+                                  setSelectedMenuItemIndex(-1);
+                                }
+                              }}
                               aria-label="View source documents"
                               aria-expanded={isDropdownOpen}
-                              aria-haspopup="true"
+                              aria-haspopup="menu"
                             >
-                              <FaFileAlt size={12} />
+                              <FaFileAlt size={12} aria-hidden="true" />
                               {
                                 (props.message.metadata.Sources as any[]).length
                               }{" "}
-                              Sources <FaChevronDown size={10} />
+                              Sources <FaChevronDown size={10} aria-hidden="true" />
                             </button>
 
                             {isDropdownOpen && (
-                              <div style={dropdownMenuStyle}>
+                              <div 
+                                role="menu"
+                                style={dropdownMenuStyle}
+                                aria-label="Source documents"
+                              >
                                 {(props.message.metadata.Sources as any[]).map(
                                   (item, index) => (
                                     <a
                                       key={index}
+                                      ref={(el) => {
+                                        menuItemsRef.current[index] = el;
+                                      }}
                                       href={item.uri}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      style={dropdownItemStyle}
+                                      role="menuitem"
+                                      tabIndex={selectedMenuItemIndex === index ? 0 : -1}
+                                      style={{
+                                        ...dropdownItemStyle,
+                                        backgroundColor:
+                                          selectedMenuItemIndex === index
+                                            ? "#f0f7ff"
+                                            : "transparent",
+                                        outline:
+                                          selectedMenuItemIndex === index
+                                            ? "2px solid #0073bb"
+                                            : "none",
+                                        outlineOffset: "2px",
+                                      }}
+                                      onFocus={() => setSelectedMenuItemIndex(index)}
+                                      onClick={() => {
+                                        setIsDropdownOpen(false);
+                                        setSelectedMenuItemIndex(-1);
+                                      }}
                                     >
                                       {item.title}{" "}
                                       <FaExternalLinkAlt
                                         size={10}
                                         style={{ marginLeft: "4px" }}
+                                        aria-hidden="true"
                                       />
                                     </a>
                                   )
@@ -473,7 +576,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                     }}
                     aria-label="Copy message to clipboard"
                   >
-                    <FaCopy size={14} />
+                    <FaCopy size={14} aria-hidden="true" />
                   </button>
                   {showCopyPopup && (
                     <div
@@ -512,6 +615,6 @@ export default function ChatMessage(props: ChatMessageProps) {
           <div style={spinnerStyle}></div>
         </div>
       )}
-    </div>
+    </article>
   );
 }
