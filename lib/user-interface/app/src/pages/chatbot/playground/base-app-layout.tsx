@@ -11,29 +11,24 @@ import {
   Home,
 } from "lucide-react";
 
-// Function to get brand banner + global header + MDS header height dynamically
+// Function to get brand banner + MDS header height dynamically
+// Note: Headers are now static, so this is only used for minHeight calculations
 const getTopOffset = (): number => {
   const bannerElement = document.querySelector(".ma__brand-banner");
-  const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
   const mdsHeaderElement = document.querySelector(".ma__header_slim");
   
   let bannerHeight = 40; // Default fallback
-  let globalHeaderHeight = 56; // Default fallback
   let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
   
   if (bannerElement) {
     bannerHeight = bannerElement.getBoundingClientRect().height;
   }
   
-  if (globalHeaderElement) {
-    globalHeaderHeight = globalHeaderElement.getBoundingClientRect().height;
-  }
-  
   if (mdsHeaderElement) {
     mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
   }
   
-  return bannerHeight + globalHeaderHeight + mdsHeaderHeight;
+  return bannerHeight + mdsHeaderHeight;
 };
 
 interface BaseAppLayoutProps {
@@ -77,12 +72,11 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
     display: "flex",
     flexDirection: "column",
-    transition: "width 0.3s ease, top 0.3s ease, height 0.3s ease",
+    transition: "width 0.3s ease",
     overflow: "hidden",
     borderRight: "1px solid #1f3b5a",
-    position: "fixed",
-    left: 0,
-    zIndex: 100,
+    position: "static",
+    flexShrink: 0,
   },
   sidebarExpanded: {
     width: "240px",
@@ -154,25 +148,27 @@ export default function BaseAppLayout({
   modalOpen = false,
 }: BaseAppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [topOffset, setTopOffset] = useState<number>(156); // Default: 40px banner + 56px global header + 60px MDS header
+  const [topOffset, setTopOffset] = useState<number>(100); // Default: 40px banner + 60px MDS header
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
 
-  // Monitor brand banner + global header + MDS header height changes
+  // Monitor brand banner + MDS header height changes (for minHeight calculations only)
   useEffect(() => {
     const updateTopOffset = () => {
-      const offset = getTopOffset();
-      setTopOffset(offset);
+      requestAnimationFrame(() => {
+        const offset = getTopOffset();
+        setTopOffset(offset);
+      });
     };
 
-    // Initial calculation
+    // Initial calculation with a small delay to ensure headers are rendered
+    const initialTimer = setTimeout(updateTopOffset, 100);
     updateTopOffset();
 
     // Watch for changes
     const observer = new MutationObserver(updateTopOffset);
     const bannerElement = document.querySelector(".ma__brand-banner");
-    const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
     const mdsHeaderElement = document.querySelector(".ma__header_slim");
     
     if (bannerElement) {
@@ -184,17 +180,7 @@ export default function BaseAppLayout({
       });
     }
 
-    // Also observe global header changes
-    if (globalHeaderElement) {
-      observer.observe(globalHeaderElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    // Also observe MDS header changes
+    // Observe MDS header changes
     if (mdsHeaderElement) {
       observer.observe(mdsHeaderElement, {
         attributes: true,
@@ -205,10 +191,13 @@ export default function BaseAppLayout({
     }
 
     window.addEventListener("resize", updateTopOffset);
+    window.addEventListener("scroll", updateTopOffset, { passive: true });
 
     return () => {
+      clearTimeout(initialTimer);
       observer.disconnect();
       window.removeEventListener("resize", updateTopOffset);
+      window.removeEventListener("scroll", updateTopOffset);
     };
   }, []);
 
@@ -254,22 +243,21 @@ export default function BaseAppLayout({
     <div 
       style={{
         ...styles.container,
-        height: `calc(100vh - ${topOffset}px)`,
-        position: "fixed",
-        top: `${topOffset}px`,
-        left: 0,
-        right: 0,
+        minHeight: `calc(100vh - ${topOffset}px)`,
+        position: "static",
         width: "100%",
+        margin: 0,
+        padding: 0,
       }}
     >
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden", alignItems: "stretch" }}>
         {/* Sidebar */}
         <div
           style={{
             ...styles.sidebar,
             ...(sidebarOpen ? styles.sidebarExpanded : styles.sidebarCollapsed),
-            top: `${topOffset}px`,
-            height: `calc(100vh - ${topOffset}px)`,
+            height: "100%",
+            alignSelf: "stretch",
           }}
           aria-hidden={modalOpen}
         >
@@ -410,9 +398,8 @@ export default function BaseAppLayout({
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
-            marginLeft: sidebarOpen ? "240px" : "72px",
-            transition: "margin-left 0.3s ease",
-            width: "calc(100% - " + (sidebarOpen ? "240px" : "72px") + ")",
+            margin: 0,
+            padding: 0,
             height: "100%",
           }}
         >

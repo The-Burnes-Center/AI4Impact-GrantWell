@@ -9,17 +9,7 @@ import { Auth } from "aws-amplify";
 import useOnFollow from "../common/hooks/use-on-follow";
 import { CHATBOT_NAME } from "../common/constants";
 import "./styles/global-header.css";
-import { Divider } from "@aws-amplify/ui-react";
 import { useNavigate } from "react-router-dom";
-
-// Function to get brand banner height dynamically
-const getBrandBannerHeight = (): number => {
-  const bannerElement = document.querySelector(".ma__brand-banner");
-  if (bannerElement) {
-    return bannerElement.getBoundingClientRect().height;
-  }
-  return 40; // Default fallback height
-};
 
 const styles = {
   container: {
@@ -34,7 +24,6 @@ export default function GlobalHeader() {
   const [userName, setUserName] = useState<string | null>(null);
   const [theme, setTheme] = useState<Mode>(StorageHelper.getTheme());
   const [isAdmin, setIsAdmin] = useState(false);
-  const [brandBannerHeight, setBrandBannerHeight] = useState<number>(40);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,38 +48,6 @@ export default function GlobalHeader() {
     })();
   }, []);
 
-  // Monitor brand banner height changes (for when it expands/collapses)
-  useEffect(() => {
-    const updateBannerHeight = () => {
-      const height = getBrandBannerHeight();
-      setBrandBannerHeight(height);
-    };
-
-    // Initial measurement
-    updateBannerHeight();
-
-    // Watch for changes (e.g., when banner expands/collapses)
-    const observer = new MutationObserver(updateBannerHeight);
-    const bannerElement = document.querySelector(".ma__brand-banner");
-    
-    if (bannerElement) {
-      observer.observe(bannerElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    // Also listen for resize events
-    window.addEventListener("resize", updateBannerHeight);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateBannerHeight);
-    };
-  }, []);
-
   // const onChangeThemeClick = () => {
   //   if (theme === Mode.Dark) {
   //     setTheme(StorageHelper.applyTheme(Mode.Light));
@@ -105,8 +62,6 @@ export default function GlobalHeader() {
   }) => {
     if (detail.id === "signout") {
       Auth.signOut();
-    } else if (detail.id === "dashboard") {
-      navigate("/dashboard");
     }
   };
 
@@ -114,56 +69,45 @@ export default function GlobalHeader() {
     <div
       style={{
         ...styles.container,
-        zIndex: 1002,
-        top: `${brandBannerHeight}px`, // Position below brand banner dynamically
-        left: 0,
-        right: 0,
-        position: "fixed",
+        position: "static",
         backgroundColor: "#14558f",
         height: "40px",
         minHeight: "40px",
         maxHeight: "40px",
+        width: "100%",
       }}
       className="awsui-context-top-navigation"
     >
       <div style={{ height: "40px", minHeight: "40px", maxHeight: "40px" }}>
         <TopNavigation
-        identity={{
-          href: "/",
-          title: "GrantWell",
-        }}
-        i18nStrings={{ searchIconAriaLabel: "Global header" }}
-        utilities={[
-          // {
-          //   type: "button",
-          //   // text: theme === Mode.Dark ? "Light Mode" : "Dark Mode",
-          //   onClick: onChangeThemeClick,
-          // },
+          identity={{
+            href: "/",
+            title: "GrantWell",
+          }}
+          i18nStrings={{ searchIconAriaLabel: "Global header" }}
+          utilities={[
+            // {
+            //   type: "button",
+            //   // text: theme === Mode.Dark ? "Light Mode" : "Dark Mode",
+            //   onClick: onChangeThemeClick,
+            // },
 
-          {
-            type: "menu-dropdown",
-            text: userName ?? "User",
-            iconName: "user-profile",
-            ariaLabel: userName ? `User menu for ${userName}` : "User menu",
-            onItemClick: onUserProfileClick,
-            items: [
-              ...(isAdmin
-                ? [
-                    {
-                      id: "dashboard",
-                      text: "Dashboard",
-                    },
-                  ]
-                : []),
-              {
-                id: "signout",
-                text: "Sign out",
-              },
-            ],
-            onItemFollow: onFollow,
-          },
-        ]}
-      />
+            {
+              type: "menu-dropdown",
+              text: userName ?? "User",
+              iconName: "user-profile",
+              ariaLabel: userName ? `User menu for ${userName}` : "User menu",
+              onItemClick: onUserProfileClick,
+              items: [
+                {
+                  id: "signout",
+                  text: "Sign out",
+                },
+              ],
+              onItemFollow: onFollow,
+            },
+          ]}
+        />
       </div>
     </div>
   );

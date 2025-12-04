@@ -1,13 +1,11 @@
 /* Redesigned Document Editor Layout */
 .document-editor-root {
-  min-height: 100vh;
   width: 100%;
   background: #f5f7fa;
   position: relative;
 }
 
 .document-content {
-  min-height: 100vh;
   background: #f5f7fa;
 }
 

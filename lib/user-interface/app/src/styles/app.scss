@@ -17,7 +17,7 @@ div[data-amplify-theme] {
 
 body {
   background-color: #ffffff;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 body.awsui-dark-mode {
@@ -69,6 +69,13 @@ textarea:focus-visible,
   outline-offset: 2px;
 }
 
+/* Hide focus outline on main element - it's only for screen reader navigation */
+main#main-content:focus,
+main#main-content:focus-visible {
+  outline: none;
+  outline-offset: 0;
+}
+
 .header-container {
   display: flex;
   grid-template-columns: 1fr auto;
@@ -90,6 +97,33 @@ textarea:focus-visible,
     border: 1px solid #d6d6d6;
     padding: 10px;
   }
+}
+
+/* Ensure MDS header utility bar appears right after brand banner */
+.ma__header_slim {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ma__header_slim__utility {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  order: 1 !important;
+}
+
+.ma__header_slim__header {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  order: 2 !important;
 }
 
 .awsui-dark-mode {

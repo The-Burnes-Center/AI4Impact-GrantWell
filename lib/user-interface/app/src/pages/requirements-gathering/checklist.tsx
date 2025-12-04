@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { createPortal } from "react-dom";
 import {
   useParams,
   useLocation,
@@ -82,7 +83,7 @@ const THEME = {
 // CSS styles as objects
 const styles = {
   container: {
-    maxWidth: "1300px",
+    width: "100%",
     margin: "0 auto",
     padding: "32px",
     fontSize: "18px",
@@ -165,7 +166,7 @@ const styles = {
     padding: "40px 0",
   },
   contentArea: {
-    maxWidth: "900px",
+    width: "100%",
     marginRight: "auto",
     marginLeft: "0",
     marginTop: "12px",
@@ -750,34 +751,45 @@ const Checklists: React.FC = () => {
     },
   };
 
-  // Calculate top offset for brand banner + header
-  const [topOffset, setTopOffset] = useState<number>(96); // Default: 40px banner + 56px header
+  // Calculate top offset dynamically for brand banner + MDS header
+  const [topOffset, setTopOffset] = useState<number>(0);
 
   useEffect(() => {
     const updateTopOffset = () => {
-      const bannerElement = document.querySelector(".ma__brand-banner");
-      const headerElement = document.querySelector(".awsui-context-top-navigation");
-      
-      let bannerHeight = 40; // Default fallback
-      let headerHeight = 56; // Default fallback
-      
-      if (bannerElement) {
-        bannerHeight = bannerElement.getBoundingClientRect().height;
-      }
-      
-      if (headerElement) {
-        headerHeight = headerElement.getBoundingClientRect().height;
-      }
-      
-      setTopOffset(bannerHeight + headerHeight);
+      // Use requestAnimationFrame to ensure DOM is fully rendered
+      requestAnimationFrame(() => {
+        const bannerElement = document.querySelector(".ma__brand-banner");
+        const mdsHeaderElement = document.querySelector(".ma__header_slim");
+        
+        let bannerHeight = 0;
+        let mdsHeaderHeight = 0;
+        
+        if (bannerElement) {
+          const rect = bannerElement.getBoundingClientRect();
+          bannerHeight = rect.height || 0;
+        }
+        
+        if (mdsHeaderElement) {
+          const rect = mdsHeaderElement.getBoundingClientRect();
+          mdsHeaderHeight = rect.height || 0;
+        }
+        
+        const totalHeight = bannerHeight + mdsHeaderHeight;
+        setTopOffset(totalHeight);
+      });
     };
 
-    // Initial calculation
+    // Initial calculation with a small delay to ensure headers are rendered
+    const initialTimer = setTimeout(updateTopOffset, 100);
     updateTopOffset();
 
     // Watch for changes
-    const observer = new MutationObserver(updateTopOffset);
+    const observer = new MutationObserver(() => {
+      updateTopOffset();
+    });
+    
     const bannerElement = document.querySelector(".ma__brand-banner");
+    const mdsHeaderElement = document.querySelector(".ma__header_slim");
     
     if (bannerElement) {
       observer.observe(bannerElement, {
@@ -788,11 +800,23 @@ const Checklists: React.FC = () => {
       });
     }
 
+    if (mdsHeaderElement) {
+      observer.observe(mdsHeaderElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+
     window.addEventListener("resize", updateTopOffset);
+    window.addEventListener("scroll", updateTopOffset, { passive: true });
 
     return () => {
+      clearTimeout(initialTimer);
       observer.disconnect();
       window.removeEventListener("resize", updateTopOffset);
+      window.removeEventListener("scroll", updateTopOffset);
     };
   }, []);
 
@@ -800,12 +824,14 @@ const Checklists: React.FC = () => {
     <div
       style={{
         display: "flex",
-        height: `calc(100vh - ${topOffset}px)`, // Adjust height to account for top offset
-        overflow: "hidden",
-        position: "fixed",
+        alignItems: "stretch",
+        gap: 0,
+        minHeight: `calc(100vh - ${topOffset}px)`,
+        position: "static",
         width: "100%",
-        top: `${topOffset}px`, // Position below brand banner + header
-        left: 0,
+        margin: 0,
+        padding: 0,
+        // No marginTop needed - headers are static and already in document flow
       }}
     >
       {/* Skip Navigation Link for Accessibility */}
@@ -833,7 +859,15 @@ const Checklists: React.FC = () => {
         Skip to main content
       </a>
       {/* Navigation Sidebar */}
-      <nav aria-label="Requirements navigation" aria-hidden={showHelp}>
+      <nav 
+        aria-label="Requirements navigation" 
+        aria-hidden={showHelp}
+        style={{
+          margin: 0,
+          padding: 0,
+          flexShrink: 0,
+        }}
+      >
         <RequirementsNavigation 
           documentIdentifier={folderParam}
           onCollapseChange={setIsNavCollapsed}
@@ -845,9 +879,10 @@ const Checklists: React.FC = () => {
         id="main-content"
         style={{
           flex: 1,
-          overflow: "auto",
-          marginLeft: isNavCollapsed ? "60px" : "240px",
-          transition: "margin-left 0.3s ease",
+          margin: 0,
+          padding: 0,
+          paddingLeft: "0",
+          minHeight: "calc(100vh - 120px)",
         }}
         aria-hidden={showHelp}
       >
@@ -997,294 +1032,6 @@ const Checklists: React.FC = () => {
                 </div>
               </div>
 
-              {showHelp && (
-                <div
-                  style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: "rgba(0, 0, 0, 0.6)",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    zIndex: 1000,
-                  }}
-                >
-                  <div
-                    ref={modalRef}
-                    tabIndex={-1}
-                    role="dialog"
-                    aria-modal="true"
-                    aria-labelledby="help-modal-title"
-                    aria-describedby="help-modal-description"
-                    style={{
-                      width: "650px",
-                      backgroundColor: THEME.colors.white,
-                      borderRadius: "12px",
-                      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
-                      maxHeight: "90vh",
-                      overflow: "hidden",
-                      display: "flex",
-                      flexDirection: "column",
-                      outline: "none",
-                    }}
-                  >
-                    {/* Header */}
-                    <div
-                      style={{
-                        backgroundColor: "#0073BB",
-                        padding: "20px 24px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <h2
-                        id="help-modal-title"
-                        style={{
-                          fontSize: "22px",
-                          fontWeight: 600,
-                          color: "#ffffff",
-                          margin: 0,
-                        }}
-                      >
-                        How to use this page
-                      </h2>
-                      <button
-                        ref={closeButtonRef}
-                        onClick={handleCloseModal}
-                        style={{
-                          background: "rgba(255, 255, 255, 0.2)",
-                          border: "none",
-                          cursor: "pointer",
-                          fontSize: "24px",
-                          color: "#ffffff",
-                          padding: "4px 10px",
-                          borderRadius: "4px",
-                          lineHeight: "1",
-                          transition: "background 0.2s",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background =
-                            "rgba(255, 255, 255, 0.3)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background =
-                            "rgba(255, 255, 255, 0.2)";
-                        }}
-                        onFocus={(e) => {
-                          e.currentTarget.style.background = "#ffffff";
-                          e.currentTarget.style.color = "#0073bb";
-                          e.currentTarget.style.outline = "2px solid #ffffff";
-                          e.currentTarget.style.outlineOffset = "2px";
-                        }}
-                        onBlur={(e) => {
-                          e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
-                          e.currentTarget.style.color = "#ffffff";
-                          e.currentTarget.style.outline = "none";
-                        }}
-                        aria-label="Close help dialog"
-                      >
-                        ×
-                      </button>
-                    </div>
-
-                    {/* Content */}
-                    <div
-                      id="help-modal-description"
-                      style={{
-                        padding: "28px 32px",
-                        overflowY: "auto",
-                        flex: 1,
-                      }}
-                    >
-                      <p
-                        style={{
-                          marginBottom: "20px",
-                          lineHeight: "1.6",
-                          fontSize: "15px",
-                          color: "#555",
-                        }}
-                      >
-                        Grantwell uses generative AI to extract and summarize
-                        the key elements of the grant.
-                      </p>
-
-                      {/* Highlighted box */}
-                      <div
-                        style={{
-                          borderLeft: "4px solid #0073BB",
-                          backgroundColor: "#F0F7FF",
-                          padding: "16px 20px",
-                          marginBottom: "24px",
-                          borderRadius: "4px",
-                        }}
-                      >
-                        <p
-                          style={{
-                            margin: 0,
-                            lineHeight: "1.6",
-                            fontSize: "15px",
-                            color: "#333",
-                          }}
-                        >
-                          Click through the tabs above (
-                          <strong style={{ fontWeight: 600 }}>
-                            Eligibility, Required Documents, Narrative Sections,
-                            Key Deadlines
-                          </strong>
-                          ) to see what you need for this grant.
-                        </p>
-                      </div>
-
-                      {/* Have a question section */}
-                      <div style={{ marginBottom: "20px" }}>
-                        <p
-                          style={{
-                            margin: 0,
-                            marginBottom: "6px",
-                            fontSize: "15px",
-                            color: "#0073BB",
-                            fontWeight: 600,
-                          }}
-                        >
-                          Have a question?
-                        </p>
-                        <p
-                          style={{
-                            margin: 0,
-                            lineHeight: "1.6",
-                            fontSize: "15px",
-                            color: "#555",
-                          }}
-                        >
-                          Use "Chat with AI" in the left sidebar to get help
-                          understanding the grant requirements.
-                        </p>
-                      </div>
-
-                      {/* Ready to start writing section */}
-                      <div style={{ marginBottom: "20px" }}>
-                        <p
-                          style={{
-                            margin: 0,
-                            marginBottom: "6px",
-                            fontSize: "15px",
-                            color: "#0073BB",
-                            fontWeight: 600,
-                          }}
-                        >
-                          Ready to start writing?
-                        </p>
-                        <p
-                          style={{
-                            margin: 0,
-                            lineHeight: "1.6",
-                            fontSize: "15px",
-                            color: "#555",
-                          }}
-                        >
-                          Click "Write Application" in the left sidebar to begin
-                          drafting.
-                        </p>
-                      </div>
-
-                      {/* Want a different grant section */}
-                      <div style={{ marginBottom: "24px" }}>
-                        <p
-                          style={{
-                            margin: 0,
-                            marginBottom: "6px",
-                            fontSize: "15px",
-                            color: "#0073BB",
-                            fontWeight: 600,
-                          }}
-                        >
-                          Want a different grant?
-                        </p>
-                        <p
-                          style={{
-                            margin: 0,
-                            lineHeight: "1.6",
-                            fontSize: "15px",
-                            color: "#555",
-                          }}
-                        >
-                          Use "Recent Grants" to quickly access other grants or
-                          return to the home page.
-                        </p>
-                      </div>
-
-                      {/* Checkbox */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          marginTop: "24px",
-                          marginBottom: "20px",
-                        }}
-                      >
-                        <input
-                          ref={checkboxRef}
-                          type="checkbox"
-                          id="dont-show-again"
-                          checked={dontShowAgain}
-                          onChange={(e) => setDontShowAgain(e.target.checked)}
-                          style={{
-                            marginRight: "10px",
-                            cursor: "pointer",
-                            width: "18px",
-                            height: "18px",
-                            accentColor: "#0073BB",
-                          }}
-                          aria-label="Do not show this again"
-                        />
-                        <label
-                          htmlFor="dont-show-again"
-                          style={{
-                            fontSize: "14px",
-                            color: "#666",
-                            cursor: "pointer",
-                            userSelect: "none",
-                          }}
-                        >
-                          Do not show this again
-                        </label>
-                      </div>
-
-                      {/* Got it button */}
-                      <button
-                        ref={gotItButtonRef}
-                        onClick={handleCloseModal}
-                        style={{
-                          padding: "14px 24px",
-                          backgroundColor: "#0073BB",
-                          color: "#ffffff",
-                          border: "none",
-                          borderRadius: "6px",
-                          cursor: "pointer",
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          width: "100%",
-                          transition: "background 0.2s",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = "#005A94";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = "#0073BB";
-                        }}
-                        aria-label="Close help dialog"
-                      >
-                        Got it
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               <div style={styles.tabsContainer}>
                 <div
                   style={styles.tabsHeader}
@@ -1390,6 +1137,306 @@ const Checklists: React.FC = () => {
           )}
         </div>
       </main>
+      {showHelp &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.6)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 10000,
+            }}
+            onClick={(e) => {
+              // Close modal if clicking on the overlay (not the modal content)
+              if (e.target === e.currentTarget) {
+                handleCloseModal();
+              }
+            }}
+          >
+            <div
+              ref={modalRef}
+              tabIndex={-1}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="help-modal-title"
+              aria-describedby="help-modal-description"
+              style={{
+                width: "650px",
+                backgroundColor: THEME.colors.white,
+                borderRadius: "12px",
+                boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+                maxHeight: "90vh",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                outline: "none",
+              }}
+              onClick={(e) => {
+                // Prevent clicks inside modal from bubbling to overlay
+                e.stopPropagation();
+              }}
+            >
+              {/* Header */}
+              <div
+                style={{
+                  backgroundColor: "#0073BB",
+                  padding: "20px 24px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <h2
+                  id="help-modal-title"
+                  style={{
+                    fontSize: "22px",
+                    fontWeight: 600,
+                    color: "#ffffff",
+                    margin: 0,
+                  }}
+                >
+                  How to use this page
+                </h2>
+                <button
+                  ref={closeButtonRef}
+                  onClick={handleCloseModal}
+                  style={{
+                    background: "rgba(255, 255, 255, 0.2)",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "24px",
+                    color: "#ffffff",
+                    padding: "4px 10px",
+                    borderRadius: "4px",
+                    lineHeight: "1",
+                    transition: "background 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background =
+                      "rgba(255, 255, 255, 0.3)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background =
+                      "rgba(255, 255, 255, 0.2)";
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.background = "#ffffff";
+                    e.currentTarget.style.color = "#0073bb";
+                    e.currentTarget.style.outline = "2px solid #ffffff";
+                    e.currentTarget.style.outlineOffset = "2px";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.background =
+                      "rgba(255, 255, 255, 0.2)";
+                    e.currentTarget.style.color = "#ffffff";
+                    e.currentTarget.style.outline = "none";
+                  }}
+                  aria-label="Close help dialog"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Content */}
+              <div
+                id="help-modal-description"
+                style={{
+                  padding: "28px 32px",
+                  overflowY: "auto",
+                  flex: 1,
+                }}
+              >
+                <p
+                  style={{
+                    marginBottom: "20px",
+                    lineHeight: "1.6",
+                    fontSize: "15px",
+                    color: "#555",
+                  }}
+                >
+                  Grantwell uses generative AI to extract and summarize the key
+                  elements of the grant.
+                </p>
+
+                {/* Highlighted box */}
+                <div
+                  style={{
+                    borderLeft: "4px solid #0073BB",
+                    backgroundColor: "#F0F7FF",
+                    padding: "16px 20px",
+                    marginBottom: "24px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <p
+                    style={{
+                      margin: 0,
+                      lineHeight: "1.6",
+                      fontSize: "15px",
+                      color: "#333",
+                    }}
+                  >
+                    Click through the tabs above (
+                    <strong style={{ fontWeight: 600 }}>
+                      Eligibility, Required Documents, Narrative Sections, Key
+                      Deadlines
+                    </strong>
+                    ) to see what you need for this grant.
+                  </p>
+                </div>
+
+                {/* Have a question section */}
+                <div style={{ marginBottom: "20px" }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      marginBottom: "6px",
+                      fontSize: "15px",
+                      color: "#0073BB",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Have a question?
+                  </p>
+                  <p
+                    style={{
+                      margin: 0,
+                      lineHeight: "1.6",
+                      fontSize: "15px",
+                      color: "#555",
+                    }}
+                  >
+                    Use "Chat with AI" in the left sidebar to get help
+                    understanding the grant requirements.
+                  </p>
+                </div>
+
+                {/* Ready to start writing section */}
+                <div style={{ marginBottom: "20px" }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      marginBottom: "6px",
+                      fontSize: "15px",
+                      color: "#0073BB",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Ready to start writing?
+                  </p>
+                  <p
+                    style={{
+                      margin: 0,
+                      lineHeight: "1.6",
+                      fontSize: "15px",
+                      color: "#555",
+                    }}
+                  >
+                    Click "Write Application" in the left sidebar to begin
+                    drafting.
+                  </p>
+                </div>
+
+                {/* Want a different grant section */}
+                <div style={{ marginBottom: "24px" }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      marginBottom: "6px",
+                      fontSize: "15px",
+                      color: "#0073BB",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Want a different grant?
+                  </p>
+                  <p
+                    style={{
+                      margin: 0,
+                      lineHeight: "1.6",
+                      fontSize: "15px",
+                      color: "#555",
+                    }}
+                  >
+                    Use "Recent Grants" to quickly access other grants or return
+                    to the home page.
+                  </p>
+                </div>
+
+                {/* Checkbox */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "24px",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <input
+                    ref={checkboxRef}
+                    type="checkbox"
+                    id="dont-show-again"
+                    checked={dontShowAgain}
+                    onChange={(e) => setDontShowAgain(e.target.checked)}
+                    style={{
+                      marginRight: "10px",
+                      cursor: "pointer",
+                      width: "18px",
+                      height: "18px",
+                      accentColor: "#0073BB",
+                    }}
+                    aria-label="Do not show this again"
+                  />
+                  <label
+                    htmlFor="dont-show-again"
+                    style={{
+                      fontSize: "14px",
+                      color: "#666",
+                      cursor: "pointer",
+                      userSelect: "none",
+                    }}
+                  >
+                    Do not show this again
+                  </label>
+                </div>
+
+                {/* Got it button */}
+                <button
+                  ref={gotItButtonRef}
+                  onClick={handleCloseModal}
+                  style={{
+                    padding: "14px 24px",
+                    backgroundColor: "#0073BB",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: "16px",
+                    width: "100%",
+                    transition: "background 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#005A94";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#0073BB";
+                  }}
+                  aria-label="Close help dialog"
+                >
+                  Got it
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

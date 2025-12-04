@@ -9,6 +9,19 @@ body {
   padding: 0;
 }
 
+/* Remove any default margins/padding from MDS header that might cause spacing */
+.ma__header_slim {
+  margin: 0 !important;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Ensure checklist container has no extra spacing */
+.requirements-checklist-container {
+  margin: 0;
+  padding: 0;
+}
+
 .awsui-app-layout__content {
   padding-left: 0 !important;
 }

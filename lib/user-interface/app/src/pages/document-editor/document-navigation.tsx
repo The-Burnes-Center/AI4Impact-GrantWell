@@ -4,29 +4,24 @@ import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../utils/recently-viewed-nofos";
 import { Home } from "lucide-react";
 
-// Function to get brand banner + global header + MDS header height dynamically
+// Function to get brand banner + MDS header height dynamically
+// Note: Headers are now static, so this is only used for minHeight calculations
 const getTopOffset = (): number => {
   const bannerElement = document.querySelector(".ma__brand-banner");
-  const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
   const mdsHeaderElement = document.querySelector(".ma__header_slim");
   
   let bannerHeight = 40; // Default fallback
-  let globalHeaderHeight = 56; // Default fallback
   let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
   
   if (bannerElement) {
     bannerHeight = bannerElement.getBoundingClientRect().height;
   }
   
-  if (globalHeaderElement) {
-    globalHeaderHeight = globalHeaderElement.getBoundingClientRect().height;
-  }
-  
   if (mdsHeaderElement) {
     mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
   }
   
-  return bannerHeight + globalHeaderHeight + mdsHeaderHeight;
+  return bannerHeight + mdsHeaderHeight;
 };
 
 interface DocumentNavigationProps {
@@ -45,22 +40,24 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
   setIsOpen,
 }) => {
   const navigate = useNavigate();
-  const [topOffset, setTopOffset] = useState<number>(156); // Default: 40px banner + 56px global header + 60px MDS header
+  const [topOffset, setTopOffset] = useState<number>(100); // Default: 40px banner + 60px MDS header
 
-  // Monitor brand banner + global header + MDS header height changes
+  // Monitor brand banner + MDS header height changes (for minHeight calculations only)
   useEffect(() => {
     const updateTopOffset = () => {
-      const offset = getTopOffset();
-      setTopOffset(offset);
+      requestAnimationFrame(() => {
+        const offset = getTopOffset();
+        setTopOffset(offset);
+      });
     };
 
-    // Initial calculation
+    // Initial calculation with a small delay to ensure headers are rendered
+    const initialTimer = setTimeout(updateTopOffset, 100);
     updateTopOffset();
 
     // Watch for changes
     const observer = new MutationObserver(updateTopOffset);
     const bannerElement = document.querySelector(".ma__brand-banner");
-    const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
     const mdsHeaderElement = document.querySelector(".ma__header_slim");
     
     if (bannerElement) {
@@ -72,17 +69,6 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
       });
     }
 
-    // Also observe global header changes
-    if (globalHeaderElement) {
-      observer.observe(globalHeaderElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    // Also observe MDS header changes
     if (mdsHeaderElement) {
       observer.observe(mdsHeaderElement, {
         attributes: true,
@@ -93,10 +79,13 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
     }
 
     window.addEventListener("resize", updateTopOffset);
+    window.addEventListener("scroll", updateTopOffset, { passive: true });
 
     return () => {
+      clearTimeout(initialTimer);
       observer.disconnect();
       window.removeEventListener("resize", updateTopOffset);
+      window.removeEventListener("scroll", updateTopOffset);
     };
   }, []);
 
@@ -148,14 +137,12 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
         display: "flex",
         flexDirection: "column",
         borderRight: "1px solid #23272f",
-        transition: "width 0.3s ease, top 0.3s ease, height 0.3s ease",
+        transition: "width 0.3s ease",
         overflow: "hidden",
-        position: "fixed",
-        top: `${topOffset}px`,
-        left: 0,
-        zIndex: 50,
-        height: `calc(100vh - ${topOffset}px)`,
-        minHeight: `calc(100vh - ${topOffset}px)`,
+        position: "static",
+        flexShrink: 0,
+        height: "100%",
+        alignSelf: "stretch",
       }}
     >
       <div

@@ -3,29 +3,25 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { MessageSquare, Edit, Home, ChevronLeft, ChevronRight } from "lucide-react";
 
-// Function to get brand banner + global header + MDS header height dynamically
+// Function to get brand banner + MDS header height dynamically
 const getTopOffset = (): number => {
   const bannerElement = document.querySelector(".ma__brand-banner");
-  const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
   const mdsHeaderElement = document.querySelector(".ma__header_slim");
   
-  let bannerHeight = 40; // Default fallback
-  let globalHeaderHeight = 56; // Default fallback
-  let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
+  let bannerHeight = 0;
+  let mdsHeaderHeight = 0;
   
   if (bannerElement) {
-    bannerHeight = bannerElement.getBoundingClientRect().height;
-  }
-  
-  if (globalHeaderElement) {
-    globalHeaderHeight = globalHeaderElement.getBoundingClientRect().height;
+    const rect = bannerElement.getBoundingClientRect();
+    bannerHeight = rect.height || 0;
   }
   
   if (mdsHeaderElement) {
-    mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
+    const rect = mdsHeaderElement.getBoundingClientRect();
+    mdsHeaderHeight = rect.height || 0;
   }
   
-  return bannerHeight + globalHeaderHeight + mdsHeaderHeight;
+  return bannerHeight + mdsHeaderHeight;
 };
 
 interface NavigationProps {
@@ -39,12 +35,11 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
     display: "flex",
     flexDirection: "column",
-    transition: "width 0.3s ease, top 0.3s ease, height 0.3s ease",
+    transition: "width 0.3s ease",
     overflow: "hidden",
     borderRight: "1px solid #1f3b5a",
-    position: "fixed",
-    zIndex: 100,
-    left: 0,
+    position: "static",
+    flexShrink: 0,
   },
   sidebarHeader: {
     padding: "16px",
@@ -100,7 +95,7 @@ export default function RequirementsNavigation({
   onCollapseChange,
 }: NavigationProps) {
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<any[]>([]);
-  const [topOffset, setTopOffset] = useState<number>(156); // Default: 40px banner + 56px global header + 60px MDS header
+  const [topOffset, setTopOffset] = useState<number>(0);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -119,20 +114,26 @@ export default function RequirementsNavigation({
     setRecentlyViewedNOFOs(storedHistory);
   }, []);
 
-  // Monitor brand banner + global header + MDS header height changes
+  // Monitor brand banner + MDS header height changes dynamically
   useEffect(() => {
     const updateTopOffset = () => {
-      const offset = getTopOffset();
-      setTopOffset(offset);
+      // Use requestAnimationFrame to ensure DOM is fully rendered
+      requestAnimationFrame(() => {
+        const offset = getTopOffset();
+        setTopOffset(offset);
+      });
     };
 
-    // Initial calculation
+    // Initial calculation with a small delay to ensure headers are rendered
+    const initialTimer = setTimeout(updateTopOffset, 100);
     updateTopOffset();
 
     // Watch for changes
-    const observer = new MutationObserver(updateTopOffset);
+    const observer = new MutationObserver(() => {
+      updateTopOffset();
+    });
+    
     const bannerElement = document.querySelector(".ma__brand-banner");
-    const globalHeaderElement = document.querySelector(".awsui-context-top-navigation");
     const mdsHeaderElement = document.querySelector(".ma__header_slim");
     
     if (bannerElement) {
@@ -144,17 +145,7 @@ export default function RequirementsNavigation({
       });
     }
 
-    // Also observe global header changes
-    if (globalHeaderElement) {
-      observer.observe(globalHeaderElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    // Also observe MDS header changes
+    // Observe MDS header changes
     if (mdsHeaderElement) {
       observer.observe(mdsHeaderElement, {
         attributes: true,
@@ -165,10 +156,13 @@ export default function RequirementsNavigation({
     }
 
     window.addEventListener("resize", updateTopOffset);
+    window.addEventListener("scroll", updateTopOffset, { passive: true });
 
     return () => {
+      clearTimeout(initialTimer);
       observer.disconnect();
       window.removeEventListener("resize", updateTopOffset);
+      window.removeEventListener("scroll", updateTopOffset);
     };
   }, []);
 
@@ -196,9 +190,9 @@ export default function RequirementsNavigation({
     <div
       style={{
         ...styles.sidebar,
-        top: `${topOffset}px`,
-        height: `calc(100vh - ${topOffset}px)`,
         width: isCollapsed ? "60px" : "240px",
+        height: "100%",
+        alignSelf: "stretch",
       }}
     >
       {/* Sidebar header */}

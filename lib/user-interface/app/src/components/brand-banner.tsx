@@ -83,11 +83,8 @@ export default function BrandBanner() {
       ref={bannerRef}
       className="ma__brand-banner ma__brand-banner--c-primary-alt-bg-dark"
       style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1003,
+        position: "static",
+        width: "100%",
       }}
     >
       <button
