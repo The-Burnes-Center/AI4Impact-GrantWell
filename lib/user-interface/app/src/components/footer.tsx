@@ -4,7 +4,7 @@ import { Footer } from "@massds/mayflower-react";
 
 export default function FooterComponent() {
   const navigate = useNavigate();
-  const footerRef = useRef<HTMLElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
 
   // Intercept footer link clicks for React Router navigation
   useEffect(() => {
