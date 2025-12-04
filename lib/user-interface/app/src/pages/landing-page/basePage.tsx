@@ -1099,21 +1099,6 @@ export default function Welcome() {
             </div>
           </div>
         </div>
-
-        {/* Creative Commons License */}
-        <InfoBanner
-          title=""
-          height="100px"
-          imageSrc="/images/creativeCommons.png"
-          imageAlt="Creative Commons"
-          description="This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License"
-          linkUrl={"https://creativecommons.org/licenses/by-sa/4.0/"}
-          backgroundColor="#000000"
-          titleFontSize="16px"
-          imagePosition="left"
-          imageWidth="75px"
-          titleAlign="center"
-        />
       </footer>
     </>
   );

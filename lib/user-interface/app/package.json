@@ -28,6 +28,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@massds/mayflower-react": "^14.1.0",
     "@mui/material": "^7.3.5",
     "@tiptap/extension-bold": "^2.11.7",
     "@tiptap/extension-bullet-list": "^2.11.7",

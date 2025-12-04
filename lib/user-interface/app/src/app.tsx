@@ -9,6 +9,7 @@ import {
 import { AppContext } from "./common/app-context";
 import BrandBanner from "./components/brand-banner";
 import MDSHeader from "./components/mds-header";
+import FooterComponent from "./components/footer";
 import Playground from "./pages/chatbot/playground/playground";
 import DataPage from "./pages/admin/data-view-page";
 import UserFeedbackPage from "./pages/admin/user-feedback-page";
@@ -104,6 +105,7 @@ function App() {
           />
         </Routes>
       </main>
+      <FooterComponent />
     </Router>
   );
 }
