@@ -312,7 +312,10 @@ export default function Sessions(props: SessionsProps) {
     // Restore focus when modal closes
     return () => {
       // Only restore focus if the element still exists in the DOM
-      if (deleteModalPreviousFocusRef.current && document.body.contains(deleteModalPreviousFocusRef.current)) {
+      if (
+        deleteModalPreviousFocusRef.current &&
+        document.body.contains(deleteModalPreviousFocusRef.current)
+      ) {
         deleteModalPreviousFocusRef.current.focus();
       }
     };
@@ -325,9 +328,10 @@ export default function Sessions(props: SessionsProps) {
     const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
 
-      const focusableElements = deleteModalRef.current?.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
+      const focusableElements =
+        deleteModalRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
 
       if (!focusableElements || focusableElements.length === 0) return;
 
@@ -464,14 +468,14 @@ export default function Sessions(props: SessionsProps) {
   return (
     <div style={styles.container}>
       {showModalDelete && (
-        <div 
+        <div
           style={styles.modalOverlay}
           onClick={() => setShowModalDelete(false)}
           role="dialog"
           aria-modal="true"
           aria-labelledby="delete-modal-title"
         >
-          <div 
+          <div
             ref={deleteModalRef}
             style={styles.modal}
             onClick={(e) => e.stopPropagation()}
@@ -511,7 +515,9 @@ export default function Sessions(props: SessionsProps) {
                 onBlur={(e) => {
                   e.currentTarget.style.outline = "none";
                 }}
-                aria-label={`Confirm delete ${selectedItems.length} session${selectedItems.length > 1 ? 's' : ''}`}
+                aria-label={`Confirm delete ${selectedItems.length} session${
+                  selectedItems.length > 1 ? "s" : ""
+                }`}
               >
                 OK
               </button>
@@ -589,6 +595,7 @@ export default function Sessions(props: SessionsProps) {
                       selectedItems.length === paginatedItems.length
                     }
                     onChange={handleSelectAll}
+                    aria-label="Select all sessions"
                   />
                 </th>
                 <th
@@ -620,6 +627,7 @@ export default function Sessions(props: SessionsProps) {
                         (i) => i.session_id === item.session_id
                       )}
                       onChange={(e) => handleSelectItem(item, e)}
+                      aria-label={`Select ${item.title}`}
                     />
                   </td>
                   <td style={styles.tableCell}>
@@ -681,6 +689,7 @@ export default function Sessions(props: SessionsProps) {
                 setPageSize(Number(e.target.value));
                 setCurrentPage(1);
               }}
+              aria-label="Items per page"
             >
               <option value={10}>10 per page</option>
               <option value={20}>20 per page</option>
