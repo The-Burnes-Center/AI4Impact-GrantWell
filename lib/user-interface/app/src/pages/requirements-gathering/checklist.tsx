@@ -613,10 +613,13 @@ const Checklists: React.FC = () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
-      
+
       // Restore focus to the element that triggered the modal
       // Only restore focus if the element still exists in the DOM
-      if (modalPreviousFocusRef.current && document.body.contains(modalPreviousFocusRef.current)) {
+      if (
+        modalPreviousFocusRef.current &&
+        document.body.contains(modalPreviousFocusRef.current)
+      ) {
         modalPreviousFocusRef.current.focus();
       }
     };
@@ -760,20 +763,20 @@ const Checklists: React.FC = () => {
       requestAnimationFrame(() => {
         const bannerElement = document.querySelector(".ma__brand-banner");
         const mdsHeaderElement = document.querySelector(".ma__header_slim");
-        
+
         let bannerHeight = 0;
         let mdsHeaderHeight = 0;
-        
+
         if (bannerElement) {
           const rect = bannerElement.getBoundingClientRect();
           bannerHeight = rect.height || 0;
         }
-        
+
         if (mdsHeaderElement) {
           const rect = mdsHeaderElement.getBoundingClientRect();
           mdsHeaderHeight = rect.height || 0;
         }
-        
+
         const totalHeight = bannerHeight + mdsHeaderHeight;
         setTopOffset(totalHeight);
       });
@@ -787,10 +790,10 @@ const Checklists: React.FC = () => {
     const observer = new MutationObserver(() => {
       updateTopOffset();
     });
-    
+
     const bannerElement = document.querySelector(".ma__brand-banner");
     const mdsHeaderElement = document.querySelector(".ma__header_slim");
-    
+
     if (bannerElement) {
       observer.observe(bannerElement, {
         attributes: true,
@@ -859,8 +862,8 @@ const Checklists: React.FC = () => {
         Skip to main content
       </a>
       {/* Navigation Sidebar */}
-      <nav 
-        aria-label="Requirements navigation" 
+      <nav
+        aria-label="Requirements navigation"
         aria-hidden={showHelp}
         style={{
           margin: 0,
@@ -868,7 +871,7 @@ const Checklists: React.FC = () => {
           flexShrink: 0,
         }}
       >
-        <RequirementsNavigation 
+        <RequirementsNavigation
           documentIdentifier={folderParam}
           onCollapseChange={setIsNavCollapsed}
         />
@@ -1135,7 +1138,7 @@ const Checklists: React.FC = () => {
             </div>
           )}
         </div>
-      </main>
+      </div>
       {showHelp &&
         createPortal(
           <div
