@@ -69,7 +69,11 @@ export class AuthorizationStack extends Construct {
     });
 
     const userPoolClient = new UserPoolClient(this, 'UserPoolClient', {
-      userPool,      
+      userPool,
+      authFlows: {
+        userPassword: true, // Enable username/password authentication
+        userSrp: true,      // Enable SRP authentication (default)
+      },
     });
 
     this.userPoolClient = userPoolClient;

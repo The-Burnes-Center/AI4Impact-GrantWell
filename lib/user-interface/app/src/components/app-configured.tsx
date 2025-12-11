@@ -4,13 +4,14 @@ import {
   defaultDarkModeOverride,
 } from "@aws-amplify/ui-react";
 import App from "../app";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify, Auth, Hub } from "aws-amplify";
 import { AppConfig } from "../common/types";
 import { AppContext } from "../common/app-context";
 import { Alert, StatusIndicator } from "@cloudscape-design/components";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import { Mode } from "@cloudscape-design/global-styles";
 import "@aws-amplify/ui-react/styles.css";
+import AuthPage from "../pages/auth/auth-page";
 
 export default function AppConfigured() {
   const [config, setConfig] = useState<AppConfig | null>(null);
@@ -22,49 +23,70 @@ export default function AppConfigured() {
   // trigger authentication state when needed
   useEffect(() => {
     (async () => {
-      let currentConfig: AppConfig;
       try {
         const result = await fetch("/aws-exports.json");
         const awsExports = await result.json();
-        currentConfig = Amplify.configure(awsExports) as AppConfig | null;
-        const user = await Auth.currentAuthenticatedUser();
-        if (user) {
-          setAuthenticated(true);
+        const currentConfig = Amplify.configure(awsExports) as AppConfig | null;
+        
+        try {
+          const user = await Auth.currentAuthenticatedUser();
+          if (user) {
+            setAuthenticated(true);
+          }
+        } catch (authError) {
+          // User is not authenticated - show custom login UI instead of redirecting
+          console.log("User not authenticated, showing login page");
+          setAuthenticated(false);
         }
-        // TAKE THIS OUT LATER
-        // setAuthenticated(true);
+        
         setConfig(awsExports);
         setConfigured(true);
       } catch (e) {
-        // If you get to this state, then this means the user check failed
-        // technically it is possible that loading aws-exports.json failed too or some other step
-        // but that is very unlikely
-        console.error("Authentication check error:", e);
-        try {
-          if (currentConfig.federatedSignInProvider != "") {
-            Auth.federatedSignIn({ customProvider: currentConfig.federatedSignInProvider });
-          } else {
-            Auth.federatedSignIn();
-          }
-        } catch (error) {
-          // however, just in case, we'll add another try catch
-          setError(true);
-        }
+        // Configuration file failed to load
+        console.error("Configuration error:", e);
+        setError(true);
+        setConfigured(true);
       }
     })();
   }, []);
 
-  // whenever the authentication state changes, if it's changed to un-authenticated, re-verify
+  // Listen for auth state changes using Amplify Hub
   useEffect(() => {
-    if (!authenticated && configured) {
-      console.log("No authenticated user, initiating sign-in.");
-      if (config.federatedSignInProvider != "") {
-        Auth.federatedSignIn({ customProvider: config.federatedSignInProvider });
-      } else {
-        Auth.federatedSignIn();
+    const hubListener = Hub.listen('auth', async ({ payload }) => {
+      switch (payload.event) {
+        case 'signIn':
+        case 'tokenRefresh':
+          setAuthenticated(true);
+          break;
+        case 'signOut':
+          setAuthenticated(false);
+          break;
+        case 'signIn_failure':
+          setAuthenticated(false);
+          break;
       }
+    });
+
+    // Check initial auth state
+    const checkAuthState = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        if (user) {
+          setAuthenticated(true);
+        }
+      } catch (e) {
+        setAuthenticated(false);
+      }
+    };
+    
+    if (configured) {
+      checkAuthState();
     }
-  }, [authenticated, configured]);
+
+    return () => {
+      hubListener();
+    };
+  }, [configured]);
 
   // dark/light theme
   useEffect(() => {
@@ -148,9 +170,10 @@ export default function AppConfigured() {
       >
         {authenticated ? (
           <App />
+        ) : configured ? (
+          <AuthPage />
         ) : (
-          // <TextContent>Are we authenticated: {authenticated}</TextContent>
-          <></>
+          <StatusIndicator type="loading">Loading</StatusIndicator>
         )}
       </ThemeProvider>
     </AppContext.Provider>
