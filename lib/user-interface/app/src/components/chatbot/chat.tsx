@@ -8,10 +8,7 @@ import ChatMessage from "./chat-message";
 import ChatInputPanel from "./chat-input-panel";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notif-manager";
-import {
-  HelpCircle,
-  X as FaTimes,
-} from "lucide-react";
+import { HelpCircle, X as FaTimes } from "lucide-react";
 
 // Styles for components
 const styles: Record<string, React.CSSProperties> = {
@@ -249,7 +246,10 @@ export default function Chat(props: {
     // Restore focus when modal closes
     return () => {
       // Only restore focus if the element still exists in the DOM
-      if (modalPreviousFocusRef.current && document.body.contains(modalPreviousFocusRef.current)) {
+      if (
+        modalPreviousFocusRef.current &&
+        document.body.contains(modalPreviousFocusRef.current)
+      ) {
         modalPreviousFocusRef.current.focus();
       }
     };
@@ -317,7 +317,7 @@ export default function Chat(props: {
         if (!username) return;
         const hist = await apiClient.sessions.getSession({
           sessionId: props.sessionId,
-          userId: username
+          userId: username,
         });
 
         if (hist?.chatHistory && hist.chatHistory.length > 0) {
@@ -354,21 +354,21 @@ export default function Chat(props: {
       {/* Welcome Modal */}
       {showPopup && (
         <div style={styles.modalOverlay}>
-          <div 
-            ref={modalRef} 
+          <div
+            ref={modalRef}
             style={styles.modal}
             role="dialog"
             aria-modal="true"
             aria-labelledby="welcome-modal-title"
           >
             <div style={styles.modalHeader}>
-              <h2 
-                id="welcome-modal-title" 
-                style={{ 
-                  margin: 0, 
-                  fontSize: "24px", 
+              <h2
+                id="welcome-modal-title"
+                style={{
+                  margin: 0,
+                  fontSize: "24px",
                   fontWeight: 600,
-                  color: "#1a73e8"
+                  color: "#1a73e8",
                 }}
               >
                 Welcome to GrantWell!
@@ -395,7 +395,8 @@ export default function Chat(props: {
 
             <div style={styles.modalContent}>
               <p>
-              This AI-powered assistant is your expert guide for understanding a grant.
+                This AI-powered assistant is your expert guide for understanding
+                a grant.
                 <br></br>
                 <br></br>
                 <strong>You can ask Grantwell to:</strong>
@@ -406,10 +407,23 @@ export default function Chat(props: {
                     marginTop: "8px",
                   }}
                 >
-                  <li style={styles.listItem}>Explain specific grant requirements, eligibility criteria, and NOFO sections</li>
-                  <li style={styles.listItem}>Review your draft grant narratives and applications for completeness and competitiveness based on evaluation criteria in the grant</li>
-                  <li style={styles.listItem}>Assess your organization's eligibility for specific funding opportunities</li>
-                  <li style={styles.listItem}>Explain deadlines, submission requirements, budget rules, cost-sharing, and post-award compliance</li>
+                  <li style={styles.listItem}>
+                    Explain specific grant requirements, eligibility criteria,
+                    and NOFO sections
+                  </li>
+                  <li style={styles.listItem}>
+                    Review your draft grant narratives and applications for
+                    completeness and competitiveness based on evaluation
+                    criteria in the grant
+                  </li>
+                  <li style={styles.listItem}>
+                    Assess your organization's eligibility for specific funding
+                    opportunities
+                  </li>
+                  <li style={styles.listItem}>
+                    Explain deadlines, submission requirements, budget rules,
+                    cost-sharing, and post-award compliance
+                  </li>
                 </ul>
               </p>
               <p
@@ -418,10 +432,14 @@ export default function Chat(props: {
                   color: "#1a73e8",
                 }}
               >
-                <strong>Pro Tip:</strong> Upload your organizational documents (mission statements, past projects, draft narratives, etc.) and the chatbot can review them against the NOFO requirements to provide detailed feedback.
+                <strong>Pro Tip:</strong> Upload your organizational documents
+                (mission statements, past projects, draft narratives, etc.) and
+                the chatbot can review them against the NOFO requirements to
+                provide detailed feedback.
               </p>
               <p style={{ fontSize: "14px", color: "#666", marginTop: "12px" }}>
-                Click the "View Help" button in the upper right corner to access this information again.
+                Click the "View Help" button in the upper right corner to access
+                this information again.
               </p>
               <div style={styles.checkboxContainer}>
                 <input
@@ -441,11 +459,11 @@ export default function Chat(props: {
       )}
 
       {/* Chat content area */}
-      <div 
-        role="log" 
-        aria-live="polite" 
+      <div
+        role="log"
+        aria-live="polite"
         aria-relevant="additions"
-        aria-label="Chat messages"
+        aria-atomic="false"
         tabIndex={0}
         style={styles.messageArea}
       >
@@ -461,10 +479,7 @@ export default function Chat(props: {
           )}
 
           {messageHistory.map((message, idx) => (
-            <ChatMessage
-              key={idx}
-              message={message}
-            />
+            <ChatMessage key={idx} message={message} />
           ))}
 
           {messageHistory.length === 0 && !session?.loading && (

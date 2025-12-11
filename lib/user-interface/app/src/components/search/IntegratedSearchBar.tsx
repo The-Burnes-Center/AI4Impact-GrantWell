@@ -563,12 +563,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     width: "100%",
   };
 
+  // Subtle visible label - accessible and visually clean
   const labelStyle: React.CSSProperties = {
-    display: "block",
-    fontSize: "16px",
-    fontWeight: "500",
-    color: "#006499",
-    marginBottom: "8px",
+    fontSize: "14px",
+    fontWeight: "400",
+    color: "#666",
+    marginBottom: "6px",
+    opacity: 0.85,
     cursor: "pointer",
   };
 
@@ -1300,9 +1301,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         <div style={resultsContainerStyle}>
           <div style={assistantContainerStyle}>
             <div style={assistantHeaderStyle}>
-              <h3 style={{ margin: 0, fontSize: "16px", color: "#0073BB" }}>
+              <h2 style={{ margin: 0, fontSize: "16px", color: "#0073BB" }}>
                 Describe Your Grant Needs
-              </h3>
+              </h2>
               <button
                 style={assistantCloseButtonStyle}
                 onClick={closeAssistant}

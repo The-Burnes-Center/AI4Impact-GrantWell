@@ -19,8 +19,14 @@ export default function MDSHeader() {
     e.preventDefault();
     const mainContent = document.getElementById("main-content");
     if (mainContent) {
-      mainContent.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Focus first to ensure keyboard focus moves
       mainContent.focus();
+      // Then scroll smoothly
+      mainContent.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Ensure focus is maintained after scroll
+      setTimeout(() => {
+        mainContent.focus();
+      }, 100);
     }
   };
 
@@ -117,7 +123,8 @@ export default function MDSHeader() {
               transition: "background-color 0.2s ease",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.backgroundColor =
+                "rgba(255, 255, 255, 0.1)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = "transparent";
@@ -144,4 +151,3 @@ export default function MDSHeader() {
     </div>
   );
 }
-

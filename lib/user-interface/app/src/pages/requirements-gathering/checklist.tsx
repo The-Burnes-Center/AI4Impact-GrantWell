@@ -875,8 +875,7 @@ const Checklists: React.FC = () => {
       </nav>
 
       {/* Main Content */}
-      <main
-        id="main-content"
+      <div
         style={{
           flex: 1,
           margin: 0,

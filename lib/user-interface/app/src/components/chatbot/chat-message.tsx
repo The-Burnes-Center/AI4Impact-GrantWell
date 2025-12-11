@@ -26,7 +26,8 @@ export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { addNotification, removeNotification } = useNotifications();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedMenuItemIndex, setSelectedMenuItemIndex] = useState<number>(-1);
+  const [selectedMenuItemIndex, setSelectedMenuItemIndex] =
+    useState<number>(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   // State for copy popup
@@ -77,7 +78,10 @@ export default function ChatMessage(props: ChatMessageProps) {
           break;
         case "Enter":
         case " ":
-          if (selectedMenuItemIndex >= 0 && selectedMenuItemIndex < sources.length) {
+          if (
+            selectedMenuItemIndex >= 0 &&
+            selectedMenuItemIndex < sources.length
+          ) {
             e.preventDefault();
             const menuItem = menuItemsRef.current[selectedMenuItemIndex];
             if (menuItem) {
@@ -390,6 +394,30 @@ export default function ChatMessage(props: ChatMessageProps) {
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
+                          h1(props) {
+                            const { children, ...rest } = props;
+                            return <h2 {...rest}>{children}</h2>;
+                          },
+                          h2(props) {
+                            const { children, ...rest } = props;
+                            return <h2 {...rest}>{children}</h2>;
+                          },
+                          h3(props) {
+                            const { children, ...rest } = props;
+                            return <h2 {...rest}>{children}</h2>;
+                          },
+                          h4(props) {
+                            const { children, ...rest } = props;
+                            return <h2 {...rest}>{children}</h2>;
+                          },
+                          h5(props) {
+                            const { children, ...rest } = props;
+                            return <h2 {...rest}>{children}</h2>;
+                          },
+                          h6(props) {
+                            const { children, ...rest } = props;
+                            return <h2 {...rest}>{children}</h2>;
+                          },
                           pre(props) {
                             const { children, ...rest } = props;
                             return (
@@ -490,53 +518,90 @@ export default function ChatMessage(props: ChatMessageProps) {
                               {
                                 (props.message.metadata.Sources as any[]).length
                               }{" "}
-                              Sources <FaChevronDown size={10} aria-hidden="true" />
+                              Sources{" "}
+                              <FaChevronDown size={10} aria-hidden="true" />
                             </button>
 
                             {isDropdownOpen && (
-                              <div 
+                              <div
                                 role="menu"
                                 style={dropdownMenuStyle}
                                 aria-label="Source documents"
                               >
                                 {(props.message.metadata.Sources as any[]).map(
-                                  (item, index) => (
-                                    <a
-                                      key={index}
-                                      ref={(el) => {
-                                        menuItemsRef.current[index] = el;
-                                      }}
-                                      href={item.uri}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      role="menuitem"
-                                      tabIndex={selectedMenuItemIndex === index ? 0 : -1}
-                                      style={{
-                                        ...dropdownItemStyle,
-                                        backgroundColor:
+                                  (item, index) => {
+                                    // Check if URI is valid (not s3:// or other invalid protocols)
+                                    const isValidUrl =
+                                      item.uri &&
+                                      (item.uri.startsWith("http://") ||
+                                        item.uri.startsWith("https://") ||
+                                        item.uri.startsWith("/"));
+                                    const uri = isValidUrl ? item.uri : "#";
+
+                                    return (
+                                      <a
+                                        key={index}
+                                        ref={(el) => {
+                                          menuItemsRef.current[index] = el;
+                                        }}
+                                        href={uri}
+                                        target={
+                                          isValidUrl ? "_blank" : undefined
+                                        }
+                                        rel={
+                                          isValidUrl
+                                            ? "noopener noreferrer"
+                                            : undefined
+                                        }
+                                        role="menuitem"
+                                        tabIndex={
                                           selectedMenuItemIndex === index
-                                            ? "#f0f7ff"
-                                            : "transparent",
-                                        outline:
-                                          selectedMenuItemIndex === index
-                                            ? "2px solid #0073bb"
-                                            : "none",
-                                        outlineOffset: "2px",
-                                      }}
-                                      onFocus={() => setSelectedMenuItemIndex(index)}
-                                      onClick={() => {
-                                        setIsDropdownOpen(false);
-                                        setSelectedMenuItemIndex(-1);
-                                      }}
-                                    >
-                                      {item.title}{" "}
-                                      <FaExternalLinkAlt
-                                        size={10}
-                                        style={{ marginLeft: "4px" }}
-                                        aria-hidden="true"
-                                      />
-                                    </a>
-                                  )
+                                            ? 0
+                                            : -1
+                                        }
+                                        style={{
+                                          ...dropdownItemStyle,
+                                          backgroundColor:
+                                            selectedMenuItemIndex === index
+                                              ? "#f0f7ff"
+                                              : "transparent",
+                                          outline:
+                                            selectedMenuItemIndex === index
+                                              ? "2px solid #0073bb"
+                                              : "none",
+                                          outlineOffset: "2px",
+                                          cursor: isValidUrl
+                                            ? "pointer"
+                                            : "default",
+                                          opacity: isValidUrl ? 1 : 0.7,
+                                        }}
+                                        onFocus={() =>
+                                          setSelectedMenuItemIndex(index)
+                                        }
+                                        onClick={(e) => {
+                                          if (!isValidUrl) {
+                                            e.preventDefault();
+                                          }
+                                          setIsDropdownOpen(false);
+                                          setSelectedMenuItemIndex(-1);
+                                        }}
+                                        aria-label={
+                                          isValidUrl
+                                            ? `Open ${item.title} in new tab`
+                                            : `${item.title} (link unavailable)`
+                                        }
+                                      >
+                                        {item.title}{" "}
+                                        {isValidUrl && (
+                                          <FaExternalLinkAlt
+                                            size={10}
+                                            style={{ marginLeft: "4px" }}
+                                            aria-hidden="true"
+                                          />
+                                        )}
+                                      </a>
+                                    );
+                                  }
                                 )}
                               </div>
                             )}
