@@ -1,50 +1,87 @@
-import React, { useState } from 'react';
-import { Container, Box } from '@cloudscape-design/components';
+import { useState } from 'react';
 import LoginForm from '../../components/auth/login-form';
 import SignUpForm from '../../components/auth/signup-form';
+import ForgotPasswordPage from './forgot-password-page';
+import ResetPasswordPage from './reset-password-page';
 import '../../styles/auth-page.css';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
 
   const handleAuthSuccess = () => {
-    // Reload the page to trigger authentication check
     window.location.reload();
   };
 
+  const handleForgotPasswordClick = () => {
+    setShowForgotPassword(true);
+  };
+
+  const handleCodeSent = (email: string) => {
+    setResetEmail(email);
+    setShowForgotPassword(false);
+    setShowResetPassword(true);
+  };
+
+  const handleBackToLogin = () => {
+    setShowForgotPassword(false);
+    setShowResetPassword(false);
+    setResetEmail('');
+  };
+
+  if (showResetPassword) {
+    return (
+      <ResetPasswordPage
+        email={resetEmail}
+        onBack={handleBackToLogin}
+        onSuccess={handleAuthSuccess}
+      />
+    );
+  }
+
+  if (showForgotPassword) {
+    return (
+      <ForgotPasswordPage
+        onBack={handleBackToLogin}
+        onCodeSent={handleCodeSent}
+      />
+    );
+  }
+
   return (
-    <div className="auth-page-container">
-      <Container>
-        <Box padding="xl">
-          <div className="auth-card">
-            <div className="auth-header">
-              <img
-                src="/images/stateseal-color.png"
-                alt="State Seal"
-                style={{ width: '60px', height: '60px', marginRight: '15px' }}
-              />
-              <div>
-                <h1 className="auth-title">GrantWell</h1>
-                <p className="auth-subtitle">Free AI powered tool designed for finding and writing grants</p>
-              </div>
-            </div>
-            <div className="auth-content">
-              {isLogin ? (
-                <LoginForm 
-                  onSuccess={handleAuthSuccess}
-                  onSwitchToSignUp={() => setIsLogin(false)}
-                />
-              ) : (
-                <SignUpForm 
-                  onSuccess={handleAuthSuccess}
-                  onSwitchToLogin={() => setIsLogin(true)}
-                />
-              )}
-            </div>
+    <main role="main" className="auth-page-container">
+      <div className="auth-card">
+        <div className="auth-header-section">
+          <div className="auth-logo-container">
+            <img
+              src="/images/stateseal-color.png"
+              alt="State Seal"
+              className="auth-logo"
+            />
+            <h1 className="auth-brand-title">GrantWell</h1>
           </div>
-        </Box>
-      </Container>
-    </div>
+          <h1 className="auth-page-title">{isLogin ? 'Sign in' : 'Create account'}</h1>
+          <p className="auth-page-subtitle">
+            {isLogin ? 'Sign in to your account.' : 'Create a new account to get started.'}
+          </p>
+        </div>
+        <div className="auth-content">
+          {isLogin ? (
+            <LoginForm 
+              onSuccess={handleAuthSuccess}
+              onSwitchToSignUp={() => setIsLogin(false)}
+              onForgotPassword={handleForgotPasswordClick}
+            />
+          ) : (
+            <SignUpForm 
+              onSuccess={handleAuthSuccess}
+              onSwitchToLogin={() => setIsLogin(true)}
+            />
+          )}
+        </div>
+      </div>
+    </main>
   );
 }
-

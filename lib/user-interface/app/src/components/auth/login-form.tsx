@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
-import { Button, FormField, Input, Alert, SpaceBetween } from '@cloudscape-design/components';
+import { Button, FormField, Input, Alert, SpaceBetween, Checkbox } from '@cloudscape-design/components';
 
 interface LoginFormProps {
   onSuccess: () => void;
   onError?: (error: string) => void;
   onSwitchToSignUp?: () => void;
+  onForgotPassword?: () => void;
 }
 
-export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: LoginFormProps) {
+export default function LoginForm({ onSuccess, onError, onSwitchToSignUp, onForgotPassword }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [showNewPasswordRequired, setShowNewPasswordRequired] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [verificationCode, setVerificationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
   const handleSignIn = async (e?: React.FormEvent | React.MouseEvent) => {
@@ -70,46 +70,9 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: Logi
     }
   };
 
-  const handleForgotPassword = async () => {
-    if (!email) {
-      setError('Please enter your email address first');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      await Auth.forgotPassword(email);
-      setShowPasswordReset(true);
-      setError(null);
-      alert('Password reset code sent to your email');
-    } catch (err: any) {
-      setError(err.message || 'Failed to send password reset code');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleForgotPasswordSubmit = async (e?: React.FormEvent | React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
-    setLoading(true);
-    setError(null);
-
-    try {
-      await Auth.forgotPasswordSubmit(email, verificationCode, newPassword);
-      setError(null);
-      alert('Password reset successful! Please sign in with your new password.');
-      setShowPasswordReset(false);
-      setPassword('');
-      setVerificationCode('');
-      setNewPassword('');
-    } catch (err: any) {
-      setError(err.message || 'Failed to reset password');
-    } finally {
-      setLoading(false);
+  const handleForgotPasswordClick = () => {
+    if (onForgotPassword) {
+      onForgotPassword();
     }
   };
 
@@ -155,66 +118,10 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: Logi
     );
   }
 
-  if (showPasswordReset) {
-    return (
-      <form onSubmit={handleForgotPasswordSubmit}>
-        <SpaceBetween size="m">
-          <FormField label="Email">
-            <Input
-              value={email}
-              onChange={(e) => setEmail(e.detail.value)}
-              placeholder="Enter your email"
-              type="email"
-              disabled={loading}
-              autoComplete="email"
-            />
-          </FormField>
-          <FormField label="Verification Code">
-            <Input
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.detail.value)}
-              placeholder="Enter verification code from email"
-              type="text"
-              disabled={loading}
-            />
-          </FormField>
-          <FormField label="New Password">
-            <Input
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.detail.value)}
-              placeholder="Enter new password"
-              type="password"
-              disabled={loading}
-              autoComplete="new-password"
-            />
-          </FormField>
-          {error && (
-            <Alert type="error" dismissible onDismiss={() => setError(null)}>
-              {error}
-            </Alert>
-          )}
-          <SpaceBetween direction="horizontal" size="xs">
-            <Button variant="primary" loading={loading} onClick={() => handleForgotPasswordSubmit()}>
-              Reset Password
-            </Button>
-            <Button onClick={() => {
-              setShowPasswordReset(false);
-              setVerificationCode('');
-              setNewPassword('');
-              setError(null);
-            }}>
-              Back to Login
-            </Button>
-          </SpaceBetween>
-        </SpaceBetween>
-      </form>
-    );
-  }
-
   return (
-    <form onSubmit={handleSignIn}>
-      <SpaceBetween size="m">
-        <FormField label="Email">
+    <form onSubmit={handleSignIn} className="login-form">
+      <SpaceBetween size="l">
+        <FormField label="Email address">
           <Input
             value={email}
             onChange={(e) => setEmail(e.detail.value)}
@@ -228,29 +135,37 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: Logi
           <Input
             value={password}
             onChange={(e) => setPassword(e.detail.value)}
-            placeholder="Enter your password"
-            type="password"
+            placeholder="Enter password"
+            type={showPassword ? "text" : "password"}
             disabled={loading}
             autoComplete="current-password"
           />
         </FormField>
+        <div className="login-form-options">
+          <Checkbox
+            checked={showPassword}
+            onChange={(e) => setShowPassword(e.detail.checked)}
+          >
+            Show password
+          </Checkbox>
+          <Button variant="link" onClick={handleForgotPasswordClick} disabled={loading}>
+            Forgot your password?
+          </Button>
+        </div>
         {error && (
           <Alert type="error" dismissible onDismiss={() => setError(null)}>
             {error}
           </Alert>
         )}
-        <SpaceBetween direction="horizontal" size="xs">
+        <div className="login-form-actions">
           <Button variant="primary" loading={loading} onClick={() => handleSignIn()}>
-            Sign In
+            Sign in
           </Button>
-          <Button variant="link" onClick={handleForgotPassword} disabled={loading}>
-            Forgot Password?
-          </Button>
-        </SpaceBetween>
+        </div>
         {onSwitchToSignUp && (
-          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <div className="login-form-footer">
             <Button variant="link" onClick={onSwitchToSignUp}>
-              Don't have an account? Sign Up
+              New user? Create an account
             </Button>
           </div>
         )}

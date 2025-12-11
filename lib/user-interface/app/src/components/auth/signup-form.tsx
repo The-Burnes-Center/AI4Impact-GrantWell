@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Auth } from 'aws-amplify';
-import { Button, FormField, Input, Alert, SpaceBetween } from '@cloudscape-design/components';
+import { Button, FormField, Input, Alert, SpaceBetween, Checkbox } from '@cloudscape-design/components';
 
 interface SignUpFormProps {
   onSuccess: () => void;
@@ -11,10 +11,22 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
   const [showVerification, setShowVerification] = useState(false);
+
+  // Password requirements validation
+  const passwordRequirements = useMemo(() => {
+    return {
+      minLength: password.length >= 8,
+      hasNumber: /\d/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasUppercase: /[A-Z]/.test(password),
+      hasSymbol: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+    };
+  }, [password]);
 
   const handleSignUp = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e) {
@@ -29,8 +41,29 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
       return;
     }
 
-    if (password.length < 8) {
+    // Validate password requirements
+    if (!passwordRequirements.minLength) {
       setError('Password must be at least 8 characters long');
+      setLoading(false);
+      return;
+    }
+    if (!passwordRequirements.hasNumber) {
+      setError('Password must contain at least one number');
+      setLoading(false);
+      return;
+    }
+    if (!passwordRequirements.hasLowercase) {
+      setError('Password must contain at least one lowercase letter');
+      setLoading(false);
+      return;
+    }
+    if (!passwordRequirements.hasUppercase) {
+      setError('Password must contain at least one uppercase letter');
+      setLoading(false);
+      return;
+    }
+    if (!passwordRequirements.hasSymbol) {
+      setError('Password must contain at least one symbol');
       setLoading(false);
       return;
     }
@@ -127,9 +160,9 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
   }
 
   return (
-    <form onSubmit={handleSignUp}>
-      <SpaceBetween size="m">
-        <FormField label="Email">
+    <form onSubmit={handleSignUp} className="login-form">
+      <SpaceBetween size="l">
+        <FormField label="Email address">
           <Input
             value={email}
             onChange={(e) => setEmail(e.detail.value)}
@@ -139,42 +172,71 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
             autoComplete="email"
           />
         </FormField>
-        <FormField 
-          label="Password"
-          description="Password must be at least 8 characters long"
-        >
+        <FormField label="Password">
           <Input
             value={password}
             onChange={(e) => setPassword(e.detail.value)}
             placeholder="Enter password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             disabled={loading}
             autoComplete="new-password"
           />
+          <div className="password-requirements">
+            <div className={`password-requirement ${passwordRequirements.minLength ? 'met' : ''}`}>
+              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.minLength ? '✓' : '○'}</span>
+              <span>Password must be at least 8 characters</span>
+            </div>
+            <div className={`password-requirement ${passwordRequirements.hasNumber ? 'met' : ''}`}>
+              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.hasNumber ? '✓' : '○'}</span>
+              <span>Use a number</span>
+            </div>
+            <div className={`password-requirement ${passwordRequirements.hasLowercase ? 'met' : ''}`}>
+              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.hasLowercase ? '✓' : '○'}</span>
+              <span>Use a lowercase letter</span>
+            </div>
+            <div className={`password-requirement ${passwordRequirements.hasUppercase ? 'met' : ''}`}>
+              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.hasUppercase ? '✓' : '○'}</span>
+              <span>Use an uppercase letter</span>
+            </div>
+            <div className={`password-requirement ${passwordRequirements.hasSymbol ? 'met' : ''}`}>
+              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.hasSymbol ? '✓' : '○'}</span>
+              <span>Use a symbol</span>
+            </div>
+          </div>
         </FormField>
-        <FormField label="Confirm Password">
+        <FormField label="Confirm password">
           <Input
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.detail.value)}
-            placeholder="Confirm password"
-            type="password"
+            placeholder="Reenter password"
+            type={showPassword ? "text" : "password"}
             disabled={loading}
             autoComplete="new-password"
           />
         </FormField>
+        <div className="login-form-options">
+          <Checkbox
+            checked={showPassword}
+            onChange={(e) => setShowPassword(e.detail.checked)}
+          >
+            Show password
+          </Checkbox>
+        </div>
         {error && (
           <Alert type="error" dismissible onDismiss={() => setError(null)}>
             {error}
           </Alert>
         )}
-        <SpaceBetween direction="horizontal" size="xs">
+        <div className="login-form-actions">
           <Button variant="primary" loading={loading} onClick={() => handleSignUp()}>
-            Sign Up
+            Sign up
           </Button>
+        </div>
+        <div className="login-form-footer">
           <Button variant="link" onClick={onSwitchToLogin}>
-            Already have an account? Sign In
+            Have an account already? Sign in
           </Button>
-        </SpaceBetween>
+        </div>
       </SpaceBetween>
     </form>
   );
