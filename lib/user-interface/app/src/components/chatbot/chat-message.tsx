@@ -8,7 +8,6 @@ import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 // Import icons
 import {
   FaCopy,
-  FaExternalLinkAlt,
   FaChevronDown,
   FaFileAlt,
 } from "react-icons/fa";
@@ -29,7 +28,7 @@ export default function ChatMessage(props: ChatMessageProps) {
   const [selectedMenuItemIndex, setSelectedMenuItemIndex] =
     useState<number>(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const menuItemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const menuItemsRef = useRef<(HTMLDivElement | null)[]>([]);
   // State for copy popup
   const [showCopyPopup, setShowCopyPopup] = useState(false);
 
@@ -530,29 +529,12 @@ export default function ChatMessage(props: ChatMessageProps) {
                               >
                                 {(props.message.metadata.Sources as any[]).map(
                                   (item, index) => {
-                                    // Check if URI is valid (not s3:// or other invalid protocols)
-                                    const isValidUrl =
-                                      item.uri &&
-                                      (item.uri.startsWith("http://") ||
-                                        item.uri.startsWith("https://") ||
-                                        item.uri.startsWith("/"));
-                                    const uri = isValidUrl ? item.uri : "#";
-
                                     return (
-                                      <a
+                                      <div
                                         key={index}
                                         ref={(el) => {
                                           menuItemsRef.current[index] = el;
                                         }}
-                                        href={uri}
-                                        target={
-                                          isValidUrl ? "_blank" : undefined
-                                        }
-                                        rel={
-                                          isValidUrl
-                                            ? "noopener noreferrer"
-                                            : undefined
-                                        }
                                         role="menuitem"
                                         tabIndex={
                                           selectedMenuItemIndex === index
@@ -570,36 +552,19 @@ export default function ChatMessage(props: ChatMessageProps) {
                                               ? "2px solid #0073bb"
                                               : "none",
                                           outlineOffset: "2px",
-                                          cursor: isValidUrl
-                                            ? "pointer"
-                                            : "default",
-                                          opacity: isValidUrl ? 1 : 0.7,
+                                          cursor: "default",
                                         }}
                                         onFocus={() =>
                                           setSelectedMenuItemIndex(index)
                                         }
-                                        onClick={(e) => {
-                                          if (!isValidUrl) {
-                                            e.preventDefault();
-                                          }
+                                        onClick={() => {
                                           setIsDropdownOpen(false);
                                           setSelectedMenuItemIndex(-1);
                                         }}
-                                        aria-label={
-                                          isValidUrl
-                                            ? `Open ${item.title} in new tab`
-                                            : `${item.title} (link unavailable)`
-                                        }
+                                        aria-label={item.title}
                                       >
-                                        {item.title}{" "}
-                                        {isValidUrl && (
-                                          <FaExternalLinkAlt
-                                            size={10}
-                                            style={{ marginLeft: "4px" }}
-                                            aria-hidden="true"
-                                          />
-                                        )}
-                                      </a>
+                                        {item.title}
+                                      </div>
                                     );
                                   }
                                 )}
