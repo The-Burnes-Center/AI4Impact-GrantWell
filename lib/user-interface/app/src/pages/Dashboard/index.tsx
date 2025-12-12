@@ -165,7 +165,10 @@ const GrantActionsDropdown: React.FC<{
         <LuMenu size={18} />
       </button>
       {isOpen && (
-        <div className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`} role="menu">
+        <div
+          className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`}
+          role="menu"
+        >
           {/* Toggle Status */}
           <button
             onClick={() => {
@@ -285,7 +288,10 @@ export const Modal = React.memo(
       // Restore focus when modal closes
       return () => {
         // Only restore focus if the element still exists in the DOM
-        if (previousFocusRef.current && document.body.contains(previousFocusRef.current)) {
+        if (
+          previousFocusRef.current &&
+          document.body.contains(previousFocusRef.current)
+        ) {
           previousFocusRef.current.focus();
         }
       };
@@ -296,12 +302,13 @@ export const Modal = React.memo(
       if (!isOpen || !modalRef.current) return;
 
       const handleTabKey = (e: KeyboardEvent) => {
-        if (e.key !== 'Tab') return;
+        if (e.key !== "Tab") return;
 
-        const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        
+        const focusableElements =
+          modalRef.current?.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+
         if (!focusableElements || focusableElements.length === 0) return;
 
         const firstElement = focusableElements[0];
@@ -327,8 +334,8 @@ export const Modal = React.memo(
         }
       };
 
-      document.addEventListener('keydown', handleTabKey);
-      return () => document.removeEventListener('keydown', handleTabKey);
+      document.addEventListener("keydown", handleTabKey);
+      return () => document.removeEventListener("keydown", handleTabKey);
     }, [isOpen]);
 
     if (!isOpen) return null;
@@ -400,7 +407,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const [editedNofoStatus, setEditedNofoStatus] = useState<
     "active" | "archived"
   >("active");
-  const [editedNofoExpirationDate, setEditedNofoExpirationDate] = useState<string>("");
+  const [editedNofoExpirationDate, setEditedNofoExpirationDate] =
+    useState<string>("");
 
   // Upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -419,7 +427,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
       // Then sort alphabetically by name (case-insensitive)
-      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
     });
 
   // Helper function to normalize grant name
@@ -496,7 +504,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     // Format expiration date for date input (YYYY-MM-DD format)
     if (nofo.expirationDate) {
       const date = new Date(nofo.expirationDate);
-      const formattedDate = date.toISOString().split('T')[0];
+      const formattedDate = date.toISOString().split("T")[0];
       setEditedNofoExpirationDate(formattedDate);
     } else {
       setEditedNofoExpirationDate("");
@@ -531,11 +539,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       }
 
       // Update expiration date if it changed
-      const newExpirationDate = editedNofoExpirationDate 
-        ? new Date(editedNofoExpirationDate + 'T23:59:59').toISOString() 
+      const newExpirationDate = editedNofoExpirationDate
+        ? new Date(editedNofoExpirationDate + "T23:59:59").toISOString()
         : null;
       const oldExpirationDate = selectedNofo.expirationDate || null;
-      
+
       if (newExpirationDate !== oldExpirationDate) {
         await apiClient.landingPage.updateNOFOStatus(
           editedNofoName.trim(),
@@ -549,11 +557,11 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setNofos(
         nofos.map((nofo) =>
           nofo.id === selectedNofo.id
-            ? { 
-                ...nofo, 
-                name: editedNofoName.trim(), 
+            ? {
+                ...nofo,
+                name: editedNofoName.trim(),
                 status: editedNofoStatus,
-                expirationDate: newExpirationDate
+                expirationDate: newExpirationDate,
               }
             : nofo
         )
@@ -757,10 +765,10 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               <div className="row-cell">
                 {nofo.expirationDate ? (
                   <span className="expiry-date">
-                    {new Date(nofo.expirationDate).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
+                    {new Date(nofo.expirationDate).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
                     })}
                   </span>
                 ) : (
@@ -849,7 +857,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               className="form-input"
             />
             <div className="field-note">
-              Leave empty if no expiration date. Grants will be auto-archived after this date.
+              Leave empty if no expiration date. Grants will be auto-archived
+              after this date.
             </div>
           </div>
           <div className="modal-actions">
@@ -866,9 +875,12 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                 !editedNofoName.trim() ||
                 (editedNofoName === selectedNofo?.name &&
                   editedNofoStatus === selectedNofo?.status &&
-                  editedNofoExpirationDate === (selectedNofo?.expirationDate 
-                    ? new Date(selectedNofo.expirationDate).toISOString().split('T')[0] 
-                    : ""))
+                  editedNofoExpirationDate ===
+                    (selectedNofo?.expirationDate
+                      ? new Date(selectedNofo.expirationDate)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""))
               }
             >
               Save Changes
@@ -1031,6 +1043,7 @@ const Dashboard: React.FC = () => {
 
   // Automated NOFO scraper state
   const [isScraping, setIsScraping] = useState(false);
+  const [scrapeConfirmModalOpen, setScrapeConfirmModalOpen] = useState(false);
 
   // Refs for click outside detection
   const filterMenuRef = useRef<HTMLDivElement>(null);
@@ -1163,23 +1176,35 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Automated NOFO scraper handler
-  const handleAutomatedScraper = async () => {
+  // Open scrape confirmation modal
+  const handleScrapeButtonClick = () => {
+    setScrapeConfirmModalOpen(true);
+  };
+
+  // Automated NOFO scraper handler - called after confirmation
+  const confirmAutomatedScraper = async () => {
+    setScrapeConfirmModalOpen(false);
     try {
       setIsScraping(true);
       addNotification("info", "Starting automated NOFO scraping...");
 
       const response = await apiClient.landingPage.triggerAutomatedScraper();
-      
+
       if (response.result && response.result.processed > 0) {
-        addNotification("success", `Successfully processed ${response.result.processed} new NOFOs!`);
+        addNotification(
+          "success",
+          `Successfully processed ${response.result.processed} new NOFOs!`
+        );
         // Refresh the NOFOs list to show new items
         await fetchNofos();
       } else {
         addNotification("info", "No new NOFOs found to process.");
       }
     } catch (error) {
-      addNotification("error", "Failed to run automated NOFO scraper. Please try again.");
+      addNotification(
+        "error",
+        "Failed to run automated NOFO scraper. Please try again."
+      );
     } finally {
       setIsScraping(false);
     }
@@ -1239,7 +1264,7 @@ const Dashboard: React.FC = () => {
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
       // Then sort alphabetically by name (case-insensitive)
-      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
     });
 
     return filtered;
@@ -1398,7 +1423,10 @@ const Dashboard: React.FC = () => {
         <div style={{ display: "flex", alignItems: "center" }}>
           <div className="pagination-controls">{pageButtons}</div>
           <div className="items-per-page">
-            <label htmlFor="items-per-page-select" style={{ marginRight: "8px" }}>
+            <label
+              htmlFor="items-per-page-select"
+              style={{ marginRight: "8px" }}
+            >
               Show:
             </label>
             <select
@@ -1457,7 +1485,7 @@ const Dashboard: React.FC = () => {
           <button
             className="breadcrumb-link"
             onClick={() => navigate("/")}
-            style={{ 
+            style={{
               cursor: "pointer",
               background: "none",
               border: "none",
@@ -1469,7 +1497,9 @@ const Dashboard: React.FC = () => {
             Home
           </button>
         </div>
-        <div className="breadcrumb-item" aria-current="page">Dashboard</div>
+        <div className="breadcrumb-item" aria-current="page">
+          Dashboard
+        </div>
       </nav>
 
       <main>
@@ -1567,7 +1597,9 @@ const Dashboard: React.FC = () => {
                 >
                   <LuFilter size={18} />
                   {statusFilter !== "all" && (
-                    <span className="filter-badge" aria-label="1 filter active">1</span>
+                    <span className="filter-badge" aria-label="1 filter active">
+                      1
+                    </span>
                   )}
                 </button>
 
@@ -1648,14 +1680,53 @@ const Dashboard: React.FC = () => {
 
               <button
                 className="action-button scraper-button"
-                onClick={handleAutomatedScraper}
+                onClick={handleScrapeButtonClick}
                 disabled={isScraping}
+                aria-label="Auto-scrape NOFOs from grants.gov"
               >
                 <LuDownload size={16} className="button-icon" />
                 <span>{isScraping ? "Scraping..." : "Auto-Scrape NOFOs"}</span>
               </button>
             </div>
           </div>
+
+          {/* Scrape Confirmation Modal */}
+          <Modal
+            isOpen={scrapeConfirmModalOpen}
+            onClose={() => setScrapeConfirmModalOpen(false)}
+            title="Confirm Auto-Scrape"
+          >
+            <div className="modal-form">
+              <div className="delete-confirmation">
+                <LuInfo
+                  size={32}
+                  className="warning-icon"
+                  style={{ color: "#0073bb" }}
+                />
+                <p>Are you sure you want to scrape NOFOs now?</p>
+              </div>
+              <p className="warning-text">
+                This will search for new grants on grants.gov and add them to
+                the system. This process may take a few minutes.
+              </p>
+              <div className="modal-actions">
+                <button
+                  className="modal-button secondary"
+                  onClick={() => setScrapeConfirmModalOpen(false)}
+                  aria-label="Cancel scraping"
+                >
+                  Cancel
+                </button>
+                <button
+                  className="modal-button primary"
+                  onClick={confirmAutomatedScraper}
+                  aria-label="Confirm and start scraping"
+                >
+                  Yes, Scrape Now
+                </button>
+              </div>
+            </div>
+          </Modal>
 
           {/* Tab Content */}
           <NOFOsTab

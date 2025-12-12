@@ -6,12 +6,13 @@
   background-color: #f9fafc;
   min-height: 100vh;
   color: #333;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   position: relative;
 }
 
 /* Reset body styles */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -74,8 +75,8 @@ html, body {
 }
 
 .tab-button.active {
-  color: #0073BB;
-  border-bottom: 3px solid #0073BB;
+  color: #0073bb;
+  border-bottom: 3px solid #0073bb;
   font-weight: 500;
 }
 
@@ -107,7 +108,7 @@ html, body {
 
 .search-input:focus {
   outline: none;
-  border-color: #0073BB;
+  border-color: #0073bb;
   box-shadow: 0 2px 8px rgba(0, 115, 187, 0.1);
 }
 
@@ -141,11 +142,11 @@ html, body {
 
 .filter-button.active {
   background-color: #e6f2fa;
-  border-color: #0073BB;
+  border-color: #0073bb;
 }
 
 .filter-button.active svg path {
-  fill: #0073BB;
+  fill: #0073bb;
 }
 
 /* Table container styles */
@@ -250,7 +251,7 @@ html, body {
   font-weight: 600;
   text-transform: capitalize;
   transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   gap: 6px;
 }
 
@@ -262,7 +263,7 @@ html, body {
 
 .status-badge:hover {
   transform: scale(1.05);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 .status-badge.active {
@@ -283,7 +284,7 @@ html, body {
   align-items: center;
   font-size: 0.75rem;
   background-color: #f0f7ff;
-  color: #0073BB;
+  color: #0073bb;
   padding: 3px 8px;
   border-radius: 12px;
   margin-left: 8px;
@@ -311,7 +312,7 @@ html, body {
 
 .action-button.pin:hover {
   background-color: #e8f4ff;
-  color: #0073BB;
+  color: #0073bb;
   transform: translateY(-2px);
 }
 
@@ -412,7 +413,7 @@ html, body {
 }
 
 .expiry-date.no-date {
-  color: #999;
+  color: #767676;
   font-style: italic;
   font-weight: 400;
 }
@@ -425,7 +426,7 @@ html, body {
 }
 
 .expiry-date.no-date {
-  color: #999;
+  color: #767676;
   font-style: italic;
   font-weight: 400;
 }
@@ -453,7 +454,7 @@ html, body {
   gap: 8px;
   padding: 10px 15px;
   background-color: #f0f7ff;
-  color: #0073BB;
+  color: #0073bb;
   border: 1px solid #d0e8ff;
   border-radius: 6px;
   font-weight: 500;
@@ -479,7 +480,7 @@ html, body {
 }
 
 .file-icon {
-  color: #0073BB;
+  color: #0073bb;
 }
 
 /* Info box styling */
@@ -498,7 +499,7 @@ html, body {
 }
 
 .info-icon {
-  color: #0073BB;
+  color: #0073bb;
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -610,7 +611,7 @@ html, body {
 
 .modal-header h2 {
   margin: 0;
-  color: #0073BB;
+  color: #0073bb;
   font-size: 20px;
   font-weight: 600;
 }
@@ -671,7 +672,7 @@ select.form-input {
 
 .form-input:focus {
   outline: none;
-  border-color: #0073BB;
+  border-color: #0073bb;
   box-shadow: 0 0 0 3px rgba(0, 115, 187, 0.1);
 }
 
@@ -693,7 +694,7 @@ select.form-input {
 }
 
 .modal-button.primary {
-  background-color: #0073BB;
+  background-color: #0073bb;
   color: white;
   box-shadow: 0 2px 5px rgba(0, 115, 187, 0.3);
 }
@@ -754,7 +755,7 @@ select.form-input {
   align-items: center;
   height: 100vh;
   font-size: 18px;
-  color: #0073BB;
+  color: #0073bb;
   flex-direction: column;
   gap: 15px;
 }
@@ -764,13 +765,15 @@ select.form-input {
   width: 40px;
   height: 40px;
   border: 3px solid #e0e0e0;
-  border-top-color: #0073BB;
+  border-top-color: #0073bb;
   border-radius: 50%;
   animation: loading-spin 1s linear infinite;
 }
 
 @keyframes loading-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Pinned Grants specific styles */
@@ -861,7 +864,7 @@ select.form-input {
 .filter-option.selected {
   background-color: #f0f7ff;
   font-weight: 500;
-  color: #0073BB;
+  color: #0073bb;
 }
 
 .filter-option-content {
@@ -872,7 +875,7 @@ select.form-input {
 .filter-option-check {
   width: 20px;
   margin-right: 8px;
-  color: #0073BB;
+  color: #0073bb;
   font-weight: bold;
 }
 
@@ -880,7 +883,7 @@ select.form-input {
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: #0073BB;
+  background-color: #0073bb;
   color: white;
   border-radius: 50%;
   width: 18px;
@@ -920,7 +923,7 @@ select.form-input {
 }
 
 .breadcrumb-link {
-  color: #0073BB;
+  color: #0073bb;
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -978,9 +981,9 @@ select.form-input {
 }
 
 .pagination-button.active {
-  background-color: #0073BB;
+  background-color: #0073bb;
   color: white;
-  border-color: #0073BB;
+  border-color: #0073bb;
 }
 
 .items-per-page {
@@ -1002,7 +1005,7 @@ select.form-input {
 }
 
 .items-per-page select:hover {
-  border-color: #0073BB;
+  border-color: #0073bb;
 }
 
 /* Edit and Delete button styles */
@@ -1020,7 +1023,7 @@ select.form-input {
 
 .action-button.edit {
   background-color: #f0f7ff;
-  color: #0073BB;
+  color: #0073bb;
 }
 
 .action-button.edit:hover {
@@ -1166,7 +1169,7 @@ select.form-input {
 
 /* Add Grant Button - Teal/Blue */
 .action-button.add-button {
-  background-color: #0073BB;
+  background-color: #0073bb;
 }
 
 .action-button.add-button:hover:not(:disabled) {
@@ -1230,7 +1233,7 @@ select.form-input {
   gap: 8px;
   padding: 10px 16px;
   background-color: #f0f7ff;
-  color: #0073BB;
+  color: #0073bb;
   border: 1px solid #d0e8ff;
   border-radius: 25px;
   font-weight: 500;
@@ -1268,13 +1271,15 @@ select.form-input {
   width: 16px;
   height: 16px;
   border: 2px solid #d0e8ff;
-  border-top-color: #0073BB;
+  border-top-color: #0073bb;
   border-radius: 50%;
   animation: refresh-spin 1s linear infinite;
 }
 
 @keyframes refresh-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Fix for dashboard container to prevent double scrollbars */
@@ -1285,15 +1290,19 @@ select.form-input {
 
 /* Loading spinner animation */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-spinner {
   width: 100%;
   height: 100%;
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #0073BB;
+  border-top: 3px solid #0073bb;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -1324,7 +1333,7 @@ select.form-input {
 }
 
 .actions-dropdown-button:focus {
-  outline: 2px solid #FFB700;
+  outline: 2px solid #ffb700;
   outline-offset: 2px;
   box-shadow: 0 0 0 4px rgba(255, 183, 0, 0.2);
 }
@@ -1393,7 +1402,7 @@ select.form-input {
 }
 
 .dropdown-menu-item:focus {
-  outline: 2px solid #FFB700;
+  outline: 2px solid #ffb700;
   outline-offset: -2px;
   background-color: #f9fafb;
 }
