@@ -11,7 +11,7 @@ import { ChatBotApi } from "../chatbot-api";
 import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
-import { OIDCIntegrationName } from "../constants";
+import { OIDCIntegrationName, customDomainConfig } from "../constants";
 
 export interface UserInterfaceProps {
   readonly userPoolId: string;
@@ -50,10 +50,16 @@ export class UserInterface extends Construct {
     let websocketEndpoint: string;
     let distribution;
 
-    const publicWebsite = new Website(this, "Website", { ...props, websiteBucket: websiteBucket });
+    const publicWebsite = new Website(this, "Website", { 
+      ...props, 
+      websiteBucket: websiteBucket,
+      customDomain: customDomainConfig.domain,
+      certificateArn: customDomainConfig.certificateArn
+    });
     distribution = publicWebsite.distribution
-
-
+    
+    // Use custom domain if configured, otherwise use CloudFront domain
+    const frontendDomain = publicWebsite.domainName;
 
     const exportsAsset = s3deploy.Source.jsonData("aws-exports.json", {
       Auth: {
@@ -63,8 +69,8 @@ export class UserInterface extends Construct {
         oauth: {
           domain: props.cognitoDomain.concat(".auth.us-east-1.amazoncognito.com"),
           scope: ["aws.cognito.signin.user.admin","email", "openid", "profile"],
-          redirectSignIn: "https://" + distribution.distributionDomainName,
-          redirectSignOut: "https://" + distribution.distributionDomainName,
+          redirectSignIn: "https://" + frontendDomain,
+          redirectSignOut: "https://" + frontendDomain,
           responseType: "code"
         }
       },

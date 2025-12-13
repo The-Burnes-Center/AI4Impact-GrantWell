@@ -14,6 +14,8 @@ jobs:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
       ENVIRONMENT: production
       STACK_NAME: gw-stack-prod
+      CLOUDFRONT_CERTIFICATE_ARN: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
+      CLOUDFRONT_CUSTOM_DOMAIN: ${{ secrets.CLOUDFRONT_CUSTOM_DOMAIN }}
 
     permissions:
       id-token: write

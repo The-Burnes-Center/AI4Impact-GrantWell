@@ -57,8 +57,40 @@ const getKnowledgeBaseIndexName = () => {
 
 export const knowledgeBaseIndexName = getKnowledgeBaseIndexName();
 
+// Environment-specific custom domain configuration for CloudFront
+const getCustomDomainConfig = () => {
+  // Custom domain can be provided via environment variable, or use defaults
+  const customDomain = process.env.CLOUDFRONT_CUSTOM_DOMAIN;
+  const certificateArn = process.env.CLOUDFRONT_CERTIFICATE_ARN;
+  
+  // If both are explicitly provided via env vars, use them (for any environment)
+  if (customDomain && certificateArn) {
+    return {
+      domain: customDomain,
+      certificateArn: certificateArn
+    };
+  }
+  
+  // Staging and local development: Always use CloudFront domain (no custom domain)
+  return {
+    domain: undefined,
+    certificateArn: undefined
+  };
+};
+
+export const customDomainConfig = getCustomDomainConfig();
+
 // Environment-specific email configuration for user invitations
 const getEmailConfig = () => {
+  const customDomain = customDomainConfig.domain;
+  
+  if (customDomain) {
+    return {
+      deploymentUrl: `https://${customDomain}/`
+    };
+  }
+  
+  // Fallback to CloudFront domains if custom domain not configured
   if (ENVIRONMENT === 'production') {
     return {
       deploymentUrl: 'https://d1mu5xcqb0ac30.cloudfront.net/'

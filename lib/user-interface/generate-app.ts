@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { ChatBotApi } from "../chatbot-api";
@@ -11,10 +12,13 @@ export interface WebsiteProps {
   readonly userPoolClientId: string;
   readonly api: ChatBotApi;
   readonly websiteBucket: s3.Bucket;
+  readonly customDomain?: string;
+  readonly certificateArn?: string;
 }
 
 export class Website extends Construct {
     readonly distribution: cf.CloudFrontWebDistribution;
+    readonly domainName: string;
 
   constructor(scope: Construct, id: string, props: WebsiteProps) {
     super(scope, id);
@@ -39,24 +43,26 @@ export class Website extends Construct {
       }
     );
 
+    // Configure custom domain if certificate ARN and domain are provided
+    const viewerCertificate = props.certificateArn && props.customDomain
+      ? cf.ViewerCertificate.fromAcmCertificate(
+          acm.Certificate.fromCertificateArn(this, 'CloudfrontAcm', props.certificateArn),
+          {
+            aliases: [props.customDomain]
+          }
+        )
+      : undefined;
+
     const distribution = new cf.CloudFrontWebDistribution(
       this,
       "Distribution",
       {
         // CUSTOM DOMAIN FOR PUBLIC WEBSITE
         // REQUIRES:
-        // 1. ACM Certificate ARN in us-east-1 and Domain of website to be input during 'npm run config':
-        //    "privateWebsite" : false,
-        //    "certificate" : "arn:aws:acm:us-east-1:1234567890:certificate/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX",
-        //    "domain" : "sub.example.com"
+        // 1. ACM Certificate ARN in us-east-1 and Domain of website to be provided via environment variables or props
+        //    Set CLOUDFRONT_CERTIFICATE_ARN and CLOUDFRONT_CUSTOM_DOMAIN environment variables
         // 2. After the deployment, in your Route53 Hosted Zone, add an "A Record" that points to the Cloudfront Alias (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-cloudfront-distribution.html)
-        // ...(props.config.certificate && props.config.domain && {
-        //   viewerCertificate: cf.ViewerCertificate.fromAcmCertificate(
-        //     acm.Certificate.fromCertificateArn(this,'CloudfrontAcm', props.config.certificate),
-        //     {
-        //       aliases: [props.config.domain]
-        //     })
-        // }),
+        viewerCertificate: viewerCertificate,
         viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         priceClass: cf.PriceClass.PRICE_CLASS_ALL,
         httpVersion: cf.HttpVersion.HTTP2_AND_3,
@@ -112,13 +118,23 @@ export class Website extends Construct {
     );
 
     this.distribution = distribution;
+    
+    // Use custom domain if configured, otherwise use CloudFront domain
+    this.domainName = props.customDomain || distribution.distributionDomainName;
 
     // ###################################################
     // Outputs
     // ###################################################
     new cdk.CfnOutput(this, "UserInterfaceDomainName", {
-      value: `https://${distribution.distributionDomainName}`,
+      value: `https://${this.domainName}`,
     });
+    
+    if (props.customDomain) {
+      new cdk.CfnOutput(this, "CustomDomainName", {
+        value: props.customDomain,
+        description: "Custom domain configured for CloudFront distribution",
+      });
+    }
 
     NagSuppressions.addResourceSuppressions(
       distributionLogsBucket,
