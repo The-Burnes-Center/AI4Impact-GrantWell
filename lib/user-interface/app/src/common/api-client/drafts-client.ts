@@ -291,4 +291,41 @@ export class DraftsClient {
     console.log('Draft generation response data:', data);
     return data.sections || {};
   }
+
+  // Generates a tagged PDF from draft data
+  async generatePDF(draftData: {
+    title?: string;
+    projectBasics?: any;
+    sections?: Record<string, string>;
+  }): Promise<Blob> {
+    const auth = await Utils.authenticate();
+    console.log('Calling /generate-pdf with:', draftData);
+    
+    const response = await fetch(this.API + '/generate-pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify({
+        draftData: {
+          title: draftData.title || 'Grant Application',
+          projectBasics: draftData.projectBasics || {},
+          sections: draftData.sections || {},
+        },
+      }),
+    });
+
+    console.log('PDF generation response status:', response.status);
+    
+    if (response.status !== 200) {
+      const errorMessage = await response.json();
+      console.error('PDF generation error:', errorMessage);
+      throw new Error(errorMessage.error || errorMessage.message || 'Failed to generate PDF');
+    }
+
+    // The response is a PDF blob
+    const blob = await response.blob();
+    return blob;
+  }
 } 

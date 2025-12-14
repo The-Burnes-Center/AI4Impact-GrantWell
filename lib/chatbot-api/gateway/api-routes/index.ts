@@ -25,6 +25,7 @@ export interface RoutesProps {
   grantRecommendationFunction: lambda.Function;
   draftGeneratorFunction: lambda.Function; // Add draft generator function prop
   automatedNofoScraperFunction: lambda.Function; // Add automated NOFO scraper function prop
+  applicationPdfGeneratorFunction: lambda.Function; // Add application PDF generator function prop
 }
 
 export class Routes extends Construct {
@@ -239,6 +240,19 @@ export class Routes extends Construct {
       path: '/automated-nofo-scraper',
       methods: [apigwv2.HttpMethod.POST, apigwv2.HttpMethod.OPTIONS],
       integration: automatedNofoScraperIntegration,
+    });
+
+    // Application PDF Generator Lambda Integration
+    const applicationPdfGeneratorIntegration = new HttpLambdaIntegration(
+      'ApplicationPdfGeneratorIntegration',
+      props.applicationPdfGeneratorFunction
+    );
+
+    // Add the route to the HTTP API
+    props.httpApi.addRoutes({
+      path: '/generate-pdf',
+      methods: [apigwv2.HttpMethod.POST, apigwv2.HttpMethod.OPTIONS],
+      integration: applicationPdfGeneratorIntegration,
     });
   }
 }

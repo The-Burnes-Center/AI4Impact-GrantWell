@@ -58,6 +58,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly draftGeneratorFunction: lambda.Function;
   public readonly automatedNofoScraperFunction: lambda.Function;
   public readonly htmlToPdfConverterFunction: lambda.Function;
+  public readonly applicationPdfGeneratorFunction: lambda.Function;
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly backfillExpirationDatesFunction: lambda.Function;
@@ -1118,6 +1119,33 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.htmlToPdfConverterFunction = htmlToPdfConverterFunction;
+
+    const playwrightLayer = new lambda.LayerVersion(scope, "PlaywrightLayer", {
+      layerVersionName: "PlaywrightLayer",
+      compatibleRuntimes: [lambda.Runtime.PYTHON_3_12],
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "layers/playwright-layer.zip")
+      ),
+      description: "Playwright Python package for Lambda",
+    });
+
+    // Application PDF Generator Lambda Function (using Playwright for tagged PDFs)
+    const applicationPdfGeneratorFunction = new lambda.Function(
+      scope,
+      "ApplicationPdfGeneratorFunction",
+      {
+        runtime: lambda.Runtime.PYTHON_3_12,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "application-pdf-generator")
+        ),
+        handler: "lambda_function.lambda_handler",
+        layers: [playwrightLayer],
+        timeout: cdk.Duration.minutes(5),
+        memorySize: 2048,
+      }
+    );
+
+    this.applicationPdfGeneratorFunction = applicationPdfGeneratorFunction;
 
     // Auto-Archive Expired NOFOs Lambda Function
     const autoArchiveExpiredNofosFunction = new lambda.Function(

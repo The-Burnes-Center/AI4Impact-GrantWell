@@ -399,6 +399,18 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    // Add REST API route for application PDF generation
+    const applicationPdfGeneratorAPIIntegration = new HttpLambdaIntegration(
+      "ApplicationPdfGeneratorAPIIntegration",
+      lambdaFunctions.applicationPdfGeneratorFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/generate-pdf",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: applicationPdfGeneratorAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     new cdk.CfnOutput(this, "WS-API - apiEndpoint", {
       value: websocketBackend.wsAPI.apiEndpoint || "",
     });
