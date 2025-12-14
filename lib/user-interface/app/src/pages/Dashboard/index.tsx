@@ -1502,7 +1502,7 @@ const Dashboard: React.FC = () => {
         </div>
       </nav>
 
-      <main>
+      <div className="dashboard-main-content">
         {/* Header with Refresh Button */}
         <div className="dashboard-header">
           <h1>Admin Dashboard</h1>
@@ -1743,7 +1743,7 @@ const Dashboard: React.FC = () => {
           {/* Pagination Controls */}
           <PaginationControls />
         </div>
-      </main>
+      </div>
 
       {/* Invite User Modal */}
       <Modal

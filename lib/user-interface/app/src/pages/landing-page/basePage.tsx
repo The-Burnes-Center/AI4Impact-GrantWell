@@ -658,7 +658,7 @@ export default function Welcome() {
           maxWidth: "950px",
           margin: "0 auto",
           padding: "0 40px",
-          marginTop: "70px",
+          marginTop: "40px",
           display: "flex",
           flexDirection: "column",
         }}
@@ -670,7 +670,6 @@ export default function Welcome() {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "40px",
             marginBottom: "30px",
             position: "relative",
             width: "100%",
@@ -1053,18 +1052,6 @@ export default function Welcome() {
         <ContentBox>
           <ResourcesPanel />
         </ContentBox>
-
-        {/* Feedback Section */}
-        {/* <InfoBanner
-          title="We Value Your Feedback!"
-          height="150px"
-          description="Help us make GrantWell better by sharing your thoughts and suggestions."
-          buttonText="Open Feedback Form"
-          buttonAction={() =>
-            window.open("https://forms.gle/M2PHgWTVVRrRubpc7", "_blank")
-          }
-          backgroundColor="#006499"
-        /> */}
       </div>
 
       {/* Footer Section */}
