@@ -317,15 +317,26 @@ export class DraftsClient {
     });
 
     console.log('PDF generation response status:', response.status);
+    console.log('PDF generation response headers:', Object.fromEntries(response.headers.entries()));
     
     if (response.status !== 200) {
-      const errorMessage = await response.json();
+      let errorMessage;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorData.message || 'Failed to generate PDF';
+      } catch (e) {
+        // If response is not JSON, try to get text
+        const errorText = await response.text();
+        errorMessage = errorText || `Failed to generate PDF: HTTP ${response.status}`;
+      }
       console.error('PDF generation error:', errorMessage);
-      throw new Error(errorMessage.error || errorMessage.message || 'Failed to generate PDF');
+      throw new Error(errorMessage);
     }
 
     // The response is a PDF blob
+    // API Gateway HTTP API will decode the base64 body automatically
     const blob = await response.blob();
+    console.log('PDF blob created, size:', blob.size, 'bytes');
     return blob;
   }
 } 
