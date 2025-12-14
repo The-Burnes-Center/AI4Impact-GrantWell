@@ -505,7 +505,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             gap: "16px",
           }}
         >
-          <button
+          {/* <button
             style={{
               display: "flex",
               alignItems: "center",
@@ -575,7 +575,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
                 View as a single document
               </div>
             </div>
-          </button>
+          </button> */}
 
           <button
             onClick={() => onNavigate("sectionEditor")}
