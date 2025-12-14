@@ -23,6 +23,12 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp, onForg
     if (e) {
       e.preventDefault();
     }
+    
+    // Prevent multiple simultaneous sign-in attempts
+    if (loading) {
+      return;
+    }
+    
     setLoading(true);
     setError(null);
 
@@ -41,6 +47,12 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp, onForg
       onSuccess();
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred during sign in';
+      
+      if (errorMessage.toLowerCase().includes('pending sign in attempt')) {
+        setLoading(false);
+        return;
+      }
+      
       setError(errorMessage);
       onError?.(errorMessage);
       setLoading(false);
@@ -51,6 +63,12 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp, onForg
     if (e) {
       e.preventDefault();
     }
+    
+    // Prevent multiple simultaneous attempts
+    if (loading) {
+      return;
+    }
+    
     setLoading(true);
     setError(null);
 
@@ -65,6 +83,12 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp, onForg
       onSuccess();
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred setting new password';
+      
+      if (errorMessage.toLowerCase().includes('pending sign in attempt')) {
+        setLoading(false);
+        return;
+      }
+      
       setError(errorMessage);
       setLoading(false);
     }
