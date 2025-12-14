@@ -29,7 +29,7 @@ export default function ResetPasswordPage({ email, onBack, onSuccess }: ResetPas
     }
 
     try {
-      await Auth.forgotPasswordSubmit(email, verificationCode, newPassword);
+      await Auth.forgotPasswordSubmit(email.toLowerCase().trim(), verificationCode, newPassword);
       alert('Password reset successful! Please sign in with your new password.');
       onSuccess();
     } catch (err: any) {
@@ -58,6 +58,16 @@ export default function ResetPasswordPage({ email, onBack, onSuccess }: ResetPas
         <div className="auth-content">
           <form onSubmit={handleResetPassword} className="login-form">
             <SpaceBetween size="l">
+              <FormField label="Email address">
+                <Input
+                  value={email}
+                  readOnly
+                  placeholder="Enter your email"
+                  type="email"
+                  disabled={true}
+                  autoComplete="email"
+                />
+              </FormField>
               <FormField label="Verification Code">
                 <Input
                   value={verificationCode}

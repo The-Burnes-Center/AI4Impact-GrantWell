@@ -20,7 +20,7 @@ export default function AuthPage() {
   };
 
   const handleCodeSent = (email: string) => {
-    setResetEmail(email);
+    setResetEmail(email.toLowerCase().trim());
     setShowForgotPassword(false);
     setShowResetPassword(true);
   };

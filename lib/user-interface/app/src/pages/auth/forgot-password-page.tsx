@@ -27,8 +27,10 @@ export default function ForgotPasswordPage({ onBack, onCodeSent }: ForgotPasswor
     }
 
     try {
-      await Auth.forgotPassword(email);
-      onCodeSent(email);
+      // Normalize email to lowercase
+      const normalizedEmail = email.toLowerCase().trim();
+      await Auth.forgotPassword(normalizedEmail);
+      onCodeSent(normalizedEmail);
     } catch (err: any) {
       setError(err.message || 'Failed to send password reset code');
       setLoading(false);
@@ -58,7 +60,7 @@ export default function ForgotPasswordPage({ onBack, onCodeSent }: ForgotPasswor
               <FormField label="Email address">
                 <Input
                   value={email}
-                  onChange={(e) => setEmail(e.detail.value)}
+                  onChange={(e) => setEmail(e.detail.value.toLowerCase())}
                   placeholder="Enter your email"
                   type="email"
                   disabled={loading}

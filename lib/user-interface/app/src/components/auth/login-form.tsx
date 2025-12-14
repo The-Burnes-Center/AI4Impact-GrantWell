@@ -33,7 +33,7 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp, onForg
     setError(null);
 
     try {
-      const user = await Auth.signIn(email, password);
+      const user = await Auth.signIn(email.toLowerCase().trim(), password);
       
       // Check if user needs to set a new password (first-time login)
       if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
@@ -148,7 +148,7 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp, onForg
         <FormField label="Email address">
           <Input
             value={email}
-            onChange={(e) => setEmail(e.detail.value)}
+            onChange={(e) => setEmail(e.detail.value.toLowerCase())}
             placeholder="Enter your email"
             type="email"
             disabled={loading}

@@ -69,11 +69,12 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
     }
 
     try {
+      const normalizedEmail = email.toLowerCase().trim();
       await Auth.signUp({
-        username: email,
+        username: normalizedEmail,
         password,
         attributes: {
-          email,
+          email: normalizedEmail,
         },
       });
       setShowVerification(true);
@@ -92,7 +93,7 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
     setError(null);
 
     try {
-      await Auth.confirmSignUp(email, verificationCode);
+      await Auth.confirmSignUp(email.toLowerCase().trim(), verificationCode);
       onSuccess();
     } catch (err: any) {
       setError(err.message || 'Invalid verification code');
@@ -106,7 +107,7 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
     setError(null);
 
     try {
-      await Auth.resendSignUp(email);
+      await Auth.resendSignUp(email.toLowerCase().trim());
       setError(null);
       alert('Verification code resent to your email');
     } catch (err: any) {
@@ -165,7 +166,7 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
         <FormField label="Email address">
           <Input
             value={email}
-            onChange={(e) => setEmail(e.detail.value)}
+            onChange={(e) => setEmail(e.detail.value.toLowerCase())}
             placeholder="Enter your email"
             type="email"
             disabled={loading}
