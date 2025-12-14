@@ -1120,28 +1120,19 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.htmlToPdfConverterFunction = htmlToPdfConverterFunction;
 
-    const playwrightLayer = new lambda.LayerVersion(scope, "PlaywrightLayer", {
-      layerVersionName: "PlaywrightLayer",
-      compatibleRuntimes: [lambda.Runtime.PYTHON_3_12],
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "layers/playwright-layer.zip")
-      ),
-      description: "Playwright Python package for Lambda",
-    });
-
-    // Application PDF Generator Lambda Function (using Playwright for tagged PDFs)
+    // Application PDF Generator Lambda Function (using Puppeteer for tagged PDFs)
     const applicationPdfGeneratorFunction = new lambda.Function(
       scope,
       "ApplicationPdfGeneratorFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "application-pdf-generator")
         ),
-        handler: "lambda_function.lambda_handler",
-        layers: [playwrightLayer],
+        handler: "index.handler",
+        layers: [puppeteerCoreLayer],
         timeout: cdk.Duration.minutes(5),
-        memorySize: 2048,
+        memorySize: 2048, // PDF conversion with Chromium can be memory-intensive
       }
     );
 

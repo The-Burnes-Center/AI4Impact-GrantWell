@@ -1,0 +1,9 @@
+{
+  "name": "application-pdf-generator",
+  "version": "1.0.0",
+  "description": "Lambda function to generate PDFs from application draft data using Puppeteer",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {}
+}
+
