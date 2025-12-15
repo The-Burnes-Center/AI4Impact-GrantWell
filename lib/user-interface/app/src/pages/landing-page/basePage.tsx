@@ -19,6 +19,9 @@ export default function Welcome() {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState([]);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -440,6 +443,50 @@ export default function Welcome() {
         )}
       </div>
     );
+  };
+
+  // **Feedback Form Handler**
+  const handleFeedbackSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmittingFeedback(true);
+    setFeedbackError(null);
+
+    const form = e.currentTarget;
+
+    // Create a hidden iframe for form submission
+    const iframe = document.createElement("iframe");
+    iframe.name = `formstack_iframe_${Date.now()}`;
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+
+    // Set form target to iframe
+    form.target = iframe.name;
+
+    // Handle iframe load (form submission complete)
+    iframe.onload = () => {
+      setIsSubmittingFeedback(false);
+      setFeedbackSubmitted(true);
+      form.reset();
+      // Clean up iframe after a delay
+      setTimeout(() => {
+        if (iframe.parentNode) {
+          iframe.parentNode.removeChild(iframe);
+        }
+      }, 1000);
+    };
+
+    // Fallback timeout in case iframe doesn't load
+    setTimeout(() => {
+      if (iframe.parentNode) {
+        setIsSubmittingFeedback(false);
+        setFeedbackSubmitted(true);
+        form.reset();
+        iframe.parentNode.removeChild(iframe);
+      }
+    }, 5000);
+
+    // Submit the form (will post to iframe)
+    form.submit();
   };
 
   const ContentBox = ({ children, backgroundColor = "#f1f6f9" }) => (
@@ -1052,6 +1099,259 @@ export default function Welcome() {
         <ContentBox>
           <ResourcesPanel />
         </ContentBox>
+
+        {/* Feedback Form */}
+        <ContentBox backgroundColor="#ffffff">
+          <div
+            id="feedback-form"
+            className="ma__feedback-form"
+            data-mass-feedback-form="true"
+            style={{
+              border: "1px solid #d4d4d4",
+              borderRadius: "4px",
+              backgroundColor: "#ffffff",
+              padding: "24px",
+              maxWidth: "600px",
+              margin: "0 auto",
+            }}
+          >
+            <h2 className="visually-hidden">Feedback</h2>
+            {feedbackSubmitted ? (
+              <div
+                role="alert"
+                aria-live="polite"
+                style={{
+                  padding: "20px",
+                  backgroundColor: "#f0f9ff",
+                  border: "1px solid #006499",
+                  borderRadius: "4px",
+                  color: "#006499",
+                  fontSize: "16px",
+                  fontWeight: "400",
+                  textAlign: "center",
+                }}
+              >
+                <p style={{ margin: 0 }}>
+                  Thank you for your feedback! Your response has been submitted
+                  successfully.
+                </p>
+              </div>
+            ) : (
+              <form
+                noValidate
+                id="fsForm2521317"
+                method="post"
+                className="formForm"
+                action="https://www.formstack.com/forms/index.php"
+                encType="multipart/form-data"
+                style={{ margin: 0 }}
+                onSubmit={handleFeedbackSubmit}
+              >
+                <input type="hidden" name="form" value="2521317" />
+                <input type="hidden" name="jsonp" value="1" />
+                <input type="hidden" name="viewkey" value="vx39GBYJhi" />
+                <input type="hidden" name="_submit" value="1" />
+                <input type="hidden" name="style_version" value="3" />
+                <input
+                  type="hidden"
+                  id="viewparam"
+                  name="viewparam"
+                  value="524744"
+                />
+                <input
+                  type="hidden"
+                  id="field47056299"
+                  name="field47056299"
+                  size={50}
+                  className="ma__textarea fsField"
+                  value="https://mayflower.digital.mass.gov/react/iframe.html?id=forms-organisms-feedbackform--feedback-form-example&amp;viewMode=story"
+                />
+                <input type="hidden" id="field58154059" name="field58154059" />
+                <input type="hidden" id="field57432673" name="field57432673" />
+                <fieldset
+                  style={{
+                    border: "none",
+                    padding: 0,
+                    margin: 0,
+                    marginBottom: "20px",
+                  }}
+                >
+                  <legend
+                    className="fsLabel requiredLabel fsLabelVertical"
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "400",
+                      color: "#000000",
+                      marginBottom: "12px",
+                      padding: 0,
+                      width: "100%",
+                    }}
+                  >
+                    Did you find what you were looking for on this webpage?
+                    <span>
+                      {" "}
+                      *<span className="visually-hidden">required</span>
+                    </span>
+                  </legend>
+                  <div
+                    className="ma__input-group__items"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                    }}
+                  >
+                    <div
+                      className="ma__input-group__item"
+                      style={{ margin: 0 }}
+                    >
+                      <span
+                        className="ma__input-radio"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        <input
+                          className="fsField required"
+                          id="field47054416_1"
+                          name="field47054416"
+                          type="radio"
+                          value="Yes"
+                          required
+                          style={{
+                            marginRight: "8px",
+                            width: "18px",
+                            height: "18px",
+                            cursor: "pointer",
+                            flexShrink: 0,
+                          }}
+                        />
+                        <label
+                          className="fsOptionLabel ma__input-radio__label"
+                          htmlFor="field47054416_1"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            color: "#000000",
+                            cursor: "pointer",
+                            margin: 0,
+                          }}
+                        >
+                          Yes
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      className="ma__input-group__item"
+                      style={{ margin: 0 }}
+                    >
+                      <span
+                        className="ma__input-radio"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        <input
+                          className="fsField required"
+                          id="field47054416_2"
+                          name="field47054416"
+                          type="radio"
+                          value="No"
+                          required
+                          style={{
+                            marginRight: "8px",
+                            width: "18px",
+                            height: "18px",
+                            cursor: "pointer",
+                            flexShrink: 0,
+                          }}
+                        />
+                        <label
+                          className="fsOptionLabel ma__input-radio__label"
+                          htmlFor="field47054416_2"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            color: "#000000",
+                            cursor: "pointer",
+                            margin: 0,
+                          }}
+                        >
+                          No
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset
+                  className="ma_feedback-fieldset ma__mass-feedback-form__form--submit-wrapper"
+                  style={{
+                    border: "none",
+                    padding: 0,
+                    margin: 0,
+                    marginTop: "20px",
+                  }}
+                >
+                  {feedbackError && (
+                    <div
+                      role="alert"
+                      aria-live="assertive"
+                      style={{
+                        fontWeight: "bold",
+                        marginBottom: "16px",
+                        display: "block",
+                      }}
+                    >
+                      <p
+                        className="error"
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "#d32f2f",
+                          margin: 0,
+                        }}
+                      >
+                        {feedbackError}
+                      </p>
+                    </div>
+                  )}
+                  <input
+                    id="submitButton2521317"
+                    className="submitButton ma__button ma__button--uppercase"
+                    type="submit"
+                    value={
+                      isSubmittingFeedback ? "Submitting..." : "Send Feedback"
+                    }
+                    disabled={isSubmittingFeedback}
+                    style={{
+                      display: "block",
+                      backgroundColor: isSubmittingFeedback
+                        ? "#999999"
+                        : "#006499",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "4px",
+                      padding: "12px 24px",
+                      fontSize: "16px",
+                      fontWeight: "700",
+                      textTransform: "uppercase",
+                      cursor: isSubmittingFeedback ? "not-allowed" : "pointer",
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                      transition: "background-color 0.2s",
+                      opacity: isSubmittingFeedback ? 0.7 : 1,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSubmittingFeedback) {
+                        e.currentTarget.style.backgroundColor = "#0074ad";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSubmittingFeedback) {
+                        e.currentTarget.style.backgroundColor = "#006499";
+                      }
+                    }}
+                  />
+                </fieldset>
+              </form>
+            )}
+          </div>
+        </ContentBox>
       </div>
 
       {/* Footer Section */}
@@ -1157,11 +1457,22 @@ export default function Welcome() {
 
       {/* Fixed Feedback Tab */}
       <a
-        href="#"
+        href="#feedback-form"
         onClick={(e) => {
           e.preventDefault();
-          // TODO: Add feedback link URL here
-          // window.open('FEEDBACK_URL_HERE', '_blank');
+          const feedbackForm = document.getElementById("feedback-form");
+          if (feedbackForm) {
+            feedbackForm.scrollIntoView({ behavior: "smooth", block: "start" });
+            // Focus the form for accessibility
+            setTimeout(() => {
+              const firstInput = feedbackForm.querySelector(
+                'input[type="radio"]'
+              ) as HTMLElement;
+              if (firstInput) {
+                firstInput.focus();
+              }
+            }, 500);
+          }
         }}
         style={{
           position: "fixed",
@@ -1169,49 +1480,49 @@ export default function Welcome() {
           top: "50%",
           transform: "translateY(-50%)",
           backgroundColor: "#ffffff",
-          border: "2px solid #14558f",
+          border: "2px solid #4c8e5c",
           borderRight: "none",
           borderTopLeftRadius: "8px",
           borderBottomLeftRadius: "8px",
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
           padding: "20px 8px",
           zIndex: 1000,
           cursor: "pointer",
           textDecoration: "none",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+          boxShadow: "none",
           transition: "all 0.2s ease",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#f0f7ff";
-          e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
-          e.currentTarget.style.transform = "translateY(-50%) translateX(-4px)";
+          e.currentTarget.style.backgroundColor = "#f5f9f7";
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.backgroundColor = "#ffffff";
-          e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.15)";
-          e.currentTarget.style.transform = "translateY(-50%)";
         }}
         onFocus={(e) => {
-          e.currentTarget.style.outline = "3px solid #2c4fdb";
+          e.currentTarget.style.outline = "3px solid #4c8e5c";
           e.currentTarget.style.outlineOffset = "2px";
-          e.currentTarget.style.backgroundColor = "#f0f7ff";
+          e.currentTarget.style.backgroundColor = "#f5f9f7";
         }}
         onBlur={(e) => {
           e.currentTarget.style.outline = "none";
           e.currentTarget.style.backgroundColor = "#ffffff";
         }}
-        aria-label="Provide feedback"
+        aria-label="Scroll to feedback form"
       >
         <span
           style={{
-            color: "#14558f",
+            color: "#4c8e5c",
             fontSize: "16px",
-            fontWeight: "600",
-            writingMode: "vertical-rl",
-            textOrientation: "mixed",
+            fontWeight: "400",
+            writingMode: "vertical-lr",
+            textOrientation: "sideways",
             letterSpacing: "0.5px",
+            transform: "rotate(180deg)",
+            display: "inline-block",
           }}
         >
           Feedback
