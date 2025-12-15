@@ -57,6 +57,17 @@ function App() {
 
   return (
     <Router>
+      <AppContent />
+    </Router>
+  );
+}
+
+function AppContent() {
+  const location = useLocation();
+  const isPlaygroundPage = location.pathname.startsWith("/chatbot/playground");
+
+  return (
+    <>
       <ScrollToTop />
       <BrandBanner />
       <MDSHeader />
@@ -105,8 +116,8 @@ function App() {
           />
         </Routes>
       </main>
-      <FooterComponent />
-    </Router>
+      {!isPlaygroundPage && <FooterComponent />}
+    </>
   );
 }
 

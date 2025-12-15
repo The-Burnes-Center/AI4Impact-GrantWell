@@ -16,18 +16,18 @@ import {
 const getTopOffset = (): number => {
   const bannerElement = document.querySelector(".ma__brand-banner");
   const mdsHeaderElement = document.querySelector(".ma__header_slim");
-  
+
   let bannerHeight = 40; // Default fallback
   let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
-  
+
   if (bannerElement) {
     bannerHeight = bannerElement.getBoundingClientRect().height;
   }
-  
+
   if (mdsHeaderElement) {
     mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
   }
-  
+
   return bannerHeight + mdsHeaderHeight;
 };
 
@@ -58,8 +58,10 @@ const styles: Record<string, React.CSSProperties> = {
   },
   contentArea: {
     flex: 1,
-    overflow: "auto",
+    overflow: "hidden",
     height: "100%",
+    display: "flex",
+    flexDirection: "column",
   },
   toolsPanel: {
     height: "100%",
@@ -170,7 +172,7 @@ export default function BaseAppLayout({
     const observer = new MutationObserver(updateTopOffset);
     const bannerElement = document.querySelector(".ma__brand-banner");
     const mdsHeaderElement = document.querySelector(".ma__header_slim");
-    
+
     if (bannerElement) {
       observer.observe(bannerElement, {
         attributes: true,
@@ -240,7 +242,7 @@ export default function BaseAppLayout({
   const activeTab = getActiveTab();
 
   return (
-    <div 
+    <div
       style={{
         ...styles.container,
         minHeight: `calc(100vh - ${topOffset}px)`,
@@ -250,7 +252,14 @@ export default function BaseAppLayout({
         padding: 0,
       }}
     >
-      <div style={{ display: "flex", flex: 1, overflow: "hidden", alignItems: "stretch" }}>
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          overflow: "hidden",
+          alignItems: "stretch",
+        }}
+      >
         {/* Sidebar */}
         <div
           style={{
@@ -276,7 +285,11 @@ export default function BaseAppLayout({
             <button
               style={styles.sidebarToggle}
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label={sidebarOpen ? "Collapse navigation sidebar" : "Expand navigation sidebar"}
+              aria-label={
+                sidebarOpen
+                  ? "Collapse navigation sidebar"
+                  : "Expand navigation sidebar"
+              }
               aria-expanded={sidebarOpen}
             >
               {sidebarOpen ? (
