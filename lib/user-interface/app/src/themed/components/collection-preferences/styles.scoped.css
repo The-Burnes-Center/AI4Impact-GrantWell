@@ -736,7 +736,7 @@ body[data-awsui-focus-visible=true] .awsui_drag-overlay_tc96w_13pnp_692:not(#\9)
 
 .awsui_content-display-description_tc96w_13pnp_736:not(#\9) {
   color: var(--color-text-form-secondary-54emib, #656871);
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
   margin-block-start: var(--space-scaled-xxxs-27y4hv, 2px);

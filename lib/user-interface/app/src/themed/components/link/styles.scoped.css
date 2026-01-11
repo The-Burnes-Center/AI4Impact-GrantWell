@@ -482,7 +482,7 @@ body[data-awsui-focus-visible=true] .awsui_link_4c84z_1dxmc_141:not(#\9):focus {
   box-shadow: 0 0 0 var(--border-link-focus-ring-shadow-spread-v8hkrl, 2px) var(--color-border-item-focused-nv6mhz, #006ce0);
 }
 .awsui_link_4c84z_1dxmc_141.awsui_font-size-body-s_4c84z_1dxmc_467:not(#\9) {
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
   text-underline-offset: 0.3em;

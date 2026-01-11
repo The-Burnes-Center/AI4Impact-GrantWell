@@ -180,7 +180,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   font-family: var(--font-family-base-eynpfp, Open Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   padding-block: var(--space-s-34lx8l, 12px);
   position: relative;
   max-inline-size: 800px;

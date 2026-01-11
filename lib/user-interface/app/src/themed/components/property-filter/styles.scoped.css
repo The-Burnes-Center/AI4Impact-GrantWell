@@ -403,7 +403,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
 .awsui_constraint_1wzqe_4vhga_401:not(#\9) {
   padding-block-start: var(--space-xxs-p8yyaw, 4px);
   color: var(--color-text-form-secondary-54emib, #656871);
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
 }

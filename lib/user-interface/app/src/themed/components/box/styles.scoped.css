@@ -182,7 +182,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
 }
 
 .awsui_box_18wu0_oppu3_168.awsui_small-variant_18wu0_oppu3_176.awsui_font-size-default_18wu0_oppu3_184:not(#\9), .awsui_box_18wu0_oppu3_168.awsui_code-variant_18wu0_oppu3_168.awsui_font-size-default_18wu0_oppu3_184:not(#\9) {
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
 }
@@ -271,7 +271,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   margin-block-end: var(--space-key-value-gap-0517k5, 0px);
 }
 .awsui_box_18wu0_oppu3_168.awsui_gen-ai-label-variant_18wu0_oppu3_273:not(#\9) {
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
   font-style: italic;
@@ -317,7 +317,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   color: inherit;
 }
 .awsui_box_18wu0_oppu3_168.awsui_font-size-body-s_18wu0_oppu3_319:not(#\9) {
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
 }

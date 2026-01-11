@@ -237,7 +237,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
 
 .awsui_tags_1p2cx_1kqsc_237:not(#\9),
 .awsui_description_1p2cx_1kqsc_238:not(#\9) {
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
   color: var(--color-text-dropdown-item-secondary-xvh5zo, #656871);

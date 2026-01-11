@@ -283,7 +283,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
 .awsui_description_14mhv_1f26h_288:not(#\9),
 .awsui_constraint_14mhv_1f26h_289:not(#\9) {
   color: var(--color-text-form-secondary-54emib, #656871);
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
 }
@@ -311,7 +311,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
 
 .awsui_error_14mhv_1f26h_149:not(#\9) {
   color: var(--color-text-status-error-5676bj, #db0000);
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
   display: flex;
@@ -320,7 +320,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
 
 .awsui_warning_14mhv_1f26h_150:not(#\9) {
   color: var(--color-text-status-warning-csaw41, #855900);
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
   display: flex;

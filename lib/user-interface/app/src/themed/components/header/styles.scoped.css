@@ -360,7 +360,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   padding-block-end: var(--space-scaled-xxs-7597g1, 4px);
 }
 .awsui_description-variant-h3_2qdw9_iyu7q_361:not(#\9) {
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
 }

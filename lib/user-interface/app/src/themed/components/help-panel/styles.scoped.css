@@ -244,7 +244,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   padding-block: 0;
 }
 .awsui_help-panel_1d237_pu5s4_177 code:not(#\9) {
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
   font-family: var(--font-family-monospace-bftdwf, Monaco, Menlo, Consolas, "Courier Prime", Courier, "Courier New", monospace);
@@ -255,7 +255,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   white-space: pre-wrap;
 }
 .awsui_help-panel_1d237_pu5s4_177 pre:not(#\9) {
-  font-size: var(--font-size-body-s-asqx2i, 12px);
+  font-size: var(--font-size-body-s-asqx2i, 14px);
   line-height: var(--line-height-body-s-7zv1j5, 16px);
   letter-spacing: var(--letter-spacing-body-s-z9jkwp, 0.005em);
   font-family: var(--font-family-monospace-bftdwf, Monaco, Menlo, Consolas, "Courier Prime", Courier, "Courier New", monospace);
