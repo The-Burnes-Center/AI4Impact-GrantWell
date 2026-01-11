@@ -1,21 +1,16 @@
 import {
   SideNavigation,
   SideNavigationProps,
-  Header,
   Button,
   Link,
   Box,
   StatusIndicator,
   SpaceBetween,
-  ContentLayout,
-  Container,
-  Tabs,
-  Alert,
 } from "@cloudscape-design/components";
 import { useContext, useState, useEffect } from "react";
 import useOnFollow from "../common/hooks/use-on-follow";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../common/app-context";
 import PencilSquareIcon from "../../public/images/pencil-square.jsx";
 import RouterButton from "../components/wrappers/router-button";
@@ -25,9 +20,6 @@ import { v4 as uuidv4 } from "uuid";
 import { SessionRefreshContext } from "../common/session-refresh-context";
 import { useNotifications } from "../components/notif-manager";
 import { Utils } from "../common/utils.js";
-import DocumentsTab from "../pages/admin/documents-tab";
-import DataFileUpload from "../pages/admin/file-upload-tab";
-import { useSearchParams } from "react-router-dom";
 
 export default function NavigationPanel({
   documentIdentifier,
@@ -51,32 +43,9 @@ export default function NavigationPanel({
   const [loadingSessions, setLoadingSessions] = useState(false);
   const { addNotification, removeNotification } = useNotifications();
   const [activeHref, setActiveHref] = useState(window.location.pathname);
-  const [activeTab, setActiveTab] = useState("file");
-  const [lastSyncTime, setLastSyncTime] = useState("");
-  const [showUnsyncedAlert, setShowUnsyncedAlert] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
     identifier
   )}`;
-
-  // Check if the current user is an admin
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        const adminRole =
-          user?.signInUserSession?.idToken?.payload["custom:role"];
-        if (adminRole) {
-          const role = JSON.parse(adminRole);
-          setIsAdmin(role.includes("Admin"));
-        }
-      } catch (error) {
-        console.error("Error checking admin status:", error);
-      }
-    };
-
-    checkAdminStatus();
-  }, []);
 
   const loadSessions = async () => {
     let username;
@@ -174,15 +143,6 @@ export default function NavigationPanel({
         [sectionIndex]: !detail.expanded,
       },
     });
-  };
-
-  const refreshSyncTime = async () => {
-    try {
-      const lastSync = await apiClient.knowledgeManagement.lastKendraSync();
-      setLastSyncTime(lastSync);
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   return (
@@ -334,61 +294,6 @@ export default function NavigationPanel({
           </Box>
         </SpaceBetween>
       </Box>
-      <div
-        style={{
-          borderBottom: "1px solid #dedee2",
-          padding: "8px 0",
-          margin: "0 30px",
-        }}
-      >
-        <Box />
-      </div>
-
-      {/* File Upload section disabled */}
-      {false && (
-        <>
-          <Box margin="xs" padding={{ top: "l" }} textAlign="center">
-            <SpaceBetween size="xl">
-              <Box textAlign="right" margin={{ right: "l" }}>
-                <h2
-                  style={{ fontSize: "24px", display: "inline", color: "#14558F" }}
-                >
-                  File Upload
-                </h2>
-              </Box>
-            </SpaceBetween>
-          </Box>
-          <Box margin={{ horizontal: "l" }}>
-            <SpaceBetween size="l">
-              <DataFileUpload tabChangeFunction={() => setActiveTab("file")} />
-              {isAdmin && (
-                <Button
-                  variant="link"
-                  iconName={
-                    activeTab === "backend-controls" ? "caret-down" : "caret-up"
-                  }
-                  onClick={() =>
-                    setActiveTab(
-                      activeTab === "backend-controls" ? "" : "backend-controls"
-                    )
-                  }
-                >
-                  Manage Backend Files
-                </Button>
-              )}
-              {isAdmin && activeTab === "backend-controls" && (
-                <DocumentsTab
-                  tabChangeFunction={() => setActiveTab("add-data")}
-                  documentType="file"
-                  statusRefreshFunction={refreshSyncTime}
-                  lastSyncTime={lastSyncTime}
-                  setShowUnsyncedAlert={setShowUnsyncedAlert}
-                />
-              )}
-            </SpaceBetween>
-          </Box>
-        </>
-      )}
       <div
         style={{
           borderBottom: "1px solid #dedee2",

@@ -1,8 +1,6 @@
 import {
   Flashbar
 } from "@cloudscape-design/components";
-// import styles from "../styles/chat.module.scss";
-// import "../../styles/app.scss";
 import { useNotifications } from "./notif-manager";
 
 export default function NotificationBar() {
