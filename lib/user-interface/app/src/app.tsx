@@ -1,15 +1,10 @@
 import {
-  BrowserRouter,
   Outlet,
   Route,
   Routes,
   Navigate,
   useLocation,
 } from "react-router-dom";
-import { AppContext } from "./common/app-context";
-import BrandBanner from "./components/brand-banner";
-import MDSHeader from "./components/mds-header";
-import FooterComponent from "./components/footer";
 import Playground from "./pages/chatbot/playground/playground";
 import DataPage from "./pages/admin/data-view-page";
 import UserFeedbackPage from "./pages/admin/user-feedback-page";
@@ -20,8 +15,6 @@ import DocumentEditor from "./pages/document-editor";
 import DocEditorSessionsPage from "./pages/document-editor/doc-editor-sessions-page";
 import Dashboard from "./pages/Dashboard";
 import "./styles/app.scss";
-import { Mode } from "@cloudscape-design/global-styles";
-import { StorageHelper } from "./common/helpers/storage-helper";
 import { useEffect } from "react";
 
 function ScrollToTop() {
@@ -53,24 +46,14 @@ function ScrollToTop() {
 }
 
 function App() {
-  const Router = BrowserRouter;
-
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
+  return <AppContent />;
 }
 
 function AppContent() {
-  const location = useLocation();
-  const isPlaygroundPage = location.pathname.startsWith("/chatbot/playground");
-
   return (
     <>
       <ScrollToTop />
-      <BrandBanner />
-      <MDSHeader />
+      {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
       <main id="main-content" role="main" tabIndex={-1}>
         <Routes>
           <Route
@@ -116,7 +99,6 @@ function AppContent() {
           />
         </Routes>
       </main>
-      {!isPlaygroundPage && <FooterComponent />}
     </>
   );
 }
