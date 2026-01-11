@@ -3953,7 +3953,7 @@
           }
         },
         "font-family-base": {
-          "$value": "Open Sans"
+          "$value": "Noto Sans"
         },
         "font-family-monospace": {
           "$value": "Monaco, Menlo, Consolas, 'Courier Prime', Courier, 'Courier New', monospace"
@@ -6099,7 +6099,7 @@
           }
         },
         "font-family-base": {
-          "$value": "Open Sans"
+          "$value": "Noto Sans"
         },
         "font-family-monospace": {
           "$value": "Monaco, Menlo, Consolas, 'Courier Prime', Courier, 'Courier New', monospace"
@@ -8245,7 +8245,7 @@
           }
         },
         "font-family-base": {
-          "$value": "Open Sans"
+          "$value": "Noto Sans"
         },
         "font-family-monospace": {
           "$value": "Monaco, Menlo, Consolas, 'Courier Prime', Courier, 'Courier New', monospace"
@@ -10391,7 +10391,7 @@
           }
         },
         "font-family-base": {
-          "$value": "Open Sans"
+          "$value": "Noto Sans"
         },
         "font-family-monospace": {
           "$value": "Monaco, Menlo, Consolas, 'Courier Prime', Courier, 'Courier New', monospace"
@@ -12537,7 +12537,7 @@
           }
         },
         "font-family-base": {
-          "$value": "Open Sans"
+          "$value": "Noto Sans"
         },
         "font-family-monospace": {
           "$value": "Monaco, Menlo, Consolas, 'Courier Prime', Courier, 'Courier New', monospace"
@@ -14683,7 +14683,7 @@
           }
         },
         "font-family-base": {
-          "$value": "Open Sans"
+          "$value": "Noto Sans"
         },
         "font-family-monospace": {
           "$value": "Monaco, Menlo, Consolas, 'Courier Prime', Courier, 'Courier New', monospace"
@@ -16829,7 +16829,7 @@
           }
         },
         "font-family-base": {
-          "$value": "Open Sans"
+          "$value": "Noto Sans"
         },
         "font-family-monospace": {
           "$value": "Monaco, Menlo, Consolas, 'Courier Prime', Courier, 'Courier New', monospace"

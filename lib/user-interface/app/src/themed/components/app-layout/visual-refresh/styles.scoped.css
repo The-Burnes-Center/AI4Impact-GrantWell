@@ -237,7 +237,7 @@ div.awsui_background_hyvsj_1p3nl_145 > .awsui_scrolling-background_hyvsj_1p3nl_1
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   background-color: transparent;
@@ -1120,7 +1120,7 @@ handleSplitPanelMaxWidth function in the context.
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   box-sizing: border-box;
