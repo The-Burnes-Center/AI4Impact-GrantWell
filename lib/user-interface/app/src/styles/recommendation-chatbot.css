@@ -1,7 +1,7 @@
 .suggestion-chip {
   border-radius: 16px;
   padding: 4px 12px;
-  font-size: 0.875rem;
+  font-size: 14px;
   background-color: #EBF5FF;
   color: #14558F;
   transition: all 0.2s ease;
@@ -52,17 +52,17 @@
 }
 
 .grant-detail-label {
-  font-size: 0.8rem;
+  font-size: 14px;
   color: #6b737b;
 }
 
 .grant-detail-value {
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .grant-requirements {
-  font-size: 0.9rem;
+  font-size: 14px;
 }
 
 .grant-actions {

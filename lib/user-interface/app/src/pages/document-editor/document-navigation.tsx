@@ -212,7 +212,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
             <div
               style={{
                 padding: "0 16px 8px 16px",
-                fontSize: "12px",
+                fontSize: "14px",
                 fontWeight: 600,
                 color: "#e2e8f0",
                 textTransform: "uppercase",
@@ -398,7 +398,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
               <div
                 style={{
                   padding: "0 16px 8px 16px",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   fontWeight: 600,
                   color: "#a0aec0",
                   textTransform: "uppercase",

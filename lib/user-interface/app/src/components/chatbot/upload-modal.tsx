@@ -237,7 +237,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#14558F",
   },
   fileSize: {
-    fontSize: "12px",
+    fontSize: "14px",
     color: "#5a6169",
   },
   deleteButton: {
@@ -990,7 +990,7 @@ export default function UploadModal({
                       <p style={styles.fileName}>
                         {file.name}
                         {downloadingFile === file.name && (
-                          <span style={{ marginLeft: "8px", fontSize: "12px" }}>
+                          <span style={{ marginLeft: "8px", fontSize: "14px" }}>
                             (Preparing download...)
                           </span>
                         )}

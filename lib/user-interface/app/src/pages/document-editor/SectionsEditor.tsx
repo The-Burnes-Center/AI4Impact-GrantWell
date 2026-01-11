@@ -866,7 +866,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   alignItems: "center",
                   justifyContent: "center",
                   marginRight: "12px",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   fontWeight: 600,
                 }}
               >

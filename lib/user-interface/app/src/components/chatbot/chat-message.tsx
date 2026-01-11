@@ -297,7 +297,7 @@ export default function ChatMessage(props: ChatMessageProps) {
     color: "#067306",
     padding: "6px 12px",
     borderRadius: "4px",
-    fontSize: "13px",
+    fontSize: "14px",
     display: "inline-flex",
     alignItems: "center",
     gap: "6px",
@@ -482,7 +482,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                                 border: "none",
                                 cursor: "pointer",
                                 padding: "4px 8px",
-                                fontSize: "13px",
+                                fontSize: "14px",
                                 color: "#374151",
                                 fontWeight: 500,
                                 display: "inline-flex",
@@ -612,7 +612,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                     <div
                       style={{
                         position: "absolute",
-                        fontSize: "11px",
+                        fontSize: "14px",
                         color: "#059669",
                         fontWeight: "500",
                         whiteSpace: "nowrap",

@@ -449,7 +449,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                   </span>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 500 }}>{file.name}</div>
-                    <div style={{ fontSize: "12px", color: "#5a6575" }}>
+                    <div style={{ fontSize: "14px", color: "#5a6575" }}>
                       {formatFileSize(file.size)}
                     </div>
                   </div>

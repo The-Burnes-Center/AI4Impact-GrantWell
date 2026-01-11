@@ -681,7 +681,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   const pinnedBadgeStyle: React.CSSProperties = {
     display: "inline-block",
-    fontSize: "11px",
+    fontSize: "14px",
     backgroundColor: "#005a63",
     color: "white",
     padding: "2px 6px",
@@ -1451,7 +1451,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              fontSize: "13px",
+                              fontSize: "14px",
                               color: "#666",
                               cursor: "pointer",
                               padding: "4px 8px",
@@ -1512,7 +1512,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         {isExpanded && (
                           <div
                             style={{
-                              fontSize: "13px",
+                              fontSize: "14px",
                               color: "#666",
                               marginTop: "12px",
                               padding: "12px",
@@ -1527,7 +1527,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 style={{
                                   margin: "0 0 0 20px",
                                   padding: "0",
-                                  fontSize: "13px",
+                                  fontSize: "14px",
                                 }}
                               >
                                 {grant.keyRequirements.map((req, i) => (
@@ -1789,7 +1789,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 <span
                                   style={{
                                     display: "inline-block",
-                                    fontSize: "11px",
+                                    fontSize: "14px",
                                     backgroundColor: "#005a63",
                                     color: "white",
                                     padding: "3px 8px",

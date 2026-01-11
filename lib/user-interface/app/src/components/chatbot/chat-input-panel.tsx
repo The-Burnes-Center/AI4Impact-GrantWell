@@ -613,7 +613,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             color: "white",
             padding: "10px 18px",
             borderRadius: "12px",
-            fontSize: "13px",
+            fontSize: "14px",
             marginBottom: "12px",
             whiteSpace: "nowrap",
             boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)",

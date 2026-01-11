@@ -171,7 +171,7 @@ body {
 
 .header-cell {
   padding: 12px 16px;
-  font-size: 0.875rem;
+  font-size: 14px;
   color: #444;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -214,7 +214,7 @@ body {
   padding: 12px 16px;
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 14px;
 }
 
 .no-data {
@@ -247,7 +247,7 @@ body {
   align-items: center;
   padding: 6px 12px;
   border-radius: 25px;
-  font-size: 0.85rem;
+  font-size: 14px;
   font-weight: 600;
   text-transform: capitalize;
   transition: all 0.3s ease;
@@ -282,7 +282,7 @@ body {
 .pinned-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 0.75rem;
+  font-size: 14px;
   background-color: #f0f7ff;
   color: #14558F;
   padding: 3px 8px;
@@ -407,7 +407,7 @@ body {
 
 /* Expiry date styling */
 .expiry-date {
-  font-size: 0.9rem;
+  font-size: 14px;
   color: #333;
   font-weight: 400;
 }
@@ -420,7 +420,7 @@ body {
 
 /* Expiry date styling */
 .expiry-date {
-  font-size: 0.9rem;
+  font-size: 14px;
   color: #333;
   font-weight: 400;
 }
@@ -506,7 +506,7 @@ body {
 
 /* Field note */
 .field-note {
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
   margin-top: 6px;
   line-height: 1.4;
@@ -545,7 +545,7 @@ body {
 /* Custom dropdown arrow */
 .select-wrapper::after {
   content: "▼";
-  font-size: 10px;
+  font-size: 14px;
   color: #666;
   position: absolute;
   right: 12px;
@@ -888,7 +888,7 @@ select.form-input {
   border-radius: 50%;
   width: 18px;
   height: 18px;
-  font-size: 11px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -902,7 +902,7 @@ select.form-input {
   margin-bottom: 15px;
   margin-top: 5px;
   color: #666;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .breadcrumb-item {
@@ -1012,7 +1012,7 @@ select.form-input {
 .action-button.edit,
 .action-button.delete {
   padding: 6px 14px;
-  font-size: 0.85rem;
+  font-size: 14px;
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.2s ease;

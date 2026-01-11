@@ -109,7 +109,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "center",
     color: "#e2e8f0",
-    fontSize: "12px",
+    fontSize: "14px",
     fontWeight: 600,
     textTransform: "uppercase",
     letterSpacing: "0.5px",

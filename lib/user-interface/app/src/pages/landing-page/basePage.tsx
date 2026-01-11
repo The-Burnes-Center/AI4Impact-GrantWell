@@ -370,7 +370,7 @@ export default function Welcome() {
               {title}
             </h2>
           )}
-          <p style={{ fontSize: "13px", color: bodyTextColor }}>
+          <p style={{ fontSize: "14px", color: bodyTextColor }}>
             {description}
           </p>
         </div>
@@ -391,7 +391,7 @@ export default function Welcome() {
     const learnMoreLinkStyle: CSSProperties = {
       color: mainTextColor === "#ffffff" ? "#ffffff" : "#14558F",
       textDecoration: "underline",
-      fontSize: "13px",
+      fontSize: "14px",
       marginTop: "8px",
       display: "inline-block",
       cursor: "pointer",
@@ -1038,7 +1038,7 @@ export default function Welcome() {
                   <br />
                   <span
                     style={{
-                      fontSize: "13px",
+                      fontSize: "14px",
                       fontStyle: "italic",
                       color: "#666",
                     }}

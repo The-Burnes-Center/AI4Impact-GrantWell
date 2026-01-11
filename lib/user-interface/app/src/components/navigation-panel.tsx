@@ -246,14 +246,14 @@ export default function NavigationPanel({
             marginTop: "20px",
             margin: "0 10px",
             color: "#666871",
-            fontSize: "13px",
+            fontSize: "14px",
           }}
         >
           Navigate to the GrantWell chatbot, which will help you craft your
           project narrative.
         </div>
         <div>
-          <p style={{ fontSize: "13px", color: "#555", marginBottom: "0px" }}>
+          <p style={{ fontSize: "14px", color: "#555", marginBottom: "0px" }}>
             For guidance prompting the chatbot, please navigate to the below
             <br />
             <a

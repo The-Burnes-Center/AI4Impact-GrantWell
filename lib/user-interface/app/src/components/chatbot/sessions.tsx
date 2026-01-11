@@ -93,7 +93,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: "1px solid #e5e7eb",
     cursor: "pointer",
     userSelect: "none" as const,
-    fontSize: "12px",
+    fontSize: "14px",
     textTransform: "uppercase" as const,
     letterSpacing: "0.5px",
   },

@@ -445,7 +445,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="projectName-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -509,7 +509,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="organizationName-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -589,7 +589,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="requestedAmount-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -662,7 +662,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 id="location-help"
                 style={{
                   display: "block",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   color: "#5a6575",
                   marginTop: "4px",
                 }}
@@ -727,7 +727,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 id="zipCode-help"
                 style={{
                   display: "block",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   color: "#5a6575",
                   marginTop: "4px",
                 }}
@@ -792,7 +792,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="contactName-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -857,7 +857,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="contactEmail-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
