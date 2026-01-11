@@ -322,7 +322,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             onDrop={handleDrop}
             onClick={openFileSelector}
             style={{
-              border: `2px dashed ${isDragging ? "#2c4fdb" : "#e2e8f0"}`,
+              border: `2px dashed ${isDragging ? "#0088FF" : "#e2e8f0"}`,
               borderRadius: "8px",
               padding: "24px",
               textAlign: "center",
@@ -336,7 +336,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               style={{
                 width: "40px",
                 height: "40px",
-                stroke: isDragging ? "#2c4fdb" : "#3d4451",
+                stroke: isDragging ? "#0088FF" : "#3d4451",
                 fill: "none",
                 strokeWidth: 2,
                 strokeLinecap: "round",
@@ -349,7 +349,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <p style={{ marginBottom: "16px", color: isDragging ? "#2c4fdb" : "#3d4451" }}>
+            <p style={{ marginBottom: "16px", color: isDragging ? "#0088FF" : "#3d4451" }}>
               {isDragging
                 ? "Drop files here"
                 : "Drag and drop files here, or click to select"}
@@ -360,7 +360,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                 openFileSelector();
               }}
               style={{
-                background: "#2c4fdb",
+                background: "#14558F",
                 color: "white",
                 border: "none",
                 padding: "8px 16px",
@@ -401,7 +401,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                   style={{
                     width: `${uploadProgress}%`,
                     height: "100%",
-                    background: "#2c4fdb",
+                    background: "#14558F",
                     transition: "width 0.3s",
                   }}
                 />
@@ -545,7 +545,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             display: "flex",
             alignItems: "center",
             padding: "12px 24px",
-            background: isLoading ? "#a0aec0" : "#2c4fdb",
+            background: isLoading ? "#a0aec0" : "#14558F",
             color: "white",
             border: "none",
             borderRadius: "6px",

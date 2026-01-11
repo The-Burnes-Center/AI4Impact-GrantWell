@@ -86,7 +86,7 @@ const styles: Record<string, React.CSSProperties> = {
     zIndex: 100,
     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
     borderRadius: "12px",
-    borderTop: "3px solid #0073bb",
+    borderTop: "3px solid #14558F",
   },
   // Modal Styles
   modalOverlay: {
@@ -379,7 +379,7 @@ export default function Chat(props: {
                 aria-label="Close welcome dialog"
                 onFocus={(e) => {
                   e.currentTarget.style.background = "#ffffff";
-                  e.currentTarget.style.color = "#0073bb";
+                  e.currentTarget.style.color = "#14558F";
                   e.currentTarget.style.outline = "2px solid #ffffff";
                   e.currentTarget.style.outlineOffset = "2px";
                 }}

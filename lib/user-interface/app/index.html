@@ -8,16 +8,6 @@
       href="https://unpkg.com/@massds/mayflower-assets@14.1.0/static/images/logo/stateseal.png"
       type="image/png"
     />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: light)"
-      content="#ffffff"
-    />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: dark)"
-      content="#0e1b2a"
-    />
     <meta name="description" content="GrantWell: AI Grants Assistant" />
     <link rel="manifest" href="/manifest.json" />
     <link
@@ -49,7 +39,6 @@
     <script>
       const global = window.global || window;
 
-      // Add state seal to document title area after page loads
       window.addEventListener("DOMContentLoaded", () => {
         const headerTitle = document.querySelector(
           "header h1, header div, .app-title"

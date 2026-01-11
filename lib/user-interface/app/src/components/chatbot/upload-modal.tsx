@@ -143,8 +143,8 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: "2px solid transparent",
   },
   activeTab: {
-    borderBottom: "2px solid #0073bb",
-    color: "#0073bb",
+    borderBottom: "2px solid #14558F",
+    color: "#14558F",
     fontWeight: 500,
   },
   dropZone: {
@@ -157,7 +157,7 @@ const styles: Record<string, React.CSSProperties> = {
     transition: "border-color 0.3s, background-color 0.3s",
   },
   dragActive: {
-    borderColor: "#0073bb",
+    borderColor: "#14558F",
     backgroundColor: "rgba(0, 115, 187, 0.05)",
   },
   uploadIcon: {
@@ -175,7 +175,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#5a6169",
   },
   browseLink: {
-    color: "#0073bb",
+    color: "#14558F",
     textDecoration: "underline",
     cursor: "pointer",
   },
@@ -194,7 +194,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   progressFill: {
     height: "100%",
-    backgroundColor: "#0073bb",
+    backgroundColor: "#14558F",
     transition: "width 0.3s ease",
   },
   progressText: {
@@ -234,7 +234,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500,
     marginBottom: "4px",
     wordBreak: "break-all",
-    color: "#0073bb",
+    color: "#14558F",
   },
   fileSize: {
     fontSize: "12px",
@@ -259,7 +259,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: "8px",
   },
   uploadButton: {
-    backgroundColor: "#0073bb",
+    backgroundColor: "#14558F",
     color: "white",
     border: "none",
     borderRadius: "6px",
@@ -299,7 +299,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid #d1d5db",
   },
   confirmButton: {
-    backgroundColor: "#0073bb",
+    backgroundColor: "#14558F",
     color: "white",
     border: "none",
   },
@@ -311,7 +311,7 @@ const styles: Record<string, React.CSSProperties> = {
   refreshButton: {
     background: "none",
     border: "none",
-    color: "#0073bb",
+    color: "#14558F",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -327,7 +327,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   spinner: {
     border: "4px solid rgba(0, 0, 0, 0.1)",
-    borderTop: "4px solid #0073bb",
+    borderTop: "4px solid #14558F",
     borderRadius: "50%",
     width: "30px",
     height: "30px",
@@ -336,7 +336,7 @@ const styles: Record<string, React.CSSProperties> = {
   downloadButton: {
     background: "none",
     border: "none",
-    color: "#0073bb",
+    color: "#14558F",
     cursor: "pointer",
     padding: "8px",
     borderRadius: "4px",
@@ -843,7 +843,7 @@ export default function UploadModal({
                     width: "100%",
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.outline = "2px solid #2c4fdb";
+                    e.currentTarget.style.outline = "2px solid #0088FF";
                     e.currentTarget.style.outlineOffset = "2px";
                     e.currentTarget.style.backgroundColor = "#f0f7ff";
                   }}
@@ -1017,7 +1017,7 @@ export default function UploadModal({
                           style={{
                             width: "16px",
                             height: "16px",
-                            border: "2px solid #0073bb",
+                            border: "2px solid #14558F",
                             borderTopColor: "transparent",
                             borderRadius: "50%",
                             animation: "spin 1s linear infinite",

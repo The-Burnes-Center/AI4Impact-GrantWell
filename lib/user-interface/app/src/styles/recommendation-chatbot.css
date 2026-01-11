@@ -3,7 +3,7 @@
   padding: 4px 12px;
   font-size: 0.875rem;
   background-color: #EBF5FF;
-  color: #0073BB;
+  color: #14558F;
   transition: all 0.2s ease;
   margin: 4px;
   border: 1px solid #D1E4F5;
@@ -39,7 +39,7 @@
 .grant-title {
   font-weight: bold;
   font-size: 1rem;
-  color: #006499;
+  color: #14558F;
 }
 
 .grant-match {
@@ -79,7 +79,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #0073BB;
+  background-color: #14558F;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,11 +92,11 @@
 
 .chatbot-float-button:hover {
   transform: scale(1.05);
-  background-color: #005A94;
+  background-color: #104472;
 }
 
 .chatbot-float-button:focus {
-  outline: 2px solid #0073bb;
+  outline: 2px solid #0088FF;
   outline-offset: 2px;
   box-shadow: 0 0 0 3px rgba(0, 115, 187, 0.3), 0 4px 8px rgba(0,0,0,0.2);
 }

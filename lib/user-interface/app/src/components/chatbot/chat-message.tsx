@@ -140,7 +140,7 @@ export default function ChatMessage(props: ChatMessageProps) {
     fontWeight: "600",
     flexShrink: 0,
     backgroundColor:
-      props.message?.type === ChatBotMessageType.Human ? "#004d7a" : "#0073bb",
+      props.message?.type === ChatBotMessageType.Human ? "#0A2B48" : "#14558F",
     color: "white",
   };
 
@@ -186,7 +186,7 @@ export default function ChatMessage(props: ChatMessageProps) {
         ? "18px 18px 4px 18px"
         : "18px 18px 18px 4px",
     backgroundColor:
-      props.message?.type === ChatBotMessageType.Human ? "#0073bb" : "#e8eef1",
+      props.message?.type === ChatBotMessageType.Human ? "#14558F" : "#e8eef1",
     color:
       props.message?.type === ChatBotMessageType.Human ? "white" : "#2d3748",
     wordWrap: "break-word" as const,
@@ -223,7 +223,7 @@ export default function ChatMessage(props: ChatMessageProps) {
 
   const dropdownButtonStyle = {
     padding: "8px 12px",
-    backgroundColor: "#006499",
+    backgroundColor: "#14558F",
     color: "white",
     border: "none",
     borderRadius: "4px",
@@ -288,7 +288,7 @@ export default function ChatMessage(props: ChatMessageProps) {
     height: "20px",
     border: "3px solid rgba(0, 0, 0, 0.1)",
     borderRadius: "50%",
-    borderTopColor: "#006499",
+    borderTopColor: "#14558F",
     animation: "spin 1s linear infinite",
   };
 
@@ -496,7 +496,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                               onMouseEnter={(e) => {
                                 e.currentTarget.style.backgroundColor =
                                   "#f3f4f6";
-                                e.currentTarget.style.color = "#0073bb";
+                                e.currentTarget.style.color = "#14558F";
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.backgroundColor =
@@ -549,7 +549,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                                               : "transparent",
                                           outline:
                                             selectedMenuItemIndex === index
-                                              ? "2px solid #0073bb"
+                                              ? "2px solid #14558F"
                                               : "none",
                                           outlineOffset: "2px",
                                           cursor: "default",
@@ -586,7 +586,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                     onClick={handleCopy}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = "#f3f4f6";
-                      e.currentTarget.style.color = "#0073bb";
+                      e.currentTarget.style.color = "#14558F";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = "transparent";
@@ -594,8 +594,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                     }}
                     onFocus={(e) => {
                       e.currentTarget.style.backgroundColor = "#f3f4f6";
-                      e.currentTarget.style.color = "#0073bb";
-                      e.currentTarget.style.outline = "2px solid #2c4fdb";
+                      e.currentTarget.style.color = "#14558F";
+                      e.currentTarget.style.outline = "2px solid #0088FF";
                       e.currentTarget.style.outlineOffset = "2px";
                     }}
                     onBlur={(e) => {

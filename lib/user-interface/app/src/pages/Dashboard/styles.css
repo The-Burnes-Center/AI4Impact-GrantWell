@@ -30,7 +30,7 @@ body {
 }
 
 .dashboard-header h1 {
-  color: #006499;
+  color: #14558F;
   margin: 0;
   font-size: 24px;
   font-weight: 600;
@@ -42,7 +42,7 @@ body {
 }
 
 .upload-button {
-  background-color: #006499;
+  background-color: #14558F;
   color: white;
   border: none;
   border-radius: 25px;
@@ -53,7 +53,7 @@ body {
 }
 
 .upload-button:hover {
-  background-color: #005d94;
+  background-color: #104472;
 }
 
 /* Tab controls */
@@ -75,8 +75,8 @@ body {
 }
 
 .tab-button.active {
-  color: #0073bb;
-  border-bottom: 3px solid #0073bb;
+  color: #14558F;
+  border-bottom: 3px solid #14558F;
   font-weight: 500;
 }
 
@@ -108,7 +108,7 @@ body {
 
 .search-input:focus {
   outline: none;
-  border-color: #0073bb;
+  border-color: #14558F;
   box-shadow: 0 2px 8px rgba(0, 115, 187, 0.1);
 }
 
@@ -142,11 +142,11 @@ body {
 
 .filter-button.active {
   background-color: #e6f2fa;
-  border-color: #0073bb;
+  border-color: #14558F;
 }
 
 .filter-button.active svg path {
-  fill: #0073bb;
+  fill: #14558F;
 }
 
 /* Table container styles */
@@ -284,7 +284,7 @@ body {
   align-items: center;
   font-size: 0.75rem;
   background-color: #f0f7ff;
-  color: #0073bb;
+  color: #14558F;
   padding: 3px 8px;
   border-radius: 12px;
   margin-left: 8px;
@@ -312,7 +312,7 @@ body {
 
 .action-button.pin:hover {
   background-color: #e8f4ff;
-  color: #0073bb;
+  color: #14558F;
   transform: translateY(-2px);
 }
 
@@ -454,7 +454,7 @@ body {
   gap: 8px;
   padding: 10px 15px;
   background-color: #f0f7ff;
-  color: #0073bb;
+  color: #14558F;
   border: 1px solid #d0e8ff;
   border-radius: 6px;
   font-weight: 500;
@@ -480,7 +480,7 @@ body {
 }
 
 .file-icon {
-  color: #0073bb;
+  color: #14558F;
 }
 
 /* Info box styling */
@@ -499,7 +499,7 @@ body {
 }
 
 .info-icon {
-  color: #0073bb;
+  color: #14558F;
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -611,7 +611,7 @@ body {
 
 .modal-header h2 {
   margin: 0;
-  color: #0073bb;
+  color: #14558F;
   font-size: 20px;
   font-weight: 600;
 }
@@ -672,7 +672,7 @@ select.form-input {
 
 .form-input:focus {
   outline: none;
-  border-color: #0073bb;
+  border-color: #14558F;
   box-shadow: 0 0 0 3px rgba(0, 115, 187, 0.1);
 }
 
@@ -694,13 +694,13 @@ select.form-input {
 }
 
 .modal-button.primary {
-  background-color: #0073bb;
+  background-color: #14558F;
   color: white;
   box-shadow: 0 2px 5px rgba(0, 115, 187, 0.3);
 }
 
 .modal-button.primary:hover {
-  background-color: #005d94;
+  background-color: #104472;
   box-shadow: 0 4px 8px rgba(0, 115, 187, 0.4);
   transform: translateY(-2px);
 }
@@ -755,7 +755,7 @@ select.form-input {
   align-items: center;
   height: 100vh;
   font-size: 18px;
-  color: #0073bb;
+  color: #14558F;
   flex-direction: column;
   gap: 15px;
 }
@@ -765,7 +765,7 @@ select.form-input {
   width: 40px;
   height: 40px;
   border: 3px solid #e0e0e0;
-  border-top-color: #0073bb;
+  border-top-color: #14558F;
   border-radius: 50%;
   animation: loading-spin 1s linear infinite;
 }
@@ -785,13 +785,13 @@ select.form-input {
 }
 
 .pinned-grants-header h2 {
-  color: #006499;
+  color: #14558F;
   margin: 0;
   font-size: 20px;
 }
 
 .add-grant-button {
-  background-color: #006499;
+  background-color: #14558F;
   color: white;
   border: none;
   border-radius: 4px;
@@ -802,7 +802,7 @@ select.form-input {
 }
 
 .add-grant-button:hover {
-  background-color: #005d94;
+  background-color: #104472;
 }
 
 /* Filter menu styles */
@@ -864,7 +864,7 @@ select.form-input {
 .filter-option.selected {
   background-color: #f0f7ff;
   font-weight: 500;
-  color: #0073bb;
+  color: #14558F;
 }
 
 .filter-option-content {
@@ -875,7 +875,7 @@ select.form-input {
 .filter-option-check {
   width: 20px;
   margin-right: 8px;
-  color: #0073bb;
+  color: #14558F;
   font-weight: bold;
 }
 
@@ -883,7 +883,7 @@ select.form-input {
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: #0073bb;
+  background-color: #14558F;
   color: white;
   border-radius: 50%;
   width: 18px;
@@ -923,13 +923,13 @@ select.form-input {
 }
 
 .breadcrumb-link {
-  color: #0073bb;
+  color: #14558F;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .breadcrumb-link:hover {
-  color: #005d94;
+  color: #104472;
   text-decoration: underline;
 }
 
@@ -981,9 +981,9 @@ select.form-input {
 }
 
 .pagination-button.active {
-  background-color: #0073bb;
+  background-color: #14558F;
   color: white;
-  border-color: #0073bb;
+  border-color: #14558F;
 }
 
 .items-per-page {
@@ -1005,7 +1005,7 @@ select.form-input {
 }
 
 .items-per-page select:hover {
-  border-color: #0073bb;
+  border-color: #14558F;
 }
 
 /* Edit and Delete button styles */
@@ -1023,7 +1023,7 @@ select.form-input {
 
 .action-button.edit {
   background-color: #f0f7ff;
-  color: #0073bb;
+  color: #14558F;
 }
 
 .action-button.edit:hover {
@@ -1163,13 +1163,13 @@ select.form-input {
 }
 
 .action-button.invite-button:focus {
-  outline: 2px solid #2c4fdb;
+  outline: 2px solid #0088FF;
   outline-offset: 2px;
 }
 
 /* Add Grant Button - Teal/Blue */
 .action-button.add-button {
-  background-color: #0073bb;
+  background-color: #14558F;
 }
 
 .action-button.add-button:hover:not(:disabled) {
@@ -1179,7 +1179,7 @@ select.form-input {
 }
 
 .action-button.add-button:focus {
-  outline: 2px solid #2c4fdb;
+  outline: 2px solid #0088FF;
   outline-offset: 2px;
 }
 
@@ -1195,7 +1195,7 @@ select.form-input {
 }
 
 .action-button.scraper-button:focus {
-  outline: 2px solid #2c4fdb;
+  outline: 2px solid #0088FF;
   outline-offset: 2px;
 }
 
@@ -1233,7 +1233,7 @@ select.form-input {
   gap: 8px;
   padding: 10px 16px;
   background-color: #f0f7ff;
-  color: #0073bb;
+  color: #14558F;
   border: 1px solid #d0e8ff;
   border-radius: 25px;
   font-weight: 500;
@@ -1271,7 +1271,7 @@ select.form-input {
   width: 16px;
   height: 16px;
   border: 2px solid #d0e8ff;
-  border-top-color: #0073bb;
+  border-top-color: #14558F;
   border-radius: 50%;
   animation: refresh-spin 1s linear infinite;
 }
@@ -1302,7 +1302,7 @@ select.form-input {
   width: 100%;
   height: 100%;
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #0073bb;
+  border-top: 3px solid #14558F;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

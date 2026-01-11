@@ -159,7 +159,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
           style={{
             marginTop: "16px",
             padding: "8px 16px",
-            background: "#2c4fdb",
+            background: "#14558F",
             color: "white",
             border: "none",
             borderRadius: "4px",
@@ -390,7 +390,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
             display: "flex",
             alignItems: "center",
             padding: "12px 24px",
-            background: "#2c4fdb",
+            background: "#14558F",
             color: "white",
             border: "none",
             borderRadius: "6px",

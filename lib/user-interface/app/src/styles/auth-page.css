@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0972d3;
+  background-color: #14558F;
   padding: 20px;
 }
 
@@ -38,7 +38,7 @@
   margin: 0;
   font-size: 24px;
   font-weight: 500;
-  color: #0972d3;
+  color: #14558F;
 }
 
 .auth-page-title {
@@ -91,8 +91,8 @@
 
 .login-form-footer button {
   width: auto;
-  border: 1px solid #0972d3;
-  color: #0972d3;
+  border: 1px solid #14558F;
+  color: #14558F;
   background-color: white;
 }
 

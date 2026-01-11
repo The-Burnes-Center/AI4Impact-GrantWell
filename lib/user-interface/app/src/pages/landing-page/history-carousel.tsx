@@ -31,7 +31,7 @@ const HistoryCarousel: React.FC<HistoryCarouselProps> = ({ onNOFOSelect }) => {
   const buttonStyles = {
     background: "none",
     border: "none",
-    color: "#0073bb",
+    color: "#14558F",
     padding: "8px 12px",
     fontSize: "14px",
     textAlign: "left" as const,

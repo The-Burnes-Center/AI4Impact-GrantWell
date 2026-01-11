@@ -173,7 +173,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             style={{
               width: "24px",
               height: "24px",
-              stroke: "#2c4fdb",
+              stroke: "#0088FF",
               fill: "none",
               strokeWidth: 2,
               strokeLinecap: "round",

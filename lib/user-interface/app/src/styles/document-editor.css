@@ -120,12 +120,12 @@
 }
 
 .primary-btn {
-  background-color: #0073bb;
+  background-color: #14558F;
   color: white;
 }
 
 .primary-btn:hover {
-  background-color: #005a93;
+  background-color: #104472;
 }
 
 /* Section navigation */
@@ -145,6 +145,6 @@
 }
 
 .document-section-item.active {
-  background: #0073bb;
+  background: #14558F;
   color: white;
 }

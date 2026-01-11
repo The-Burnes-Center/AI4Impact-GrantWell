@@ -508,7 +508,7 @@ const DocumentEditor: React.FC = () => {
           onClick={() => window.location.reload()}
           style={{
             padding: "8px 16px",
-            background: "#2c4fdb",
+            background: "#0088FF",
             color: "white",
             border: "none",
             borderRadius: "4px",
@@ -632,10 +632,10 @@ const DocumentEditor: React.FC = () => {
                   height: "32px",
                   color: "#e2e8f0",
                   "&.Mui-active": {
-                    color: "#2c4fdb",
+                    color: "#0088FF",
                   },
                   "&.Mui-completed": {
-                    color: "#2c4fdb",
+                    color: "#0088FF",
                   },
                 },
               },
@@ -668,7 +668,7 @@ const DocumentEditor: React.FC = () => {
                     width: "40px",
                     height: "40px",
                     border: "4px solid #f3f4f6",
-                    borderTopColor: "#2c4fdb",
+                    borderTopColor: "#0088FF",
                     borderRadius: "50%",
                     animation: "spin 1s linear infinite",
                     margin: "0 auto 16px",
@@ -700,7 +700,7 @@ const DocumentEditor: React.FC = () => {
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
           <h3
             style={{
-              color: "#0073bb",
+              color: "#14558F",
               fontSize: "20px",
               fontWeight: "600",
               margin: "0 0 16px",
@@ -734,7 +734,7 @@ const DocumentEditor: React.FC = () => {
           >
             <div
               style={{
-                backgroundColor: "#0073bb",
+                backgroundColor: "#14558F",
                 color: "white",
                 borderRadius: "50%",
                 width: "36px",
@@ -784,7 +784,7 @@ const DocumentEditor: React.FC = () => {
           >
             <div
               style={{
-                backgroundColor: "#0073bb",
+                backgroundColor: "#14558F",
                 color: "white",
                 borderRadius: "50%",
                 width: "36px",
@@ -833,7 +833,7 @@ const DocumentEditor: React.FC = () => {
           >
             <div
               style={{
-                backgroundColor: "#0073bb",
+                backgroundColor: "#14558F",
                 color: "white",
                 borderRadius: "50%",
                 width: "36px",
@@ -889,7 +889,7 @@ const DocumentEditor: React.FC = () => {
             style={{
               width: "100%",
               padding: "14px 24px",
-              background: "linear-gradient(135deg, #0073bb 0%, #005d96 100%)",
+              background: "linear-gradient(135deg, #14558F 0%, #0A2B48 100%)",
               color: "white",
               border: "none",
               borderRadius: "12px",
@@ -909,7 +909,7 @@ const DocumentEditor: React.FC = () => {
               e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 115, 187, 0.2)";
             }}
             onFocus={(e) => {
-              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outline = "2px solid #0088FF";
               e.currentTarget.style.outlineOffset = "2px";
             }}
             onBlur={(e) => {
@@ -929,8 +929,8 @@ const DocumentEditor: React.FC = () => {
               width: "100%",
               padding: "14px 24px",
               backgroundColor: "white",
-              color: "#0073bb",
-              border: "2px solid #0073bb",
+              color: "#14558F",
+              border: "2px solid #14558F",
               borderRadius: "12px",
               fontSize: "16px",
               fontWeight: 600,
@@ -945,7 +945,7 @@ const DocumentEditor: React.FC = () => {
               e.currentTarget.style.backgroundColor = "white";
             }}
             onFocus={(e) => {
-              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outline = "2px solid #0088FF";
               e.currentTarget.style.outlineOffset = "2px";
             }}
             onBlur={(e) => {

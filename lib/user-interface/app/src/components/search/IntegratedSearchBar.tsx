@@ -380,7 +380,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   };
 
   const assistantSubmitButtonStyle: React.CSSProperties = {
-    backgroundColor: "#0073BB",
+    backgroundColor: "#14558F",
     color: "white",
     border: "none",
     borderRadius: "20px",
@@ -398,7 +398,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const assistantButtonStyle: React.CSSProperties = {
     display: "inline-block",
     padding: "8px 15px",
-    backgroundColor: "#0073BB",
+    backgroundColor: "#14558F",
     color: "white",
     borderRadius: "20px",
     fontSize: "14px",
@@ -427,7 +427,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const grantCardTitleStyle: React.CSSProperties = {
     fontSize: "16px",
     fontWeight: "bold",
-    color: "#006499",
+    color: "#14558F",
   };
 
   // Helper function to normalize grant name
@@ -649,7 +649,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const selectedItemStyle: React.CSSProperties = {
     ...resultItemStyle,
     backgroundColor: "#f0f7ff",
-    borderLeft: "3px solid #0073bb",
+    borderLeft: "3px solid #14558F",
   };
 
   const pinnedItemStyle: React.CSSProperties = {
@@ -661,7 +661,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const selectedPinnedItemStyle: React.CSSProperties = {
     ...pinnedItemStyle,
     backgroundColor: "#e0f7f7",
-    borderLeft: "3px solid #0073bb",
+    borderLeft: "3px solid #14558F",
   };
 
   const sectionHeaderStyle: React.CSSProperties = {
@@ -737,18 +737,18 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       style={assistantButtonStyle}
       onClick={() => openRecommendationAssistant(query)}
       onMouseOver={(e) => {
-        e.currentTarget.style.backgroundColor = "#005A94";
+        e.currentTarget.style.backgroundColor = "#104472";
       }}
       onMouseOut={(e) => {
-        e.currentTarget.style.backgroundColor = "#0073BB";
+        e.currentTarget.style.backgroundColor = "#14558F";
       }}
       onFocus={(e) => {
-        e.currentTarget.style.backgroundColor = "#005A94";
-        e.currentTarget.style.outline = "2px solid #2c4fdb";
+        e.currentTarget.style.backgroundColor = "#104472";
+        e.currentTarget.style.outline = "2px solid #0088FF";
         e.currentTarget.style.outlineOffset = "2px";
       }}
       onBlur={(e) => {
-        e.currentTarget.style.backgroundColor = "#0073BB";
+        e.currentTarget.style.backgroundColor = "#14558F";
         e.currentTarget.style.outline = "none";
         e.currentTarget.style.outlineOffset = "0";
       }}
@@ -796,23 +796,23 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     <button
       style={{
         ...assistantButtonStyle,
-        backgroundColor: "#006499",
+        backgroundColor: "#14558F",
         marginLeft: "8px",
       }}
       onClick={() => setShowViewAllModal(true)}
       onMouseOver={(e) => {
-        e.currentTarget.style.backgroundColor = "#005080";
+        e.currentTarget.style.backgroundColor = "#104472";
       }}
       onMouseOut={(e) => {
-        e.currentTarget.style.backgroundColor = "#006499";
+        e.currentTarget.style.backgroundColor = "#14558F";
       }}
       onFocus={(e) => {
-        e.currentTarget.style.backgroundColor = "#005080";
-        e.currentTarget.style.outline = "2px solid #2c4fdb";
+        e.currentTarget.style.backgroundColor = "#104472";
+        e.currentTarget.style.outline = "2px solid #0088FF";
         e.currentTarget.style.outlineOffset = "2px";
       }}
       onBlur={(e) => {
-        e.currentTarget.style.backgroundColor = "#006499";
+        e.currentTarget.style.backgroundColor = "#14558F";
         e.currentTarget.style.outline = "none";
         e.currentTarget.style.outlineOffset = "0";
       }}
@@ -858,7 +858,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       </label>
       <div style={inputContainerStyle}>
         <div style={searchIconStyle}>
-          <SearchIcon color="#0073BB" />
+          <SearchIcon color="#14558F" />
         </div>
         <input
           id="grant-search-input"
@@ -998,7 +998,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   borderRadius: "12px",
                   padding: "20px 24px",
                   margin: "15px 0",
-                  border: "2px solid #0073BB",
+                  border: "2px solid #14558F",
                   boxShadow: "0 2px 8px rgba(0, 115, 187, 0.1)",
                   textAlign: "left",
                 }}
@@ -1084,7 +1084,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     }}
                     onFocus={(e) => {
                       setSelectedIndex(index);
-                      e.currentTarget.style.outline = "2px solid #2c4fdb";
+                      e.currentTarget.style.outline = "2px solid #0088FF";
                       e.currentTarget.style.outlineOffset = "2px";
                     }}
                     onBlur={(e) => {
@@ -1126,7 +1126,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.backgroundColor = "#f8e0e0";
-                          e.currentTarget.style.outline = "2px solid #2c4fdb";
+                          e.currentTarget.style.outline = "2px solid #0088FF";
                           e.currentTarget.style.outlineOffset = "2px";
                         }}
                         onBlur={(e) => {
@@ -1187,7 +1187,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                       }}
                       onFocus={(e) => {
                         setSelectedIndex(index + filteredPinnedGrants.length);
-                        e.currentTarget.style.outline = "2px solid #2c4fdb";
+                        e.currentTarget.style.outline = "2px solid #0088FF";
                         e.currentTarget.style.outlineOffset = "2px";
                       }}
                       onBlur={(e) => {
@@ -1231,7 +1231,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 e.currentTarget.style.backgroundColor =
                                   "#f8e0e0";
                               e.currentTarget.style.outline =
-                                "2px solid #2c4fdb";
+                                "2px solid #0088FF";
                               e.currentTarget.style.outlineOffset = "2px";
                             }}
                             onBlur={(e) => {
@@ -1275,7 +1275,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 e.currentTarget.style.backgroundColor =
                                   "#e0f0ff";
                               e.currentTarget.style.outline =
-                                "2px solid #2c4fdb";
+                                "2px solid #0088FF";
                               e.currentTarget.style.outlineOffset = "2px";
                             }}
                             onBlur={(e) => {
@@ -1285,7 +1285,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               e.currentTarget.style.outlineOffset = "0";
                             }}
                           >
-                            <LuPin size={20} color="#0073BB" />
+                            <LuPin size={20} color="#14558F" />
                           </button>
                         )}
                       </div>
@@ -1337,7 +1337,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           />
           <div style={assistantContainerStyle}>
             <div style={assistantHeaderStyle}>
-              <h2 style={{ margin: 0, fontSize: "16px", color: "#0073BB" }}>
+              <h2 style={{ margin: 0, fontSize: "16px", color: "#14558F" }}>
                 Describe Your Grant Needs
               </h2>
               <button
@@ -1421,7 +1421,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                             }
                             onFocus={(e) => {
                               e.currentTarget.style.outline =
-                                "2px solid #2c4fdb";
+                                "2px solid #0088FF";
                               e.currentTarget.style.outlineOffset = "2px";
                             }}
                             onBlur={(e) => {
@@ -1472,7 +1472,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                             }}
                             onMouseOver={(e) => {
                               e.currentTarget.style.backgroundColor = "#e0f0ff";
-                              e.currentTarget.style.color = "#0073BB";
+                              e.currentTarget.style.color = "#14558F";
                             }}
                             onMouseOut={(e) => {
                               e.currentTarget.style.backgroundColor = "#f5f5f5";
@@ -1480,9 +1480,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                             }}
                             onFocus={(e) => {
                               e.currentTarget.style.backgroundColor = "#e0f0ff";
-                              e.currentTarget.style.color = "#0073BB";
+                              e.currentTarget.style.color = "#14558F";
                               e.currentTarget.style.outline =
-                                "2px solid #2c4fdb";
+                                "2px solid #0088FF";
                               e.currentTarget.style.outlineOffset = "2px";
                             }}
                             onBlur={(e) => {
@@ -1623,7 +1623,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 style={{
                   margin: 0,
                   fontSize: "24px",
-                  color: "#006499",
+                  color: "#14558F",
                   fontWeight: "600",
                 }}
               >
@@ -1654,7 +1654,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                 }}
                 onFocus={(e) => {
                   e.currentTarget.style.backgroundColor = "#f0f0f0";
-                  e.currentTarget.style.outline = "2px solid #2c4fdb";
+                  e.currentTarget.style.outline = "2px solid #0088FF";
                   e.currentTarget.style.outlineOffset = "2px";
                 }}
                 onBlur={(e) => {
@@ -1691,7 +1691,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                       <h3
                         style={{
                           fontSize: "18px",
-                          color: "#006499",
+                          color: "#14558F",
                           marginBottom: "16px",
                           display: "flex",
                           alignItems: "center",
@@ -1767,7 +1767,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 e.currentTarget.style.backgroundColor =
                                   "#f0ffff";
                                 e.currentTarget.style.outline =
-                                  "2px solid #2c4fdb";
+                                  "2px solid #0088FF";
                                 e.currentTarget.style.outlineOffset = "2px";
                               }}
                               onBlur={(e) => {
@@ -1779,7 +1779,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               <div
                                 style={{
                                   fontSize: "15px",
-                                  color: "#006499",
+                                  color: "#14558F",
                                   display: "flex",
                                   alignItems: "center",
                                   gap: "10px",
@@ -1864,7 +1864,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 e.currentTarget.style.backgroundColor =
                                   "#f7faff";
                                 e.currentTarget.style.outline =
-                                  "2px solid #2c4fdb";
+                                  "2px solid #0088FF";
                                 e.currentTarget.style.outlineOffset = "2px";
                               }}
                               onBlur={(e) => {
@@ -1876,7 +1876,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               <div
                                 style={{
                                   fontSize: "15px",
-                                  color: "#0073BB",
+                                  color: "#14558F",
                                 }}
                               >
                                 {doc.label}

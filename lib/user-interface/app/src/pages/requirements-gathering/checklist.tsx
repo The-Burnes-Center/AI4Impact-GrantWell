@@ -44,12 +44,12 @@ interface TabProps {
 // Theme
 const THEME = {
   colors: {
-    primary: "#0972d3",
-    primaryHover: "#0561b8",
+    primary: "#14558F",
+    primaryHover: "#104472",
     primaryLight: "#f2f8fd",
     text: "#333",
     textSecondary: "#444",
-    accent: "#006499",
+    accent: "#14558F",
     heading: "#0a2e52",
     border: "#ddd",
     white: "#ffffff",
@@ -58,7 +58,7 @@ const THEME = {
     successLight: "#eafaf1",
     warning: "#cc7700",
     warningLight: "#fff8ec",
-    info: "#0073bb",
+    info: "#14558F",
     infoLight: "#e6f7ff",
     gray: "#eaeaea",
   },
@@ -480,7 +480,7 @@ const Tab: React.FC<TabProps> = ({ id, activeId, onClick, children, icon }) => {
       }}
       onClick={() => onClick(id)}
       onFocus={(e) => {
-        e.currentTarget.style.outline = "2px solid #2c4fdb";
+        e.currentTarget.style.outline = "2px solid #0088FF";
         e.currentTarget.style.outlineOffset = "2px";
       }}
       onBlur={(e) => {
@@ -951,7 +951,7 @@ const Checklists: React.FC = () => {
                 <p
                   style={{
                     fontSize: "14px",
-                    color: "#0073BB",
+                    color: "#14558F",
                     margin: 0,
                     lineHeight: "1.5",
                   }}
@@ -1187,7 +1187,7 @@ const Checklists: React.FC = () => {
               {/* Header */}
               <div
                 style={{
-                  backgroundColor: "#0073BB",
+                  backgroundColor: "#14558F",
                   padding: "20px 24px",
                   display: "flex",
                   justifyContent: "space-between",
@@ -1229,7 +1229,7 @@ const Checklists: React.FC = () => {
                   }}
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#ffffff";
-                    e.currentTarget.style.color = "#0073bb";
+                    e.currentTarget.style.color = "#14558F";
                     e.currentTarget.style.outline = "2px solid #ffffff";
                     e.currentTarget.style.outlineOffset = "2px";
                   }}
@@ -1269,7 +1269,7 @@ const Checklists: React.FC = () => {
                 {/* Highlighted box */}
                 <div
                   style={{
-                    borderLeft: "4px solid #0073BB",
+                    borderLeft: "4px solid #14558F",
                     backgroundColor: "#F0F7FF",
                     padding: "16px 20px",
                     marginBottom: "24px",
@@ -1300,7 +1300,7 @@ const Checklists: React.FC = () => {
                       margin: 0,
                       marginBottom: "6px",
                       fontSize: "15px",
-                      color: "#0073BB",
+                      color: "#14558F",
                       fontWeight: 600,
                     }}
                   >
@@ -1326,7 +1326,7 @@ const Checklists: React.FC = () => {
                       margin: 0,
                       marginBottom: "6px",
                       fontSize: "15px",
-                      color: "#0073BB",
+                      color: "#14558F",
                       fontWeight: 600,
                     }}
                   >
@@ -1352,7 +1352,7 @@ const Checklists: React.FC = () => {
                       margin: 0,
                       marginBottom: "6px",
                       fontSize: "15px",
-                      color: "#0073BB",
+                      color: "#14558F",
                       fontWeight: 600,
                     }}
                   >
@@ -1391,7 +1391,7 @@ const Checklists: React.FC = () => {
                       cursor: "pointer",
                       width: "18px",
                       height: "18px",
-                      accentColor: "#0073BB",
+                      accentColor: "#14558F",
                     }}
                     aria-label="Do not show this again"
                   />
@@ -1414,7 +1414,7 @@ const Checklists: React.FC = () => {
                   onClick={handleCloseModal}
                   style={{
                     padding: "14px 24px",
-                    backgroundColor: "#0073BB",
+                    backgroundColor: "#14558F",
                     color: "#ffffff",
                     border: "none",
                     borderRadius: "6px",
@@ -1425,10 +1425,10 @@ const Checklists: React.FC = () => {
                     transition: "background 0.2s",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#005A94";
+                    e.currentTarget.style.backgroundColor = "#104472";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "#0073BB";
+                    e.currentTarget.style.backgroundColor = "#14558F";
                   }}
                   aria-label="Close help dialog"
                 >

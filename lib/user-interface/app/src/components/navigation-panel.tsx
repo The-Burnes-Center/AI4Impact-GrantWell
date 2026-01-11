@@ -289,7 +289,7 @@ export default function NavigationPanel({
         <SpaceBetween size="s">
           <Box textAlign="right" margin={{ right: "l" }}>
             <h2
-              style={{ fontSize: "24px", display: "inline", color: "#006499" }}
+              style={{ fontSize: "24px", display: "inline", color: "#14558F" }}
             >
               Key Requirements
             </h2>
@@ -300,7 +300,7 @@ export default function NavigationPanel({
                 identifier
               )}?folder=${encodeURIComponent(identifier)}#eligibility`}
             >
-              <span style={{ color: "#006499" }}>Eligibility Criteria</span>
+              <span style={{ color: "#14558F" }}>Eligibility Criteria</span>
             </Link>
           </Box>
           <Box textAlign="right" margin={{ right: "l" }}>
@@ -309,7 +309,7 @@ export default function NavigationPanel({
                 identifier
               )}?folder=${encodeURIComponent(identifier)}#narrative`}
             >
-              <span style={{ color: "#006499" }}>
+              <span style={{ color: "#14558F" }}>
                 Project Narrative Components
               </span>
             </Link>
@@ -320,7 +320,7 @@ export default function NavigationPanel({
                 identifier
               )}?folder=${encodeURIComponent(identifier)}#documents`}
             >
-              <span style={{ color: "#006499" }}>Documents Required</span>
+              <span style={{ color: "#14558F" }}>Documents Required</span>
             </Link>
           </Box>
           <Box textAlign="right" margin={{ right: "l" }}>
@@ -329,7 +329,7 @@ export default function NavigationPanel({
                 identifier
               )}?folder=${encodeURIComponent(identifier)}#deadlines`}
             >
-              <span style={{ color: "#006499" }}>Key Deadlines</span>
+              <span style={{ color: "#14558F" }}>Key Deadlines</span>
             </Link>
           </Box>
         </SpaceBetween>
@@ -351,7 +351,7 @@ export default function NavigationPanel({
             <SpaceBetween size="xl">
               <Box textAlign="right" margin={{ right: "l" }}>
                 <h2
-                  style={{ fontSize: "24px", display: "inline", color: "#0073bb" }}
+                  style={{ fontSize: "24px", display: "inline", color: "#14558F" }}
                 >
                   File Upload
                 </h2>
@@ -403,7 +403,7 @@ export default function NavigationPanel({
         <SpaceBetween size="xl">
           <Box textAlign="right" margin={{ right: "l" }}>
             <h2
-              style={{ fontSize: "24px", display: "inline", color: "#0073bb" }}
+              style={{ fontSize: "24px", display: "inline", color: "#14558F" }}
             >
               Session History
             </h2>
@@ -430,7 +430,7 @@ export default function NavigationPanel({
                     key={session.href}
                   >
                     <Link href={session.href}>
-                      <span style={{ color: "#0073bb" }}>{session.text}</span>
+                      <span style={{ color: "#14558F" }}>{session.text}</span>
                     </Link>
                   </Box>
                 ))}

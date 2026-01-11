@@ -34,9 +34,9 @@ export default function Welcome() {
     height: "100px",
   };
 
-  const mainTextColor = "#006499";
+  const mainTextColor = "#14558F";
   const bodyTextColor = "#5a5a5a";
-  const primaryBlue = "#0073bb"; // Match header blue color
+  const primaryBlue = "#14558F"; // Match header blue color
 
   const buttonStyle: CSSProperties = {
     backgroundColor: primaryBlue, // Use blue from the header when active
@@ -54,7 +54,7 @@ export default function Welcome() {
 
   const disabledButtonStyle: CSSProperties = {
     ...buttonStyle,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#F0F0F0",
     color: "#707070",
     cursor: "not-allowed",
     boxShadow: "none",
@@ -62,7 +62,7 @@ export default function Welcome() {
 
   const buttonHoverStyle = (e: React.MouseEvent<HTMLButtonElement>) => {
     if ((e.target as HTMLButtonElement).disabled) return;
-    (e.target as HTMLElement).style.backgroundColor = "#005d94"; // Darker blue on hover
+    (e.target as HTMLElement).style.backgroundColor = "#104472"; // Darker blue on hover
     (e.target as HTMLElement).style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
   };
 
@@ -73,7 +73,7 @@ export default function Welcome() {
   };
 
   const linkStyle: CSSProperties = {
-    color: "#006499",
+    color: "#14558F",
     textDecoration: "none",
   };
 
@@ -238,7 +238,7 @@ export default function Welcome() {
               e.currentTarget.style.transform = "translateY(0)";
             }}
             onFocus={(e) => {
-              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outline = "2px solid #0088FF";
               e.currentTarget.style.outlineOffset = "2px";
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
               e.currentTarget.style.transform = "translateY(-2px)";
@@ -325,8 +325,8 @@ export default function Welcome() {
     imageWidth?: any;
   }) => {
     const bannerButtonStyle: CSSProperties = {
-      backgroundColor: buttonVariant === "primary" ? "#006499" : "white",
-      color: "#006499",
+      backgroundColor: buttonVariant === "primary" ? "#14558F" : "white",
+      color: "#14558F",
       border: "none",
       padding: "10px 15px",
       borderRadius: "4px",
@@ -389,7 +389,7 @@ export default function Welcome() {
       </div>
     );
     const learnMoreLinkStyle: CSSProperties = {
-      color: mainTextColor === "#ffffff" ? "#ffffff" : "#0073bb",
+      color: mainTextColor === "#ffffff" ? "#ffffff" : "#14558F",
       textDecoration: "underline",
       fontSize: "13px",
       marginTop: "8px",
@@ -429,7 +429,7 @@ export default function Welcome() {
               rel="noopener noreferrer"
               style={learnMoreLinkStyle}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                e.currentTarget.style.outline = "2px solid #0088FF";
                 e.currentTarget.style.outlineOffset = "2px";
               }}
               onBlur={(e) => {
@@ -624,7 +624,7 @@ export default function Welcome() {
               display: "block",
             }}
             onFocus={(e) => {
-              e.currentTarget.style.outline = "2px solid #2c4fdb";
+              e.currentTarget.style.outline = "2px solid #0088FF";
               e.currentTarget.style.outlineOffset = "2px";
             }}
             onBlur={(e) => {
@@ -795,7 +795,7 @@ export default function Welcome() {
                 );
               }}
               style={{
-                background: "#0073BB",
+                background: "#14558F",
                 color: "white",
                 border: "none",
                 borderRadius: "20px",
@@ -807,13 +807,13 @@ export default function Welcome() {
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#005A94";
+                e.currentTarget.style.backgroundColor = "#104472";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#0073BB";
+                e.currentTarget.style.backgroundColor = "#14558F";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                e.currentTarget.style.outline = "2px solid #0088FF";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
                   "0 0 0 4px rgba(44, 79, 219, 0.2)";
@@ -840,7 +840,7 @@ export default function Welcome() {
                 )}`;
               }}
               style={{
-                background: "#0073BB",
+                background: "#14558F",
                 color: "white",
                 border: "none",
                 borderRadius: "20px",
@@ -852,13 +852,13 @@ export default function Welcome() {
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#005A94";
+                e.currentTarget.style.backgroundColor = "#104472";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#0073BB";
+                e.currentTarget.style.backgroundColor = "#14558F";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                e.currentTarget.style.outline = "2px solid #0088FF";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
                   "0 0 0 4px rgba(44, 79, 219, 0.2)";
@@ -886,7 +886,7 @@ export default function Welcome() {
                 )}`;
               }}
               style={{
-                background: "#0073BB",
+                background: "#14558F",
                 color: "white",
                 border: "none",
                 borderRadius: "20px",
@@ -898,13 +898,13 @@ export default function Welcome() {
                 minWidth: "180px",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#005A94";
+                e.currentTarget.style.backgroundColor = "#104472";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#0073BB";
+                e.currentTarget.style.backgroundColor = "#14558F";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                e.currentTarget.style.outline = "2px solid #0088FF";
                 e.currentTarget.style.outlineOffset = "2px";
                 e.currentTarget.style.boxShadow =
                   "0 0 0 4px rgba(44, 79, 219, 0.2)";
@@ -937,7 +937,7 @@ export default function Welcome() {
             style={{
               fontSize: "18px",
               fontWeight: "600",
-              color: "#006499",
+              color: "#14558F",
               margin: "0 0 12px 0",
               textAlign: "center",
             }}
@@ -956,15 +956,15 @@ export default function Welcome() {
           >
             Search for a grant above, select one from the results, then choose
             an action:{" "}
-            <strong style={{ color: "#0073BB", fontWeight: "600" }}>
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
               View Key Requirements
             </strong>{" "}
             to see eligibility and other NOFO requirements,{" "}
-            <strong style={{ color: "#0073BB", fontWeight: "600" }}>
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
               Write Project Narrative
             </strong>{" "}
             to draft your proposal with AI assistance, or{" "}
-            <strong style={{ color: "#0073BB", fontWeight: "600" }}>
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
               Get Grant Help
             </strong>{" "}
             to chat with our AI assistant.
@@ -1050,7 +1050,7 @@ export default function Welcome() {
               <button
                 onClick={() => navigate("/dashboard")}
                 style={{
-                  background: "#006499",
+                  background: "#14558F",
                   color: "white",
                   border: "none",
                   borderRadius: "20px",
@@ -1062,16 +1062,16 @@ export default function Welcome() {
                   minWidth: "200px",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#005A94";
+                  e.currentTarget.style.backgroundColor = "#104472";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#006499";
+                  e.currentTarget.style.backgroundColor = "#14558F";
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.outline = "2px solid #2c4fdb";
+                  e.currentTarget.style.outline = "2px solid #0088FF";
                   e.currentTarget.style.outlineOffset = "2px";
                   e.currentTarget.style.boxShadow =
-                    "0 0 0 4px rgba(44, 79, 219, 0.2)";
+                    "0 0 0 4px rgba(0, 136, 255, 0.2)";
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.outline = "none";
@@ -1123,9 +1123,9 @@ export default function Welcome() {
                 style={{
                   padding: "20px",
                   backgroundColor: "#f0f9ff",
-                  border: "1px solid #006499",
+                  border: "1px solid #14558F",
                   borderRadius: "4px",
-                  color: "#006499",
+                  color: "#14558F",
                   fontSize: "16px",
                   fontWeight: "400",
                   textAlign: "center",
@@ -1323,7 +1323,7 @@ export default function Welcome() {
                       display: "block",
                       backgroundColor: isSubmittingFeedback
                         ? "#999999"
-                        : "#006499",
+                        : "#14558F",
                       color: "#ffffff",
                       border: "none",
                       borderRadius: "4px",
@@ -1338,12 +1338,12 @@ export default function Welcome() {
                     }}
                     onMouseEnter={(e) => {
                       if (!isSubmittingFeedback) {
-                        e.currentTarget.style.backgroundColor = "#0074ad";
+                        e.currentTarget.style.backgroundColor = "#104472";
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isSubmittingFeedback) {
-                        e.currentTarget.style.backgroundColor = "#006499";
+                        e.currentTarget.style.backgroundColor = "#14558F";
                       }
                     }}
                   />

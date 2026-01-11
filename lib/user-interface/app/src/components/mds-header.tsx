@@ -66,7 +66,7 @@ export default function MDSHeader() {
               top: "10px",
               zIndex: 9999,
               padding: "10px 20px",
-              backgroundColor: "#0073bb",
+              backgroundColor: "#14558F",
               color: "white",
               textDecoration: "none",
               borderRadius: "4px",

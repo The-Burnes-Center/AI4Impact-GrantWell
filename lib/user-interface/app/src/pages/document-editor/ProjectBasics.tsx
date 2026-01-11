@@ -191,17 +191,17 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           input:focus,
           textarea:focus,
           select:focus {
-            outline: 2px solid #2c4fdb !important;
+            outline: 2px solid #0088FF !important;
             outline-offset: 2px !important;
           }
           
           button:focus {
-            outline: 2px solid #2c4fdb !important;
+            outline: 2px solid #0088FF !important;
             outline-offset: 2px !important;
           }
           
           a:focus {
-            outline: 2px solid #2c4fdb !important;
+            outline: 2px solid #0088FF !important;
             outline-offset: 2px !important;
           }
         `}
@@ -223,7 +223,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       >
         <div
           style={{
-            background: "#2c4fdb",
+            background: "#14558F",
             color: "white",
             padding: "20px 24px",
           }}
@@ -897,7 +897,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             onClick={handleContinue}
             style={{
               padding: "12px 24px",
-              background: "#2c4fdb",
+              background: "#14558F",
               color: "white",
               border: "none",
               borderRadius: "6px",

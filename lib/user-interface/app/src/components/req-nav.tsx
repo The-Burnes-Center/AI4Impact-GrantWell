@@ -196,7 +196,7 @@ export default function NavigationPanel({ documentIdentifier }) {
         </RouterButton>
         <Box textAlign="right" margin={{ right: "s"}}>
           <Link href={linkUrl}>
-            <h2 style={{ fontSize: '24px', display: 'inline', color: '#0073bb' }}>Click Here to Start a Narrative For This Grant</h2>
+            <h2 style={{ fontSize: '24px', display: 'inline', color: '#14558F' }}>Click Here to Start a Narrative For This Grant</h2>
           </Link>
         </Box>
         </SpaceBetween>
