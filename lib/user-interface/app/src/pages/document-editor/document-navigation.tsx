@@ -1,28 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../utils/recently-viewed-nofos";
 import { Home } from "lucide-react";
-
-// Function to get brand banner + MDS header height dynamically
-// Note: Headers are now static, so this is only used for minHeight calculations
-const getTopOffset = (): number => {
-  const bannerElement = document.querySelector(".ma__brand-banner");
-  const mdsHeaderElement = document.querySelector(".ma__header_slim");
-  
-  let bannerHeight = 40; // Default fallback
-  let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
-  
-  if (bannerElement) {
-    bannerHeight = bannerElement.getBoundingClientRect().height;
-  }
-  
-  if (mdsHeaderElement) {
-    mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
-  }
-  
-  return bannerHeight + mdsHeaderHeight;
-};
 
 interface DocumentNavigationProps {
   documentIdentifier?: string;
@@ -40,54 +20,6 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
   setIsOpen,
 }) => {
   const navigate = useNavigate();
-  const [topOffset, setTopOffset] = useState<number>(100); // Default: 40px banner + 60px MDS header
-
-  // Monitor brand banner + MDS header height changes (for minHeight calculations only)
-  useEffect(() => {
-    const updateTopOffset = () => {
-      requestAnimationFrame(() => {
-        const offset = getTopOffset();
-        setTopOffset(offset);
-      });
-    };
-
-    // Initial calculation with a small delay to ensure headers are rendered
-    const initialTimer = setTimeout(updateTopOffset, 100);
-    updateTopOffset();
-
-    // Watch for changes
-    const observer = new MutationObserver(updateTopOffset);
-    const bannerElement = document.querySelector(".ma__brand-banner");
-    const mdsHeaderElement = document.querySelector(".ma__header_slim");
-    
-    if (bannerElement) {
-      observer.observe(bannerElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    if (mdsHeaderElement) {
-      observer.observe(mdsHeaderElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    window.addEventListener("resize", updateTopOffset);
-    window.addEventListener("scroll", updateTopOffset, { passive: true });
-
-    return () => {
-      clearTimeout(initialTimer);
-      observer.disconnect();
-      window.removeEventListener("resize", updateTopOffset);
-      window.removeEventListener("scroll", updateTopOffset);
-    };
-  }, []);
 
   // Handle chat navigation
   const handleChatNavigation = () => {
