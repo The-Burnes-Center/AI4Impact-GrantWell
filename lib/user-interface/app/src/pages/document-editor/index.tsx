@@ -565,7 +565,10 @@ const DocumentEditor: React.FC = () => {
             background: "#fff",
             borderBottom: "0",
             width: "100%",
+            maxWidth: "100%",
             position: "static",
+            overflow: "hidden",
+            boxSizing: "border-box",
           }}
         >
           <div
@@ -576,6 +579,9 @@ const DocumentEditor: React.FC = () => {
               flexDirection: "column",
               alignItems: "flex-start",
               width: "100%",
+              maxWidth: "100%",
+              minWidth: 0,
+              boxSizing: "border-box",
             }}
           >
             <div
@@ -584,6 +590,7 @@ const DocumentEditor: React.FC = () => {
                 alignItems: "center",
                 width: "100%",
                 marginBottom: "0",
+                minWidth: 0,
               }}
             >
               <h1
@@ -593,6 +600,12 @@ const DocumentEditor: React.FC = () => {
                   textAlign: "left",
                   fontSize: "22px",
                   fontWeight: "600",
+                  width: "100%",
+                  maxWidth: "100%",
+                  wordWrap: "break-word",
+                  overflowWrap: "break-word",
+                  wordBreak: "break-word",
+                  lineHeight: "1.4",
                 }}
               >
                 {isNofoLoading ? "Loading..." : nofoName || "Grant Application"}
