@@ -15,37 +15,67 @@ import DocumentEditor from "./pages/document-editor";
 import DocEditorSessionsPage from "./pages/document-editor/doc-editor-sessions-page";
 import Dashboard from "./pages/Dashboard";
 import "./styles/app.scss";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
+  const prevPathRef = useRef<string>("");
 
   useEffect(() => {
-    // Move focus to main content on route change for screen readers
-    // Use preventScroll to avoid auto-scrolling past headers
     const mainContent = document.getElementById("main-content");
     if (mainContent) {
-      // Prevent scrolling when focusing for accessibility
       mainContent.focus({ preventScroll: true });
     }
 
     // Update page title based on route
-    const pageTitles: { [key: string]: string } = {
-      "/": "GrantWell - Home",
-      "/landing-page/basePage": "GrantWell - Home",
-      "/dashboard": "Admin Dashboard - GrantWell",
-      "/chatbot/sessions": "Chat Sessions - GrantWell",
-      "/document-editor": "Document Editor - GrantWell",
+    const getPageTitle = (path: string): string => {
+      const exactMatches: { [key: string]: string } = {
+        "/": "GrantWell - Home",
+        "/landing-page/basePage": "GrantWell - Home",
+        "/dashboard": "Admin Dashboard - GrantWell",
+        "/chatbot/sessions": "Chat Sessions - GrantWell",
+        "/document-editor": "Document Editor - GrantWell",
+        "/document-editor/drafts": "Document Editor Drafts - GrantWell",
+        "/admin/data": "Admin Data View - GrantWell",
+        "/admin/user-feedback": "User Feedback - GrantWell",
+      };
+
+      if (exactMatches[path]) {
+        return exactMatches[path];
+      }
+
+      // Pattern matches for dynamic routes
+      if (path.startsWith("/chatbot/playground/")) {
+        return "Chatbot Playground - GrantWell";
+      }
+      if (path.startsWith("/document-editor/") && path !== "/document-editor/drafts") {
+        return "Document Editor Session - GrantWell";
+      }
+      if (path.startsWith("/landing-page/basePage/checklists/")) {
+        return "Requirements Checklist - GrantWell";
+      }
+
+      // Default fallback
+      return "GrantWell";
     };
 
-    const baseTitle = pageTitles[pathname] || "GrantWell";
+    const baseTitle = getPageTitle(pathname);
     document.title = baseTitle;
 
-    if (typeof window !== "undefined" && window.gtag) {
-      const fullPath = pathname + search;
-      window.gtag("config", "G-K27MB9Y26C", {
-        page_path: fullPath,
-      });
+    const fullPath = pathname + search;
+    const fullUrl = window.location.origin + fullPath;
+    
+    if (prevPathRef.current !== fullPath) {
+      prevPathRef.current = fullPath;
+      
+      if (typeof window !== "undefined" && window.gtag) {
+        // Send complete page view data to Google Analytics
+        window.gtag("config", "G-K27MB9Y26C", {
+          page_title: baseTitle,
+          page_path: fullPath,
+          page_location: fullUrl,
+        });
+      }
     }
   }, [pathname, search]);
 
@@ -70,7 +100,6 @@ function AppContent() {
           />
           <Route path="/landing-page/basePage" element={<Outlet />}>
             <Route path="" element={<Welcome />} />
-            {/* Route for the checklists page with a dynamic parameter */}
             <Route
               path="/landing-page/basePage/checklists/:documentIdentifier"
               element={<Checklists />}

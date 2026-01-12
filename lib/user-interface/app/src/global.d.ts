@@ -7,7 +7,9 @@ interface Window {
     command: string,
     targetId: string,
     config?: {
+      page_title?: string;
       page_path?: string;
+      page_location?: string;
       [key: string]: any;
     }
   ) => void;
