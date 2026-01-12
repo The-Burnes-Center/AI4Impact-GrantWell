@@ -13,4 +13,5 @@ interface Window {
       [key: string]: any;
     }
   ) => void;
+  __ENVIRONMENT__?: string;
 }

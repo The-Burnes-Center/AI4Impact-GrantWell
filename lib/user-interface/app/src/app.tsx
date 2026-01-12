@@ -68,8 +68,12 @@ function ScrollToTop() {
     if (prevPathRef.current !== fullPath) {
       prevPathRef.current = fullPath;
       
-      if (typeof window !== "undefined" && window.gtag) {
-        // Send complete page view data to Google Analytics
+      const environment = typeof window !== "undefined" && window.__ENVIRONMENT__ 
+        ? window.__ENVIRONMENT__ 
+        : 'staging';
+      const isProduction = environment === 'production';
+      
+      if (isProduction && typeof window !== "undefined" && window.gtag) {
         window.gtag("config", "G-K27MB9Y26C", {
           page_title: baseTitle,
           page_path: fullPath,
