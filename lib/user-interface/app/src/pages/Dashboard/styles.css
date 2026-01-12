@@ -8,6 +8,20 @@
   color: #333;
   font-family: "Noto Sans", sans-serif;
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 320px) {
+  .dashboard-container {
+    padding: 8px 12px;
+  }
+}
+
+@media screen and (min-width: 321px) and (max-width: 480px) {
+  .dashboard-container {
+    padding: 12px 16px;
+  }
 }
 
 /* Reset body styles */
@@ -17,7 +31,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto; /* Changed from hidden to allow scrolling */
 }
 
 /* Dashboard header styles */

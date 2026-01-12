@@ -3,6 +3,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { MessageSquare, Edit, Home, ChevronLeft, ChevronRight } from "lucide-react";
 
+const useViewportWidth = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+};
+
 // Function to get brand banner + MDS header height dynamically
 const getTopOffset = (): number => {
   const bannerElement = document.querySelector(".ma__brand-banner");
@@ -97,6 +109,8 @@ export default function RequirementsNavigation({
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<any[]>([]);
   const [topOffset, setTopOffset] = useState<number>(0);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const viewportWidth = useViewportWidth();
+  const isNarrowViewport = viewportWidth <= 320;
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -186,15 +200,72 @@ export default function RequirementsNavigation({
 
   const activeTab = getActiveTab();
 
+  useEffect(() => {
+    if (isNarrowViewport && !isCollapsed) {
+      setIsCollapsed(true);
+    }
+  }, [isNarrowViewport]);
+
   return (
-    <div
-      style={{
-        ...styles.sidebar,
-        width: isCollapsed ? "60px" : "240px",
-        height: "100%",
-        alignSelf: "stretch",
-      }}
-    >
+    <>
+      {isNarrowViewport && isCollapsed && (
+        <button
+          onClick={() => setIsCollapsed(false)}
+          style={{
+            position: 'fixed',
+            top: '8px',
+            left: '8px',
+            zIndex: 1001,
+            background: '#0f1b2a',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            padding: '8px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          }}
+          aria-label="Open navigation menu"
+        >
+          <ChevronRight size={20} />
+        </button>
+      )}
+
+      {isNarrowViewport && !isCollapsed && (
+        <div
+          onClick={() => setIsCollapsed(true)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 1000,
+          }}
+          aria-hidden="true"
+        />
+      )}
+
+      <div
+        style={{
+          ...styles.sidebar,
+          width: isNarrowViewport 
+            ? (!isCollapsed ? "100%" : "0")
+            : (isCollapsed ? "60px" : "240px"),
+          height: "100%",
+          alignSelf: "stretch",
+          ...(isNarrowViewport && {
+            position: !isCollapsed ? 'fixed' : 'relative',
+            top: !isCollapsed ? 0 : 'auto',
+            left: !isCollapsed ? 0 : 'auto',
+            right: !isCollapsed ? 0 : 'auto',
+            bottom: !isCollapsed ? 0 : 'auto',
+            zIndex: !isCollapsed ? 1001 : 'auto',
+            maxWidth: !isCollapsed ? '280px' : '0',
+            transition: "width 0.3s ease, transform 0.3s ease",
+          }),
+        }}
+      >
       {/* Sidebar header */}
       <div
         style={{
@@ -319,5 +390,6 @@ export default function RequirementsNavigation({
         )}
       </div>
     </div>
+    </>
   );
 }

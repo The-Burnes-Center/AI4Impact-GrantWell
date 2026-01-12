@@ -7,6 +7,18 @@ import { v4 as uuidv4 } from "uuid";
 import DocEditorSessions from "../../components/document-editor/doc-editor-sessions";
 import DocumentNavigation from "./document-navigation";
 
+const useViewportWidth = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+};
+
 export default function DocEditorSessionsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -14,6 +26,8 @@ export default function DocEditorSessionsPage() {
   const appContext = useContext(AppContext);
   const [latestDraftId, setLatestDraftId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const viewportWidth = useViewportWidth();
+  const isNarrowViewport = viewportWidth <= 320;
 
   useEffect(() => {
     const fetchLatestDraft = async () => {
@@ -112,7 +126,7 @@ export default function DocEditorSessionsPage() {
   };
 
   return (
-    <div className="document-editor-root" style={{ display: "flex", minHeight: "100vh" }}>
+    <div className="document-editor-root" style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <DocumentNavigation
         documentIdentifier={documentIdentifier || undefined}
         currentStep="drafts"
@@ -124,11 +138,12 @@ export default function DocEditorSessionsPage() {
       <div
         className="document-content"
         style={{
-          marginLeft: sidebarOpen ? "240px" : "60px",
+          marginLeft: isNarrowViewport ? "0" : (sidebarOpen ? "240px" : "60px"),
           transition: "margin-left 0.3s ease",
-          width: `calc(100% - ${sidebarOpen ? "240px" : "60px"})`,
+          width: isNarrowViewport ? "100%" : `calc(100% - ${sidebarOpen ? "240px" : "60px"})`,
           display: "flex",
           flexDirection: "column",
+          minWidth: 0,
         }}
       >
         <div

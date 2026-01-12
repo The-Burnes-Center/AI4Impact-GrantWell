@@ -5,11 +5,46 @@
   flex-direction: column;
   height: 100vh;
   border-right: 1px solid #23272f;
-  transition: width 0.3s;
+  transition: width 0.3s, transform 0.3s;
   width: 240px;
 }
 .document-sidebar.collapsed {
   width: 60px;
+}
+
+@media screen and (max-width: 320px) {
+  .document-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    width: 100% !important;
+    max-width: 280px;
+  }
+
+  .document-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .document-sidebar.collapsed {
+    width: 0;
+    transform: translateX(-100%);
+  }
+
+  .sidebar-header {
+    padding: 12px;
+  }
+
+  .sidebar-title {
+    font-size: 1rem;
+  }
+
+  .sidebar-link {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
 }
 .sidebar-header {
   padding: 16px;

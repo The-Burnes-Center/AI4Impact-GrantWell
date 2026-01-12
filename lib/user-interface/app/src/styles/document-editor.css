@@ -19,7 +19,7 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   width: 100%;
   max-width: 100%;
-  overflow: hidden;
+  overflow: visible;
   box-sizing: border-box;
 }
 
@@ -47,6 +47,36 @@
   .document-content {
     margin-left: 60px !important;
     width: calc(100% - 60px) !important;
+  }
+}
+
+/* WCAG 1.4.10 Reflow: Responsive breakpoints */
+@media screen and (max-width: 320px) {
+  .document-editor-workspace {
+    padding: 8px; /* Reduced padding */
+  }
+
+  .document-editor-header {
+    padding: 8px;
+  }
+
+  .document-editor-nofo-title {
+    font-size: 18px; /* Smaller font for narrow viewports */
+  }
+
+  .document-editor-content {
+    flex-direction: column; /* Stack sidebar and content vertically */
+  }
+
+  .document-editor-actions {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .document-action-btn {
+    padding: 8px 16px;
+    font-size: 14px;
   }
 }
 
@@ -90,17 +120,18 @@
 .document-editor-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh; /* Changed from height to minHeight */
   width: 100%;
-  overflow: hidden;
+  overflow: auto; /* Allow scrolling */
 }
 
 /* Content area that holds the workspace */
 .document-editor-content {
   display: flex;
   flex: 1;
-  overflow: hidden;
+  overflow: auto; /* Allow scrolling */
   background-color: #f5f7fa;
+  min-width: 0; /* Allow flex item to shrink */
 }
 
 /* Action buttons container */

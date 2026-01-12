@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../utils/recently-viewed-nofos";
@@ -12,6 +12,18 @@ interface DocumentNavigationProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const useViewportWidth = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+};
+
 const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
   documentIdentifier,
   currentStep,
@@ -20,6 +32,8 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
   setIsOpen,
 }) => {
   const navigate = useNavigate();
+  const viewportWidth = useViewportWidth();
+  const isNarrowViewport = viewportWidth <= 320;
 
   // Handle chat navigation
   const handleChatNavigation = () => {
@@ -60,23 +74,94 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (isNarrowViewport && isOpen) {
+      setIsOpen(false);
+    }
+  }, [isNarrowViewport, isOpen, setIsOpen]);
+
   return (
-    <div
-      style={{
-        width: isOpen ? "240px" : "60px",
-        background: "#1a202c",
-        color: "white",
-        display: "flex",
-        flexDirection: "column",
-        borderRight: "1px solid #23272f",
-        transition: "width 0.3s ease",
-        overflow: "hidden",
-        position: "static",
-        flexShrink: 0,
-        height: "100%",
-        alignSelf: "stretch",
-      }}
-    >
+    <>
+      {isNarrowViewport && !isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            position: 'fixed',
+            top: '8px',
+            left: '8px',
+            zIndex: 1001,
+            background: '#1a202c',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            padding: '8px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          }}
+          aria-label="Open navigation menu"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            style={{
+              width: "20px",
+              height: "20px",
+              stroke: "currentColor",
+              fill: "none",
+              strokeWidth: 2,
+            }}
+          >
+            <path d="M9 18l6-6-6-6"></path>
+          </svg>
+        </button>
+      )}
+
+      {/* Overlay backdrop for mobile sidebar */}
+      {isNarrowViewport && isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 1000,
+          }}
+          aria-hidden="true"
+        />
+      )}
+
+      <div
+        style={{
+          width: isNarrowViewport 
+            ? (isOpen ? "100%" : "0")
+            : (isOpen ? "240px" : "60px"),
+          background: "#1a202c",
+          color: "white",
+          display: "flex",
+          flexDirection: "column",
+          borderRight: "1px solid #23272f",
+          transition: "width 0.3s ease, transform 0.3s ease",
+          overflow: "hidden",
+          ...(isNarrowViewport && {
+            position: isOpen ? 'fixed' : 'relative',
+            top: isOpen ? 0 : 'auto',
+            left: isOpen ? 0 : 'auto',
+            right: isOpen ? 0 : 'auto',
+            bottom: isOpen ? 0 : 'auto',
+            zIndex: isOpen ? 1001 : 'auto',
+            maxWidth: isOpen ? '280px' : '0',
+            height: isOpen ? '100vh' : '100%',
+          }),
+          ...(!isNarrowViewport && {
+            position: 'static',
+            height: "100%",
+            alignSelf: "stretch",
+          }),
+          flexShrink: 0,
+        }}
+      >
       <div
         style={{
           padding: "16px",
@@ -604,6 +689,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
         )}
       </div>
     </div>
+    </>
   );
 };
 

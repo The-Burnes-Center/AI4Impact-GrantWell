@@ -1,6 +1,6 @@
 /* Global layout adjustments */
 body {
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-y: auto;
 }
 
 /* Fix layout alignment */
@@ -37,7 +37,8 @@ body {
   padding: 0 40px;
   box-sizing: border-box;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto; /* Allow horizontal scrolling when needed */
+  min-width: 0;
 }
 
 /* Ensure content aligns to the left edge */
@@ -102,7 +103,48 @@ body {
   color: #14558F;
 }
 
-/* Make content area full width and responsive */
+/* WCAG 1.4.10 Reflow: Responsive breakpoints */
+/* Base mobile styles (applies to narrow viewports) */
+@media screen and (max-width: 320px) {
+  .checklist-container {
+    padding: 0 8px; /* Reduced padding for narrow viewports */
+  }
+
+  .full-height-content {
+    padding: 8px !important; /* Minimal padding */
+  }
+
+  /* Ensure text wraps properly */
+  .custom-markdown {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    font-size: 14px;
+  }
+
+  /* Reduce padding in navigation elements */
+  .awsui-tabs-header-wrapper {
+    padding-left: 4px;
+  }
+
+  .awsui-tabs-content-container {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+/* Small mobile (up to 480px) */
+@media screen and (min-width: 321px) and (max-width: 480px) {
+  .checklist-container {
+    padding: 0 12px;
+  }
+
+  .full-height-content {
+    padding: 12px !important;
+  }
+}
+
+/* Tablet and up (existing breakpoint) */
 @media screen and (max-width: 768px) {
   .full-height-content {
     padding: 15px !important;

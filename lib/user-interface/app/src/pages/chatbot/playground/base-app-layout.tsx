@@ -31,6 +31,18 @@ const getTopOffset = (): number => {
   return bannerHeight + mdsHeaderHeight;
 };
 
+const useViewportWidth = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+};
+
 interface BaseAppLayoutProps {
   header: React.ReactNode;
   content: React.ReactNode;
@@ -47,27 +59,30 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     display: "flex",
     flexDirection: "column",
-    height: "100vh",
+    minHeight: "100vh",
     width: "100%",
-    overflow: "hidden",
+    overflow: "visible",
   },
   mainContainer: {
     display: "flex",
     flex: 1,
-    overflow: "hidden",
+    overflow: "auto",
+    minWidth: 0,
   },
   contentArea: {
     flex: 1,
-    overflow: "hidden",
-    height: "100%",
+    overflow: "auto",
+    minHeight: 0,
+    minWidth: 0,
     display: "flex",
     flexDirection: "column",
   },
   toolsPanel: {
     height: "100%",
-    overflow: "hidden",
+    overflow: "auto",
     borderLeft: "1px solid #e5e7eb",
     backgroundColor: "#f9fafb",
+    minWidth: 0,
   },
   sidebar: {
     backgroundColor: "#0f1b2a",
@@ -151,6 +166,8 @@ export default function BaseAppLayout({
 }: BaseAppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [topOffset, setTopOffset] = useState<number>(100); // Default: 40px banner + 60px MDS header
+  const viewportWidth = useViewportWidth();
+  const isNarrowViewport = viewportWidth <= 320;
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
@@ -203,6 +220,13 @@ export default function BaseAppLayout({
     };
   }, []);
 
+  // Auto-collapse sidebar on narrow viewports for better UX
+  useEffect(() => {
+    if (isNarrowViewport && sidebarOpen) {
+      setSidebarOpen(false);
+    }
+  }, [isNarrowViewport]);
+
   // Use the sessionId from props, or fall back to URL params if not provided
   const currentSessionId = sessionId || params.sessionId;
 
@@ -252,23 +276,81 @@ export default function BaseAppLayout({
         padding: 0,
       }}
     >
+      {/* Mobile menu button - only visible on narrow viewports */}
+      {isNarrowViewport && !sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          style={{
+            position: 'fixed',
+            top: `${topOffset + 8}px`,
+            left: '8px',
+            zIndex: 1001,
+            background: '#0f1b2a',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            padding: '8px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          }}
+          aria-label="Open navigation menu"
+        >
+          <ChevronRight size={20} />
+        </button>
+      )}
+
+      {/* Overlay backdrop for mobile sidebar */}
+      {isNarrowViewport && sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 1000,
+          }}
+          aria-hidden="true"
+        />
+      )}
+
       <div
         style={{
           display: "flex",
           flex: 1,
-          overflow: "hidden",
+          overflow: isNarrowViewport ? "auto" : "hidden",
           alignItems: "stretch",
+          flexDirection: isNarrowViewport ? "column" : "row",
         }}
       >
-        {/* Sidebar */}
+        {/* Sidebar - becomes overlay on narrow viewports */}
         <div
           style={{
             ...styles.sidebar,
             ...(sidebarOpen ? styles.sidebarExpanded : styles.sidebarCollapsed),
             height: "100%",
             alignSelf: "stretch",
+            // Mobile overlay styles for WCAG Reflow compliance
+            ...(isNarrowViewport && {
+              position: sidebarOpen ? 'fixed' : 'relative',
+              top: sidebarOpen ? `${topOffset}px` : 'auto',
+              left: sidebarOpen ? 0 : 'auto',
+              right: sidebarOpen ? 0 : 'auto',
+              bottom: sidebarOpen ? 0 : 'auto',
+              zIndex: sidebarOpen ? 1001 : 'auto',
+              width: sidebarOpen ? '100%' : '0',
+              minWidth: sidebarOpen ? '100%' : '0',
+              maxWidth: sidebarOpen ? '100%' : '0',
+              overflow: sidebarOpen ? 'auto' : 'hidden',
+            }),
+            // Desktop styles
+            ...(!isNarrowViewport && {
+              position: 'static',
+            }),
           }}
-          aria-hidden={modalOpen}
+          aria-hidden={modalOpen || (isNarrowViewport && !sidebarOpen)}
         >
           {/* Sidebar header with toggle button */}
           <div
@@ -410,26 +492,39 @@ export default function BaseAppLayout({
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            overflow: "hidden",
+            overflow: "auto",
             margin: 0,
             padding: 0,
-            height: "100%",
+            minHeight: 0,
+            minWidth: 0,
+            width: isNarrowViewport ? '100%' : 'auto',
           }}
         >
           {/* Header area */}
           {header}
 
           {/* Main content area */}
-          <div style={styles.mainContainer}>
+          <div style={{
+            ...styles.mainContainer,
+            flexDirection: isNarrowViewport ? 'column' : 'row',
+          }}>
             {/* Primary content */}
-            <div style={styles.contentArea}>{content}</div>
+            <div style={{
+              ...styles.contentArea,
+              width: isNarrowViewport ? '100%' : 'auto',
+            }}>
+              {content}
+            </div>
 
-            {/* Tools/help panel - conditionally rendered based on toolsOpenExternal */}
+            {/* Tools/help panel - stacks below content on narrow viewports */}
             {toolsOpenExternal && info && (
               <div
                 style={{
                   ...styles.toolsPanel,
-                  width: toolsWidth,
+                  width: isNarrowViewport ? '100%' : toolsWidth,
+                  height: isNarrowViewport ? 'auto' : '100%',
+                  borderLeft: isNarrowViewport ? 'none' : '1px solid #e5e7eb',
+                  borderTop: isNarrowViewport ? '1px solid #e5e7eb' : 'none',
                 }}
               >
                 {info}
