@@ -18,7 +18,7 @@ import "./styles/app.scss";
 import { useEffect } from "react";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   useEffect(() => {
     // Move focus to main content on route change for screen readers
@@ -40,7 +40,14 @@ function ScrollToTop() {
 
     const baseTitle = pageTitles[pathname] || "GrantWell";
     document.title = baseTitle;
-  }, [pathname]);
+
+    if (typeof window !== "undefined" && window.gtag) {
+      const fullPath = pathname + search;
+      window.gtag("config", "G-K27MB9Y26C", {
+        page_path: fullPath,
+      });
+    }
+  }, [pathname, search]);
 
   return null;
 }
