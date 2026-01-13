@@ -286,29 +286,39 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
           <div id="password-requirements" className="password-requirements mt-2" role="group" aria-label="Password requirements">
             <small>
               <div className={`password-requirement ${passwordRequirements.minLength ? 'text-success' : 'text-muted'}`}>
-                <span aria-hidden="true">{passwordRequirements.minLength ? '✓' : '○'}</span>{' '}
-                <span className={passwordRequirements.minLength ? 'sr-only' : ''}>Requirement not met: </span>
-                Password must be at least 8 characters
+                <span aria-hidden="true" className="requirement-icon">{passwordRequirements.minLength ? '✓' : '○'}</span>
+                <span>
+                  <span className={passwordRequirements.minLength ? 'sr-only' : ''}>Requirement not met: </span>
+                  Password must be at least 8 characters
+                </span>
               </div>
               <div className={`password-requirement ${passwordRequirements.hasNumber ? 'text-success' : 'text-muted'}`}>
-                <span aria-hidden="true">{passwordRequirements.hasNumber ? '✓' : '○'}</span>{' '}
-                <span className={passwordRequirements.hasNumber ? 'sr-only' : ''}>Requirement not met: </span>
-                Use a number
+                <span aria-hidden="true" className="requirement-icon">{passwordRequirements.hasNumber ? '✓' : '○'}</span>
+                <span>
+                  <span className={passwordRequirements.hasNumber ? 'sr-only' : ''}>Requirement not met: </span>
+                  Use a number
+                </span>
               </div>
               <div className={`password-requirement ${passwordRequirements.hasLowercase ? 'text-success' : 'text-muted'}`}>
-                <span aria-hidden="true">{passwordRequirements.hasLowercase ? '✓' : '○'}</span>{' '}
-                <span className={passwordRequirements.hasLowercase ? 'sr-only' : ''}>Requirement not met: </span>
-                Use a lowercase letter
+                <span aria-hidden="true" className="requirement-icon">{passwordRequirements.hasLowercase ? '✓' : '○'}</span>
+                <span>
+                  <span className={passwordRequirements.hasLowercase ? 'sr-only' : ''}>Requirement not met: </span>
+                  Use a lowercase letter
+                </span>
               </div>
               <div className={`password-requirement ${passwordRequirements.hasUppercase ? 'text-success' : 'text-muted'}`}>
-                <span aria-hidden="true">{passwordRequirements.hasUppercase ? '✓' : '○'}</span>{' '}
-                <span className={passwordRequirements.hasUppercase ? 'sr-only' : ''}>Requirement not met: </span>
-                Use an uppercase letter
+                <span aria-hidden="true" className="requirement-icon">{passwordRequirements.hasUppercase ? '✓' : '○'}</span>
+                <span>
+                  <span className={passwordRequirements.hasUppercase ? 'sr-only' : ''}>Requirement not met: </span>
+                  Use an uppercase letter
+                </span>
               </div>
               <div className={`password-requirement ${passwordRequirements.hasSymbol ? 'text-success' : 'text-muted'}`}>
-                <span aria-hidden="true">{passwordRequirements.hasSymbol ? '✓' : '○'}</span>{' '}
-                <span className={passwordRequirements.hasSymbol ? 'sr-only' : ''}>Requirement not met: </span>
-                Use a symbol
+                <span aria-hidden="true" className="requirement-icon">{passwordRequirements.hasSymbol ? '✓' : '○'}</span>
+                <span>
+                  <span className={passwordRequirements.hasSymbol ? 'sr-only' : ''}>Requirement not met: </span>
+                  Use a symbol
+                </span>
               </div>
             </small>
           </div>
@@ -320,7 +330,7 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
           <Form.Control
             id="confirm-password-input"
             type={showPassword ? "text" : "password"}
-            placeholder="Reenter password"
+            placeholder="Re-enter password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             disabled={loading}
