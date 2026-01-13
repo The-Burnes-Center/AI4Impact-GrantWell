@@ -51,37 +51,42 @@ export default function AuthPage() {
   }
 
   return (
-    <main role="main" className="auth-page-container">
-      <div className="auth-card">
-        <div className="auth-header-section">
-          <div className="auth-logo-container">
-            <img
-              src="/images/stateseal-color.png"
-              alt="State Seal"
-              className="auth-logo"
-            />
-            <h1 className="auth-brand-title">GrantWell</h1>
+    <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <main role="main" className="auth-page-container" id="main-content">
+        <div className="auth-card">
+          <div className="auth-header-section">
+            <div className="auth-logo-container">
+              <img
+                src="/images/stateseal-color.png"
+                alt="Massachusetts State Seal"
+                className="auth-logo"
+              />
+              <h1 className="auth-brand-title">GrantWell</h1>
+            </div>
+            <h2 className="auth-page-title">{isLogin ? 'Sign in' : 'Create account'}</h2>
+            <p className="auth-page-subtitle">
+              {isLogin ? 'Sign in to your account.' : 'Create a new account to get started.'}
+            </p>
           </div>
-          <h1 className="auth-page-title">{isLogin ? 'Sign in' : 'Create account'}</h1>
-          <p className="auth-page-subtitle">
-            {isLogin ? 'Sign in to your account.' : 'Create a new account to get started.'}
-          </p>
+          <div className="auth-content">
+            {isLogin ? (
+              <LoginForm 
+                onSuccess={handleAuthSuccess}
+                onSwitchToSignUp={() => setIsLogin(false)}
+                onForgotPassword={handleForgotPasswordClick}
+              />
+            ) : (
+              <SignUpForm 
+                onSuccess={handleAuthSuccess}
+                onSwitchToLogin={() => setIsLogin(true)}
+              />
+            )}
+          </div>
         </div>
-        <div className="auth-content">
-          {isLogin ? (
-            <LoginForm 
-              onSuccess={handleAuthSuccess}
-              onSwitchToSignUp={() => setIsLogin(false)}
-              onForgotPassword={handleForgotPasswordClick}
-            />
-          ) : (
-            <SignUpForm 
-              onSuccess={handleAuthSuccess}
-              onSwitchToLogin={() => setIsLogin(true)}
-            />
-          )}
-        </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
