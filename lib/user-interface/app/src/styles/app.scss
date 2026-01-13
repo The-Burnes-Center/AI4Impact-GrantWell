@@ -293,3 +293,17 @@ textarea:-moz-placeholder {
   opacity: 1 !important;
 }
 
+
+.ma__footer-new a {
+  color: #0056b3 !important;
+}
+
+.ma__footer-new a:hover,
+.ma__footer-new a:focus {
+  color: #004085 !important;
+  text-decoration: underline;
+}
+
+.ma__footer-new a:visited {
+  color: #0056b3 !important;
+}

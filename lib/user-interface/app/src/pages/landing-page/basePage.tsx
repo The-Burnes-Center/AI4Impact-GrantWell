@@ -1515,7 +1515,7 @@ export default function Welcome() {
       >
         <span
           style={{
-            color: "#4c8e5c",
+            color: "#2d5a3a",
             fontSize: "16px",
             fontWeight: "400",
             writingMode: "vertical-lr",
