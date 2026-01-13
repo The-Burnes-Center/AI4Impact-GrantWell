@@ -309,7 +309,7 @@ body[data-awsui-focus-visible=true] .awsui_segment_8cbea_mrnmo_157:not(#\9):focu
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
 }

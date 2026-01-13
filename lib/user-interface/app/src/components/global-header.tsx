@@ -13,9 +13,9 @@ import { useNavigate } from "react-router-dom";
 
 const styles = {
   container: {
-    "--color-background-top-navigation": "#14558f", // Mayflower utility bar color
+    "--color-background-top-navigation": "#14558F", // Mayflower utility bar color
     "--color-text-top-navigation": "#ffffff", // White text
-    "--color-background-top-navigation-hover": "#1a6ba8", // Slightly lighter blue for hover
+    "--color-background-top-navigation-hover": "#104472", // Slightly lighter blue for hover
   },
 };
 
@@ -70,7 +70,7 @@ export default function GlobalHeader() {
       style={{
         ...styles.container,
         position: "static",
-        backgroundColor: "#14558f",
+        backgroundColor: "#14558F",
         height: "40px",
         minHeight: "40px",
         maxHeight: "40px",

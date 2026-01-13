@@ -93,7 +93,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: "1px solid #e5e7eb",
     cursor: "pointer",
     userSelect: "none" as const,
-    fontSize: "12px",
+    fontSize: "14px",
     textTransform: "uppercase" as const,
     letterSpacing: "0.5px",
   },
@@ -495,7 +495,7 @@ export default function Sessions(props: SessionsProps) {
                 style={{ ...styles.button, ...styles.primaryButton }}
                 onClick={() => setShowModalDelete(false)}
                 onFocus={(e) => {
-                  e.currentTarget.style.outline = "2px solid #2c4fdb";
+                  e.currentTarget.style.outline = "2px solid #0088FF";
                   e.currentTarget.style.outlineOffset = "2px";
                 }}
                 onBlur={(e) => {
@@ -509,7 +509,7 @@ export default function Sessions(props: SessionsProps) {
                 style={{ ...styles.button, ...styles.dangerButton }}
                 onClick={deleteSelectedSessions}
                 onFocus={(e) => {
-                  e.currentTarget.style.outline = "2px solid #2c4fdb";
+                  e.currentTarget.style.outline = "2px solid #0088FF";
                   e.currentTarget.style.outlineOffset = "2px";
                 }}
                 onBlur={(e) => {

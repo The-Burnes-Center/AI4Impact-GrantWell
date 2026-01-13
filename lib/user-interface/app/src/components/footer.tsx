@@ -55,6 +55,10 @@ export default function FooterComponent() {
               href: "https://www.mass.gov/public-records-requests",
               text: "Public Records Requests",
             },
+            {
+              href: "https://www.mass.gov/info-details/commonwealth-of-massachusetts-executive-department-digital-accessibility-statement",
+              text: "Accessibility Statement",
+            },
           ],
         }}
         footerLogo={{

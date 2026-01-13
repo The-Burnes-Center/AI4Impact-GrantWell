@@ -191,17 +191,17 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           input:focus,
           textarea:focus,
           select:focus {
-            outline: 2px solid #2c4fdb !important;
+            outline: 2px solid #0088FF !important;
             outline-offset: 2px !important;
           }
           
           button:focus {
-            outline: 2px solid #2c4fdb !important;
+            outline: 2px solid #0088FF !important;
             outline-offset: 2px !important;
           }
           
           a:focus {
-            outline: 2px solid #2c4fdb !important;
+            outline: 2px solid #0088FF !important;
             outline-offset: 2px !important;
           }
         `}
@@ -223,7 +223,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       >
         <div
           style={{
-            background: "#2c4fdb",
+            background: "#14558F",
             color: "white",
             padding: "20px 24px",
           }}
@@ -445,7 +445,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="projectName-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -509,7 +509,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="organizationName-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -589,7 +589,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="requestedAmount-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -662,7 +662,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 id="location-help"
                 style={{
                   display: "block",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   color: "#5a6575",
                   marginTop: "4px",
                 }}
@@ -727,7 +727,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 id="zipCode-help"
                 style={{
                   display: "block",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   color: "#5a6575",
                   marginTop: "4px",
                 }}
@@ -792,7 +792,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="contactName-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -857,7 +857,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               id="contactEmail-help"
               style={{
                 display: "block",
-                fontSize: "12px",
+                fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
               }}
@@ -897,7 +897,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             onClick={handleContinue}
             style={{
               padding: "12px 24px",
-              background: "#2c4fdb",
+              background: "#14558F",
               color: "white",
               border: "none",
               borderRadius: "6px",

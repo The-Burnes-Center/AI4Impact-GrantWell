@@ -3,14 +3,27 @@ import fs from "fs";
 import path from "path";
 import react from "@vitejs/plugin-react";
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.NODE_ENV === "staging";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
     "process.env": {},
+    // Inject ENVIRONMENT variable for use in client-side code
+    "__ENVIRONMENT__": JSON.stringify(process.env.ENVIRONMENT),
   },
   plugins: [
+    // Plugin to inject ENVIRONMENT variable into HTML
+    {
+      name: "inject-environment",
+      transformIndexHtml(html) {
+        const environment = process.env.ENVIRONMENT;
+        return html.replace(
+          '<head>',
+          `<head>\n    <script>window.__ENVIRONMENT__ = ${JSON.stringify(environment)};</script>`
+        );
+      },
+    },
     isDev && {
       name: "aws-exports",
       writeBundle() {

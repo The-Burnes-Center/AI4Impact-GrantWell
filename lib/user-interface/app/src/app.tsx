@@ -1,15 +1,10 @@
 import {
-  BrowserRouter,
   Outlet,
   Route,
   Routes,
   Navigate,
   useLocation,
 } from "react-router-dom";
-import { AppContext } from "./common/app-context";
-import BrandBanner from "./components/brand-banner";
-import MDSHeader from "./components/mds-header";
-import FooterComponent from "./components/footer";
 import Playground from "./pages/chatbot/playground/playground";
 import DataPage from "./pages/admin/data-view-page";
 import UserFeedbackPage from "./pages/admin/user-feedback-page";
@@ -20,57 +15,86 @@ import DocumentEditor from "./pages/document-editor";
 import DocEditorSessionsPage from "./pages/document-editor/doc-editor-sessions-page";
 import Dashboard from "./pages/Dashboard";
 import "./styles/app.scss";
-import { Mode } from "@cloudscape-design/global-styles";
-import { StorageHelper } from "./common/helpers/storage-helper";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+  const prevPathRef = useRef<string>("");
 
   useEffect(() => {
-    // Move focus to main content on route change for screen readers
-    // Use preventScroll to avoid auto-scrolling past headers
     const mainContent = document.getElementById("main-content");
     if (mainContent) {
-      // Prevent scrolling when focusing for accessibility
       mainContent.focus({ preventScroll: true });
     }
 
     // Update page title based on route
-    const pageTitles: { [key: string]: string } = {
-      "/": "GrantWell - Home",
-      "/landing-page/basePage": "GrantWell - Home",
-      "/dashboard": "Admin Dashboard - GrantWell",
-      "/chatbot/sessions": "Chat Sessions - GrantWell",
-      "/document-editor": "Document Editor - GrantWell",
+    const getPageTitle = (path: string): string => {
+      const exactMatches: { [key: string]: string } = {
+        "/": "GrantWell - Home",
+        "/landing-page/basePage": "GrantWell - Home",
+        "/dashboard": "Admin Dashboard - GrantWell",
+        "/chatbot/sessions": "Chat Sessions - GrantWell",
+        "/document-editor": "Document Editor - GrantWell",
+        "/document-editor/drafts": "Document Editor Drafts - GrantWell",
+        "/admin/data": "Admin Data View - GrantWell",
+        "/admin/user-feedback": "User Feedback - GrantWell",
+      };
+
+      if (exactMatches[path]) {
+        return exactMatches[path];
+      }
+
+      // Pattern matches for dynamic routes
+      if (path.startsWith("/chatbot/playground/")) {
+        return "Chatbot Playground - GrantWell";
+      }
+      if (path.startsWith("/document-editor/") && path !== "/document-editor/drafts") {
+        return "Document Editor Session - GrantWell";
+      }
+      if (path.startsWith("/landing-page/basePage/checklists/")) {
+        return "Requirements Checklist - GrantWell";
+      }
+
+      // Default fallback
+      return "GrantWell";
     };
 
-    const baseTitle = pageTitles[pathname] || "GrantWell";
+    const baseTitle = getPageTitle(pathname);
     document.title = baseTitle;
-  }, [pathname]);
+
+    const fullPath = pathname + search;
+    const fullUrl = window.location.origin + fullPath;
+    
+    if (prevPathRef.current !== fullPath) {
+      prevPathRef.current = fullPath;
+      
+      const environment = typeof window !== "undefined" && window.__ENVIRONMENT__ 
+        ? window.__ENVIRONMENT__ 
+        : 'staging';
+      const isProduction = environment === 'production';
+      
+      if (isProduction && typeof window !== "undefined" && window.gtag) {
+        window.gtag("config", "G-K27MB9Y26C", {
+          page_title: baseTitle,
+          page_path: fullPath,
+          page_location: fullUrl,
+        });
+      }
+    }
+  }, [pathname, search]);
 
   return null;
 }
 
 function App() {
-  const Router = BrowserRouter;
-
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
+  return <AppContent />;
 }
 
 function AppContent() {
-  const location = useLocation();
-  const isPlaygroundPage = location.pathname.startsWith("/chatbot/playground");
-
   return (
     <>
       <ScrollToTop />
-      <BrandBanner />
-      <MDSHeader />
+      {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
       <main id="main-content" role="main" tabIndex={-1}>
         <Routes>
           <Route
@@ -80,7 +104,6 @@ function AppContent() {
           />
           <Route path="/landing-page/basePage" element={<Outlet />}>
             <Route path="" element={<Welcome />} />
-            {/* Route for the checklists page with a dynamic parameter */}
             <Route
               path="/landing-page/basePage/checklists/:documentIdentifier"
               element={<Checklists />}
@@ -116,7 +139,6 @@ function AppContent() {
           />
         </Routes>
       </main>
-      {!isPlaygroundPage && <FooterComponent />}
     </>
   );
 }

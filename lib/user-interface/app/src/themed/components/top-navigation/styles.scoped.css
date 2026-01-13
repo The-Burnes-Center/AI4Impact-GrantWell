@@ -191,7 +191,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   background: var(--color-background-container-content-z79u4u, #ffffff);
@@ -416,7 +416,7 @@ body[data-awsui-focus-visible=true] .awsui_identity_k5dlb_1pj9w_235 > .awsui_ide
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   background: var(--color-background-container-content-z79u4u, #ffffff);
@@ -492,7 +492,7 @@ body[data-awsui-focus-visible=true] .awsui_identity_k5dlb_1pj9w_235 > .awsui_ide
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   display: flex;

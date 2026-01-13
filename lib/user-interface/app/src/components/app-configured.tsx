@@ -3,6 +3,7 @@ import {
   ThemeProvider,
   defaultDarkModeOverride,
 } from "@aws-amplify/ui-react";
+import { BrowserRouter } from "react-router-dom";
 import App from "../app";
 import { Amplify, Auth, Hub } from "aws-amplify";
 import { AppConfig } from "../common/types";
@@ -12,6 +13,9 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import { Mode } from "@cloudscape-design/global-styles";
 import "@aws-amplify/ui-react/styles.css";
 import AuthPage from "../pages/auth/auth-page";
+import BrandBanner from "./brand-banner";
+import MDSHeader from "./mds-header";
+import FooterComponent from "./footer";
 
 export default function AppConfigured() {
   const [config, setConfig] = useState<AppConfig | null>(null);
@@ -119,7 +123,6 @@ export default function AppConfigured() {
     };
   }, [theme]);
 
-  // display a loading screen while waiting for the config file to load
   if (!config) {
     if (error) {
       return (
@@ -158,7 +161,6 @@ export default function AppConfigured() {
     );
   }
 
-  // the main app - only display it when authenticated
   return (
     <AppContext.Provider value={config}>
       <ThemeProvider
@@ -168,14 +170,36 @@ export default function AppConfigured() {
         }}
         colorMode={theme === Mode.Dark ? "dark" : "light"}
       >
-        {authenticated ? (
-          <App />
-        ) : configured ? (
-          <AuthPage />
-        ) : (
-          <StatusIndicator type="loading">Loading</StatusIndicator>
-        )}
+        <BrowserRouter>
+          <AppLayoutContent
+            authenticated={authenticated}
+            configured={configured}
+          />
+        </BrowserRouter>
       </ThemeProvider>
     </AppContext.Provider>
+  );
+}
+
+function AppLayoutContent({
+  authenticated,
+  configured,
+}: {
+  authenticated: boolean | null;
+  configured: boolean;
+}) {
+  return (
+    <>
+      <BrandBanner />
+      <MDSHeader showSignOut={authenticated === true} />
+      {authenticated ? (
+        <App />
+      ) : configured ? (
+        <AuthPage />
+      ) : (
+        <StatusIndicator type="loading">Loading</StatusIndicator>
+      )}
+      <FooterComponent />
+    </>
   );
 }

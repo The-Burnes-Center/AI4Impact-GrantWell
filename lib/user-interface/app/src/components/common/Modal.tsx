@@ -205,7 +205,7 @@ export const Modal = React.memo<ModalProps>(
                 e.currentTarget.style.color = "#6b7280";
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = "2px solid #2c4fdb";
+                e.currentTarget.style.outline = "2px solid #0088FF";
                 e.currentTarget.style.outlineOffset = "2px";
               }}
               onBlur={(e) => {

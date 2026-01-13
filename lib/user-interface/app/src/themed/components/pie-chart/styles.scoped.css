@@ -342,7 +342,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
 }
 
 text.awsui_label__description_1edmh_113t9_344:not(#\9) {
-  font-size: var(--font-chart-detail-size-1n389u, 12px);
+  font-size: var(--font-chart-detail-size-1n389u, 14px);
   font-weight: 400;
   color: var(--color-text-group-label-8pk3es, #424650);
   fill: var(--color-text-group-label-8pk3es, #424650);

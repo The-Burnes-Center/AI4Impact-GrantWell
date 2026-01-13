@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Auth } from 'aws-amplify';
-import { Button, FormField, Input, Alert, SpaceBetween } from '@cloudscape-design/components';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/auth-page.css';
 
 interface ForgotPasswordPageProps {
@@ -12,6 +13,15 @@ export default function ForgotPasswordPage({ onBack, onCodeSent }: ForgotPasswor
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  // Focus error when it appears
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.focus();
+    }
+  }, [error]);
 
   const handleResetPassword = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e) {
@@ -38,55 +48,99 @@ export default function ForgotPasswordPage({ onBack, onCodeSent }: ForgotPasswor
   };
 
   return (
-    <main role="main" className="auth-page-container">
-      <div className="auth-card">
-        <div className="auth-header-section">
-          <div className="auth-logo-container">
-            <img
-              src="/images/stateseal-color.png"
-              alt="State Seal"
-              className="auth-logo"
-            />
-            <h1 className="auth-brand-title">GrantWell</h1>
-          </div>
-          <h1 className="auth-page-title">Forgot your password?</h1>
+    <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <main role="main" className="auth-page-container" id="main-content">
+        <div className="auth-card">
+          <div className="auth-header-section">
+            <div className="auth-logo-container">
+              <img
+                src="/images/stateseal-color.png"
+                alt="Massachusetts State Seal"
+                className="auth-logo"
+              />
+              <h1 className="auth-brand-title">GrantWell</h1>
+            </div>
+            <h2 className="auth-page-title">Forgot your password?</h2>
           <p className="auth-page-subtitle">
             Enter your email address. We will send a message with a code to reset your password.
           </p>
         </div>
         <div className="auth-content">
-          <form onSubmit={handleResetPassword} className="login-form">
-            <SpaceBetween size="l">
-              <FormField label="Email address">
-                <Input
-                  value={email}
-                  onChange={(e) => setEmail(e.detail.value.toLowerCase())}
-                  placeholder="Enter your email"
+          <div className="login-form">
+            <Form onSubmit={handleResetPassword} aria-label="Forgot password form" noValidate>
+              <div role="alert" aria-live="polite" aria-atomic="true">
+                {error && (
+                  <Alert 
+                    variant="danger" 
+                    dismissible 
+                    onClose={() => setError(null)} 
+                    className="mt-3"
+                    ref={errorRef}
+                    tabIndex={-1}
+                  >
+                    {error}
+                  </Alert>
+                )}
+              </div>
+              <Form.Group className="mb-3">
+                <Form.Label className="form-label" htmlFor="forgot-email-input">
+                  Email address
+                </Form.Label>
+                <Form.Control
+                  id="forgot-email-input"
                   type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value.toLowerCase())}
                   disabled={loading}
                   autoComplete="email"
+                  required
+                  className="form-input"
+                  ref={emailInputRef}
+                  aria-describedby={error ? "forgot-email-error" : undefined}
+                  aria-invalid={error ? true : false}
+                  aria-required="true"
                 />
-              </FormField>
-              {error && (
-                <Alert type="error" dismissible onDismiss={() => setError(null)}>
-                  {error}
-                </Alert>
-              )}
+                {error && <div id="forgot-email-error" className="sr-only">{error}</div>}
+              </Form.Group>
               <div className="login-form-actions">
-                <Button variant="primary" loading={loading} onClick={() => handleResetPassword()}>
-                  Reset my password
+                <Button 
+                  variant="primary" 
+                  type="submit" 
+                  disabled={loading} 
+                  className="login-submit-button"
+                  aria-label={loading ? "Sending password reset code, please wait" : "Reset my password"}
+                >
+                  {loading ? (
+                    <>
+                      <Spinner animation="border" size="sm" aria-hidden="true" />
+                      <span className="sr-only">Loading...</span>
+                      Sending...
+                    </>
+                  ) : (
+                    'Reset my password'
+                  )}
                 </Button>
               </div>
-              <div className="login-form-footer">
-                <Button variant="normal" onClick={onBack}>
-                  Back
-                </Button>
-              </div>
-            </SpaceBetween>
-          </form>
+            </Form>
+            <div className="login-form-footer">
+              <Button 
+                variant="link" 
+                onClick={onBack} 
+                className="create-account-link"
+                aria-label="Go back to sign in"
+              >
+                Back
+              </Button>
+            </div>
+          </div>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 

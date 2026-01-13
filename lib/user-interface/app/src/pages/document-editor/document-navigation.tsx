@@ -4,26 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../utils/recently-viewed-nofos";
 import { Home } from "lucide-react";
 
-// Function to get brand banner + MDS header height dynamically
-// Note: Headers are now static, so this is only used for minHeight calculations
-const getTopOffset = (): number => {
-  const bannerElement = document.querySelector(".ma__brand-banner");
-  const mdsHeaderElement = document.querySelector(".ma__header_slim");
-  
-  let bannerHeight = 40; // Default fallback
-  let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
-  
-  if (bannerElement) {
-    bannerHeight = bannerElement.getBoundingClientRect().height;
-  }
-  
-  if (mdsHeaderElement) {
-    mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
-  }
-  
-  return bannerHeight + mdsHeaderHeight;
-};
-
 interface DocumentNavigationProps {
   documentIdentifier?: string;
   currentStep: string;
@@ -31,6 +11,18 @@ interface DocumentNavigationProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+const useViewportWidth = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+};
 
 const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
   documentIdentifier,
@@ -40,54 +32,8 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
   setIsOpen,
 }) => {
   const navigate = useNavigate();
-  const [topOffset, setTopOffset] = useState<number>(100); // Default: 40px banner + 60px MDS header
-
-  // Monitor brand banner + MDS header height changes (for minHeight calculations only)
-  useEffect(() => {
-    const updateTopOffset = () => {
-      requestAnimationFrame(() => {
-        const offset = getTopOffset();
-        setTopOffset(offset);
-      });
-    };
-
-    // Initial calculation with a small delay to ensure headers are rendered
-    const initialTimer = setTimeout(updateTopOffset, 100);
-    updateTopOffset();
-
-    // Watch for changes
-    const observer = new MutationObserver(updateTopOffset);
-    const bannerElement = document.querySelector(".ma__brand-banner");
-    const mdsHeaderElement = document.querySelector(".ma__header_slim");
-    
-    if (bannerElement) {
-      observer.observe(bannerElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    if (mdsHeaderElement) {
-      observer.observe(mdsHeaderElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    window.addEventListener("resize", updateTopOffset);
-    window.addEventListener("scroll", updateTopOffset, { passive: true });
-
-    return () => {
-      clearTimeout(initialTimer);
-      observer.disconnect();
-      window.removeEventListener("resize", updateTopOffset);
-      window.removeEventListener("scroll", updateTopOffset);
-    };
-  }, []);
+  const viewportWidth = useViewportWidth();
+  const isNarrowViewport = viewportWidth <= 320;
 
   // Handle chat navigation
   const handleChatNavigation = () => {
@@ -128,23 +74,94 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (isNarrowViewport && isOpen) {
+      setIsOpen(false);
+    }
+  }, [isNarrowViewport, isOpen, setIsOpen]);
+
   return (
-    <div
-      style={{
-        width: isOpen ? "240px" : "60px",
-        background: "#1a202c",
-        color: "white",
-        display: "flex",
-        flexDirection: "column",
-        borderRight: "1px solid #23272f",
-        transition: "width 0.3s ease",
-        overflow: "hidden",
-        position: "static",
-        flexShrink: 0,
-        height: "100%",
-        alignSelf: "stretch",
-      }}
-    >
+    <>
+      {isNarrowViewport && !isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            position: 'fixed',
+            top: '8px',
+            left: '8px',
+            zIndex: 1001,
+            background: '#1a202c',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            padding: '8px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          }}
+          aria-label="Open navigation menu"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            style={{
+              width: "20px",
+              height: "20px",
+              stroke: "currentColor",
+              fill: "none",
+              strokeWidth: 2,
+            }}
+          >
+            <path d="M9 18l6-6-6-6"></path>
+          </svg>
+        </button>
+      )}
+
+      {/* Overlay backdrop for mobile sidebar */}
+      {isNarrowViewport && isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 1000,
+          }}
+          aria-hidden="true"
+        />
+      )}
+
+      <div
+        style={{
+          width: isNarrowViewport 
+            ? (isOpen ? "100%" : "0")
+            : (isOpen ? "240px" : "60px"),
+          background: "#1a202c",
+          color: "white",
+          display: "flex",
+          flexDirection: "column",
+          borderRight: "1px solid #23272f",
+          transition: "width 0.3s ease, transform 0.3s ease",
+          overflow: "hidden",
+          ...(isNarrowViewport && {
+            position: isOpen ? 'fixed' : 'relative',
+            top: isOpen ? 0 : 'auto',
+            left: isOpen ? 0 : 'auto',
+            right: isOpen ? 0 : 'auto',
+            bottom: isOpen ? 0 : 'auto',
+            zIndex: isOpen ? 1001 : 'auto',
+            maxWidth: isOpen ? '280px' : '0',
+            height: isOpen ? '100vh' : '100%',
+          }),
+          ...(!isNarrowViewport && {
+            position: 'static',
+            height: "100%",
+            alignSelf: "stretch",
+          }),
+          flexShrink: 0,
+        }}
+      >
       <div
         style={{
           padding: "16px",
@@ -212,7 +229,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
             <div
               style={{
                 padding: "0 16px 8px 16px",
-                fontSize: "12px",
+                fontSize: "14px",
                 fontWeight: 600,
                 color: "#e2e8f0",
                 textTransform: "uppercase",
@@ -398,7 +415,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
               <div
                 style={{
                   padding: "0 16px 8px 16px",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   fontWeight: 600,
                   color: "#a0aec0",
                   textTransform: "uppercase",
@@ -672,6 +689,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
         )}
       </div>
     </div>
+    </>
   );
 };
 

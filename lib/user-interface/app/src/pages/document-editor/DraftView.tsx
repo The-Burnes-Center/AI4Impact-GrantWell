@@ -89,7 +89,7 @@ const DraftView: React.FC<DraftViewProps> = ({
         onClick={onStartEditing}
         style={{
           padding: "12px 32px",
-          background: "#2c4fdb",
+          background: "#14558F",
           color: "white",
           border: "none",
           borderRadius: "6px",

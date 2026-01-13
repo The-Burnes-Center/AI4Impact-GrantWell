@@ -2,17 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: light)"
-      content="#ffffff"
-    />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: dark)"
-      content="#0e1b2a"
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <!-- Google tag (gtag.js) -->
+    <script>
+      const environment = window.__ENVIRONMENT__;
+      const isProduction = environment === 'production';
+      
+      if (isProduction) {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-K27MB9Y26C';
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-K27MB9Y26C');
+      }
+    </script>
+    <link
+      rel="icon"
+      href="https://unpkg.com/@massds/mayflower-assets@14.1.0/static/images/logo/stateseal.png"
+      type="image/png"
     />
     <meta name="description" content="GrantWell: AI Grants Assistant" />
     <link rel="manifest" href="/manifest.json" />
@@ -28,8 +40,13 @@
       rel="stylesheet"
       href="https://unpkg.com/@massds/mayflower-assets@14.1.0/css/footer.css"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <title>GrantWell: AI Grants Assistant</title>
-    <link rel="icon" href="/images/stateseal-color.png" type="image/png" />
     <style>
       /* Custom styles for title with state seal */
       .title-with-seal {
@@ -46,7 +63,6 @@
     <script>
       const global = window.global || window;
 
-      // Add state seal to document title area after page loads
       window.addEventListener("DOMContentLoaded", () => {
         const headerTitle = document.querySelector(
           "header h1, header div, .app-title"

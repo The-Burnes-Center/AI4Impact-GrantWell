@@ -1701,7 +1701,7 @@ const Dashboard: React.FC = () => {
                 <LuInfo
                   size={32}
                   className="warning-icon"
-                  style={{ color: "#0073bb" }}
+                  style={{ color: "#14558F" }}
                 />
                 <p>Are you sure you want to scrape NOFOs now?</p>
               </div>

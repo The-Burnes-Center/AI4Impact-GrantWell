@@ -170,7 +170,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   border-start-start-radius: var(--border-radius-input-plgbrq, 8px);
@@ -287,7 +287,7 @@ surrounding text. (WCAG F73) https://www.w3.org/WAI/WCAG21/Techniques/failures/F
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   border-start-start-radius: var(--border-radius-input-plgbrq, 8px);
@@ -408,7 +408,7 @@ body[data-awsui-focus-visible=true] .awsui_button_55fkh_7yysf_348 > .awsui_actio
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   border-start-start-radius: var(--border-radius-input-plgbrq, 8px);
@@ -457,7 +457,7 @@ body[data-awsui-focus-visible=true] .awsui_button_55fkh_7yysf_348 > .awsui_actio
   line-height: var(--line-height-body-m-30ar75, 20px);
   color: var(--color-text-body-default-7v1jfn, #0f141a);
   font-weight: 400;
-  font-family: var(--font-family-base-eynpfp, Open Sans);
+  font-family: var(--font-family-base-eynpfp, Noto Sans);
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
   border-start-start-radius: var(--border-radius-input-plgbrq, 8px);

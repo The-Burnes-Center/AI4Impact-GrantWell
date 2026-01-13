@@ -31,9 +31,9 @@ export default function BaseAppLayout({
   return (
     <SessionRefreshContext.Provider value={{ needsRefresh, setNeedsRefresh }}>
       <NotificationProvider>
-        <div style={{ display: "flex", height: "100vh" }}>
+        <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
           {/* Main content and tools area using AppLayout */}
-          <div style={{ flex: 1, overflow: "hidden" }}>
+          <div style={{ flex: 1, overflow: "auto", minWidth: 0 }}>
             <AppLayout
               headerSelector="#awsui-top-navigation"
               content={
