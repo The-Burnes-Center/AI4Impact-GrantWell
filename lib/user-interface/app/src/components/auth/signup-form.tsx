@@ -1,6 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Auth } from 'aws-amplify';
-import { Button, FormField, Input, Alert, SpaceBetween, Checkbox } from '@cloudscape-design/components';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../styles/auth-page.css';
 
 interface SignUpFormProps {
   onSuccess: () => void;
@@ -16,6 +18,22 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
   const [error, setError] = useState<string | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
   const [showVerification, setShowVerification] = useState(false);
+  const errorRef = useRef<HTMLDivElement>(null);
+  const verificationInputRef = useRef<HTMLInputElement>(null);
+
+  // Focus error when it appears
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.focus();
+    }
+  }, [error]);
+
+  // Focus verification input when verification form appears
+  useEffect(() => {
+    if (showVerification && verificationInputRef.current) {
+      verificationInputRef.current.focus();
+    }
+  }, [showVerification]);
 
   // Password requirements validation
   const passwordRequirements = useMemo(() => {
@@ -119,127 +137,245 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
 
   if (showVerification) {
     return (
-      <form onSubmit={handleVerify}>
-        <SpaceBetween size="m">
-          <div>
-            <p style={{ marginBottom: '16px', color: '#5a6169' }}>
-              We've sent a verification code to <strong>{email}</strong>. Please enter it below.
-            </p>
+      <div className="login-form">
+        <p style={{ marginBottom: '16px', color: '#6b7280' }}>
+          We've sent a verification code to <strong>{email}</strong>. Please enter it below.
+        </p>
+        <Form onSubmit={handleVerify} aria-label="Email verification form" noValidate>
+          <div role="alert" aria-live="polite" aria-atomic="true">
+            {error && (
+              <Alert 
+                variant="danger" 
+                dismissible 
+                onClose={() => setError(null)} 
+                className="mt-3"
+                ref={errorRef}
+                tabIndex={-1}
+              >
+                {error}
+              </Alert>
+            )}
           </div>
-          <FormField label="Verification Code">
-            <Input
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.detail.value)}
-              placeholder="Enter verification code from email"
+          <Form.Group className="mb-3">
+            <Form.Label className="form-label" htmlFor="verification-code-input">
+              Verification Code
+            </Form.Label>
+            <Form.Control
+              id="verification-code-input"
               type="text"
+              placeholder="Enter verification code from email"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
               disabled={loading}
+              required
+              className="form-input"
+              ref={verificationInputRef}
+              aria-describedby={error ? "verification-error" : undefined}
+              aria-invalid={error ? true : false}
+              aria-required="true"
+              inputMode="numeric"
+              autoComplete="one-time-code"
             />
-          </FormField>
-          {error && (
-            <Alert type="error" dismissible onDismiss={() => setError(null)}>
-              {error}
-            </Alert>
-          )}
-          <SpaceBetween direction="horizontal" size="xs">
-            <Button variant="primary" loading={loading} onClick={() => handleVerify()}>
-              Verify Email
+            {error && <div id="verification-error" className="sr-only">{error}</div>}
+          </Form.Group>
+          <div className="login-form-actions">
+            <Button 
+              variant="primary" 
+              type="submit" 
+              disabled={loading} 
+              className="login-submit-button"
+              aria-label={loading ? "Verifying email, please wait" : "Verify email address"}
+            >
+              {loading ? (
+                <>
+                  <Spinner animation="border" size="sm" aria-hidden="true" />
+                  <span className="sr-only">Loading...</span>
+                  Verifying...
+                </>
+              ) : (
+                'Verify Email'
+              )}
             </Button>
-            <Button onClick={handleResendCode} disabled={loading}>
+          </div>
+          <div className="login-form-footer">
+            <Button 
+              variant="link" 
+              onClick={handleResendCode} 
+              disabled={loading} 
+              className="create-account-link"
+              aria-label="Resend verification code"
+            >
               Resend Code
             </Button>
-            <Button onClick={() => {
-              setShowVerification(false);
-              setVerificationCode('');
-              setError(null);
-            }}>
+            <Button 
+              variant="link" 
+              onClick={() => {
+                setShowVerification(false);
+                setVerificationCode('');
+                setError(null);
+              }}
+              disabled={loading}
+              className="create-account-link"
+              style={{ marginLeft: '16px' }}
+              aria-label="Go back to sign up form"
+            >
               Back
             </Button>
-          </SpaceBetween>
-        </SpaceBetween>
-      </form>
+          </div>
+        </Form>
+      </div>
     );
   }
 
   return (
-    <form onSubmit={handleSignUp} className="login-form">
-      <SpaceBetween size="l">
-        <FormField label="Email address">
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.detail.value.toLowerCase())}
-            placeholder="Enter your email"
+    <div className="login-form">
+      <Form onSubmit={handleSignUp} aria-label="Create account form" noValidate>
+        <div role="alert" aria-live="polite" aria-atomic="true">
+          {error && (
+            <Alert 
+              variant="danger" 
+              dismissible 
+              onClose={() => setError(null)} 
+              className="mt-3"
+              ref={errorRef}
+              tabIndex={-1}
+            >
+              {error}
+            </Alert>
+          )}
+        </div>
+        <Form.Group className="mb-3">
+          <Form.Label className="form-label" htmlFor="signup-email-input">
+            Email address
+          </Form.Label>
+          <Form.Control
+            id="signup-email-input"
             type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value.toLowerCase())}
             disabled={loading}
             autoComplete="email"
+            required
+            className="form-input"
+            aria-describedby={error ? "signup-email-error" : undefined}
+            aria-invalid={error ? true : false}
+            aria-required="true"
           />
-        </FormField>
-        <FormField label="Password">
-          <Input
-            value={password}
-            onChange={(e) => setPassword(e.detail.value)}
+          {error && <div id="signup-email-error" className="sr-only">{error}</div>}
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label className="form-label" htmlFor="signup-password-input">
+            Password
+          </Form.Label>
+          <Form.Control
+            id="signup-password-input"
+            type={showPassword ? "text" : "password"}
             placeholder="Enter password"
-            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
             autoComplete="new-password"
+            required
+            className="form-input"
+            aria-describedby="password-requirements signup-password-error"
+            aria-invalid={error ? true : false}
+            aria-required="true"
           />
-          <div className="password-requirements">
-            <div className={`password-requirement ${passwordRequirements.minLength ? 'met' : ''}`}>
-              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.minLength ? '✓' : '○'}</span>
-              <span>Password must be at least 8 characters</span>
-            </div>
-            <div className={`password-requirement ${passwordRequirements.hasNumber ? 'met' : ''}`}>
-              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.hasNumber ? '✓' : '○'}</span>
-              <span>Use a number</span>
-            </div>
-            <div className={`password-requirement ${passwordRequirements.hasLowercase ? 'met' : ''}`}>
-              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.hasLowercase ? '✓' : '○'}</span>
-              <span>Use a lowercase letter</span>
-            </div>
-            <div className={`password-requirement ${passwordRequirements.hasUppercase ? 'met' : ''}`}>
-              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.hasUppercase ? '✓' : '○'}</span>
-              <span>Use an uppercase letter</span>
-            </div>
-            <div className={`password-requirement ${passwordRequirements.hasSymbol ? 'met' : ''}`}>
-              <span className="requirement-icon" aria-hidden="true">{passwordRequirements.hasSymbol ? '✓' : '○'}</span>
-              <span>Use a symbol</span>
-            </div>
+          {error && <div id="signup-password-error" className="sr-only">{error}</div>}
+          <div id="password-requirements" className="password-requirements mt-2" role="group" aria-label="Password requirements">
+            <small>
+              <div className={`password-requirement ${passwordRequirements.minLength ? 'text-success' : 'text-muted'}`}>
+                <span aria-hidden="true">{passwordRequirements.minLength ? '✓' : '○'}</span>{' '}
+                <span className={passwordRequirements.minLength ? 'sr-only' : ''}>Requirement not met: </span>
+                Password must be at least 8 characters
+              </div>
+              <div className={`password-requirement ${passwordRequirements.hasNumber ? 'text-success' : 'text-muted'}`}>
+                <span aria-hidden="true">{passwordRequirements.hasNumber ? '✓' : '○'}</span>{' '}
+                <span className={passwordRequirements.hasNumber ? 'sr-only' : ''}>Requirement not met: </span>
+                Use a number
+              </div>
+              <div className={`password-requirement ${passwordRequirements.hasLowercase ? 'text-success' : 'text-muted'}`}>
+                <span aria-hidden="true">{passwordRequirements.hasLowercase ? '✓' : '○'}</span>{' '}
+                <span className={passwordRequirements.hasLowercase ? 'sr-only' : ''}>Requirement not met: </span>
+                Use a lowercase letter
+              </div>
+              <div className={`password-requirement ${passwordRequirements.hasUppercase ? 'text-success' : 'text-muted'}`}>
+                <span aria-hidden="true">{passwordRequirements.hasUppercase ? '✓' : '○'}</span>{' '}
+                <span className={passwordRequirements.hasUppercase ? 'sr-only' : ''}>Requirement not met: </span>
+                Use an uppercase letter
+              </div>
+              <div className={`password-requirement ${passwordRequirements.hasSymbol ? 'text-success' : 'text-muted'}`}>
+                <span aria-hidden="true">{passwordRequirements.hasSymbol ? '✓' : '○'}</span>{' '}
+                <span className={passwordRequirements.hasSymbol ? 'sr-only' : ''}>Requirement not met: </span>
+                Use a symbol
+              </div>
+            </small>
           </div>
-        </FormField>
-        <FormField label="Confirm password">
-          <Input
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.detail.value)}
-            placeholder="Reenter password"
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label className="form-label" htmlFor="confirm-password-input">
+            Confirm password
+          </Form.Label>
+          <Form.Control
+            id="confirm-password-input"
             type={showPassword ? "text" : "password"}
+            placeholder="Reenter password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             disabled={loading}
             autoComplete="new-password"
+            required
+            className="form-input"
+            aria-describedby={error ? "confirm-password-error" : undefined}
+            aria-invalid={error ? true : false}
+            aria-required="true"
           />
-        </FormField>
+          {error && <div id="confirm-password-error" className="sr-only">{error}</div>}
+        </Form.Group>
         <div className="login-form-options">
-          <Checkbox
+          <Form.Check
+            type="checkbox"
+            id="signup-show-password-checkbox"
+            label="Show password"
             checked={showPassword}
-            onChange={(e) => setShowPassword(e.detail.checked)}
-          >
-            Show password
-          </Checkbox>
+            onChange={(e) => setShowPassword(e.target.checked)}
+            className="show-password-checkbox"
+            aria-label="Show password as plain text"
+          />
         </div>
-        {error && (
-          <Alert type="error" dismissible onDismiss={() => setError(null)}>
-            {error}
-          </Alert>
-        )}
         <div className="login-form-actions">
-          <Button variant="primary" loading={loading} onClick={() => handleSignUp()}>
-            Sign up
+          <Button 
+            variant="primary" 
+            type="submit" 
+            disabled={loading} 
+            className="login-submit-button"
+            aria-label={loading ? "Creating account, please wait" : "Create account"}
+          >
+            {loading ? (
+              <>
+                <Spinner animation="border" size="sm" aria-hidden="true" />
+                <span className="sr-only">Loading...</span>
+                Creating account...
+              </>
+            ) : (
+              'Sign up'
+            )}
           </Button>
         </div>
-        <div className="login-form-footer">
-          <Button variant="link" onClick={onSwitchToLogin}>
-            Have an account already? Sign in
-          </Button>
-        </div>
-      </SpaceBetween>
-    </form>
+      </Form>
+      <div className="login-form-footer">
+        <Button 
+          variant="link" 
+          onClick={onSwitchToLogin} 
+          disabled={loading} 
+          className="create-account-link"
+          aria-label="Have an account already? Sign in"
+        >
+          Have an account already? Sign in
+        </Button>
+      </div>
+    </div>
   );
 }
 
