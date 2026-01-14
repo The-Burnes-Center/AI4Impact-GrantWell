@@ -838,6 +838,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -850,6 +852,19 @@ export class LambdaFunctionStack extends cdk.Stack {
         resources: [
           props.ffioNofosBucket.bucketArn,
           props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+
+    // Grant DynamoDB delete permissions
+    nofoDeleteHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:DeleteItem",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
         ],
       })
     );
