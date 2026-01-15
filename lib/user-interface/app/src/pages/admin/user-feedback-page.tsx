@@ -1,26 +1,17 @@
-import {
-  BreadcrumbGroup,
-  ContentLayout,
-  Header,
-  SpaceBetween,
-  Alert
-} from "@cloudscape-design/components";
-import {
-  Authenticator,
-  Heading,
-  useTheme,
-} from "@aws-amplify/ui-react";
+import { Breadcrumb, Container, Alert } from "react-bootstrap";
 import BaseAppLayout from "../../components/base-app-layout";
-import useOnFollow from "../../common/hooks/use-on-follow";
 import FeedbackTab from "./feedback-tab";
 import FeedbackPanel from "../../components/feedback-panel";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 export default function UserFeedbackPage() {
-  const onFollow = useOnFollow();  
+  const navigate = useNavigate();
   const [feedback, setFeedback] = useState<any>({});
   const [admin, setAdmin] = useState<boolean>(false);
 
@@ -60,7 +51,8 @@ export default function UserFeedbackPage() {
           alignItems: "center",
         }}
       >
-        <Alert header="Configuration error" type="error">
+        <Alert variant="danger">
+          <Alert.Heading>Configuration error</Alert.Heading>
           You are not authorized to view this page!
         </Alert>
       </div>
@@ -71,28 +63,22 @@ export default function UserFeedbackPage() {
     <BaseAppLayout
       contentType="cards"
       breadcrumbs={
-        <BreadcrumbGroup
-          onFollow={onFollow}
-          items={[
-            {
-              text: CHATBOT_NAME,
-              href: "/chatbot/playground/${uuidv4()}",
-            },
-
-            {
-              text: "View Feedback",
-              href: "/admin/user-feedback",
-            },
-          ]}
-        />
+        <Breadcrumb>
+          <Breadcrumb.Item 
+            onClick={() => navigate(`/chatbot/playground/${uuidv4()}`)}
+            style={{ cursor: "pointer" }}
+          >
+            {CHATBOT_NAME}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item active>View Feedback</Breadcrumb.Item>
+        </Breadcrumb>
       }
       splitPanel={<FeedbackPanel selectedFeedback={feedback}/>}
       content={
-        <ContentLayout header={<Header variant="h1">View Feedback</Header>}>
-          <SpaceBetween size="l">
-                <FeedbackTab updateSelectedFeedback={setFeedback}/>
-          </SpaceBetween>
-        </ContentLayout>
+        <Container fluid className="p-4">
+          <h1 className="mb-4">View Feedback</h1>
+          <FeedbackTab updateSelectedFeedback={setFeedback}/>
+        </Container>
       }
     />
   );

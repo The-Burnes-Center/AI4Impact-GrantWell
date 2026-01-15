@@ -1,26 +1,13 @@
-import {
-  Box,
-  SpaceBetween,
-  Table,
-  DateRangePicker,
-  Pagination,
-  Button,
-  Header,
-  Modal,
-  Select,
-  DateRangePickerProps,
-} from "@cloudscape-design/components";
-import { I18nProvider } from '@cloudscape-design/components/i18n';
-import messages from '@cloudscape-design/components/i18n/messages/all.all';
+import { Table, Pagination, Button, Modal, Card, Form } from "react-bootstrap";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
-import { useCollection } from "@cloudscape-design/collection-hooks";
 import React from 'react';
 import { useNotifications } from "../../components/notif-manager";
-import { feedbackCategories } from '../../common/constants'
+import { feedbackCategories } from '../../common/constants';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export interface FeedbackTabProps {
   updateSelectedFeedback: React.Dispatch<any>;
@@ -40,35 +27,21 @@ export default function FeedbackTab(props: FeedbackTabProps) {
     selectedOption,
     setSelectedOption
   ] = React.useState({ label: "Any", value: "any" });
-  const [value, setValue] = React.useState<DateRangePickerProps.AbsoluteValue>({
-    type: "absolute",
-    startDate: (new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1)).toISOString().split("T")[0],
-    endDate: (new Date()).toISOString().split("T")[0]
-  });
+  const [startDate, setStartDate] = React.useState<string>(
+    (new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1)).toISOString().split("T")[0]
+  );
+  const [endDate, setEndDate] = React.useState<string>(
+    (new Date()).toISOString().split("T")[0]
+  );
 
   const { addNotification, removeNotification } = useNotifications();
 
-  /** Theoretically handles pagination but I think it works without this actually */
-  const { items, collectionProps, paginationProps } = useCollection(pages, {
-    filtering: {
-      empty: (
-        <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
-          <SpaceBetween size="m">
-            <b>No feedback</b>
-          </SpaceBetween>
-        </Box>
-      ),
-    },
-    pagination: { pageSize: 5 },
-    sorting: {
-      defaultState: {
-        sortingColumn: {
-          sortingField: "FeedbackID",
-        },
-        isDescending: true,
-      },
-    },
-    selection: {},
+  // Sort items by FeedbackID descending by default
+  const currentPageItems = pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Items || [];
+  const sortedItems = [...currentPageItems].sort((a, b) => {
+    if (a.FeedbackID < b.FeedbackID) return 1;
+    if (a.FeedbackID > b.FeedbackID) return -1;
+    return 0;
   });
 
   /** This is the memoized function that is used to get feedback. It takes in a
@@ -79,7 +52,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
     async (params: { pageIndex?, nextPageToken?}) => {
       setLoading(true);
       try {
-        const result = await apiClient.userFeedback.getUserFeedback(selectedOption.value, value.startDate + "T00:00:00", value.endDate + "T23:59:59", params.nextPageToken)
+        const result = await apiClient.userFeedback.getUserFeedback(selectedOption.value, startDate + "T00:00:00", endDate + "T23:59:59", params.nextPageToken)
 
         setPages((current) => {
           /** When any of the filters change, we want to reset the display back to page 1.
@@ -104,7 +77,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
       }
       setLoading(false);
     },
-    [appContext, selectedOption, value, needsRefresh]
+    [appContext, selectedOption, startDate, endDate, needsRefresh]
   );
 
 
@@ -166,180 +139,182 @@ export default function FeedbackTab(props: FeedbackTabProps) {
     setLoading(false);
   };
 
+  const handleSelectItem = (item: any) => {
+    if (selectedItems.some((i) => i.FeedbackID === item.FeedbackID)) {
+      setSelectedItems([]);
+      props.updateSelectedFeedback(null);
+    } else {
+      setSelectedItems([item]);
+      props.updateSelectedFeedback(item);
+    }
+  };
 
+  const isSelected = (item: any) => {
+    return selectedItems.some((i) => i.FeedbackID === item.FeedbackID);
+  };
 
   return (
     <>
-      <Modal
-        onDismiss={() => setShowModalDelete(false)}
-        visible={showModalDelete}
-        footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              {" "}
-              <Button variant="link" onClick={() => setShowModalDelete(false)}>
-                Cancel
-              </Button>
-              <Button variant="primary" onClick={deleteSelectedFeedback}>
-                Ok
-              </Button>
-            </SpaceBetween>{" "}
-          </Box>
-        }
-        header={"Delete feedback" + (selectedItems.length > 1 ? "s" : "")}
-      >
-        Do you want to delete{" "}
-        {selectedItems.length == 1
-          ? `Feedback ${selectedItems[0].FeedbackID!}?`
-          : `${selectedItems.length} Feedback?`}
+      <Modal show={showModalDelete} onHide={() => setShowModalDelete(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete feedback{selectedItems.length > 1 ? "s" : ""}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Do you want to delete{" "}
+          {selectedItems.length == 1
+            ? `Feedback ${selectedItems[0].FeedbackID!}?`
+            : `${selectedItems.length} Feedback?`}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModalDelete(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={deleteSelectedFeedback}>
+            Ok
+          </Button>
+        </Modal.Footer>
       </Modal>
-      <I18nProvider locale="en" messages={[messages]}>
-
-
-        <Table
-          {...collectionProps}
-          loading={loading}
-          loadingText={`Loading Feedback`}
-          columnDefinitions={columnDefinitions}
-          selectionType="single"
-          onSelectionChange={({ detail }) => {
-            props.updateSelectedFeedback(detail.selectedItems[0])
-            setSelectedItems(detail.selectedItems);
-          }}
-          selectedItems={selectedItems}
-          items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Items!}
-          trackBy="FeedbackID"
-          header={
-            <Header
-              actions={
-                <SpaceBetween direction="horizontal" size="xs">
-                  <DateRangePicker
-                    onChange={({ detail }) => {
-                      /** If the date changes, refresh all of the feedback. This
-                       * prevents bugs where one page is up-to-date and the previous/next ones are not
-                       */
-                      needsRefresh.current = true;
-                      setValue(detail.value as DateRangePickerProps.AbsoluteValue)
-                    }}
-                    value={value as DateRangePickerProps.AbsoluteValue}
-                    relativeOptions={[
-                      {
-                        key: "previous-5-minutes",
-                        amount: 5,
-                        unit: "minute",
-                        type: "relative"
-                      },
-                      {
-                        key: "previous-30-minutes",
-                        amount: 30,
-                        unit: "minute",
-                        type: "relative"
-                      },
-                      {
-                        key: "previous-1-hour",
-                        amount: 1,
-                        unit: "hour",
-                        type: "relative"
-                      },
-                      {
-                        key: "previous-6-hours",
-                        amount: 6,
-                        unit: "hour",
-                        type: "relative"
-                      }
-                    ]}
-
-                    isValidRange={range => {
-                      if (range.type === "absolute") {
-                        const [
-                          startDateWithoutTime
-                        ] = range.startDate.split("T");
-                        const [
-                          endDateWithoutTime
-                        ] = range.endDate.split("T");
-                        if (
-                          !startDateWithoutTime ||
-                          !endDateWithoutTime
-                        ) {
-                          return {
-                            valid: false,
-                            errorMessage:
-                              "The selected date range is incomplete. Select a start and end date for the date range."
-                          };
-                        }
-                        if (
-                          +new Date(range.startDate) - +new Date(range.endDate) > 0
-                        ) {
-                          return {
-                            valid: false,
-                            errorMessage:
-                              "The selected date range is invalid. The start date must be before the end date."
-                          };
-                        }
-                      }
-                      return { valid: true };
-                    }}
-                    i18nStrings={{}}
-                    placeholder="Filter by a date and time range"
-                    showClearButton={false}
-                    dateOnly
-                    timeInputFormat="hh:mm:ss"
-                    rangeSelectorMode="absolute-only"
-                  />
-                  <Select
-                    selectedOption={selectedOption}
-                    onChange={({ detail }) => {
-                      /** If the topic changes, refresh all of the feedback */
-                      needsRefresh.current = true;
-                      setSelectedOption({ label: detail.selectedOption.label!, value: detail.selectedOption.value });
-                    }}
-                    placeholder="Choose a category"
-                    options={[...feedbackCategories, {label : "Any", value: "any", disabled: false}]}
-                  />
-                  <Button iconName="refresh" onClick={refreshPage} />
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      apiClient.userFeedback.downloadFeedback(selectedOption.value, value.startDate, value.endDate);
-                      const id = addNotification("success", "Your files have been downloaded.")
-                      Utils.delay(3000).then(() => removeNotification(id));
-                    }}
-                  >Download</Button>
-                  <Button
-                    variant="primary"
-                    disabled={selectedItems.length == 0}
-                    onClick={() => {
-                      if (selectedItems.length > 0) setShowModalDelete(true);
-                    }}
-                    data-testid="submit">
-                    Delete
-                  </Button>
-                </SpaceBetween>
-              }
-              description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
-            >
-              {"Feedback"}
-
-            </Header>
-          }
-          empty={
-            <Box textAlign="center">No feedback available</Box>
-          }
-          pagination={
-            pages.length === 0 ? null : (
-              <Pagination
-                openEnd={true}
-                pagesCount={pages.length}
-                currentPageIndex={currentPageIndex}
-                onNextPageClick={onNextPageClick}
-                onPreviousPageClick={onPreviousPageClick}
-              />
-            )
-          }
-        />
-      </I18nProvider>
+      <Card>
+        <Card.Header>
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+              <h5 className="mb-0">Feedback</h5>
+              <small className="text-muted">
+                Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes.
+              </small>
+            </div>
+            <div className="d-flex gap-2 flex-wrap">
+              <Form.Group className="d-flex align-items-center gap-2">
+                <Form.Label className="mb-0">Start Date:</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => {
+                    needsRefresh.current = true;
+                    setStartDate(e.target.value);
+                  }}
+                  style={{ width: "auto" }}
+                />
+              </Form.Group>
+              <Form.Group className="d-flex align-items-center gap-2">
+                <Form.Label className="mb-0">End Date:</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => {
+                    needsRefresh.current = true;
+                    setEndDate(e.target.value);
+                  }}
+                  style={{ width: "auto" }}
+                />
+              </Form.Group>
+              <Form.Select
+                value={selectedOption.value}
+                onChange={(e) => {
+                  needsRefresh.current = true;
+                  const option = [...feedbackCategories, {label : "Any", value: "any", disabled: false}].find(
+                    (opt) => opt.value === e.target.value
+                  );
+                  if (option) {
+                    setSelectedOption({ label: option.label, value: option.value });
+                  }
+                }}
+                style={{ width: "auto" }}
+              >
+                {[...feedbackCategories, {label : "Any", value: "any", disabled: false}].map((cat) => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </option>
+                ))}
+              </Form.Select>
+              <Button variant="outline-secondary" onClick={refreshPage}>
+                ↻ Refresh
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  apiClient.userFeedback.downloadFeedback(selectedOption.value, startDate, endDate);
+                  const id = addNotification("success", "Your files have been downloaded.")
+                  Utils.delay(3000).then(() => removeNotification(id));
+                }}
+              >
+                Download
+              </Button>
+              <Button
+                variant="danger"
+                disabled={selectedItems.length == 0}
+                onClick={() => {
+                  if (selectedItems.length > 0) setShowModalDelete(true);
+                }}
+                data-testid="submit"
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </Card.Header>
+        <Card.Body>
+          {loading ? (
+            <div className="text-center p-4">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <div className="mt-2">Loading Feedback</div>
+            </div>
+          ) : sortedItems.length === 0 ? (
+            <div className="text-center p-4">No feedback available</div>
+          ) : (
+            <>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th style={{ width: "40px" }}></th>
+                    {columnDefinitions.map((col) => (
+                      <th key={col.id}>{col.header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedItems.map((item) => (
+                    <tr
+                      key={item.FeedbackID}
+                      onClick={() => handleSelectItem(item)}
+                      style={{ cursor: "pointer" }}
+                      className={isSelected(item) ? "table-active" : ""}
+                    >
+                      <td>
+                        <input
+                          type="radio"
+                          checked={isSelected(item)}
+                          onChange={() => handleSelectItem(item)}
+                        />
+                      </td>
+                      {columnDefinitions.map((col) => (
+                        <td key={col.id}>{col.cell(item)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              {pages.length > 0 && (
+                <div className="d-flex justify-content-center mt-3">
+                  <Pagination>
+                    <Pagination.Prev
+                      disabled={currentPageIndex === 1}
+                      onClick={onPreviousPageClick}
+                    />
+                    <Pagination.Item active>{currentPageIndex}</Pagination.Item>
+                    <Pagination.Next
+                      disabled={!pages[currentPageIndex - 1]?.NextPageToken}
+                      onClick={onNextPageClick}
+                    />
+                  </Pagination>
+                </div>
+              )}
+            </>
+          )}
+        </Card.Body>
+      </Card>
     </>
-
-
   );
 }

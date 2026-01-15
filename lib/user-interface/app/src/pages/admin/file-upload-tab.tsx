@@ -1,22 +1,12 @@
-import {
-  Button,
-  Container,
-  FileUpload,
-  Flashbar,
-  FlashbarProps,
-  Form,
-  FormField,
-  ProgressBar,
-  ProgressBarProps,
-  SpaceBetween,
-} from "@cloudscape-design/components";
+import { Button, Form, ProgressBar, Alert, Card, ListGroup } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Utils } from "../../common/utils";
 import { FileUploader } from "../../common/file-uploader";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Auth } from "aws-amplify";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 const fileExtensions = new Set([
@@ -71,7 +61,6 @@ export interface FileUploadTabProps {
 export default function DataFileUpload(props: FileUploadTabProps) {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const documentIdentifier = searchParams.get("folder");
   const [files, setFiles] = useState<File[]>([]);
@@ -80,7 +69,7 @@ export default function DataFileUpload(props: FileUploadTabProps) {
   const [globalError, setGlobalError] = useState<string | undefined>(undefined);
   const [uploadError, setUploadError] = useState<string | undefined>(undefined);
   const [uploadingStatus, setUploadingStatus] =
-    useState<FlashbarProps.Type>("info");
+    useState<"info" | "success" | "error" | "in-progress">("info");
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploadingIndex, setUploadingIndex] = useState<number>(0);
   const [currentFileName, setCurrentFileName] = useState<string>("");
@@ -143,7 +132,6 @@ export default function DataFileUpload(props: FileUploadTabProps) {
     setUploadPanelDismissed(false);
 
     const uploader = new FileUploader();
-    // const apiClient = new ApiClient(appContext);
     const nofoName = extractNofoName(documentIdentifier);
     const totalSize = filesToUpload.reduce((acc, file) => acc + file.size, 0);
     let accumulator = 0;
@@ -162,7 +150,7 @@ export default function DataFileUpload(props: FileUploadTabProps) {
         try {
           await uploader.upload(
             file,
-            result, //.data!.getUploadFileURL!,
+            result,
             fileType,
             (uploaded: number) => {
               fileUploaded = uploaded;
@@ -196,107 +184,130 @@ export default function DataFileUpload(props: FileUploadTabProps) {
     }
   };
 
-  const getProgressbarStatus = (): ProgressBarProps.Status => {
-    if (uploadingStatus === "error") return "error";
+  const getProgressbarVariant = (): "danger" | "success" | "info" => {
+    if (uploadingStatus === "error") return "danger";
     if (uploadingStatus === "success") return "success";
-    return "in-progress";
+    return "info";
   };
 
-  /*const hasReadyWorkspace =
-    typeof props.data.workspace?.value !== "undefined" &&
-    typeof props.selectedWorkspace !== "undefined" &&
-    props.selectedWorkspace.status === "ready";*/
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
+    onSetFiles(selectedFiles);
+  };
+
+  const removeFile = (index: number) => {
+    const newFiles = files.filter((_, i) => i !== index);
+    const newErrors = fileErrors.filter((_, i) => i !== index);
+    onSetFiles(newFiles);
+    setFileErrors(newErrors);
+  };
 
   return (
-    <Form
-      actions={
-        <SpaceBetween direction="horizontal" size="xs">
+    <div>
+      <Form>
+        {globalError && (
+          <Alert variant="danger" className="mb-3">
+            {globalError}
+          </Alert>
+        )}
+        {uploadError && (
+          <Alert variant="danger" className="mb-3">
+            {uploadError}
+          </Alert>
+        )}
+        <Card className="mb-3">
+          <Card.Body>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <div className="mb-2">
+                  Upload relevant files here, to better inform GrantWell. Click "Manage Backend Files" below to see the documents the chatbot is currently referring to.
+                </div>
+                <div className="text-muted small">
+                  Text documents up to 100MB are supported ({Array.from(fileExtensions.values()).join(", ")})
+                </div>
+              </Form.Label>
+              <Form.Control
+                type="file"
+                multiple
+                onChange={handleFileChange}
+                accept={Array.from(fileExtensions.values()).join(",")}
+              />
+            </Form.Group>
+            {files.length > 0 && (
+              <div className="mt-3">
+                <h6>Selected Files:</h6>
+                <ListGroup>
+                  {files.map((file, index) => (
+                    <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>{file.name}</strong>
+                        <div className="text-muted small">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                          {fileErrors[index] && (
+                            <span className="text-danger ms-2"> - {fileErrors[index]}</span>
+                          )}
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => removeFile(index)}
+                      >
+                        Remove
+                      </Button>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </div>
+            )}
+          </Card.Body>
+        </Card>
+        {uploadingStatus !== "info" && !uploadPanelDismissed && (
+          <Alert
+            variant={uploadingStatus === "error" ? "danger" : uploadingStatus === "success" ? "success" : "info"}
+            dismissible={uploadingStatus === "success" || uploadingStatus === "error"}
+            onClose={() => setUploadPanelDismissed(true)}
+            className="mb-3"
+          >
+            <div className="mb-2">
+              <strong>
+                {uploadingStatus === "success" || uploadingStatus === "error"
+                  ? "Uploading files"
+                  : `Uploading files ${uploadingIndex} of ${filesToUpload.length}`}
+              </strong>
+            </div>
+            {uploadingStatus !== "success" && uploadingStatus !== "error" && (
+              <div className="mb-2 small">{currentFileName}</div>
+            )}
+            <ProgressBar
+              now={uploadProgress}
+              variant={getProgressbarVariant()}
+              label={`${uploadProgress}%`}
+              className="mb-2"
+            />
+            <div className="small">
+              {uploadingStatus === "success"
+                ? "Upload complete"
+                : uploadingStatus === "error"
+                ? "Upload failed"
+                : "Uploading..."}
+            </div>
+          </Alert>
+        )}
+        <div className="d-flex gap-2">
           <Button
             data-testid="create"
             variant="primary"
             disabled={
               filesToUpload.length === 0 ||
               uploadingStatus === "in-progress"
-              // !hasReadyWorkspace
             }
             onClick={onUpload}
           >
             Upload files
           </Button>
-        </SpaceBetween>
-      }
-      errorText={globalError}
-    >
-      <SpaceBetween size="l">
-        <Container>
-          <SpaceBetween size="l">
-            <FormField>
-              <FileUpload
-                onChange={({ detail }) => onSetFiles(detail.value)}
-                value={files}
-                i18nStrings={{
-                  uploadButtonText: (e) => (e ? "Choose files" : "Choose file"),
-                  dropzoneText: (e) =>
-                    e ? "Drop files to upload" : "Drop file to upload",
-                  removeFileAriaLabel: (e) => `Remove file ${e + 1}`,
-                  limitShowFewer: "Show fewer files",
-                  limitShowMore: "Show more files",
-                  errorIconAriaLabel: "Error",
-                }}
-                multiple
-                showFileLastModified
-                showFileSize
-                showFileThumbnail
-                tokenLimit={3}
-                constraintText={
-                  <div>
-                    <div style={{ marginBottom: '8px' }}>Upload relevant files here, to better inform GrantWell. Click "Manage Backend Files" below to see the documents the chatbot is currently referring to.</div>
-                    <div>Text documents up to 100MB are supported ({Array.from(fileExtensions.values()).join(", ")})</div>
-                  </div>
-                }
-                fileErrors={fileErrors}
-                errorText={uploadError}
-              />
-            </FormField>
-          </SpaceBetween>
-        </Container>
-        {uploadingStatus !== "info" && !uploadPanelDismissed && (
-          <Flashbar
-            items={[
-              {
-                content: (
-                  <ProgressBar
-                    value={uploadProgress}
-                    variant="flash"
-                    description={
-                      uploadingStatus === "success" ||
-                      uploadingStatus === "error"
-                        ? null
-                        : currentFileName
-                    }
-                    label={
-                      uploadingStatus === "success" ||
-                      uploadingStatus === "error"
-                        ? "Uploading files"
-                        : `Uploading files ${uploadingIndex} of ${filesToUpload.length}`
-                    }
-                    status={getProgressbarStatus()}
-                    resultText={
-                      uploadingStatus === "success"
-                        ? "Upload complete"
-                        : "Upload failed"
-                    }
-                  />
-                ),
-                type: uploadingStatus,
-                dismissible:
-                  uploadingStatus === "success" || uploadingStatus === "error",
-                onDismiss: () => setUploadPanelDismissed(true),
-              },
-            ]}
-          />
-        )}
-      </SpaceBetween>
-    </Form>
+        </div>
+      </Form>
+    </div>
   );
 }

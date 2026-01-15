@@ -1,23 +1,13 @@
-import {
-  Box,
-  SpaceBetween,
-  Table,
-  Pagination,
-  Button,
-  Header,
-  Modal,
-  Spinner,
-} from "@cloudscape-design/components";
+import { Table, Pagination, Button, Modal, Spinner, Card } from "react-bootstrap";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { AdminDataType } from "../../common/types";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
-import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
-import { useCollection } from "@cloudscape-design/collection-hooks";
 import { useNotifications } from "../../components/notif-manager";
 import { Auth } from "aws-amplify";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export interface DocumentsTabProps {
   tabChangeFunction: () => void;
@@ -37,9 +27,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const { addNotification, removeNotification } = useNotifications();
-  // const documentIdentifier = new URLSearchParams(location.search).get("folder");
-  //const { documentIdentifier } = useParams();
+  const { addNotification } = useNotifications();
   const [searchParams] = useSearchParams();
   const documentIdentifier = searchParams.get("folder");
 
@@ -62,30 +50,11 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     fetchUserId();
   }, []);
 
-  /** Pagination, but this is currently not working.
-   * You will likely need to take the items object from useCollection in the
-   * Cloudscape component, but it currently just takes in pages directly.
-   */
-  const { items, collectionProps, paginationProps } = useCollection(pages.flat(), {
-    filtering: {
-      empty: (
-        <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
-          <SpaceBetween size="m">
-            <b>No files</b>
-          </SpaceBetween>
-        </Box>
-      ),
-    },
-    pagination: { pageSize: 5 },
-    sorting: {
-      defaultState: {
-        sortingColumn: {
-          sortingField: "Key",
-        },
-        isDescending: true,
-      },
-    },
-    selection: {},
+  // Sort items by Key descending by default
+  const sortedItems = [...pages.flat()].sort((a, b) => {
+    if (a.Key < b.Key) return 1;
+    if (a.Key > b.Key) return -1;
+    return 0;
   });
 
   useEffect(() => {
@@ -286,100 +255,153 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     }
   }
 
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedItems(sortedItems);
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const handleSelectItem = (item: any, checked: boolean) => {
+    if (checked) {
+      setSelectedItems([...selectedItems, item]);
+    } else {
+      setSelectedItems(selectedItems.filter((i) => i.key !== item.key));
+    }
+  };
+
+  const isSelected = (item: any) => {
+    return selectedItems.some((i) => i.key === item.key);
+  };
+
   return (
-    <><Modal
-      onDismiss={() => setShowModalDelete(false)}
-      visible={showModalDelete}
-      footer={
-        <Box float="right">
-          <SpaceBetween direction="horizontal" size="xs">
-            {" "}
-            <Button variant="link" onClick={() => setShowModalDelete(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={deleteSelectedFiles}>
-              Ok
-            </Button>
-          </SpaceBetween>{" "}
-        </Box>
-      }
-      header={"Delete file" + (selectedItems.length > 1 ? "s" : "")}
-    >
-      Do you want to delete{" "}
-      {selectedItems.length == 1
-        ? `file ${selectedItems[0].Key!}?`
-        : `${selectedItems.length} files?`}
-    </Modal>
-      <Table
-        {...collectionProps}
-        loading={loading}
-        loadingText={`Loading files`}
-        columnDefinitions={columnDefinitions}
-        selectionType="multi"
-        onSelectionChange={({ detail }) => {
-          setSelectedItems(detail.selectedItems);
-        }}
-        selectedItems={selectedItems}
-        items={pages.flat()}
-        trackBy="key"
-        header={
-          <Header
-            actions={
-              <SpaceBetween direction="horizontal" size="xs">
-                <Button iconName="refresh" onClick={refreshPage} />
-                <Button
-                  onClick={props.tabChangeFunction}
-                >
-                  {'Add Files'}
-                </Button>
-                <Button
-                  variant="primary"
-                  disabled={selectedItems.length == 0}
-                  onClick={() => {
-                    if (selectedItems.length > 0) setShowModalDelete(true);
-                  }}
-                  data-testid="submit">
-                  Delete
-                </Button>
-                <Button
-                  variant="primary"
-                  disabled={syncing}
-                  onClick={() => {
-                    syncKendra();
-                  }}
-                // data-testid="submit"
-                >
-                  {syncing ? (
-                    <>
-                      Syncing data...&nbsp;&nbsp;
-                      <Spinner />
-                    </>
-                  ) : (
-                    "Sync data now"
-                  )}
-                </Button>
-              </SpaceBetween>
-            }
-            description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
-          >
-            {"Files"}
-          </Header>
-        }
-        empty={
-          <Box textAlign="center">No files available</Box>
-        }
-        pagination={
-          pages.length === 0 ? null : (
-            <Pagination
-              openEnd={true}
-              pagesCount={pages.length}
-              currentPageIndex={currentPageIndex}
-              onNextPageClick={onNextPageClick}
-              onPreviousPageClick={onPreviousPageClick}
-            />
-          )
-        }
-      />
+    <>
+      <Modal show={showModalDelete} onHide={() => setShowModalDelete(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete file{selectedItems.length > 1 ? "s" : ""}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Do you want to delete{" "}
+          {selectedItems.length == 1
+            ? `file ${selectedItems[0].Key!}?`
+            : `${selectedItems.length} files?`}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModalDelete(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={deleteSelectedFiles}>
+            Ok
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Card>
+        <Card.Header>
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 className="mb-0">Files</h5>
+              <small className="text-muted">
+                Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes.
+              </small>
+            </div>
+            <div className="d-flex gap-2">
+              <Button variant="outline-secondary" onClick={refreshPage}>
+                ↻ Refresh
+              </Button>
+              <Button variant="outline-primary" onClick={props.tabChangeFunction}>
+                Add Files
+              </Button>
+              <Button
+                variant="danger"
+                disabled={selectedItems.length == 0}
+                onClick={() => {
+                  if (selectedItems.length > 0) setShowModalDelete(true);
+                }}
+                data-testid="submit"
+              >
+                Delete
+              </Button>
+              <Button
+                variant="primary"
+                disabled={syncing}
+                onClick={() => {
+                  syncKendra();
+                }}
+              >
+                {syncing ? (
+                  <>
+                    Syncing data...{" "}
+                    <Spinner animation="border" size="sm" />
+                  </>
+                ) : (
+                  "Sync data now"
+                )}
+              </Button>
+            </div>
+          </div>
+        </Card.Header>
+        <Card.Body>
+          {loading ? (
+            <div className="text-center p-4">
+              <Spinner animation="border" />
+              <div className="mt-2">Loading files</div>
+            </div>
+          ) : sortedItems.length === 0 ? (
+            <div className="text-center p-4">No files available</div>
+          ) : (
+            <>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th style={{ width: "40px" }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.length === sortedItems.length && sortedItems.length > 0}
+                        onChange={handleSelectAll}
+                      />
+                    </th>
+                    {columnDefinitions.map((col) => (
+                      <th key={col.id}>{col.header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedItems.map((item) => (
+                    <tr key={item.key}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={isSelected(item)}
+                          onChange={(e) => handleSelectItem(item, e.target.checked)}
+                        />
+                      </td>
+                      {columnDefinitions.map((col) => (
+                        <td key={col.id}>{col.cell(item)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              {pages.length > 0 && (
+                <div className="d-flex justify-content-center mt-3">
+                  <Pagination>
+                    <Pagination.Prev
+                      disabled={currentPageIndex === 1}
+                      onClick={onPreviousPageClick}
+                    />
+                    <Pagination.Item active>{currentPageIndex}</Pagination.Item>
+                    <Pagination.Next
+                      disabled={!pages[currentPageIndex - 1]?.NextContinuationToken}
+                      onClick={onNextPageClick}
+                    />
+                  </Pagination>
+                </div>
+              )}
+            </>
+          )}
+        </Card.Body>
+      </Card>
     </>
   );
 }

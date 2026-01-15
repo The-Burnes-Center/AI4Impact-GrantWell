@@ -1,9 +1,10 @@
-import { AppLayout } from "@cloudscape-design/components";
 import { ReactElement, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Container, Row, Col, Offcanvas } from "react-bootstrap";
 import { SessionRefreshContext } from "../common/session-refresh-context";
 import { NotificationProvider } from "./notif-manager";
 import NotificationBar from "./notif-flashbar";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 interface BaseAppLayoutProps {
   content: ReactElement;
@@ -32,24 +33,43 @@ export default function BaseAppLayout({
     <SessionRefreshContext.Provider value={{ needsRefresh, setNeedsRefresh }}>
       <NotificationProvider>
         <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-          {/* Main content and tools area using AppLayout */}
+          {/* Main content area */}
           <div style={{ flex: 1, overflow: "auto", minWidth: 0 }}>
-            <AppLayout
-              headerSelector="#awsui-top-navigation"
-              content={
-                <>
+            <Container fluid className="p-0">
+              {breadcrumbs && (
+                <div className="p-3 border-bottom">
+                  {breadcrumbs}
+                </div>
+              )}
+              <Row className="g-0">
+                <Col style={{ flex: 1 }}>
                   <NotificationBar />
                   {content}
-                </>
-              }
-              toolsHide={!info}
-              tools={info}
-              toolsOpen={toolsOpen}
-              onToolsChange={({ detail }) => setToolsOpen(detail.open)}
-              contentType={contentType}
-              navigationHide={true}
-              toolsWidth={toolsWidth}
-            />
+                </Col>
+                {splitPanel && (
+                  <Col xs="auto" style={{ width: toolsWidth || 400, borderLeft: "1px solid #dee2e6" }}>
+                    <div className="p-3 h-100" style={{ overflowY: "auto" }}>
+                      {splitPanel}
+                    </div>
+                  </Col>
+                )}
+              </Row>
+              {info && (
+                <Offcanvas
+                  show={toolsOpen}
+                  onHide={() => setToolsOpen(false)}
+                  placement="end"
+                  style={{ width: toolsWidth || 400 }}
+                >
+                  <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Tools</Offcanvas.Title>
+                  </Offcanvas.Header>
+                  <Offcanvas.Body>
+                    {info}
+                  </Offcanvas.Body>
+                </Offcanvas>
+              )}
+            </Container>
           </div>
         </div>
       </NotificationProvider>
