@@ -1403,30 +1403,6 @@ export default function Welcome() {
               }}
             >
               <a
-                href="https://www.mass.gov/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "transform 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
-                aria-label="Visit Massachusetts Government website"
-              >
-                <img
-                  src="/images/stateseal-color.png"
-                  alt="Massachusetts State Seal"
-                  style={{ width: "100px", height: "auto" }}
-                />
-              </a>
-              <a
                 href="https://burnes.northeastern.edu/"
                 target="_blank"
                 rel="noopener noreferrer"
