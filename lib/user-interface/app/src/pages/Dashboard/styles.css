@@ -343,6 +343,12 @@ body {
   align-items: center;
   gap: 8px;
   padding-right: 16px;
+  position: relative;
+}
+
+/* Ensure actions cell with open dropdown appears above other content */
+.row-cell.actions:has(.grant-actions-dropdown.dropdown-open) {
+  z-index: 100;
 }
 
 /* Row actions menu styling */
@@ -1332,6 +1338,17 @@ select.form-input {
 .grant-actions-dropdown {
   position: relative;
   display: inline-block;
+  z-index: 100;
+}
+
+/* When dropdown is open, ensure it appears above all table content */
+.grant-actions-dropdown.dropdown-open {
+  z-index: 10001;
+}
+
+/* Ensure the parent row also has higher z-index when dropdown is open */
+.table-row:has(.grant-actions-dropdown.dropdown-open) {
+  z-index: 100;
 }
 
 .actions-dropdown-button {
@@ -1368,7 +1385,7 @@ select.form-input {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 160px;
-  z-index: 1000;
+  z-index: 10000;
   overflow: hidden;
   animation: dropdown-appear 0.15s ease-out;
 }

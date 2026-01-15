@@ -153,7 +153,7 @@ const GrantActionsDropdown: React.FC<{
   }, [isOpen]);
 
   return (
-    <div className="grant-actions-dropdown" ref={menuRef}>
+    <div className={`grant-actions-dropdown ${isOpen ? "dropdown-open" : ""}`} ref={menuRef}>
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
