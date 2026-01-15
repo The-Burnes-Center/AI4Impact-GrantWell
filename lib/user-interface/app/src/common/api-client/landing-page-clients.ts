@@ -191,8 +191,14 @@ export class LandingPageClient {
     }
   }
 
-  // Updates a NOFO's status (active or archived), pinned state, and expiration date
-  async updateNOFOStatus(nofoName: string, status?: "active" | "archived", isPinned?: boolean, expirationDate?: string | null) {
+  // Updates a NOFO's status (active or archived), pinned state, expiration date, and grant type
+  async updateNOFOStatus(
+    nofoName: string, 
+    status?: "active" | "archived", 
+    isPinned?: boolean, 
+    expirationDate?: string | null,
+    grantType?: "federal" | "state" | "quasi" | "philanthropic" | "unknown"
+  ) {
     try {
       const token = await Utils.authenticate();
       const response = await fetch(`${this.baseUrl}/s3-nofo-status`, {
@@ -201,7 +207,7 @@ export class LandingPageClient {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({ nofoName, status, isPinned, expirationDate }),
+        body: JSON.stringify({ nofoName, status, isPinned, expirationDate, grantType }),
       });
 
       const data = await response.json();
@@ -244,4 +250,5 @@ export class LandingPageClient {
       throw error;
     }
   }
+
 }
