@@ -8,9 +8,20 @@ import { LuPinOff } from "react-icons/lu";
 import { LuChevronDown, LuChevronRight } from "react-icons/lu";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
+import { GrantTypeId } from "../../common/grant-types";
+
+// Grant type definitions for display (matching Dashboard pattern)
+const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
+  federal: { label: "Federal", color: "#1a4480" },
+  state: { label: "State", color: "#2e8540" },
+  quasi: { label: "Quasi", color: "#8168b3" },
+  philanthropic: { label: "Philanthropic", color: "#e66f0e" },
+  unknown: { label: "Unknown", color: "#6b7280" },
+};
 
 interface PinnableGrant extends GrantRecommendation {
   isPinned: boolean;
+  grantType?: GrantTypeId | null;
 }
 
 interface IntegratedSearchBarProps {
@@ -60,6 +71,11 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     {}
   );
 
+  // Grant type mapping: grant name -> grant type
+  const [grantTypeMap, setGrantTypeMap] = useState<
+    Record<string, GrantTypeId | null>
+  >({});
+
   // Add state for 'How to use?' modal
   const [showHowToModal, setShowHowToModal] = useState(false);
   const howToRef = useRef<HTMLDivElement>(null);
@@ -86,18 +102,27 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     checkAdmin();
   }, []);
 
-  // Load pinned grants from API on component mount
+  // Load pinned grants and grant type mapping from API on component mount
   useEffect(() => {
     const loadPinnedGrants = async () => {
       try {
         const result = await apiClient.landingPage.getNOFOs();
         if (result.nofoData) {
+          // Create grant type mapping for all grants
+          const typeMap: Record<string, GrantTypeId | null> = {};
+          result.nofoData.forEach((nofo) => {
+            typeMap[nofo.name] = nofo.grant_type || null;
+          });
+          setGrantTypeMap(typeMap);
+
+          // Load pinned grants with grant type
           const pinnedGrants = result.nofoData
             .filter((nofo) => nofo.isPinned)
             .map((nofo) => ({
               id: nofo.name,
               name: nofo.name,
               isPinned: true,
+              grantType: nofo.grant_type || null,
               matchScore: 80,
               eligibilityMatch: true,
               matchReason: "Admin selected",
@@ -336,6 +361,32 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     setShowAssistant(false);
     setAssistantInput("");
     setRecommendedGrants([]);
+  };
+
+  // Helper function to render grant type badge
+  const renderGrantTypeBadge = (grantType: GrantTypeId | null | undefined) => {
+    if (!grantType || !GRANT_TYPES[grantType]) {
+      return null;
+    }
+
+    const typeInfo = GRANT_TYPES[grantType];
+    return (
+      <span
+        style={{
+          display: "inline-block",
+          fontSize: "11px",
+          fontWeight: "500",
+          padding: "2px 8px",
+          borderRadius: "12px",
+          backgroundColor: `${typeInfo.color}15`,
+          color: typeInfo.color,
+          border: `1px solid ${typeInfo.color}40`,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {typeInfo.label}
+      </span>
+    );
   };
 
   const assistantContainerStyle: React.CSSProperties = {
@@ -1107,6 +1158,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     aria-label={`Select ${grant.name}`}
                   >
                     <span>{grant.name}</span>
+                    {renderGrantTypeBadge(grant.grantType)}
                     <span style={pinnedBadgeStyle}>Pinned</span>
                   </button>
 
@@ -1203,10 +1255,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         color: "inherit",
                         fontSize: "inherit",
                         fontFamily: "inherit",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
                       }}
                       aria-label={`Select ${docName}`}
                     >
-                      {docName}
+                      <span>{docName}</span>
+                      {renderGrantTypeBadge(grantTypeMap[docName])}
                     </button>
 
                     {isAdmin && (
@@ -1437,10 +1493,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                               color: "inherit",
                               fontSize: "inherit",
                               fontFamily: "inherit",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                              flexWrap: "wrap",
                             }}
                             aria-label={`View details for ${grantName}`}
                           >
                             <div style={grantCardTitleStyle}>{grantName}</div>
+                            {renderGrantTypeBadge(grantTypeMap[grantName])}
                           </button>
                           <button
                             type="button"
@@ -1786,6 +1847,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                                 }}
                               >
                                 <span>{grant.name}</span>
+                                {renderGrantTypeBadge(grant.grantType)}
                                 <span
                                   style={{
                                     display: "inline-block",

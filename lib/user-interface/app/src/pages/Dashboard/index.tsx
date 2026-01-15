@@ -33,13 +33,25 @@ interface PinnableGrant {
   isPinned: boolean;
 }
 
+export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic" | "unknown";
+
 export interface NOFO {
   id: number;
   name: string;
   status: "active" | "archived";
   isPinned?: boolean;
   expirationDate?: string | null;
+  grantType?: GrantTypeId | null;
 }
+
+// Grant type definitions for display
+export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
+  federal: { label: "Federal", color: "#1a4480" },
+  state: { label: "State", color: "#2e8540" },
+  quasi: { label: "Quasi", color: "#8168b3" },
+  philanthropic: { label: "Philanthropic", color: "#e66f0e" },
+  unknown: { label: "Unknown", color: "#6b7280" },
+};
 
 /**
  * Row actions menu component - provides edit/delete functionality
@@ -382,7 +394,7 @@ interface NOFOsTabProps {
   nofos: NOFO[];
   searchQuery: string;
   apiClient: ApiClient;
-  setNofos: React.Dispatch<React.SetStateAction<NOFO[]>>;
+  updateNofos: (updater: (nofos: NOFO[]) => NOFO[]) => void;
   uploadNofoModalOpen: boolean;
   setUploadNofoModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showGrantSuccessBanner?: (grantName: string) => void;
@@ -393,7 +405,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   nofos,
   searchQuery,
   apiClient,
-  setNofos,
+  updateNofos,
   uploadNofoModalOpen,
   setUploadNofoModalOpen,
   showGrantSuccessBanner,
@@ -409,26 +421,17 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   >("active");
   const [editedNofoExpirationDate, setEditedNofoExpirationDate] =
     useState<string>("");
+  const [editedNofoGrantType, setEditedNofoGrantType] = useState<GrantTypeId | "">("");
 
   // Upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
+  const [uploadGrantType, setUploadGrantType] = useState<GrantTypeId | "">("");
 
   // Access notifications if available
   const addNotification = useNotifications?.addNotification;
 
-  // Filter data based on search query
-  const filteredNofos = nofos
-    .filter((nofo) =>
-      nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      // Pinned grants come first
-      if (a.isPinned && !b.isPinned) return -1;
-      if (!a.isPinned && b.isPinned) return 1;
-      // Then sort alphabetically by name (case-insensitive)
-      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
-    });
+  const filteredNofos = nofos;
 
   // Helper function to normalize grant name
   const normalizeGrantName = (name: string): string => {
@@ -451,8 +454,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, true);
 
       // Update local state after successful API call
-      setNofos(
-        nofos.map((item) =>
+      updateNofos((allNofos) =>
+        allNofos.map((item) =>
           item.id === nofo.id ? { ...item, isPinned: true } : item
         )
       );
@@ -479,8 +482,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, false);
 
       // Update local state after successful API call
-      setNofos(
-        nofos.map((item) =>
+      updateNofos((allNofos) =>
+        allNofos.map((item) =>
           item.id === nofo.id ? { ...item, isPinned: false } : item
         )
       );
@@ -501,7 +504,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     setSelectedNofo(nofo);
     setEditedNofoName(nofo.name);
     setEditedNofoStatus(nofo.status || "active");
-    // Format expiration date for date input (YYYY-MM-DD format)
+    setEditedNofoGrantType(nofo.grantType || "");
     if (nofo.expirationDate) {
       const date = new Date(nofo.expirationDate);
       const formattedDate = date.toISOString().split("T")[0];
@@ -553,15 +556,30 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         );
       }
 
+      // Update grant type if it changed
+      const newGrantType = editedNofoGrantType || null;
+      const oldGrantType = selectedNofo.grantType || null;
+
+      if (newGrantType !== oldGrantType) {
+        await apiClient.landingPage.updateNOFOStatus(
+          editedNofoName.trim(),
+          undefined,
+          undefined,
+          undefined,
+          newGrantType as GrantTypeId
+        );
+      }
+
       // Update local state after successful API call
-      setNofos(
-        nofos.map((nofo) =>
+      updateNofos((allNofos) =>
+        allNofos.map((nofo) =>
           nofo.id === selectedNofo.id
             ? {
                 ...nofo,
                 name: editedNofoName.trim(),
                 status: editedNofoStatus,
                 expirationDate: newExpirationDate,
+                grantType: newGrantType as GrantTypeId | null,
               }
             : nofo
         )
@@ -579,6 +597,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setSelectedNofo(null);
       setEditedNofoName("");
       setEditedNofoExpirationDate("");
+      setEditedNofoGrantType("");
     } catch (error) {
       if (addNotification) {
         addNotification("error", "Failed to update grant. Please try again.");
@@ -600,8 +619,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       );
 
       // Update local state after successful API call
-      setNofos(
-        nofos.map((item) =>
+      updateNofos((allNofos) =>
+        allNofos.map((item) =>
           item.id === nofo.id ? { ...item, status: newStatus } : item
         )
       );
@@ -633,7 +652,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       await apiClient.landingPage.deleteNOFO(selectedNofo.name);
 
       // Update local state after successful API call
-      setNofos(nofos.filter((nofo) => nofo.id !== selectedNofo.id));
+      updateNofos((allNofos) => allNofos.filter((nofo) => nofo.id !== selectedNofo.id));
 
       // Show success notification
       if (addNotification) {
@@ -706,8 +725,14 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       );
       await apiClient.landingPage.uploadFileToS3(signedUrl, selectedFile);
 
-      // Set initial status to active for the new NOFO
-      await apiClient.landingPage.updateNOFOStatus(folderName, "active");
+      // Set initial status to active for the new NOFO, and grant type (default to 'unknown' if not specified)
+      await apiClient.landingPage.updateNOFOStatus(
+        folderName, 
+        "active", 
+        undefined, 
+        undefined,
+        uploadGrantType ? (uploadGrantType as GrantTypeId) : "unknown"
+      );
 
       // Use the banner if available, otherwise fall back to alert
       if (showGrantSuccessBanner) {
@@ -721,6 +746,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       // Reset state
       setSelectedFile(null);
       setCustomGrantName("");
+      setUploadGrantType("");
       setUploadNofoModalOpen(false);
 
       // We won't automatically refresh - that's now handled by the parent's showGrantSuccessBanner
@@ -739,6 +765,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       <div className="table-container">
         <div className="table-header">
           <div className="header-cell">Name</div>
+          <div className="header-cell">Type</div>
           <div className="header-cell">Expiry Date</div>
           <div className="header-cell">Actions</div>
         </div>
@@ -760,6 +787,22 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                     <LuPin size={14} />
                     <span>Pinned</span>
                   </span>
+                )}
+              </div>
+              <div className="row-cell">
+                {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
+                  <span 
+                    className="grant-type-badge"
+                    style={{ 
+                      backgroundColor: `${GRANT_TYPES[nofo.grantType].color}15`,
+                      color: GRANT_TYPES[nofo.grantType].color,
+                      borderColor: `${GRANT_TYPES[nofo.grantType].color}40`
+                    }}
+                  >
+                    {GRANT_TYPES[nofo.grantType].label}
+                  </span>
+                ) : (
+                  <span className="grant-type-badge unset">Unset</span>
                 )}
               </div>
               <div className="row-cell">
@@ -861,6 +904,29 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               after this date.
             </div>
           </div>
+          <div className="form-group">
+            <label htmlFor="nofo-grant-type">Grant Type</label>
+            <div className="select-wrapper">
+              <select
+                id="nofo-grant-type"
+                value={editedNofoGrantType}
+                onChange={(e) =>
+                  setEditedNofoGrantType(e.target.value as GrantTypeId | "")
+                }
+                className="form-input"
+              >
+                <option value="">Select type...</option>
+                <option value="federal">Federal</option>
+                <option value="state">State</option>
+                <option value="quasi">Quasi</option>
+                <option value="philanthropic">Philanthropic</option>
+                <option value="unknown">Unknown</option>
+              </select>
+            </div>
+            <div className="field-note">
+              Federal, State, Quasi-governmental, Philanthropic, or Unknown.
+            </div>
+          </div>
           <div className="modal-actions">
             <button
               className="modal-button secondary"
@@ -880,7 +946,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                       ? new Date(selectedNofo.expirationDate)
                           .toISOString()
                           .split("T")[0]
-                      : ""))
+                      : "") &&
+                  editedNofoGrantType === (selectedNofo?.grantType || ""))
               }
             >
               Save Changes
@@ -925,6 +992,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
           setUploadNofoModalOpen(false);
           setSelectedFile(null);
           setCustomGrantName("");
+          setUploadGrantType("");
         }}
         title="Upload Grant"
       >
@@ -966,20 +1034,46 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
           </div>
 
           {selectedFile && (
-            <div className="form-group">
-              <label htmlFor="custom-grant-name">Grant Name</label>
-              <input
-                type="text"
-                id="custom-grant-name"
-                value={customGrantName}
-                onChange={(e) => setCustomGrantName(e.target.value)}
-                className="form-input"
-                placeholder="Enter grant name"
-              />
-              <div className="field-note">
-                This name will be used to identify the grant in the system.
+            <>
+              <div className="form-group">
+                <label htmlFor="custom-grant-name">Grant Name</label>
+                <input
+                  type="text"
+                  id="custom-grant-name"
+                  value={customGrantName}
+                  onChange={(e) => setCustomGrantName(e.target.value)}
+                  className="form-input"
+                  placeholder="Enter grant name"
+                />
+                <div className="field-note">
+                  This name will be used to identify the grant in the system.
+                </div>
               </div>
-            </div>
+
+              <div className="form-group">
+                <label htmlFor="upload-grant-type">Grant Type</label>
+                <div className="select-wrapper">
+                  <select
+                    id="upload-grant-type"
+                    value={uploadGrantType}
+                    onChange={(e) =>
+                      setUploadGrantType(e.target.value as GrantTypeId | "")
+                    }
+                    className="form-input"
+                  >
+                    <option value="">Select type (optional)...</option>
+                    <option value="federal">Federal</option>
+                    <option value="state">State</option>
+                    <option value="quasi">Quasi</option>
+                    <option value="philanthropic">Philanthropic</option>
+                    <option value="unknown">Unknown</option>
+                  </select>
+                </div>
+                <div className="field-note">
+                  Optional. Can be auto-detected or set later after upload.
+                </div>
+              </div>
+            </>
           )}
 
           <div className="modal-actions">
@@ -989,6 +1083,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                 setUploadNofoModalOpen(false);
                 setSelectedFile(null);
                 setCustomGrantName("");
+                setUploadGrantType("");
               }}
             >
               Cancel
@@ -1021,7 +1116,8 @@ const Dashboard: React.FC = () => {
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<
     "all" | "active" | "archived"
-  >("all");
+  >("active");
+  const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -1099,7 +1195,7 @@ const Dashboard: React.FC = () => {
       // Fetch NOFOs from API
       const nofoResult = await apiClient.landingPage.getNOFOs();
 
-      // Convert to required format and include pinned status
+      // Convert to required format and include pinned status and grant type
       if (nofoResult.nofoData) {
         const nofoData = nofoResult.nofoData.map((nofo, index) => ({
           id: index,
@@ -1107,6 +1203,7 @@ const Dashboard: React.FC = () => {
           status: nofo.status || "active",
           isPinned: nofo.isPinned || false,
           expirationDate: nofo.expiration_date || null,
+          grantType: nofo.grant_type || null,
         }));
         setNofos(nofoData);
       } else {
@@ -1117,6 +1214,7 @@ const Dashboard: React.FC = () => {
           status: "active",
           isPinned: false,
           expirationDate: null,
+          grantType: null,
         }));
         setNofos(nofoData);
       }
@@ -1230,21 +1328,19 @@ const Dashboard: React.FC = () => {
     setFilterMenuOpen(!filterMenuOpen);
   };
 
-  // Apply filter handler
+  // Apply status filter handler
   const applyFilter = (status: "all" | "active" | "archived") => {
     setStatusFilter(status);
-    setFilterMenuOpen(false);
-
-    // Show notification about filter applied
-    addNotification(
-      "info",
-      `Filtered to show ${
-        status === "all" ? "all grants" : `${status} grants only`
-      }`
-    );
+    // Don't close menu so user can also select grant type filter
   };
 
-  // Get filtered data based on search query and status filter
+  // Apply grant type filter handler
+  const applyGrantTypeFilter = (grantType: GrantTypeId | "all") => {
+    setGrantTypeFilter(grantType);
+    // Don't close menu so user can also select status filter
+  };
+
+  // Get filtered data based on search query, status filter, and grant type filter
   const getFilteredNofos = () => {
     // First filter by search query
     let filtered = nofos.filter((nofo) =>
@@ -1258,6 +1354,13 @@ const Dashboard: React.FC = () => {
       );
     }
 
+    // Then filter by grant type
+    if (grantTypeFilter !== "all") {
+      filtered = filtered.filter(
+        (nofo) => nofo.grantType === grantTypeFilter
+      );
+    }
+
     // Sort alphabetically: pinned grants first, then alphabetically by name
     filtered.sort((a, b) => {
       // Pinned grants come first
@@ -1268,6 +1371,14 @@ const Dashboard: React.FC = () => {
     });
 
     return filtered;
+  };
+
+  // Calculate active filter count for badge
+  const getActiveFilterCount = () => {
+    let count = 0;
+    if (statusFilter !== "all") count++;
+    if (grantTypeFilter !== "all") count++;
+    return count;
   };
 
   // Get paginated data
@@ -1447,6 +1558,11 @@ const Dashboard: React.FC = () => {
     );
   };
 
+  // Reset pagination to page 1 when filters or search query change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, grantTypeFilter, searchQuery]);
+
   // Click outside handler for filter menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -1588,17 +1704,17 @@ const Dashboard: React.FC = () => {
                 <button
                   ref={filterButtonRef}
                   className={`filter-button ${
-                    statusFilter !== "all" ? "active" : ""
+                    getActiveFilterCount() > 0 ? "active" : ""
                   }`}
                   onClick={toggleFilterMenu}
-                  aria-label="Filter grants by status"
+                  aria-label="Filter grants"
                   aria-expanded={filterMenuOpen}
                   aria-haspopup="menu"
                 >
                   <LuFilter size={18} />
-                  {statusFilter !== "all" && (
-                    <span className="filter-badge" aria-label="1 filter active">
-                      1
+                  {getActiveFilterCount() > 0 && (
+                    <span className="filter-badge" aria-label={`${getActiveFilterCount()} filter(s) active`}>
+                      {getActiveFilterCount()}
                     </span>
                   )}
                 </button>
@@ -1619,7 +1735,7 @@ const Dashboard: React.FC = () => {
                           <span className="filter-option-check">
                             {statusFilter === "all" ? "✓" : ""}
                           </span>
-                          All Grants
+                          All Status
                         </div>
                       </button>
 
@@ -1635,7 +1751,7 @@ const Dashboard: React.FC = () => {
                           <span className="filter-option-check">
                             {statusFilter === "active" ? "✓" : ""}
                           </span>
-                          Active Grants
+                          Active
                         </div>
                       </button>
 
@@ -1651,7 +1767,108 @@ const Dashboard: React.FC = () => {
                           <span className="filter-option-check">
                             {statusFilter === "archived" ? "✓" : ""}
                           </span>
-                          Archived Grants
+                          Archived
+                        </div>
+                      </button>
+                    </div>
+
+                    <div className="filter-menu-divider"></div>
+
+                    <div className="filter-menu-header">Filter by Grant Type</div>
+                    <div>
+                      <button
+                        onClick={() => applyGrantTypeFilter("all")}
+                        className={`filter-option ${
+                          grantTypeFilter === "all" ? "selected" : ""
+                        }`}
+                        role="menuitemradio"
+                        aria-checked={grantTypeFilter === "all"}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {grantTypeFilter === "all" ? "✓" : ""}
+                          </span>
+                          All Types
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => applyGrantTypeFilter("federal")}
+                        className={`filter-option ${
+                          grantTypeFilter === "federal" ? "selected" : ""
+                        }`}
+                        role="menuitemradio"
+                        aria-checked={grantTypeFilter === "federal"}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {grantTypeFilter === "federal" ? "✓" : ""}
+                          </span>
+                          Federal
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => applyGrantTypeFilter("state")}
+                        className={`filter-option ${
+                          grantTypeFilter === "state" ? "selected" : ""
+                        }`}
+                        role="menuitemradio"
+                        aria-checked={grantTypeFilter === "state"}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {grantTypeFilter === "state" ? "✓" : ""}
+                          </span>
+                          State
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => applyGrantTypeFilter("quasi")}
+                        className={`filter-option ${
+                          grantTypeFilter === "quasi" ? "selected" : ""
+                        }`}
+                        role="menuitemradio"
+                        aria-checked={grantTypeFilter === "quasi"}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {grantTypeFilter === "quasi" ? "✓" : ""}
+                          </span>
+                          Quasi
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => applyGrantTypeFilter("philanthropic")}
+                        className={`filter-option ${
+                          grantTypeFilter === "philanthropic" ? "selected" : ""
+                        }`}
+                        role="menuitemradio"
+                        aria-checked={grantTypeFilter === "philanthropic"}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {grantTypeFilter === "philanthropic" ? "✓" : ""}
+                          </span>
+                          Philanthropic
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => applyGrantTypeFilter("unknown")}
+                        className={`filter-option ${
+                          grantTypeFilter === "unknown" ? "selected" : ""
+                        }`}
+                        role="menuitemradio"
+                        aria-checked={grantTypeFilter === "unknown"}
+                      >
+                        <div className="filter-option-content">
+                          <span className="filter-option-check">
+                            {grantTypeFilter === "unknown" ? "✓" : ""}
+                          </span>
+                          Unknown
                         </div>
                       </button>
                     </div>
@@ -1733,7 +1950,7 @@ const Dashboard: React.FC = () => {
             nofos={getPaginatedData().items}
             searchQuery={searchQuery}
             apiClient={apiClient}
-            setNofos={setNofos}
+            updateNofos={(updater) => setNofos(updater)}
             uploadNofoModalOpen={uploadNofoModalOpen}
             setUploadNofoModalOpen={setUploadNofoModalOpen}
             showGrantSuccessBanner={showGrantSuccessBanner}

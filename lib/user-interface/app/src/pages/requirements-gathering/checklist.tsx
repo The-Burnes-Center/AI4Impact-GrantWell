@@ -9,9 +9,19 @@ import {
 import ReactMarkdown from "react-markdown";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
+import { GrantTypeId } from "../../common/grant-types";
 import "../../styles/checklists.css";
 import { v4 as uuidv4 } from "uuid";
 import RequirementsNavigation from "./checklist-navigation";
+
+// Grant type definitions for display
+const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
+  federal: { label: "Federal", color: "#1a4480" },
+  state: { label: "State", color: "#2e8540" },
+  quasi: { label: "Quasi", color: "#8168b3" },
+  philanthropic: { label: "Philanthropic", color: "#e66f0e" },
+  unknown: { label: "Unknown", color: "#6b7280" },
+};
 
 // Types
 interface TabContent {
@@ -514,6 +524,7 @@ const Checklists: React.FC = () => {
     narrative: "",
     deadlines: "",
   });
+  const [grantType, setGrantType] = useState<GrantTypeId | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [activeTabId, setActiveTabId] = useState("eligibility");
   const [showHelp, setShowHelp] = useState(false);
@@ -633,15 +644,31 @@ const Checklists: React.FC = () => {
     }
   }, [location]);
 
-  // Fetch NOFO summary data
+  // Fetch NOFO summary data and grant type
   useEffect(() => {
     const fetchData = async () => {
       if (!documentIdentifier) return;
 
       try {
+        // Fetch NOFO summary
         const result = await apiClient.landingPage.getNOFOSummary(
           documentIdentifier
         );
+
+        // Fetch grant type information
+        try {
+          const nofoResult = await apiClient.landingPage.getNOFOs();
+          if (nofoResult.nofoData) {
+            const matchingNofo = nofoResult.nofoData.find(
+              (nofo) => nofo.name === documentIdentifier
+            );
+            if (matchingNofo) {
+              setGrantType(matchingNofo.grant_type || null);
+            }
+          }
+        } catch (error) {
+          console.error("Error loading grant type: ", error);
+        }
 
         // Process API data with better error handling
         const processApiItems = (items) => {
@@ -970,6 +997,24 @@ const Checklists: React.FC = () => {
                     <span style={{ color: THEME.colors.accent }}>
                       {llmData.grantName}
                     </span>
+                    {grantType && GRANT_TYPES[grantType] && (
+                      <span
+                        style={{
+                          display: "inline-block",
+                          fontSize: "14px",
+                          fontWeight: "500",
+                          padding: "4px 12px",
+                          borderRadius: "16px",
+                          backgroundColor: `${GRANT_TYPES[grantType].color}15`,
+                          color: GRANT_TYPES[grantType].color,
+                          border: `1px solid ${GRANT_TYPES[grantType].color}40`,
+                          marginLeft: "12px",
+                          verticalAlign: "middle",
+                        }}
+                      >
+                        {GRANT_TYPES[grantType].label}
+                      </span>
+                    )}
                   </h1>
                   <p style={styles.paragraph}>
                     Key requirement checkpoints for this Notice of Funding
