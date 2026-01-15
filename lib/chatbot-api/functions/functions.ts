@@ -1012,19 +1012,21 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     // Create EventBridge rule to run the scraper daily at 9 AM UTC
-    const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
-      schedule: events.Schedule.cron({
-        minute: '0',
-        hour: '9',
-        day: '*',
-        month: '*',
-        year: '*',
-      }),
-      description: 'Trigger automated NOFO scraper daily at 9 AM UTC',
-    });
+    const environment = process.env.ENVIRONMENT;
+    if (environment === 'production') {
+      const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
+        schedule: events.Schedule.cron({
+          minute: '0',
+          hour: '9',
+          day: '*',
+          month: '*',
+          year: '*',
+        }),
+        description: 'Trigger automated NOFO scraper daily at 9 AM UTC',
+      });
 
-    // Add the Lambda function as a target for the EventBridge rule
-    scraperRule.addTarget(new targets.LambdaFunction(automatedNofoScraperFunction));
+      scraperRule.addTarget(new targets.LambdaFunction(automatedNofoScraperFunction));
+    }
 
     this.automatedNofoScraperFunction = automatedNofoScraperFunction;
 
