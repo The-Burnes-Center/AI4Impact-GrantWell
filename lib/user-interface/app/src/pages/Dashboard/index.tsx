@@ -394,7 +394,7 @@ interface NOFOsTabProps {
   nofos: NOFO[];
   searchQuery: string;
   apiClient: ApiClient;
-  setNofos: React.Dispatch<React.SetStateAction<NOFO[]>>;
+  updateNofos: (updater: (nofos: NOFO[]) => NOFO[]) => void;
   uploadNofoModalOpen: boolean;
   setUploadNofoModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showGrantSuccessBanner?: (grantName: string) => void;
@@ -405,7 +405,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   nofos,
   searchQuery,
   apiClient,
-  setNofos,
+  updateNofos,
   uploadNofoModalOpen,
   setUploadNofoModalOpen,
   showGrantSuccessBanner,
@@ -431,18 +431,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   // Access notifications if available
   const addNotification = useNotifications?.addNotification;
 
-  // Filter data based on search query
-  const filteredNofos = nofos
-    .filter((nofo) =>
-      nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      // Pinned grants come first
-      if (a.isPinned && !b.isPinned) return -1;
-      if (!a.isPinned && b.isPinned) return 1;
-      // Then sort alphabetically by name (case-insensitive)
-      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
-    });
+  const filteredNofos = nofos;
 
   // Helper function to normalize grant name
   const normalizeGrantName = (name: string): string => {
@@ -465,8 +454,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, true);
 
       // Update local state after successful API call
-      setNofos(
-        nofos.map((item) =>
+      updateNofos((allNofos) =>
+        allNofos.map((item) =>
           item.id === nofo.id ? { ...item, isPinned: true } : item
         )
       );
@@ -493,8 +482,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, false);
 
       // Update local state after successful API call
-      setNofos(
-        nofos.map((item) =>
+      updateNofos((allNofos) =>
+        allNofos.map((item) =>
           item.id === nofo.id ? { ...item, isPinned: false } : item
         )
       );
@@ -516,7 +505,6 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     setEditedNofoName(nofo.name);
     setEditedNofoStatus(nofo.status || "active");
     setEditedNofoGrantType(nofo.grantType || "");
-    // Format expiration date for date input (YYYY-MM-DD format)
     if (nofo.expirationDate) {
       const date = new Date(nofo.expirationDate);
       const formattedDate = date.toISOString().split("T")[0];
@@ -583,8 +571,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       }
 
       // Update local state after successful API call
-      setNofos(
-        nofos.map((nofo) =>
+      updateNofos((allNofos) =>
+        allNofos.map((nofo) =>
           nofo.id === selectedNofo.id
             ? {
                 ...nofo,
@@ -631,8 +619,8 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       );
 
       // Update local state after successful API call
-      setNofos(
-        nofos.map((item) =>
+      updateNofos((allNofos) =>
+        allNofos.map((item) =>
           item.id === nofo.id ? { ...item, status: newStatus } : item
         )
       );
@@ -664,7 +652,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       await apiClient.landingPage.deleteNOFO(selectedNofo.name);
 
       // Update local state after successful API call
-      setNofos(nofos.filter((nofo) => nofo.id !== selectedNofo.id));
+      updateNofos((allNofos) => allNofos.filter((nofo) => nofo.id !== selectedNofo.id));
 
       // Show success notification
       if (addNotification) {
@@ -1570,6 +1558,11 @@ const Dashboard: React.FC = () => {
     );
   };
 
+  // Reset pagination to page 1 when filters or search query change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, grantTypeFilter, searchQuery]);
+
   // Click outside handler for filter menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -1957,7 +1950,7 @@ const Dashboard: React.FC = () => {
             nofos={getPaginatedData().items}
             searchQuery={searchQuery}
             apiClient={apiClient}
-            setNofos={setNofos}
+            updateNofos={(updater) => setNofos(updater)}
             uploadNofoModalOpen={uploadNofoModalOpen}
             setUploadNofoModalOpen={setUploadNofoModalOpen}
             showGrantSuccessBanner={showGrantSuccessBanner}
