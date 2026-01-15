@@ -1128,7 +1128,7 @@ const Dashboard: React.FC = () => {
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<
     "all" | "active" | "archived"
-  >("all");
+  >("active");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
 
   // Pagination state
