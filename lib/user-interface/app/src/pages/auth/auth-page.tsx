@@ -36,12 +36,6 @@ const DraftIcon = () => (
   </svg>
 );
 
-const AIIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M14 2L17 10.5L26 14L17 17.5L14 26L11 17.5L2 14L11 10.5L14 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-    <circle cx="14" cy="14" r="3.5" fill="currentColor" fillOpacity="0.15"/>
-  </svg>
-);
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -154,18 +148,14 @@ export default function AuthPage() {
           {/* Row 3: AI Transparency & Trust Section */}
           <section className="auth-trust-row" aria-labelledby="trust-heading">
             <div className="auth-trust-panel">
-              <div className="auth-trust-icon">
-                <AIIcon />
-              </div>
               <div className="auth-trust-content">
                 <h2 id="trust-heading" className="auth-trust-title">Free and AI-Powered</h2>
-                <ul className="auth-trust-list">
-                  <li>GrantWell uses AI as a support tool, not a decision-maker.</li>
-                  <li>AI responses are grounded in official Notice of Funding Opportunity (NOFO) documents.</li>
-                  <li>The system is designed not to invent requirements or facts.</li>
-                  <li>All drafts require human review before submission.</li>
-                  <li>Users retain full control and professional judgment.</li>
-                </ul>
+                <p className="auth-trust-description">
+                  GrantWell uses AI as a support tool, not a decision-maker. AI responses are grounded 
+                  in official Notice of Funding Opportunity (NOFO) documents. The system is designed not 
+                  to invent requirements or facts. All drafts require human review before submission. 
+                  Users retain full control and professional judgment.
+                </p>
               </div>
             </div>
           </section>

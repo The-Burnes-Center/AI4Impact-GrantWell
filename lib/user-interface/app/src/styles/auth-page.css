@@ -127,70 +127,52 @@
    ============================================ */
 
 .auth-trust-row {
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 0 24px;
+  box-sizing: border-box;
 }
 
 .auth-trust-panel {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 28px 32px;
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  width: 100%;
-}
-
-.auth-trust-icon {
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 16px 16px 0 0;
+  padding: 56px 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  color: white;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 .auth-trust-content {
-  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 800px;
+  text-align: center;
 }
 
 .auth-trust-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700;
   color: white;
-  margin: 0 0 12px 0;
-}
-
-.auth-trust-list {
-  list-style: none;
-  padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  line-height: 1.2;
 }
 
-.auth-trust-list li {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.5;
-  padding-left: 20px;
-  position: relative;
+.auth-trust-description {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.7;
+  margin: 0;
+  max-width: 100%;
 }
 
-.auth-trust-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 7px;
-  width: 6px;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-}
 
 /* ============================================
    Footer: Attribution
@@ -749,25 +731,27 @@
   /* Trust panel mobile */
   .auth-trust-panel {
     width: 100%;
-    padding: 24px 20px;
+    padding: 40px 24px;
     flex-direction: column;
-    gap: 16px;
+    gap: 36px;
+    border-radius: 12px 12px 0 0;
   }
 
-  .auth-trust-icon {
-    width: 44px;
-    height: 44px;
+  .auth-trust-content {
+    width: 100%;
+    max-width: 100%;
+    gap: 24px;
   }
 
   .auth-trust-title {
-    font-size: 16px;
+    font-size: 26px;
   }
 
-  .auth-trust-list li {
-    font-size: 13px;
-    height: 48px;
-    flex-shrink: 0;
+  .auth-trust-description {
+    font-size: 16px;
+    line-height: 1.6;
   }
+
 
   .auth-feature-title {
     font-size: 24px;
@@ -853,6 +837,20 @@
     font-size: 14px;
   }
 
+  .auth-trust-panel {
+    padding: 32px 20px;
+    gap: 28px;
+  }
+
+  .auth-trust-title {
+    font-size: 22px;
+  }
+
+  .auth-trust-description {
+    font-size: 15px;
+  }
+
+
   .auth-footer-text {
     font-size: 12px;
   }
@@ -922,6 +920,7 @@
   .auth-footer-link {
     transition: none;
   }
+
 }
 
 /* ============================================
