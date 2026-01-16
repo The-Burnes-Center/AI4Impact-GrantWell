@@ -181,7 +181,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const baseIndexForAvailable = filteredPinnedGrants.length + aiSearch.results.length;
   const showDivider =
     filteredPinnedGrants.length > 0 ||
-    (searchTerm.length >= 3 &&
+    (searchTerm.length > 0 &&
       (aiSearch.isSearching || aiSearch.results.length > 0 || aiSearch.triggered));
 
   return (
@@ -279,9 +279,11 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
           {/* No Results Message */}
           {searchTerm.length > 0 &&
-            searchTerm.length < 3 &&
             filteredPinnedGrants.length === 0 &&
-            filteredDocuments.length === 0 && (
+            filteredDocuments.length === 0 &&
+            !aiSearch.isSearching &&
+            !aiSearch.triggered &&
+            aiSearch.results.length === 0 && (
               <div
                 style={{
                   padding: "20px",
@@ -290,7 +292,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   fontSize: "14px",
                 }}
               >
-                <p>No matches found. Type at least 3 characters for AI suggestions.</p>
+                <p>No matches found. Try different keywords or use AI suggestions above.</p>
               </div>
             )}
         </div>

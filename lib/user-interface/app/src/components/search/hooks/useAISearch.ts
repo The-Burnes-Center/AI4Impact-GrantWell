@@ -56,13 +56,9 @@ export function useAISearch({
       debounceTimerRef.current = null;
     }
 
-    if (searchTerm.length < 3) {
+    // Only reset if user is backspacing and search term is shorter than last query
+    if (lastQuery && searchTerm !== lastQuery && searchTerm.length < lastQuery.length) {
       if (results.length > 0 || triggered || isSearching) {
-        setIsSearching(false);
-        resetSearch();
-      }
-    } else if (lastQuery && searchTerm !== lastQuery) {
-      if (searchTerm.length < lastQuery.length) {
         setIsSearching(false);
         resetSearch();
       }

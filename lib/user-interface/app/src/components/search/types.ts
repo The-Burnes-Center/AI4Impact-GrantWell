@@ -1,5 +1,5 @@
 import { GrantRecommendation } from "../../hooks/useGrantRecommendations";
-import { GrantTypeId } from "../../common/grant-types";
+import type { GrantTypeId } from "../../common/grant-types";
 
 // Grant type definitions for display
 export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {

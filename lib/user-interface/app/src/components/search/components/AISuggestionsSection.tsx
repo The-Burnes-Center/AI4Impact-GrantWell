@@ -41,8 +41,6 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
   onTriggerSearch,
   onBrowseAll,
 }) => {
-  if (searchTerm.length < 3) return null;
-
   return (
     <div
       role="region"
@@ -262,31 +260,54 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
       {!isSearching && !triggered && (
         <div style={aiPromptStyle}>
           <div style={{ fontSize: "13px", color: "#333" }}>
-            <strong>Press Enter</strong> to get AI-powered suggestions for "
-            {searchTerm}"
+            {searchTerm.length > 0 ? (
+              <>
+                <strong>Press Enter</strong> to get AI-powered suggestions for "
+                {searchTerm}"
+                {searchTerm.length < 3 && (
+                  <span style={{ display: "block", fontSize: "12px", color: "#666", marginTop: "4px" }}>
+                    (AI search runs automatically after 3 characters)
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <strong>Type and press Enter</strong> to get AI-powered grant suggestions
+                <span style={{ display: "block", fontSize: "12px", color: "#666", marginTop: "4px" }}>
+                  (AI search runs automatically after 3 characters)
+                </span>
+              </>
+            )}
           </div>
           <button
             onClick={onTriggerSearch}
-            aria-label={`Find grants with AI for "${searchTerm}"`}
+            aria-label={`Find grants with AI for "${searchTerm || "your search"}"`}
+            disabled={!searchTerm.trim()}
             style={{
-              backgroundColor: "#14558F",
+              backgroundColor: searchTerm.trim() ? "#14558F" : "#ccc",
               color: "white",
               border: "none",
               borderRadius: "16px",
               padding: "6px 14px",
               fontSize: "13px",
-              cursor: "pointer",
+              cursor: searchTerm.trim() ? "pointer" : "not-allowed",
               whiteSpace: "nowrap",
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = "#104472";
+              if (searchTerm.trim()) {
+                e.currentTarget.style.backgroundColor = "#104472";
+              }
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = "#14558F";
+              if (searchTerm.trim()) {
+                e.currentTarget.style.backgroundColor = "#14558F";
+              }
             }}
             onFocus={(e) => {
-              e.currentTarget.style.outline = "2px solid #0088FF";
-              e.currentTarget.style.outlineOffset = "2px";
+              if (searchTerm.trim()) {
+                e.currentTarget.style.outline = "2px solid #0088FF";
+                e.currentTarget.style.outlineOffset = "2px";
+              }
             }}
             onBlur={(e) => {
               e.currentTarget.style.outline = "none";

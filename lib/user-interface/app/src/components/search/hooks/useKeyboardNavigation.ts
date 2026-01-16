@@ -63,8 +63,8 @@ export function useKeyboardNavigation({
             onSelectDocument(filteredDocuments[docIndex]);
           }
           onClose();
-        } else if (searchTerm.trim().length >= 3) {
-          // No item selected - trigger AI search
+        } else if (searchTerm.trim().length > 0) {
+          // No item selected - trigger AI search (works with any length)
           onTriggerAISearch(searchTerm);
         }
       } else if (e.key === "Escape") {
