@@ -5,7 +5,7 @@ import '../../styles/auth-page.css';
 
 // Feature icons as SVG components
 const DiscoverIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <circle cx="14" cy="14" r="10" stroke="#14558F" strokeWidth="2"/>
     <path d="M22 22L28 28" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
     <circle cx="14" cy="14" r="4" fill="#14558F" fillOpacity="0.2"/>
@@ -13,7 +13,7 @@ const DiscoverIcon = () => (
 );
 
 const UnderstandIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <rect x="4" y="4" width="24" height="24" rx="3" stroke="#14558F" strokeWidth="2"/>
     <path d="M9 12H23" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
     <path d="M9 17H19" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
@@ -24,7 +24,7 @@ const UnderstandIcon = () => (
 );
 
 const DraftIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path d="M8 4H20L26 10V28H8V4Z" stroke="#14558F" strokeWidth="2" strokeLinejoin="round"/>
     <path d="M20 4V10H26" stroke="#14558F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M12 16H22" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>

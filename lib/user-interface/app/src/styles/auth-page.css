@@ -3,7 +3,7 @@
    Layout: Hero + Login Row, Feature Cards Below
    ============================================ */
 
-/* Skip link for keyboard navigation */
+/* Skip link for keyboard navigation - WCAG 2.4.1 */
 .skip-link {
   position: absolute;
   top: -40px;
@@ -15,11 +15,14 @@
   z-index: 100;
   border-radius: 4px;
   font-size: 14px;
+  font-weight: 600;
 }
 
 .skip-link:focus {
   top: 10px;
   left: 10px;
+  outline: 3px solid #ffffff; /* WCAG: Ensure skip link focus is visible */
+  outline-offset: 2px;
 }
 
 /* Screen reader only content */
@@ -109,14 +112,14 @@
 .auth-tagline {
   font-size: 22px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.95);
+  color: #ffffff; /* WCAG: Ensure sufficient contrast on blue background */
   margin: 0;
   line-height: 1.4;
 }
 
 .auth-product-description {
   font-size: 17px;
-  color: rgba(255, 255, 255, 0.85);
+  color: #ffffff; /* WCAG: Changed from 0.85 opacity to ensure 4.5:1 contrast ratio */
   line-height: 1.8;
   margin: 0;
   max-width: 540px;
@@ -167,7 +170,7 @@
 
 .auth-trust-description {
   font-size: 17px;
-  color: rgba(255, 255, 255, 0.95);
+  color: #ffffff; /* WCAG: Ensure sufficient contrast */
   line-height: 1.7;
   margin: 0;
   max-width: 100%;
@@ -186,7 +189,7 @@
 
 .auth-footer-text {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.9); /* WCAG: Improved contrast from 0.7 to 0.9 */
   line-height: 1.6;
   margin: 0 0 4px 0;
 }
@@ -204,7 +207,13 @@
 }
 
 .auth-footer-link:focus {
-  outline: 2px solid #ffffff;
+  outline: 3px solid #ffffff; /* WCAG: Increased from 2px to 3px for better visibility */
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.auth-footer-link:focus-visible {
+  outline: 3px solid #ffffff;
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -278,13 +287,13 @@
 .auth-feature-card {
   background: white;
   border-radius: 16px;
-  border: none;
+  border: 2px solid transparent; /* WCAG: Add border for better focus visibility */
   padding: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
   margin-bottom: 20px;
   width: 100%;
   aspect-ratio: 1;
@@ -295,13 +304,27 @@
   transform: translateY(-4px);
 }
 
+/* WCAG: Ensure focus indicators are visible */
+.auth-feature-card:focus-visible {
+  outline: 3px solid #14558F;
+  outline-offset: 2px;
+  border-color: #14558F;
+}
+
 .auth-feature-icon {
-  width: 64px;
-  height: 64px;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.auth-feature-icon svg {
+  width: 100%;
+  height: 100%;
+  max-width: 80px;
+  max-height: 80px;
 }
 
 .auth-feature-title {
@@ -314,7 +337,7 @@
 
 .auth-feature-description {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff; /* WCAG: Ensure sufficient contrast on blue background */
   line-height: 1.6;
   margin: 0;
 }
@@ -410,6 +433,12 @@
 
 .form-input::placeholder {
   color: #94a3b8;
+  opacity: 1; /* WCAG: Ensure placeholder text meets contrast requirements */
+}
+
+/* WCAG: Ensure placeholder text has sufficient contrast when input is focused */
+.form-input:focus::placeholder {
+  color: #cbd5e1;
 }
 
 /* Login Form Options Row */
@@ -440,7 +469,13 @@
 }
 
 .show-password-checkbox .form-check-input:focus {
-  outline: 2px solid #14558F;
+  outline: 3px solid #14558F; /* WCAG: Increased from 2px to 3px for better visibility */
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(20, 85, 143, 0.15);
+}
+
+.show-password-checkbox .form-check-input:focus-visible {
+  outline: 3px solid #14558F;
   outline-offset: 2px;
   box-shadow: 0 0 0 3px rgba(20, 85, 143, 0.15);
 }
@@ -476,7 +511,13 @@
 }
 
 .forgot-password-link:focus {
-  outline: 2px solid #14558F;
+  outline: 3px solid #14558F; /* WCAG: Increased from 2px to 3px for better visibility */
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.forgot-password-link:focus-visible {
+  outline: 3px solid #14558F;
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -514,7 +555,13 @@
 }
 
 .login-submit-button:focus {
-  outline: 2px solid #14558F;
+  outline: 3px solid #14558F; /* WCAG: Increased from 2px to 3px for better visibility */
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(20, 85, 143, 0.2);
+}
+
+.login-submit-button:focus-visible {
+  outline: 3px solid #14558F;
   outline-offset: 2px;
   box-shadow: 0 0 0 3px rgba(20, 85, 143, 0.2);
 }
@@ -823,9 +870,9 @@
     margin-bottom: 12px;
   }
 
-  .auth-feature-icon {
-    width: 48px;
-    height: 48px;
+  .auth-feature-icon svg {
+    max-width: 56px;
+    max-height: 56px;
   }
 
   .auth-feature-title {

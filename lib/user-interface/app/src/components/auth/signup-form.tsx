@@ -16,9 +16,11 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
   const [showVerification, setShowVerification] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
   const verificationInputRef = useRef<HTMLInputElement>(null);
 
   // Focus error when it appears
@@ -27,6 +29,13 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
       errorRef.current.focus();
     }
   }, [error]);
+
+  // Focus success message when it appears
+  useEffect(() => {
+    if (success && successRef.current) {
+      successRef.current.focus();
+    }
+  }, [success]);
 
   // Focus verification input when verification form appears
   useEffect(() => {
@@ -123,13 +132,15 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
   const handleResendCode = async () => {
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       await Auth.resendSignUp(email.toLowerCase().trim());
+      setSuccess('Verification code resent to your email');
       setError(null);
-      alert('Verification code resent to your email');
     } catch (err: any) {
       setError(err.message || 'Failed to resend verification code');
+      setSuccess(null);
     } finally {
       setLoading(false);
     }
@@ -158,7 +169,7 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
           </div>
           <Form.Group className="mb-3">
             <Form.Label className="form-label" htmlFor="verification-code-input">
-              Verification Code
+              Verification Code <span aria-hidden="true">*</span>
             </Form.Label>
             <Form.Control
               id="verification-code-input"
@@ -176,7 +187,11 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
               inputMode="numeric"
               autoComplete="one-time-code"
             />
-            {error && <div id="verification-error" className="sr-only">{error}</div>}
+            {error && (
+              <div id="verification-error" className="sr-only" role="alert">
+                {error}
+              </div>
+            )}
           </Form.Group>
           <div className="login-form-actions">
             <Button 
@@ -213,6 +228,7 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
                 setShowVerification(false);
                 setVerificationCode('');
                 setError(null);
+                setSuccess(null);
               }}
               disabled={loading}
               className="create-account-link"
@@ -228,7 +244,8 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
   }
 
   return (
-    <div className="login-form">
+    <div className="login-form" role="region" aria-labelledby="signup-heading">
+      <h3 id="signup-heading" className="visually-hidden">Create account form</h3>
       <Form onSubmit={handleSignUp} aria-label="Create account form" noValidate>
         <div role="alert" aria-live="polite" aria-atomic="true">
           {error && (
@@ -246,7 +263,7 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
         </div>
         <Form.Group className="mb-3">
           <Form.Label className="form-label" htmlFor="signup-email-input">
-            Email address
+            Email address <span aria-hidden="true">*</span>
           </Form.Label>
           <Form.Control
             id="signup-email-input"
@@ -258,15 +275,19 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
             autoComplete="email"
             required
             className="form-input"
-            aria-describedby={error ? "signup-email-error" : undefined}
-            aria-invalid={error ? true : false}
+            aria-describedby={error && error.toLowerCase().includes('email') ? "signup-email-error" : undefined}
+            aria-invalid={error && error.toLowerCase().includes('email') ? true : false}
             aria-required="true"
           />
-          {error && <div id="signup-email-error" className="sr-only">{error}</div>}
+          {error && error.toLowerCase().includes('email') && (
+            <div id="signup-email-error" className="sr-only" role="alert">
+              {error}
+            </div>
+          )}
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label className="form-label" htmlFor="signup-password-input">
-            Password
+            Password <span aria-hidden="true">*</span>
           </Form.Label>
           <Form.Control
             id="signup-password-input"
@@ -278,11 +299,15 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
             autoComplete="new-password"
             required
             className="form-input"
-            aria-describedby="password-requirements signup-password-error"
-            aria-invalid={error ? true : false}
+            aria-describedby={`password-requirements${error && (error.toLowerCase().includes('password') || error.toLowerCase().includes('match')) ? ' signup-password-error' : ''}`}
+            aria-invalid={error && (error.toLowerCase().includes('password') || error.toLowerCase().includes('match')) ? true : false}
             aria-required="true"
           />
-          {error && <div id="signup-password-error" className="sr-only">{error}</div>}
+          {error && (error.toLowerCase().includes('password') || error.toLowerCase().includes('match')) && (
+            <div id="signup-password-error" className="sr-only" role="alert">
+              {error}
+            </div>
+          )}
           <div id="password-requirements" className="password-requirements mt-2" role="group" aria-label="Password requirements">
             <small>
               <div className={`password-requirement ${passwordRequirements.minLength ? 'text-success' : 'text-muted'}`}>
@@ -337,11 +362,15 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
             autoComplete="new-password"
             required
             className="form-input"
-            aria-describedby={error ? "confirm-password-error" : undefined}
-            aria-invalid={error ? true : false}
+            aria-describedby={error && error.toLowerCase().includes('match') ? "confirm-password-error" : undefined}
+            aria-invalid={error && error.toLowerCase().includes('match') ? true : false}
             aria-required="true"
           />
-          {error && <div id="confirm-password-error" className="sr-only">{error}</div>}
+          {error && error.toLowerCase().includes('match') && (
+            <div id="confirm-password-error" className="sr-only" role="alert">
+              {error}
+            </div>
+          )}
         </Form.Group>
         <div className="login-form-options">
           <Form.Check
