@@ -110,9 +110,11 @@ export default function AuthPage() {
           <section className="auth-features-row" aria-labelledby="features-heading">
             <h2 id="features-heading" className="sr-only">Key Features</h2>
             <div className="auth-features-grid">
-              <div className="auth-feature-card">
-                <div className="auth-feature-icon">
-                  <DiscoverIcon />
+              <div className="auth-feature-item">
+                <div className="auth-feature-card">
+                  <div className="auth-feature-icon">
+                    <DiscoverIcon />
+                  </div>
                 </div>
                 <h3 className="auth-feature-title">Discover</h3>
                 <p className="auth-feature-description">
@@ -121,9 +123,11 @@ export default function AuthPage() {
                 </p>
               </div>
 
-              <div className="auth-feature-card">
-                <div className="auth-feature-icon">
-                  <UnderstandIcon />
+              <div className="auth-feature-item">
+                <div className="auth-feature-card">
+                  <div className="auth-feature-icon">
+                    <UnderstandIcon />
+                  </div>
                 </div>
                 <h3 className="auth-feature-title">Understand</h3>
                 <p className="auth-feature-description">
@@ -132,9 +136,11 @@ export default function AuthPage() {
                 </p>
               </div>
 
-              <div className="auth-feature-card">
-                <div className="auth-feature-icon">
-                  <DraftIcon />
+              <div className="auth-feature-item">
+                <div className="auth-feature-card">
+                  <div className="auth-feature-icon">
+                    <DraftIcon />
+                  </div>
                 </div>
                 <h3 className="auth-feature-title">Draft</h3>
                 <p className="auth-feature-description">
