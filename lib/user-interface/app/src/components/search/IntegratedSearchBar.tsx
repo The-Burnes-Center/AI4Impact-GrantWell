@@ -48,13 +48,29 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const [isAdmin, setIsAdmin] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [showAssistant, setShowAssistant] = useState(false);
-  const [assistantInput, setAssistantInput] = useState("");
   const [recommendedGrants, setRecommendedGrants] = useState<
     GrantRecommendation[]
   >([]);
-  const [isAssistantLoading, setIsAssistantLoading] = useState(false);
+  const [isAISearching, setIsAISearching] = useState(false);
   const [showViewAllModal, setShowViewAllModal] = useState(false);
+  const [aiSearchTriggered, setAiSearchTriggered] = useState(false);
+  const [lastAIQuery, setLastAIQuery] = useState("");
+
+  // Ref for debounce timer
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // State for rotating loading messages
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+  const loadingMessages = [
+    "Searching through grant database...",
+    "Analyzing your requirements...",
+    "Matching grants to your needs...",
+    "Reviewing eligibility criteria...",
+    "Finding the best matches...",
+    "Processing grant information...",
+    "Comparing funding opportunities...",
+    "Evaluating grant parameters...",
+  ];
 
   // Ref for View All Grants modal focus trap
   const viewAllModalRef = useRef<HTMLDivElement>(null);
@@ -231,6 +247,90 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     return () => document.removeEventListener("keydown", handleTabKey);
   }, [showViewAllModal, documents, pinnedGrants]); // Re-run when grants change
 
+  // Rotate loading messages while AI is searching
+  useEffect(() => {
+    if (!isAISearching) {
+      setLoadingMessageIndex(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+    }, 2000); // Change message every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [isAISearching, loadingMessages.length]);
+
+  // Clear AI suggestions when search term changes (especially on backspace)
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+    }
+    if (searchTerm.length < 3) {
+      if (recommendedGrants.length > 0 || aiSearchTriggered || isAISearching) {
+        setIsAISearching(false);
+        resetAISearch();
+      }
+    } else if (lastAIQuery && searchTerm !== lastAIQuery) {
+      if (searchTerm.length < lastAIQuery.length) {
+        setIsAISearching(false);
+        resetAISearch();
+      }
+    }
+  }, [searchTerm]);
+
+  // Debounced AI search - triggers after user stops typing for 1 second
+  useEffect(() => {
+    // Clear any existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    const hasExactMatches = filteredDocuments.length > 0 || filteredPinnedGrants.length > 0;
+    const looksLikeQuery = searchTerm.includes(" ") && searchTerm.length > 10;
+    const shouldTriggerAI = searchTerm.length >= 3 && 
+                            (!hasExactMatches || looksLikeQuery) && 
+                            !isAISearching &&
+                            searchTerm !== lastAIQuery;
+
+    if (shouldTriggerAI && showResults) {
+      debounceTimerRef.current = setTimeout(() => {
+        triggerAISearch(searchTerm);
+      }, 1200); // 1.2 second debounce
+    }
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [searchTerm, filteredDocuments.length, filteredPinnedGrants.length, showResults]);
+
+  // Trigger AI search function
+  const triggerAISearch = async (query: string) => {
+    if (!query.trim() || isAISearching) return;
+
+    setIsAISearching(true);
+    setAiSearchTriggered(true);
+    setLastAIQuery(query);
+    setExpandedGrants({});
+
+    try {
+      const response = await getRecommendationsUsingREST(query);
+      if (response && response.grants) {
+        setRecommendedGrants(response.grants);
+      } else {
+        setRecommendedGrants([]);
+      }
+    } catch (error) {
+      console.error("Error getting AI recommendations:", error);
+      setRecommendedGrants([]);
+    } finally {
+      setIsAISearching(false);
+    }
+  };
+
   // Filter documents when search term changes - removed automatic AI recommendations
   useEffect(() => {
     // Filter existing documents and sort alphabetically
@@ -259,7 +359,10 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    const totalItems = filteredPinnedGrants.length + filteredDocuments.length;
+    const pinnedCount = filteredPinnedGrants.length;
+    const aiCount = recommendedGrants.length;
+    const availableCount = filteredDocuments.length;
+    const totalItems = pinnedCount + aiCount + availableCount;
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -270,16 +373,24 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (selectedIndex >= 0) {
-        if (selectedIndex < filteredPinnedGrants.length) {
+        // Select the highlighted item
+        if (selectedIndex < pinnedCount) {
+          // Pinned grant
           handlePinnedGrantSelect(filteredPinnedGrants[selectedIndex]);
-        } else if (
-          selectedIndex <
-          filteredPinnedGrants.length + filteredDocuments.length
-        ) {
-          const docIndex = selectedIndex - filteredPinnedGrants.length;
+        } else if (selectedIndex < pinnedCount + aiCount) {
+          // AI suggestion
+          const aiIndex = selectedIndex - pinnedCount;
+          const grant = recommendedGrants[aiIndex];
+          handleAIGrantSelect(grant.summaryUrl, grant.name || "");
+        } else {
+          // Available grant
+          const docIndex = selectedIndex - pinnedCount - aiCount;
           onSelectDocument(filteredDocuments[docIndex]);
         }
         setShowResults(false);
+      } else if (searchTerm.trim().length >= 3) {
+        // No item selected - trigger AI search immediately
+        triggerAISearch(searchTerm);
       }
     } else if (e.key === "Escape") {
       setShowResults(false);
@@ -301,38 +412,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     setShowResults(false);
   };
 
-  // Handle submitting the use case to get grant recommendations
-  const handleAssistantSubmit = (e?: React.FormEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
 
-    if (!assistantInput.trim()) return;
-
-    setIsAssistantLoading(true);
-    setExpandedGrants({}); // Reset expanded states when loading new recommendations
-
-    // Call the actual recommendation API
-    getRecommendationsUsingREST(assistantInput)
-      .then((response) => {
-        if (response && response.grants) {
-          setRecommendedGrants(response.grants);
-        } else {
-          // Handle empty response
-          setRecommendedGrants([]);
-        }
-      })
-      .catch((error) => {
-        console.error("Error getting recommendations:", error);
-        setRecommendedGrants([]);
-      })
-      .finally(() => {
-        setIsAssistantLoading(false);
-      });
-  };
-
-  // Handle selection of a grant
-  const handleAssistantGrantClick = (summaryUrl: string, grantName: string) => {
+  // Handle selection of an AI-recommended grant
+  const handleAIGrantSelect = (summaryUrl: string, grantName: string) => {
     setSearchTerm(grantName);
 
     // Find the matching document for onSelectDocument
@@ -341,26 +423,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       onSelectDocument(matchedDoc);
     }
 
-    setShowAssistant(false);
     setShowResults(false); // Close the dropdown
   };
 
-  // Handle opening the simplified recommendation assistant
-  const openRecommendationAssistant = (query?: string) => {
-    setShowAssistant(true);
-
-    if (query) {
-      setAssistantInput(query);
-    } else {
-      setRecommendedGrants([]);
-    }
-  };
-
-  // Close assistant and reset
-  const closeAssistant = () => {
-    setShowAssistant(false);
-    setAssistantInput("");
+  // Reset AI search state
+  const resetAISearch = () => {
     setRecommendedGrants([]);
+    setAiSearchTriggered(false);
+    setLastAIQuery("");
   };
 
   // Helper function to render grant type badge
@@ -782,65 +852,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     });
   };
 
-  // Reusable component for Grant Assistant buttons
-  const AssistantButton = ({ query }: { query?: string }) => (
-    <button
-      style={assistantButtonStyle}
-      onClick={() => openRecommendationAssistant(query)}
-      onMouseOver={(e) => {
-        e.currentTarget.style.backgroundColor = "#104472";
-      }}
-      onMouseOut={(e) => {
-        e.currentTarget.style.backgroundColor = "#14558F";
-      }}
-      onFocus={(e) => {
-        e.currentTarget.style.backgroundColor = "#104472";
-        e.currentTarget.style.outline = "2px solid #0088FF";
-        e.currentTarget.style.outlineOffset = "2px";
-      }}
-      onBlur={(e) => {
-        e.currentTarget.style.backgroundColor = "#14558F";
-        e.currentTarget.style.outline = "none";
-        e.currentTarget.style.outlineOffset = "0";
-      }}
-      aria-label="Open Grant Assistant to get AI-powered grant recommendations"
-    >
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ marginRight: "8px", verticalAlign: "middle" }}
-        aria-hidden="true"
-      >
-        <path
-          d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-          stroke="white"
-          strokeWidth="2"
-        />
-        <path
-          d="M8 12H8.01"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M12 12H12.01"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M16 12H16.01"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      </svg>
-      Grant Assistant
-    </button>
-  );
 
   // Reusable component for View All Grants button
   const ViewAllGrantsButton = () => (
@@ -915,14 +926,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           id="grant-search-input"
           ref={inputRef}
           type="text"
-          placeholder="Search for grants"
-          aria-label="Search for grants"
+          placeholder="Search grants or describe what you need..."
+          aria-label="Search grants or describe what you need"
           aria-describedby="search-help-know-grant search-help-not-sure"
           aria-autocomplete="list"
           aria-expanded={showResults}
           aria-controls={showResults ? "search-results-listbox" : undefined}
           aria-activedescendant={
-            selectedIndex >= 0 && showResults && !showAssistant
+            selectedIndex >= 0 && showResults
               ? `search-result-${selectedIndex}`
               : undefined
           }
@@ -944,10 +955,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             if (!documents.some((doc) => doc.label === searchTerm)) {
               setSearchTerm(e.target.value);
               setShowResults(true);
-              // Close assistant when typing in search
-              if (showAssistant) {
-                closeAssistant();
-              }
+              // Don't close AI assistant - both can work together now
             }
           }}
           onFocus={() => {
@@ -972,9 +980,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               setSelectedIndex(-1);
               setFilteredDocuments(documents);
               setFilteredPinnedGrants(pinnedGrants);
-              setShowAssistant(false);
-              setAssistantInput("");
-              setRecommendedGrants([]);
+              resetAISearch();
               setExpandedGrants({});
               // Reset the document selection with null to ensure parent state is cleared
               onSelectDocument(null);
@@ -1018,28 +1024,26 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       </div>
 
       {/* Search Results Count Announcement for Screen Readers */}
-      {showResults && !showAssistant && searchTerm.length > 0 && (
+      {showResults && searchTerm.length > 0 && (
         <div
           role="status"
           aria-live="polite"
           aria-atomic="true"
           className="sr-only"
         >
-          {filteredPinnedGrants.length + filteredDocuments.length === 0
-            ? `No results found for "${searchTerm}"`
-            : `${
-                filteredPinnedGrants.length + filteredDocuments.length
-              } result${
-                filteredPinnedGrants.length + filteredDocuments.length === 1
-                  ? ""
-                  : "s"
-              } found`}
+          {(() => {
+            const totalResults = filteredPinnedGrants.length + recommendedGrants.length + filteredDocuments.length;
+            return totalResults === 0
+              ? `No results found for "${searchTerm}"`
+              : `${totalResults} result${totalResults === 1 ? "" : "s"} found`;
+          })()}
         </div>
       )}
 
-      {/* Search Results */}
-      {showResults && !showAssistant && (
+      {/* Single Smart Search - Unified Results */}
+      {showResults && (
         <div style={resultsContainerStyle}>
+          {/* Empty State - When no search term */}
           {searchTerm.length === 0 && (
             <div style={emptyPromptStyle}>
               <div
@@ -1063,8 +1067,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     lineHeight: "1.6",
                   }}
                 >
-                  <strong>Know the grant you need?</strong> Type its name above
-                  and browse through matching grants in the list.
+                  <strong>Search by grant name</strong> — Type a grant name to find exact matches instantly.
                 </p>
                 <p
                   id="search-help-not-sure"
@@ -1075,9 +1078,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                     lineHeight: "1.6",
                   }}
                 >
-                  <strong>Not sure where to start?</strong> Click "Grant
-                  Assistant" Button below to describe what you're looking for.
-                  Or click the "View All Grants" Button to browse all grants.
+                  <strong>Or describe what you need</strong> — Type a description and AI will suggest matching grants automatically.
                 </p>
               </div>
               <div
@@ -1088,7 +1089,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                   flexWrap: "wrap",
                 }}
               >
-                <AssistantButton query={undefined} />
                 <ViewAllGrantsButton />
               </div>
             </div>
@@ -1197,39 +1197,315 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             </>
           )}
 
+          {/* AI Suggestions Section - Shows after pinned grants, before available grants */}
+          {searchTerm.length >= 3 && (
+            <div
+              style={{
+                borderTop: (searchTerm.length === 0
+                  ? pinnedGrants.length > 0
+                  : filteredPinnedGrants.length > 0) ? "2px solid #e0e0e0" : "none",
+                marginTop: (searchTerm.length === 0
+                  ? pinnedGrants.length > 0
+                  : filteredPinnedGrants.length > 0) ? "8px" : "0",
+                paddingTop: (searchTerm.length === 0
+                  ? pinnedGrants.length > 0
+                  : filteredPinnedGrants.length > 0) ? "12px" : "0",
+              }}
+            >
+              {/* AI Loading State */}
+              {isAISearching && (
+                <div
+                  style={{
+                    padding: "24px 16px",
+                    textAlign: "center",
+                    backgroundColor: "#f8f9ff",
+                    borderRadius: "8px",
+                    margin: "8px 12px",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
+                    <Spinner size="normal" />
+                    <div>
+                      <div
+                        style={{
+                          color: "#14558F",
+                          fontSize: "14px",
+                          fontWeight: "500",
+                        }}
+                      >
+                        {loadingMessages[loadingMessageIndex]}
+                      </div>
+                      <div
+                        style={{
+                          marginTop: "4px",
+                          color: "#999",
+                          fontSize: "12px",
+                        }}
+                      >
+                        Finding AI-powered suggestions...
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* AI Recommendations */}
+              {!isAISearching && recommendedGrants.length > 0 && (
+                <div style={{ padding: "0 12px 12px 12px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "8px 0",
+                      fontSize: "13px",
+                      fontWeight: "600",
+                      color: "#14558F",
+                    }}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                        stroke="#14558F"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M8 12H8.01M12 12H12.01M16 12H16.01"
+                        stroke="#14558F"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    AI Suggestions based on "{searchTerm}"
+                  </div>
+                  <div
+                    style={{
+                      maxHeight: "250px",
+                      overflowY: "auto",
+                    }}
+                  >
+                    {recommendedGrants.map((grant, index) => {
+                      const grantName = grant.name || "";
+                      const grantKey = `ai-grant-${grantName}-${index}`;
+                      const isExpanded = !!expandedGrants[grantKey];
+
+                      return (
+                        <div
+                          key={grantKey}
+                          style={{
+                            padding: "12px",
+                            backgroundColor: "#f8f9ff",
+                            borderRadius: "8px",
+                            marginBottom: "8px",
+                            border: "1px solid #e8ecf4",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              gap: "8px",
+                            }}
+                          >
+                            <button
+                              onClick={() => handleAIGrantSelect(grant.summaryUrl, grantName)}
+                              style={{
+                                flex: 1,
+                                textAlign: "left",
+                                background: "none",
+                                border: "none",
+                                padding: 0,
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                flexWrap: "wrap",
+                              }}
+                              aria-label={`Select ${grantName}`}
+                            >
+                              <span style={{ fontSize: "14px", fontWeight: "500", color: "#14558F" }}>
+                                {grantName}
+                              </span>
+                              {renderGrantTypeBadge(grantTypeMap[grantName])}
+                            </button>
+                            <button
+                              type="button"
+                              aria-expanded={isExpanded}
+                              aria-label={`${isExpanded ? "Collapse" : "Expand"} details`}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: "12px",
+                                color: "#666",
+                                cursor: "pointer",
+                                padding: "4px 8px",
+                                backgroundColor: "#fff",
+                                borderRadius: "4px",
+                                border: "1px solid #e0e0e0",
+                              }}
+                              onClick={(e) => toggleGrantExpanded(grantKey, e)}
+                            >
+                              {isExpanded ? (
+                                <LuChevronDown size={14} style={{ marginRight: "4px" }} />
+                              ) : (
+                                <LuChevronRight size={14} style={{ marginRight: "4px" }} />
+                              )}
+                              Details
+                            </button>
+                          </div>
+
+                          {isExpanded && (
+                            <div
+                              style={{
+                                fontSize: "13px",
+                                color: "#666",
+                                marginTop: "10px",
+                                padding: "10px",
+                                backgroundColor: "#fff",
+                                borderRadius: "4px",
+                              }}
+                            >
+                              {grant.keyRequirements.length > 0 ? (
+                                <ul style={{ margin: "0 0 0 16px", padding: "0" }}>
+                                  {grant.keyRequirements.map((req, i) => (
+                                    <li key={i} style={{ marginBottom: "4px" }}>{req}</li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p style={{ margin: "0", fontStyle: "italic" }}>
+                                  Click to view full grant details.
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Prompt to trigger AI search */}
+              {!isAISearching && !aiSearchTriggered && searchTerm.length >= 3 && (
+                <div
+                  style={{
+                    padding: "12px 16px",
+                    margin: "8px 12px",
+                    backgroundColor: "#f0f7ff",
+                    borderRadius: "8px",
+                    border: "1px dashed #14558F",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "12px",
+                  }}
+                >
+                  <div style={{ fontSize: "13px", color: "#333" }}>
+                    <strong>Press Enter</strong> to get AI-powered suggestions for "{searchTerm}"
+                  </div>
+                  <button
+                    onClick={() => triggerAISearch(searchTerm)}
+                    style={{
+                      backgroundColor: "#14558F",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "16px",
+                      padding: "6px 14px",
+                      fontSize: "13px",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor = "#104472";
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor = "#14558F";
+                    }}
+                  >
+                    Find with AI
+                  </button>
+                </div>
+              )}
+
+              {/* No AI results message */}
+              {!isAISearching && aiSearchTriggered && recommendedGrants.length === 0 && (
+                <div
+                  style={{
+                    padding: "16px",
+                    margin: "8px 12px",
+                    textAlign: "center",
+                    color: "#666",
+                    fontSize: "13px",
+                    backgroundColor: "#f9f9f9",
+                    borderRadius: "8px",
+                  }}
+                >
+                  No AI suggestions found for "{searchTerm}". Try different keywords or{" "}
+                  <button
+                    onClick={() => setShowViewAllModal(true)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#14558F",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      fontSize: "13px",
+                      padding: 0,
+                    }}
+                  >
+                    browse all grants
+                  </button>.
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Available grants section - ONLY show when user is actively searching */}
           {searchTerm.length > 0 && filteredDocuments.length > 0 && (
             <>
-              <div style={sectionHeaderStyle}>Available Grants</div>
+              <div 
+                style={{
+                  ...sectionHeaderStyle,
+                  borderTop: (filteredPinnedGrants.length > 0 || (searchTerm.length >= 3 && (isAISearching || recommendedGrants.length > 0 || aiSearchTriggered))) ? "2px solid #e0e0e0" : "none",
+                  marginTop: (filteredPinnedGrants.length > 0 || (searchTerm.length >= 3 && (isAISearching || recommendedGrants.length > 0 || aiSearchTriggered))) ? "8px" : "0",
+                  paddingTop: (filteredPinnedGrants.length > 0 || (searchTerm.length >= 3 && (isAISearching || recommendedGrants.length > 0 || aiSearchTriggered))) ? "12px" : "0",
+                }}
+              >
+                Available Grants
+              </div>
               {filteredDocuments.map((doc, index) => {
                 const docName = doc.label || "";
 
                 const isPinned = isNofoPinned(docName);
+                // Calculate index accounting for pinned grants and AI suggestions
+                const baseIndex = filteredPinnedGrants.length;
+                const aiResultsCount = recommendedGrants.length;
+                const itemIndex = baseIndex + aiResultsCount + index;
 
                 return (
                   <div
                     key={`doc-${docName}-${index}`}
-                      id={`search-result-${
-                        index + filteredPinnedGrants.length
-                      }`}
+                      id={`search-result-${itemIndex}`}
                       role="option"
-                      aria-selected={
-                        selectedIndex === index + filteredPinnedGrants.length
-                      }
+                      aria-selected={selectedIndex === itemIndex}
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                       gap: "8px",
-                        ...(selectedIndex ===
-                        index + filteredPinnedGrants.length
+                        ...(selectedIndex === itemIndex
                         ? selectedItemStyle
                         : resultItemStyle),
                       padding: "12px 15px",
                     }}
-                    onMouseEnter={() =>
-                      setSelectedIndex(index + filteredPinnedGrants.length)
-                    }
+                    onMouseEnter={() => setSelectedIndex(itemIndex)}
                   >
                     <button
                       onClick={() => {
@@ -1238,7 +1514,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
                         setShowResults(false);
                       }}
                       onFocus={(e) => {
-                        setSelectedIndex(index + filteredPinnedGrants.length);
+                        setSelectedIndex(itemIndex);
                         e.currentTarget.style.outline = "2px solid #0088FF";
                         e.currentTarget.style.outlineOffset = "2px";
                       }}
@@ -1353,278 +1629,17 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
           )}
           </div>
 
-          {/* No results state with assistant button - outside listbox */}
+          {/* No exact matches message - only when no results AND AI not triggered yet */}
           {searchTerm.length > 0 &&
+            searchTerm.length < 3 &&
             filteredPinnedGrants.length === 0 &&
             filteredDocuments.length === 0 && (
               <div
-                style={{ padding: "20px", textAlign: "center", color: "#666" }}
+                style={{ padding: "20px", textAlign: "center", color: "#666", fontSize: "14px" }}
               >
-                <p>No matches found for "{searchTerm}".</p>
-                <p style={{ marginTop: "10px" }}>
-                  Try different keywords or use our grant assistant for more
-                  help.
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <AssistantButton query={searchTerm} />
-                  <ViewAllGrantsButton />
-                </div>
+                <p>No matches found. Type at least 3 characters for AI suggestions.</p>
               </div>
             )}
-        </div>
-      )}
-
-      {/* Simplified Grant Assistant */}
-      {showResults && showAssistant && (
-        <div style={resultsContainerStyle}>
-          {/* Empty listbox for ARIA compliance when assistant is showing */}
-          <div
-            id="search-results-listbox"
-            role="listbox"
-            style={{ display: "none" }}
-            aria-hidden="true"
-          />
-          <div style={assistantContainerStyle}>
-            <div style={assistantHeaderStyle}>
-              <h2 style={{ margin: 0, fontSize: "16px", color: "#14558F" }}>
-                Describe Your Grant Needs
-              </h2>
-              <button
-                style={assistantCloseButtonStyle}
-                onClick={closeAssistant}
-                aria-label="Close assistant"
-              >
-                ×
-              </button>
-            </div>
-
-            <form
-              onSubmit={handleAssistantSubmit}
-              style={assistantInputContainerStyle}
-            >
-              <input
-                type="text"
-                placeholder="No special terms needed—just ask in your own words."
-                value={assistantInput}
-                onChange={(e) => setAssistantInput(e.target.value)}
-                style={assistantInputStyle}
-              />
-              <button
-                type="submit"
-                style={assistantSubmitButtonStyle}
-                disabled={isAssistantLoading}
-              >
-                {isAssistantLoading ? "Finding Grants..." : "Find Grants"}
-              </button>
-            </form>
-
-            <div style={grantsContainerStyle}>
-              {isAssistantLoading ? (
-                <div style={{ textAlign: "center", padding: "40px 0" }}>
-                  <Spinner size="normal" />
-                  <div style={{ marginTop: "15px", color: "#666" }}>
-                    Finding the best grant matches for your needs...
-                  </div>
-                </div>
-              ) : recommendedGrants.length > 0 ? (
-                <div>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      marginBottom: "16px",
-                      color: "#444",
-                    }}
-                  >
-                    Here are the top grants that match your needs:
-                  </div>
-                  {recommendedGrants.map((grant, index) => {
-                    const grantName = grant.name || "";
-                    const grantKey = `grant-${grantName}-${index}`;
-                    const isExpanded = !!expandedGrants[grantKey];
-
-                    return (
-                      <div
-                        key={grantKey}
-                        style={{
-                          ...grantCardStyle,
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "12px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            ...grantCardHeaderStyle,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: "8px",
-                          }}
-                        >
-                          <button
-                            onClick={() =>
-                              handleAssistantGrantClick(
-                                grant.summaryUrl,
-                                grantName
-                              )
-                            }
-                            onFocus={(e) => {
-                              e.currentTarget.style.outline =
-                                "2px solid #0088FF";
-                              e.currentTarget.style.outlineOffset = "2px";
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.outline = "none";
-                            }}
-                            style={{
-                              flex: 1,
-                              textAlign: "left",
-                              background: "none",
-                              border: "none",
-                              padding: 0,
-                              cursor: "pointer",
-                              color: "inherit",
-                              fontSize: "inherit",
-                              fontFamily: "inherit",
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "8px",
-                              flexWrap: "wrap",
-                            }}
-                            aria-label={`View details for ${grantName}`}
-                          >
-                            <div style={grantCardTitleStyle}>{grantName}</div>
-                            {renderGrantTypeBadge(grantTypeMap[grantName])}
-                          </button>
-                          <button
-                            type="button"
-                            aria-expanded={isExpanded}
-                            aria-label={`${
-                              isExpanded ? "Collapse" : "Expand"
-                            } details for ${grantName}`}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              fontSize: "14px",
-                              color: "#666",
-                              cursor: "pointer",
-                              padding: "4px 8px",
-                              backgroundColor: "#f5f5f5",
-                              borderRadius: "4px",
-                              border: "none",
-                              width: "auto",
-                              textAlign: "left",
-                              transition: "all 0.2s ease",
-                              flexShrink: 0,
-                            }}
-                            onClick={(e) => toggleGrantExpanded(grantKey, e)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                toggleGrantExpanded(grantKey, e);
-                              }
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = "#e0f0ff";
-                              e.currentTarget.style.color = "#14558F";
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = "#f5f5f5";
-                              e.currentTarget.style.color = "#666";
-                            }}
-                            onFocus={(e) => {
-                              e.currentTarget.style.backgroundColor = "#e0f0ff";
-                              e.currentTarget.style.color = "#14558F";
-                              e.currentTarget.style.outline =
-                                "2px solid #0088FF";
-                              e.currentTarget.style.outlineOffset = "2px";
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.backgroundColor = "#f5f5f5";
-                              e.currentTarget.style.color = "#666";
-                              e.currentTarget.style.outline = "none";
-                              e.currentTarget.style.outlineOffset = "0";
-                            }}
-                          >
-                            {isExpanded ? (
-                              <LuChevronDown
-                                size={16}
-                                style={{ marginRight: "4px", flexShrink: 0 }}
-                              />
-                            ) : (
-                              <LuChevronRight
-                                size={16}
-                                style={{ marginRight: "4px", flexShrink: 0 }}
-                              />
-                            )}
-                            <span style={{ fontWeight: "bold" }}>
-                              Grant details
-                            </span>
-                          </button>
-                        </div>
-
-                        {isExpanded && (
-                          <div
-                            style={{
-                              fontSize: "14px",
-                              color: "#666",
-                              marginTop: "12px",
-                              padding: "12px",
-                              backgroundColor: "#fafafa",
-                              border: "1px solid #f0f0f0",
-                              borderRadius: "4px",
-                              boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                            }}
-                          >
-                            {grant.keyRequirements.length > 0 ? (
-                              <ul
-                                style={{
-                                  margin: "0 0 0 20px",
-                                  padding: "0",
-                                  fontSize: "14px",
-                                }}
-                              >
-                                {grant.keyRequirements.map((req, i) => (
-                                  <li key={i}>{req}</li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <p style={{ margin: "0" }}>
-                                No detailed requirements available for this
-                                grant.
-                              </p>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: "30px 0",
-                    color: "#666",
-                  }}
-                >
-                  {assistantInput &&
-                  !isAssistantLoading &&
-                  recommendedGrants.length === 0 &&
-                  Object.keys(recommendations || {}).length > 0
-                    ? "No matching grants found. Try describing your needs in more detail or with different keywords."
-                    : "Describe your specific grant needs above and click 'Find Grants' to discover matching opportunities."}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       )}
 
