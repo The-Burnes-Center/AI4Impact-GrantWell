@@ -13,10 +13,11 @@ interface ResetPasswordPageProps {
 export default function ResetPasswordPage({ email, onBack, onSuccess }: ResetPasswordPageProps) {
   const [verificationCode, setVerificationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
-  const verificationInputRef = useRef<HTMLInputElement>(null);
 
   // Focus error when it appears
   useEffect(() => {
@@ -40,8 +41,11 @@ export default function ResetPasswordPage({ email, onBack, onSuccess }: ResetPas
 
     try {
       await Auth.forgotPasswordSubmit(email.toLowerCase().trim(), verificationCode, newPassword);
-      alert('Password reset successful! Please sign in with your new password.');
-      onSuccess();
+      setSuccess(true);
+      // Wait a moment to show success message, then redirect
+      setTimeout(() => {
+        onSuccess();
+      }, 2000);
     } catch (err: any) {
       setError(err.message || 'Failed to reset password');
       setLoading(false);
@@ -53,157 +57,133 @@ export default function ResetPasswordPage({ email, onBack, onSuccess }: ResetPas
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      <main role="main" className="auth-page-container" id="main-content">
-        <div className="auth-card">
-          {/* Left Column - Branding Section */}
-          <div className="auth-branding-section">
-            <div className="auth-branding-content">
-              <div className="auth-logo-container">
-                <img
-                  src="/images/stateseal-color.png"
-                  alt="Massachusetts State Seal"
-                  className="auth-logo"
-                />
-                <h1 className="auth-brand-title">GrantWell</h1>
-              </div>
-              <div className="auth-branding-text">
-                <h2 className="auth-branding-heading">Create new password</h2>
-                <p className="auth-branding-description">
-                  Enter the verification code we sent to your email and choose a secure new password for your account.
-                </p>
-                <div className="auth-affiliation-banner">
-                  <p className="auth-affiliation-label">Developed in partnership with</p>
-                  <a
-                    href="https://burnes.northeastern.edu/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="auth-affiliation-link"
-                    aria-label="Visit Burnes Center for Social Change at Northeastern University"
-                  >
-                    <img
-                      src="/images/burnesLogo.png"
-                      alt="Burnes Center for Social Change Logo"
-                      className="auth-affiliation-logo"
-                    />
-                  </a>
-                </div>
-              </div>
+      <main role="main" className="auth-simple-wrapper" id="main-content">
+        <div className="auth-simple-card">
+          {/* Logo and Branding */}
+          <div className="auth-simple-header">
+            <div className="auth-logo-container">
+              <img
+                src="/images/stateseal-color.png"
+                alt="Massachusetts State Seal"
+                className="auth-logo"
+              />
+              <h1 className="auth-brand-title">GrantWell</h1>
             </div>
           </div>
 
-          {/* Right Column - Form Section */}
-          <div className="auth-form-section">
-            <div className="auth-form-header">
-              <h2 className="auth-page-title">Reset your password</h2>
-              <p className="auth-page-subtitle">
-                Enter the verification code sent to your email and your new password.
-              </p>
-            </div>
-            <div className="auth-content">
-              <div className="login-form">
-                <Form onSubmit={handleResetPassword} aria-label="Reset password form" noValidate>
-                  <div role="alert" aria-live="polite" aria-atomic="true">
-                    {error && (
-                      <Alert 
-                        variant="danger" 
-                        dismissible 
-                        onClose={() => setError(null)} 
-                        className="mt-3"
-                        ref={errorRef}
-                        tabIndex={-1}
-                      >
-                        {error}
-                      </Alert>
-                    )}
-                  </div>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label" htmlFor="reset-email-input">
-                      Email address
-                    </Form.Label>
-                    <Form.Control
-                      id="reset-email-input"
-                      type="email"
-                      value={email}
-                      readOnly
-                      disabled={true}
-                      autoComplete="email"
-                      className="form-input"
-                      style={{ backgroundColor: '#f9fafb', cursor: 'not-allowed' }}
-                      aria-label="Email address (read-only)"
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label" htmlFor="reset-verification-input">
-                      Verification Code
-                    </Form.Label>
-                    <Form.Control
-                      id="reset-verification-input"
-                      type="text"
-                      placeholder="Enter verification code"
-                      value={verificationCode}
-                      onChange={(e) => setVerificationCode(e.target.value)}
-                      disabled={loading}
-                      required
-                      className="form-input"
-                      ref={verificationInputRef}
-                      aria-describedby={error ? "reset-verification-error" : undefined}
-                      aria-invalid={error ? true : false}
-                      aria-required="true"
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                    />
-                    {error && <div id="reset-verification-error" className="sr-only">{error}</div>}
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label" htmlFor="reset-password-input">
-                      New Password
-                    </Form.Label>
-                    <Form.Control
-                      id="reset-password-input"
-                      type="password"
-                      placeholder="Enter new password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      disabled={loading}
-                      autoComplete="new-password"
-                      required
-                      className="form-input"
-                      aria-describedby={error ? "reset-password-error" : undefined}
-                      aria-invalid={error ? true : false}
-                      aria-required="true"
-                    />
-                    {error && <div id="reset-password-error" className="sr-only">{error}</div>}
-                  </Form.Group>
-                  <div className="login-form-actions">
-                    <Button 
-                      variant="primary" 
-                      type="submit" 
-                      disabled={loading} 
-                      className="login-submit-button"
-                      aria-label={loading ? "Resetting password, please wait" : "Reset password"}
+          {/* Form Section */}
+          <div className="auth-simple-content">
+            <h2 className="auth-page-title">Reset your password</h2>
+            <p className="auth-page-subtitle">
+              Enter the verification code sent to <strong>{email}</strong> and your new password.
+            </p>
+            
+            <div className="login-form">
+              <Form onSubmit={handleResetPassword} aria-label="Reset password form" noValidate>
+                <div role="alert" aria-live="polite" aria-atomic="true">
+                  {error && (
+                    <Alert 
+                      variant="danger" 
+                      dismissible 
+                      onClose={() => setError(null)} 
+                      className="mt-3"
+                      ref={errorRef}
+                      tabIndex={-1}
                     >
-                      {loading ? (
-                        <>
-                          <Spinner animation="border" size="sm" aria-hidden="true" />
-                          <span className="sr-only">Loading...</span>
-                          Resetting...
-                        </>
-                      ) : (
-                        'Reset password'
-                      )}
-                    </Button>
-                  </div>
-                </Form>
-                <div className="login-form-footer">
+                      {error}
+                    </Alert>
+                  )}
+                  {success && (
+                    <Alert variant="success" className="mt-3">
+                      Password reset successful! Redirecting to sign in...
+                    </Alert>
+                  )}
+                </div>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label" htmlFor="reset-verification-input">
+                    Verification Code
+                  </Form.Label>
+                  <Form.Control
+                    id="reset-verification-input"
+                    type="text"
+                    placeholder="Enter verification code"
+                    value={verificationCode}
+                    onChange={(e) => setVerificationCode(e.target.value)}
+                    disabled={loading || success}
+                    required
+                    className="form-input"
+                    aria-describedby={error ? "reset-verification-error" : undefined}
+                    aria-invalid={error ? true : false}
+                    aria-required="true"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                  />
+                  {error && <div id="reset-verification-error" className="sr-only">{error}</div>}
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label" htmlFor="reset-password-input">
+                    New Password
+                  </Form.Label>
+                  <Form.Control
+                    id="reset-password-input"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter new password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    disabled={loading || success}
+                    autoComplete="new-password"
+                    required
+                    className="form-input"
+                    aria-describedby={error ? "reset-password-error" : undefined}
+                    aria-invalid={error ? true : false}
+                    aria-required="true"
+                  />
+                  {error && <div id="reset-password-error" className="sr-only">{error}</div>}
+                </Form.Group>
+                <div className="login-form-options" style={{ justifyContent: 'flex-start' }}>
+                  <Form.Check
+                    type="checkbox"
+                    id="reset-show-password-checkbox"
+                    label="Show password"
+                    checked={showPassword}
+                    onChange={(e) => setShowPassword(e.target.checked)}
+                    className="show-password-checkbox"
+                    aria-label="Show password as plain text"
+                    disabled={loading || success}
+                  />
+                </div>
+                <div className="login-form-actions">
                   <Button 
-                    variant="link" 
-                    onClick={onBack} 
-                    className="create-account-link"
-                    aria-label="Go back to forgot password"
+                    variant="primary" 
+                    type="submit" 
+                    disabled={loading || success} 
+                    className="login-submit-button"
+                    aria-label={loading ? "Resetting password, please wait" : "Reset password"}
                   >
-                    Back
+                    {loading ? (
+                      <>
+                        <Spinner animation="border" size="sm" aria-hidden="true" />
+                        <span className="sr-only">Loading...</span>
+                        Resetting...
+                      </>
+                    ) : success ? (
+                      'Success!'
+                    ) : (
+                      'Reset password'
+                    )}
                   </Button>
                 </div>
+              </Form>
+              <div className="login-form-footer">
+                <Button 
+                  variant="link" 
+                  onClick={onBack} 
+                  className="create-account-link"
+                  aria-label="Go back to sign in"
+                  disabled={loading || success}
+                >
+                  Back to sign in
+                </Button>
               </div>
             </div>
           </div>
@@ -212,4 +192,3 @@ export default function ResetPasswordPage({ email, onBack, onSuccess }: ResetPas
     </>
   );
 }
-
