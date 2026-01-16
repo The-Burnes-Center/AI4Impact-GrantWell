@@ -71,6 +71,22 @@ export default function ResetPasswordPage({ email, onBack, onSuccess }: ResetPas
                 <p className="auth-branding-description">
                   Enter the verification code we sent to your email and choose a secure new password for your account.
                 </p>
+                <div className="auth-affiliation-banner">
+                  <p className="auth-affiliation-label">Developed in partnership with</p>
+                  <a
+                    href="https://burnes.northeastern.edu/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="auth-affiliation-link"
+                    aria-label="Visit Burnes Center for Social Change at Northeastern University"
+                  >
+                    <img
+                      src="/images/burnesLogo.png"
+                      alt="Burnes Center for Social Change Logo"
+                      className="auth-affiliation-logo"
+                    />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

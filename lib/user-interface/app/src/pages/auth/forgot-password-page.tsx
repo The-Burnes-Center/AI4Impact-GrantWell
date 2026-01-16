@@ -70,6 +70,22 @@ export default function ForgotPasswordPage({ onBack, onCodeSent }: ForgotPasswor
                 <p className="auth-branding-description">
                   Don't worry, we'll help you get back into your account. Enter your email address and we'll send you a verification code.
                 </p>
+                <div className="auth-affiliation-banner">
+                  <p className="auth-affiliation-label">Developed in partnership with</p>
+                  <a
+                    href="https://burnes.northeastern.edu/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="auth-affiliation-link"
+                    aria-label="Visit Burnes Center for Social Change at Northeastern University"
+                  >
+                    <img
+                      src="/images/burnesLogo.png"
+                      alt="Burnes Center for Social Change Logo"
+                      className="auth-affiliation-logo"
+                    />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

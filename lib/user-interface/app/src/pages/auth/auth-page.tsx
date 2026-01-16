@@ -97,6 +97,22 @@ export default function AuthPage() {
                     <span>Secure and confidential</span>
                   </div>
                 </div>
+                <div className="auth-affiliation-banner">
+                  <p className="auth-affiliation-label">Developed in partnership with</p>
+                  <a
+                    href="https://burnes.northeastern.edu/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="auth-affiliation-link"
+                    aria-label="Visit Burnes Center for Social Change at Northeastern University"
+                  >
+                    <img
+                      src="/images/burnesLogo.png"
+                      alt="Burnes Center for Social Change Logo"
+                      className="auth-affiliation-logo"
+                    />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

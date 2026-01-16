@@ -122,6 +122,49 @@
   flex-shrink: 0;
 }
 
+.auth-affiliation-banner {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.auth-affiliation-label {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.auth-affiliation-link {
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  text-decoration: none;
+}
+
+.auth-affiliation-link:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.auth-affiliation-link:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.auth-affiliation-logo {
+  width: 180px;
+  height: auto;
+  max-width: 100%;
+}
+
 /* Right Column - Form Section */
 .auth-form-section {
   flex: 1;
@@ -485,6 +528,19 @@
 
   .auth-feature-item {
     font-size: 14px;
+  }
+
+  .auth-affiliation-banner {
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+
+  .auth-affiliation-label {
+    font-size: 12px;
+  }
+
+  .auth-affiliation-logo {
+    width: 150px;
   }
 
   .auth-form-section {
