@@ -58,6 +58,7 @@ export const AvailableGrantsSection: React.FC<AvailableGrantsSectionProps> = ({
         const docName = doc.label || "";
         const isPinned = isNofoPinned(docName);
         const itemIndex = baseIndex + index;
+        const isArchived = doc.status === "archived";
 
         return (
           <div
@@ -65,6 +66,7 @@ export const AvailableGrantsSection: React.FC<AvailableGrantsSectionProps> = ({
             id={`search-result-${itemIndex}`}
             role="option"
             aria-selected={selectedIndex === itemIndex}
+            aria-disabled={isArchived}
             style={{
               display: "flex",
               alignItems: "center",
@@ -72,14 +74,33 @@ export const AvailableGrantsSection: React.FC<AvailableGrantsSectionProps> = ({
               gap: "8px",
               ...(selectedIndex === itemIndex ? selectedItemStyle : resultItemStyle),
               padding: "12px 15px",
+              opacity: isArchived ? 0.7 : 1,
+              backgroundColor: isArchived ? "#f5f5f5" : undefined,
             }}
             onMouseEnter={() => onMouseEnter(itemIndex)}
           >
-            <button
-              onClick={() => onSelect(doc)}
+            <div
+              onClick={() => {
+                if (isArchived) {
+                  // Show tooltip or alert that the grant is expired
+                  return;
+                }
+                onSelect(doc);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  if (!isArchived) {
+                    onSelect(doc);
+                  }
+                }
+              }}
+              tabIndex={0}
+              role="button"
               onFocus={(e) => {
-                e.currentTarget.style.outline = "2px solid #0088FF";
-                e.currentTarget.style.outlineOffset = "2px";
+                if (!isArchived) {
+                  e.currentTarget.style.outline = "2px solid #0088FF";
+                  e.currentTarget.style.outlineOffset = "2px";
+                }
               }}
               onBlur={(e) => {
                 e.currentTarget.style.outline = "none";
@@ -90,21 +111,39 @@ export const AvailableGrantsSection: React.FC<AvailableGrantsSectionProps> = ({
                 background: "none",
                 border: "none",
                 padding: 0,
-                cursor: "pointer",
-                color: "inherit",
+                cursor: isArchived ? "not-allowed" : "pointer",
+                color: isArchived ? "#888" : "inherit",
                 fontSize: "inherit",
                 fontFamily: "inherit",
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
+                flexWrap: "wrap",
               }}
-              aria-label={`Select ${docName}`}
+              aria-label={isArchived ? `${docName} (Expired - no longer accepting applications)` : `Select ${docName}`}
             >
-              <span>{docName}</span>
+              <span style={{ textDecoration: isArchived ? "line-through" : "none" }}>{docName}</span>
               <GrantTypeBadge grantType={grantTypeMap[docName]} />
-            </button>
+              {isArchived && (
+                <span
+                  style={{
+                    backgroundColor: "#dc3545",
+                    color: "white",
+                    fontSize: "10px",
+                    fontWeight: "600",
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    marginLeft: "4px",
+                    textTransform: "uppercase",
+                  }}
+                  title="This grant has expired and is no longer accepting applications"
+                >
+                  Expired
+                </span>
+              )}
+            </div>
 
-            {isAdmin && (
+            {isAdmin && !isArchived && (
               <div style={{ display: "flex", alignItems: "center" }}>
                 {isPinned ? (
                   <button

@@ -20,6 +20,7 @@ export interface PinnableGrant extends GrantRecommendation {
 export interface SearchDocument {
   label: string;
   value: string;
+  status?: "active" | "archived";
 }
 
 // Props for the main IntegratedSearchBar component

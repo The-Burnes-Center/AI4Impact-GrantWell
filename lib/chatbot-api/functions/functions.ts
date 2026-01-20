@@ -1241,7 +1241,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Backfill Expiration Dates Function
     const backfillExpirationDatesFunction = new lambda.Function(
       scope,
-      'BackfillExpirationDatesFunction',
+      'BackfillExpirationDatesFunctionV2',
       {
         runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(

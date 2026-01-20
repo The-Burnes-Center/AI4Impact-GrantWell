@@ -139,30 +139,48 @@ export default function Welcome() {
         `Received ${folders.length} active NOFOs for landing page display`
       );
 
-      // For debugging: Check if we have nofoData with status information too
+      // Use nofoData to include both active and archived NOFOs with status
       if (result.nofoData) {
         const activeCount = result.nofoData.filter(
-          (nofo) => nofo.status === "active"
+          (nofo: { status: string }) => nofo.status === "active"
         ).length;
         const archivedCount = result.nofoData.filter(
-          (nofo) => nofo.status === "archived"
+          (nofo: { status: string }) => nofo.status === "archived"
         ).length;
         console.log(
           `NOFO status breakdown - Active: ${activeCount}, Archived: ${archivedCount}`
         );
+
+        // Sort all NOFOs alphabetically, with active ones first
+        const sortedNofos = [...result.nofoData].sort((a: { name: string; status: string }, b: { name: string; status: string }) => {
+          // Active NOFOs come first
+          if (a.status === "active" && b.status !== "active") return -1;
+          if (a.status !== "active" && b.status === "active") return 1;
+          // Then sort alphabetically
+          return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+        });
+
+        setDocuments(
+          sortedNofos.map((nofo: { name: string; status: string }) => ({
+            label: nofo.name,
+            value: nofo.name + "/",
+            status: nofo.status as "active" | "archived",
+          }))
+        );
+      } else {
+        // Fallback to folders array if nofoData is not available
+        const sortedFolders = [...folders].sort((a: string, b: string) =>
+          a.localeCompare(b, undefined, { sensitivity: "base" })
+        );
+
+        setDocuments(
+          sortedFolders.map((document: string) => ({
+            label: document,
+            value: document + "/",
+            status: "active" as const,
+          }))
+        );
       }
-
-      // Sort folders alphabetically (case-insensitive)
-      const sortedFolders = [...folders].sort((a, b) =>
-        a.localeCompare(b, undefined, { sensitivity: "base" })
-      );
-
-      setDocuments(
-        sortedFolders.map((document) => ({
-          label: document,
-          value: document + "/",
-        }))
-      );
     } catch (error) {
       console.error("Error retrieving NOFOs: ", error);
     }

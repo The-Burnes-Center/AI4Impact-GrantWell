@@ -182,42 +182,44 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
                       </span>
                       <GrantTypeBadge grantType={grantTypeMap[grantName]} />
                     </button>
-                    <button
-                      id={`${grantKey}-details-button`}
-                      type="button"
-                      aria-expanded={isExpanded}
-                      aria-controls={`${grantKey}-details`}
-                      aria-label={`${
-                        isExpanded ? "Collapse" : "Expand"
-                      } details for ${grantName}`}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        fontSize: "12px",
-                        color: "#666",
-                        cursor: "pointer",
-                        padding: "4px 8px",
-                        backgroundColor: "#fff",
-                        borderRadius: "4px",
-                        border: "1px solid #e0e0e0",
-                      }}
-                      onClick={(e) => onToggleExpanded(grantKey, e)}
-                    >
-                      {isExpanded ? (
-                        <LuChevronDown
-                          size={14}
-                          style={{ marginRight: "4px" }}
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <LuChevronRight
-                          size={14}
-                          style={{ marginRight: "4px" }}
-                          aria-hidden="true"
-                        />
-                      )}
-                      <span>Details</span>
-                    </button>
+                    {grant.keyRequirements && grant.keyRequirements.length > 0 && (
+                      <button
+                        id={`${grantKey}-details-button`}
+                        type="button"
+                        aria-expanded={isExpanded}
+                        aria-controls={`${grantKey}-details`}
+                        aria-label={`${
+                          isExpanded ? "Collapse" : "Expand"
+                        } details for ${grantName}`}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          fontSize: "12px",
+                          color: "#666",
+                          cursor: "pointer",
+                          padding: "4px 8px",
+                          backgroundColor: "#fff",
+                          borderRadius: "4px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                        onClick={(e) => onToggleExpanded(grantKey, e)}
+                      >
+                        {isExpanded ? (
+                          <LuChevronDown
+                            size={14}
+                            style={{ marginRight: "4px" }}
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <LuChevronRight
+                            size={14}
+                            style={{ marginRight: "4px" }}
+                            aria-hidden="true"
+                          />
+                        )}
+                        <span>Details</span>
+                      </button>
+                    )}
                   </div>
 
                   {isExpanded && (
