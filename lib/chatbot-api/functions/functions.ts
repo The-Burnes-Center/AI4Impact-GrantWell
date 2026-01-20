@@ -148,6 +148,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -175,6 +176,21 @@ export class LambdaFunctionStack extends cdk.Stack {
           "bedrock-agent:Retrieve",
         ],
         resources: ["*"],
+      })
+    );
+
+    // DynamoDB permissions for grant recommendation function (keyword filtering)
+    grantRecommendationFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:Query",
+          "dynamodb:GetItem",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          `${props.nofoMetadataTable.tableArn}/index/*`,
+        ],
       })
     );
 

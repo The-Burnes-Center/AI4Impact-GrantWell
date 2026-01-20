@@ -93,6 +93,22 @@ export class TableStack extends Stack {
       projectionType: ProjectionType.ALL,
     });
 
+    // Add GSI for filtering by category
+    nofoMetadataTable.addGlobalSecondaryIndex({
+      indexName: 'CategoryIndex',
+      partitionKey: { name: 'category', type: AttributeType.STRING },
+      sortKey: { name: 'created_at', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    // Add GSI for filtering by agency
+    nofoMetadataTable.addGlobalSecondaryIndex({
+      indexName: 'AgencyIndex',
+      partitionKey: { name: 'agency', type: AttributeType.STRING },
+      sortKey: { name: 'created_at', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
     this.nofoMetadataTable = nofoMetadataTable;
   }
 }
