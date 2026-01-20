@@ -189,17 +189,19 @@ function AppLayoutContent({
   configured: boolean;
 }) {
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <BrandBanner />
       <MDSHeader showSignOut={authenticated === true} />
-      {authenticated ? (
-        <App />
-      ) : configured ? (
-        <AuthPage />
-      ) : (
-        <StatusIndicator type="loading">Loading</StatusIndicator>
-      )}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {authenticated ? (
+          <App />
+        ) : configured ? (
+          <AuthPage />
+        ) : (
+          <StatusIndicator type="loading">Loading</StatusIndicator>
+        )}
+      </div>
       <FooterComponent />
-    </>
+    </div>
   );
 }

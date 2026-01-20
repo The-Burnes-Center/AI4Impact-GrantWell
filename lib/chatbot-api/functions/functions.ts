@@ -62,6 +62,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly backfillExpirationDatesFunction: lambda.Function;
+  public readonly backfillAgencyCategoryFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -148,6 +149,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -175,6 +177,21 @@ export class LambdaFunctionStack extends cdk.Stack {
           "bedrock-agent:Retrieve",
         ],
         resources: ["*"],
+      })
+    );
+
+    // DynamoDB permissions for grant recommendation function (keyword filtering)
+    grantRecommendationFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:Query",
+          "dynamodb:GetItem",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          `${props.nofoMetadataTable.tableArn}/index/*`,
+        ],
       })
     );
 
@@ -1279,5 +1296,65 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.backfillExpirationDatesFunction = backfillExpirationDatesFunction;
+
+    // Backfill Agency and Category Function
+    const backfillAgencyCategoryFunction = new lambda.Function(
+      scope,
+      'BackfillAgencyCategoryFunction',
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, 'landing-page/backfill-agency-category')
+        ),
+        handler: 'index.handler',
+        environment: {
+          BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        },
+        timeout: cdk.Duration.minutes(15),
+      }
+    );
+
+    // Grant S3 permissions
+    backfillAgencyCategoryFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          's3:GetObject',
+          's3:ListBucket',
+        ],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          `${props.ffioNofosBucket.bucketArn}/*`,
+        ],
+      })
+    );
+
+    // Grant DynamoDB permissions
+    backfillAgencyCategoryFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'dynamodb:GetItem',
+          'dynamodb:UpdateItem',
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+        ],
+      })
+    );
+
+    // Grant Bedrock permissions
+    backfillAgencyCategoryFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'bedrock:InvokeModel',
+        ],
+        resources: ['*'],
+      })
+    );
+
+    this.backfillAgencyCategoryFunction = backfillAgencyCategoryFunction;
   }
 }

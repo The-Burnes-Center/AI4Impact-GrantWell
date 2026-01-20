@@ -41,6 +41,7 @@ export default function ForgotPasswordPage({ onBack, onCodeSent }: ForgotPasswor
       const normalizedEmail = email.toLowerCase().trim();
       await Auth.forgotPassword(normalizedEmail);
       onCodeSent(normalizedEmail);
+      setLoading(false);
     } catch (err: any) {
       setError(err.message || 'Failed to send password reset code');
       setLoading(false);
@@ -52,9 +53,10 @@ export default function ForgotPasswordPage({ onBack, onCodeSent }: ForgotPasswor
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      <main role="main" className="auth-page-container" id="main-content">
-        <div className="auth-card">
-          <div className="auth-header-section">
+      <main role="main" className="auth-simple-wrapper" id="main-content">
+        <div className="auth-simple-card">
+          {/* Logo and Branding */}
+          <div className="auth-simple-header">
             <div className="auth-logo-container">
               <img
                 src="/images/stateseal-color.png"
@@ -63,84 +65,86 @@ export default function ForgotPasswordPage({ onBack, onCodeSent }: ForgotPasswor
               />
               <h1 className="auth-brand-title">GrantWell</h1>
             </div>
+          </div>
+
+          {/* Form Section */}
+          <div className="auth-simple-content">
             <h2 className="auth-page-title">Forgot your password?</h2>
-          <p className="auth-page-subtitle">
-            Enter your email address. We will send a message with a code to reset your password.
-          </p>
-        </div>
-        <div className="auth-content">
-          <div className="login-form">
-            <Form onSubmit={handleResetPassword} aria-label="Forgot password form" noValidate>
-              <div role="alert" aria-live="polite" aria-atomic="true">
-                {error && (
-                  <Alert 
-                    variant="danger" 
-                    dismissible 
-                    onClose={() => setError(null)} 
-                    className="mt-3"
-                    ref={errorRef}
-                    tabIndex={-1}
-                  >
-                    {error}
-                  </Alert>
-                )}
-              </div>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label" htmlFor="forgot-email-input">
-                  Email address
-                </Form.Label>
-                <Form.Control
-                  id="forgot-email-input"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value.toLowerCase())}
-                  disabled={loading}
-                  autoComplete="email"
-                  required
-                  className="form-input"
-                  ref={emailInputRef}
-                  aria-describedby={error ? "forgot-email-error" : undefined}
-                  aria-invalid={error ? true : false}
-                  aria-required="true"
-                />
-                {error && <div id="forgot-email-error" className="sr-only">{error}</div>}
-              </Form.Group>
-              <div className="login-form-actions">
-                <Button 
-                  variant="primary" 
-                  type="submit" 
-                  disabled={loading} 
-                  className="login-submit-button"
-                  aria-label={loading ? "Sending password reset code, please wait" : "Reset my password"}
-                >
-                  {loading ? (
-                    <>
-                      <Spinner animation="border" size="sm" aria-hidden="true" />
-                      <span className="sr-only">Loading...</span>
-                      Sending...
-                    </>
-                  ) : (
-                    'Reset my password'
+            <p className="auth-page-subtitle">
+              Enter your email address. We will send a message with a code to reset your password.
+            </p>
+            
+            <div className="login-form">
+              <Form onSubmit={handleResetPassword} aria-label="Forgot password form" noValidate>
+                <div role="alert" aria-live="polite" aria-atomic="true">
+                  {error && (
+                    <Alert 
+                      variant="danger" 
+                      dismissible 
+                      onClose={() => setError(null)} 
+                      className="mt-3"
+                      ref={errorRef}
+                      tabIndex={-1}
+                    >
+                      {error}
+                    </Alert>
                   )}
+                </div>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label" htmlFor="forgot-email-input">
+                    Email address
+                  </Form.Label>
+                  <Form.Control
+                    id="forgot-email-input"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                    disabled={loading}
+                    autoComplete="email"
+                    required
+                    className="form-input"
+                    ref={emailInputRef}
+                    aria-describedby={error ? "forgot-email-error" : undefined}
+                    aria-invalid={error ? true : false}
+                    aria-required="true"
+                  />
+                  {error && <div id="forgot-email-error" className="sr-only">{error}</div>}
+                </Form.Group>
+                <div className="login-form-actions">
+                  <Button 
+                    variant="primary" 
+                    type="submit" 
+                    disabled={loading} 
+                    className="login-submit-button"
+                    aria-label={loading ? "Sending password reset code, please wait" : "Reset my password"}
+                  >
+                    {loading ? (
+                      <>
+                        <Spinner animation="border" size="sm" aria-hidden="true" />
+                        <span className="sr-only">Loading...</span>
+                        Sending...
+                      </>
+                    ) : (
+                      'Reset my password'
+                    )}
+                  </Button>
+                </div>
+              </Form>
+              <div className="login-form-footer">
+                <Button 
+                  variant="link" 
+                  onClick={onBack} 
+                  className="create-account-link"
+                  aria-label="Go back to sign in"
+                >
+                  Back to sign in
                 </Button>
               </div>
-            </Form>
-            <div className="login-form-footer">
-              <Button 
-                variant="link" 
-                onClick={onBack} 
-                className="create-account-link"
-                aria-label="Go back to sign in"
-              >
-                Back
-              </Button>
             </div>
-          </div>
           </div>
         </div>
       </main>
     </>
   );
 }
-
