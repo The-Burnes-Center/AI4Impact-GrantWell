@@ -3,36 +3,32 @@ import LoginForm from '../../components/auth/login-form';
 import SignUpForm from '../../components/auth/signup-form';
 import '../../styles/auth-page.css';
 
-// Feature icons as SVG components
+// Feature icons as SVG components - white icons for blue background
 const DiscoverIcon = () => (
-  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <circle cx="14" cy="14" r="10" stroke="#14558F" strokeWidth="2"/>
-    <path d="M22 22L28 28" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="14" cy="14" r="4" fill="#14558F" fillOpacity="0.2"/>
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="11" cy="11" r="7" stroke="white" strokeWidth="2"/>
+    <path d="M16 16L20 20" stroke="white" strokeWidth="2" strokeLinecap="round"/>
   </svg>
 );
 
 const UnderstandIcon = () => (
-  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <rect x="4" y="4" width="24" height="24" rx="3" stroke="#14558F" strokeWidth="2"/>
-    <path d="M9 12H23" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M9 17H19" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M9 22H16" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="24" cy="24" r="6" fill="white" stroke="#14558F" strokeWidth="2"/>
-    <path d="M24 22V24.5L25.5 26" stroke="#14558F" strokeWidth="1.5" strokeLinecap="round"/>
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
+    <path d="M7 8H17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M7 12H14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M7 16H11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
   </svg>
 );
 
 const DraftIcon = () => (
-  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M8 4H20L26 10V28H8V4Z" stroke="#14558F" strokeWidth="2" strokeLinejoin="round"/>
-    <path d="M20 4V10H26" stroke="#14558F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M12 16H22" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M12 20H22" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M12 24H18" stroke="#14558F" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="10" cy="16" r="1.5" fill="#14558F"/>
-    <circle cx="10" cy="20" r="1.5" fill="#14558F"/>
-    <circle cx="10" cy="24" r="1.5" fill="#14558F"/>
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
+    <path d="M7 8H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M11 8H17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M7 12H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M11 12H17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M7 16H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M11 16H15" stroke="white" strokeWidth="2" strokeLinecap="round"/>
   </svg>
 );
 
@@ -104,12 +100,13 @@ export default function AuthPage() {
           <section className="auth-features-row" aria-labelledby="features-heading">
             <h2 id="features-heading" className="sr-only">Key Features</h2>
             <div className="auth-features-grid">
-              <div className="auth-feature-item">
-                <div className="auth-feature-card">
-                  <div className="auth-feature-icon">
-                    <DiscoverIcon />
-                  </div>
-                </div>
+              <div className="auth-feature-card">
+                <img 
+                  src="/images/Discover.png" 
+                  alt="" 
+                  className="auth-feature-icon-image"
+                  aria-hidden="true"
+                />
                 <h3 className="auth-feature-title">Discover</h3>
                 <p className="auth-feature-description">
                   Search for relevant state and federal funding opportunities aligned with 
@@ -117,11 +114,9 @@ export default function AuthPage() {
                 </p>
               </div>
 
-              <div className="auth-feature-item">
-                <div className="auth-feature-card">
-                  <div className="auth-feature-icon">
-                    <UnderstandIcon />
-                  </div>
+              <div className="auth-feature-card">
+                <div className="auth-feature-icon-wrapper">
+                  <UnderstandIcon />
                 </div>
                 <h3 className="auth-feature-title">Understand</h3>
                 <p className="auth-feature-description">
@@ -130,11 +125,9 @@ export default function AuthPage() {
                 </p>
               </div>
 
-              <div className="auth-feature-item">
-                <div className="auth-feature-card">
-                  <div className="auth-feature-icon">
-                    <DraftIcon />
-                  </div>
+              <div className="auth-feature-card">
+                <div className="auth-feature-icon-wrapper">
+                  <DraftIcon />
                 </div>
                 <h3 className="auth-feature-title">Draft</h3>
                 <p className="auth-feature-description">
