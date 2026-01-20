@@ -102,12 +102,14 @@ export class TableStack extends Stack {
     });
 
     // Add GSI for filtering by agency
-    nofoMetadataTable.addGlobalSecondaryIndex({
-      indexName: 'AgencyIndex',
-      partitionKey: { name: 'agency', type: AttributeType.STRING },
-      sortKey: { name: 'created_at', type: AttributeType.STRING },
-      projectionType: ProjectionType.ALL,
-    });
+    // NOTE: Deploying in two steps due to DynamoDB limitation (only one GSI per update)
+    // After CategoryIndex is deployed, uncomment this and deploy again
+    // nofoMetadataTable.addGlobalSecondaryIndex({
+    //   indexName: 'AgencyIndex',
+    //   partitionKey: { name: 'agency', type: AttributeType.STRING },
+    //   sortKey: { name: 'created_at', type: AttributeType.STRING },
+    //   projectionType: ProjectionType.ALL,
+    // });
 
     this.nofoMetadataTable = nofoMetadataTable;
   }
