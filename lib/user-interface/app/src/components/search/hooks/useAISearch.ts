@@ -104,6 +104,10 @@ export function useAISearch({
         const response = await getRecommendationsUsingREST(query);
         if (response && response.grants) {
           setResults(response.grants);
+          
+          // Log which tool was used for monitoring
+          const toolUsed = response.toolUsed || response.searchMethod || 'unknown';
+          console.log(`[Search Bar] Tool used: ${toolUsed} | Query: "${query}" | Results: ${response.grants.length}`);
         } else {
           setResults([]);
         }
