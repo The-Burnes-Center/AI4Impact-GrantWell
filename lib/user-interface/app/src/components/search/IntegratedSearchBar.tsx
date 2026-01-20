@@ -83,6 +83,10 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   const handleSelectDocument = useCallback(
     (doc: SearchDocument) => {
+      // Prevent selection of archived/expired grants
+      if (doc.status === "archived") {
+        return;
+      }
       setSearchTerm(doc.label);
       onSelectDocument(doc);
       setShowResults(false);

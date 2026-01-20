@@ -85,9 +85,18 @@ export const ViewAllGrantsModal: React.FC<ViewAllGrantsModalProps> = ({
 
   if (!isOpen) return null;
 
-  const sortedDocuments = [...documents].sort((a, b) =>
-    a.label.localeCompare(b.label, undefined, { sensitivity: "base" })
-  );
+  // Sort documents: active first, then alphabetically
+  const sortedDocuments = [...documents].sort((a, b) => {
+    // Active NOFOs come first
+    if (a.status === "active" && b.status !== "active") return -1;
+    if (a.status !== "active" && b.status === "active") return 1;
+    // Then sort alphabetically
+    return a.label.localeCompare(b.label, undefined, { sensitivity: "base" });
+  });
+
+  // Count active and archived
+  const activeCount = documents.filter((d) => d.status !== "archived").length;
+  const archivedCount = documents.filter((d) => d.status === "archived").length;
 
   const sortedPinnedGrants = [...pinnedGrants].sort((a, b) =>
     a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
@@ -295,7 +304,7 @@ export const ViewAllGrantsModal: React.FC<ViewAllGrantsModalProps> = ({
                     marginBottom: "16px",
                   }}
                 >
-                  All Grants ({sortedDocuments.length})
+                  All Grants ({activeCount} active{archivedCount > 0 ? `, ${archivedCount} expired` : ""})
                 </h3>
                 <div
                   style={{
@@ -304,62 +313,92 @@ export const ViewAllGrantsModal: React.FC<ViewAllGrantsModalProps> = ({
                     backgroundColor: "#fff",
                   }}
                 >
-                  {sortedDocuments.map((doc, index) => (
-                    <div
-                      key={`grant-${doc.label}`}
-                      style={{
-                        padding: "14px 16px",
-                        borderBottom:
-                          index < sortedDocuments.length - 1
-                            ? "1px solid #e0e0e0"
-                            : "none",
-                        cursor: "pointer",
-                        transition: "background-color 0.2s ease",
-                      }}
-                      onClick={() => {
-                        onSelectGrant(doc);
-                        onClose();
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
+                  {sortedDocuments.map((doc, index) => {
+                    const isArchived = doc.status === "archived";
+                    return (
+                      <div
+                        key={`grant-${doc.label}`}
+                        style={{
+                          padding: "14px 16px",
+                          borderBottom:
+                            index < sortedDocuments.length - 1
+                              ? "1px solid #e0e0e0"
+                              : "none",
+                          cursor: isArchived ? "not-allowed" : "pointer",
+                          transition: "background-color 0.2s ease",
+                          opacity: isArchived ? 0.7 : 1,
+                          backgroundColor: isArchived ? "#f9f9f9" : undefined,
+                        }}
+                        onClick={() => {
+                          if (isArchived) return;
                           onSelectGrant(doc);
                           onClose();
-                        }
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#f5f5f5";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Select ${doc.label}`}
-                      onFocus={(e) => {
-                        e.currentTarget.style.backgroundColor = "#f5f5f5";
-                        e.currentTarget.style.outline = "2px solid #0088FF";
-                        e.currentTarget.style.outlineOffset = "2px";
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.outline = "none";
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "15px",
-                          color: "#333",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            if (!isArchived) {
+                              onSelectGrant(doc);
+                              onClose();
+                            }
+                          }
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isArchived) {
+                            e.currentTarget.style.backgroundColor = "#f5f5f5";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = isArchived ? "#f9f9f9" : "transparent";
+                        }}
+                        role="button"
+                        tabIndex={isArchived ? -1 : 0}
+                        aria-label={isArchived ? `${doc.label} (Expired - no longer accepting applications)` : `Select ${doc.label}`}
+                        aria-disabled={isArchived}
+                        onFocus={(e) => {
+                          if (!isArchived) {
+                            e.currentTarget.style.backgroundColor = "#f5f5f5";
+                            e.currentTarget.style.outline = "2px solid #0088FF";
+                            e.currentTarget.style.outlineOffset = "2px";
+                          }
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.backgroundColor = isArchived ? "#f9f9f9" : "transparent";
+                          e.currentTarget.style.outline = "none";
                         }}
                       >
-                        <span>{doc.label}</span>
-                        <GrantTypeBadge grantType={grantTypeMap[doc.label]} />
+                        <div
+                          style={{
+                            fontSize: "15px",
+                            color: isArchived ? "#888" : "#333",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <span style={{ textDecoration: isArchived ? "line-through" : "none" }}>{doc.label}</span>
+                          <GrantTypeBadge grantType={grantTypeMap[doc.label]} />
+                          {isArchived && (
+                            <span
+                              style={{
+                                backgroundColor: "#dc3545",
+                                color: "white",
+                                fontSize: "10px",
+                                fontWeight: "600",
+                                padding: "2px 6px",
+                                borderRadius: "4px",
+                                textTransform: "uppercase",
+                              }}
+                              title="This grant has expired and is no longer accepting applications"
+                            >
+                              Expired
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </>
