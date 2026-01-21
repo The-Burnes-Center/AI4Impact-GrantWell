@@ -76,7 +76,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
 
   // Handle row click to select document (same as search bar)
   const handleRowClick = (nofo: NOFO) => {
-    const document = {
+    const selectedDoc = {
       label: nofo.name,
       value: nofo.name + "/",
     };
@@ -98,10 +98,15 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
     }
     
     // Then select the document (this will update the dropdown and show CTA buttons)
-    onSelectDocument(document);
+    onSelectDocument(selectedDoc);
     
-    // Scroll to top to show the CTA buttons
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Scroll to top to show the CTA buttons after state updates complete
+    setTimeout(() => {
+      // Try multiple scroll methods for cross-browser compatibility
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+      document.body.scrollTo({ top: 0, behavior: "smooth" });
+    }, 150);
   };
 
   if (loading) {
