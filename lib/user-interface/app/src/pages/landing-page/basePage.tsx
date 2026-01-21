@@ -172,20 +172,18 @@ export default function Welcome() {
           }))
         );
 
-        // Set table NOFOs (only active ones)
-        const activeNofos = sortedNofos
-          .filter((nofo: { status: string }) => nofo.status === "active")
-          .map((nofo: any, index: number) => ({
-            id: index,
-            name: nofo.name,
-            status: nofo.status as "active" | "archived",
-            isPinned: nofo.isPinned || false,
-            expirationDate: nofo.expiration_date || null,
-            grantType: nofo.grant_type || null,
-            agency: nofo.agency || null,
-            category: nofo.category || null,
-          }));
-        setTableNofos(activeNofos);
+        // Set table NOFOs (all grants - both active and archived)
+        const allNofos = sortedNofos.map((nofo: any, index: number) => ({
+          id: index,
+          name: nofo.name,
+          status: nofo.status as "active" | "archived",
+          isPinned: nofo.isPinned || false,
+          expirationDate: nofo.expiration_date || null,
+          grantType: nofo.grant_type || null,
+          agency: nofo.agency || null,
+          category: nofo.category || null,
+        }));
+        setTableNofos(allNofos);
       } else {
         // Fallback to folders array if nofoData is not available
         const sortedFolders = [...folders].sort((a: string, b: string) =>
