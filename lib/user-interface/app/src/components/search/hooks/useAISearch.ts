@@ -65,7 +65,7 @@ export function useAISearch({
     }
   }, [searchTerm, lastQuery, results.length, triggered, isSearching]);
 
-  // Debounced AI search trigger
+  // Debounced search trigger
   useEffect(() => {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -114,7 +114,7 @@ export function useAISearch({
       } catch (err) {
         console.error("Error getting AI recommendations:", err);
         setResults([]);
-        setError("Unable to get AI suggestions. Please try again.");
+        setError("Unable to get grant suggestions. Please try again.");
       } finally {
         setIsSearching(false);
       }

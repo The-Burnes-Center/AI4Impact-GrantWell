@@ -4,14 +4,12 @@ import { IntegratedSearchBarProps, SearchDocument, PinnableGrant } from "./types
 
 import { useAISearch } from "./hooks/useAISearch";
 import { usePinnedGrants } from "./hooks/usePinnedGrants";
-import { useGrantFiltering } from "./hooks/useGrantFiltering";
 import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
 
 import {
   SearchInput,
   PinnedGrantsSection,
   AISuggestionsSection,
-  AvailableGrantsSection,
   ViewAllGrantsModal,
   SearchResultsStatus,
   EmptyState,
@@ -23,8 +21,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   documents,
   onSelectDocument,
   isLoading,
+  searchTerm: externalSearchTerm,
+  onSearchTermChange,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [internalSearchTerm, setInternalSearchTerm] = useState("");
+  const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
+  const setSearchTerm = onSearchTermChange || setInternalSearchTerm;
   const [showResults, setShowResults] = useState(false);
   const [showViewAllModal, setShowViewAllModal] = useState(false);
   const [expandedGrants, setExpandedGrants] = useState<Record<string, boolean>>({});
@@ -42,13 +44,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     handleUnpinGrant,
   } = usePinnedGrants();
 
-  const { filteredDocuments, filteredPinnedGrants } = useGrantFiltering({
-    documents,
-    pinnedGrants,
-    searchTerm,
-  });
-
-  const hasExactMatches = filteredDocuments.length > 0 || filteredPinnedGrants.length > 0;
+  // Only semantic search functionality - no exact name matching
+  const hasExactMatches = false;
 
   const aiSearch = useAISearch({
     searchTerm,
@@ -98,15 +95,18 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     setShowResults(false);
   }, []);
 
+  // Only show pinned grants when search is empty (no filtering)
+  const displayedPinnedGrants = searchTerm.length === 0 ? pinnedGrants : [];
+
   const {
     selectedIndex,
     setSelectedIndex,
     handleKeyDown,
     resetSelection,
   } = useKeyboardNavigation({
-    filteredPinnedGrants,
+    filteredPinnedGrants: displayedPinnedGrants,
     aiResults: aiSearch.results,
-    filteredDocuments,
+    filteredDocuments: [],
     searchTerm,
     onSelectPinnedGrant: handleSelectPinnedGrant,
     onSelectAIGrant: handleSelectAIGrant,
@@ -149,20 +149,27 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   // Handle input change
   const handleInputChange = useCallback(
     (value: string) => {
-      if (!documents.some((doc) => doc.label === searchTerm)) {
-        setSearchTerm(value);
+      setSearchTerm(value);
+      
+      // If cleared by backspacing, reset the popup
+      if (value.length === 0) {
+        resetSelection();
+        aiSearch.resetSearch();
+        setExpandedGrants({});
+        setShowResults(true); // Still show results to display empty state with pinned grants
+      } else {
         setShowResults(true);
       }
     },
-    [documents, searchTerm]
+    [resetSelection, aiSearch]
   );
 
   // Handle input focus
   const handleInputFocus = useCallback(() => {
-    if (!isLoading && !documents.some((doc) => doc.label === searchTerm)) {
+    if (!isLoading) {
       setShowResults(true);
     }
-  }, [isLoading, documents, searchTerm]);
+  }, [isLoading]);
 
   // Toggle grant expanded
   const toggleGrantExpanded = useCallback(
@@ -181,10 +188,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   );
 
   // Compute values
-  const isDocumentSelected = documents.some((doc) => doc.label === searchTerm);
-  const baseIndexForAvailable = filteredPinnedGrants.length + aiSearch.results.length;
+  const isDocumentSelected = false; // No exact matching, so never consider document selected
   const showDivider =
-    filteredPinnedGrants.length > 0 ||
+    displayedPinnedGrants.length > 0 ||
     (searchTerm.length > 0 &&
       (aiSearch.isSearching || aiSearch.results.length > 0 || aiSearch.triggered));
 
@@ -208,9 +214,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       <SearchResultsStatus
         searchTerm={searchTerm}
         showResults={showResults}
-        filteredPinnedGrants={filteredPinnedGrants}
+        filteredPinnedGrants={displayedPinnedGrants}
         recommendedGrants={aiSearch.results}
-        filteredDocuments={filteredDocuments}
+        filteredDocuments={[]}
         isAISearching={aiSearch.isSearching}
         aiError={aiSearch.error}
         loadingMessage={aiSearch.loadingMessages[aiSearch.loadingMessageIndex]}
@@ -236,9 +242,9 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             role="listbox"
             style={{ marginTop: searchTerm.length === 0 ? "10px" : "0" }}
           >
-            {/* Pinned Grants */}
+            {/* Pinned Grants - only shown when search is empty */}
             <PinnedGrantsSection
-              grants={searchTerm.length === 0 ? pinnedGrants : filteredPinnedGrants}
+              grants={displayedPinnedGrants}
               selectedIndex={selectedIndex}
               isAdmin={isAdmin}
               onSelect={handleSelectPinnedGrant}
@@ -246,7 +252,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               onMouseEnter={setSelectedIndex}
             />
 
-            {/* AI Suggestions */}
+            {/* Relevant Grants */}
             <AISuggestionsSection
               searchTerm={searchTerm}
               isSearching={aiSearch.isSearching}
@@ -256,49 +262,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               loadingMessage={aiSearch.loadingMessages[aiSearch.loadingMessageIndex]}
               grantTypeMap={grantTypeMap}
               expandedGrants={expandedGrants}
-              hasPinnedGrants={filteredPinnedGrants.length > 0}
+              hasPinnedGrants={displayedPinnedGrants.length > 0}
               onSelectGrant={handleSelectAIGrant}
               onToggleExpanded={toggleGrantExpanded}
               onTriggerSearch={() => aiSearch.triggerSearch(searchTerm)}
               onBrowseAll={() => setShowViewAllModal(true)}
             />
-
-            {/* Available Grants */}
-            {searchTerm.length > 0 && (
-              <AvailableGrantsSection
-                documents={filteredDocuments}
-                selectedIndex={selectedIndex}
-                baseIndex={baseIndexForAvailable}
-                isAdmin={isAdmin}
-                grantTypeMap={grantTypeMap}
-                showDivider={showDivider}
-                isNofoPinned={isNofoPinned}
-                onSelect={handleSelectDocument}
-                onPin={handlePinGrant}
-                onUnpin={handleUnpinGrant}
-                onMouseEnter={setSelectedIndex}
-              />
-            )}
           </div>
-
-          {/* No Results Message */}
-          {searchTerm.length > 0 &&
-            filteredPinnedGrants.length === 0 &&
-            filteredDocuments.length === 0 &&
-            !aiSearch.isSearching &&
-            !aiSearch.triggered &&
-            aiSearch.results.length === 0 && (
-              <div
-                style={{
-                  padding: "20px",
-                  textAlign: "center",
-                  color: "#666",
-                  fontSize: "14px",
-                }}
-              >
-                <p>No matches found. Try different keywords or use AI suggestions above.</p>
-              </div>
-            )}
         </div>
       )}
 

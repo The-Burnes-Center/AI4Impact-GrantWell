@@ -44,7 +44,7 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
   return (
     <div
       role="region"
-      aria-label="AI-powered grant suggestions"
+      aria-label="Relevant grant suggestions"
       aria-busy={isSearching}
       style={{
         borderTop: hasPinnedGrants ? "2px solid #e0e0e0" : "none",
@@ -86,7 +86,7 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
                   fontSize: "12px",
                 }}
               >
-                Finding AI-powered suggestions...
+                Finding relevant grants...
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
                 strokeLinecap="round"
               />
             </svg>
-            AI Suggestions based on "{searchTerm}"
+            Relevant Grants for "{searchTerm}"
           </div>
           <div style={{ maxHeight: "250px", overflowY: "auto" }}>
             {results.map((grant, index) => {
@@ -264,26 +264,26 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
           <div style={{ fontSize: "13px", color: "#333" }}>
             {searchTerm.length > 0 ? (
               <>
-                <strong>Press Enter</strong> to get AI-powered suggestions for "
+                <strong>Press Enter</strong> to find relevant grants for "
                 {searchTerm}"
                 {searchTerm.length < 3 && (
                   <span style={{ display: "block", fontSize: "12px", color: "#666", marginTop: "4px" }}>
-                    (AI search runs automatically after 3 characters)
+                    (Search runs automatically after 3 characters)
                   </span>
                 )}
               </>
             ) : (
               <>
-                <strong>Type and press Enter</strong> to get AI-powered grant suggestions
+                <strong>Type and press Enter</strong> to find relevant grants
                 <span style={{ display: "block", fontSize: "12px", color: "#666", marginTop: "4px" }}>
-                  (AI search runs automatically after 3 characters)
+                  (Search runs automatically after 3 characters)
                 </span>
               </>
             )}
           </div>
           <button
             onClick={onTriggerSearch}
-            aria-label={`Find grants with AI for "${searchTerm || "your search"}"`}
+            aria-label={`Find relevant grants for "${searchTerm || "your search"}"`}
             disabled={!searchTerm.trim()}
             style={{
               backgroundColor: searchTerm.trim() ? "#14558F" : "#ccc",
@@ -315,7 +315,7 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
               e.currentTarget.style.outline = "none";
             }}
           >
-            Find with AI
+            Find Grants
           </button>
         </div>
       )}
@@ -333,22 +333,7 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
             borderRadius: "8px",
           }}
         >
-          No AI suggestions found for "{searchTerm}". Try different keywords or{" "}
-          <button
-            onClick={onBrowseAll}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#14558F",
-              textDecoration: "underline",
-              cursor: "pointer",
-              fontSize: "13px",
-              padding: 0,
-            }}
-          >
-            browse all grants
-          </button>
-          .
+          No relevant grants found for "{searchTerm}". Try different keywords.
         </div>
       )}
     </div>

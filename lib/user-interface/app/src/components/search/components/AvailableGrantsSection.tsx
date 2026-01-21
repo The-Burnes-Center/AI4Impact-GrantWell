@@ -122,7 +122,7 @@ export const AvailableGrantsSection: React.FC<AvailableGrantsSectionProps> = ({
               }}
               aria-label={isArchived ? `${docName} (Expired - no longer accepting applications)` : `Select ${docName}`}
             >
-              <span style={{ textDecoration: isArchived ? "line-through" : "none" }}>{docName}</span>
+              <span>{docName}</span>
               <GrantTypeBadge grantType={grantTypeMap[docName]} />
               {isArchived && (
                 <span

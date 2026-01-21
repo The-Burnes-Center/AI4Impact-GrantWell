@@ -11,6 +11,8 @@ import {
   getRecentlyViewed,
   cleanupRecentlyViewed,
 } from "../../utils/recently-viewed-nofos";
+import { GrantsTable } from "./grants-table";
+import { NOFO } from "../Dashboard";
 
 export default function Welcome() {
   // **State Variables**
@@ -22,6 +24,8 @@ export default function Welcome() {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [tableNofos, setTableNofos] = useState<NOFO[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -167,6 +171,19 @@ export default function Welcome() {
             status: nofo.status as "active" | "archived",
           }))
         );
+
+        // Set table NOFOs (all grants - both active and archived)
+        const allNofos = sortedNofos.map((nofo: any, index: number) => ({
+          id: index,
+          name: nofo.name,
+          status: nofo.status as "active" | "archived",
+          isPinned: nofo.isPinned || false,
+          expirationDate: nofo.expiration_date || null,
+          grantType: nofo.grant_type || null,
+          agency: nofo.agency || null,
+          category: nofo.category || null,
+        }));
+        setTableNofos(allNofos);
       } else {
         // Fallback to folders array if nofoData is not available
         const sortedFolders = [...folders].sort((a: string, b: string) =>
@@ -180,6 +197,19 @@ export default function Welcome() {
             status: "active" as const,
           }))
         );
+
+        // Set table NOFOs from folders (fallback)
+        const folderNofos = sortedFolders.map((folder: string, index: number) => ({
+          id: index,
+          name: folder,
+          status: "active" as const,
+          isPinned: false,
+          expirationDate: null,
+          grantType: null,
+          agency: null,
+          category: null,
+        }));
+        setTableNofos(folderNofos);
       }
     } catch (error) {
       console.error("Error retrieving NOFOs: ", error);
@@ -788,11 +818,14 @@ export default function Welcome() {
           documents={documents}
           onSelectDocument={setSelectedDocument}
           isLoading={loading}
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
         />
 
         {/* CTA Buttons - shown when grant is selected */}
         {selectedDocument && (
-          <div
+          <nav
+            aria-label="Grant actions"
             style={{
               display: "flex",
               flexDirection: "row",
@@ -936,14 +969,14 @@ export default function Welcome() {
             >
               Get Grant Help
             </button>
-          </div>
+          </nav>
         )}
 
         {/* How it works section - always visible */}
         <section
           aria-labelledby="how-it-works-heading"
           style={{
-            margin: "20px auto 8px auto",
+            margin: "20px auto 12px auto",
             padding: "0",
             maxWidth: "650px",
             textAlign: "center",
@@ -1002,18 +1035,110 @@ export default function Welcome() {
               border: "0",
             }}
             role="note"
-            aria-label="Screen reader note"
+            aria-label="Screen reader navigation note"
           >
             Screen-reader note: The search bar is the first interactive element
-            on this page. After selecting a grant, navigate to the next heading
-            or use "next button" to reach the action buttons. Each button loads
-            a new page or tool. Use heading navigation to explore the content on
-            each screen.
+            on this page. You can search for grants by describing what you need, or
+            use the filters below the "OR" divider to browse grants by status,
+            category, or grant type. After selecting a grant from search results or
+            the table, action buttons will appear above. Use heading navigation to
+            explore the content on each screen.
           </div>
         </section>
 
-        {/* Add spacing before next section */}
-        <div style={{ marginBottom: "20px" }} />
+        {/* OR divider */}
+        <div
+          role="separator"
+          aria-label="Alternative search method"
+          style={{
+            margin: "20px auto",
+            textAlign: "center",
+            fontSize: "16px",
+            fontWeight: "600",
+            color: "#14558F",
+          }}
+        >
+          OR
+        </div>
+
+        {/* Search using filters section */}
+        <section
+          aria-labelledby="filters-heading"
+          style={{
+            margin: "0 auto 12px auto",
+            padding: "0",
+            maxWidth: "650px",
+            textAlign: "center",
+          }}
+        >
+          <h2
+            id="filters-heading"
+            className="visually-hidden"
+            style={{
+              position: "absolute",
+              width: "1px",
+              height: "1px",
+              padding: "0",
+              margin: "-1px",
+              overflow: "hidden",
+              clip: "rect(0, 0, 0, 0)",
+              whiteSpace: "nowrap",
+              border: "0",
+            }}
+          >
+            Using Filters to Search Grants
+          </h2>
+          <p
+            style={{
+              fontSize: "15px",
+              color: "#555",
+              lineHeight: "1.6",
+              margin: "0",
+            }}
+          >
+            Use the filters below to narrow down grants by{" "}
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
+              Category
+            </strong>
+            {" "}or{" "}            
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
+              Grant Type
+            </strong>
+            <br/>Click on any grant to select it and view available actions.
+          </p>
+        </section>
+
+        {/* Grants Table Section */}
+        <ContentBox backgroundColor="#ffffff">
+          <section
+            aria-labelledby="grants-table-heading"
+            style={{ padding: "20px 0" }}
+          >
+            <h2
+              id="grants-table-heading"
+              className="visually-hidden"
+              style={{
+                position: "absolute",
+                width: "1px",
+                height: "1px",
+                padding: "0",
+                margin: "-1px",
+                overflow: "hidden",
+                clip: "rect(0, 0, 0, 0)",
+                whiteSpace: "nowrap",
+                border: "0",
+              }}
+            >
+              Grants Table with Filters
+            </h2>
+            <GrantsTable 
+              nofos={tableNofos} 
+              loading={loading} 
+              onSelectDocument={setSelectedDocument}
+              onSearchTermChange={setSearchTerm}
+            />
+          </section>
+        </ContentBox>
 
         {/* Admin Dashboard Section - shown only to admins */}
         {isAdmin && (

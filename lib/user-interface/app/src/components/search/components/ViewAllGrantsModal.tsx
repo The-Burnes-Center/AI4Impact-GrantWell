@@ -377,7 +377,7 @@ export const ViewAllGrantsModal: React.FC<ViewAllGrantsModalProps> = ({
                             flexWrap: "wrap",
                           }}
                         >
-                          <span style={{ textDecoration: isArchived ? "line-through" : "none" }}>{doc.label}</span>
+                          <span>{doc.label}</span>
                           <GrantTypeBadge grantType={grantTypeMap[doc.label]} />
                           {isArchived && (
                             <span
