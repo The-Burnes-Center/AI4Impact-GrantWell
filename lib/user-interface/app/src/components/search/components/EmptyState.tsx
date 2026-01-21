@@ -1,5 +1,4 @@
 import React from "react";
-import { ViewAllGrantsButton } from "./ViewAllGrantsButton";
 import { emptyPromptStyle } from "../styles/searchStyles";
 
 interface EmptyStateProps {
@@ -21,19 +20,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({ onViewAll }) => {
         }}
       >
         <p
-          id="search-help-know-grant"
-          style={{
-            margin: "0 0 12px 0",
-            fontSize: "14px",
-            color: "#333",
-            lineHeight: "1.6",
-          }}
-        >
-          <strong>Search by grant name</strong> — Type a grant name to find
-          exact matches instantly.
-        </p>
-        <p
-          id="search-help-not-sure"
+          id="search-help-describe"
           style={{
             margin: "0",
             fontSize: "14px",
@@ -41,19 +28,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({ onViewAll }) => {
             lineHeight: "1.6",
           }}
         >
-          <strong>Or describe what you need</strong> — Type a description and AI
-          will suggest matching grants automatically.
+          <strong>Describe what you need</strong> — Type a description and relevant grants
+          will be suggested automatically.
         </p>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <ViewAllGrantsButton onClick={onViewAll} />
       </div>
     </div>
   );

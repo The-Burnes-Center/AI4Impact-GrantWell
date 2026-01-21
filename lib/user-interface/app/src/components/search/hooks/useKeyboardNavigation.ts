@@ -53,7 +53,7 @@ export function useKeyboardNavigation({
             // Pinned grant
             onSelectPinnedGrant(filteredPinnedGrants[selectedIndex]);
           } else if (selectedIndex < pinnedCount + aiCount) {
-            // AI suggestion
+            // Relevant grant suggestion
             const aiIndex = selectedIndex - pinnedCount;
             const grant = aiResults[aiIndex];
             onSelectAIGrant(grant.summaryUrl, grant.name || "");
@@ -64,7 +64,7 @@ export function useKeyboardNavigation({
           }
           onClose();
         } else if (searchTerm.trim().length > 0) {
-          // No item selected - trigger AI search (works with any length)
+          // No item selected - trigger search (works with any length)
           onTriggerAISearch(searchTerm);
         }
       } else if (e.key === "Escape") {

@@ -39,7 +39,7 @@ export const SearchResultsStatus: React.FC<SearchResultsStatusProps> = ({
       parts.push(`${pinnedCount} pinned grant${pinnedCount === 1 ? "" : "s"}`);
     }
     if (aiCount > 0) {
-      parts.push(`${aiCount} AI suggestion${aiCount === 1 ? "" : "s"}`);
+      parts.push(`${aiCount} relevant grant${aiCount === 1 ? "" : "s"}`);
     }
     if (availableCount > 0) {
       parts.push(
@@ -78,7 +78,7 @@ export const SearchResultsStatus: React.FC<SearchResultsStatusProps> = ({
         </div>
       )}
 
-      {/* AI Error Announcement */}
+      {/* Error Announcement */}
       {aiError && (
         <div
           id="ai-error-message"

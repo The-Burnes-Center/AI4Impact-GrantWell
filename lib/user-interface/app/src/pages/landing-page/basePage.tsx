@@ -824,7 +824,8 @@ export default function Welcome() {
 
         {/* CTA Buttons - shown when grant is selected */}
         {selectedDocument && (
-          <div
+          <nav
+            aria-label="Grant actions"
             style={{
               display: "flex",
               flexDirection: "row",
@@ -968,14 +969,14 @@ export default function Welcome() {
             >
               Get Grant Help
             </button>
-          </div>
+          </nav>
         )}
 
         {/* How it works section - always visible */}
         <section
           aria-labelledby="how-it-works-heading"
           style={{
-            margin: "20px auto 8px auto",
+            margin: "20px auto 12px auto",
             padding: "0",
             maxWidth: "650px",
             textAlign: "center",
@@ -1034,32 +1035,101 @@ export default function Welcome() {
               border: "0",
             }}
             role="note"
-            aria-label="Screen reader note"
+            aria-label="Screen reader navigation note"
           >
             Screen-reader note: The search bar is the first interactive element
-            on this page. After selecting a grant, navigate to the next heading
-            or use "next button" to reach the action buttons. Each button loads
-            a new page or tool. Use heading navigation to explore the content on
-            each screen.
+            on this page. You can search for grants by describing what you need, or
+            use the filters below the "OR" divider to browse grants by status,
+            category, or grant type. After selecting a grant from search results or
+            the table, action buttons will appear above. Use heading navigation to
+            explore the content on each screen.
           </div>
         </section>
 
-        {/* Add spacing before next section */}
-        <div style={{ marginBottom: "20px" }} />
+        {/* OR divider */}
+        <div
+          role="separator"
+          aria-label="Alternative search method"
+          style={{
+            margin: "20px auto",
+            textAlign: "center",
+            fontSize: "16px",
+            fontWeight: "600",
+            color: "#14558F",
+          }}
+        >
+          OR
+        </div>
+
+        {/* Search using filters section */}
+        <section
+          aria-labelledby="filters-heading"
+          style={{
+            margin: "0 auto 12px auto",
+            padding: "0",
+            maxWidth: "650px",
+            textAlign: "center",
+          }}
+        >
+          <h2
+            id="filters-heading"
+            className="visually-hidden"
+            style={{
+              position: "absolute",
+              width: "1px",
+              height: "1px",
+              padding: "0",
+              margin: "-1px",
+              overflow: "hidden",
+              clip: "rect(0, 0, 0, 0)",
+              whiteSpace: "nowrap",
+              border: "0",
+            }}
+          >
+            Using Filters to Search Grants
+          </h2>
+          <p
+            style={{
+              fontSize: "15px",
+              color: "#555",
+              lineHeight: "1.6",
+              margin: "0",
+            }}
+          >
+            Use the filters below to narrow down grants by{" "}
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
+              Category
+            </strong>
+            {" "}or{" "}            
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
+              Grant Type
+            </strong>
+            <br/>Click on any grant to select it and view available actions.
+          </p>
+        </section>
 
         {/* Grants Table Section */}
         <ContentBox backgroundColor="#ffffff">
-          <div style={{ padding: "20px 0" }}>
+          <section
+            aria-labelledby="grants-table-heading"
+            style={{ padding: "20px 0" }}
+          >
             <h2
+              id="grants-table-heading"
+              className="visually-hidden"
               style={{
-                fontSize: "24px",
-                fontWeight: "600",
-                color: mainTextColor,
-                margin: "0 0 20px 0",
-                textAlign: "center",
+                position: "absolute",
+                width: "1px",
+                height: "1px",
+                padding: "0",
+                margin: "-1px",
+                overflow: "hidden",
+                clip: "rect(0, 0, 0, 0)",
+                whiteSpace: "nowrap",
+                border: "0",
               }}
             >
-              Available Grants
+              Grants Table with Filters
             </h2>
             <GrantsTable 
               nofos={tableNofos} 
@@ -1067,7 +1137,7 @@ export default function Welcome() {
               onSelectDocument={setSelectedDocument}
               onSearchTermChange={setSearchTerm}
             />
-          </div>
+          </section>
         </ContentBox>
 
         {/* Admin Dashboard Section - shown only to admins */}

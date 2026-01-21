@@ -21,6 +21,21 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
     new Set(nofos.map((nofo) => nofo.category).filter((category): category is string => !!category))
   ).sort();
 
+  // Calculate grant count per category
+  const getCategoryCount = (category: string) => {
+    return nofos.filter((nofo) => nofo.category === category).length;
+  };
+
+  // Calculate grant count per status
+  const getStatusCount = (status: "active" | "archived") => {
+    return nofos.filter((nofo) => nofo.status === status).length;
+  };
+
+  // Calculate grant count per grant type
+  const getGrantTypeCount = (grantType: GrantTypeId) => {
+    return nofos.filter((nofo) => nofo.grantType === grantType).length;
+  };
+
   // Filter NOFOs based on filters
   const getFilteredNofos = () => {
     let filtered = nofos.filter((nofo) => {
@@ -109,9 +124,9 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "archived")}
           >
-            <option value="all">All Grants</option>
-            <option value="active">Active</option>
-            <option value="archived">Archived</option>
+            <option value="all">All Grants ({nofos.length})</option>
+            <option value="active">Active ({getStatusCount("active")})</option>
+            <option value="archived">Archived ({getStatusCount("archived")})</option>
           </select>
         </div>
 
@@ -124,11 +139,14 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="all">All Categories</option>
-            {uniqueCategories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
+            {uniqueCategories.map((category) => {
+              const count = getCategoryCount(category);
+              return (
+                <option key={category} value={category}>
+                  {category} ({count})
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -141,11 +159,15 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
             onChange={(e) => setGrantTypeFilter(e.target.value as GrantTypeId | "all")}
           >
             <option value="all">All Grant Types</option>
-            {Object.keys(GRANT_TYPES).map((type) => (
-              <option key={type} value={type}>
-                {GRANT_TYPES[type as GrantTypeId].label}
-              </option>
-            ))}
+            {Object.keys(GRANT_TYPES).map((type) => {
+              const grantType = type as GrantTypeId;
+              const count = getGrantTypeCount(grantType);
+              return (
+                <option key={type} value={type}>
+                  {GRANT_TYPES[grantType].label} ({count})
+                </option>
+              );
+            })}
           </select>
         </div>
       </div>
