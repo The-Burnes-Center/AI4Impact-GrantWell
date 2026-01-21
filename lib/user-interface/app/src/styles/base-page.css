@@ -43,3 +43,67 @@
   --color-background-button-primary-hover-d0p0ol: #0074ad !important;
   --color-background-button-primary-active-iuavwn: #005380 !important;
  */
+
+/* CTA Buttons highlight animation */
+@keyframes ctaButtonsHighlight {
+  0% {
+    box-shadow: 0 0 0 0 rgba(20, 85, 143, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(20, 85, 143, 0.3);
+    transform: scale(1.02);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(20, 85, 143, 0);
+    transform: scale(1);
+  }
+}
+
+@keyframes ctaButtonPulse {
+  0% {
+    box-shadow: 0 2px 8px rgba(20, 85, 143, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(20, 85, 143, 0.5);
+  }
+  100% {
+    box-shadow: 0 2px 8px rgba(20, 85, 143, 0.3);
+  }
+}
+
+.cta-buttons-container {
+  transition: all 0.3s ease;
+}
+
+.cta-buttons-container.highlight {
+  animation: ctaButtonsHighlight 0.8s ease-out;
+  background: linear-gradient(135deg, rgba(20, 85, 143, 0.08) 0%, rgba(20, 85, 143, 0.02) 100%);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin: 20px 0 8px 0;
+}
+
+.cta-buttons-container.highlight button {
+  animation: ctaButtonPulse 1s ease-in-out 2;
+}
+
+/* WCAG 2.1 - Respect reduced motion preference (Success Criterion 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  .cta-buttons-container {
+    transition: none;
+  }
+  
+  .cta-buttons-container.highlight {
+    animation: none;
+    /* Keep the visual indicator but without motion */
+    background: linear-gradient(135deg, rgba(20, 85, 143, 0.12) 0%, rgba(20, 85, 143, 0.06) 100%);
+    border: 2px solid rgba(20, 85, 143, 0.3);
+  }
+  
+  .cta-buttons-container.highlight button {
+    animation: none;
+    /* Static visual emphasis instead of animation */
+    box-shadow: 0 4px 12px rgba(20, 85, 143, 0.4);
+  }
+}
