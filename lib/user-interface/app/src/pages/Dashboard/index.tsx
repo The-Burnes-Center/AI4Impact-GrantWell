@@ -42,6 +42,8 @@ export interface NOFO {
   isPinned?: boolean;
   expirationDate?: string | null;
   grantType?: GrantTypeId | null;
+  agency?: string | null;
+  category?: string | null;
 }
 
 // Grant type definitions for display
@@ -1204,6 +1206,8 @@ const Dashboard: React.FC = () => {
           isPinned: nofo.isPinned || false,
           expirationDate: nofo.expiration_date || null,
           grantType: nofo.grant_type || null,
+          agency: nofo.agency || null,
+          category: nofo.category || null,
         }));
         setNofos(nofoData);
       } else {
@@ -1215,6 +1219,8 @@ const Dashboard: React.FC = () => {
           isPinned: false,
           expirationDate: null,
           grantType: null,
+          agency: null,
+          category: null,
         }));
         setNofos(nofoData);
       }

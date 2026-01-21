@@ -23,8 +23,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   documents,
   onSelectDocument,
   isLoading,
+  searchTerm: externalSearchTerm,
+  onSearchTermChange,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [internalSearchTerm, setInternalSearchTerm] = useState("");
+  const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
+  const setSearchTerm = onSearchTermChange || setInternalSearchTerm;
   const [showResults, setShowResults] = useState(false);
   const [showViewAllModal, setShowViewAllModal] = useState(false);
   const [expandedGrants, setExpandedGrants] = useState<Record<string, boolean>>({});

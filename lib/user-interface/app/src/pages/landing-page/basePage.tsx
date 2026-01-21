@@ -11,6 +11,8 @@ import {
   getRecentlyViewed,
   cleanupRecentlyViewed,
 } from "../../utils/recently-viewed-nofos";
+import { GrantsTable } from "./grants-table";
+import { NOFO } from "../Dashboard";
 
 export default function Welcome() {
   // **State Variables**
@@ -22,6 +24,8 @@ export default function Welcome() {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [tableNofos, setTableNofos] = useState<NOFO[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -167,6 +171,21 @@ export default function Welcome() {
             status: nofo.status as "active" | "archived",
           }))
         );
+
+        // Set table NOFOs (only active ones)
+        const activeNofos = sortedNofos
+          .filter((nofo: { status: string }) => nofo.status === "active")
+          .map((nofo: any, index: number) => ({
+            id: index,
+            name: nofo.name,
+            status: nofo.status as "active" | "archived",
+            isPinned: nofo.isPinned || false,
+            expirationDate: nofo.expiration_date || null,
+            grantType: nofo.grant_type || null,
+            agency: nofo.agency || null,
+            category: nofo.category || null,
+          }));
+        setTableNofos(activeNofos);
       } else {
         // Fallback to folders array if nofoData is not available
         const sortedFolders = [...folders].sort((a: string, b: string) =>
@@ -180,6 +199,19 @@ export default function Welcome() {
             status: "active" as const,
           }))
         );
+
+        // Set table NOFOs from folders (fallback)
+        const folderNofos = sortedFolders.map((folder: string, index: number) => ({
+          id: index,
+          name: folder,
+          status: "active" as const,
+          isPinned: false,
+          expirationDate: null,
+          grantType: null,
+          agency: null,
+          category: null,
+        }));
+        setTableNofos(folderNofos);
       }
     } catch (error) {
       console.error("Error retrieving NOFOs: ", error);
@@ -788,6 +820,8 @@ export default function Welcome() {
           documents={documents}
           onSelectDocument={setSelectedDocument}
           isLoading={loading}
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
         />
 
         {/* CTA Buttons - shown when grant is selected */}
@@ -1014,6 +1048,29 @@ export default function Welcome() {
 
         {/* Add spacing before next section */}
         <div style={{ marginBottom: "20px" }} />
+
+        {/* Grants Table Section */}
+        <ContentBox backgroundColor="#ffffff">
+          <div style={{ padding: "20px 0" }}>
+            <h2
+              style={{
+                fontSize: "24px",
+                fontWeight: "600",
+                color: mainTextColor,
+                margin: "0 0 20px 0",
+                textAlign: "center",
+              }}
+            >
+              Available Grants
+            </h2>
+            <GrantsTable 
+              nofos={tableNofos} 
+              loading={loading} 
+              onSelectDocument={setSelectedDocument}
+              onSearchTermChange={setSearchTerm}
+            />
+          </div>
+        </ContentBox>
 
         {/* Admin Dashboard Section - shown only to admins */}
         {isAdmin && (

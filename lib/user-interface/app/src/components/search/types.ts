@@ -28,6 +28,8 @@ export interface IntegratedSearchBarProps {
   documents: SearchDocument[];
   onSelectDocument: (document: SearchDocument | null) => void;
   isLoading: boolean;
+  searchTerm?: string;
+  onSearchTermChange?: (term: string) => void;
 }
 
 // AI search state
