@@ -45,7 +45,6 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly uploadNOFOS3Function: lambda.Function;
   public readonly syncKBFunction: lambda.Function;
   public readonly createMetadataFunction: lambda.Function;
-  public readonly backfillNofoMetadataFunction: lambda.Function;
   public readonly getNOFOsList: lambda.Function;
   public readonly getNOFOSummary: lambda.Function;
   public readonly getNOFOQuestions: lambda.Function;
@@ -61,8 +60,6 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly applicationPdfGeneratorFunction: lambda.Function;
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
-  public readonly backfillExpirationDatesFunction: lambda.Function;
-  public readonly backfillAgencyCategoryFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -378,39 +375,6 @@ export class LambdaFunctionStack extends cdk.Stack {
     // );
 
     this.createMetadataFunction = createMetadataFunction;
-
-    // Lambda function to backfill metadata for existing NOFO documents
-    const backfillNofoMetadataFunction = new lambda.Function(
-      scope,
-      "BackfillNofoMetadataFunction",
-      {
-        functionName: `${stackName}-backfillNofoMetadataFunction`,
-        runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "knowledge-management/backfill-nofo-metadata")
-        ),
-        handler: "index.handler",
-        environment: {
-          NOFO_BUCKET: props.ffioNofosBucket.bucketName,
-          BUCKET: props.ffioNofosBucket.bucketName,
-        },
-        timeout: cdk.Duration.minutes(15), // May take time for large buckets
-      }
-    );
-
-    // Grant S3 permissions for listing and reading/writing objects
-    backfillNofoMetadataFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:ListBucket", "s3:GetObject", "s3:PutObject"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
-    );
-
-    this.backfillNofoMetadataFunction = backfillNofoMetadataFunction;
 
     const deleteS3APIHandlerFunction = new lambda.Function(
       scope,
@@ -1237,125 +1201,5 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Add the Lambda function as a target for the EventBridge rule
     autoArchiveRule.addTarget(new targets.LambdaFunction(autoArchiveExpiredNofosFunction));
-
-    // Backfill Expiration Dates Function
-    const backfillExpirationDatesFunction = new lambda.Function(
-      scope,
-      'BackfillExpirationDatesFunctionV2',
-      {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, 'landing-page/backfill-expiration-dates')
-        ),
-        handler: 'index.handler',
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          DRY_RUN: 'false', // Set to 'true' for testing
-        },
-        timeout: cdk.Duration.minutes(15),
-      }
-    );
-
-    // Grant permissions
-    backfillExpirationDatesFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          's3:GetObject',
-          's3:PutObject',
-          's3:ListBucket',
-        ],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
-      })
-    );
-
-    backfillExpirationDatesFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'dynamodb:GetItem',
-          'dynamodb:UpdateItem',
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-        ],
-      })
-    );
-
-    backfillExpirationDatesFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'bedrock:InvokeModel',
-        ],
-        resources: ['*'],
-      })
-    );
-
-    this.backfillExpirationDatesFunction = backfillExpirationDatesFunction;
-
-    // Backfill Agency and Category Function
-    const backfillAgencyCategoryFunction = new lambda.Function(
-      scope,
-      'BackfillAgencyCategoryFunction',
-      {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, 'landing-page/backfill-agency-category')
-        ),
-        handler: 'index.handler',
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        },
-        timeout: cdk.Duration.minutes(15),
-      }
-    );
-
-    // Grant S3 permissions
-    backfillAgencyCategoryFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          's3:GetObject',
-          's3:ListBucket',
-        ],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
-      })
-    );
-
-    // Grant DynamoDB permissions
-    backfillAgencyCategoryFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'dynamodb:GetItem',
-          'dynamodb:UpdateItem',
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-        ],
-      })
-    );
-
-    // Grant Bedrock permissions
-    backfillAgencyCategoryFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'bedrock:InvokeModel',
-        ],
-        resources: ['*'],
-      })
-    );
-
-    this.backfillAgencyCategoryFunction = backfillAgencyCategoryFunction;
   }
 }

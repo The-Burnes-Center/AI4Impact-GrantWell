@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, CSSProperties } from "react";
+import React, { useContext, useState, useEffect, useRef, CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -26,6 +26,10 @@ export default function Welcome() {
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [tableNofos, setTableNofos] = useState<NOFO[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [highlightCTAButtons, setHighlightCTAButtons] = useState(false);
+  const [srAnnouncement, setSrAnnouncement] = useState("");
+  const prevSelectedDocRef = useRef<any>(null);
+  const firstCTAButtonRef = useRef<HTMLButtonElement>(null);
 
   // **Context and Navigation**
   const appContext = useContext(AppContext);
@@ -131,6 +135,49 @@ export default function Welcome() {
     };
     fetchDocuments();
   }, []);
+
+  // Highlight CTA buttons when a new document is selected
+  useEffect(() => {
+    // Check if selectedDocument changed (new selection or different document)
+    if (
+      selectedDocument &&
+      (!prevSelectedDocRef.current ||
+        prevSelectedDocRef.current.value !== selectedDocument.value)
+    ) {
+      setHighlightCTAButtons(true);
+      
+      // Screen reader announcement (WCAG 4.1.3 - Status Messages)
+      setSrAnnouncement(
+        `${selectedDocument.label} selected. Choose an action: View Key Requirements, Write Project Narrative, or Get Grant Help.`
+      );
+      
+      // Focus management for keyboard users (WCAG 2.4.3 - Focus Order)
+      // Delay focus to allow scroll to complete
+      const focusTimer = setTimeout(() => {
+        if (firstCTAButtonRef.current) {
+          firstCTAButtonRef.current.focus();
+        }
+      }, 300);
+      
+      // Remove highlight after animation completes
+      const highlightTimer = setTimeout(() => {
+        setHighlightCTAButtons(false);
+      }, 2000); // 2 seconds for the full animation cycle
+      
+      // Clear announcement after it's been read
+      const announcementTimer = setTimeout(() => {
+        setSrAnnouncement("");
+      }, 3000);
+      
+      prevSelectedDocRef.current = selectedDocument;
+      return () => {
+        clearTimeout(focusTimer);
+        clearTimeout(highlightTimer);
+        clearTimeout(announcementTimer);
+      };
+    }
+    prevSelectedDocRef.current = selectedDocument;
+  }, [selectedDocument]);
 
   // **Functions**
   // Get NOFO list from S3
@@ -822,21 +869,44 @@ export default function Welcome() {
           onSearchTermChange={setSearchTerm}
         />
 
+        {/* Screen reader announcement for grant selection (WCAG 4.1.3) */}
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="visually-hidden"
+          style={{
+            position: "absolute",
+            width: "1px",
+            height: "1px",
+            padding: "0",
+            margin: "-1px",
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            whiteSpace: "nowrap",
+            border: "0",
+          }}
+        >
+          {srAnnouncement}
+        </div>
+
         {/* CTA Buttons - shown when grant is selected */}
         {selectedDocument && (
           <nav
             aria-label="Grant actions"
+            className={`cta-buttons-container${highlightCTAButtons ? " highlight" : ""}`}
             style={{
               display: "flex",
               flexDirection: "row",
               gap: "10px",
-              margin: "28px 0 8px 0",
+              margin: highlightCTAButtons ? "20px 0 8px 0" : "28px 0 8px 0",
               width: "100%",
               justifyContent: "center",
               flexWrap: "wrap",
             }}
           >
             <button
+              ref={firstCTAButtonRef}
               onClick={() => {
                 handleNOFOSelect(
                   `/landing-page/basePage/checklists/${encodeURIComponent(
