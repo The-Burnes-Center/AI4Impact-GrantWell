@@ -26,6 +26,7 @@ interface LambdaFunctionStackProps {
   readonly feedbackTable: Table;
   readonly draftTable: Table;
   readonly nofoMetadataTable: Table;
+  readonly searchJobsTable: Table;
   readonly feedbackBucket: s3.Bucket;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
@@ -147,8 +148,10 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          SEARCH_JOBS_TABLE_NAME: props.searchJobsTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
         },
-        timeout: cdk.Duration.minutes(2),
+        timeout: cdk.Duration.minutes(5),
       }
     );
 
@@ -177,17 +180,20 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    // DynamoDB permissions for grant recommendation function (keyword filtering)
+    // DynamoDB permissions for grant recommendation function (for auto-detection, metadata checks, and search jobs)
     grantRecommendationFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: [
-          "dynamodb:Query",
           "dynamodb:GetItem",
+          "dynamodb:Scan",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
         ],
         resources: [
           props.nofoMetadataTable.tableArn,
           `${props.nofoMetadataTable.tableArn}/index/*`,
+          props.searchJobsTable.tableArn,
         ],
       })
     );

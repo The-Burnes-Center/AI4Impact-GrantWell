@@ -13,6 +13,7 @@ export class TableStack extends Stack {
   public readonly feedbackTable: Table;
   public readonly draftTable: Table;
   public readonly nofoMetadataTable: Table;
+  public readonly searchJobsTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -112,5 +113,14 @@ export class TableStack extends Stack {
     // });
 
     this.nofoMetadataTable = nofoMetadataTable;
+
+    // Define the Search Jobs Table for async grant recommendation searches
+    // Stores job status and results for polling
+    const searchJobsTable = new Table(this, 'SearchJobsTable', {
+      partitionKey: { name: 'jobId', type: AttributeType.STRING },
+      timeToLiveAttribute: 'ttl', // Auto-delete jobs after expiry
+    });
+
+    this.searchJobsTable = searchJobsTable;
   }
 }

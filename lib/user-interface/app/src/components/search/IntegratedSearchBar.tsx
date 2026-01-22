@@ -256,10 +256,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
             <AISuggestionsSection
               searchTerm={searchTerm}
               isSearching={aiSearch.isSearching}
+              isSearchingRAG={aiSearch.isSearchingRAG}
               triggered={aiSearch.triggered}
               error={aiSearch.error}
               results={aiSearch.results}
               loadingMessage={aiSearch.loadingMessages[aiSearch.loadingMessageIndex]}
+              ragLoadingMessage={aiSearch.ragLoadingMessage}
               grantTypeMap={grantTypeMap}
               expandedGrants={expandedGrants}
               hasPinnedGrants={displayedPinnedGrants.length > 0}

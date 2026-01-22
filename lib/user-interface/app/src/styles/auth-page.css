@@ -69,7 +69,8 @@
   display: flex;
   gap: 60px;
   align-items: center;
-  min-height: 420px;
+  min-height: 480px;
+  margin-bottom: 20px;
 }
 
 /* Left Column - Hero / Product Identity */
@@ -118,11 +119,16 @@
 }
 
 .auth-product-description {
-  font-size: 17px;
-  color: #ffffff; /* WCAG: Changed from 0.85 opacity to ensure 4.5:1 contrast ratio */
-  line-height: 1.8;
+  font-size: 18px;
+  color: #ffffff;
+  line-height: 1.7;
   margin: 0;
   max-width: 540px;
+}
+
+.auth-product-description strong {
+  font-weight: 600;
+  color: #ffffff;
 }
 
 /* ============================================
@@ -154,10 +160,27 @@
 .auth-trust-content {
   width: 100%;
   display: flex;
+  flex-direction: row;
+  gap: 48px;
+  max-width: 1200px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auth-trust-text {
+  flex: 1;
+  display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 800px;
-  text-align: center;
+  text-align: left;
+}
+
+.auth-trust-image {
+  width: 300px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
 }
 
 .auth-trust-title {
@@ -319,8 +342,8 @@
 }
 
 .auth-feature-icon-image {
-  width: 56px;
-  height: 56px;
+  width: 300px;
+  height: 300px;
   object-fit: contain;
   margin-bottom: 20px;
   flex-shrink: 0;
@@ -690,12 +713,20 @@
     flex: 0 0 380px;
   }
 
-  .auth-product-name {
-    font-size: 40px;
+  .auth-hero-image-wrapper {
+    justify-content: center;
+  }
+
+  .auth-hero-image {
+    max-width: 250px;
   }
 
   .auth-tagline {
-    font-size: 18px;
+    font-size: 26px;
+  }
+
+  .auth-product-description {
+    font-size: 16px;
   }
 
   .auth-login-card {
@@ -761,6 +792,23 @@
     order: 1;
   }
 
+  .auth-product-name {
+    font-size: 32px;
+  }
+
+  .auth-logo-row {
+    gap: 12px;
+  }
+
+  .auth-state-seal {
+    width: 44px;
+    height: 44px;
+  }
+
+  .auth-tagline {
+    font-size: 17px;
+  }
+
   .auth-login-column {
     flex: 1;
     width: 100%;
@@ -770,10 +818,6 @@
   .auth-login-card {
     max-width: 100%;
     padding: 32px 24px;
-  }
-
-  .auth-product-name {
-    font-size: 32px;
   }
 
   .auth-tagline {
@@ -823,7 +867,17 @@
   .auth-trust-content {
     width: 100%;
     max-width: 100%;
-    gap: 24px;
+    gap: 32px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .auth-trust-text {
+    text-align: center;
+  }
+
+  .auth-trust-image {
+    width: 200px;
   }
 
   .auth-trust-title {
@@ -866,6 +920,18 @@
 
   .auth-card-subtitle {
     font-size: 14px;
+  }
+
+  .auth-hero-image-wrapper {
+    justify-content: center;
+  }
+
+  .auth-hero-image {
+    max-width: 200px;
+  }
+
+  .auth-tagline {
+    font-size: 20px;
   }
 
   .auth-product-name {
@@ -926,6 +992,10 @@
     gap: 28px;
   }
 
+  .auth-trust-image {
+    width: 220px;
+  }
+
   .auth-trust-title {
     font-size: 22px;
   }
@@ -961,7 +1031,7 @@
    ============================================ */
 
 @media (min-resolution: 2dppx) {
-  .auth-state-seal {
+  .auth-trust-image {
     image-rendering: -webkit-optimize-contrast;
   }
 }
