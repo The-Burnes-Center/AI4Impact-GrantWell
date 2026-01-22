@@ -7,6 +7,7 @@ import { FaSort, FaSortUp, FaSortDown, FaPlus, FaTrash, FaSync } from "react-ico
 import { Calendar } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import { Utils } from "../../common/utils";
+import { DraftStatus } from "../../common/api-client/drafts-client";
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -166,6 +167,7 @@ interface Session {
   created_at: string;
   last_modified: string;
   document_identifier?: string;
+  status?: DraftStatus;
 }
 
 export default function DocEditorSessions(props: DocEditorSessionsProps) {
@@ -196,7 +198,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           title: draft.title,
           created_at: draft.lastModified,
           last_modified: draft.lastModified,
-          document_identifier: draft.documentIdentifier
+          document_identifier: draft.documentIdentifier,
+          status: draft.status || 'nofo_selected'
         })));
       }
     } catch (e) {
@@ -298,6 +301,51 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const formatSessionTime = (timestamp: string) => {
     return Utils.formatTimestamp(timestamp);
   };
+
+  const getStatusLabel = (status?: DraftStatus): string => {
+    switch (status) {
+      case 'nofo_selected':
+        return 'NOFO Selected';
+      case 'in_progress':
+        return 'In Progress';
+      case 'draft_generated':
+        return 'Draft Generated';
+      case 'review_ready':
+        return 'Ready for Review';
+      case 'submitted':
+        return 'Submitted';
+      default:
+        return 'NOFO Selected';
+    }
+  };
+
+  const getStatusColor = (status?: DraftStatus): string => {
+    switch (status) {
+      case 'nofo_selected':
+        return '#6b7280'; // gray
+      case 'in_progress':
+        return '#2563eb'; // blue
+      case 'draft_generated':
+        return '#059669'; // green
+      case 'review_ready':
+        return '#d97706'; // amber
+      case 'submitted':
+        return '#7c3aed'; // purple
+      default:
+        return '#6b7280';
+    }
+  };
+
+  const statusBadgeStyle = (status?: DraftStatus): React.CSSProperties => ({
+    display: 'inline-block',
+    padding: '4px 12px',
+    borderRadius: '12px',
+    fontSize: '12px',
+    fontWeight: '500',
+    backgroundColor: getStatusColor(status) + '15',
+    color: getStatusColor(status),
+    border: `1px solid ${getStatusColor(status)}30`,
+  });
 
   return (
     <div style={styles.container}>
@@ -403,6 +451,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                 Last Modified {getSortIcon("last_modified")}
               </button>
             </th>
+            <th style={styles.tableHeader}>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -449,6 +498,11 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   <Calendar size={16} style={styles.calendarIcon} />
                   {formatSessionTime(item.last_modified)}
                 </div>
+              </td>
+              <td style={styles.tableCell}>
+                <span style={statusBadgeStyle(item.status)}>
+                  {getStatusLabel(item.status)}
+                </span>
               </td>
             </tr>
           ))}

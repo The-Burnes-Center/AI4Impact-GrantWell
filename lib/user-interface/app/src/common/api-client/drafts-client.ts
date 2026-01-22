@@ -1,11 +1,14 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types";
 
+export type DraftStatus = 'nofo_selected' | 'in_progress' | 'draft_generated' | 'review_ready' | 'submitted';
+
 export interface DocumentDraft {
   sessionId: string;
   userId: string;
   title: string;
   documentIdentifier: string;
+  status?: DraftStatus;
   sections?: Record<string, any>;
   projectBasics?: any;
   questionnaire?: any;
@@ -45,6 +48,7 @@ export class DraftsClient {
         title: draft.title,
         document_identifier: draft.documentIdentifier,
         sections: draft.sections || {},
+        status: draft.status,
       }),
     });
 
@@ -57,16 +61,17 @@ export class DraftsClient {
   }
 
   // Gets a document draft
+  // If draft doesn't exist, waits for draft generation to complete (if in progress)
   async getDraft(params: { sessionId: string; userId: string }): Promise<DocumentDraft | null> {
     const auth = await Utils.authenticate();
-    let validData = false;
     let output;
-    let runs = 0;
-    const limit = 3;
-    let errorMessage = "Could not load draft";
+    let pollCount = 0;
+    const maxPolls = 60; // Max 60 polls (2 minutes with 2s interval) - same as draft generation timeout
+    const pollInterval = 2000; // 2 seconds
 
-    while (!validData && runs < limit) {
-      runs += 1;
+    while (pollCount < maxPolls) {
+      pollCount++;
+      
       const response = await fetch(this.API + '/user-draft', {
         method: 'POST',
         headers: {
@@ -80,38 +85,77 @@ export class DraftsClient {
         }),
       });
 
-      if (response.status != 200) {
-        validData = false;
-        errorMessage = await response.json();
-        break;
+      // If 404, draft doesn't exist yet - wait and retry (might be generating)
+      if (response.status === 404) {
+        console.log(`[getDraft] Draft not found for sessionId ${params.sessionId}, waiting... (attempt ${pollCount}/${maxPolls})`);
+        // Wait before retrying (unless this is the last attempt)
+        if (pollCount < maxPolls) {
+          await new Promise(resolve => setTimeout(resolve, pollInterval));
+          continue;
+        } else {
+          // After max polls, draft still doesn't exist
+          return null;
+        }
+      }
+
+      // For other errors, log and retry
+      if (response.status !== 200) {
+        try {
+          const errorData = await response.json();
+          console.warn(`[getDraft] Error fetching draft (attempt ${pollCount}):`, errorData);
+        } catch (e) {
+          console.warn(`[getDraft] Error parsing error response (attempt ${pollCount}):`, e);
+        }
+        // Wait and retry for non-404 errors
+        if (pollCount < maxPolls) {
+          await new Promise(resolve => setTimeout(resolve, pollInterval));
+          continue;
+        } else {
+          // After max retries, return null
+          return null;
+        }
       }
       
+      // Success - parse and return draft
       try {
         output = await response.json();
-        validData = true;
+        // Check if response body contains an error message
+        if (typeof output === 'string' && output.includes('No record found')) {
+          // Wait and retry
+          if (pollCount < maxPolls) {
+            await new Promise(resolve => setTimeout(resolve, pollInterval));
+            continue;
+          } else {
+            return null;
+          }
+        }
+        
+        // Draft found!
+        console.log(`[getDraft] Draft found for sessionId ${params.sessionId} after ${pollCount} attempts`);
+        return {
+          sessionId: params.sessionId,
+          userId: params.userId,
+          title: output.title || '',
+          documentIdentifier: output.document_identifier || '',
+          status: output.status || 'nofo_selected',
+          sections: output.sections || {},
+          projectBasics: output.project_basics || {},
+          questionnaire: output.questionnaire || {},
+          lastModified: output.last_modified || new Date().toISOString(),
+        };
       } catch (e) {
-        console.log(e);
+        console.log(`[getDraft] Error parsing response (attempt ${pollCount}):`, e);
+        // Wait and retry
+        if (pollCount < maxPolls) {
+          await new Promise(resolve => setTimeout(resolve, pollInterval));
+          continue;
+        }
       }
     }
 
-    if (!validData) {
-      throw new Error(errorMessage);
-    }
-
-    if (!output) {
-      return null;
-    }
-
-    return {
-      sessionId: params.sessionId,
-      userId: params.userId,
-      title: output.title || '',
-      documentIdentifier: output.document_identifier || '',
-      sections: output.sections || {},
-      projectBasics: output.project_basics || {},
-      questionnaire: output.questionnaire || {},
-      lastModified: output.last_modified || new Date().toISOString(),
-    };
+    // If we've exhausted all polls, draft doesn't exist
+    console.log(`[getDraft] Draft not found after ${maxPolls} attempts for sessionId ${params.sessionId}`);
+    return null;
   }
 
   // Updates a document draft
@@ -134,6 +178,7 @@ export class DraftsClient {
         project_basics: draft.projectBasics || {},
         questionnaire: draft.questionnaire || {},
         last_modified: draft.lastModified || new Date().toISOString(),
+        status: draft.status,
         additionalInfo: draft.additionalInfo,
         uploadedFiles: draft.uploadedFiles
       }),
@@ -225,6 +270,7 @@ export class DraftsClient {
           userId: userId,
           title: draft.title,
           documentIdentifier: draft.documentIdentifier,
+          status: draft.status || 'nofo_selected',
           lastModified: draft.lastModified
         }));
       }
@@ -243,6 +289,7 @@ export class DraftsClient {
           userId: userId,
           title: draft.title,
           documentIdentifier: draft.documentIdentifier,
+          status: draft.status || 'nofo_selected',
           lastModified: draft.lastModified
         }));
       }
@@ -256,16 +303,20 @@ export class DraftsClient {
   }
 
   // Generates draft sections based on project basics and questionnaire
+  // Uses async polling pattern to handle long-running operations
   async generateDraft(params: {
     query: string;
     documentIdentifier: string;
     projectBasics?: any;
     questionnaire?: any;
     sessionId: string;
+    onProgress?: (status: string) => void;
   }): Promise<Record<string, any>> {
     const auth = await Utils.authenticate();
     console.log('Calling /draft-generation with:', params);
-    const response = await fetch(this.API + '/draft-generation', {
+    
+    // Start the draft generation job
+    const startResponse = await fetch(this.API + '/draft-generation', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -280,16 +331,64 @@ export class DraftsClient {
       }),
     });
 
-    console.log('Draft generation response status:', response.status);
-    if (response.status !== 200) {
-      const errorMessage = await response.json();
+    console.log('Draft generation start response status:', startResponse.status);
+    if (startResponse.status !== 200) {
+      const errorMessage = await startResponse.json();
       console.error('Draft generation error:', errorMessage);
-      throw new Error(errorMessage);
+      throw new Error(errorMessage.error || 'Failed to start draft generation');
     }
 
-    const data = await response.json();
-    console.log('Draft generation response data:', data);
-    return data.sections || {};
+    const startData = await startResponse.json();
+    const jobId = startData.jobId;
+    console.log('Draft generation job started:', jobId);
+    
+    if (params.onProgress) {
+      params.onProgress('in_progress');
+    }
+
+    // Poll for job status
+    let pollCount = 0;
+    const maxPolls = 60; // Max 60 polls (about 2 minutes with 2s interval)
+    const pollInterval = 2000; // 2 seconds
+    
+    while (pollCount < maxPolls) {
+      await new Promise(resolve => setTimeout(resolve, pollInterval));
+      pollCount++;
+      
+      console.log(`[Polling] Checking draft generation job ${jobId} status (attempt ${pollCount}/${maxPolls})`);
+      
+      try {
+        const statusResponse = await fetch(this.API + `/draft-generation-jobs/${jobId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + auth,
+          },
+        });
+        
+        if (!statusResponse.ok) {
+          console.warn(`[Polling] Job status check failed: ${statusResponse.status}`);
+          continue;
+        }
+        
+        const statusData = await statusResponse.json();
+        console.log(`[Polling] Job ${jobId} status: ${statusData.status}`);
+        
+        if (statusData.status === 'completed') {
+          console.log('Draft generation completed:', statusData.sections);
+          return statusData.sections || {};
+        } else if (statusData.status === 'error') {
+          throw new Error(statusData.error || 'Draft generation failed');
+        }
+        
+        // Continue polling if still in progress
+      } catch (err) {
+        console.error('[Polling] Error checking job status:', err);
+        // Continue polling on error
+      }
+    }
+    
+    // If we've exhausted polls, throw an error
+    throw new Error('Draft generation timed out. Please try again.');
   }
 
   // Generates a tagged PDF from draft data

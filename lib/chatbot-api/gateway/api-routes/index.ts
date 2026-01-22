@@ -27,6 +27,7 @@ export interface RoutesProps {
   automatedNofoScraperFunction: lambda.Function; // Add automated NOFO scraper function prop
   applicationPdfGeneratorFunction: lambda.Function; // Add application PDF generator function prop
   searchJobsTableName: string; // For search job status polling
+  draftGenerationJobsTableName: string; // For draft generation job status polling
 }
 
 export class Routes extends Construct {
@@ -210,14 +211,16 @@ export class Routes extends Construct {
 
     // Draft Generation Lambda Integration
     // Create a new dedicated Lambda function for the REST API endpoint
+    // Note: API Gateway HTTP API has a hard limit of 30 seconds for synchronous requests
     const draftGeneratorAPIFunction = new lambda.Function(this, 'DraftGeneratorAPIFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(path.join(__dirname, 'draft-generation')),
       handler: 'index.handler',
       environment: {
         DRAFT_GENERATOR_FUNCTION: props.draftGeneratorFunction.functionName,
+        DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTableName,
       },
-      timeout: Duration.minutes(2),
+      timeout: Duration.seconds(30), // Max allowed by API Gateway HTTP API
     });
 
     // Grant the API function permission to invoke the Draft Generator function
@@ -226,6 +229,15 @@ export class Routes extends Construct {
         effect: iam.Effect.ALLOW,
         actions: ['lambda:InvokeFunction'],
         resources: [props.draftGeneratorFunction.functionArn],
+      })
+    );
+
+    // Grant DynamoDB write permissions for creating job status
+    draftGeneratorAPIFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['dynamodb:PutItem'],
+        resources: [`arn:aws:dynamodb:*:*:table/${props.draftGenerationJobsTableName}`],
       })
     );
 
@@ -240,6 +252,38 @@ export class Routes extends Construct {
       path: '/draft-generation',
       methods: [apigwv2.HttpMethod.POST, apigwv2.HttpMethod.OPTIONS],
       integration: draftGeneratorIntegration,
+    });
+
+    // Draft Generation Job Status Lambda Integration
+    // Allows frontend to poll for async draft generation results
+    const draftJobStatusFunction = new lambda.Function(this, 'DraftJobStatusFunction', {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, 'draft-job-status')),
+      handler: 'index.handler',
+      environment: {
+        DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTableName,
+      },
+      timeout: Duration.seconds(10),
+    });
+
+    // Grant DynamoDB read permissions
+    draftJobStatusFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['dynamodb:GetItem'],
+        resources: [`arn:aws:dynamodb:*:*:table/${props.draftGenerationJobsTableName}`],
+      })
+    );
+
+    const draftJobStatusIntegration = new HttpLambdaIntegration(
+      'DraftJobStatusIntegration',
+      draftJobStatusFunction
+    );
+
+    props.httpApi.addRoutes({
+      path: '/draft-generation-jobs/{jobId}',
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.OPTIONS],
+      integration: draftJobStatusIntegration,
     });
 
     // Automated NOFO Scraper Lambda Integration

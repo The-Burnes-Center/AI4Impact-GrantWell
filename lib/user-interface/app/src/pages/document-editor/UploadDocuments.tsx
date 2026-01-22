@@ -56,6 +56,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [userId, setUserId] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [generatingDraft, setGeneratingDraft] = useState(false);
+  const [draftProgress, setDraftProgress] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Helper to extract NOFO name from documentIdentifier
@@ -237,30 +239,40 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
       console.log('Fetching current draft from DB:', { sessionId, username });
       // Get project basics and questionnaire from the database
-      const currentDraft = await apiClient.drafts.getDraft({
+      // getDraft() will wait if draft generation is in progress
+      const draftToUse = await apiClient.drafts.getDraft({
         sessionId: sessionId,
         userId: username
       });
-      console.log('Fetched current draft:', currentDraft);
+      console.log('Fetched current draft:', draftToUse);
 
-      if (!currentDraft) {
-        throw new Error('No draft found');
+      if (!draftToUse) {
+        throw new Error('Draft not found. Please start a new document first.');
       }
 
       console.log('Generating draft sections...');
+      setGeneratingDraft(true);
+      setDraftProgress('Starting draft generation...');
+      
       // Generate draft sections using data from the database
+      // This uses async polling internally
       const result = await apiClient.drafts.generateDraft({
         query: "Generate all sections for the grant application",
         documentIdentifier: selectedNofo,
-        projectBasics: currentDraft.projectBasics || {},
-        questionnaire: currentDraft.questionnaire || {},
-        sessionId: sessionId
+        projectBasics: draftToUse.projectBasics || {},
+        questionnaire: draftToUse.questionnaire || {},
+        sessionId: sessionId,
+        onProgress: (status: string) => {
+          setDraftProgress(`Generating draft sections... (${status})`);
+        }
       });
       console.log('Generated draft sections:', result);
 
-      if (!result) {
+      if (!result || Object.keys(result).length === 0) {
         throw new Error('Failed to generate sections');
       }
+      
+      setDraftProgress('Draft generation completed!');
 
       console.log('Updating draft in DB with new sections, additionalInfo, and uploadedFiles...');
       // Update the draft with generated sections
@@ -272,11 +284,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         lastModified: f.lastModified
       }));
       await apiClient.drafts.updateDraft({
-        ...currentDraft,
+        ...draftToUse,
         sections: {
-          ...currentDraft.sections,  // Preserve existing sections
+          ...draftToUse.sections,  // Preserve existing sections
           ...result  // Add new sections
         },
+        status: 'draft_generated', // Update status when draft sections are generated
         additionalInfo: additionalInfo,
         uploadedFiles: uploadedFileInfo
       });
@@ -286,9 +299,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       onNavigate("sectionEditor");
     } catch (error) {
       console.error('Error creating draft:', error);
-      alert('Failed to create draft. Please try again.');
+      setUploadError(error instanceof Error ? error.message : 'Failed to create draft. Please try again.');
+      alert(error instanceof Error ? error.message : 'Failed to create draft. Please try again.');
     } finally {
       setIsLoading(false);
+      setGeneratingDraft(false);
+      setDraftProgress("");
     }
   };
 
@@ -540,23 +556,23 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         </button>
         <button
           onClick={handleSubmit}
-          disabled={isLoading}
+          disabled={isLoading || generatingDraft}
           style={{
             display: "flex",
             alignItems: "center",
             padding: "12px 24px",
-            background: isLoading ? "#a0aec0" : "#14558F",
+            background: (isLoading || generatingDraft) ? "#a0aec0" : "#14558F",
             color: "white",
             border: "none",
             borderRadius: "6px",
             fontSize: "16px",
             fontWeight: 500,
-            cursor: isLoading ? "not-allowed" : "pointer",
+            cursor: (isLoading || generatingDraft) ? "not-allowed" : "pointer",
             boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
           }}
         >
-          {isLoading ? "Creating Draft..." : "Create Draft"}
-          {!isLoading && (
+          {generatingDraft ? "Generating Draft..." : isLoading ? "Uploading..." : "Create Draft"}
+          {!isLoading && !generatingDraft && (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -575,6 +591,41 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           )}
         </button>
       </div>
+      {generatingDraft && draftProgress && (
+        <div
+          style={{
+            marginTop: "16px",
+            padding: "12px 16px",
+            background: "#e0f2fe",
+            border: "1px solid #0284c7",
+            borderRadius: "6px",
+            color: "#0369a1",
+            fontSize: "14px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <div
+            style={{
+              width: "16px",
+              height: "16px",
+              border: "2px solid #0284c7",
+              borderTopColor: "transparent",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+            }}
+          />
+          {draftProgress}
+        </div>
+      )}
+      <style>
+        {`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}
+      </style>
     </div>
   );
 };

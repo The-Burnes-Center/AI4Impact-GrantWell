@@ -24,6 +24,7 @@ import { Construct } from "constructs";
 import { OpenSearchStack } from "./opensearch/opensearch";
 import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as path from "path";
 
 export interface ChatbotAPIProps {
@@ -63,6 +64,7 @@ export class ChatBotApi extends Construct {
       draftTable: tables.draftTable,
       nofoMetadataTable: tables.nofoMetadataTable,
       searchJobsTable: tables.searchJobsTable,
+      draftGenerationJobsTable: tables.draftGenerationJobsTable,
       feedbackBucket: buckets.feedbackBucket,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
@@ -362,14 +364,65 @@ export class ChatBotApi extends Construct {
     });
 
     // Add REST API route for draft generation
+    // Create a dedicated API function that starts jobs asynchronously
+    const draftGeneratorAPIFunction = new lambda.Function(this, "DraftGeneratorAPIFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "gateway/api-routes/draft-generation")
+      ),
+      handler: "index.handler",
+      environment: {
+        DRAFT_GENERATOR_FUNCTION: lambdaFunctions.draftGeneratorFunction.functionName,
+        DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
+    });
+    
+    // Grant permission to invoke draft generator function
+    draftGeneratorAPIFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [lambdaFunctions.draftGeneratorFunction.functionArn],
+      })
+    );
+    
+    // Grant DynamoDB write permissions for creating job status
+    tables.draftGenerationJobsTable.grantWriteData(draftGeneratorAPIFunction);
+    
     const draftGeneratorAPIIntegration = new HttpLambdaIntegration(
       "DraftGeneratorAPIIntegration",
-      lambdaFunctions.draftGeneratorFunction
+      draftGeneratorAPIFunction
     );
     restBackend.restAPI.addRoutes({
       path: "/draft-generation",
       methods: [apigwv2.HttpMethod.POST],
       integration: draftGeneratorAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for draft generation job status polling
+    const draftJobStatusFunction = new lambda.Function(this, "DraftJobStatusFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "gateway/api-routes/draft-job-status")
+      ),
+      handler: "index.handler",
+      environment: {
+        DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(10),
+    });
+    tables.draftGenerationJobsTable.grantReadData(draftJobStatusFunction);
+    
+    const draftJobStatusAPIIntegration = new HttpLambdaIntegration(
+      "DraftJobStatusAPIIntegration",
+      draftJobStatusFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/draft-generation-jobs/{jobId}",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: draftJobStatusAPIIntegration,
       authorizer: httpAuthorizer,
     });
 

@@ -71,13 +71,58 @@ export default function DocEditorSessionsPage() {
       );
 
       if (username) {
-        const drafts = await apiClient.drafts.getDrafts(username);
-        const selectedDraft = drafts.find(draft => draft.sessionId === draftId);
+        // Get full draft details to check status
+        const selectedDraft = await apiClient.drafts.getDraft({
+          sessionId: draftId,
+          userId: username
+        });
+        
         if (!selectedDraft || !selectedDraft.documentIdentifier) {
           console.error("Could not find draft or its NOFO identifier");
           return;
         }
-        const queryParams = `?step=projectBasics&nofo=${encodeURIComponent(selectedDraft.documentIdentifier)}`;
+        
+        // Determine step based on status
+        let step = 'projectBasics';
+        const status = selectedDraft.status || 'nofo_selected';
+        
+        switch (status) {
+          case 'nofo_selected':
+            // NOFO selected but no project basics yet
+            step = 'projectBasics';
+            break;
+          case 'in_progress':
+            // Check which section they're on
+            if (selectedDraft.projectBasics && Object.keys(selectedDraft.projectBasics).length > 0) {
+              if (selectedDraft.questionnaire && Object.keys(selectedDraft.questionnaire).length > 0) {
+                // Both project basics and questionnaire done, go to draft
+                step = 'draft';
+              } else {
+                // Project basics done, go to questionnaire
+                step = 'questionnaire';
+              }
+            } else {
+              // No project basics, start there
+              step = 'projectBasics';
+            }
+            break;
+          case 'draft_generated':
+            // Draft has been generated, go to draft view
+            step = 'draft';
+            break;
+          case 'review_ready':
+            // Ready for review
+            step = 'review';
+            break;
+          case 'submitted':
+            // Already submitted, go to review
+            step = 'review';
+            break;
+          default:
+            step = 'projectBasics';
+        }
+        
+        const queryParams = `?step=${step}&nofo=${encodeURIComponent(selectedDraft.documentIdentifier)}`;
         navigate(`/document-editor/${draftId}${queryParams}`);
       }
     } catch (e) {

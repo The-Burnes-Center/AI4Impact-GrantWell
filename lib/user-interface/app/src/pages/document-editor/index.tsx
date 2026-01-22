@@ -276,6 +276,7 @@ const DocumentEditor: React.FC = () => {
           sections: {},
           projectBasics: {}, // Initialize empty project basics
           questionnaire: {},
+          status: 'nofo_selected', // Initial status when NOFO is selected
           lastModified: Utils.getCurrentTimestamp(),
         });
       }
