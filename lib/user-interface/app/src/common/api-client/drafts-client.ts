@@ -62,7 +62,11 @@ export class DraftsClient {
 
   // Gets a document draft
   // If draft doesn't exist, waits for draft generation to complete (if in progress)
-  async getDraft(params: { sessionId: string; userId: string }): Promise<DocumentDraft | null> {
+  async getDraft(params: { 
+    sessionId: string; 
+    userId: string;
+    onProgress?: (message: string, attempt: number, maxAttempts: number) => void;
+  }): Promise<DocumentDraft | null> {
     const auth = await Utils.authenticate();
     let output;
     let pollCount = 0;
@@ -88,12 +92,29 @@ export class DraftsClient {
       // If 404, draft doesn't exist yet - wait and retry (might be generating)
       if (response.status === 404) {
         console.log(`[getDraft] Draft not found for sessionId ${params.sessionId}, waiting... (attempt ${pollCount}/${maxPolls})`);
+        
+        // Notify progress callback
+        if (params.onProgress) {
+          if (pollCount === 1) {
+            params.onProgress('Waiting for draft generation to complete...', pollCount, maxPolls);
+          } else if (pollCount <= 15) {
+            params.onProgress('Draft generation in progress...', pollCount, maxPolls);
+          } else if (pollCount <= 30) {
+            params.onProgress('Draft generation is taking longer than expected...', pollCount, maxPolls);
+          } else {
+            params.onProgress('Still waiting for draft generation...', pollCount, maxPolls);
+          }
+        }
+        
         // Wait before retrying (unless this is the last attempt)
         if (pollCount < maxPolls) {
           await new Promise(resolve => setTimeout(resolve, pollInterval));
           continue;
         } else {
           // After max polls, draft still doesn't exist
+          if (params.onProgress) {
+            params.onProgress('Draft generation timed out', pollCount, maxPolls);
+          }
           return null;
         }
       }
@@ -106,6 +127,12 @@ export class DraftsClient {
         } catch (e) {
           console.warn(`[getDraft] Error parsing error response (attempt ${pollCount}):`, e);
         }
+        
+        // Notify progress callback about retry
+        if (params.onProgress && pollCount < maxPolls) {
+          params.onProgress('Retrying...', pollCount, maxPolls);
+        }
+        
         // Wait and retry for non-404 errors
         if (pollCount < maxPolls) {
           await new Promise(resolve => setTimeout(resolve, pollInterval));
@@ -121,6 +148,10 @@ export class DraftsClient {
         output = await response.json();
         // Check if response body contains an error message
         if (typeof output === 'string' && output.includes('No record found')) {
+          // Notify progress callback
+          if (params.onProgress && pollCount < maxPolls) {
+            params.onProgress('Waiting for draft...', pollCount, maxPolls);
+          }
           // Wait and retry
           if (pollCount < maxPolls) {
             await new Promise(resolve => setTimeout(resolve, pollInterval));
@@ -132,6 +163,9 @@ export class DraftsClient {
         
         // Draft found!
         console.log(`[getDraft] Draft found for sessionId ${params.sessionId} after ${pollCount} attempts`);
+        if (params.onProgress && pollCount > 1) {
+          params.onProgress('Draft loaded successfully!', pollCount, maxPolls);
+        }
         return {
           sessionId: params.sessionId,
           userId: params.userId,

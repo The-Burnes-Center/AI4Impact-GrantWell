@@ -16,6 +16,7 @@ const DraftView: React.FC<DraftViewProps> = ({
 }) => {
   const [draftData, setDraftData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState<string>("Loading draft...");
   const appContext = useContext(AppContext);
 
   useEffect(() => {
@@ -23,20 +24,37 @@ const DraftView: React.FC<DraftViewProps> = ({
       if (!appContext || !selectedNofo || !sessionId) return;
 
       try {
+        setIsLoading(true);
+        setLoadingMessage("Loading draft...");
+        
         const apiClient = new ApiClient(appContext);
         const username = (await Auth.currentAuthenticatedUser()).username;
         
         // Get draft from database
+        // getDraft() will wait if draft generation is in progress
         const currentDraft = await apiClient.drafts.getDraft({
           sessionId: sessionId,
-          userId: username
+          userId: username,
+          onProgress: (message: string, attempt: number, maxAttempts: number) => {
+            setLoadingMessage(message);
+            if (attempt === 15) {
+              setLoadingMessage("Draft generation is taking longer than expected. Please wait...");
+            }
+            if (attempt === 30) {
+              setLoadingMessage("Draft generation is still in progress. This may take up to 2 minutes...");
+            }
+          }
         });
 
         if (currentDraft) {
           setDraftData(currentDraft);
+          setLoadingMessage("Draft loaded successfully!");
+        } else {
+          setLoadingMessage("Draft not found");
         }
       } catch (error) {
         console.error("Error loading draft data:", error);
+        setLoadingMessage("Failed to load draft");
       } finally {
         setIsLoading(false);
       }
@@ -49,9 +67,11 @@ const DraftView: React.FC<DraftViewProps> = ({
     return (
       <div style={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "60vh"
+        minHeight: "60vh",
+        padding: "32px"
       }}>
         <div style={{
           width: "40px",
@@ -59,8 +79,24 @@ const DraftView: React.FC<DraftViewProps> = ({
           border: "4px solid #f3f3f3",
           borderTop: "4px solid #3498db",
           borderRadius: "50%",
-          animation: "spin 1s linear infinite"
+          animation: "spin 1s linear infinite",
+          marginBottom: "16px"
         }}></div>
+        <p style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px", textAlign: "center" }}>
+          {loadingMessage}
+        </p>
+        {loadingMessage.includes("generation") && (
+          <p style={{ color: "#9ca3af", fontSize: "14px", textAlign: "center", maxWidth: "400px" }}>
+            This may take 30-60 seconds. Please don't close this page.
+          </p>
+        )}
+        <style>
+          {`
+            @keyframes spin {
+              to { transform: rotate(360deg); }
+            }
+          `}
+        </style>
       </div>
     );
   }

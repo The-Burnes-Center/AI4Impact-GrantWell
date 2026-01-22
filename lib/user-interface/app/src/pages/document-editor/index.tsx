@@ -48,6 +48,7 @@ const ERROR_MESSAGES = {
 const useDocumentStorage = (nofoId: string | null) => {
   const [documentData, setDocumentData] = useState<DocumentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState<string>("Loading document editor...");
   const [error, setError] = useState<string | null>(null);
   const { sessionId } = useParams();
   const appContext = useContext(AppContext);
@@ -57,6 +58,7 @@ const useDocumentStorage = (nofoId: string | null) => {
 
     setIsLoading(true);
     setError(null);
+    setLoadingMessage("Loading document editor...");
 
     try {
       // Load from database
@@ -67,6 +69,17 @@ const useDocumentStorage = (nofoId: string | null) => {
         const draft = await draftsClient.getDraft({
           sessionId: sessionId,
           userId: username,
+          onProgress: (message: string, attempt: number, maxAttempts: number) => {
+            setLoadingMessage(message);
+            // Show timeout warning after 30 seconds (15 attempts)
+            if (attempt === 15) {
+              setLoadingMessage("Draft generation is taking longer than expected. Please wait...");
+            }
+            // Show final warning after 1 minute (30 attempts)
+            if (attempt === 30) {
+              setLoadingMessage("Draft generation is still in progress. This may take up to 2 minutes...");
+            }
+          }
         });
 
         if (draft) {
@@ -78,6 +91,7 @@ const useDocumentStorage = (nofoId: string | null) => {
             questionnaire: draft.questionnaire,
             lastModified: draft.lastModified || new Date().toISOString(),
           });
+          setLoadingMessage("Document loaded successfully!");
         } else {
           setDocumentData({
             id: sessionId,
@@ -85,11 +99,13 @@ const useDocumentStorage = (nofoId: string | null) => {
             sections: {},
             lastModified: new Date().toISOString(),
           });
+          setLoadingMessage("Starting new document...");
         }
       }
     } catch (error) {
       console.error('Failed to load document:', error);
       setError(ERROR_MESSAGES.LOAD_FAILED);
+      setLoadingMessage("Failed to load document");
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +154,7 @@ const useDocumentStorage = (nofoId: string | null) => {
     loadDocument();
   }, [loadDocument]);
 
-  return { documentData, setDocumentData, isLoading, error, setError };
+  return { documentData, setDocumentData, isLoading, loadingMessage, error, setError };
 };
 
 // Main Component
@@ -178,7 +194,7 @@ const DocumentEditor: React.FC = () => {
   const startButtonRef = useRef<HTMLButtonElement>(null);
   const draftsButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { documentData, setDocumentData, isLoading, error, setError } = useDocumentStorage(selectedNofo);
+  const { documentData, setDocumentData, isLoading, loadingMessage, error, setError } = useDocumentStorage(selectedNofo);
 
   // Monitor brand banner + MDS header height changes (for minHeight calculations only)
   useEffect(() => {
@@ -676,7 +692,7 @@ const DocumentEditor: React.FC = () => {
                 height: "60vh",
               }}
             >
-              <div style={{ textAlign: "center" }}>
+              <div style={{ textAlign: "center", maxWidth: "400px" }}>
                 <div
                   style={{
                     width: "40px",
@@ -688,7 +704,14 @@ const DocumentEditor: React.FC = () => {
                     margin: "0 auto 16px",
                   }}
                 ></div>
-                <p style={{ color: "#5a6169" }}>Loading document editor...</p>
+                <p style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px" }}>
+                  {loadingMessage}
+                </p>
+                {loadingMessage.includes("generation") && (
+                  <p style={{ color: "#9ca3af", fontSize: "14px", marginTop: "8px" }}>
+                    This may take 30-60 seconds. Please don't close this page.
+                  </p>
+                )}
               </div>
             </div>
           ) : (
@@ -696,6 +719,13 @@ const DocumentEditor: React.FC = () => {
           )}
         </div>
       </main>
+      <style>
+        {`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}
+      </style>
 
       {/* Welcome Modal */}
       <Modal
