@@ -199,6 +199,15 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // Lambda invoke permission for async RAG search (self-invoke)
+    grantRecommendationFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [grantRecommendationFunction.functionArn],
+      })
+    );
+
     this.grantRecommendationFunction = grantRecommendationFunction;
 
     // Update WebSocket chat function
