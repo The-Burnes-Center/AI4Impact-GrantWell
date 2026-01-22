@@ -147,6 +147,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -177,6 +178,20 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // DynamoDB permissions for grant recommendation function (for auto-detection and metadata checks)
+    grantRecommendationFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:GetItem",
+          "dynamodb:Scan",
+        ],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+          `${props.nofoMetadataTable.tableArn}/index/*`,
+        ],
+      })
+    );
 
     this.grantRecommendationFunction = grantRecommendationFunction;
 
