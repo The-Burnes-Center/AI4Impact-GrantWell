@@ -46,10 +46,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
 
   // Handle drafts navigation
   const handleDraftsNavigation = () => {
-    const queryParams = documentIdentifier
-      ? `?nofo=${encodeURIComponent(documentIdentifier)}`
-      : "";
-    navigate(`/document-editor/drafts${queryParams}`);
+    navigate(`/document-editor/drafts`);
   };
 
   // Handle requirements navigation

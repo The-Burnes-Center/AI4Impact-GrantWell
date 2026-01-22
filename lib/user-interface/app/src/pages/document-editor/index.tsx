@@ -268,10 +268,20 @@ const DocumentEditor: React.FC = () => {
     }
   }, [window.location.search]);
 
-  // Show welcome modal automatically every time user lands on document editor
+  // Show welcome modal automatically only when starting a new document (no sessionId and no step parameter)
   useEffect(() => {
-    if (!isLoading && !sessionId) {
+    const searchParams = new URLSearchParams(window.location.search);
+    const stepFromUrl = searchParams.get("step");
+    
+    // Only show welcome modal if:
+    // 1. Not loading
+    // 2. No sessionId (new session)
+    // 3. No step parameter in URL (not navigating to a specific step)
+    if (!isLoading && !sessionId && !stepFromUrl) {
       setWelcomeModalOpen(true);
+    } else {
+      // If there's a sessionId or step parameter, don't show the welcome modal
+      setWelcomeModalOpen(false);
     }
   }, [isLoading, sessionId]);
 
