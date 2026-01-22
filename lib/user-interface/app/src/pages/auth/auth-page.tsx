@@ -3,35 +3,6 @@ import LoginForm from '../../components/auth/login-form';
 import SignUpForm from '../../components/auth/signup-form';
 import '../../styles/auth-page.css';
 
-// Feature icons as SVG components - white icons for blue background
-const DiscoverIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <circle cx="11" cy="11" r="7" stroke="white" strokeWidth="2"/>
-    <path d="M16 16L20 20" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-  </svg>
-);
-
-const UnderstandIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
-    <path d="M7 8H17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M7 12H14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M7 16H11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-  </svg>
-);
-
-const DraftIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
-    <path d="M7 8H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M11 8H17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M7 12H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M11 12H17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M7 16H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M11 16H15" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-  </svg>
-);
-
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -102,7 +73,7 @@ export default function AuthPage() {
             <div className="auth-features-grid">
               <div className="auth-feature-card">
                 <img 
-                  src="/images/Discover.png" 
+                  src="/images/grantwell-icons_discover.png" 
                   alt="" 
                   className="auth-feature-icon-image"
                   aria-hidden="true"
@@ -115,9 +86,12 @@ export default function AuthPage() {
               </div>
 
               <div className="auth-feature-card">
-                <div className="auth-feature-icon-wrapper">
-                  <UnderstandIcon />
-                </div>
+                <img 
+                  src="/images/grantwell-icons_understand.png" 
+                  alt="" 
+                  className="auth-feature-icon-image"
+                  aria-hidden="true"
+                />
                 <h3 className="auth-feature-title">Understand</h3>
                 <p className="auth-feature-description">
                   Extract key grant information and use chat to ask questions about 
@@ -126,9 +100,12 @@ export default function AuthPage() {
               </div>
 
               <div className="auth-feature-card">
-                <div className="auth-feature-icon-wrapper">
-                  <DraftIcon />
-                </div>
+                <img 
+                  src="/images/grantwell-icons_draft.png" 
+                  alt="" 
+                  className="auth-feature-icon-image"
+                  aria-hidden="true"
+                />
                 <h3 className="auth-feature-title">Draft</h3>
                 <p className="auth-feature-description">
                   Get step-by-step guidance to help draft your grant applications 
@@ -142,13 +119,21 @@ export default function AuthPage() {
           <section className="auth-trust-row" aria-labelledby="trust-heading">
             <div className="auth-trust-panel">
               <div className="auth-trust-content">
-                <h2 id="trust-heading" className="auth-trust-title">Free and AI-Powered</h2>
-                <p className="auth-trust-description">
-                  GrantWell uses AI as a support tool, not a decision-maker. AI responses are grounded 
-                  in official Notice of Funding Opportunity (NOFO) documents. The system is designed not 
-                  to invent requirements or facts. All drafts require human review before submission. 
-                  Users retain full control and professional judgment.
-                </p>
+                <div className="auth-trust-text">
+                  <h2 id="trust-heading" className="auth-trust-title">Free and AI-Powered</h2>
+                  <p className="auth-trust-description">
+                    GrantWell uses AI as a support tool, not a decision-maker. AI responses are grounded 
+                    in official Notice of Funding Opportunity (NOFO) documents. The system is designed not 
+                    to invent requirements or facts. All drafts require human review before submission. 
+                    Users retain full control and professional judgment.
+                  </p>
+                </div>
+                <img 
+                  src="/images/grantwell-icons_hero-image.png" 
+                  alt="" 
+                  className="auth-trust-image"
+                  aria-hidden="true"
+                />
               </div>
             </div>
           </section>
