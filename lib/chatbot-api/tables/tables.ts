@@ -14,6 +14,7 @@ export class TableStack extends Stack {
   public readonly draftTable: Table;
   public readonly nofoMetadataTable: Table;
   public readonly searchJobsTable: Table;
+  public readonly draftGenerationJobsTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -122,5 +123,14 @@ export class TableStack extends Stack {
     });
 
     this.searchJobsTable = searchJobsTable;
+
+    // Define the Draft Generation Jobs Table for async draft generation
+    // Stores job status and results for polling
+    const draftGenerationJobsTable = new Table(this, 'DraftGenerationJobsTable', {
+      partitionKey: { name: 'jobId', type: AttributeType.STRING },
+      timeToLiveAttribute: 'ttl', // Auto-delete jobs after expiry
+    });
+
+    this.draftGenerationJobsTable = draftGenerationJobsTable;
   }
 }

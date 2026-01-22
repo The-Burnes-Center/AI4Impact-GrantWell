@@ -191,13 +191,14 @@ export class LandingPageClient {
     }
   }
 
-  // Updates a NOFO's status (active or archived), pinned state, expiration date, and grant type
+  // Updates a NOFO's status (active or archived), pinned state, expiration date, grant type, and category
   async updateNOFOStatus(
     nofoName: string, 
     status?: "active" | "archived", 
     isPinned?: boolean, 
     expirationDate?: string | null,
-    grantType?: "federal" | "state" | "quasi" | "philanthropic" | "unknown"
+    grantType?: "federal" | "state" | "quasi" | "philanthropic" | "unknown",
+    category?: string
   ) {
     try {
       const token = await Utils.authenticate();
@@ -207,7 +208,7 @@ export class LandingPageClient {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({ nofoName, status, isPinned, expirationDate, grantType }),
+        body: JSON.stringify({ nofoName, status, isPinned, expirationDate, grantType, category }),
       });
 
       const data = await response.json();

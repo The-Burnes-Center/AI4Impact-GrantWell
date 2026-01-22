@@ -182,6 +182,12 @@ export const aiSuggestionCardStyle: React.CSSProperties = {
   border: "1px solid #e8ecf4",
 };
 
+export const selectedAiSuggestionCardStyle: React.CSSProperties = {
+  ...aiSuggestionCardStyle,
+  backgroundColor: "#f0f7ff",
+  borderLeft: "3px solid #14558F",
+};
+
 export const aiLoadingStyle: React.CSSProperties = {
   padding: "24px 16px",
   textAlign: "center",

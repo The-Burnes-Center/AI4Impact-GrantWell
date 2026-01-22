@@ -28,6 +28,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     [key: string]: string;
   }>({});
   const [loading, setLoading] = useState(true);
+  const [regenerating, setRegenerating] = useState(false);
+  const [regenerateProgress, setRegenerateProgress] = useState<string>("");
   const appContext = useContext(AppContext);
 
   // Load sections from NOFO summary API
@@ -197,6 +199,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     if (!section || !appContext || !selectedNofo) return;
 
     try {
+      setRegenerating(true);
+      setRegenerateProgress('Generating content...');
+      
       const apiClient = new ApiClient(appContext);
       const username = (await Auth.currentAuthenticatedUser()).username;
       
@@ -211,20 +216,25 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       }
 
       // Generate draft sections using data from the database
+      // This uses async polling internally
       const result = await apiClient.drafts.generateDraft({
         query: `Generate content for the ${section.name} section. ${section.description}`,
         documentIdentifier: selectedNofo,
         projectBasics: currentDraft.projectBasics || {},
         questionnaire: currentDraft.questionnaire || {},
-        sessionId: sessionId
+        sessionId: sessionId,
+        onProgress: (status: string) => {
+          setRegenerateProgress(`Generating content for ${section.name}... (${status})`);
+        }
       });
 
-      if (result && result.sections && result.sections[section.name]) {
+      // Result is sections directly (Record<string, any>), not wrapped
+      if (result && result[section.name]) {
         // Update the editor content with the generated section
-        setEditorContent(result.sections[section.name]);
+        setEditorContent(result[section.name]);
 
         // Update the section answers state
-        const updated = { ...sectionAnswers, [section.name]: result.sections[section.name] };
+        const updated = { ...sectionAnswers, [section.name]: result[section.name] };
         setSectionAnswers(updated);
 
         // Save to localStorage
@@ -238,7 +248,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           documentIdentifier: selectedNofo,
           sections: {
             ...currentDraft.sections,
-            [section.name]: result.sections[section.name]
+            [section.name]: result[section.name]
           },
           projectBasics: currentDraft.projectBasics,
           questionnaire: currentDraft.questionnaire,
@@ -249,13 +259,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         if (!updatedDraft.sections || !updatedDraft.sections[section.name]) {
           throw new Error('Failed to save section to database');
         }
+        
+        setRegenerateProgress('Content generated successfully!');
       } else {
         throw new Error('No content generated for this section');
       }
     } catch (error) {
       console.error('Error generating content:', error);
       // Show error to user
-      alert('Failed to generate content. Please try again.');
+      alert(error instanceof Error ? error.message : 'Failed to generate content. Please try again.');
+    } finally {
+      setRegenerating(false);
+      setTimeout(() => setRegenerateProgress(""), 2000);
     }
   };
 
@@ -446,6 +461,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           {false && (
             <button
               onClick={handleRegenerateContent}
+              disabled={regenerating}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -477,9 +493,44 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
                 <path d="M3 3v5h5"></path>
               </svg>
-              Regenerate Content with AI
+              {regenerating ? "Generating..." : "Regenerate Content with AI"}
             </button>
           )}
+          {regenerating && regenerateProgress && (
+            <div
+              style={{
+                marginTop: "12px",
+                padding: "12px 16px",
+                background: "#e0f2fe",
+                border: "1px solid #0284c7",
+                borderRadius: "6px",
+                color: "#0369a1",
+                fontSize: "14px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <div
+                style={{
+                  width: "16px",
+                  height: "16px",
+                  border: "2px solid #0284c7",
+                  borderTopColor: "transparent",
+                  borderRadius: "50%",
+                  animation: "spin 1s linear infinite",
+                }}
+              />
+              {regenerateProgress}
+            </div>
+          )}
+          <style>
+            {`
+              @keyframes spin {
+                to { transform: rotate(360deg); }
+              }
+            `}
+          </style>
 
           {/* Content Suggestions and Completion Checklist sections - DISABLED */}
           {false && (

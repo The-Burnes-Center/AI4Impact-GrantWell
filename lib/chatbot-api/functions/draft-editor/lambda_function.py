@@ -20,8 +20,19 @@ dynamodb = boto3.resource("dynamodb", region_name='us-east-1')
 table = dynamodb.Table(DDB_TABLE_NAME)
 
 # Define a function to add a draft or update an existing one in the DynamoDB table
-def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None):
+def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None, status=None):
     try:
+        # Determine default status based on what data exists
+        if status is None:
+            if document_identifier and not project_basics:
+                status = "nofo_selected"
+            elif project_basics and not sections:
+                status = "in_progress"
+            elif sections:
+                status = "draft_generated"
+            else:
+                status = "nofo_selected"
+        
         # Create a new item in DynamoDB
         item = {
             "user_id": user_id,
@@ -32,7 +43,7 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
             "project_basics": project_basics or {},
             "questionnaire": questionnaire or {},
             "last_modified": last_modified or str(datetime.now()),
-            "status": "draft"  # Adding default status
+            "status": status
         }
         
         # Put the item in DynamoDB
@@ -43,7 +54,8 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
             "sessionId": session_id,
             "title": item["title"],
             "documentIdentifier": item["document_identifier"],
-            "lastModified": item["last_modified"]
+            "lastModified": item["last_modified"],
+            "status": item["status"]
         }
         
         return {
@@ -106,7 +118,7 @@ def get_draft(session_id, user_id):
     return response_to_client
 
 # Define a function to update a draft in the DynamoDB table
-def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, questionnaire=None, last_modified=None):
+def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, questionnaire=None, last_modified=None, status=None):
     try:
         # Prepare update expression and attribute values
         update_parts = []
@@ -137,6 +149,39 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             update_parts.append("#q = :questionnaire")
             expression_values[":questionnaire"] = questionnaire
             expression_names["#q"] = "questionnaire"
+        
+        if status is not None:
+            update_parts.append("#st = :status")
+            expression_values[":status"] = status
+            expression_names["#st"] = "status"
+        else:
+            # Auto-update status based on content if not explicitly provided
+            # Get current draft to check existing state
+            try:
+                current_response = table.get_item(Key={"user_id": user_id, "session_id": session_id})
+                current_item = current_response.get("Item", {})
+                current_sections = sections if sections is not None else current_item.get("sections", {})
+                current_project_basics = project_basics if project_basics is not None else current_item.get("project_basics", {})
+                current_doc_id = document_identifier if document_identifier is not None else current_item.get("document_identifier")
+                
+                # Determine status based on content
+                if current_doc_id and not current_project_basics:
+                    auto_status = "nofo_selected"
+                elif current_project_basics and not current_sections:
+                    auto_status = "in_progress"
+                elif current_sections:
+                    auto_status = "draft_generated"
+                else:
+                    auto_status = current_item.get("status", "nofo_selected")
+                
+                update_parts.append("#st = :status")
+                expression_values[":status"] = auto_status
+                expression_names["#st"] = "status"
+            except:
+                # If we can't get current item, default to in_progress
+                update_parts.append("#st = :status")
+                expression_values[":status"] = "in_progress"
+                expression_names["#st"] = "status"
             
         # Always update last_modified
         update_parts.append("#lm = :last_modified")
@@ -162,7 +207,8 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             "sections": updated_item.get("sections", {}),
             "projectBasics": updated_item.get("project_basics", {}),
             "questionnaire": updated_item.get("questionnaire", {}),
-            "lastModified": updated_item.get("last_modified", "")
+            "lastModified": updated_item.get("last_modified", ""),
+            "status": updated_item.get("status", "nofo_selected")
         }
         
         return {
@@ -317,7 +363,8 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
             "sessionId": x.get("session_id"),
             "title": x.get("title", "").strip(),
             "documentIdentifier": x.get("document_identifier", ""),
-            "lastModified": x.get("last_modified", "")
+            "lastModified": x.get("last_modified", ""),
+            "status": x.get("status", "nofo_selected")
         }, sorted_items))
 
         # Return the sorted items directly in the body
@@ -386,6 +433,7 @@ def lambda_handler(event, context):
         project_basics = data.get('project_basics')
         questionnaire = data.get('questionnaire')
         last_modified = data.get('last_modified')
+        status = data.get('status')
 
         if not operation:
             return {
@@ -401,7 +449,7 @@ def lambda_handler(event, context):
                     'headers': {'Access-Control-Allow-Origin': '*'},
                     'body': json.dumps('session_id and user_id are required for add_draft operation')
                 }
-            return add_draft(session_id, user_id, sections, title, document_identifier, project_basics, questionnaire, last_modified)
+            return add_draft(session_id, user_id, sections, title, document_identifier, project_basics, questionnaire, last_modified, status)
         elif operation == 'get_draft':
             if not all([session_id, user_id]):
                 return {
@@ -425,7 +473,8 @@ def lambda_handler(event, context):
                 document_identifier=document_identifier,
                 project_basics=project_basics,
                 questionnaire=questionnaire,
-                last_modified=last_modified
+                last_modified=last_modified,
+                status=status
             )
         elif operation == 'list_drafts_by_user_id':
             if not user_id:

@@ -26,6 +26,7 @@ export interface GrantRecommendation {
   keyRequirements: string[];
   summaryUrl: string;
   source?: 'db_filter' | 'rag'; // Track source for UI differentiation
+  grantType?: 'federal' | 'state' | 'quasi' | 'philanthropic' | 'unknown'; // Grant type
 }
 
 export interface RecommendationResponse {

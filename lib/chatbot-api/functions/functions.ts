@@ -27,6 +27,7 @@ interface LambdaFunctionStackProps {
   readonly draftTable: Table;
   readonly nofoMetadataTable: Table;
   readonly searchJobsTable: Table;
+  readonly draftGenerationJobsTable: Table;
   readonly feedbackBucket: s3.Bucket;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
@@ -909,6 +910,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
+          DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -936,6 +938,19 @@ export class LambdaFunctionStack extends cdk.Stack {
           "bedrock-agent:Retrieve",
         ],
         resources: ["*"],
+      })
+    );
+
+    // DynamoDB permissions for draft generator
+    draftGeneratorFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:GetItem",
+        ],
+        resources: [props.draftGenerationJobsTable.tableArn],
       })
     );
 
