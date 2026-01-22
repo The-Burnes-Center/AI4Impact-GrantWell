@@ -1224,20 +1224,14 @@ export class LambdaFunctionStack extends cdk.Stack {
     autoArchiveRule.addTarget(new targets.LambdaFunction(autoArchiveExpiredNofosFunction));
 
     // Lambda invoke permission for async RAG search (self-invoke)
-    // Grant permission using wildcard to avoid circular dependency
-    // The function will use AWS_LAMBDA_FUNCTION_NAME env var (set by Lambda runtime)
-    // to invoke itself, so we grant permission to any function in the account
     const stack = cdk.Stack.of(this);
     this.grantRecommendationFunction.addToRolePolicy(
       new iam.PolicyStatement({
+        sid: 'AllowSelfInvoke',
         effect: iam.Effect.ALLOW,
         actions: ["lambda:InvokeFunction"],
         resources: [
-          cdk.Stack.of(this).formatArn({
-            service: "lambda",
-            resource: "function",
-            resourceName: "*",
-          }),
+          `arn:aws:lambda:${stack.region}:${stack.account}:function:*`,
         ],
       })
     );
