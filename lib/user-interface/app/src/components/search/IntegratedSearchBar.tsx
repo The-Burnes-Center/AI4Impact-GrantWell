@@ -69,13 +69,33 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const handleSelectAIGrant = useCallback(
     (summaryUrl: string, grantName: string) => {
       setSearchTerm(grantName);
-      const matchedDoc = documents.find((doc) => doc.value === summaryUrl);
+      // Try multiple matching strategies to find the document
+      // 1. Match by value (exact URL match)
+      let matchedDoc = documents.find((doc) => doc.value === summaryUrl);
+      // 2. Match by value with trailing slash variations
+      if (!matchedDoc) {
+        matchedDoc = documents.find(
+          (doc) => doc.value === summaryUrl || doc.value === `${summaryUrl}/` || summaryUrl === `${doc.value}/`
+        );
+      }
+      // 3. Match by label (grant name)
+      if (!matchedDoc) {
+        matchedDoc = documents.find((doc) => doc.label === grantName);
+      }
+      // 4. Create a document from the grant info if no match found
+      if (!matchedDoc && grantName) {
+        matchedDoc = {
+          label: grantName,
+          value: summaryUrl.endsWith('/') ? summaryUrl : `${summaryUrl}/`,
+          status: 'active' as const,
+        };
+      }
       if (matchedDoc) {
         onSelectDocument(matchedDoc);
       }
       setShowResults(false);
     },
-    [documents, onSelectDocument]
+    [documents, onSelectDocument, setSearchTerm]
   );
 
   const handleSelectDocument = useCallback(
@@ -265,10 +285,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
               grantTypeMap={grantTypeMap}
               expandedGrants={expandedGrants}
               hasPinnedGrants={displayedPinnedGrants.length > 0}
+              selectedIndex={selectedIndex}
+              pinnedGrantsCount={displayedPinnedGrants.length}
               onSelectGrant={handleSelectAIGrant}
               onToggleExpanded={toggleGrantExpanded}
               onTriggerSearch={() => aiSearch.triggerSearch(searchTerm)}
               onBrowseAll={() => setShowViewAllModal(true)}
+              onMouseEnter={setSelectedIndex}
             />
           </div>
         </div>

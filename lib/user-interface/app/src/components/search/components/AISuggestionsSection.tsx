@@ -5,6 +5,7 @@ import { GrantRecommendation, GrantTypeId } from "../types";
 import { GrantTypeBadge } from "./GrantTypeBadge";
 import {
   aiSuggestionCardStyle,
+  selectedAiSuggestionCardStyle,
   aiLoadingStyle,
   aiErrorStyle,
   aiPromptStyle,
@@ -22,10 +23,13 @@ interface AISuggestionsSectionProps {
   grantTypeMap: Record<string, GrantTypeId | null>;
   expandedGrants: Record<string, boolean>;
   hasPinnedGrants: boolean;
+  selectedIndex?: number; // Index of selected item for keyboard navigation
+  pinnedGrantsCount?: number; // Number of pinned grants (to calculate correct index offset)
   onSelectGrant: (summaryUrl: string, grantName: string) => void;
   onToggleExpanded: (grantKey: string, e: React.MouseEvent) => void;
   onTriggerSearch: () => void;
   onBrowseAll: () => void;
+  onMouseEnter?: (index: number) => void; // For keyboard navigation highlighting
 }
 
 export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
@@ -40,10 +44,13 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
   grantTypeMap,
   expandedGrants,
   hasPinnedGrants,
+  selectedIndex = -1,
+  pinnedGrantsCount = 0,
   onSelectGrant,
   onToggleExpanded,
   onTriggerSearch,
   onBrowseAll,
+  onMouseEnter,
 }) => {
   return (
     <div
@@ -148,9 +155,20 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
               const grantName = grant.name || "";
               const grantKey = `ai-grant-${grantName}-${index}`;
               const isExpanded = !!expandedGrants[grantKey];
+              // Calculate the item index for keyboard navigation (pinned grants come first)
+              const itemIndex = pinnedGrantsCount + index;
+              const isSelected = selectedIndex === itemIndex;
+              const cardStyle = isSelected ? selectedAiSuggestionCardStyle : aiSuggestionCardStyle;
 
               return (
-                <div key={grantKey} style={aiSuggestionCardStyle}>
+                <div
+                  key={grantKey}
+                  id={`search-result-${itemIndex}`}
+                  role="option"
+                  aria-selected={isSelected}
+                  style={cardStyle}
+                  onMouseEnter={() => onMouseEnter?.(itemIndex)}
+                >
                   <div
                     style={{
                       display: "flex",
