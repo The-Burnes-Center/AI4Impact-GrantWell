@@ -39,6 +39,8 @@ export interface RecommendationResponse {
     category?: string;
     agency?: string;
   };
+  searchMethod?: string;
+  toolUsed?: string;
 }
 
 export interface JobStatusResponse {
