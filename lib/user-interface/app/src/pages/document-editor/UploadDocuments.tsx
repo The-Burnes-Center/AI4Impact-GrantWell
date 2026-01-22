@@ -390,6 +390,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           </div>
           {uploadError && (
             <div
+              role="alert"
+              aria-live="assertive"
               style={{
                 marginTop: "12px",
                 padding: "12px",
@@ -480,9 +482,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                       cursor: "pointer",
                       fontSize: "18px",
                     }}
+                    aria-label={`Remove file: ${file.name}`}
                     title="Remove file"
                   >
-                    ×
+                    <span aria-hidden="true">×</span>
                   </button>
                 </div>
               ))}
@@ -525,6 +528,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       >
         <button
           onClick={() => onNavigate("questionnaire")}
+          aria-label="Go back to questionnaire"
           style={{
             display: "flex",
             alignItems: "center",
@@ -548,6 +552,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             strokeLinecap="round"
             strokeLinejoin="round"
             style={{ marginRight: "8px" }}
+            aria-hidden="true"
           >
             <path d="M19 12H5"></path>
             <path d="m12 19-7-7 7-7"></path>
@@ -557,6 +562,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         <button
           onClick={handleSubmit}
           disabled={isLoading || generatingDraft}
+          aria-label={generatingDraft ? "Generating draft, please wait" : isLoading ? "Uploading files, please wait" : "Create draft"}
+          aria-busy={isLoading || generatingDraft}
           style={{
             display: "flex",
             alignItems: "center",
@@ -584,6 +591,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               strokeLinecap="round"
               strokeLinejoin="round"
               style={{ marginLeft: "8px" }}
+              aria-hidden="true"
             >
               <path d="M5 12h14"></path>
               <path d="m12 5 7 7-7 7"></path>
@@ -593,6 +601,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       </div>
       {generatingDraft && draftProgress && (
         <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          aria-label="Draft generation progress"
           style={{
             marginTop: "16px",
             padding: "12px 16px",
@@ -607,6 +619,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           }}
         >
           <div
+            role="img"
+            aria-label="Loading"
             style={{
               width: "16px",
               height: "16px",
@@ -614,9 +628,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               borderTopColor: "transparent",
               borderRadius: "50%",
               animation: "spin 1s linear infinite",
+              flexShrink: 0,
             }}
           />
-          {draftProgress}
+          <span>{draftProgress}</span>
         </div>
       )}
       <style>

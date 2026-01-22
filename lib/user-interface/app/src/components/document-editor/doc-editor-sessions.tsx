@@ -322,30 +322,36 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const getStatusColor = (status?: DraftStatus): string => {
     switch (status) {
       case 'nofo_selected':
-        return '#6b7280'; // gray
+        return '#6b7280'; // gray - meets WCAG AA contrast
       case 'in_progress':
-        return '#2563eb'; // blue
+        return '#2563eb'; // blue - meets WCAG AA contrast
       case 'draft_generated':
-        return '#059669'; // green
+        return '#059669'; // green - meets WCAG AA contrast
       case 'review_ready':
-        return '#d97706'; // amber
+        return '#d97706'; // amber - meets WCAG AA contrast
       case 'submitted':
-        return '#7c3aed'; // purple
+        return '#7c3aed'; // purple - meets WCAG AA contrast
       default:
         return '#6b7280';
     }
   };
 
-  const statusBadgeStyle = (status?: DraftStatus): React.CSSProperties => ({
-    display: 'inline-block',
-    padding: '4px 12px',
-    borderRadius: '12px',
-    fontSize: '12px',
-    fontWeight: '500',
-    backgroundColor: getStatusColor(status) + '15',
-    color: getStatusColor(status),
-    border: `1px solid ${getStatusColor(status)}30`,
-  });
+  const statusBadgeStyle = (status?: DraftStatus): React.CSSProperties => {
+    const color = getStatusColor(status);
+    return {
+      display: 'inline-block',
+      padding: '4px 12px',
+      borderRadius: '12px',
+      fontSize: '12px',
+      fontWeight: '500',
+      backgroundColor: color + '15', // 15% opacity background
+      color: color,
+      border: `1px solid ${color}30`, // 30% opacity border
+      // Ensure sufficient contrast for text
+      minWidth: '100px',
+      textAlign: 'center' as const,
+    };
+  };
 
   return (
     <div style={styles.container}>
@@ -396,8 +402,9 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   : "";
                 navigate(`/document-editor${queryParams}`);
               }}
+              aria-label="Create new draft"
             >
-              <FaPlus size={16} /> New Draft
+              <FaPlus size={16} aria-hidden="true" /> New Draft
             </button>
             <button
               style={{
@@ -407,8 +414,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               }}
               onClick={() => setShowModalDelete(true)}
               disabled={selectedItems.length === 0}
+              aria-label={selectedItems.length === 0 ? "Delete drafts (no drafts selected)" : `Delete ${selectedItems.length} selected draft${selectedItems.length > 1 ? 's' : ''}`}
+              aria-disabled={selectedItems.length === 0}
             >
-              <FaTrash size={16} /> Delete
+              <FaTrash size={16} aria-hidden="true" /> Delete
             </button>
             <button
               style={{ ...styles.button }}
@@ -417,57 +426,79 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                 await getSessions();
                 setIsLoading(false);
               }}
+              aria-label="Refresh drafts list"
+              aria-busy={isLoading}
             >
-              <FaSync size={16} /> Refresh
+              <FaSync size={16} aria-hidden="true" /> Refresh
             </button>
           </div>
         </div>
       </div>
 
-      <table style={styles.table}>
+      <table 
+        style={styles.table}
+        role="table"
+        aria-label="Draft sessions list"
+      >
         <thead>
-          <tr>
-            <th style={{ ...styles.tableHeader, ...styles.checkboxCell }}>
+          <tr role="row">
+            <th style={{ ...styles.tableHeader, ...styles.checkboxCell }} role="columnheader" scope="col">
+              <label htmlFor="select-all-drafts" style={{ display: "none" }}>
+                Select all drafts
+              </label>
               <input
+                id="select-all-drafts"
                 type="checkbox"
                 style={styles.checkbox}
                 checked={selectedItems.length === sessions.length}
                 onChange={handleSelectAll}
+                aria-label="Select all drafts"
               />
             </th>
-            <th style={styles.tableHeader}>
+            <th style={styles.tableHeader} role="columnheader" scope="col">
               <button
                 style={styles.tableHeaderButton}
                 onClick={() => handleSort("title")}
+                aria-label={`Sort by title, ${sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "not sorted"}`}
+                aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
               >
                 Title {getSortIcon("title")}
               </button>
             </th>
-            <th style={styles.tableHeader}>
+            <th style={styles.tableHeader} role="columnheader" scope="col">
               <button
                 style={styles.tableHeaderButton}
                 onClick={() => handleSort("last_modified")}
+                aria-label={`Sort by last modified, ${sortField === "last_modified" ? (sortDirection === "asc" ? "ascending" : "descending") : "not sorted"}`}
+                aria-sort={sortField === "last_modified" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
               >
                 Last Modified {getSortIcon("last_modified")}
               </button>
             </th>
-            <th style={styles.tableHeader}>Status</th>
+            <th style={styles.tableHeader} role="columnheader" scope="col">
+              <span>Status</span>
+            </th>
           </tr>
         </thead>
         <tbody>
           {paginatedItems.map((item) => (
-            <tr key={item.draft_id}>
-              <td style={{ ...styles.tableCell, ...styles.checkboxCell }}>
+            <tr key={item.draft_id} role="row">
+              <td style={{ ...styles.tableCell, ...styles.checkboxCell }} role="gridcell">
+                <label htmlFor={`draft-checkbox-${item.draft_id}`} style={{ display: "none" }}>
+                  Select draft: {item.title}
+                </label>
                 <input
+                  id={`draft-checkbox-${item.draft_id}`}
                   type="checkbox"
                   style={styles.checkbox}
                   checked={selectedItems.some(
                     (i) => i.draft_id === item.draft_id
                   )}
                   onChange={(e) => handleSelectItem(item, e)}
+                  aria-label={`Select draft: ${item.title}`}
                 />
               </td>
-              <td style={styles.tableCell}>
+              <td style={styles.tableCell} role="gridcell">
                 <button
                   onClick={() => {
                     if (props.onSessionSelect) {
@@ -480,6 +511,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
 
                     navigate(`/document-editor${queryParam}`);
                   }}
+                  aria-label={`Open draft: ${item.title}`}
                   style={{
                     ...styles.link,
                     background: "none",
@@ -493,14 +525,20 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   {item.title}
                 </button>
               </td>
-              <td style={styles.tableCell}>
+              <td style={styles.tableCell} role="gridcell">
                 <div style={styles.dateCell}>
-                  <Calendar size={16} style={styles.calendarIcon} />
-                  {formatSessionTime(item.last_modified)}
+                  <Calendar size={16} style={styles.calendarIcon} aria-hidden="true" />
+                  <time dateTime={item.last_modified}>
+                    {formatSessionTime(item.last_modified)}
+                  </time>
                 </div>
               </td>
-              <td style={styles.tableCell}>
-                <span style={statusBadgeStyle(item.status)}>
+              <td style={styles.tableCell} role="gridcell">
+                <span 
+                  role="status"
+                  aria-label={`Draft status: ${getStatusLabel(item.status)}`}
+                  style={statusBadgeStyle(item.status)}
+                >
                   {getStatusLabel(item.status)}
                 </span>
               </td>

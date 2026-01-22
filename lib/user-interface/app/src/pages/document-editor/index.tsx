@@ -60,6 +60,12 @@ const useDocumentStorage = (nofoId: string | null) => {
     setError(null);
     setLoadingMessage("Loading document editor...");
 
+    // Focus management: Move focus to loading region for screen readers
+    const loadingRegion = document.getElementById('document-loading-region');
+    if (loadingRegion) {
+      loadingRegion.focus();
+    }
+
     try {
       // Load from database
       const draftsClient = new DraftsClient(appContext);
@@ -685,6 +691,12 @@ const DocumentEditor: React.FC = () => {
         >
           {isLoading ? (
             <div
+              id="document-loading-region"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+              aria-label="Loading document editor"
+              tabIndex={-1}
               style={{
                 display: "flex",
                 justifyContent: "center",
@@ -694,6 +706,8 @@ const DocumentEditor: React.FC = () => {
             >
               <div style={{ textAlign: "center", maxWidth: "400px" }}>
                 <div
+                  role="img"
+                  aria-label="Loading spinner"
                   style={{
                     width: "40px",
                     height: "40px",
@@ -704,11 +718,17 @@ const DocumentEditor: React.FC = () => {
                     margin: "0 auto 16px",
                   }}
                 ></div>
-                <p style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px" }}>
+                <p 
+                  id="loading-message"
+                  style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px" }}
+                >
                   {loadingMessage}
                 </p>
                 {loadingMessage.includes("generation") && (
-                  <p style={{ color: "#9ca3af", fontSize: "14px", marginTop: "8px" }}>
+                  <p 
+                    id="loading-help-text"
+                    style={{ color: "#9ca3af", fontSize: "14px", marginTop: "8px" }}
+                  >
                     This may take 30-60 seconds. Please don't close this page.
                   </p>
                 )}

@@ -65,28 +65,44 @@ const DraftView: React.FC<DraftViewProps> = ({
 
   if (isLoading) {
     return (
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "60vh",
-        padding: "32px"
-      }}>
-        <div style={{
-          width: "40px",
-          height: "40px",
-          border: "4px solid #f3f3f3",
-          borderTop: "4px solid #3498db",
-          borderRadius: "50%",
-          animation: "spin 1s linear infinite",
-          marginBottom: "16px"
-        }}></div>
-        <p style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px", textAlign: "center" }}>
+      <div 
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label="Loading draft"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          padding: "32px"
+        }}
+      >
+        <div 
+          role="img"
+          aria-label="Loading spinner"
+          style={{
+            width: "40px",
+            height: "40px",
+            border: "4px solid #f3f3f3",
+            borderTop: "4px solid #3498db",
+            borderRadius: "50%",
+            animation: "spin 1s linear infinite",
+            marginBottom: "16px"
+          }}
+        ></div>
+        <p 
+          id="draft-loading-message"
+          style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px", textAlign: "center" }}
+        >
           {loadingMessage}
         </p>
         {loadingMessage.includes("generation") && (
-          <p style={{ color: "#9ca3af", fontSize: "14px", textAlign: "center", maxWidth: "400px" }}>
+          <p 
+            id="draft-loading-help"
+            style={{ color: "#9ca3af", fontSize: "14px", textAlign: "center", maxWidth: "400px" }}
+          >
             This may take 30-60 seconds. Please don't close this page.
           </p>
         )}
