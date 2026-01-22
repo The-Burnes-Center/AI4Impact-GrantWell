@@ -50,6 +50,7 @@ export interface JobStatusResponse {
   ragStatus: 'pending' | 'in_progress' | 'completed' | 'error';
   filteredGrants: GrantRecommendation[];
   ragGrants: GrantRecommendation[];
+  allGrants?: GrantRecommendation[]; // Complete deduplicated results (preferred)
   filters?: {
     category?: string;
     agency?: string;
@@ -186,8 +187,21 @@ export const useGrantRecommendations = () => {
         setLoadingRAG(true);
         
         await pollJobStatus(data.jobId, (jobData) => {
-          // Merge RAG results with existing grants
-          if (jobData.ragGrants && jobData.ragGrants.length > 0) {
+          // Use complete deduplicated results if available, otherwise merge manually
+          if (jobData.allGrants && jobData.allGrants.length > 0) {
+            // Use the complete deduplicated results from backend
+            console.log(`[Polling] Received ${jobData.allGrants.length} complete deduplicated grants`);
+            setRecommendations(prev => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                grants: jobData.allGrants!,
+                ragStatus: jobData.ragStatus,
+                ragCount: jobData.ragGrants?.length || 0
+              };
+            });
+          } else if (jobData.ragGrants && jobData.ragGrants.length > 0) {
+            // Fallback: merge manually if allGrants not available
             setRecommendations(prev => {
               if (!prev) return prev;
               
@@ -195,12 +209,13 @@ export const useGrantRecommendations = () => {
               const existingIds = new Set(prev.grants.map(g => g.id));
               const newRagGrants = jobData.ragGrants.filter(g => !existingIds.has(g.id));
               
-              console.log(`[Polling] Adding ${newRagGrants.length} new RAG grants`);
+              console.log(`[Polling] Adding ${newRagGrants.length} new RAG grants (manual merge)`);
               
               return {
                 ...prev,
                 grants: [...prev.grants, ...newRagGrants],
-                ragStatus: jobData.ragStatus
+                ragStatus: jobData.ragStatus,
+                ragCount: jobData.ragGrants.length
               };
             });
           }
