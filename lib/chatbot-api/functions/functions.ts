@@ -199,15 +199,6 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    // Lambda invoke permission for async RAG search (self-invoke)
-    grantRecommendationFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [grantRecommendationFunction.functionArn],
-      })
-    );
-
     this.grantRecommendationFunction = grantRecommendationFunction;
 
     // Update WebSocket chat function
@@ -1231,5 +1222,24 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Add the Lambda function as a target for the EventBridge rule
     autoArchiveRule.addTarget(new targets.LambdaFunction(autoArchiveExpiredNofosFunction));
+
+    // Lambda invoke permission for async RAG search (self-invoke)
+    // Grant permission using wildcard to avoid circular dependency
+    // The function will use AWS_LAMBDA_FUNCTION_NAME env var (set by Lambda runtime)
+    // to invoke itself, so we grant permission to any function in the account
+    const stack = cdk.Stack.of(this);
+    this.grantRecommendationFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [
+          cdk.Stack.of(this).formatArn({
+            service: "lambda",
+            resource: "function",
+            resourceName: "*",
+          }),
+        ],
+      })
+    );
   }
 }
