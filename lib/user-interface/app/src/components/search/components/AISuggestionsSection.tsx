@@ -13,10 +13,12 @@ import {
 interface AISuggestionsSectionProps {
   searchTerm: string;
   isSearching: boolean;
+  isSearchingRAG?: boolean; // New: RAG search in progress
   triggered: boolean;
   error: string | null;
   results: GrantRecommendation[];
   loadingMessage: string;
+  ragLoadingMessage?: string; // New: RAG loading message
   grantTypeMap: Record<string, GrantTypeId | null>;
   expandedGrants: Record<string, boolean>;
   hasPinnedGrants: boolean;
@@ -29,10 +31,12 @@ interface AISuggestionsSectionProps {
 export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
   searchTerm,
   isSearching,
+  isSearchingRAG = false,
   triggered,
   error,
   results,
   loadingMessage,
+  ragLoadingMessage = "Searching for more grants...",
   grantTypeMap,
   expandedGrants,
   hasPinnedGrants,
@@ -255,6 +259,32 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
               );
             })}
           </div>
+          
+          {/* RAG Loading Indicator - shown after initial results while searching for more */}
+          {isSearchingRAG && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "12px",
+                marginTop: "8px",
+                backgroundColor: "#f0f7ff",
+                borderRadius: "8px",
+                border: "1px dashed #14558F",
+              }}
+            >
+              <Spinner
+                animation="border"
+                size="sm"
+                variant="primary"
+                aria-hidden="true"
+              />
+              <span style={{ fontSize: "13px", color: "#14558F" }}>
+                {ragLoadingMessage}
+              </span>
+            </div>
+          )}
         </div>
       )}
 

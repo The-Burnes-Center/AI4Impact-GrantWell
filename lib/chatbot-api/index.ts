@@ -62,6 +62,7 @@ export class ChatBotApi extends Construct {
       feedbackTable: tables.feedbackTable,
       draftTable: tables.draftTable,
       nofoMetadataTable: tables.nofoMetadataTable,
+      searchJobsTable: tables.searchJobsTable,
       feedbackBucket: buckets.feedbackBucket,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
@@ -286,6 +287,31 @@ export class ChatBotApi extends Construct {
       path: "/grant-recommendations",
       methods: [apigwv2.HttpMethod.POST],
       integration: grantRecommendationAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for search job status polling
+    const searchJobStatusFunction = new lambda.Function(this, "SearchJobStatusFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "functions/landing-page/search-job-status")
+      ),
+      handler: "index.handler",
+      environment: {
+        SEARCH_JOBS_TABLE_NAME: tables.searchJobsTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(10),
+    });
+    tables.searchJobsTable.grantReadData(searchJobStatusFunction);
+    
+    const searchJobStatusAPIIntegration = new HttpLambdaIntegration(
+      "SearchJobStatusAPIIntegration",
+      searchJobStatusFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/search-jobs/{jobId}",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: searchJobStatusAPIIntegration,
       authorizer: httpAuthorizer,
     });
 
