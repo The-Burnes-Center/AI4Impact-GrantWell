@@ -55,6 +55,36 @@ export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> 
   unknown: { label: "Unknown", color: "#6b7280" },
 };
 
+// Grant category options (must match FUNDING_CATEGORY_MAP from automated-nofo-scraper)
+export const GRANT_CATEGORIES = [
+  "Recovery Act",
+  "Agriculture",
+  "Arts",
+  "Business and Commerce",
+  "Community Development",
+  "Consumer Protection",
+  "Disaster Prevention and Relief",
+  "Education",
+  "Employment, Labor, and Training",
+  "Energy",
+  "Energy Infrastructure and Critical Mineral and Materials (EICMM)",
+  "Environment",
+  "Food and Nutrition",
+  "Health",
+  "Housing",
+  "Humanities",
+  "Information and Statistics",
+  "Infrastructure Investment and Jobs Act",
+  "Income Security and Social Services",
+  "Law, Justice, and Legal Services",
+  "Natural Resources",
+  "Opportunity Zone Benefits",
+  "Regional Development",
+  "Science, Technology, and Other Research and Development",
+  "Transportation",
+  "Affordable Care Act",
+] as const;
+
 /**
  * Row actions menu component - provides edit/delete functionality
  */
@@ -429,6 +459,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
   const [uploadGrantType, setUploadGrantType] = useState<GrantTypeId | "">("");
+  const [uploadCategory, setUploadCategory] = useState<string>("");
 
   // Access notifications if available
   const addNotification = useNotifications?.addNotification;
@@ -709,6 +740,15 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       return;
     }
 
+    if (!uploadCategory) {
+      if (addNotification) {
+        addNotification("error", "Category is required");
+      } else {
+        alert("Please select a category");
+      }
+      return;
+    }
+
     try {
       const folderName = customGrantName.trim();
 
@@ -727,13 +767,13 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       );
       await apiClient.landingPage.uploadFileToS3(signedUrl, selectedFile);
 
-      // Set initial status to active for the new NOFO, and grant type (default to 'unknown' if not specified)
+      // Set initial status to active for the new NOFO, and grant type (default to 'federal' if not specified)
       await apiClient.landingPage.updateNOFOStatus(
         folderName, 
         "active", 
         undefined, 
         undefined,
-        uploadGrantType ? (uploadGrantType as GrantTypeId) : "unknown"
+        uploadGrantType ? (uploadGrantType as GrantTypeId) : "federal"
       );
 
       // Use the banner if available, otherwise fall back to alert
@@ -749,6 +789,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
       setSelectedFile(null);
       setCustomGrantName("");
       setUploadGrantType("");
+      setUploadCategory("");
       setUploadNofoModalOpen(false);
 
       // We won't automatically refresh - that's now handled by the parent's showGrantSuccessBanner
@@ -995,6 +1036,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
           setSelectedFile(null);
           setCustomGrantName("");
           setUploadGrantType("");
+          setUploadCategory("");
         }}
         title="Upload Grant"
       >
@@ -1075,6 +1117,29 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                   Optional. Can be auto-detected or set later after upload.
                 </div>
               </div>
+
+              <div className="form-group">
+                <label htmlFor="upload-category">Category *</label>
+                <div className="select-wrapper">
+                  <select
+                    id="upload-category"
+                    value={uploadCategory}
+                    onChange={(e) => setUploadCategory(e.target.value)}
+                    className="form-input"
+                    required
+                  >
+                    <option value="">Select category...</option>
+                    {GRANT_CATEGORIES.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="field-note">
+                  Required. Select the funding category for this grant.
+                </div>
+              </div>
             </>
           )}
 
@@ -1086,6 +1151,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                 setSelectedFile(null);
                 setCustomGrantName("");
                 setUploadGrantType("");
+                setUploadCategory("");
               }}
             >
               Cancel
@@ -1093,7 +1159,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
             <button
               className="modal-button primary"
               onClick={uploadNOFO}
-              disabled={!selectedFile || !customGrantName.trim()}
+              disabled={!selectedFile || !customGrantName.trim() || !uploadCategory}
             >
               <LuUpload size={16} className="button-icon" />
               <span>Upload Grant</span>
