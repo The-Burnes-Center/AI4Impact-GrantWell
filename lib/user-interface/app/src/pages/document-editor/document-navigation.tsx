@@ -41,15 +41,12 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
     const queryParams = documentIdentifier
       ? `?folder=${encodeURIComponent(documentIdentifier)}`
       : "";
-    navigate(`/chatbot/playground/${newSessionId}${queryParams}`);
+    navigate(`/chat/${newSessionId}${queryParams}`);
   };
 
   // Handle drafts navigation
   const handleDraftsNavigation = () => {
-    const queryParams = documentIdentifier
-      ? `?nofo=${encodeURIComponent(documentIdentifier)}`
-      : "";
-    navigate(`/document-editor/drafts${queryParams}`);
+    navigate(`/document-editor/drafts`);
   };
 
   // Handle requirements navigation
@@ -64,13 +61,13 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
       // Navigate to requirements page - using both path param and query param for compatibility
       // Path param is primary, folder param is for consistency with chatbot navigation
       navigate(
-        `/landing-page/basePage/checklists/${encodeURIComponent(
+        `/requirements/${encodeURIComponent(
           documentIdentifier
         )}?folder=${encodeURIComponent(documentIdentifier)}`
       );
     } else {
-      // If no documentIdentifier, go back to base page
-      navigate("/landing-page/basePage");
+      // If no documentIdentifier, go back to home page
+      navigate("/home");
     }
   };
 
@@ -242,7 +239,7 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
 
           {/* Home Button */}
           <button
-            onClick={() => navigate("/landing-page/basePage")}
+            onClick={() => navigate("/home")}
             aria-label="Home"
             style={{
               width: "100%",

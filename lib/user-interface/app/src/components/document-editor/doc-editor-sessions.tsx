@@ -192,7 +192,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       const username = (await Auth.currentAuthenticatedUser()).username;
 
       if (username) {
-        const result = await apiClient.drafts.getDrafts(username, documentIdentifier);
+        // Get all drafts regardless of NOFO - pass null to get all drafts
+        const result = await apiClient.drafts.getDrafts(username, null);
         setSessions(result.map(draft => ({
           draft_id: draft.sessionId,
           title: draft.title,
@@ -397,10 +398,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             <button
               style={{ ...styles.button, ...styles.primaryButton }}
               onClick={() => {
-                const queryParams = props.documentIdentifier
-                  ? `?nofo=${encodeURIComponent(props.documentIdentifier)}`
-                  : "";
-                navigate(`/document-editor${queryParams}`);
+                navigate(`/document-editor`);
               }}
               aria-label="Create new draft"
             >
@@ -476,6 +474,9 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               </button>
             </th>
             <th style={styles.tableHeader} role="columnheader" scope="col">
+              <span>NOFO</span>
+            </th>
+            <th style={styles.tableHeader} role="columnheader" scope="col">
               <span>Status</span>
             </th>
           </tr>
@@ -504,12 +505,6 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                     if (props.onSessionSelect) {
                       props.onSessionSelect(item.draft_id);
                     }
-
-                    const queryParam = item.document_identifier
-                      ? `?nofo=${encodeURIComponent(item.document_identifier)}`
-                      : "";
-
-                    navigate(`/document-editor${queryParam}`);
                   }}
                   aria-label={`Open draft: ${item.title}`}
                   style={{
@@ -532,6 +527,11 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                     {formatSessionTime(item.last_modified)}
                   </time>
                 </div>
+              </td>
+              <td style={styles.tableCell} role="gridcell">
+                <span aria-label={`NOFO: ${item.document_identifier || 'Not specified'}`}>
+                  {item.document_identifier || '—'}
+                </span>
               </td>
               <td style={styles.tableCell} role="gridcell">
                 <span 

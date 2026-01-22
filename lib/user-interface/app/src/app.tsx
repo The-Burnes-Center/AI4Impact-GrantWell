@@ -6,8 +6,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import Playground from "./pages/chatbot/playground/playground";
-import DataPage from "./pages/admin/data-view-page";
-import UserFeedbackPage from "./pages/admin/user-feedback-page";
 import SessionPage from "./pages/chatbot/sessions/sessions";
 import Welcome from "./pages/landing-page/basePage";
 import Checklists from "./pages/requirements-gathering/checklist";
@@ -31,13 +29,11 @@ function ScrollToTop() {
     const getPageTitle = (path: string): string => {
       const exactMatches: { [key: string]: string } = {
         "/": "GrantWell - Home",
-        "/landing-page/basePage": "GrantWell - Home",
-        "/dashboard": "Admin Dashboard - GrantWell",
-        "/chatbot/sessions": "Chat Sessions - GrantWell",
+        "/home": "GrantWell - Home",
+        "/admin/dashboard": "Admin Dashboard - GrantWell",
+        "/chat/sessions": "Chat Sessions - GrantWell",
         "/document-editor": "Document Editor - GrantWell",
         "/document-editor/drafts": "Document Editor Drafts - GrantWell",
-        "/admin/data": "Admin Data View - GrantWell",
-        "/admin/user-feedback": "User Feedback - GrantWell",
       };
 
       if (exactMatches[path]) {
@@ -45,13 +41,13 @@ function ScrollToTop() {
       }
 
       // Pattern matches for dynamic routes
-      if (path.startsWith("/chatbot/playground/")) {
+      if (path.startsWith("/chat/") && path !== "/chat/sessions") {
         return "Chatbot Playground - GrantWell";
       }
       if (path.startsWith("/document-editor/") && path !== "/document-editor/drafts") {
         return "Document Editor Session - GrantWell";
       }
-      if (path.startsWith("/landing-page/basePage/checklists/")) {
+      if (path.startsWith("/requirements/")) {
         return "Requirements Checklist - GrantWell";
       }
 
@@ -100,23 +96,15 @@ function AppContent() {
           <Route
             index
             path="/"
-            element={<Navigate to={`/landing-page/basePage`} replace />} // root path
+            element={<Navigate to={`/home`} replace />} // root path
           />
-          <Route path="/landing-page/basePage" element={<Outlet />}>
-            <Route path="" element={<Welcome />} />
-            <Route
-              path="/landing-page/basePage/checklists/:documentIdentifier"
-              element={<Checklists />}
-            />
-          </Route>
-          <Route path="/chatbot" element={<Outlet />}>
-            <Route path="playground/:sessionId" element={<Playground />} />
-            <Route path="sessions" element={<SessionPage />} />
-            <Route
-              path="document-editor"
-              element={<Navigate to="/document-editor" replace />}
-            />
-          </Route>
+          <Route path="/home" element={<Welcome />} />
+          <Route
+            path="/requirements/:documentIdentifier"
+            element={<Checklists />}
+          />
+          <Route path="/chat/:sessionId" element={<Playground />} />
+          <Route path="/chat/sessions" element={<SessionPage />} />
           {/* Document editor routes - use the new DocumentEditor component */}
           <Route path="/document-editor" element={<DocumentEditor />} />
           <Route
@@ -128,14 +116,11 @@ function AppContent() {
             element={<DocEditorSessionsPage />}
           />
           <Route path="/admin" element={<Outlet />}>
-            <Route path="data" element={<DataPage />} />
-            <Route path="user-feedback" element={<UserFeedbackPage />} />
+            <Route path="dashboard" element={<Dashboard />} />
           </Route>
-          {/* Add Dashboard route */}
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route
             path="*"
-            element={<Navigate to={`/landing-page/basePage`} replace />}
+            element={<Navigate to={`/home`} replace />}
           />
         </Routes>
       </main>

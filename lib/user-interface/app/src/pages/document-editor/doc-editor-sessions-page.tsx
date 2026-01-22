@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
@@ -21,8 +21,6 @@ const useViewportWidth = () => {
 
 export default function DocEditorSessionsPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const documentIdentifier = searchParams.get("nofo");
   const appContext = useContext(AppContext);
   const [latestDraftId, setLatestDraftId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -40,7 +38,8 @@ export default function DocEditorSessionsPage() {
         );
 
         if (username) {
-          const result = await apiClient.drafts.getDrafts(username, documentIdentifier);
+          // Get all drafts regardless of NOFO
+          const result = await apiClient.drafts.getDrafts(username, null);
 
           if (result && result.length > 0) {
             const sortedDrafts = [...result].sort(
@@ -60,7 +59,7 @@ export default function DocEditorSessionsPage() {
     };
 
     fetchLatestDraft();
-  }, [appContext, documentIdentifier]);
+  }, [appContext]);
 
   const handleDraftSelect = async (draftId: string) => {
     setLatestDraftId(draftId);
@@ -88,15 +87,20 @@ export default function DocEditorSessionsPage() {
         
         switch (status) {
           case 'nofo_selected':
-            // NOFO selected but no project basics yet
+            // NOFO selected but no project basics yet - go directly to project basics
             step = 'projectBasics';
             break;
           case 'in_progress':
             // Check which section they're on
             if (selectedDraft.projectBasics && Object.keys(selectedDraft.projectBasics).length > 0) {
               if (selectedDraft.questionnaire && Object.keys(selectedDraft.questionnaire).length > 0) {
-                // Both project basics and questionnaire done, go to draft
-                step = 'draft';
+                // Both project basics and questionnaire done
+                // Check if draft sections exist - if yes, go to draftCreated, otherwise uploadDocuments
+                if (selectedDraft.sections && Object.keys(selectedDraft.sections).length > 0) {
+                  step = 'draftCreated';
+                } else {
+                  step = 'uploadDocuments';
+                }
               } else {
                 // Project basics done, go to questionnaire
                 step = 'questionnaire';
@@ -107,16 +111,16 @@ export default function DocEditorSessionsPage() {
             }
             break;
           case 'draft_generated':
-            // Draft has been generated, go to draft view
-            step = 'draft';
+            // Draft has been generated, go directly to draftCreated view
+            step = 'draftCreated';
             break;
           case 'review_ready':
             // Ready for review
-            step = 'review';
+            step = 'reviewApplication';
             break;
           case 'submitted':
             // Already submitted, go to review
-            step = 'review';
+            step = 'reviewApplication';
             break;
           default:
             step = 'projectBasics';
@@ -155,25 +159,19 @@ export default function DocEditorSessionsPage() {
 
   const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const queryParams = documentIdentifier
-      ? `?nofo=${encodeURIComponent(documentIdentifier)}`
-      : "";
-    navigate(`/${queryParams}`);
+    navigate("/");
   };
 
   const handleNavigateToStep = (step: string) => {
     if (latestDraftId) {
-      const queryParams = documentIdentifier
-        ? `?step=${step}&nofo=${encodeURIComponent(documentIdentifier)}`
-        : `?step=${step}`;
-      navigate(`/document-editor/${latestDraftId}${queryParams}`);
+      navigate(`/document-editor/${latestDraftId}?step=${step}`);
     }
   };
 
   return (
     <div className="document-editor-root" style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <DocumentNavigation
-        documentIdentifier={documentIdentifier || undefined}
+        documentIdentifier={undefined}
         currentStep="drafts"
         onNavigate={handleNavigateToStep}
         isOpen={sidebarOpen}
@@ -211,7 +209,7 @@ export default function DocEditorSessionsPage() {
         </div>
         <DocEditorSessions
           toolsOpen={true}
-          documentIdentifier={documentIdentifier}
+          documentIdentifier={null}
           onSessionSelect={handleDraftSelect}
         />
       </div>

@@ -65,7 +65,7 @@ export default function SessionPage() {
     const queryParams = documentIdentifier
       ? `?folder=${encodeURIComponent(documentIdentifier)}`
       : "";
-    navigate(`/chatbot/playground/${sessionId}${queryParams}`);
+    navigate(`/chat/${sessionId}${queryParams}`);
   };
 
   // Styles for the breadcrumbs

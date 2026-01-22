@@ -43,7 +43,7 @@ export default function NavigationPanel({
   const [loadingSessions, setLoadingSessions] = useState(false);
   const { addNotification, removeNotification } = useNotifications();
   const [activeHref, setActiveHref] = useState(window.location.pathname);
-  const linkUrl = `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
+  const linkUrl = `/chat/${uuidv4()}?folder=${encodeURIComponent(
     identifier
   )}`;
 
@@ -96,7 +96,7 @@ export default function NavigationPanel({
           .map((session) => ({
             type: "link",
             text: session.title,
-            href: `/chatbot/playground/${session.session_id}?folder=${session.document_identifier}`,
+            href: `/chat/${session.session_id}?folder=${session.document_identifier}`,
           }))
           .concat([
             {
@@ -104,7 +104,7 @@ export default function NavigationPanel({
               info: (
                 <Box margin="xxs" textAlign="center">
                   <RouterButton
-                    href={`/chatbot/sessions?folder=${encodeURIComponent(
+                    href={`/chat/sessions?folder=${encodeURIComponent(
                       documentIdentifier || ""
                     )}`}
                     loading={loadingSessions}
@@ -160,7 +160,7 @@ export default function NavigationPanel({
             variant="primary"
             onClick={() =>
               navigate(
-                `/chatbot/playground/${uuidv4()}?folder=${encodeURIComponent(
+                `/chat/${uuidv4()}?folder=${encodeURIComponent(
                   identifier
                 )}`
               )
@@ -256,7 +256,7 @@ export default function NavigationPanel({
           </Box>
           <Box textAlign="right" margin={{ right: "l" }}>
             <Link
-              href={`/landing-page/basePage/checklists/${encodeURIComponent(
+              href={`/requirements/${encodeURIComponent(
                 identifier
               )}?folder=${encodeURIComponent(identifier)}#eligibility`}
             >
@@ -265,7 +265,7 @@ export default function NavigationPanel({
           </Box>
           <Box textAlign="right" margin={{ right: "l" }}>
             <Link
-              href={`/landing-page/basePage/checklists/${encodeURIComponent(
+              href={`/requirements/${encodeURIComponent(
                 identifier
               )}?folder=${encodeURIComponent(identifier)}#narrative`}
             >
@@ -276,7 +276,7 @@ export default function NavigationPanel({
           </Box>
           <Box textAlign="right" margin={{ right: "l" }}>
             <Link
-              href={`/landing-page/basePage/checklists/${encodeURIComponent(
+              href={`/requirements/${encodeURIComponent(
                 identifier
               )}?folder=${encodeURIComponent(identifier)}#documents`}
             >
@@ -285,7 +285,7 @@ export default function NavigationPanel({
           </Box>
           <Box textAlign="right" margin={{ right: "l" }}>
             <Link
-              href={`/landing-page/basePage/checklists/${encodeURIComponent(
+              href={`/requirements/${encodeURIComponent(
                 identifier
               )}?folder=${encodeURIComponent(identifier)}#deadlines`}
             >
@@ -344,7 +344,7 @@ export default function NavigationPanel({
                   <Button
                     onClick={() =>
                       navigate(
-                        `/chatbot/sessions?folder=${encodeURIComponent(
+                        `/chat/sessions?folder=${encodeURIComponent(
                           documentIdentifier || ""
                         )}`
                       )

@@ -554,7 +554,7 @@ export default function Playground() {
                   fontSize: "15px",
                   color: "#555",
                 }}>
-                  All conversations are saved and can be accessed later via the <Link to="/chatbot/sessions" style={{ color: "#0073BB", fontWeight: 500 }}>Sessions</Link> page.
+                  All conversations are saved and can be accessed later via the <Link to="/chat/sessions" style={{ color: "#0073BB", fontWeight: 500 }}>Sessions</Link> page.
                 </p>
               </div>
 
