@@ -1170,7 +1170,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           BUCKET: props.ffioNofosBucket.bucketName,
-          GRACE_PERIOD_DAYS: '7', // 7 days grace period
+          GRACE_PERIOD_DAYS: '1', // 1 day grace period (archive next day)
           DRY_RUN: 'false', // Set to 'true' for testing
         },
         timeout: cdk.Duration.minutes(15),
