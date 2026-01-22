@@ -184,7 +184,7 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
                       >
                         {grantName}
                       </span>
-                      <GrantTypeBadge grantType={grantTypeMap[grantName]} />
+                      <GrantTypeBadge grantType={grant.grantType || grantTypeMap[grantName]} />
                     </button>
                     {grant.keyRequirements && grant.keyRequirements.length > 0 && (
                       <button
