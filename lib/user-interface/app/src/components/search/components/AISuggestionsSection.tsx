@@ -333,7 +333,7 @@ export const AISuggestionsSection: React.FC<AISuggestionsSectionProps> = ({
             borderRadius: "8px",
           }}
         >
-          No relevant grants found for "{searchTerm}". Try different keywords.
+          No relevant grants found for "{searchTerm}". Try rephrasing your search.
         </div>
       )}
     </div>

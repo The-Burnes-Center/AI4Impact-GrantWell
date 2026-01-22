@@ -177,20 +177,6 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    // DynamoDB permissions for grant recommendation function (keyword filtering)
-    grantRecommendationFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "dynamodb:Query",
-          "dynamodb:GetItem",
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          `${props.nofoMetadataTable.tableArn}/index/*`,
-        ],
-      })
-    );
 
     this.grantRecommendationFunction = grantRecommendationFunction;
 
