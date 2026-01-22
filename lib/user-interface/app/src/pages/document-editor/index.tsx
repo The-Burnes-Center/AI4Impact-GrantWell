@@ -762,9 +762,9 @@ const DocumentEditor: React.FC = () => {
         isOpen={welcomeModalOpen}
         onClose={() => {
           setWelcomeModalOpen(false);
-          // Navigate back to checklists when closing the modal
+          // Navigate back to requirements when closing the modal
           if (selectedNofo) {
-            navigate(`/landing-page/basePage/checklists/${selectedNofo}`);
+            navigate(`/requirements/${selectedNofo}`);
           }
         }}
         title="Welcome to GrantWell"

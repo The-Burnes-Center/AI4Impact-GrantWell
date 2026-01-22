@@ -62,7 +62,7 @@ const HistoryCarousel: React.FC<HistoryCarouselProps> = ({ onNOFOSelect }) => {
             key={nofo.id}
             style={hoveredId === nofo.id ? buttonHoverStyles : buttonStyles}
             onClick={() =>
-              onNOFOSelect(`/landing-page/basePage/requirements/${nofo.id}`)
+              onNOFOSelect(`/requirements/${nofo.id}`)
             }
             onMouseEnter={() => setHoveredId(nofo.id)}
             onMouseLeave={() => setHoveredId(null)}

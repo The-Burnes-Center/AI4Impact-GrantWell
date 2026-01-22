@@ -462,7 +462,7 @@ export default function Sessions(props: SessionsProps) {
       ? `?folder=${encodeURIComponent(item.document_identifier)}`
       : "";
 
-    navigate(`/chatbot/playground/${item.session_id}${queryParam}`);
+    navigate(`/chat/${item.session_id}${queryParam}`);
   };
 
   return (
@@ -542,7 +542,7 @@ export default function Sessions(props: SessionsProps) {
                 const queryParams = props.documentIdentifier
                   ? `?folder=${encodeURIComponent(props.documentIdentifier)}`
                   : "";
-                navigate(`/landing-page/basePage${queryParams}`);
+                navigate(`/home${queryParams}`);
               }}
             >
               <FaPlus size={16} /> New Session
@@ -644,7 +644,7 @@ export default function Sessions(props: SessionsProps) {
                           : "";
 
                         navigate(
-                          `/chatbot/playground/${item.session_id}${queryParam}`
+                          `/chat/${item.session_id}${queryParam}`
                         );
                       }}
                       style={{

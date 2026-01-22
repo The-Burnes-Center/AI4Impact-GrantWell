@@ -237,7 +237,7 @@ export default function BaseAppLayout({
       const queryParams = documentIdentifier
         ? `?folder=${encodeURIComponent(documentIdentifier)}`
         : "";
-      navigate(`/chatbot/playground/${currentSessionId}${queryParams}`);
+      navigate(`/chat/${currentSessionId}${queryParams}`);
     } else if (location.pathname.includes("/sessions")) {
       // If we're on the sessions page without a selected session,
       // generate a new session ID and navigate to it
@@ -245,7 +245,7 @@ export default function BaseAppLayout({
       const queryParams = documentIdentifier
         ? `?folder=${encodeURIComponent(documentIdentifier)}`
         : "";
-      navigate(`/chatbot/playground/${newSessionId}${queryParams}`);
+      navigate(`/chat/${newSessionId}${queryParams}`);
     } else {
       // If we're anywhere else, just go to the current location
       navigate(location.pathname + location.search);
@@ -393,7 +393,7 @@ export default function BaseAppLayout({
 
               {/* Home Button */}
               <button
-                onClick={() => navigate("/landing-page/basePage")}
+                onClick={() => navigate("/home")}
                 style={{
                   ...styles.navButton,
                 }}
@@ -422,7 +422,7 @@ export default function BaseAppLayout({
                   const queryParams = documentIdentifier
                     ? `?folder=${encodeURIComponent(documentIdentifier)}`
                     : "";
-                  navigate(`/chatbot/sessions${queryParams}`);
+                  navigate(`/chat/sessions${queryParams}`);
                 }}
                 style={{
                   ...styles.navButton,
@@ -463,7 +463,7 @@ export default function BaseAppLayout({
               <button
                 onClick={() =>
                   navigate(
-                    `/landing-page/basePage/checklists/${
+                    `/requirements/${
                       documentIdentifier || ""
                     }`
                   )

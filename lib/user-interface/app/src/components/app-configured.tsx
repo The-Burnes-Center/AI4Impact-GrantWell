@@ -64,6 +64,10 @@ export default function AppConfigured() {
           break;
         case 'signOut':
           setAuthenticated(false);
+          // Redirect to root page on logout (backup navigation if handlers don't navigate)
+          if (window.location.pathname !== '/') {
+            window.location.href = '/';
+          }
           break;
         case 'signIn_failure':
           setAuthenticated(false);

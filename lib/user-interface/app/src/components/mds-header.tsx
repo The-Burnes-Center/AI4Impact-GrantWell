@@ -14,8 +14,11 @@ export default function MDSHeader({ showSignOut = true }: MDSHeaderProps) {
   const handleSignOut = async () => {
     try {
       await Auth.signOut();
+      navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
+      // Navigate even if signOut fails
+      navigate("/");
     }
   };
 

@@ -318,7 +318,7 @@ export default function Welcome() {
             }}
             onClick={() =>
               handleNOFOSelect(
-                `/landing-page/basePage/checklists/${encodeURIComponent(
+                `/requirements/${encodeURIComponent(
                   nofo.value
                 )}`,
                 nofo
@@ -909,7 +909,7 @@ export default function Welcome() {
               ref={firstCTAButtonRef}
               onClick={() => {
                 handleNOFOSelect(
-                  `/landing-page/basePage/checklists/${encodeURIComponent(
+                  `/requirements/${encodeURIComponent(
                     selectedDocument.value
                   )}`,
                   selectedDocument
@@ -1002,7 +1002,7 @@ export default function Welcome() {
 
                 // Navigate to chatbot
                 const newSessionId = uuidv4();
-                window.location.href = `/chatbot/playground/${newSessionId}?folder=${encodeURIComponent(
+                window.location.href = `/chat/${newSessionId}?folder=${encodeURIComponent(
                   selectedDocument.value
                 )}`;
               }}
@@ -1261,7 +1261,7 @@ export default function Welcome() {
                 </p>
               </div>
               <button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate("/admin/dashboard")}
                 style={{
                   background: "#14558F",
                   color: "white",

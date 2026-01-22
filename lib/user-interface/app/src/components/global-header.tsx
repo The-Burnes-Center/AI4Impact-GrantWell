@@ -55,13 +55,20 @@ export default function GlobalHeader() {
   //     setTheme(StorageHelper.applyTheme(Mode.Dark));
   //   }
   // };
-  const onUserProfileClick = ({
+  const onUserProfileClick = async ({
     detail,
   }: {
     detail: ButtonDropdownProps.ItemClickDetails;
   }) => {
     if (detail.id === "signout") {
-      Auth.signOut();
+      try {
+        await Auth.signOut();
+        navigate("/");
+      } catch (error) {
+        console.error("Error signing out:", error);
+        // Navigate even if signOut fails
+        navigate("/");
+      }
     }
   };
 

@@ -186,7 +186,7 @@ export default function RequirementsNavigation({
     const queryParams = documentIdentifier
       ? `?folder=${encodeURIComponent(documentIdentifier)}`
       : "";
-    navigate(`/chatbot/playground/${newSessionId}${queryParams}`);
+    navigate(`/chat/${newSessionId}${queryParams}`);
   };
 
   // Determine active tab based on the current URL
@@ -318,10 +318,10 @@ export default function RequirementsNavigation({
 
           {/* Home Button */}
           <button
-            onClick={() => navigate("/landing-page/basePage")}
+            onClick={() => navigate("/home")}
             style={{
               ...styles.navButton,
-              ...(location.pathname === "/landing-page/basePage" ? styles.navButtonActive : {}),
+              ...(location.pathname === "/home" || location.pathname === "/" ? styles.navButtonActive : {}),
             }}
             aria-label="Home"
             title="Home"
@@ -376,7 +376,7 @@ export default function RequirementsNavigation({
                 key={index}
                 onClick={() =>
                   navigate(
-                    `/landing-page/basePage/checklists/${encodeURIComponent(
+                    `/requirements/${encodeURIComponent(
                       nofo.value
                     )}`
                   )
