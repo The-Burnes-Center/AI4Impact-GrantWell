@@ -387,6 +387,21 @@ export const Modal = React.memo(
     return (
       <div
         className="modal-overlay"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+          backdropFilter: "blur(3px)",
+          padding: "20px",
+          boxSizing: "border-box",
+        }}
         onClick={onClose}
         onKeyDown={(e) => {
           if (e.key === "Escape") onClose();
@@ -398,11 +413,36 @@ export const Modal = React.memo(
         <div
           ref={modalRef}
           className="modal-content"
+          style={{
+            backgroundColor: "white",
+            borderRadius: "12px",
+            width: "100%",
+            maxWidth: "500px",
+            maxHeight: "85vh",
+            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
           role="document"
         >
-          <div className="modal-header">
+          <div
+            className="modal-header"
+            style={{
+              padding: "20px 25px",
+              borderBottom: "1px solid #e0e0e0",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              backgroundColor: "#f9fafc",
+              borderTopLeftRadius: "12px",
+              borderTopRightRadius: "12px",
+              flexShrink: 0,
+            }}
+          >
             <h2 id="modal-title">{title}</h2>
             <button
               className="modal-close-button"
@@ -412,7 +452,16 @@ export const Modal = React.memo(
               <LuX size={20} />
             </button>
           </div>
-          <div className="modal-body">{children}</div>
+          <div
+            className="modal-body"
+            style={{
+              padding: "25px",
+              overflowY: "auto",
+              backgroundColor: "white",
+            }}
+          >
+            {children}
+          </div>
         </div>
       </div>
     );
