@@ -264,7 +264,7 @@ export default function Chat(props: {
           )}
 
           {messageHistory.map((message, idx) => (
-            <ChatMessage key={idx} message={message} />
+            <ChatMessage key={idx} message={message} documentIdentifier={props.documentIdentifier} />
           ))}
 
           {messageHistory.length === 0 && !session?.loading && (

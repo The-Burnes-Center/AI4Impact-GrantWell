@@ -1,14 +1,15 @@
 import * as React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
+import { AppContext } from "../../common/app-context";
+import { ApiClient } from "../../common/api-client/api-client";
 
 // Import icons
 import {
   FaCopy,
-  FaChevronDown,
   FaFileAlt,
 } from "react-icons/fa";
 
@@ -19,101 +20,18 @@ import { Utils } from "../../common/utils";
 
 export interface ChatMessageProps {
   message: ChatBotHistoryItem;
+  documentIdentifier?: string;
 }
 
 export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { addNotification, removeNotification } = useNotifications();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedMenuItemIndex, setSelectedMenuItemIndex] =
-    useState<number>(-1);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const menuItemsRef = useRef<(HTMLDivElement | null)[]>([]);
   // State for copy popup
   const [showCopyPopup, setShowCopyPopup] = useState(false);
+  const [grantName, setGrantName] = useState<string>("");
+  const appContext = useContext(AppContext);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsDropdownOpen(false);
-        setSelectedMenuItemIndex(-1);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
-  // Handle keyboard navigation for dropdown menu
-  useEffect(() => {
-    if (!isDropdownOpen) {
-      setSelectedMenuItemIndex(-1);
-      return;
-    }
-
-    const sources = props.message.metadata?.Sources as any[];
-    if (!sources || sources.length === 0) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isDropdownOpen) return;
-
-      switch (e.key) {
-        case "ArrowDown":
-          e.preventDefault();
-          setSelectedMenuItemIndex((prev) =>
-            prev < sources.length - 1 ? prev + 1 : 0
-          );
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          setSelectedMenuItemIndex((prev) =>
-            prev > 0 ? prev - 1 : sources.length - 1
-          );
-          break;
-        case "Enter":
-        case " ":
-          if (
-            selectedMenuItemIndex >= 0 &&
-            selectedMenuItemIndex < sources.length
-          ) {
-            e.preventDefault();
-            const menuItem = menuItemsRef.current[selectedMenuItemIndex];
-            if (menuItem) {
-              menuItem.click();
-            }
-          }
-          break;
-        case "Escape":
-          e.preventDefault();
-          setIsDropdownOpen(false);
-          setSelectedMenuItemIndex(-1);
-          // Return focus to button
-          const button = dropdownRef.current?.querySelector("button");
-          button?.focus();
-          break;
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isDropdownOpen, selectedMenuItemIndex, props.message.metadata]);
-
-  // Focus first menu item when dropdown opens
-  useEffect(() => {
-    if (isDropdownOpen && menuItemsRef.current.length > 0) {
-      setSelectedMenuItemIndex(0);
-      setTimeout(() => {
-        menuItemsRef.current[0]?.focus();
-      }, 0);
-    }
-  }, [isDropdownOpen]);
 
   // Styles for the components
   const containerStyle: React.CSSProperties = {
@@ -350,6 +268,39 @@ export default function ChatMessage(props: ChatMessageProps) {
     Array.isArray(props.message.metadata?.Sources) &&
     props.message.metadata.Sources.length > 0;
 
+  // Fetch grant name if documentIdentifier is provided
+  useEffect(() => {
+    const fetchGrantName = async () => {
+      if (!props.documentIdentifier || !appContext || !showSources) return;
+      
+      try {
+        const apiClient = new ApiClient(appContext);
+        const summaryResult = await apiClient.landingPage.getNOFOSummary(
+          props.documentIdentifier
+        );
+        if (summaryResult?.data?.GrantName) {
+          setGrantName(summaryResult.data.GrantName);
+        }
+      } catch (error) {
+        console.error("Error fetching grant name:", error);
+        // Fallback to documentIdentifier name
+        const folderName = props.documentIdentifier.split("/").pop();
+        setGrantName(folderName || "Grant");
+      }
+    };
+
+    fetchGrantName();
+  }, [props.documentIdentifier, appContext, showSources]);
+
+  // Separate sources into grant sources (NOFO) and uploaded files (userDocuments)
+  const sources = showSources ? (props.message.metadata.Sources as any[]) : [];
+  const grantSources = sources.filter((source) => 
+    source.uri && !source.uri.includes("userDocuments")
+  );
+  const uploadedFiles = sources.filter((source) => 
+    source.uri && source.uri.includes("userDocuments")
+  );
+
   const handleCopy = () => {
     navigator.clipboard.writeText(props.message.content);
     setShowCopyPopup(true);
@@ -472,102 +423,45 @@ export default function ChatMessage(props: ChatMessageProps) {
                             paddingTop: "12px",
                           }}
                         >
-                          <div
-                            style={{ position: "relative" }}
-                            ref={dropdownRef}
-                          >
-                            <button
-                              style={{
-                                backgroundColor: "transparent",
-                                border: "none",
-                                cursor: "pointer",
-                                padding: "4px 8px",
-                                fontSize: "14px",
-                                color: "#374151",
-                                fontWeight: 500,
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "4px",
-                                minWidth: "44px",
-                                minHeight: "44px",
-                                borderRadius: "4px",
-                                transition: "all 0.2s ease",
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                  "#f3f4f6";
-                                e.currentTarget.style.color = "#14558F";
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                  "transparent";
-                                e.currentTarget.style.color = "#374151";
-                              }}
-                              onClick={() => {
-                                setIsDropdownOpen(!isDropdownOpen);
-                                if (!isDropdownOpen) {
-                                  setSelectedMenuItemIndex(-1);
-                                }
-                              }}
-                              aria-label="View source documents"
-                              aria-expanded={isDropdownOpen}
-                              aria-haspopup="menu"
-                            >
-                              <FaFileAlt size={12} aria-hidden="true" />
-                              {
-                                (props.message.metadata.Sources as any[]).length
-                              }{" "}
-                              Sources{" "}
-                              <FaChevronDown size={10} aria-hidden="true" />
-                            </button>
-
-                            {isDropdownOpen && (
+                          <div>
+                            {/* Show grant name if available, otherwise show sources count */}
+                            {(grantName || grantSources.length > 0) && (
                               <div
-                                role="menu"
-                                style={dropdownMenuStyle}
-                                aria-label="Source documents"
+                                style={{
+                                  fontSize: "14px",
+                                  color: "#374151",
+                                  fontWeight: 500,
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                  marginBottom: uploadedFiles.length > 0 ? "8px" : "0",
+                                }}
                               >
-                                {(props.message.metadata.Sources as any[]).map(
-                                  (item, index) => {
-                                    return (
-                                      <div
-                                        key={index}
-                                        ref={(el) => {
-                                          menuItemsRef.current[index] = el;
-                                        }}
-                                        role="menuitem"
-                                        tabIndex={
-                                          selectedMenuItemIndex === index
-                                            ? 0
-                                            : -1
-                                        }
-                                        style={{
-                                          ...dropdownItemStyle,
-                                          backgroundColor:
-                                            selectedMenuItemIndex === index
-                                              ? "#f0f7ff"
-                                              : "transparent",
-                                          outline:
-                                            selectedMenuItemIndex === index
-                                              ? "2px solid #14558F"
-                                              : "none",
-                                          outlineOffset: "2px",
-                                          cursor: "default",
-                                        }}
-                                        onFocus={() =>
-                                          setSelectedMenuItemIndex(index)
-                                        }
-                                        onClick={() => {
-                                          setIsDropdownOpen(false);
-                                          setSelectedMenuItemIndex(-1);
-                                        }}
-                                        aria-label={item.title}
-                                      >
-                                        {item.title}
-                                      </div>
-                                    );
-                                  }
-                                )}
+                                <FaFileAlt size={12} aria-hidden="true" />
+                                {grantName || "Grant Document"}
+                              </div>
+                            )}
+                            
+                            {/* Show uploaded file names if any */}
+                            {uploadedFiles.length > 0 && (
+                              <div style={{ marginTop: grantName || grantSources.length > 0 ? "8px" : "0" }}>
+                                {uploadedFiles.map((file, index) => (
+                                  <div
+                                    key={index}
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "#374151",
+                                      fontWeight: 500,
+                                      display: "inline-flex",
+                                      alignItems: "center",
+                                      gap: "4px",
+                                      marginBottom: index < uploadedFiles.length - 1 ? "4px" : "0",
+                                    }}
+                                  >
+                                    <FaFileAlt size={12} aria-hidden="true" />
+                                    {file.title}
+                                  </div>
+                                ))}
                               </div>
                             )}
                           </div>
