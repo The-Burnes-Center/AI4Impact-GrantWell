@@ -761,23 +761,21 @@ const DocumentEditor: React.FC = () => {
       <Modal
         isOpen={welcomeModalOpen}
         onClose={() => {
+          // Just close the modal - don't navigate away
           setWelcomeModalOpen(false);
-          // Navigate back to requirements when closing the modal
-          if (selectedNofo) {
-            navigate(`/requirements/${selectedNofo}`);
-          }
         }}
         title="Welcome to GrantWell"
-        maxWidth="700px"
+        maxWidth="900px"
         topOffset={topOffset}
+        hideCloseButton={true}
       >
-        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+        <div style={{ textAlign: "center", marginBottom: "24px" }}>
           <h3
             style={{
               color: "#14558F",
               fontSize: "20px",
               fontWeight: "600",
-              margin: "0 0 16px",
+              margin: "0 0 12px",
             }}
           >
             AI-Powered Grant Writing Assistant
@@ -790,14 +788,13 @@ const DocumentEditor: React.FC = () => {
               margin: "0",
             }}
           >
-            The GrantWell grant writing tool uses generative AI to guide you through the
-            application process. The last grant you searched is pre-loaded. Want to work
-            on a different grant? Return to the home page to find the grant of interest.
+            GrantWell uses AI to help you create grant applications. We'll guide you through
+            three simple steps to get started.
           </p>
         </div>
 
         {/* Steps */}
-        <div style={{ marginBottom: "32px" }}>
+        <div style={{ marginBottom: "28px" }}>
           <div
             style={{
               display: "flex",
@@ -990,7 +987,7 @@ const DocumentEditor: React.FC = () => {
               e.currentTarget.style.outline = "none";
             }}
           >
-            Start New Application
+            Get Started
           </button>
 
           <button
