@@ -59,19 +59,21 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     display: "flex",
     flexDirection: "column",
-    minHeight: "100vh",
+    height: "100vh",
     width: "100%",
-    overflow: "visible",
+    overflow: "hidden",
+    position: "relative",
   },
   mainContainer: {
     display: "flex",
     flex: 1,
-    overflow: "auto",
+    overflow: "hidden",
     minWidth: 0,
+    minHeight: 0,
   },
   contentArea: {
     flex: 1,
-    overflow: "auto",
+    overflow: "hidden",
     minHeight: 0,
     minWidth: 0,
     display: "flex",
@@ -269,8 +271,8 @@ export default function BaseAppLayout({
     <div
       style={{
         ...styles.container,
-        minHeight: `calc(100vh - ${topOffset}px)`,
-        position: "static",
+        height: `calc(100vh - ${topOffset}px)`,
+        maxHeight: `calc(100vh - ${topOffset}px)`,
         width: "100%",
         margin: 0,
         padding: 0,
@@ -320,9 +322,10 @@ export default function BaseAppLayout({
         style={{
           display: "flex",
           flex: 1,
-          overflow: isNarrowViewport ? "auto" : "hidden",
+          overflow: "hidden",
           alignItems: "stretch",
           flexDirection: isNarrowViewport ? "column" : "row",
+          minHeight: 0,
         }}
       >
         {/* Sidebar - becomes overlay on narrow viewports */}
@@ -492,7 +495,7 @@ export default function BaseAppLayout({
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            overflow: "auto",
+            overflow: "hidden",
             margin: 0,
             padding: 0,
             minHeight: 0,

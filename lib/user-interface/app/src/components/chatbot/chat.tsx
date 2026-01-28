@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
@@ -8,7 +8,7 @@ import ChatMessage from "./chat-message";
 import ChatInputPanel from "./chat-input-panel";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notif-manager";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, ChevronDown } from "lucide-react";
 
 // Styles for components
 const styles: Record<string, React.CSSProperties> = {
@@ -17,15 +17,20 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: "column",
     height: "100%",
     position: "relative",
-    paddingBottom: "100px",
+    overflow: "hidden",
     backgroundColor: "#fbfbfd",
+    minHeight: 0,
+    flex: 1,
   },
   messageArea: {
     flex: 1,
     overflowY: "auto",
+    overflowX: "hidden",
     padding: "20px",
-    paddingBottom: "100px",
+    paddingBottom: "20px",
     backgroundColor: "#fbfbfd",
+    minHeight: 0,
+    scrollBehavior: "smooth",
   },
   messageList: {
     display: "flex",
@@ -75,18 +80,43 @@ const styles: Record<string, React.CSSProperties> = {
   inputContainer: {
     border: "none",
     backgroundColor: "#f8fafc",
-    padding: "10px",
-    position: "fixed",
-    bottom: "20px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    width: "70%",
-    maxWidth: "800px",
-    minWidth: "280px",
+    padding: "20px",
+    width: "100%",
+    maxWidth: "100%",
     zIndex: 100,
-    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-    borderRadius: "12px",
+    boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.1)",
     borderTop: "3px solid #14558F",
+    flexShrink: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollToBottomButton: {
+    position: "absolute",
+    bottom: "140px", // Increased from 100px to position it higher above the input container
+    right: "20px",
+    backgroundColor: "#14558F",
+    color: "white",
+    border: "none",
+    borderRadius: "50%",
+    width: "44px",
+    height: "44px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+    zIndex: 60, // Increased z-index to ensure it's above the input container
+    transition: "all 0.2s ease",
+    opacity: 0,
+    pointerEvents: "none",
+    outline: "none", // Remove default browser outline
+    WebkitAppearance: "none", // Remove webkit default styling
+    MozAppearance: "none", // Remove Firefox default styling
+  },
+  scrollToBottomButtonVisible: {
+    opacity: 1,
+    pointerEvents: "auto",
   },
 };
 
@@ -105,6 +135,8 @@ export default function Chat(props: {
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );
+  const messageAreaRef = useRef<HTMLDivElement>(null);
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
   /** Loads session history */
   useEffect(() => {
@@ -133,10 +165,12 @@ export default function Chat(props: {
 
         if (hist?.chatHistory && hist.chatHistory.length > 0) {
           setMessageHistory(hist.chatHistory);
-          window.scrollTo({
-            top: 0,
-            behavior: "instant",
-          });
+          // Scroll to bottom of message area to show latest messages
+          setTimeout(() => {
+            if (messageAreaRef.current) {
+              messageAreaRef.current.scrollTop = messageAreaRef.current.scrollHeight;
+            }
+          }, 100);
         } else if (!hist?.chatHistory || hist.chatHistory.length === 0) {
           const summaryResult = await apiClient.landingPage.getNOFOSummary(
             props.documentIdentifier
@@ -160,10 +194,57 @@ export default function Chat(props: {
     })();
   }, [appContext, props.sessionId, props.documentIdentifier]);
 
+  // Check if user has scrolled up to show scroll-to-bottom button
+  useEffect(() => {
+    const messageArea = messageAreaRef.current;
+    if (!messageArea) return;
+
+    const checkScrollPosition = () => {
+      const isNearBottom =
+        messageArea.scrollHeight -
+          messageArea.scrollTop -
+          messageArea.clientHeight <
+        100;
+      setShowScrollToBottom(!isNearBottom && messageHistory.length > 0);
+    };
+
+    messageArea.addEventListener("scroll", checkScrollPosition);
+    checkScrollPosition(); // Initial check
+
+    return () => {
+      messageArea.removeEventListener("scroll", checkScrollPosition);
+    };
+  }, [messageHistory]);
+
+  // Scroll to bottom when typing finishes (running changes from true to false)
+  useEffect(() => {
+    if (!running && messageHistory.length > 0) {
+      // Small delay to ensure DOM has updated with final message content
+      setTimeout(() => {
+        if (messageAreaRef.current) {
+          messageAreaRef.current.scrollTo({
+            top: messageAreaRef.current.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
+    }
+  }, [running, messageHistory.length]);
+
+  const scrollToBottom = () => {
+    if (messageAreaRef.current) {
+      messageAreaRef.current.scrollTo({
+        top: messageAreaRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
       {/* Chat content area */}
       <div
+        ref={messageAreaRef}
         role="log"
         aria-live="polite"
         aria-relevant="additions"
@@ -199,6 +280,30 @@ export default function Chat(props: {
         </div>
       </div>
 
+      {/* Scroll to bottom button */}
+      {showScrollToBottom && (
+        <button
+          onClick={scrollToBottom}
+          aria-label="Scroll to bottom"
+          style={{
+            ...styles.scrollToBottomButton,
+            ...styles.scrollToBottomButtonVisible,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#104472";
+            e.currentTarget.style.transform = "scale(1.05)";
+            e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.25)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#14558F";
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
+          }}
+        >
+          <ChevronDown size={20} />
+        </button>
+      )}
+
       {/* Loading state announcement for screen readers */}
       <div role="status" aria-live="polite" className="sr-only">
         {session?.loading ? "Loading chat session" : ""}
@@ -213,6 +318,7 @@ export default function Chat(props: {
           messageHistory={messageHistory}
           setMessageHistory={(history) => setMessageHistory(history)}
           documentIdentifier={props.documentIdentifier}
+          messageAreaRef={messageAreaRef}
         />
       </div>
     </section>
