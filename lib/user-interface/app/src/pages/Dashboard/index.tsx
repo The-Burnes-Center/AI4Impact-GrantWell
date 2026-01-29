@@ -4,6 +4,7 @@ import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { useNotifications } from "../../components/notif-manager";
+import { Utils } from "../../common/utils";
 import {
   LuPin,
   LuPinOff,
@@ -623,10 +624,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         );
       }
 
-      // Update expiration date if it changed
-      const newExpirationDate = editedNofoExpirationDate
-        ? new Date(editedNofoExpirationDate + "T23:59:59").toISOString()
-        : null;
+      const newExpirationDate = Utils.easternDateToUTC(editedNofoExpirationDate);
       const oldExpirationDate = selectedNofo.expirationDate || null;
 
       if (newExpirationDate !== oldExpirationDate) {
@@ -900,11 +898,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
               <div className="row-cell">
                 {nofo.expirationDate ? (
                   <span className="expiry-date">
-                    {new Date(nofo.expirationDate).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {Utils.formatExpirationDate(nofo.expirationDate)}
                   </span>
                 ) : (
                   <span className="expiry-date no-date">N/A</span>
@@ -1034,11 +1028,7 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                 (editedNofoName === selectedNofo?.name &&
                   editedNofoStatus === selectedNofo?.status &&
                   editedNofoExpirationDate ===
-                    (selectedNofo?.expirationDate
-                      ? new Date(selectedNofo.expirationDate)
-                          .toISOString()
-                          .split("T")[0]
-                      : "") &&
+                    Utils.utcToEasternDateString(selectedNofo?.expirationDate) &&
                   editedNofoGrantType === (selectedNofo?.grantType || ""))
               }
             >

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { LuFileX } from "react-icons/lu";
 import { NOFO, GRANT_TYPES, GrantTypeId } from "../Dashboard";
+import { Utils } from "../../common/utils";
 import "../../styles/landing-page-table.css";
 
 interface GrantsTableProps {
@@ -248,11 +249,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
                 <div className="landing-row-cell" style={{ color: isArchived ? "#888" : undefined }}>
                   {nofo.expirationDate ? (
                     <span className="landing-expiry-date">
-                      {new Date(nofo.expirationDate).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {Utils.formatExpirationDate(nofo.expirationDate)}
                     </span>
                   ) : (
                     <span className="landing-expiry-date no-date">N/A</span>
