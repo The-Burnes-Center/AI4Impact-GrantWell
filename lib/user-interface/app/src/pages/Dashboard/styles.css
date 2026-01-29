@@ -577,33 +577,33 @@ body {
 
 /* Modal styles */
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(3px);
-  padding: 20px;
-  box-sizing: border-box;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1000 !important;
+  backdrop-filter: blur(3px) !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
 }
 
 .modal-content {
-  background-color: white;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 500px;
-  max-height: 85vh;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  position: relative;
-  animation: modal-appear 0.3s ease-out forwards;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  background-color: white !important;
+  border-radius: 12px !important;
+  width: 100% !important;
+  max-width: 500px !important;
+  max-height: 85vh !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  position: relative !important;
+  animation: modal-appear 0.3s ease-out forwards !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
 }
 
 @keyframes modal-appear {
@@ -618,15 +618,15 @@ body {
 }
 
 .modal-header {
-  padding: 20px 25px;
-  border-bottom: 1px solid #e0e0e0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f9fafc;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  flex-shrink: 0;
+  padding: 20px 25px !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  background-color: #f9fafc !important;
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+  flex-shrink: 0 !important;
 }
 
 .modal-header h2 {
@@ -654,6 +654,7 @@ body {
   padding: 25px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  background-color: white !important;
 }
 
 .modal-form {

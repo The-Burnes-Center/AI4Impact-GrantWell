@@ -1411,8 +1411,8 @@ const Checklists: React.FC = () => {
                       color: "#555",
                     }}
                   >
-                    Use "Recent Grants" to quickly access other grants or return
-                    to the home page.
+                    Use Recent Grants to access other recently viewed grants, 
+                    or select Home to return to the main page.
                   </p>
                 </div>
 

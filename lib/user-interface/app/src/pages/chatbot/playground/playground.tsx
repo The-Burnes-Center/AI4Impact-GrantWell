@@ -12,57 +12,67 @@ import { ApiClient } from "../../../common/api-client/api-client";
 import { AppContext } from "../../../common/app-context";
 import UploadModal from "../../../components/chatbot/upload-modal";
 
-// Styles for components
+// Styles for components - IMPROVED DESIGN
 const styles: Record<string, React.CSSProperties> = {
   headerContainer: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "16px 24px",
+    padding: "20px 32px",
     borderBottom: "1px solid #e5e7eb",
     backgroundColor: "white",
+    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+    position: "relative",
+    zIndex: 10,
   },
   headerTitle: {
-    fontSize: "24px",
+    fontSize: "26px",
     fontWeight: 600,
     color: "#111827",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    maxWidth: "60%",
     margin: 0,
+    flex: 1,
+    minWidth: 0,
+    lineHeight: "1.3",
+    // Allow wrapping on smaller screens
+    wordBreak: "break-word",
+    overflowWrap: "break-word",
   },
   headerActions: {
     display: "flex",
     gap: "12px",
+    flexShrink: 0,
+    marginLeft: "24px",
   },
   uploadButton: {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    padding: "8px 16px",
+    padding: "10px 20px",
     backgroundColor: "#0073bb",
     color: "white",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "8px",
     fontSize: "14px",
     fontWeight: 500,
     cursor: "pointer",
     minHeight: "44px",
+    transition: "all 0.2s ease",
+    boxShadow: "0 1px 2px rgba(0, 115, 187, 0.2)",
   },
   helpButton: {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    padding: "8px 16px",
-    backgroundColor: "#f3f4f6",
+    padding: "10px 20px",
+    backgroundColor: "#f9fafb",
     color: "#374151",
-    border: "none",
-    borderRadius: "6px",
+    border: "1px solid #e5e7eb",
+    borderRadius: "8px",
     fontSize: "14px",
     fontWeight: 500,
     cursor: "pointer",
     minHeight: "44px",
+    transition: "all 0.2s ease",
   },
   helpPanel: {
     padding: "20px",
@@ -116,6 +126,16 @@ export default function Playground() {
   const checkboxRef = React.useRef<HTMLInputElement>(null);
   const gotItButtonRef = React.useRef<HTMLButtonElement>(null);
   const helpButtonRef = React.useRef<HTMLButtonElement>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Handle responsive design
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchNofoName = async () => {
@@ -293,27 +313,75 @@ export default function Playground() {
     <>
       <BaseAppLayout
         header={
-          <div style={styles.headerContainer}>
-            <h1 style={styles.headerTitle}>
+          <div style={{
+            ...styles.headerContainer,
+            flexDirection: isMobile ? "column" : "row",
+            alignItems: isMobile ? "flex-start" : "center",
+            padding: isMobile ? "16px 20px" : "20px 32px",
+            gap: isMobile ? "16px" : "0",
+          }}>
+            <h1 style={{
+              ...styles.headerTitle,
+              fontSize: isMobile ? "20px" : "26px",
+            }}>
               {isLoading ? "Loading..." : nofoName}
             </h1>
-            <div style={styles.headerActions}>
+            <div style={{
+              ...styles.headerActions,
+              marginLeft: isMobile ? "0" : "24px",
+              width: isMobile ? "100%" : "auto",
+              flexDirection: isMobile ? "column" : "row",
+            }}>
               {/* Upload Data button - only show if documentIdentifier exists */}
               {documentIdentifier && (
                 <button 
-                  style={styles.uploadButton} 
+                  style={{
+                    ...styles.uploadButton,
+                    width: isMobile ? "100%" : "auto",
+                  }} 
                   onClick={handleUploadData}
                   aria-label="Upload supporting documents"
+                  onMouseEnter={(e) => {
+                    if (!isMobile) {
+                      e.currentTarget.style.backgroundColor = "#005A94";
+                      e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 115, 187, 0.3)";
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isMobile) {
+                      e.currentTarget.style.backgroundColor = "#0073bb";
+                      e.currentTarget.style.boxShadow = "0 1px 2px rgba(0, 115, 187, 0.2)";
+                      e.currentTarget.style.transform = "translateY(0)";
+                    }
+                  }}
                 >
                   <Upload size={16} /> Upload Data
                 </button>
               )}
               <button
                 ref={helpButtonRef}
-                style={styles.helpButton}
+                style={{
+                  ...styles.helpButton,
+                  width: isMobile ? "100%" : "auto",
+                }}
                 onClick={() => setHelpOpen(!helpOpen)}
                 aria-label={helpOpen ? "Close help dialog" : "Open help dialog"}
                 aria-expanded={helpOpen}
+                onMouseEnter={(e) => {
+                  if (!isMobile) {
+                    e.currentTarget.style.backgroundColor = "#f3f4f6";
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isMobile) {
+                    e.currentTarget.style.backgroundColor = "#f9fafb";
+                    e.currentTarget.style.borderColor = "#e5e7eb";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }
+                }}
               >
                 <HelpCircle size={16} /> Help
               </button>
@@ -325,7 +393,7 @@ export default function Playground() {
         modalOpen={helpOpen}
         content={
           <div
-            style={{ height: "100%", display: "flex", flexDirection: "column" }}
+            style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden", minHeight: 0 }}
             aria-hidden={helpOpen}
           >
             <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />

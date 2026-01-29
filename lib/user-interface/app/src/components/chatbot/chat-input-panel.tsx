@@ -42,6 +42,8 @@ const styles = {
     display: "flex",
     alignItems: "flex-end",
     width: "100%",
+    maxWidth: "800px",
+    minWidth: "280px",
     margin: "0 auto",
     boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -129,6 +131,7 @@ export interface ChatInputPanelProps {
   messageHistory: ChatBotHistoryItem[];
   setMessageHistory: (history: ChatBotHistoryItem[]) => void;
   documentIdentifier: string;
+  messageAreaRef?: React.RefObject<HTMLDivElement>;
 }
 
 // Define type for select option
@@ -258,7 +261,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   }, [listening, micListeningTimeout]);
 
   useEffect(() => {
-    const onWindowScroll = () => {
+    const messageArea = props.messageAreaRef?.current;
+    if (!messageArea) return;
+
+    const onMessageAreaScroll = () => {
       if (ChatScrollState.skipNextScrollEvent) {
         ChatScrollState.skipNextScrollEvent = false;
         return;
@@ -266,9 +272,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
       const isScrollToTheEnd =
         Math.abs(
-          window.innerHeight +
-            window.scrollY -
-            document.documentElement.scrollHeight
+          messageArea.scrollHeight -
+            messageArea.scrollTop -
+            messageArea.clientHeight
         ) <= 10;
 
       if (!isScrollToTheEnd) {
@@ -278,12 +284,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       }
     };
 
-    window.addEventListener("scroll", onWindowScroll);
+    messageArea.addEventListener("scroll", onMessageAreaScroll);
 
     return () => {
-      window.removeEventListener("scroll", onWindowScroll);
+      messageArea.removeEventListener("scroll", onMessageAreaScroll);
     };
-  }, []);
+  }, [props.messageAreaRef]);
 
   useLayoutEffect(() => {
     if (ChatScrollState.skipNextHistoryUpdate) {
@@ -291,14 +297,18 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       return;
     }
 
+    const messageArea = props.messageAreaRef?.current;
+    if (!messageArea) return;
+
     if (!ChatScrollState.userHasScrolled && props.messageHistory.length > 0) {
       ChatScrollState.skipNextScrollEvent = true;
-      window.scrollTo({
-        top: document.documentElement.scrollHeight + 1000,
-        behavior: "instant",
+      // Scroll to bottom of message area with smooth behavior
+      messageArea.scrollTo({
+        top: messageArea.scrollHeight,
+        behavior: "smooth",
       });
     }
-  }, [props.messageHistory]);
+  }, [props.messageHistory, props.messageAreaRef]);
 
   /**Sends a message to the chat API */
   const handleSendMessage = async () => {
@@ -533,6 +543,19 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           Utils.delay(1500).then(() => setNeedsRefresh(true));
         }
         props.setRunning(false);
+        
+        // Ensure final scroll to bottom after message is complete
+        // Small delay to ensure DOM has updated with final content
+        setTimeout(() => {
+          const messageArea = props.messageAreaRef?.current;
+          if (messageArea && !ChatScrollState.userHasScrolled) {
+            ChatScrollState.skipNextScrollEvent = true;
+            messageArea.scrollTo({
+              top: messageArea.scrollHeight,
+              behavior: "smooth",
+            });
+          }
+        }, 150);
       });
     } catch (error) {
       console.error("Error sending message:", error);

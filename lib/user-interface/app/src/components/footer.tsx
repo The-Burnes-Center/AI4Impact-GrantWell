@@ -44,15 +44,15 @@ export default function FooterComponent() {
         footerLinks={{
           links: [
             {
-              href: "https://www.mass.gov/topics",
+              href: "https://www.mass.gov/topics/massachusetts-topics",
               text: "All Topics",
             },
             {
-              href: "https://www.mass.gov/site-policies",
+              href: "https://www.mass.gov/massgov-site-policies",
               text: "Site Policies",
             },
             {
-              href: "https://www.mass.gov/public-records-requests",
+              href: "https://www.mass.gov/topics/public-records-requests",
               text: "Public Records Requests",
             },
             {

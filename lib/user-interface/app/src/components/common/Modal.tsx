@@ -18,18 +18,19 @@ interface ModalProps {
   width?: string;
   maxWidth?: string;
   topOffset?: number;
+  hideCloseButton?: boolean;
 }
 
 /**
  * Custom hook to handle modal side effects
  */
-function useModalEffects(isOpen: boolean, onClose: () => void) {
+function useModalEffects(isOpen: boolean, onClose: () => void, hideCloseButton?: boolean) {
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !hideCloseButton) {
       // Prevent body scroll when modal is open
       document.body.style.overflow = "hidden";
       
-      // Add escape key listener
+      // Add escape key listener only if close button is not hidden
       const handleEscape = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
           onClose();
@@ -42,20 +43,26 @@ function useModalEffects(isOpen: boolean, onClose: () => void) {
         document.body.style.overflow = "";
         document.removeEventListener("keydown", handleEscape);
       };
+    } else if (isOpen && hideCloseButton) {
+      // Still prevent body scroll even if close button is hidden
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
     }
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, hideCloseButton]);
 }
 
 /**
  * Modal Component
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, width, maxWidth = "600px", topOffset = 0 }) => {
+  ({ isOpen, onClose, title, children, width, maxWidth = "600px", topOffset = 0, hideCloseButton = false }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const previousFocusRef = useRef<HTMLElement | null>(null);
 
     // Use the custom hook for side effects
-    useModalEffects(isOpen, onClose);
+    useModalEffects(isOpen, onClose, hideCloseButton);
 
     // Focus trap effect
     useEffect(() => {
@@ -136,11 +143,10 @@ export const Modal = React.memo<ModalProps>(
           alignItems: "center",
           justifyContent: "center",
           zIndex: 10000,
-          padding: "20px",
-          paddingTop: `${topOffset + 20}px`,
+          padding: "20px", // Equal padding on all sides for true centering
         }}
-        onClick={onClose}
-        onKeyDown={(e) => {
+        onClick={hideCloseButton ? undefined : onClose}
+        onKeyDown={hideCloseButton ? undefined : (e) => {
           if (e.key === "Escape") onClose();
         }}
         role="dialog"
@@ -154,9 +160,10 @@ export const Modal = React.memo<ModalProps>(
             borderRadius: "8px",
             width: width || "100%",
             maxWidth: maxWidth,
-            maxHeight: `calc(90vh - ${topOffset}px)`,
+            maxHeight: "calc(90vh - 40px)", // Account for padding
             overflow: "auto",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            margin: "auto", // Additional centering support
           }}
           onClick={(e) => e.stopPropagation()}
           role="document"
@@ -167,7 +174,7 @@ export const Modal = React.memo<ModalProps>(
               padding: "20px",
               borderBottom: "1px solid #e5e7eb",
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: hideCloseButton ? "flex-start" : "space-between",
               alignItems: "center",
             }}
           >
@@ -182,38 +189,40 @@ export const Modal = React.memo<ModalProps>(
             >
               {title}
             </h2>
-            <button
-              onClick={onClose}
-              aria-label="Close modal"
-              style={{
-                background: "none",
-                border: "none",
-                fontSize: "24px",
-                cursor: "pointer",
-                color: "#6b7280",
-                padding: "4px 8px",
-                lineHeight: 1,
-                borderRadius: "4px",
-                transition: "all 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#f3f4f6";
-                e.currentTarget.style.color = "#111827";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-                e.currentTarget.style.color = "#6b7280";
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.outline = "2px solid #0088FF";
-                e.currentTarget.style.outlineOffset = "2px";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.outline = "none";
-              }}
-            >
-              ×
-            </button>
+            {!hideCloseButton && (
+              <button
+                onClick={onClose}
+                aria-label="Close modal"
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: "24px",
+                  cursor: "pointer",
+                  color: "#6b7280",
+                  padding: "4px 8px",
+                  lineHeight: 1,
+                  borderRadius: "4px",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#f3f4f6";
+                  e.currentTarget.style.color = "#111827";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "#6b7280";
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.outline = "2px solid #0088FF";
+                  e.currentTarget.style.outlineOffset = "2px";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.outline = "none";
+                }}
+              >
+                ×
+              </button>
+            )}
           </div>
 
           {/* Modal Content */}

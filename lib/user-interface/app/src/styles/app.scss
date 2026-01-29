@@ -99,6 +99,30 @@ main#main-content:focus-visible {
   }
 }
 
+/* Custom scrollbar styling for chat message area */
+.chat-message-area {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.chat-message-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-message-area::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 4px;
+}
+
+.chat-message-area::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.chat-message-area::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
 /* Ensure MDS header utility bar appears right after brand banner */
 .ma__header_slim {
   position: static !important;
