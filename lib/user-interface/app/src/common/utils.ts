@@ -166,4 +166,65 @@ export class Utils {
   static parseTimestamp(timestamp: string): string {
     return new Date(timestamp).toISOString();
   }
+
+  /**
+   * Convert UTC date string to Eastern Time for display
+   * @param utcDateString ISO date string in UTC
+   * @returns Date object in Eastern Time (EDT or EST depending on DST)
+   */
+  static toEasternTime(utcDateString: string): Date {
+    const utcDate = DateTime.fromISO(utcDateString, { zone: 'utc' });
+    // 'America/New_York' automatically handles EDT/EST transitions
+    const easternDate = utcDate.setZone('America/New_York');
+    return easternDate.toJSDate();
+  }
+
+  /**
+   * Format expiration date in Eastern Time for display
+   * @param utcDateString ISO date string in UTC (or null)
+   * @returns Formatted date string in Eastern Time, or null
+   */
+  static formatExpirationDate(utcDateString: string | null | undefined): string | null {
+    if (!utcDateString) return null;
+    const easternDate = Utils.toEasternTime(utcDateString);
+    return easternDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  /**
+   * Convert Eastern Time date input to UTC ISO string for storage
+   * @param dateString Date string in format YYYY-MM-DD (local date in Eastern Time)
+   * @returns ISO string in UTC, or null if input is empty
+   */
+  static easternDateToUTC(dateString: string): string | null {
+    if (!dateString || dateString.trim() === '') return null;
+    
+    // Parse the date as Eastern Time at 23:59:59
+    // 'America/New_York' automatically uses EDT or EST based on the date
+    const easternDateTime = DateTime.fromISO(`${dateString}T23:59:59`, {
+      zone: 'America/New_York'
+    });
+    
+    // Convert to UTC and return ISO string
+    return easternDateTime.toUTC().toISO();
+  }
+
+  /**
+   * Convert UTC ISO string to Eastern Time date string for input fields
+   * @param utcDateString ISO date string in UTC (or null)
+   * @returns Date string in format YYYY-MM-DD (local date in Eastern Time), or empty string
+   */
+  static utcToEasternDateString(utcDateString: string | null | undefined): string {
+    if (!utcDateString) return '';
+    
+    const easternDate = Utils.toEasternTime(utcDateString);
+    // Format as YYYY-MM-DD
+    const year = easternDate.getFullYear();
+    const month = String(easternDate.getMonth() + 1).padStart(2, '0');
+    const day = String(easternDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 }
