@@ -3,11 +3,11 @@ import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
 import { DateTime } from "luxon";
-import { FaSort, FaSortUp, FaSortDown, FaPlus, FaTrash, FaSync } from "react-icons/fa";
-import { Calendar } from "react-feather";
+import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { Utils } from "../../common/utils";
 import { DraftStatus } from "../../common/api-client/drafts-client";
+import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import "../../pages/Dashboard/styles.css";
 
 const styles: Record<string, React.CSSProperties> = {
@@ -66,93 +66,6 @@ const styles: Record<string, React.CSSProperties> = {
   disabledButton: {
     opacity: 0.5,
     cursor: "not-allowed",
-  },
-  table: {
-    width: "100%",
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-    borderCollapse: "collapse" as const,
-  },
-  tableHeader: {
-    padding: "12px 24px",
-    textAlign: "left" as const,
-    borderBottom: "1px solid #e5e7eb",
-    color: "#374151",
-    fontSize: "14px",
-    fontWeight: "600",
-  },
-  tableHeaderButton: {
-    background: "none",
-    border: "none",
-    padding: 0,
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    cursor: "pointer",
-    color: "inherit",
-    fontSize: "inherit",
-    fontWeight: "inherit",
-  },
-  tableCell: {
-    padding: "12px 24px",
-    fontSize: "14px",
-    color: "#374151",
-    borderBottom: "1px solid #e5e7eb",
-  },
-  checkboxCell: {
-    width: "48px",
-  },
-  checkbox: {
-    width: "16px",
-    height: "16px",
-  },
-  dateCell: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  },
-  calendarIcon: {
-    color: "#5a6169",
-  },
-  link: {
-    color: "#2563eb",
-    textDecoration: "none",
-  },
-  modalOverlay: {
-    position: "fixed" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    width: "450px",
-    maxWidth: "90%",
-    padding: "24px",
-  },
-  modalHeader: {
-    fontSize: "18px",
-    fontWeight: "600",
-    marginBottom: "16px",
-    paddingBottom: "12px",
-    borderBottom: "1px solid #e5e7eb",
-  },
-  modalContent: {
-    marginBottom: "24px",
-  },
-  modalFooter: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "12px",
   },
 };
 
@@ -299,8 +212,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   );
 
   const getSortIcon = (field: "title" | "last_modified") => {
-    if (sortField !== field) return <FaSort />;
-    return sortDirection === "asc" ? <FaSortUp /> : <FaSortDown />;
+    if (sortField !== field) return <LuArrowUpDown size={14} />;
+    return sortDirection === "asc" ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />;
   };
 
   const formatSessionTime = (timestamp: string) => {
@@ -360,37 +273,15 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
 
   return (
     <div className="dashboard-content">
-      {showModalDelete && (
-        <div className="modal-overlay" onClick={() => setShowModalDelete(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>{`Delete draft${selectedItems.length > 1 ? "s" : ""}`}</h2>
-            </div>
-            <div className="modal-body">
-              <p>
-                Do you want to delete{" "}
-                {selectedItems.length === 1
-                  ? `draft ${selectedItems[0].draft_id}?`
-                  : `${selectedItems.length} drafts?`}
-              </p>
-              <div className="modal-actions">
-                <button
-                  className="modal-button secondary"
-                  onClick={() => setShowModalDelete(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="modal-button danger"
-                  onClick={deleteSelectedSessions}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmationModal
+        isOpen={showModalDelete}
+        onClose={() => setShowModalDelete(false)}
+        onConfirm={deleteSelectedSessions}
+        title={`Delete draft${selectedItems.length > 1 ? "s" : ""}`}
+        itemName={selectedItems.length === 1 ? selectedItems[0].draft_id : undefined}
+        itemCount={selectedItems.length > 1 ? selectedItems.length : undefined}
+        itemLabel="draft"
+      />
 
       {/* Header section */}
       <div className="dashboard-header">
@@ -408,7 +299,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             }}
             aria-label="Create new draft"
           >
-            <FaPlus size={16} /> New Draft
+            <LuPlus size={16} className="button-icon" />
+            <span>New Draft</span>
           </button>
           {hasDocId && onToggleShowAllNOFOs && (
             <button
@@ -431,7 +323,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             aria-label={selectedItems.length === 0 ? "Delete drafts (no drafts selected)" : `Delete ${selectedItems.length} selected draft${selectedItems.length > 1 ? 's' : ''}`}
             aria-disabled={selectedItems.length === 0}
           >
-            <FaTrash size={16} /> Delete
+            <LuTrash size={16} className="button-icon" />
+            <span>Delete</span>
           </button>
           <button
             className="action-button refresh-button"
@@ -440,10 +333,18 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               await getSessions();
               setIsLoading(false);
             }}
+            disabled={isLoading}
             aria-label="Refresh drafts list"
             aria-busy={isLoading}
           >
-            <FaSync size={16} /> Refresh
+            {isLoading ? (
+              <span className="refresh-loading">Refreshing...</span>
+            ) : (
+              <>
+                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <span>Refresh</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -531,7 +432,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                 </div>
                 <div className="row-cell">
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
-                    <Calendar size={16} aria-hidden="true" />
+                    <LuCalendar size={16} aria-hidden="true" />
                     <time dateTime={item.last_modified}>
                       {formatSessionTime(item.last_modified)}
                     </time>

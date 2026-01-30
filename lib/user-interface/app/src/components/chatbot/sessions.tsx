@@ -11,8 +11,8 @@ import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router";
-import { FaSort, FaSortUp, FaSortDown, FaPlus, FaTrash, FaSync } from "react-icons/fa";
-import { Calendar } from "react-feather";
+import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
+import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import "../../pages/Dashboard/styles.css";
 
 // Styles for the sessions component
@@ -185,41 +185,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#9ca3af",
     cursor: "not-allowed",
   },
-  modalOverlay: {
-    position: "fixed" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    width: "450px",
-    maxWidth: "90%",
-    padding: "24px",
-  },
-  modalHeader: {
-    fontSize: "18px",
-    fontWeight: "600",
-    marginBottom: "16px",
-    paddingBottom: "12px",
-    borderBottom: "1px solid #e5e7eb",
-  },
-  modalContent: {
-    marginBottom: "24px",
-  },
-  modalFooter: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "12px",
-  },
 };
 
 export interface SessionsProps {
@@ -248,10 +213,6 @@ export default function Sessions(props: SessionsProps) {
   );
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const navigate = useNavigate();
-
-  // Refs for delete modal focus management
-  const deleteModalRef = useRef<HTMLDivElement>(null);
-  const deleteModalPreviousFocusRef = useRef<HTMLElement | null>(null);
 
   const { documentIdentifier } = props;
 
@@ -288,83 +249,6 @@ export default function Sessions(props: SessionsProps) {
     loadSessions();
   }, [appContext, getSessions, props.toolsOpen, documentIdentifier]);
 
-  // Focus management for delete modal
-  useEffect(() => {
-    if (!showModalDelete) return;
-
-    // Store the currently focused element
-    deleteModalPreviousFocusRef.current = document.activeElement as HTMLElement;
-
-    // Focus the modal after a short delay
-    setTimeout(() => {
-      const firstFocusable = deleteModalRef.current?.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      firstFocusable?.focus();
-    }, 100);
-
-    // Restore focus when modal closes
-    return () => {
-      // Only restore focus if the element still exists in the DOM
-      if (
-        deleteModalPreviousFocusRef.current &&
-        document.body.contains(deleteModalPreviousFocusRef.current)
-      ) {
-        deleteModalPreviousFocusRef.current.focus();
-      }
-    };
-  }, [showModalDelete]);
-
-  // Focus trap handler for delete modal
-  useEffect(() => {
-    if (!showModalDelete || !deleteModalRef.current) return;
-
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-
-      const focusableElements =
-        deleteModalRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-
-      if (!focusableElements || focusableElements.length === 0) return;
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      // Check if currently focused element is inside the modal
-      const activeElement = document.activeElement as HTMLElement;
-      const isInsideModal = deleteModalRef.current?.contains(activeElement);
-
-      // If focus is outside the modal, bring it back
-      if (!isInsideModal) {
-        e.preventDefault();
-        firstElement.focus();
-        return;
-      }
-
-      if (e.shiftKey && document.activeElement === firstElement) {
-        e.preventDefault();
-        lastElement.focus();
-      } else if (!e.shiftKey && document.activeElement === lastElement) {
-        e.preventDefault();
-        firstElement.focus();
-      }
-    };
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setShowModalDelete(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleTabKey);
-    document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("keydown", handleTabKey);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [showModalDelete]);
 
   const deleteSelectedSessions = async () => {
     if (!appContext || selectedItems.length === 0) return;
@@ -437,8 +321,8 @@ export default function Sessions(props: SessionsProps) {
   }, [sortedSessions, currentPage, pageSize]);
 
   const getSortIcon = (field: "title" | "time_stamp") => {
-    if (sortField !== field) return <FaSort />;
-    return sortDirection === "asc" ? <FaSortUp /> : <FaSortDown />;
+    if (sortField !== field) return <LuArrowUpDown size={14} />;
+    return sortDirection === "asc" ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />;
   };
 
   const formatSessionTime = (timestamp: string) => {
@@ -461,54 +345,15 @@ export default function Sessions(props: SessionsProps) {
 
   return (
     <div className="dashboard-content">
-      {showModalDelete && (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowModalDelete(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-modal-title"
-        >
-          <div
-            ref={deleteModalRef}
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            role="document"
-          >
-            <div className="modal-header">
-              <h2 id="delete-modal-title">
-                {`Delete session${selectedItems.length > 1 ? "s" : ""}`}
-              </h2>
-            </div>
-            <div className="modal-body">
-              <p>
-                Do you want to delete{" "}
-                {selectedItems.length === 1
-                  ? `session ${selectedItems[0].session_id}?`
-                  : `${selectedItems.length} sessions?`}
-              </p>
-              <div className="modal-actions">
-                <button
-                  className="modal-button secondary"
-                  onClick={() => setShowModalDelete(false)}
-                  aria-label="Cancel delete"
-                >
-                  Cancel
-                </button>
-                <button
-                  className="modal-button danger"
-                  onClick={deleteSelectedSessions}
-                  aria-label={`Confirm delete ${selectedItems.length} session${
-                    selectedItems.length > 1 ? "s" : ""
-                  }`}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmationModal
+        isOpen={showModalDelete}
+        onClose={() => setShowModalDelete(false)}
+        onConfirm={deleteSelectedSessions}
+        title={`Delete session${selectedItems.length > 1 ? "s" : ""}`}
+        itemName={selectedItems.length === 1 ? selectedItems[0].session_id : undefined}
+        itemCount={selectedItems.length > 1 ? selectedItems.length : undefined}
+        itemLabel="session"
+      />
 
       {/* Header section */}
       <div className="dashboard-header">
@@ -528,7 +373,8 @@ export default function Sessions(props: SessionsProps) {
               navigate(`/home${queryParams}`);
             }}
           >
-            <FaPlus size={16} /> New Session
+            <LuPlus size={16} className="button-icon" />
+            <span>New Session</span>
           </button>
           <button
             className="action-button danger-button"
@@ -540,7 +386,8 @@ export default function Sessions(props: SessionsProps) {
               cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
             }}
           >
-            <FaTrash size={16} /> Delete
+            <LuTrash size={16} className="button-icon" />
+            <span>Delete</span>
           </button>
           <button
             className="action-button refresh-button"
@@ -549,10 +396,18 @@ export default function Sessions(props: SessionsProps) {
               await getSessions();
               setIsLoading(false);
             }}
+            disabled={isLoading}
             aria-label="Refresh sessions list"
             aria-busy={isLoading}
           >
-            <FaSync size={16} /> Refresh
+            {isLoading ? (
+              <span className="refresh-loading">Refreshing...</span>
+            ) : (
+              <>
+                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <span>Refresh</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -650,8 +505,10 @@ export default function Sessions(props: SessionsProps) {
                 </div>
                 <div className="row-cell">
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
-                    <Calendar size={16} />
-                    {formatSessionTime(item.time_stamp)}
+                    <LuCalendar size={16} aria-hidden="true" />
+                    <time dateTime={item.time_stamp}>
+                      {formatSessionTime(item.time_stamp)}
+                    </time>
                   </div>
                 </div>
               </div>

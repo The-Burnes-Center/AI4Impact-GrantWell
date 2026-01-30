@@ -1,4 +1,41 @@
 import React, { useEffect, useRef } from "react";
+import { LuX } from "react-icons/lu";
+import "../../pages/Dashboard/styles.css";
+
+/**
+ * Custom hook to handle modal side effects
+ */
+function useModalEffects(isOpen: boolean, onClose: () => void) {
+  // Prevent body scrolling when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  // Close on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    if (isOpen) {
+      window.addEventListener("keydown", handleEscape);
+    }
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
+}
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  maxWidth?: string;
+}
 
 /**
  * Reusable accessible Modal component with:
@@ -6,63 +43,15 @@ import React, { useEffect, useRef } from "react";
  * - Focus restoration
  * - Escape key handling
  * - ARIA attributes
- * 
- * Based on Dashboard Modal implementation
- */
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-  width?: string;
-  maxWidth?: string;
-  topOffset?: number;
-  hideCloseButton?: boolean;
-}
-
-/**
- * Custom hook to handle modal side effects
- */
-function useModalEffects(isOpen: boolean, onClose: () => void, hideCloseButton?: boolean) {
-  useEffect(() => {
-    if (isOpen && !hideCloseButton) {
-      // Prevent body scroll when modal is open
-      document.body.style.overflow = "hidden";
-      
-      // Add escape key listener only if close button is not hidden
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          onClose();
-        }
-      };
-      
-      document.addEventListener("keydown", handleEscape);
-      
-      return () => {
-        document.body.style.overflow = "";
-        document.removeEventListener("keydown", handleEscape);
-      };
-    } else if (isOpen && hideCloseButton) {
-      // Still prevent body scroll even if close button is hidden
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = "";
-      };
-    }
-  }, [isOpen, onClose, hideCloseButton]);
-}
-
-/**
- * Modal Component
+ * - Consistent styling matching Dashboard
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, width, maxWidth = "600px", topOffset = 0, hideCloseButton = false }) => {
+  ({ isOpen, onClose, title, children, maxWidth = "500px" }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const previousFocusRef = useRef<HTMLElement | null>(null);
 
     // Use the custom hook for side effects
-    useModalEffects(isOpen, onClose, hideCloseButton);
+    useModalEffects(isOpen, onClose);
 
     // Focus trap effect
     useEffect(() => {
@@ -82,7 +71,10 @@ export const Modal = React.memo<ModalProps>(
       // Restore focus when modal closes
       return () => {
         // Only restore focus if the element still exists in the DOM
-        if (previousFocusRef.current && document.body.contains(previousFocusRef.current)) {
+        if (
+          previousFocusRef.current &&
+          document.body.contains(previousFocusRef.current)
+        ) {
           previousFocusRef.current.focus();
         }
       };
@@ -95,9 +87,10 @@ export const Modal = React.memo<ModalProps>(
       const handleTabKey = (e: KeyboardEvent) => {
         if (e.key !== "Tab") return;
 
-        const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
+        const focusableElements =
+          modalRef.current?.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
 
         if (!focusableElements || focusableElements.length === 0) return;
 
@@ -132,6 +125,7 @@ export const Modal = React.memo<ModalProps>(
 
     return (
       <div
+        className="modal-overlay"
         style={{
           position: "fixed",
           top: 0,
@@ -142,11 +136,13 @@ export const Modal = React.memo<ModalProps>(
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          zIndex: 10000,
-          padding: "20px", // Equal padding on all sides for true centering
+          zIndex: 1000,
+          backdropFilter: "blur(3px)",
+          padding: "20px",
+          boxSizing: "border-box",
         }}
-        onClick={hideCloseButton ? undefined : onClose}
-        onKeyDown={hideCloseButton ? undefined : (e) => {
+        onClick={onClose}
+        onKeyDown={(e) => {
           if (e.key === "Escape") onClose();
         }}
         role="dialog"
@@ -155,78 +151,66 @@ export const Modal = React.memo<ModalProps>(
       >
         <div
           ref={modalRef}
+          className="modal-content"
           style={{
             backgroundColor: "white",
-            borderRadius: "8px",
-            width: width || "100%",
+            borderRadius: "12px",
+            width: "100%",
             maxWidth: maxWidth,
-            maxHeight: "calc(90vh - 40px)", // Account for padding
-            overflow: "auto",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            margin: "auto", // Additional centering support
+            maxHeight: "85vh",
+            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
           }}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
           role="document"
         >
-          {/* Modal Header */}
           <div
+            className="modal-header"
             style={{
-              padding: "20px",
-              borderBottom: "1px solid #e5e7eb",
+              padding: "20px 25px",
+              borderBottom: "1px solid #e0e0e0",
               display: "flex",
-              justifyContent: hideCloseButton ? "flex-start" : "space-between",
+              justifyContent: "space-between",
               alignItems: "center",
+              backgroundColor: "#f9fafc",
+              borderTopLeftRadius: "12px",
+              borderTopRightRadius: "12px",
+              flexShrink: 0,
             }}
           >
             <h2
               id="modal-title"
               style={{
                 margin: 0,
+                color: "#14558F",
                 fontSize: "20px",
                 fontWeight: 600,
-                color: "#111827",
               }}
             >
               {title}
             </h2>
-            {!hideCloseButton && (
-              <button
-                onClick={onClose}
-                aria-label="Close modal"
-                style={{
-                  background: "none",
-                  border: "none",
-                  fontSize: "24px",
-                  cursor: "pointer",
-                  color: "#6b7280",
-                  padding: "4px 8px",
-                  lineHeight: 1,
-                  borderRadius: "4px",
-                  transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#f3f4f6";
-                  e.currentTarget.style.color = "#111827";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "#6b7280";
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.outline = "2px solid #0088FF";
-                  e.currentTarget.style.outlineOffset = "2px";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.outline = "none";
-                }}
-              >
-                ×
-              </button>
-            )}
+            <button
+              className="modal-close-button"
+              onClick={onClose}
+              aria-label="Close modal"
+            >
+              <LuX size={20} />
+            </button>
           </div>
-
-          {/* Modal Content */}
-          <div style={{ padding: "20px" }}>{children}</div>
+          <div
+            className="modal-body"
+            style={{
+              padding: "25px",
+              overflowY: "auto",
+              backgroundColor: "white",
+            }}
+          >
+            {children}
+          </div>
         </div>
       </div>
     );
@@ -237,4 +221,3 @@ export const Modal = React.memo<ModalProps>(
 Modal.displayName = "Modal";
 
 export default Modal;
-
