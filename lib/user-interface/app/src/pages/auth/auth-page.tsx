@@ -146,7 +146,7 @@ export default function AuthPage() {
             <p className="auth-footer-text">
               Developed by{' '}
               <a 
-                href="https://burnes.northeastern.edu/" 
+                href="https://burnes.northeastern.edu/ai-for-impact-coop/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="auth-footer-link"
