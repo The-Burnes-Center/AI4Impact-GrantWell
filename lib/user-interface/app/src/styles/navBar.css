@@ -1,9 +1,0 @@
-#awsui-top-navigation .awsui-top-navigation {
-  background-color: #333 !important;
-  color: white !important;
-}
-
-[data-theme="light"] #awsui-top-navigation .awsui-top-navigation {
-  background-color: #fff !important;
-  color: black !important;
-}
