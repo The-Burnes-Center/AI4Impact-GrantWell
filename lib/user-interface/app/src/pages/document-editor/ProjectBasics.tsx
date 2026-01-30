@@ -49,25 +49,111 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   // Load existing data if available
   useEffect(() => {
     if (documentData?.projectBasics) {
-      setFormData(documentData.projectBasics);
+      setFormData((prevData) => ({
+        ...prevData,
+        ...documentData.projectBasics,
+      }));
     }
   }, [documentData]);
 
   // Validation functions
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email.trim());
   };
 
   const validateZipCode = (zip: string): boolean => {
     const zipRegex = /^\d{5}$/;
-    return zipRegex.test(zip);
+    return zipRegex.test(zip.trim());
   };
 
-  const validateAmount = (amount: string): boolean => {
-    // Allow numbers with optional commas and decimal points
-    const amountRegex = /^[\d,]+(\.\d{1,2})?$/;
-    return amountRegex.test(amount.trim());
+  const validateAmount = (amount: string): { isValid: boolean; error?: string } => {
+    const trimmed = amount.trim();
+    
+    // Remove commas for validation
+    const numericValue = trimmed.replace(/,/g, '');
+    
+    // Check if it's a valid number
+    if (!/^\d+(\.\d{1,2})?$/.test(numericValue)) {
+      return { isValid: false, error: "Please enter a valid amount (numbers only, e.g., 250000 or 250,000)" };
+    }
+    
+    // Check minimum amount (e.g., $1)
+    const numValue = parseFloat(numericValue);
+    if (numValue < 1) {
+      return { isValid: false, error: "Amount must be at least $1" };
+    }
+    
+    // Check maximum amount (e.g., $1 billion)
+    if (numValue > 1000000000) {
+      return { isValid: false, error: "Amount cannot exceed $1,000,000,000" };
+    }
+    
+    return { isValid: true };
+  };
+
+  const validateProjectName = (name: string): string | undefined => {
+    const trimmed = name.trim();
+    if (trimmed.length < 3) {
+      return "Project name must be at least 3 characters";
+    }
+    if (trimmed.length > 200) {
+      return "Project name cannot exceed 200 characters";
+    }
+    // Check for only whitespace
+    if (!trimmed.replace(/\s+/g, '').length) {
+      return "Project name cannot be only spaces";
+    }
+    return undefined;
+  };
+
+  const validateOrganizationName = (name: string): string | undefined => {
+    const trimmed = name.trim();
+    if (trimmed.length < 2) {
+      return "Organization name must be at least 2 characters";
+    }
+    if (trimmed.length > 200) {
+      return "Organization name cannot exceed 200 characters";
+    }
+    if (!trimmed.replace(/\s+/g, '').length) {
+      return "Organization name cannot be only spaces";
+    }
+    return undefined;
+  };
+
+  const validateLocation = (location: string): string | undefined => {
+    const trimmed = location.trim();
+    if (trimmed.length < 2) {
+      return "Location must be at least 2 characters";
+    }
+    if (trimmed.length > 100) {
+      return "Location cannot exceed 100 characters";
+    }
+    // Basic format check: should contain city and state (e.g., "Boston, MA")
+    if (!trimmed.includes(',') && trimmed.length > 0) {
+      // Not required, but suggest format
+      // We'll allow it but could add a warning
+    }
+    return undefined;
+  };
+
+  const validateContactName = (name: string): string | undefined => {
+    const trimmed = name.trim();
+    if (trimmed.length < 2) {
+      return "Contact name must be at least 2 characters";
+    }
+    if (trimmed.length > 100) {
+      return "Contact name cannot exceed 100 characters";
+    }
+    // Check if it looks like a valid name (at least one space or is a reasonable single name)
+    if (!trimmed.replace(/\s+/g, '').length) {
+      return "Contact name cannot be only spaces";
+    }
+    // Check for valid name characters (letters, spaces, hyphens, apostrophes)
+    if (!/^[a-zA-Z\s'-]+$/.test(trimmed)) {
+      return "Contact name can only contain letters, spaces, hyphens, and apostrophes";
+    }
+    return undefined;
   };
 
   const validateField = (name: string, value: string): string | undefined => {
@@ -79,25 +165,39 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
     // Field-specific validation
     switch (name) {
       case "projectName":
-        if (value.trim().length < 3) {
-          return "Project name must be at least 3 characters";
-        }
-        break;
+        return validateProjectName(value);
+      
+      case "organizationName":
+        return validateOrganizationName(value);
+      
       case "contactEmail":
         if (!validateEmail(value)) {
-          return "Please enter a valid email address";
+          return "Please enter a valid email address (e.g., name@example.com)";
+        }
+        // Additional email checks
+        if (value.length > 254) {
+          return "Email address is too long (maximum 254 characters)";
         }
         break;
+      
       case "zipCode":
         if (!validateZipCode(value)) {
           return "Please enter a valid 5-digit ZIP code";
         }
         break;
+      
       case "requestedAmount":
-        if (!validateAmount(value)) {
-          return "Please enter a valid amount (numbers only, e.g., 250000 or 250,000)";
+        const amountValidation = validateAmount(value);
+        if (!amountValidation.isValid) {
+          return amountValidation.error;
         }
         break;
+      
+      case "location":
+        return validateLocation(value);
+      
+      case "contactName":
+        return validateContactName(value);
     }
 
     return undefined;
@@ -105,17 +205,50 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    
+    // Format input based on field type
+    let formattedValue = value;
+    
+    // Format ZIP code: only allow digits, max 5
+    if (name === "zipCode") {
+      formattedValue = value.replace(/\D/g, '').slice(0, 5);
+    }
+    
+    // Format amount: allow digits, commas, and one decimal point
+    if (name === "requestedAmount") {
+      // Remove all non-digit and non-comma characters except one decimal point
+      formattedValue = value.replace(/[^\d,.]/g, '');
+      // Ensure only one decimal point
+      const parts = formattedValue.split('.');
+      if (parts.length > 2) {
+        formattedValue = parts[0] + '.' + parts.slice(1).join('');
+      }
+      // Limit decimal places to 2
+      if (parts.length === 2 && parts[1].length > 2) {
+        formattedValue = parts[0] + '.' + parts[1].slice(0, 2);
+      }
+    }
+    
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: formattedValue,
     }));
 
-    // Clear error when user starts typing
-    if (formErrors[name as keyof FormErrors]) {
+    // Real-time validation if field has been touched
+    if (touched[name]) {
+      const error = validateField(name, formattedValue);
       setFormErrors((prev) => ({
         ...prev,
-        [name]: undefined,
+        [name]: error,
       }));
+    } else {
+      // Clear error when user starts typing (optimistic clearing)
+      if (formErrors[name as keyof FormErrors]) {
+        setFormErrors((prev) => ({
+          ...prev,
+          [name]: undefined,
+        }));
+      }
     }
   };
 
@@ -433,12 +566,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   ? "projectName-help projectName-error"
                   : "projectName-help"
               }
+              maxLength={200}
               style={{
                 width: "100%",
                 padding: "12px",
                 border: `1px solid ${formErrors.projectName && touched.projectName ? '#d32f2f' : '#e2e8f0'}`,
                 borderRadius: "6px",
                 fontSize: "16px",
+                fontFamily: "'Noto Sans', sans-serif",
               }}
             />
             <span
@@ -448,9 +583,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
+                fontFamily: "'Noto Sans', sans-serif",
               }}
             >
-              Keep it clear and descriptive. 5-10 words recommended.
+              Keep it clear and descriptive. ({(formData.projectName || '').length}/200 characters)
             </span>
             {formErrors.projectName && touched.projectName && (
               <span
@@ -463,6 +599,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   color: "#d32f2f",
                   marginTop: "4px",
                   fontWeight: 500,
+                  fontFamily: "'Noto Sans', sans-serif",
                 }}
               >
                 {formErrors.projectName}
@@ -497,12 +634,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   ? "organizationName-help organizationName-error"
                   : "organizationName-help"
               }
+              maxLength={200}
               style={{
                 width: "100%",
                 padding: "12px",
                 border: `1px solid ${formErrors.organizationName && touched.organizationName ? '#d32f2f' : '#e2e8f0'}`,
                 borderRadius: "6px",
                 fontSize: "16px",
+                fontFamily: "'Noto Sans', sans-serif",
               }}
             />
             <span
@@ -512,9 +651,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
+                fontFamily: "'Noto Sans', sans-serif",
               }}
             >
-              Enter the name of your municipality, tribal nation, or community organization.
+              Enter the name of your municipality, tribal nation, or community organization. ({formData.organizationName.length}/200 characters)
             </span>
             {formErrors.organizationName && touched.organizationName && (
               <span
@@ -581,8 +721,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   border: `1px solid ${formErrors.requestedAmount && touched.requestedAmount ? '#d32f2f' : '#e2e8f0'}`,
                   borderRadius: "6px",
                   fontSize: "16px",
+                  fontFamily: "'Noto Sans', sans-serif",
                 }}
                 placeholder="250,000"
+                inputMode="decimal"
               />
             </div>
             <span
@@ -649,12 +791,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                     ? "location-help location-error"
                     : "location-help"
                 }
+                maxLength={100}
                 style={{
                   width: "100%",
                   padding: "12px",
                   border: `1px solid ${formErrors.location && touched.location ? '#d32f2f' : '#e2e8f0'}`,
                   borderRadius: "6px",
                   fontSize: "16px",
+                  fontFamily: "'Noto Sans', sans-serif",
                 }}
                 placeholder="Boston, MA"
               />
@@ -665,9 +809,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   fontSize: "14px",
                   color: "#5a6575",
                   marginTop: "4px",
+                  fontFamily: "'Noto Sans', sans-serif",
                 }}
               >
-                Enter the city and state where the project will take place.
+                Enter the city and state where the project will take place (e.g., "Boston, MA"). ({(formData.location || '').length}/30 characters)
               </span>
               {formErrors.location && touched.location && (
                 <span
@@ -714,6 +859,8 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                     : "zipCode-help"
                 }
                 maxLength={5}
+                pattern="[0-9]{5}"
+                inputMode="numeric"
                 style={{
                   width: "100%",
                   padding: "12px",
@@ -730,6 +877,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   fontSize: "14px",
                   color: "#5a6575",
                   marginTop: "4px",
+                  fontFamily: "'Noto Sans', sans-serif",
                 }}
               >
                 Enter the 5-digit ZIP code for the project location.
@@ -780,12 +928,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   ? "contactName-help contactName-error"
                   : "contactName-help"
               }
+              maxLength={100}
               style={{
                 width: "100%",
                 padding: "12px",
                 border: `1px solid ${formErrors.contactName && touched.contactName ? '#d32f2f' : '#e2e8f0'}`,
                 borderRadius: "6px",
                 fontSize: "16px",
+                fontFamily: "'Noto Sans', sans-serif",
               }}
             />
             <span
@@ -795,9 +945,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
+                fontFamily: "'Noto Sans', sans-serif",
               }}
             >
-              Enter the name of the primary person responsible for this grant application.
+              Enter the name of the primary person responsible for this grant application. ({(formData.contactName || '').length}/100 characters)
             </span>
             {formErrors.contactName && touched.contactName && (
               <span
@@ -844,12 +995,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                   ? "contactEmail-help contactEmail-error"
                   : "contactEmail-help"
               }
+              maxLength={254}
               style={{
                 width: "100%",
                 padding: "12px",
                 border: `1px solid ${formErrors.contactEmail && touched.contactEmail ? '#d32f2f' : '#e2e8f0'}`,
                 borderRadius: "6px",
                 fontSize: "16px",
+                fontFamily: "'Noto Sans', sans-serif",
               }}
               placeholder="name@example.com"
             />
@@ -860,6 +1013,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 fontSize: "14px",
                 color: "#5a6575",
                 marginTop: "4px",
+                fontFamily: "'Noto Sans', sans-serif",
               }}
             >
               Enter a valid email address for project-related communications.
