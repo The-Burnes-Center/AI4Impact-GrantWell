@@ -55,7 +55,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         borderBottom: "1px solid #e5e7eb",
         padding: "20px 24px",
         position: "sticky",
-        top: 0,
+        top: "62px", // Height of header (16px padding top + 16px padding bottom + ~30px h1 height)
         zIndex: 100,
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
       }}
@@ -64,7 +64,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         {`
           .step-tooltip {
             position: absolute;
-            bottom: calc(100% + 8px);
+            top: calc(100% + 8px);
             left: 50%;
             transform: translateX(-50%);
             padding: 8px 12px;
@@ -92,47 +92,49 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
           }
           
           .step-wrapper:last-child .step-tooltip {
-            left: auto;
-            right: 0;
-            transform: translateX(0);
+            left: 50%;
+            right: auto;
+            transform: translateX(calc(-50% + 16px)); /* Center on step circle (16px = half circle width) */
+            max-width: min(220px, calc(100vw - 32px));
           }
           
-          .step-tooltip::after {
+          .step-wrapper:last-child:hover .step-tooltip,
+          .step-wrapper:last-child:focus-within .step-tooltip {
+            transform: translateX(calc(-50% + 16px)) translateY(2px);
+          }
+          
+          .step-tooltip::before {
             content: '';
             position: absolute;
-            top: 100%;
+            bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
             border: 6px solid transparent;
-            border-top-color: #1f2937;
+            border-bottom-color: #1f2937;
           }
           
-          .step-wrapper:first-child .step-tooltip::after {
+          .step-wrapper:first-child .step-tooltip::before {
             left: 20px;
             transform: translateX(0);
           }
           
-          .step-wrapper:last-child .step-tooltip::after {
-            left: auto;
-            right: 20px;
-            transform: translateX(0);
+          .step-wrapper:last-child .step-tooltip::before {
+            left: 50%;
+            right: auto;
+            transform: translateX(calc(-50% + 16px));
           }
           
           .step-wrapper:hover .step-tooltip,
           .step-wrapper:focus-within .step-tooltip {
             opacity: 1;
-            transform: translateX(-50%) translateY(-2px);
+            transform: translateX(-50%) translateY(2px);
           }
           
           .step-wrapper:first-child:hover .step-tooltip,
           .step-wrapper:first-child:focus-within .step-tooltip {
-            transform: translateX(0) translateY(-2px);
+            transform: translateX(0) translateY(2px);
           }
           
-          .step-wrapper:last-child:hover .step-tooltip,
-          .step-wrapper:last-child:focus-within .step-tooltip {
-            transform: translateX(0) translateY(-2px);
-          }
           
           @media (max-width: 768px) {
             .progress-stepper-container {
@@ -166,30 +168,6 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
           }
         `}
       </style>
-      {/* Progress Bar */}
-      {showProgress && (
-        <div
-          style={{
-            width: "100%",
-            height: "4px",
-            backgroundColor: "#e5e7eb",
-            borderRadius: "2px",
-            marginBottom: "24px",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              width: `${progressPercentage}%`,
-              height: "100%",
-              backgroundColor: "#14558F",
-              borderRadius: "2px",
-              transition: "width 0.3s ease",
-            }}
-          />
-        </div>
-      )}
-
       {/* Steps */}
       <div
         style={{
@@ -320,6 +298,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                 style={{
                   textAlign: "center",
                   maxWidth: "120px",
+                  position: "relative",
                 }}
                 onMouseEnter={() => setHoveredStep(index)}
                 onMouseLeave={() => setHoveredStep(null)}

@@ -438,12 +438,33 @@ const DocumentEditor: React.FC = () => {
             onContinue={() => navigateToStep("questionnaire")}
             selectedNofo={selectedNofo}
             documentData={documentData}
-            onUpdateData={(data) => {
+            onUpdateData={async (data) => {
               if (documentData) {
-                setDocumentData({
+                const updatedData = {
                   ...documentData,
                   ...data
-                });
+                };
+                setDocumentData(updatedData);
+                
+                try {
+                  const draftsClient = new DraftsClient(appContext);
+                  const username = (await Auth.currentAuthenticatedUser()).username;
+                  
+                  if (username && sessionId && selectedNofo) {
+                    await draftsClient.updateDraft({
+                      sessionId: sessionId,
+                      userId: username,
+                      title: `Application for ${selectedNofo}`,
+                      documentIdentifier: selectedNofo,
+                      sections: updatedData.sections || {},
+                      projectBasics: updatedData.projectBasics,
+                      questionnaire: updatedData.questionnaire,
+                      lastModified: new Date().toISOString(),
+                    });
+                  }
+                } catch (error) {
+                  console.error('Failed to auto-save project basics:', error);
+                }
               }
             }}
           />
@@ -455,12 +476,35 @@ const DocumentEditor: React.FC = () => {
             selectedNofo={selectedNofo}
             onNavigate={navigateToStep}
             documentData={documentData}
-            onUpdateData={(data) => {
+            onUpdateData={async (data) => {
               if (documentData) {
-                setDocumentData({
+                const updatedData = {
                   ...documentData,
                   ...data
-                });
+                };
+                setDocumentData(updatedData);
+                
+                // Auto-save to database
+                try {
+                  const draftsClient = new DraftsClient(appContext);
+                  const username = (await Auth.currentAuthenticatedUser()).username;
+                  
+                  if (username && sessionId && selectedNofo) {
+                    await draftsClient.updateDraft({
+                      sessionId: sessionId,
+                      userId: username,
+                      title: `Application for ${selectedNofo}`,
+                      documentIdentifier: selectedNofo,
+                      sections: updatedData.sections || {},
+                      projectBasics: updatedData.projectBasics,
+                      questionnaire: updatedData.questionnaire,
+                      lastModified: new Date().toISOString(),
+                    });
+                  }
+                } catch (error) {
+                  console.error('Failed to auto-save questionnaire:', error);
+                  // Don't show error to user for auto-save failures
+                }
               }
             }}
           />
@@ -579,8 +623,9 @@ const DocumentEditor: React.FC = () => {
   }
 
   // Calculate header height for sticky positioning
-  const headerHeight = 60; // Approximate height of document-editor-header
-  const stepperTop = topOffset + headerHeight;
+  // Header has padding 16px top + 16px bottom = 32px, plus h1 height (~30px) = ~62px
+  const headerHeight = 62; // Height of document-editor-header
+  const stepperTop = headerHeight; // ProgressStepper sits right below header
 
   return (
     <div
@@ -619,12 +664,15 @@ const DocumentEditor: React.FC = () => {
           className="document-editor-header"
           style={{
             background: "#fff",
-            borderBottom: "0",
+            borderBottom: "1px solid #e5e7eb",
             width: "100%",
             maxWidth: "100%",
-            position: "static",
+            position: "sticky",
+            top: 0,
+            zIndex: 101,
             overflow: "hidden",
             boxSizing: "border-box",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
           }}
         >
           <div

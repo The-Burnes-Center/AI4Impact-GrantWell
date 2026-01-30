@@ -152,9 +152,11 @@ const DocumentNavigation: React.FC<DocumentNavigationProps> = ({
             height: isOpen ? '100vh' : '100%',
           }),
           ...(!isNarrowViewport && {
-            position: 'static',
-            height: "100%",
-            alignSelf: "stretch",
+            position: 'sticky',
+            top: 0,
+            height: "100vh",
+            alignSelf: "flex-start",
+            overflowY: "auto",
           }),
           flexShrink: 0,
         }}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 interface ProjectBasicsProps {
   onContinue: () => void;
@@ -45,16 +45,127 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const isInitialLoad = useRef(true);
+  const hasLoadedFromDocumentData = useRef(false);
 
-  // Load existing data if available
-  useEffect(() => {
-    if (documentData?.projectBasics) {
-      setFormData((prevData) => ({
-        ...prevData,
-        ...documentData.projectBasics,
-      }));
+  // Auto-save debounce ref
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const saveStatusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Auto-save function (debounced)
+  const autoSave = useCallback((data: ProjectBasicsFormData) => {
+    // Clear existing timeout
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
     }
-  }, [documentData]);
+
+    // Show saving indicator immediately when user stops typing
+    setSaveStatus('saving');
+    setIsSaving(true);
+
+    autoSaveTimeoutRef.current = setTimeout(async () => {
+      try {
+        // Save to localStorage immediately
+        localStorage.setItem('projectBasics', JSON.stringify(data));
+        
+        // Update parent component (which saves to database)
+        if (onUpdateData) {
+          try {
+            await onUpdateData({
+              projectBasics: data
+            });
+          } catch (error) {
+            // If database save fails, localStorage is still updated
+            console.error('Database save failed, but localStorage updated:', error);
+          }
+        }
+        
+        // Show saved status
+        setSaveStatus('saved');
+        setIsSaving(false);
+        
+        // Clear saved status after 2 seconds
+        if (saveStatusTimeoutRef.current) {
+          clearTimeout(saveStatusTimeoutRef.current);
+        }
+        saveStatusTimeoutRef.current = setTimeout(() => {
+          setSaveStatus('idle');
+        }, 2000);
+      } catch (error) {
+        console.error('Auto-save failed:', error);
+        setIsSaving(false);
+        setSaveStatus('idle');
+      }
+    }, 1000); // Wait 1 second after user stops typing
+  }, [onUpdateData]);
+
+  // Load existing data when documentData becomes available
+  useEffect(() => {
+    // Load from documentData if available and we haven't loaded it yet
+    if (documentData?.projectBasics && !hasLoadedFromDocumentData.current) {
+      setFormData({
+        projectName: documentData.projectBasics.projectName || "",
+        organizationName: documentData.projectBasics.organizationName || "",
+        requestedAmount: documentData.projectBasics.requestedAmount || "",
+        location: documentData.projectBasics.location || "",
+        zipCode: documentData.projectBasics.zipCode || "",
+        contactName: documentData.projectBasics.contactName || "",
+        contactEmail: documentData.projectBasics.contactEmail || "",
+      });
+      hasLoadedFromDocumentData.current = true;
+      isInitialLoad.current = false;
+    } 
+    // Fallback to localStorage only if documentData is not available and we haven't loaded yet
+    else if (isInitialLoad.current && !documentData?.projectBasics && !hasLoadedFromDocumentData.current) {
+      try {
+        const savedData = localStorage.getItem('projectBasics');
+        if (savedData) {
+          const parsedData = JSON.parse(savedData);
+          // Check if localStorage has actual data (not just empty strings)
+          const hasData = parsedData.projectName || parsedData.organizationName || 
+                         parsedData.requestedAmount || parsedData.location || 
+                         parsedData.zipCode || parsedData.contactName || 
+                         parsedData.contactEmail;
+          
+          if (hasData) {
+            setFormData({
+              projectName: parsedData.projectName || "",
+              organizationName: parsedData.organizationName || "",
+              requestedAmount: parsedData.requestedAmount || "",
+              location: parsedData.location || "",
+              zipCode: parsedData.zipCode || "",
+              contactName: parsedData.contactName || "",
+              contactEmail: parsedData.contactEmail || "",
+            });
+            // Also update parent component with localStorage data
+            if (onUpdateData) {
+              onUpdateData({
+                projectBasics: parsedData
+              });
+            }
+          }
+        }
+        isInitialLoad.current = false;
+      } catch (error) {
+        console.error('Error loading from localStorage:', error);
+        isInitialLoad.current = false;
+      }
+    }
+  }, [documentData, onUpdateData]); // Watch documentData - removed formData to prevent unnecessary re-runs
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+      if (saveStatusTimeoutRef.current) {
+        clearTimeout(saveStatusTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Validation functions
   const validateEmail = (email: string): boolean => {
@@ -229,10 +340,17 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       }
     }
     
-    setFormData((prevData) => ({
-      ...prevData,
+    const updatedData = {
+      ...formData,
       [name]: formattedValue,
-    }));
+    };
+    
+    setFormData(updatedData);
+
+    // Auto-save after user stops typing (debounced) - but not on initial load
+    if (!isInitialLoad.current) {
+      autoSave(updatedData);
+    }
 
     // Real-time validation if field has been touched
     if (touched[name]) {
@@ -337,6 +455,21 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             outline: 2px solid #0088FF !important;
             outline-offset: 2px !important;
           }
+          
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          
+          .auto-save-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+          }
         `}
       </style>
       <div
@@ -359,11 +492,54 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             background: "#14558F",
             color: "white",
             padding: "20px 24px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 600 }}>
+          <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 600, fontFamily: "'Noto Sans', sans-serif" }}>
             Project Basics
           </h1>
+          {saveStatus !== 'idle' && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                fontSize: "14px",
+                fontFamily: "'Noto Sans', sans-serif",
+                fontWeight: 500,
+              }}
+              role="status"
+              aria-live="polite"
+              aria-label={saveStatus === 'saving' ? 'Saving changes' : 'Changes saved'}
+            >
+              {saveStatus === 'saving' && (
+                <>
+                  <div className="auto-save-spinner" aria-hidden="true"></div>
+                  <span>Saving...</span>
+                </>
+              )}
+              {saveStatus === 'saved' && (
+                <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  Saved
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         <div style={{ padding: "24px" }}>
