@@ -1,1 +1,0 @@
-{"version":3,"file":"interfaces.d.ts","sourceRoot":"","sources":["../../../../../../src/internal/components/token-list/analytics-metadata/interfaces.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,eAAe,EAAE,MAAM,kEAAkE,CAAC;AAEnG,MAAM,WAAW,2CAA2C;IAC1D,MAAM,EAAE,UAAU,CAAC;IACnB,MAAM,EAAE;QACN,KAAK,EAAE,eAAe,CAAC;QACvB,QAAQ,EAAE,MAAM,CAAC;KAClB,CAAC;CACH"}

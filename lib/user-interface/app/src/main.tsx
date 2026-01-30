@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import AppConfigured from "./components/app-configured";
 import { StorageHelper } from "./common/helpers/storage-helper";
-import "@cloudscape-design/global-styles/index.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
