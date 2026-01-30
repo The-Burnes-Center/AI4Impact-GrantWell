@@ -60,6 +60,126 @@ const FIELD_LABELS: Record<string, string> = {
   contactEmail: "Contact Email",
 };
 
+// Input field component - defined outside to prevent re-creation on each render
+interface InputFieldProps {
+  name: keyof ProjectBasicsFormData;
+  label: string;
+  helpText: string;
+  type?: string;
+  maxLength?: number;
+  placeholder?: string;
+  prefix?: string;
+  value: string;
+  error?: string;
+  touched: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+}
+
+const InputField: React.FC<InputFieldProps> = React.memo(({ 
+  name, 
+  label, 
+  helpText, 
+  type = "text", 
+  maxLength, 
+  placeholder, 
+  prefix,
+  value,
+  error,
+  touched,
+  onChange,
+  onBlur
+}) => {
+  const hasError = error && touched;
+  
+  return (
+    <div style={{ marginBottom: spacing.xl }}>
+      <label
+        htmlFor={name}
+        style={{
+          display: "block",
+          marginBottom: spacing.sm,
+          fontWeight: typography.fontWeight.medium,
+          color: colors.text,
+          fontFamily: typography.fontFamily,
+        }}
+      >
+        {label} <span style={{ color: colors.error }} aria-label="required">*</span>
+      </label>
+      <div style={{ position: "relative" }}>
+        {prefix && (
+          <span
+            style={{
+              position: "absolute",
+              left: "12px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: colors.textSecondary,
+              fontSize: typography.fontSize.base,
+              pointerEvents: "none",
+            }}
+          >
+            {prefix}
+          </span>
+        )}
+        <input
+          type={type}
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          required
+          aria-required="true"
+          aria-invalid={hasError ? "true" : "false"}
+          aria-describedby={hasError ? `${name}-help ${name}-error` : `${name}-help`}
+          maxLength={maxLength}
+          placeholder={placeholder}
+          style={{
+            width: "100%",
+            padding: prefix ? "12px 12px 12px 28px" : "12px",
+            border: `1px solid ${hasError ? colors.error : colors.border}`,
+            borderRadius: borderRadius.md,
+            fontSize: typography.fontSize.base,
+            fontFamily: typography.fontFamily,
+          }}
+        />
+      </div>
+      <span
+        id={`${name}-help`}
+        style={{
+          display: "block",
+          fontSize: typography.fontSize.sm,
+          color: colors.textSecondary,
+          marginTop: spacing.xs,
+          fontFamily: typography.fontFamily,
+        }}
+      >
+        {helpText}
+      </span>
+      {hasError && (
+        <span
+          id={`${name}-error`}
+          role="alert"
+          aria-live="polite"
+          style={{
+            display: "block",
+            fontSize: typography.fontSize.sm,
+            color: colors.error,
+            marginTop: spacing.xs,
+            fontWeight: typography.fontWeight.medium,
+            fontFamily: typography.fontFamily,
+          }}
+        >
+          {error}
+        </span>
+      )}
+    </div>
+  );
+});
+
+InputField.displayName = 'InputField';
+
 const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   onContinue,
   selectedNofo,
@@ -226,7 +346,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
     return undefined;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     let formattedValue = value;
     
@@ -240,25 +360,34 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       if (parts.length === 2 && parts[1].length > 2) formattedValue = parts[0] + '.' + parts[1].slice(0, 2);
     }
     
-    const updatedData = { ...formData, [name]: formattedValue };
-    setFormData(updatedData);
+    setFormData((prevFormData) => {
+      const updatedData = { ...prevFormData, [name]: formattedValue };
+      if (!isInitialLoad.current) autoSave(updatedData);
+      return updatedData;
+    });
 
-    if (!isInitialLoad.current) autoSave(updatedData);
+    setTouched((prevTouched) => {
+      if (prevTouched[name]) {
+        const error = validateField(name, formattedValue);
+        setFormErrors((prev) => ({ ...prev, [name]: error }));
+      } else {
+        setFormErrors((prev) => {
+          if (prev[name as keyof FormErrors]) {
+            return { ...prev, [name]: undefined };
+          }
+          return prev;
+        });
+      }
+      return prevTouched;
+    });
+  }, [autoSave]);
 
-    if (touched[name]) {
-      const error = validateField(name, formattedValue);
-      setFormErrors((prev) => ({ ...prev, [name]: error }));
-    } else if (formErrors[name as keyof FormErrors]) {
-      setFormErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
-  };
-
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
     const error = validateField(name, value);
     setFormErrors((prev) => ({ ...prev, [name]: error }));
-  };
+  }, []);
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
@@ -298,104 +427,6 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
     if (touched[key]) displayErrors[key] = formErrors[key as keyof FormErrors];
   });
 
-  // Input field component to reduce repetition
-  const InputField: React.FC<{
-    name: keyof ProjectBasicsFormData;
-    label: string;
-    helpText: string;
-    type?: string;
-    maxLength?: number;
-    placeholder?: string;
-    prefix?: string;
-  }> = ({ name, label, helpText, type = "text", maxLength, placeholder, prefix }) => {
-    const hasError = formErrors[name] && touched[name];
-    
-    return (
-      <div style={{ marginBottom: spacing.xl }}>
-        <label
-          htmlFor={name}
-          style={{
-            display: "block",
-            marginBottom: spacing.sm,
-            fontWeight: typography.fontWeight.medium,
-            color: colors.text,
-            fontFamily: typography.fontFamily,
-          }}
-        >
-          {label} <span style={{ color: colors.error }} aria-label="required">*</span>
-        </label>
-        <div style={{ position: "relative" }}>
-          {prefix && (
-            <span
-              style={{
-                position: "absolute",
-                left: "12px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: colors.textSecondary,
-                fontSize: typography.fontSize.base,
-                pointerEvents: "none",
-              }}
-            >
-              {prefix}
-            </span>
-          )}
-          <input
-            type={type}
-            id={name}
-            name={name}
-            value={formData[name]}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            required
-            aria-required="true"
-            aria-invalid={hasError ? "true" : "false"}
-            aria-describedby={hasError ? `${name}-help ${name}-error` : `${name}-help`}
-            maxLength={maxLength}
-            placeholder={placeholder}
-            style={{
-              width: "100%",
-              padding: prefix ? "12px 12px 12px 28px" : "12px",
-              border: `1px solid ${hasError ? colors.error : colors.border}`,
-              borderRadius: borderRadius.md,
-              fontSize: typography.fontSize.base,
-              fontFamily: typography.fontFamily,
-            }}
-          />
-        </div>
-        <span
-          id={`${name}-help`}
-          style={{
-            display: "block",
-            fontSize: typography.fontSize.sm,
-            color: colors.textSecondary,
-            marginTop: spacing.xs,
-            fontFamily: typography.fontFamily,
-          }}
-        >
-          {helpText}
-        </span>
-        {hasError && (
-          <span
-            id={`${name}-error`}
-            role="alert"
-            aria-live="polite"
-            style={{
-              display: "block",
-              fontSize: typography.fontSize.sm,
-              color: colors.error,
-              marginTop: spacing.xs,
-              fontWeight: typography.fontWeight.medium,
-              fontFamily: typography.fontFamily,
-            }}
-          >
-            {formErrors[name]}
-          </span>
-        )}
-      </div>
-    );
-  };
-
   return (
     <>
       <style>{`
@@ -426,6 +457,11 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             label="Project Name"
             helpText={`Keep it clear and descriptive. (${formData.projectName.length}/200 characters)`}
             maxLength={200}
+            value={formData.projectName}
+            error={formErrors.projectName}
+            touched={touched.projectName || false}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
           />
 
           <InputField
@@ -433,6 +469,11 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             label="Organization Name"
             helpText={`Enter the name of your municipality, tribal nation, or community organization. (${formData.organizationName.length}/200 characters)`}
             maxLength={200}
+            value={formData.organizationName}
+            error={formErrors.organizationName}
+            touched={touched.organizationName || false}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
           />
 
           <InputField
@@ -441,6 +482,11 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             helpText="Enter the total funding amount you're requesting for this project."
             placeholder="250,000"
             prefix="$"
+            value={formData.requestedAmount}
+            error={formErrors.requestedAmount}
+            touched={touched.requestedAmount || false}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
           />
 
           <div style={{ display: "flex", gap: spacing.lg, marginBottom: spacing.xl, flexWrap: "wrap" }}>
@@ -451,6 +497,11 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 helpText={`Enter the city and state (e.g., "Boston, MA"). (${formData.location.length}/100 characters)`}
                 maxLength={100}
                 placeholder="Boston, MA"
+                value={formData.location}
+                error={formErrors.location}
+                touched={touched.location || false}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
               />
             </div>
             <div style={{ flex: "1", minWidth: "260px" }}>
@@ -460,6 +511,11 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 helpText="Enter the 5-digit ZIP code for the project location."
                 maxLength={5}
                 placeholder="02119"
+                value={formData.zipCode}
+                error={formErrors.zipCode}
+                touched={touched.zipCode || false}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
               />
             </div>
           </div>
@@ -469,6 +525,11 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             label="Primary Contact Name"
             helpText={`Enter the name of the primary person responsible for this grant application. (${formData.contactName.length}/100 characters)`}
             maxLength={100}
+            value={formData.contactName}
+            error={formErrors.contactName}
+            touched={touched.contactName || false}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
           />
 
           <InputField
@@ -478,6 +539,11 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             helpText="Enter a valid email address for project-related communications."
             maxLength={254}
             placeholder="name@example.com"
+            value={formData.contactEmail}
+            error={formErrors.contactEmail}
+            touched={touched.contactEmail || false}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
           />
         </Card>
 

@@ -179,18 +179,19 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     }, 1000);
   }, [onUpdateData]);
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    const updatedFormData = {
-      ...formData,
-      [name]: value,
-    };
-    setFormData(updatedFormData);
-
-    if (!isInitialLoad.current) {
-      autoSave(updatedFormData);
-    }
-  };
+    setFormData((prevFormData) => {
+      const updatedFormData = {
+        ...prevFormData,
+        [name]: value,
+      };
+      if (!isInitialLoad.current) {
+        autoSave(updatedFormData);
+      }
+      return updatedFormData;
+    });
+  }, [autoSave]);
 
   // Cleanup timeouts on unmount
   useEffect(() => {

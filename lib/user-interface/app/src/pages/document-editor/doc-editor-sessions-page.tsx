@@ -6,18 +6,7 @@ import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import DocEditorSessions from "../../components/document-editor/doc-editor-sessions";
 import UnifiedNavigation from "../../components/unified-navigation";
-
-const useViewportWidth = () => {
-  const [width, setWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return width;
-};
+import "../Dashboard/styles.css";
 
 export default function DocEditorSessionsPage() {
   const navigate = useNavigate();
@@ -26,8 +15,6 @@ export default function DocEditorSessionsPage() {
   const appContext = useContext(AppContext);
   const [latestDraftId, setLatestDraftId] = useState<string | null>(null);
   const [showAllNOFOs, setShowAllNOFOs] = useState(false);
-  const viewportWidth = useViewportWidth();
-  const isNarrowViewport = viewportWidth <= 320;
 
   // Get documentIdentifier from URL params or query params
   const docId = params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo') || null;
@@ -139,83 +126,52 @@ export default function DocEditorSessionsPage() {
     }
   };
 
-  const breadcrumbsContainerStyle = {
-    padding: "8px 0",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
-  };
-
-  const breadcrumbLinkStyle = {
-    color: "#0073bb",
-    textDecoration: "none",
-    cursor: "pointer",
-  };
-
-  const breadcrumbSeparatorStyle = {
-    margin: "0 8px",
-    color: "#5f6b7a",
-  };
-
-  const breadcrumbCurrentStyle = {
-    color: "#5f6b7a",
-    fontWeight: 400,
-  };
-
   const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
     navigate("/");
   };
 
-  const handleNavigateToStep = (step: string) => {
-    if (latestDraftId) {
-      navigate(`/document-editor/${latestDraftId}?step=${step}`);
-    }
-  };
-
   return (
-    <div className="document-editor-root" style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <nav aria-label="Document editor navigation" style={{ flexShrink: 0 }}>
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
         <UnifiedNavigation
           documentIdentifier={docId || undefined}
         />
       </nav>
+      <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="breadcrumb">
+          <div className="breadcrumb-item">
+            <button
+              className="breadcrumb-link"
+              onClick={handleHomeClick}
+              style={{
+                cursor: "pointer",
+                background: "none",
+                border: "none",
+                padding: 0,
+                color: "inherit",
+                textDecoration: "underline",
+              }}
+            >
+              Home
+            </button>
+          </div>
+          <div className="breadcrumb-item" aria-current="page">
+            Drafts
+          </div>
+        </nav>
 
-      <div
-        className="document-content"
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          minWidth: 0,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            padding: "16px 24px",
-            borderBottom: "1px solid #e5e7eb",
-            backgroundColor: "white",
-          }}
-        >
-          <nav style={breadcrumbsContainerStyle} aria-label="Breadcrumbs">
-            <a href="/" style={breadcrumbLinkStyle} onClick={handleHomeClick}>
-              GrantWell
-            </a>
-            <span style={breadcrumbSeparatorStyle}>/</span>
-            <span style={breadcrumbCurrentStyle}>Drafts</span>
-          </nav>
+        <div className="dashboard-main-content">
+          <DocEditorSessions
+            toolsOpen={true}
+            documentIdentifier={showAllNOFOs ? null : docId}
+            onSessionSelect={handleDraftSelect}
+            showAllNOFOs={showAllNOFOs}
+            onToggleShowAllNOFOs={() => setShowAllNOFOs(!showAllNOFOs)}
+            hasDocId={!!docId}
+          />
         </div>
-        <DocEditorSessions
-          toolsOpen={true}
-          documentIdentifier={showAllNOFOs ? null : docId}
-          onSessionSelect={handleDraftSelect}
-          showAllNOFOs={showAllNOFOs}
-          onToggleShowAllNOFOs={() => setShowAllNOFOs(!showAllNOFOs)}
-          hasDocId={!!docId}
-        />
       </div>
     </div>
   );
