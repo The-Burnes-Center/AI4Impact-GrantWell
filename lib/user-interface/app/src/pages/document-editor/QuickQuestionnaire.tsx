@@ -1,9 +1,27 @@
-import React, { useState, useEffect, useContext } from "react";
+/**
+ * QuickQuestionnaire Component
+ * 
+ * A multi-question form for gathering project-specific information based on the selected NOFO.
+ * Questions are dynamically loaded from the API based on the selected Notice of Funding Opportunity.
+ * 
+ * Features:
+ * - Dynamic question loading from API
+ * - Auto-save with debouncing
+ * - LocalStorage fallback for data persistence
+ * - Accessible form with ARIA attributes
+ */
+import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
-import { DraftsClient } from "../../common/api-client/drafts-client";
-import { Auth } from "aws-amplify";
 import { useParams } from "react-router-dom";
+import {
+  Card,
+  LoadingSpinner,
+  AutoSaveIndicator,
+  NavigationButtons,
+  colors,
+  typography,
+} from "../../components/ui";
 
 interface QuickQuestionnaireProps {
   onContinue: () => void;
@@ -34,8 +52,44 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [noQuestionsFound, setNoQuestionsFound] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const isInitialLoad = useRef(true);
+  const hasLoadedFromDocumentData = useRef(false);
   const appContext = useContext(AppContext);
   const { sessionId } = useParams();
+
+  // Auto-save debounce refs
+  const autoSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Load form data when documentData becomes available
+  useEffect(() => {
+    if (documentData?.questionnaire && !hasLoadedFromDocumentData.current) {
+      setFormData(documentData.questionnaire);
+      hasLoadedFromDocumentData.current = true;
+      isInitialLoad.current = false;
+    } else if (isInitialLoad.current && !documentData?.questionnaire && !hasLoadedFromDocumentData.current) {
+      try {
+        const savedData = localStorage.getItem('questionnaire');
+        if (savedData) {
+          const parsedData = JSON.parse(savedData);
+          const hasData = Object.keys(parsedData).length > 0 && 
+                         Object.values(parsedData).some((val: any) => val && val.trim && val.trim().length > 0);
+          
+          if (hasData) {
+            setFormData(parsedData);
+            if (onUpdateData) {
+              onUpdateData({ questionnaire: parsedData });
+            }
+          }
+        }
+        isInitialLoad.current = false;
+      } catch (error) {
+        console.error('Error loading from localStorage:', error);
+        isInitialLoad.current = false;
+      }
+    }
+  }, [documentData, onUpdateData]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -50,13 +104,10 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
           return;
         }
 
-        // Try to fetch questions from the API
         if (appContext && selectedNofo) {
           try {
             const apiClient = new ApiClient(appContext);
-            const result = await apiClient.landingPage.getNOFOQuestions(
-              selectedNofo
-            );
+            const result = await apiClient.landingPage.getNOFOQuestions(selectedNofo);
 
             if (
               result?.data?.questions &&
@@ -64,9 +115,15 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
               result.data.questions.length > 0
             ) {
               setQuestions(result.data.questions);
-              initializeFormData(result.data.questions);
+              
+              if (Object.keys(formData).length === 0 && !hasLoadedFromDocumentData.current) {
+                const initialFormData: QuestionnaireFormData = {};
+                result.data.questions.forEach((q) => {
+                  initialFormData[`question_${q.id}`] = "";
+                });
+                setFormData(initialFormData);
+              }
             } else {
-              console.warn("No questions found for this NOFO");
               setNoQuestionsFound(true);
             }
           } catch (error) {
@@ -84,83 +141,98 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
       }
     };
 
-    // Helper function to initialize form data
-    const initializeFormData = (questions: QuestionData[]) => {
-      const initialFormData: QuestionnaireFormData = {};
-      questions.forEach((q) => {
-        initialFormData[`question_${q.id}`] = "";
-      });
-
-      // Load saved answers from documentData if available
-      if (documentData?.questionnaire) {
-        Object.keys(documentData.questionnaire).forEach((key) => {
-          initialFormData[key] = documentData.questionnaire[key];
-        });
-      }
-
-      setFormData(initialFormData);
-    };
-
     fetchQuestions();
-  }, [selectedNofo, appContext, documentData]);
+  }, [selectedNofo, appContext]);
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    const updatedFormData = {
-      ...formData,
-      [name]: value,
-    };
-    setFormData(updatedFormData);
-  };
-
-  const handleCreateDraft = async () => {
-    // Save questionnaire data to session
-    if (onUpdateData) {
-      onUpdateData({
-        questionnaire: formData
-      });
+  // Auto-save function (debounced)
+  const autoSave = useCallback((data: QuestionnaireFormData) => {
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
     }
 
-    // Save to localStorage for draft generation
+    setSaveStatus('saving');
+
+    autoSaveTimeoutRef.current = setTimeout(async () => {
+      try {
+        localStorage.setItem('questionnaire', JSON.stringify(data));
+        
+        if (onUpdateData) {
+          try {
+            await onUpdateData({ questionnaire: data });
+          } catch (error) {
+            console.error('Database save failed, but localStorage updated:', error);
+          }
+        }
+        
+        setSaveStatus('saved');
+        
+        if (saveStatusTimeoutRef.current) {
+          clearTimeout(saveStatusTimeoutRef.current);
+        }
+        saveStatusTimeoutRef.current = setTimeout(() => {
+          setSaveStatus('idle');
+        }, 2000);
+      } catch (error) {
+        console.error('Auto-save failed:', error);
+        setSaveStatus('idle');
+      }
+    }, 1000);
+  }, [onUpdateData]);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => {
+      const updatedFormData = {
+        ...prevFormData,
+        [name]: value,
+      };
+      if (!isInitialLoad.current) {
+        autoSave(updatedFormData);
+      }
+      return updatedFormData;
+    });
+  }, [autoSave]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+      if (saveStatusTimeoutRef.current) {
+        clearTimeout(saveStatusTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleCreateDraft = async () => {
+    if (onUpdateData) {
+      onUpdateData({ questionnaire: formData });
+    }
     localStorage.setItem('questionnaire', JSON.stringify(formData));
-    
     onContinue();
   };
 
+  // Loading state
   if (loading) {
     return (
-      <div
-        style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          padding: "32px 0",
-          textAlign: "center",
-        }}
-      >
-        <p>Loading questions...</p>
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
+        <LoadingSpinner message="Loading questions..." showMessage centered />
       </div>
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <div
-        style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          padding: "32px 0",
-          color: "#e53e3e",
-          textAlign: "center",
-        }}
-      >
-        <p>{error}</p>
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0", textAlign: "center" }}>
+        <p style={{ color: colors.error, marginBottom: "16px" }}>{error}</p>
         <button
           onClick={() => window.location.reload()}
           style={{
-            marginTop: "16px",
             padding: "8px 16px",
-            background: "#14558F",
-            color: "white",
+            background: colors.primary,
+            color: colors.white,
             border: "none",
             borderRadius: "4px",
             cursor: "pointer",
@@ -172,252 +244,91 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     );
   }
 
+  // No questions found state
   if (noQuestionsFound) {
     return (
-      <div
-        style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          padding: "32px 0",
-          textAlign: "center",
-        }}
-      >
-        <div
-          style={{
-            background: "white",
-            borderRadius: "8px",
-            padding: "24px",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-            marginBottom: "24px",
-          }}
-        >
-          <p style={{ fontSize: "16px", marginBottom: "16px" }}>
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
+        <Card>
+          <p style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
             No questions found for this NOFO. You can continue to the next step.
           </p>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <button
-            onClick={() => onNavigate("projectBasics")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "12px 20px",
-              background: "white",
-              border: "1px solid #e2e8f0",
-              borderRadius: "6px",
-              color: "#3d4451",
-              fontSize: "16px",
-              cursor: "pointer",
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ marginRight: "8px" }}
-            >
-              <path d="M19 12H5"></path>
-              <path d="m12 19-7-7 7-7"></path>
-            </svg>
-            Back
-          </button>
-          <button
-            disabled={true}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "12px 24px",
-              background: "#a0aec0", // Grayed out color
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              fontSize: "16px",
-              fontWeight: 500,
-              cursor: "not-allowed",
-              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
-              opacity: 0.7,
-            }}
-          >
-            Continue
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ marginLeft: "8px" }}
-            >
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
-            </svg>
-          </button>
-        </div>
+        </Card>
+        <NavigationButtons
+          onBack={() => onNavigate("projectBasics")}
+          showContinue={false}
+        />
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        maxWidth: "800px",
-        margin: "0 auto",
-        padding: "32px 0",
-      }}
-    >
-      <p
-        style={{
-          color: "#3d4451",
-          marginBottom: "24px",
-        }}
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+      <Card
+        header="Questionnaire"
+        headerActions={<AutoSaveIndicator status={saveStatus} />}
       >
-        Answer these simple questions to help us create a draft of your
-        application. Don't worry about perfect answers - you can edit everything
-        later.
-      </p>
+        <p style={{ color: colors.textSecondary, marginBottom: "24px", fontFamily: typography.fontFamily }}>
+          Answer these simple questions to help us create a draft of your
+          application. Don't worry about perfect answers - you can edit everything
+          later.
+        </p>
 
-      <div
-        style={{
-          background: "white",
-          borderRadius: "8px",
-          padding: "24px",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-          marginBottom: "24px",
-        }}
-      >
-        {questions.map((questionItem) => (
-          <div key={questionItem.id} style={{ marginBottom: "24px" }}>
-            <label
-              htmlFor={`question_${questionItem.id}`}
-              style={{
-                display: "block",
-                marginBottom: "12px",
-                fontWeight: 500,
-                color: "#2d3748",
-                fontSize: "16px",
-              }}
-            >
-              {questionItem.id}. {questionItem.question}
-            </label>
-            <textarea
-              id={`question_${questionItem.id}`}
-              name={`question_${questionItem.id}`}
-              value={formData[`question_${questionItem.id}`] || ""}
-              onChange={handleInputChange}
-              aria-describedby={`question_${questionItem.id}_help`}
-              style={{
-                width: "100%",
-                padding: "12px",
-                border: "1px solid #e2e8f0",
-                borderRadius: "6px",
-                fontSize: "16px",
-                minHeight: "120px",
-                resize: "vertical",
-              }}
-              placeholder="Enter your answer here."
-            />
-            <span
-              id={`question_${questionItem.id}_help`}
-              style={{
-                display: "block",
-                fontSize: "14px",
-                color: "#4a5568",
-                marginTop: "6px",
-                lineHeight: "1.4",
-              }}
-            >
-              Provide a detailed answer. You can edit this later in the document editor.
-            </span>
-          </div>
-        ))}
-      </div>
+        <div style={{ background: colors.white, borderRadius: "8px", padding: "24px" }}>
+          {questions.map((questionItem) => (
+            <div key={questionItem.id} style={{ marginBottom: "24px" }}>
+              <label
+                htmlFor={`question_${questionItem.id}`}
+                style={{
+                  display: "block",
+                  marginBottom: "12px",
+                  fontWeight: typography.fontWeight.medium,
+                  color: colors.text,
+                  fontSize: typography.fontSize.base,
+                  fontFamily: typography.fontFamily,
+                }}
+              >
+                {questionItem.id}. {questionItem.question}
+              </label>
+              <textarea
+                id={`question_${questionItem.id}`}
+                name={`question_${questionItem.id}`}
+                value={formData[`question_${questionItem.id}`] || ""}
+                onChange={handleInputChange}
+                aria-describedby={`question_${questionItem.id}_help`}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: "6px",
+                  fontSize: typography.fontSize.base,
+                  minHeight: "120px",
+                  resize: "vertical",
+                  fontFamily: typography.fontFamily,
+                }}
+                placeholder="Enter your answer here."
+              />
+              <span
+                id={`question_${questionItem.id}_help`}
+                style={{
+                  display: "block",
+                  fontSize: typography.fontSize.sm,
+                  color: colors.textSecondary,
+                  marginTop: "6px",
+                  lineHeight: "1.4",
+                  fontFamily: typography.fontFamily,
+                }}
+              >
+                Provide a detailed answer. You can edit this later in the document editor.
+              </span>
+            </div>
+          ))}
+        </div>
+      </Card>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <button
-          onClick={() => onNavigate("projectBasics")}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "12px 20px",
-            background: "white",
-            border: "1px solid #e2e8f0",
-            borderRadius: "6px",
-            color: "#3d4451",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ marginRight: "8px" }}
-          >
-            <path d="M19 12H5"></path>
-            <path d="m12 19-7-7 7-7"></path>
-          </svg>
-          Back
-        </button>
-        <button
-          onClick={handleCreateDraft}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "12px 24px",
-            background: "#14558F",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            fontSize: "16px",
-            fontWeight: 500,
-            cursor: "pointer",
-            boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
-          }}
-        >
-          Continue
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ marginLeft: "8px" }}
-          >
-            <path d="M5 12h14"></path>
-            <path d="m12 5 7 7-7 7"></path>
-          </svg>
-        </button>
-      </div>
+      <NavigationButtons
+        onBack={() => onNavigate("projectBasics")}
+        onContinue={handleCreateDraft}
+      />
     </div>
   );
 };

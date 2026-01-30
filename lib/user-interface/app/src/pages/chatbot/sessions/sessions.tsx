@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
-import BaseAppLayout from "../playground/base-app-layout";
 import Sessions from "../../../components/chatbot/sessions";
-import { CHATBOT_NAME } from "../../../common/constants";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ApiClient } from "../../../common/api-client/api-client";
 import { AppContext } from "../../../common/app-context";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
+import UnifiedNavigation from "../../../components/unified-navigation";
+import "../../Dashboard/styles.css";
 
 export default function SessionPage() {
   const navigate = useNavigate();
@@ -68,30 +68,6 @@ export default function SessionPage() {
     navigate(`/chat/${sessionId}${queryParams}`);
   };
 
-  // Styles for the breadcrumbs
-  const breadcrumbsContainerStyle = {
-    padding: "8px 0",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
-  };
-
-  const breadcrumbLinkStyle = {
-    color: "#0073bb",
-    textDecoration: "none",
-    cursor: "pointer",
-  };
-
-  const breadcrumbSeparatorStyle = {
-    margin: "0 8px",
-    color: "#5f6b7a",
-  };
-
-  const breadcrumbCurrentStyle = {
-    color: "#5f6b7a",
-    fontWeight: 400,
-  };
-
   // Handle navigation
   const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -103,36 +79,42 @@ export default function SessionPage() {
   };
 
   return (
-    <BaseAppLayout
-      header={
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            padding: "16px 24px",
-            borderBottom: "1px solid #e5e7eb",
-            backgroundColor: "white",
-          }}
-        >
-          <nav style={breadcrumbsContainerStyle} aria-label="Breadcrumbs">
-            <a href="/" style={breadcrumbLinkStyle} onClick={handleHomeClick}>
-              {CHATBOT_NAME}
-            </a>
-            <span style={breadcrumbSeparatorStyle}>/</span>
-            <span style={breadcrumbCurrentStyle}>Sessions</span>
-          </nav>
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
+        <UnifiedNavigation />
+      </nav>
+      <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="breadcrumb">
+          <div className="breadcrumb-item">
+            <button
+              className="breadcrumb-link"
+              onClick={handleHomeClick}
+              style={{
+                cursor: "pointer",
+                background: "none",
+                border: "none",
+                padding: 0,
+                color: "inherit",
+                textDecoration: "underline",
+              }}
+            >
+              Home
+            </button>
+          </div>
+          <div className="breadcrumb-item" aria-current="page">
+            Sessions
+          </div>
+        </nav>
+
+        <div className="dashboard-main-content">
+          <Sessions
+            toolsOpen={true}
+            documentIdentifier={documentIdentifier}
+            onSessionSelect={handleSessionSelect}
+          />
         </div>
-      }
-      documentIdentifier={documentIdentifier}
-      sessionId={latestSessionId}
-      content={
-        <Sessions
-          toolsOpen={true}
-          documentIdentifier={documentIdentifier}
-          onSessionSelect={handleSessionSelect}
-        />
-      }
-    />
+      </div>
+    </div>
   );
 }

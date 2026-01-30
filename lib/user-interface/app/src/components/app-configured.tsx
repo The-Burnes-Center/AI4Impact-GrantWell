@@ -8,9 +8,8 @@ import App from "../app";
 import { Amplify, Auth, Hub } from "aws-amplify";
 import { AppConfig } from "../common/types";
 import { AppContext } from "../common/app-context";
-import { Alert, StatusIndicator } from "@cloudscape-design/components";
+import { Alert, Spinner } from "react-bootstrap";
 import { StorageHelper } from "../common/helpers/storage-helper";
-import { Mode } from "@cloudscape-design/global-styles";
 import "@aws-amplify/ui-react/styles.css";
 import AuthPage from "../pages/auth/auth-page";
 import BrandBanner from "./brand-banner";
@@ -109,7 +108,7 @@ export default function AppConfigured() {
               "--app-color-scheme"
             );
 
-          const mode = newValue === "dark" ? Mode.Dark : Mode.Light;
+          const mode = newValue === "dark" ? "dark" : "light";
           if (mode !== theme) {
             setTheme(mode);
           }
@@ -139,12 +138,12 @@ export default function AppConfigured() {
             alignItems: "center",
           }}
         >
-          <Alert header="Configuration error" type="error">
-            Error loading configuration from "
+          <Alert variant="danger">
+            <Alert.Heading>Configuration error</Alert.Heading>
+            Error loading configuration from{" "}
             <a href="/aws-exports.json" style={{ fontWeight: "600" }}>
               /aws-exports.json
             </a>
-            "
           </Alert>
         </div>
       );
@@ -160,7 +159,10 @@ export default function AppConfigured() {
           alignItems: "center",
         }}
       >
-        <StatusIndicator type="loading">Loading</StatusIndicator>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <Spinner animation="border" size="sm" />
+          <span>Loading</span>
+        </div>
       </div>
     );
   }
@@ -172,7 +174,7 @@ export default function AppConfigured() {
           name: "default-theme",
           overrides: [defaultDarkModeOverride],
         }}
-        colorMode={theme === Mode.Dark ? "dark" : "light"}
+        colorMode={theme === "dark" ? "dark" : "light"}
       >
         <BrowserRouter>
           <AppLayoutContent
@@ -202,7 +204,10 @@ function AppLayoutContent({
         ) : configured ? (
           <AuthPage />
         ) : (
-          <StatusIndicator type="loading">Loading</StatusIndicator>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <Spinner animation="border" size="sm" />
+          <span>Loading</span>
+        </div>
         )}
       </div>
       <FooterComponent />

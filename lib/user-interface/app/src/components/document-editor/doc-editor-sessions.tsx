@@ -3,11 +3,12 @@ import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
 import { DateTime } from "luxon";
-import { FaSort, FaSortUp, FaSortDown, FaPlus, FaTrash, FaSync } from "react-icons/fa";
-import { Calendar } from "react-feather";
+import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { Utils } from "../../common/utils";
 import { DraftStatus } from "../../common/api-client/drafts-client";
+import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
+import "../../pages/Dashboard/styles.css";
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -66,99 +67,15 @@ const styles: Record<string, React.CSSProperties> = {
     opacity: 0.5,
     cursor: "not-allowed",
   },
-  table: {
-    width: "100%",
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-    borderCollapse: "collapse" as const,
-  },
-  tableHeader: {
-    padding: "12px 24px",
-    textAlign: "left" as const,
-    borderBottom: "1px solid #e5e7eb",
-    color: "#374151",
-    fontSize: "14px",
-    fontWeight: "600",
-  },
-  tableHeaderButton: {
-    background: "none",
-    border: "none",
-    padding: 0,
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    cursor: "pointer",
-    color: "inherit",
-    fontSize: "inherit",
-    fontWeight: "inherit",
-  },
-  tableCell: {
-    padding: "12px 24px",
-    fontSize: "14px",
-    color: "#374151",
-    borderBottom: "1px solid #e5e7eb",
-  },
-  checkboxCell: {
-    width: "48px",
-  },
-  checkbox: {
-    width: "16px",
-    height: "16px",
-  },
-  dateCell: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  },
-  calendarIcon: {
-    color: "#5a6169",
-  },
-  link: {
-    color: "#2563eb",
-    textDecoration: "none",
-  },
-  modalOverlay: {
-    position: "fixed" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    width: "450px",
-    maxWidth: "90%",
-    padding: "24px",
-  },
-  modalHeader: {
-    fontSize: "18px",
-    fontWeight: "600",
-    marginBottom: "16px",
-    paddingBottom: "12px",
-    borderBottom: "1px solid #e5e7eb",
-  },
-  modalContent: {
-    marginBottom: "24px",
-  },
-  modalFooter: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "12px",
-  },
 };
 
 export interface DocEditorSessionsProps {
   readonly toolsOpen: boolean;
   readonly documentIdentifier: string | null;
   onSessionSelect?: (sessionId: string) => void;
+  showAllNOFOs?: boolean;
+  onToggleShowAllNOFOs?: () => void;
+  hasDocId?: boolean;
 }
 
 interface Session {
@@ -182,7 +99,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const navigate = useNavigate();
 
-  const { documentIdentifier } = props;
+  const { documentIdentifier, showAllNOFOs, onToggleShowAllNOFOs, hasDocId } = props;
 
   const getSessions = async () => {
     if (!appContext) return;
@@ -192,8 +109,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       const username = (await Auth.currentAuthenticatedUser()).username;
 
       if (username) {
-        // Get all drafts regardless of NOFO - pass null to get all drafts
-        const result = await apiClient.drafts.getDrafts(username, null);
+        // Get drafts filtered by documentIdentifier (null means all drafts)
+        const result = await apiClient.drafts.getDrafts(username, documentIdentifier);
         setSessions(result.map(draft => ({
           draft_id: draft.sessionId,
           title: draft.title,
@@ -295,8 +212,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   );
 
   const getSortIcon = (field: "title" | "last_modified") => {
-    if (sortField !== field) return <FaSort />;
-    return sortDirection === "asc" ? <FaSortUp /> : <FaSortDown />;
+    if (sortField !== field) return <LuArrowUpDown size={14} />;
+    return sortDirection === "asc" ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />;
   };
 
   const formatSessionTime = (timestamp: string) => {
@@ -355,197 +272,253 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   };
 
   return (
-    <div style={styles.container}>
-      {showModalDelete && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
-              {`Delete draft${selectedItems.length > 1 ? "s" : ""}`}
+    <div className="dashboard-content">
+      <DeleteConfirmationModal
+        isOpen={showModalDelete}
+        onClose={() => setShowModalDelete(false)}
+        onConfirm={deleteSelectedSessions}
+        title={`Delete draft${selectedItems.length > 1 ? "s" : ""}`}
+        itemName={selectedItems.length === 1 ? selectedItems[0].draft_id : undefined}
+        itemCount={selectedItems.length > 1 ? selectedItems.length : undefined}
+        itemLabel="draft"
+      />
+
+      {/* Header section */}
+      <div className="dashboard-header">
+        <div>
+          <h1>Drafts</h1>
+          <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+            Manage and access your saved grant application drafts
+          </p>
+        </div>
+        <div className="dashboard-actions">
+          <button
+            className="action-button add-button"
+            onClick={() => {
+              navigate(`/document-editor`);
+            }}
+            aria-label="Create new draft"
+          >
+            <LuPlus size={16} className="button-icon" />
+            <span>New Draft</span>
+          </button>
+          {hasDocId && onToggleShowAllNOFOs && (
+            <button
+              className="action-button invite-button"
+              onClick={onToggleShowAllNOFOs}
+              aria-label={showAllNOFOs ? "Show only current NOFO drafts" : "Show all NOFO drafts"}
+            >
+              {showAllNOFOs ? "Show Current NOFO Only" : "Show All NOFOs"}
+            </button>
+          )}
+          <button
+            className="action-button danger-button"
+            onClick={() => setShowModalDelete(true)}
+            disabled={selectedItems.length === 0}
+            style={{
+              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#e74c3c",
+              color: selectedItems.length === 0 ? "#9ca3af" : "white",
+              cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
+            }}
+            aria-label={selectedItems.length === 0 ? "Delete drafts (no drafts selected)" : `Delete ${selectedItems.length} selected draft${selectedItems.length > 1 ? 's' : ''}`}
+            aria-disabled={selectedItems.length === 0}
+          >
+            <LuTrash size={16} className="button-icon" />
+            <span>Delete</span>
+          </button>
+          <button
+            className="action-button refresh-button"
+            onClick={async () => {
+              setIsLoading(true);
+              await getSessions();
+              setIsLoading(false);
+            }}
+            disabled={isLoading}
+            aria-label="Refresh drafts list"
+            aria-busy={isLoading}
+          >
+            {isLoading ? (
+              <span className="refresh-loading">Refreshing...</span>
+            ) : (
+              <>
+                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <span>Refresh</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Table section */}
+      <div className="table-container">
+        <div className="table-header" style={{ gridTemplateColumns: "48px 2fr 1.5fr 1.5fr 1fr" }}>
+          <div className="header-cell">
+            <input
+              type="checkbox"
+              checked={selectedItems.length === sessions.length && sessions.length > 0}
+              onChange={handleSelectAll}
+              aria-label="Select all drafts"
+              style={{ cursor: "pointer" }}
+              disabled={isLoading || sessions.length === 0}
+            />
+          </div>
+          <div
+            className="header-cell"
+            onClick={() => !isLoading && handleSort("title")}
+            style={{ cursor: isLoading ? "default" : "pointer" }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              Title {!isLoading && getSortIcon("title")}
             </div>
-            <div style={styles.modalContent}>
-              Do you want to delete{" "}
-              {selectedItems.length === 1
-                ? `draft ${selectedItems[0].draft_id}?`
-                : `${selectedItems.length} drafts?`}
+          </div>
+          <div
+            className="header-cell"
+            onClick={() => !isLoading && handleSort("last_modified")}
+            style={{ cursor: isLoading ? "default" : "pointer" }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              Last Modified {!isLoading && getSortIcon("last_modified")}
             </div>
-            <div style={styles.modalFooter}>
+          </div>
+          <div className="header-cell">NOFO</div>
+          <div className="header-cell" style={{ textAlign: 'center' }}>Status</div>
+        </div>
+        <div className="table-body">
+          {isLoading ? (
+            <div className="table-loading">
+              <div className="table-loading-spinner"></div>
+            </div>
+          ) : paginatedItems.length === 0 ? (
+            <div className="no-data">
+              <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
+                No drafts
+              </div>
+            </div>
+          ) : (
+            paginatedItems.map((item) => (
+              <div key={item.draft_id} className="table-row" style={{ gridTemplateColumns: "48px 2fr 1.5fr 1.5fr 1fr" }}>
+                <div className="row-cell">
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.some(
+                      (i) => i.draft_id === item.draft_id
+                    )}
+                    onChange={(e) => handleSelectItem(item, e)}
+                    aria-label={`Select draft: ${item.title}`}
+                    style={{ cursor: "pointer" }}
+                  />
+                </div>
+                <div className="row-cell">
+                  <button
+                    onClick={() => {
+                      if (props.onSessionSelect) {
+                        props.onSessionSelect(item.draft_id);
+                      }
+                    }}
+                    aria-label={`Open draft: ${item.title}`}
+                    style={{
+                      color: "#14558F",
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      textAlign: "left",
+                      fontSize: "14px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {item.title}
+                  </button>
+                </div>
+                <div className="row-cell">
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                    <LuCalendar size={16} aria-hidden="true" />
+                    <time dateTime={item.last_modified}>
+                      {formatSessionTime(item.last_modified)}
+                    </time>
+                  </div>
+                </div>
+                <div className="row-cell">
+                  <span aria-label={`NOFO: ${item.document_identifier || 'Not specified'}`}>
+                    {item.document_identifier || '—'}
+                  </span>
+                </div>
+                <div className="row-cell" style={{ justifyContent: 'center' }}>
+                  <span 
+                    role="status"
+                    aria-label={`Draft status: ${getStatusLabel(item.status)}`}
+                    style={statusBadgeStyle(item.status)}
+                  >
+                    {getStatusLabel(item.status)}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Pagination */}
+      {!isLoading && sortedSessions.length > 0 && (
+        <div className="pagination-container">
+          <div className="pagination-info">
+            Showing {(currentPage - 1) * pageSize + 1} to{" "}
+            {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
+            {sortedSessions.length} drafts
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div className="pagination-controls">
               <button
-                style={{ ...styles.button, ...styles.primaryButton }}
-                onClick={() => setShowModalDelete(false)}
+                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(1)}
               >
-                Cancel
+                First
               </button>
               <button
-                style={{ ...styles.button, ...styles.dangerButton }}
-                onClick={deleteSelectedSessions}
+                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
               >
-                OK
+                Previous
               </button>
+              <button
+                className={`pagination-button ${currentPage === Math.ceil(sortedSessions.length / pageSize) ? "disabled" : ""}`}
+                disabled={currentPage === Math.ceil(sortedSessions.length / pageSize)}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </button>
+              <button
+                className={`pagination-button ${currentPage === Math.ceil(sortedSessions.length / pageSize) ? "disabled" : ""}`}
+                disabled={currentPage === Math.ceil(sortedSessions.length / pageSize)}
+                onClick={() => setCurrentPage(Math.ceil(sortedSessions.length / pageSize))}
+              >
+                Last
+              </button>
+            </div>
+            <div className="items-per-page">
+              <label htmlFor="items-per-page-select" style={{ marginRight: "8px" }}>
+                Show:
+              </label>
+              <select
+                id="items-per-page-select"
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                aria-label="Items per page"
+                className="form-input"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
             </div>
           </div>
         </div>
       )}
-
-      <div style={styles.header}>
-        <div style={styles.headerContainer}>
-          <div>
-            <h1 style={styles.headerTitle}>Drafts</h1>
-            <p style={styles.headerDescription}>
-              Manage and access your saved grant application drafts
-            </p>
-          </div>
-          <div style={styles.buttonContainer}>
-            <button
-              style={{ ...styles.button, ...styles.primaryButton }}
-              onClick={() => {
-                navigate(`/document-editor`);
-              }}
-              aria-label="Create new draft"
-            >
-              <FaPlus size={16} aria-hidden="true" /> New Draft
-            </button>
-            <button
-              style={{
-                ...styles.button,
-                ...styles.dangerButton,
-                ...(selectedItems.length === 0 ? styles.disabledButton : {}),
-              }}
-              onClick={() => setShowModalDelete(true)}
-              disabled={selectedItems.length === 0}
-              aria-label={selectedItems.length === 0 ? "Delete drafts (no drafts selected)" : `Delete ${selectedItems.length} selected draft${selectedItems.length > 1 ? 's' : ''}`}
-              aria-disabled={selectedItems.length === 0}
-            >
-              <FaTrash size={16} aria-hidden="true" /> Delete
-            </button>
-            <button
-              style={{ ...styles.button }}
-              onClick={async () => {
-                setIsLoading(true);
-                await getSessions();
-                setIsLoading(false);
-              }}
-              aria-label="Refresh drafts list"
-              aria-busy={isLoading}
-            >
-              <FaSync size={16} aria-hidden="true" /> Refresh
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <table 
-        style={styles.table}
-        role="table"
-        aria-label="Draft sessions list"
-      >
-        <thead>
-          <tr role="row">
-            <th style={{ ...styles.tableHeader, ...styles.checkboxCell }} role="columnheader" scope="col">
-              <label htmlFor="select-all-drafts" style={{ display: "none" }}>
-                Select all drafts
-              </label>
-              <input
-                id="select-all-drafts"
-                type="checkbox"
-                style={styles.checkbox}
-                checked={selectedItems.length === sessions.length}
-                onChange={handleSelectAll}
-                aria-label="Select all drafts"
-              />
-            </th>
-            <th style={styles.tableHeader} role="columnheader" scope="col">
-              <button
-                style={styles.tableHeaderButton}
-                onClick={() => handleSort("title")}
-                aria-label={`Sort by title, ${sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "not sorted"}`}
-                aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-              >
-                Title {getSortIcon("title")}
-              </button>
-            </th>
-            <th style={styles.tableHeader} role="columnheader" scope="col">
-              <button
-                style={styles.tableHeaderButton}
-                onClick={() => handleSort("last_modified")}
-                aria-label={`Sort by last modified, ${sortField === "last_modified" ? (sortDirection === "asc" ? "ascending" : "descending") : "not sorted"}`}
-                aria-sort={sortField === "last_modified" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-              >
-                Last Modified {getSortIcon("last_modified")}
-              </button>
-            </th>
-            <th style={styles.tableHeader} role="columnheader" scope="col">
-              <span>NOFO</span>
-            </th>
-            <th style={styles.tableHeader} role="columnheader" scope="col">
-              <span>Status</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedItems.map((item) => (
-            <tr key={item.draft_id} role="row">
-              <td style={{ ...styles.tableCell, ...styles.checkboxCell }} role="gridcell">
-                <label htmlFor={`draft-checkbox-${item.draft_id}`} style={{ display: "none" }}>
-                  Select draft: {item.title}
-                </label>
-                <input
-                  id={`draft-checkbox-${item.draft_id}`}
-                  type="checkbox"
-                  style={styles.checkbox}
-                  checked={selectedItems.some(
-                    (i) => i.draft_id === item.draft_id
-                  )}
-                  onChange={(e) => handleSelectItem(item, e)}
-                  aria-label={`Select draft: ${item.title}`}
-                />
-              </td>
-              <td style={styles.tableCell} role="gridcell">
-                <button
-                  onClick={() => {
-                    if (props.onSessionSelect) {
-                      props.onSessionSelect(item.draft_id);
-                    }
-                  }}
-                  aria-label={`Open draft: ${item.title}`}
-                  style={{
-                    ...styles.link,
-                    background: "none",
-                    border: "none",
-                    padding: 0,
-                    cursor: "pointer",
-                    textAlign: "left",
-                    fontSize: "inherit",
-                  }}
-                >
-                  {item.title}
-                </button>
-              </td>
-              <td style={styles.tableCell} role="gridcell">
-                <div style={styles.dateCell}>
-                  <Calendar size={16} style={styles.calendarIcon} aria-hidden="true" />
-                  <time dateTime={item.last_modified}>
-                    {formatSessionTime(item.last_modified)}
-                  </time>
-                </div>
-              </td>
-              <td style={styles.tableCell} role="gridcell">
-                <span aria-label={`NOFO: ${item.document_identifier || 'Not specified'}`}>
-                  {item.document_identifier || '—'}
-                </span>
-              </td>
-              <td style={styles.tableCell} role="gridcell">
-                <span 
-                  role="status"
-                  aria-label={`Draft status: ${getStatusLabel(item.status)}`}
-                  style={statusBadgeStyle(item.status)}
-                >
-                  {getStatusLabel(item.status)}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 } 

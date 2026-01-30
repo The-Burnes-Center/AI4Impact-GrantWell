@@ -150,7 +150,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
   const { needsRefresh, setNeedsRefresh } = useContext(SessionRefreshContext);
   const [micPermissionDenied, setMicPermissionDenied] = useState(false);
-  const [micListeningTimeout, setMicListeningTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [micListeningTimeout, setMicListeningTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
   const { notifications, addNotification } = useNotifications();
   
   // Ref for chat input to enable auto-focus

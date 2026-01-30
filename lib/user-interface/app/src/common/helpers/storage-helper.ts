@@ -1,4 +1,3 @@
-import { Mode, applyMode } from "@cloudscape-design/global-styles";
 import { NavigationPanelState } from "../types";
 
 const PREFIX = "aws-genai-llm-chatbot";
@@ -7,22 +6,30 @@ const SELECTED_MODEL_STORAGE_NAME = `${PREFIX}-selected-model`;
 const SELECTED_WORKSPACE_STORAGE_NAME = `${PREFIX}-selected-workspace`;
 const NAVIGATION_PANEL_STATE_STORAGE_NAME = `${PREFIX}-navigation-panel-state`;
 
+export type ThemeMode = "light" | "dark";
+
 export abstract class StorageHelper {
-  static getTheme() {
-    const value = localStorage.getItem(THEME_STORAGE_NAME) ?? Mode.Light;
-    const theme = value === Mode.Dark ? Mode.Dark : Mode.Light;
+  static getTheme(): ThemeMode {
+    const value = localStorage.getItem(THEME_STORAGE_NAME) ?? "light";
+    const theme = value === "dark" ? "dark" : "light";
 
     return theme;
   }
 
-  static applyTheme(theme: Mode) {
+  static applyTheme(theme: ThemeMode) {
     localStorage.setItem(THEME_STORAGE_NAME, theme);
-    applyMode(theme);
 
     document.documentElement.style.setProperty(
       "--app-color-scheme",
-      theme === Mode.Dark ? "dark" : "light"
+      theme === "dark" ? "dark" : "light"
     );
+
+    // Apply Bootstrap dark mode if needed
+    if (theme === "dark") {
+      document.documentElement.setAttribute("data-bs-theme", "dark");
+    } else {
+      document.documentElement.removeAttribute("data-bs-theme");
+    }
 
     return theme;
   }

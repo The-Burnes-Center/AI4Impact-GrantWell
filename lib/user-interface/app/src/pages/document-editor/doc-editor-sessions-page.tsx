@@ -1,31 +1,23 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import DocEditorSessions from "../../components/document-editor/doc-editor-sessions";
-import DocumentNavigation from "./document-navigation";
-
-const useViewportWidth = () => {
-  const [width, setWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return width;
-};
+import UnifiedNavigation from "../../components/unified-navigation";
+import "../Dashboard/styles.css";
 
 export default function DocEditorSessionsPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const params = useParams();
   const appContext = useContext(AppContext);
   const [latestDraftId, setLatestDraftId] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const viewportWidth = useViewportWidth();
-  const isNarrowViewport = viewportWidth <= 320;
+  const [showAllNOFOs, setShowAllNOFOs] = useState(false);
+
+  // Get documentIdentifier from URL params or query params
+  const docId = params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo') || null;
 
   useEffect(() => {
     const fetchLatestDraft = async () => {
@@ -134,84 +126,52 @@ export default function DocEditorSessionsPage() {
     }
   };
 
-  const breadcrumbsContainerStyle = {
-    padding: "8px 0",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
-  };
-
-  const breadcrumbLinkStyle = {
-    color: "#0073bb",
-    textDecoration: "none",
-    cursor: "pointer",
-  };
-
-  const breadcrumbSeparatorStyle = {
-    margin: "0 8px",
-    color: "#5f6b7a",
-  };
-
-  const breadcrumbCurrentStyle = {
-    color: "#5f6b7a",
-    fontWeight: 400,
-  };
-
   const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
     navigate("/");
   };
 
-  const handleNavigateToStep = (step: string) => {
-    if (latestDraftId) {
-      navigate(`/document-editor/${latestDraftId}?step=${step}`);
-    }
-  };
-
   return (
-    <div className="document-editor-root" style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <DocumentNavigation
-        documentIdentifier={undefined}
-        currentStep="drafts"
-        onNavigate={handleNavigateToStep}
-        isOpen={sidebarOpen}
-        setIsOpen={setSidebarOpen}
-      />
-
-      <div
-        className="document-content"
-        style={{
-          marginLeft: isNarrowViewport ? "0" : (sidebarOpen ? "240px" : "60px"),
-          transition: "margin-left 0.3s ease",
-          width: isNarrowViewport ? "100%" : `calc(100% - ${sidebarOpen ? "240px" : "60px"})`,
-          display: "flex",
-          flexDirection: "column",
-          minWidth: 0,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            padding: "16px 24px",
-            borderBottom: "1px solid #e5e7eb",
-            backgroundColor: "white",
-          }}
-        >
-          <nav style={breadcrumbsContainerStyle} aria-label="Breadcrumbs">
-            <a href="/" style={breadcrumbLinkStyle} onClick={handleHomeClick}>
-              GrantWell
-            </a>
-            <span style={breadcrumbSeparatorStyle}>/</span>
-            <span style={breadcrumbCurrentStyle}>Drafts</span>
-          </nav>
-        </div>
-        <DocEditorSessions
-          toolsOpen={true}
-          documentIdentifier={null}
-          onSessionSelect={handleDraftSelect}
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
+        <UnifiedNavigation
+          documentIdentifier={docId || undefined}
         />
+      </nav>
+      <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="breadcrumb">
+          <div className="breadcrumb-item">
+            <button
+              className="breadcrumb-link"
+              onClick={handleHomeClick}
+              style={{
+                cursor: "pointer",
+                background: "none",
+                border: "none",
+                padding: 0,
+                color: "inherit",
+                textDecoration: "underline",
+              }}
+            >
+              Home
+            </button>
+          </div>
+          <div className="breadcrumb-item" aria-current="page">
+            Drafts
+          </div>
+        </nav>
+
+        <div className="dashboard-main-content">
+          <DocEditorSessions
+            toolsOpen={true}
+            documentIdentifier={showAllNOFOs ? null : docId}
+            onSessionSelect={handleDraftSelect}
+            showAllNOFOs={showAllNOFOs}
+            onToggleShowAllNOFOs={() => setShowAllNOFOs(!showAllNOFOs)}
+            hasDocId={!!docId}
+          />
+        </div>
       </div>
     </div>
   );

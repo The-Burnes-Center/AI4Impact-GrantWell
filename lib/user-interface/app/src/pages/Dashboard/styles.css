@@ -596,7 +596,7 @@ body {
   background-color: white !important;
   border-radius: 12px !important;
   width: 100% !important;
-  max-width: 500px !important;
+  max-width: 500px;
   max-height: 85vh !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
   position: relative !important;
@@ -783,6 +783,24 @@ select.form-input {
 
 .loading::after {
   content: "";
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #14558F;
+  border-radius: 50%;
+  animation: loading-spin 1s linear infinite;
+}
+
+/* Table loading state */
+.table-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  min-height: 200px;
+}
+
+.table-loading-spinner {
   width: 40px;
   height: 40px;
   border: 3px solid #e0e0e0;
@@ -1003,7 +1021,8 @@ select.form-input {
   transform: translateY(-1px);
 }
 
-.pagination-button:disabled {
+.pagination-button:disabled,
+.pagination-button.disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -1163,7 +1182,8 @@ select.form-input {
 /* Action button variations - unified styling with different colors */
 .action-button.invite-button,
 .action-button.add-button,
-.action-button.scraper-button {
+.action-button.scraper-button,
+.action-button.danger-button {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1227,10 +1247,27 @@ select.form-input {
   outline-offset: 2px;
 }
 
+/* Danger Button - Red */
+.action-button.danger-button {
+  background-color: #e74c3c;
+}
+
+.action-button.danger-button:hover:not(:disabled) {
+  background-color: #d62c1a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.action-button.danger-button:focus {
+  outline: 2px solid #0088FF;
+  outline-offset: 2px;
+}
+
 /* Disabled state for all buttons */
 .action-button.invite-button:disabled,
 .action-button.add-button:disabled,
-.action-button.scraper-button:disabled {
+.action-button.scraper-button:disabled,
+.action-button.danger-button:disabled {
   background-color: #6b737b;
   cursor: not-allowed;
   transform: none;

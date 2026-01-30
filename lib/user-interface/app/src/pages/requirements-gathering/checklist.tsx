@@ -12,7 +12,7 @@ import { AppContext } from "../../common/app-context";
 import { GrantTypeId } from "../../common/grant-types";
 import "../../styles/checklists.css";
 import { v4 as uuidv4 } from "uuid";
-import RequirementsNavigation from "./checklist-navigation";
+import UnifiedNavigation from "../../components/unified-navigation";
 
 // Grant type definitions for display
 const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
@@ -73,7 +73,7 @@ const THEME = {
     gray: "#eaeaea",
   },
   fonts: {
-    base: "'Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif",
+    base: "'Noto Sans', sans-serif",
   },
   shadows: {
     small: "0 2px 4px rgba(0,0,0,0.08)",
@@ -529,7 +529,6 @@ const Checklists: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState("eligibility");
   const [showHelp, setShowHelp] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const [isNavCollapsed, setIsNavCollapsed] = useState<boolean>(false);
   const modalRef = React.useRef<HTMLDivElement>(null);
   const modalPreviousFocusRef = React.useRef<HTMLElement | null>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -554,6 +553,14 @@ const Checklists: React.FC = () => {
       setShowHelp(true);
     }
   }, [isLoading]);
+
+  // Restore checkbox state from localStorage when help dialog opens
+  useEffect(() => {
+    if (showHelp) {
+      const hasSeenHelp = localStorage.getItem("checklistsHelpSeen");
+      setDontShowAgain(hasSeenHelp === "true");
+    }
+  }, [showHelp]);
 
   // Focus trapping effect for modal
   useEffect(() => {
@@ -716,6 +723,14 @@ const Checklists: React.FC = () => {
     fetchData();
   }, [documentIdentifier]);
 
+  // Redirect to landing page if no NOFO/document identifier is provided
+  useEffect(() => {
+    if (!isLoading && !folderParam && !documentIdentifier) {
+      console.warn("No NOFO selected, redirecting to landing page");
+      navigate("/");
+    }
+  }, [isLoading, folderParam, documentIdentifier, navigate]);
+
   const linkUrl = `/chat/${uuidv4()}?folder=${encodeURIComponent(
     documentIdentifier || ""
   )}`;
@@ -755,6 +770,9 @@ const Checklists: React.FC = () => {
   const handleCloseModal = () => {
     if (dontShowAgain) {
       localStorage.setItem("checklistsHelpSeen", "true");
+    } else {
+      // If user unchecks the box, remove the preference
+      localStorage.removeItem("checklistsHelpSeen");
     }
     setShowHelp(false);
   };
@@ -898,9 +916,8 @@ const Checklists: React.FC = () => {
           flexShrink: 0,
         }}
       >
-        <RequirementsNavigation
+        <UnifiedNavigation
           documentIdentifier={folderParam}
-          onCollapseChange={setIsNavCollapsed}
         />
       </nav>
 

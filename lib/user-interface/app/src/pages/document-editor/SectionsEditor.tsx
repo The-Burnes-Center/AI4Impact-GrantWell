@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
@@ -31,6 +31,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [regenerating, setRegenerating] = useState(false);
   const [regenerateProgress, setRegenerateProgress] = useState<string>("");
   const appContext = useContext(AppContext);
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load sections from NOFO summary API
   useEffect(() => {
@@ -129,6 +130,13 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     };
 
     fetchDraftSections();
+
+    // Cleanup auto-save timeout on unmount
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
   }, [selectedNofo, appContext, sessionId]);
 
   // Update editor content when active section changes
@@ -148,42 +156,183 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     const value = e.target.value;
     setEditorContent(value);
 
-    // Save answer
+    // Save answer to localStorage immediately
     if (sections[activeSection]) {
       const sectionKey = sections[activeSection].name;
-      const updated = { ...sectionAnswers, [sectionKey]: value };
-      setSectionAnswers(updated);
-      localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+      setSectionAnswers((prev) => {
+        const updated = { ...prev, [sectionKey]: value };
+        localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+
+        // Auto-save to database after 2 seconds of inactivity
+        if (autoSaveTimeoutRef.current) {
+          clearTimeout(autoSaveTimeoutRef.current);
+        }
+
+        autoSaveTimeoutRef.current = setTimeout(async () => {
+          if (appContext && selectedNofo) {
+            try {
+              const apiClient = new ApiClient(appContext);
+              const username = (await Auth.currentAuthenticatedUser()).username;
+              
+              // Get current draft to preserve other fields
+              const currentDraft = await apiClient.drafts.getDraft({
+                sessionId: sessionId,
+                userId: username
+              });
+
+              if (currentDraft) {
+                await apiClient.drafts.updateDraft({
+                  sessionId: sessionId,
+                  userId: username,
+                  title: currentDraft.title || `Application for ${selectedNofo}`,
+                  documentIdentifier: selectedNofo,
+                  sections: updated,
+                  projectBasics: currentDraft.projectBasics,
+                  questionnaire: currentDraft.questionnaire,
+                  lastModified: new Date().toISOString()
+                });
+              } else {
+                // Create new draft if it doesn't exist
+                await apiClient.drafts.updateDraft({
+                  sessionId: sessionId,
+                  userId: username,
+                  title: `Application for ${selectedNofo}`,
+                  documentIdentifier: selectedNofo,
+                  sections: updated,
+                  projectBasics: {},
+                  questionnaire: {},
+                  lastModified: new Date().toISOString()
+                });
+              }
+            } catch (error) {
+              console.error("Error auto-saving to database:", error);
+              // Silently fail - user can manually save if needed
+            }
+          }
+        }, 2000); // Auto-save after 2 seconds of no typing
+
+        return updated;
+      });
     }
   };
 
-  const handleSaveProgress = () => {
+  const handleSaveProgress = async () => {
     // Save the current section content
-    if (sections[activeSection]) {
+    if (sections[activeSection] && appContext && selectedNofo) {
       const sectionKey = sections[activeSection].name;
       const updated = { ...sectionAnswers, [sectionKey]: editorContent };
       setSectionAnswers(updated);
       localStorage.setItem("sectionAnswers", JSON.stringify(updated));
 
-      // Visual feedback for save
-      const saveButton = document.getElementById("save-button");
-      if (saveButton) {
-        const originalText = saveButton.innerText;
-        saveButton.innerText = "Saved!";
-        setTimeout(() => {
-          saveButton.innerText = originalText;
-        }, 1500);
+      try {
+        // Save to database
+        const apiClient = new ApiClient(appContext);
+        const username = (await Auth.currentAuthenticatedUser()).username;
+        
+        // Get current draft to preserve other fields
+        const currentDraft = await apiClient.drafts.getDraft({
+          sessionId: sessionId,
+          userId: username
+        });
+
+        if (currentDraft) {
+          await apiClient.drafts.updateDraft({
+            sessionId: sessionId,
+            userId: username,
+            title: currentDraft.title || `Application for ${selectedNofo}`,
+            documentIdentifier: selectedNofo,
+            sections: updated,
+            projectBasics: currentDraft.projectBasics,
+            questionnaire: currentDraft.questionnaire,
+            lastModified: new Date().toISOString()
+          });
+        } else {
+          // Create new draft if it doesn't exist
+          await apiClient.drafts.updateDraft({
+            sessionId: sessionId,
+            userId: username,
+            title: `Application for ${selectedNofo}`,
+            documentIdentifier: selectedNofo,
+            sections: updated,
+            projectBasics: {},
+            questionnaire: {},
+            lastModified: new Date().toISOString()
+          });
+        }
+
+        // Visual feedback for save
+        const saveButton = document.getElementById("save-button");
+        if (saveButton) {
+          const originalText = saveButton.innerText;
+          saveButton.innerText = "Saved!";
+          setTimeout(() => {
+            saveButton.innerText = originalText;
+          }, 1500);
+        }
+      } catch (error) {
+        console.error("Error saving progress to database:", error);
+        // Still show saved feedback even if DB save fails (localStorage is saved)
+        const saveButton = document.getElementById("save-button");
+        if (saveButton) {
+          const originalText = saveButton.innerText;
+          saveButton.innerText = "Save failed";
+          setTimeout(() => {
+            saveButton.innerText = originalText;
+          }, 2000);
+        }
       }
     }
   };
 
-  const handleSaveAndContinue = () => {
+  const handleSaveAndContinue = async () => {
     // Save the current section content
     if (sections[activeSection]) {
       const sectionKey = sections[activeSection].name;
       const updated = { ...sectionAnswers, [sectionKey]: editorContent };
       setSectionAnswers(updated);
       localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+
+      // Save to database before continuing
+      if (appContext && selectedNofo) {
+        try {
+          const apiClient = new ApiClient(appContext);
+          const username = (await Auth.currentAuthenticatedUser()).username;
+          
+          // Get current draft to preserve other fields
+          const currentDraft = await apiClient.drafts.getDraft({
+            sessionId: sessionId,
+            userId: username
+          });
+
+          if (currentDraft) {
+            await apiClient.drafts.updateDraft({
+              sessionId: sessionId,
+              userId: username,
+              title: currentDraft.title || `Application for ${selectedNofo}`,
+              documentIdentifier: selectedNofo,
+              sections: updated,
+              projectBasics: currentDraft.projectBasics,
+              questionnaire: currentDraft.questionnaire,
+              lastModified: new Date().toISOString()
+            });
+          } else {
+            // Create new draft if it doesn't exist
+            await apiClient.drafts.updateDraft({
+              sessionId: sessionId,
+              userId: username,
+              title: `Application for ${selectedNofo}`,
+              documentIdentifier: selectedNofo,
+              sections: updated,
+              projectBasics: {},
+              questionnaire: {},
+              lastModified: new Date().toISOString()
+            });
+          }
+        } catch (error) {
+          console.error("Error saving before continue:", error);
+          // Continue anyway - localStorage is saved
+        }
+      }
     }
 
     // Move to the next section or continue to review

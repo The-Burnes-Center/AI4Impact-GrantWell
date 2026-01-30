@@ -1,1 +1,0 @@
-{"version":3,"file":"interfaces.d.ts","sourceRoot":"","sources":["../../../../../../src/internal/components/button-trigger/analytics-metadata/interfaces.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,eAAe,EAAE,MAAM,kEAAkE,CAAC;AAEnG,MAAM,WAAW,6CAA6C;IAC5D,MAAM,EAAE,QAAQ,CAAC;IACjB,MAAM,EAAE;QACN,KAAK,EAAE,eAAe,CAAC;QACvB,QAAQ,EAAE,MAAM,CAAC;KAClB,CAAC;CACH"}

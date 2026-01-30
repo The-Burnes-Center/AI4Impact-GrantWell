@@ -118,6 +118,7 @@ export default function Playground() {
   const appContext = useContext(AppContext);
   const [helpOpen, setHelpOpen] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [nofoSelectionDialogOpen, setNofoSelectionDialogOpen] = useState(false);
   const navigate = useNavigate();
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const modalRef = React.useRef<HTMLDivElement>(null);
@@ -166,6 +167,15 @@ export default function Playground() {
     fetchNofoName();
   }, [documentIdentifier, appContext]);
 
+  // Check if NOFO is selected - only show dialog if no documentIdentifier
+  useEffect(() => {
+    if (!isLoading && !documentIdentifier && !helpOpen) {
+      setNofoSelectionDialogOpen(true);
+    } else {
+      setNofoSelectionDialogOpen(false);
+    }
+  }, [isLoading, documentIdentifier, helpOpen]);
+
   // Check localStorage and show help modal automatically on first visit
   useEffect(() => {
     const hasSeenPlaygroundHelp = localStorage.getItem("playgroundHelpSeen");
@@ -173,6 +183,14 @@ export default function Playground() {
       setHelpOpen(true);
     }
   }, [isLoading]);
+
+  // Restore checkbox state from localStorage when help dialog opens
+  useEffect(() => {
+    if (helpOpen) {
+      const hasSeenPlaygroundHelp = localStorage.getItem("playgroundHelpSeen");
+      setDontShowAgain(hasSeenPlaygroundHelp === "true");
+    }
+  }, [helpOpen]);
 
   // Focus trapping effect for modal
   useEffect(() => {
@@ -300,6 +318,9 @@ export default function Playground() {
   const handleCloseModal = () => {
     if (dontShowAgain) {
       localStorage.setItem("playgroundHelpSeen", "true");
+    } else {
+      // If user unchecks the box, remove the preference
+      localStorage.removeItem("playgroundHelpSeen");
     }
     setHelpOpen(false);
     

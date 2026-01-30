@@ -1,22 +1,38 @@
-import {
-  Flashbar
-} from "@cloudscape-design/components";
+import { Alert } from "react-bootstrap";
 import { useNotifications } from "./notif-manager";
 
+// Map Cloudscape notification types to Bootstrap Alert variants
+const mapNotificationTypeToVariant = (type: string): string => {
+  switch (type) {
+    case "error":
+      return "danger";
+    case "warning":
+      return "warning";
+    case "success":
+      return "success";
+    case "info":
+      return "info";
+    default:
+      return "info";
+  }
+};
+
 export default function NotificationBar() {
+  const { notifications } = useNotifications();
 
-  const { notifications, addNotification } = useNotifications();
-  
-
-  return (  
+  return (
     <div>
-    <Flashbar  items={notifications.map(notif => ({
-        content: notif.content,
-        dismissible: notif.dismissible,
-        // sticky : true,
-        onDismiss: () => notif.onDismiss(),
-        type: notif.type
-      }))} />    
-      </div>  
+      {notifications.map((notif) => (
+        <Alert
+          key={notif.id}
+          variant={mapNotificationTypeToVariant(notif.type)}
+          dismissible={notif.dismissible}
+          onClose={() => notif.onDismiss()}
+          className="mb-2"
+        >
+          {notif.content}
+        </Alert>
+      ))}
+    </div>
   );
 }

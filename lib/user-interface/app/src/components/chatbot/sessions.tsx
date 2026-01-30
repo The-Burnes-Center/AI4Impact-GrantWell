@@ -11,15 +11,9 @@ import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router";
-import {
-  Plus as FaPlus,
-  Trash2 as FaTrash,
-  RotateCw as FaSync,
-  ChevronDown as FaSortDown,
-  ChevronUp as FaSortUp,
-  ArrowUpDown as FaSort,
-  Calendar,
-} from "lucide-react";
+import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
+import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
+import "../../pages/Dashboard/styles.css";
 
 // Styles for the sessions component
 const styles: Record<string, React.CSSProperties> = {
@@ -191,41 +185,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#9ca3af",
     cursor: "not-allowed",
   },
-  modalOverlay: {
-    position: "fixed" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    width: "450px",
-    maxWidth: "90%",
-    padding: "24px",
-  },
-  modalHeader: {
-    fontSize: "18px",
-    fontWeight: "600",
-    marginBottom: "16px",
-    paddingBottom: "12px",
-    borderBottom: "1px solid #e5e7eb",
-  },
-  modalContent: {
-    marginBottom: "24px",
-  },
-  modalFooter: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "12px",
-  },
 };
 
 export interface SessionsProps {
@@ -254,10 +213,6 @@ export default function Sessions(props: SessionsProps) {
   );
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const navigate = useNavigate();
-
-  // Refs for delete modal focus management
-  const deleteModalRef = useRef<HTMLDivElement>(null);
-  const deleteModalPreviousFocusRef = useRef<HTMLElement | null>(null);
 
   const { documentIdentifier } = props;
 
@@ -294,83 +249,6 @@ export default function Sessions(props: SessionsProps) {
     loadSessions();
   }, [appContext, getSessions, props.toolsOpen, documentIdentifier]);
 
-  // Focus management for delete modal
-  useEffect(() => {
-    if (!showModalDelete) return;
-
-    // Store the currently focused element
-    deleteModalPreviousFocusRef.current = document.activeElement as HTMLElement;
-
-    // Focus the modal after a short delay
-    setTimeout(() => {
-      const firstFocusable = deleteModalRef.current?.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      firstFocusable?.focus();
-    }, 100);
-
-    // Restore focus when modal closes
-    return () => {
-      // Only restore focus if the element still exists in the DOM
-      if (
-        deleteModalPreviousFocusRef.current &&
-        document.body.contains(deleteModalPreviousFocusRef.current)
-      ) {
-        deleteModalPreviousFocusRef.current.focus();
-      }
-    };
-  }, [showModalDelete]);
-
-  // Focus trap handler for delete modal
-  useEffect(() => {
-    if (!showModalDelete || !deleteModalRef.current) return;
-
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-
-      const focusableElements =
-        deleteModalRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-
-      if (!focusableElements || focusableElements.length === 0) return;
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      // Check if currently focused element is inside the modal
-      const activeElement = document.activeElement as HTMLElement;
-      const isInsideModal = deleteModalRef.current?.contains(activeElement);
-
-      // If focus is outside the modal, bring it back
-      if (!isInsideModal) {
-        e.preventDefault();
-        firstElement.focus();
-        return;
-      }
-
-      if (e.shiftKey && document.activeElement === firstElement) {
-        e.preventDefault();
-        lastElement.focus();
-      } else if (!e.shiftKey && document.activeElement === lastElement) {
-        e.preventDefault();
-        firstElement.focus();
-      }
-    };
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setShowModalDelete(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleTabKey);
-    document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("keydown", handleTabKey);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [showModalDelete]);
 
   const deleteSelectedSessions = async () => {
     if (!appContext || selectedItems.length === 0) return;
@@ -443,8 +321,8 @@ export default function Sessions(props: SessionsProps) {
   }, [sortedSessions, currentPage, pageSize]);
 
   const getSortIcon = (field: "title" | "time_stamp") => {
-    if (sortField !== field) return <FaSort />;
-    return sortDirection === "asc" ? <FaSortUp /> : <FaSortDown />;
+    if (sortField !== field) return <LuArrowUpDown size={14} />;
+    return sortDirection === "asc" ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />;
   };
 
   const formatSessionTime = (timestamp: string) => {
@@ -466,281 +344,237 @@ export default function Sessions(props: SessionsProps) {
   };
 
   return (
-    <div style={styles.container}>
-      {showModalDelete && (
-        <div
-          style={styles.modalOverlay}
-          onClick={() => setShowModalDelete(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-modal-title"
-        >
-          <div
-            ref={deleteModalRef}
-            style={styles.modal}
-            onClick={(e) => e.stopPropagation()}
-            role="document"
-          >
-            <div id="delete-modal-title" style={styles.modalHeader}>
-              {`Delete session${selectedItems.length > 1 ? "s" : ""}`}
-            </div>
-            <div style={styles.modalContent}>
-              Do you want to delete{" "}
-              {selectedItems.length === 1
-                ? `session ${selectedItems[0].session_id}?`
-                : `${selectedItems.length} sessions?`}
-            </div>
-            <div style={styles.modalFooter}>
-              <button
-                style={{ ...styles.button, ...styles.primaryButton }}
-                onClick={() => setShowModalDelete(false)}
-                onFocus={(e) => {
-                  e.currentTarget.style.outline = "2px solid #0088FF";
-                  e.currentTarget.style.outlineOffset = "2px";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.outline = "none";
-                }}
-                aria-label="Cancel delete"
-              >
-                Cancel
-              </button>
-              <button
-                style={{ ...styles.button, ...styles.dangerButton }}
-                onClick={deleteSelectedSessions}
-                onFocus={(e) => {
-                  e.currentTarget.style.outline = "2px solid #0088FF";
-                  e.currentTarget.style.outlineOffset = "2px";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.outline = "none";
-                }}
-                aria-label={`Confirm delete ${selectedItems.length} session${
-                  selectedItems.length > 1 ? "s" : ""
-                }`}
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+    <div className="dashboard-content">
+      <DeleteConfirmationModal
+        isOpen={showModalDelete}
+        onClose={() => setShowModalDelete(false)}
+        onConfirm={deleteSelectedSessions}
+        title={`Delete session${selectedItems.length > 1 ? "s" : ""}`}
+        itemName={selectedItems.length === 1 ? selectedItems[0].session_id : undefined}
+        itemCount={selectedItems.length > 1 ? selectedItems.length : undefined}
+        itemLabel="session"
+      />
 
       {/* Header section */}
-      <div style={styles.header}>
-        <div style={styles.headerContainer}>
-          <div>
-            <h1 style={styles.headerTitle}>Sessions</h1>
-            <p style={styles.headerDescription}>
-              Manage and access your previous chat conversations
-            </p>
-          </div>
-          <div style={styles.buttonContainer}>
-            <button
-              style={{ ...styles.button, ...styles.primaryButton }}
-              onClick={() => {
-                const queryParams = props.documentIdentifier
-                  ? `?folder=${encodeURIComponent(props.documentIdentifier)}`
-                  : "";
-                navigate(`/home${queryParams}`);
-              }}
-            >
-              <FaPlus size={16} /> New Session
-            </button>
-            <button
-              style={{
-                ...styles.button,
-                ...styles.dangerButton,
-                ...(selectedItems.length === 0 ? styles.disabledButton : {}),
-              }}
-              onClick={() => setShowModalDelete(true)}
-              disabled={selectedItems.length === 0}
-            >
-              <FaTrash size={16} /> Delete
-            </button>
-            <button
-              style={{ ...styles.button }}
-              onClick={async () => {
-                setIsLoading(true);
-                await getSessions();
-                setIsLoading(false);
-              }}
-            >
-              <FaSync size={16} /> Refresh
-            </button>
-          </div>
+      <div className="dashboard-header">
+        <div>
+          <h1>Sessions</h1>
+          <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+            Manage and access your previous chat conversations
+          </p>
+        </div>
+        <div className="dashboard-actions">
+          <button
+            className="action-button add-button"
+            onClick={() => {
+              const queryParams = props.documentIdentifier
+                ? `?folder=${encodeURIComponent(props.documentIdentifier)}`
+                : "";
+              navigate(`/home${queryParams}`);
+            }}
+          >
+            <LuPlus size={16} className="button-icon" />
+            <span>New Session</span>
+          </button>
+          <button
+            className="action-button danger-button"
+            onClick={() => setShowModalDelete(true)}
+            disabled={selectedItems.length === 0}
+            style={{
+              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#e74c3c",
+              color: selectedItems.length === 0 ? "#9ca3af" : "white",
+              cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
+            }}
+          >
+            <LuTrash size={16} className="button-icon" />
+            <span>Delete</span>
+          </button>
+          <button
+            className="action-button refresh-button"
+            onClick={async () => {
+              setIsLoading(true);
+              await getSessions();
+              setIsLoading(false);
+            }}
+            disabled={isLoading}
+            aria-label="Refresh sessions list"
+            aria-busy={isLoading}
+          >
+            {isLoading ? (
+              <span className="refresh-loading">Refreshing...</span>
+            ) : (
+              <>
+                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <span>Refresh</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
       {/* Table section */}
-      <div style={styles.tableContainer}>
-        {isLoading ? (
-          <div style={styles.loadingContainer}>
-            <div style={styles.spinner}></div>
+      <div className="table-container">
+        <div className="table-header" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+          <div className="header-cell">
+            <input
+              type="checkbox"
+              checked={
+                paginatedItems.length > 0 &&
+                selectedItems.length === paginatedItems.length
+              }
+              onChange={handleSelectAll}
+              aria-label="Select all sessions"
+              style={{ cursor: "pointer" }}
+              disabled={isLoading || sortedSessions.length === 0}
+            />
           </div>
-        ) : sortedSessions.length === 0 ? (
-          <div style={styles.emptyState}>
-            <div style={styles.emptyStateTitle}>No sessions</div>
+          <div
+            className="header-cell"
+            onClick={() => !isLoading && handleSort("title")}
+            style={{ cursor: isLoading ? "default" : "pointer" }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              Title {!isLoading && getSortIcon("title")}
+            </div>
           </div>
-        ) : (
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.checkboxCell}>
+          <div
+            className="header-cell"
+            onClick={() => !isLoading && handleSort("time_stamp")}
+            style={{ cursor: isLoading ? "default" : "pointer" }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              Time {!isLoading && getSortIcon("time_stamp")}
+            </div>
+          </div>
+        </div>
+        <div className="table-body">
+          {isLoading ? (
+            <div className="table-loading">
+              <div className="table-loading-spinner"></div>
+            </div>
+          ) : sortedSessions.length === 0 ? (
+            <div className="no-data">
+              <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
+                No sessions
+              </div>
+            </div>
+          ) : (
+            paginatedItems.map((item) => (
+              <div key={item.session_id} className="table-row" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+                <div className="row-cell">
                   <input
                     type="checkbox"
-                    style={styles.checkbox}
-                    checked={
-                      paginatedItems.length > 0 &&
-                      selectedItems.length === paginatedItems.length
-                    }
-                    onChange={handleSelectAll}
-                    aria-label="Select all sessions"
+                    checked={selectedItems.some(
+                      (i) => i.session_id === item.session_id
+                    )}
+                    onChange={(e) => handleSelectItem(item, e)}
+                    aria-label={`Select ${item.title}`}
+                    style={{ cursor: "pointer" }}
                   />
-                </th>
-                <th
-                  style={styles.tableHeader}
-                  onClick={() => handleSort("title")}
-                >
-                  <div style={styles.tableHeaderContent}>
-                    Title {getSortIcon("title")}
-                  </div>
-                </th>
-                <th
-                  style={styles.tableHeader}
-                  onClick={() => handleSort("time_stamp")}
-                >
-                  <div style={styles.tableHeaderContent}>
-                    Time {getSortIcon("time_stamp")}
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedItems.map((item) => (
-                <tr key={item.session_id}>
-                  <td style={{ ...styles.tableCell, ...styles.checkboxCell }}>
-                    <input
-                      type="checkbox"
-                      style={styles.checkbox}
-                      checked={selectedItems.some(
-                        (i) => i.session_id === item.session_id
-                      )}
-                      onChange={(e) => handleSelectItem(item, e)}
-                      aria-label={`Select ${item.title}`}
-                    />
-                  </td>
-                  <td style={styles.tableCell}>
-                    <button
-                      onClick={() => {
-                        if (props.onSessionSelect) {
-                          props.onSessionSelect(item.session_id);
-                        }
+                </div>
+                <div className="row-cell">
+                  <button
+                    onClick={() => {
+                      if (props.onSessionSelect) {
+                        props.onSessionSelect(item.session_id);
+                      }
 
-                        const queryParam = item.document_identifier
-                          ? `?folder=${encodeURIComponent(
-                              item.document_identifier
-                            )}`
-                          : "";
+                      const queryParam = item.document_identifier
+                        ? `?folder=${encodeURIComponent(
+                            item.document_identifier
+                          )}`
+                        : "";
 
-                        navigate(
-                          `/chat/${item.session_id}${queryParam}`
-                        );
-                      }}
-                      style={{
-                        ...styles.link,
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                        cursor: "pointer",
-                        textAlign: "left",
-                        fontSize: "inherit",
-                      }}
-                    >
-                      {item.title}
-                    </button>
-                  </td>
-                  <td style={styles.tableCell}>
-                    <div style={styles.dateCell}>
-                      <Calendar size={16} style={styles.calendarIcon} />
+                      navigate(
+                        `/chat/${item.session_id}${queryParam}`
+                      );
+                    }}
+                    style={{
+                      color: "#14558F",
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      textAlign: "left",
+                      fontSize: "inherit",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {item.title}
+                  </button>
+                </div>
+                <div className="row-cell">
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                    <LuCalendar size={16} aria-hidden="true" />
+                    <time dateTime={item.time_stamp}>
                       {formatSessionTime(item.time_stamp)}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+                    </time>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {/* Pagination */}
       {!isLoading && sortedSessions.length > 0 && (
-        <div style={styles.pagination}>
-          <div style={styles.pageInfo}>
-            <span>
-              Showing {(currentPage - 1) * pageSize + 1} to{" "}
-              {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
-              {sortedSessions.length} results
-            </span>
-            <select
-              style={styles.pageSizeSelect}
-              value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value));
-                setCurrentPage(1);
-              }}
-              aria-label="Items per page"
-            >
-              <option value={10}>10 per page</option>
-              <option value={20}>20 per page</option>
-              <option value={50}>50 per page</option>
-            </select>
+        <div className="pagination-container">
+          <div className="pagination-info">
+            Showing {(currentPage - 1) * pageSize + 1} to{" "}
+            {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
+            {sortedSessions.length} sessions
           </div>
-          <div style={styles.paginationButtons}>
-            <button
-              style={{
-                ...styles.paginationButton,
-                ...(currentPage === 1 ? styles.paginationButtonDisabled : {}),
-              }}
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(1)}
-            >
-              First
-            </button>
-            <button
-              style={{
-                ...styles.paginationButton,
-                ...(currentPage === 1 ? styles.paginationButtonDisabled : {}),
-              }}
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              Previous
-            </button>
-            <button
-              style={{
-                ...styles.paginationButton,
-                ...(currentPage === totalPages
-                  ? styles.paginationButtonDisabled
-                  : {}),
-              }}
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-            </button>
-            <button
-              style={{
-                ...styles.paginationButton,
-                ...(currentPage === totalPages
-                  ? styles.paginationButtonDisabled
-                  : {}),
-              }}
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(totalPages)}
-            >
-              Last
-            </button>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div className="pagination-controls">
+              <button
+                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(1)}
+              >
+                First
+              </button>
+              <button
+                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Previous
+              </button>
+              <button
+                className={`pagination-button ${currentPage === totalPages ? "disabled" : ""}`}
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </button>
+              <button
+                className={`pagination-button ${currentPage === totalPages ? "disabled" : ""}`}
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(totalPages)}
+              >
+                Last
+              </button>
+            </div>
+            <div className="items-per-page">
+              <label htmlFor="items-per-page-select" style={{ marginRight: "8px" }}>
+                Show:
+              </label>
+              <select
+                id="items-per-page-select"
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                aria-label="Items per page"
+                className="form-input"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
+            </div>
           </div>
         </div>
       )}

@@ -1,7 +1,0 @@
-/*
- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- SPDX-License-Identifier: Apache-2.0
-*/
-.awsui_breadcrumbs-own_ete58_yonx9_5:not(#\9):not(:empty) + .awsui_breadcrumbs-discovered_ete58_yonx9_5 {
-  display: none;
-}

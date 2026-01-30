@@ -67,7 +67,7 @@ export const useGrantRecommendations = () => {
   const [loadingRAG, setLoadingRAG] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState<RecommendationResponse | null>(null);
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
    * Stop polling for job status
