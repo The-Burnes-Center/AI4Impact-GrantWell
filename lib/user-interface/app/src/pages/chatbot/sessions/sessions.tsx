@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import Sessions from "../../../components/chatbot/sessions";
-import { CHATBOT_NAME } from "../../../common/constants";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ApiClient } from "../../../common/api-client/api-client";
 import { AppContext } from "../../../common/app-context";
@@ -100,7 +99,7 @@ export default function SessionPage() {
                 textDecoration: "underline",
               }}
             >
-              {CHATBOT_NAME}
+              Home
             </button>
           </div>
           <div className="breadcrumb-item" aria-current="page">

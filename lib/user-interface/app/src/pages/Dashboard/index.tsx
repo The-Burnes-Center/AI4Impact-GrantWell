@@ -1713,26 +1713,26 @@ const Dashboard: React.FC = () => {
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="breadcrumb">
-        <div className="breadcrumb-item">
-          <button
-            className="breadcrumb-link"
-            onClick={() => navigate("/")}
-            style={{
-              cursor: "pointer",
-              background: "none",
-              border: "none",
-              padding: 0,
-              color: "inherit",
-              textDecoration: "underline",
-            }}
-          >
-            Home
-          </button>
-        </div>
-        <div className="breadcrumb-item" aria-current="page">
-          Dashboard
-        </div>
-      </nav>
+          <div className="breadcrumb-item">
+            <button
+              className="breadcrumb-link"
+              onClick={() => navigate("/")}
+              style={{
+                cursor: "pointer",
+                background: "none",
+                border: "none",
+                padding: 0,
+                color: "inherit",
+                textDecoration: "underline",
+              }}
+            >
+              Home
+            </button>
+          </div>
+          <div className="breadcrumb-item" aria-current="page">
+            Dashboard
+          </div>
+        </nav>
 
       <div className="dashboard-main-content">
         {/* Header with Refresh Button */}
