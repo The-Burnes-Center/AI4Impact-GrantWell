@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../common/helpers/recently-viewed-nofos";
-import { Home, MessageSquare, FileText, CheckSquare, Upload } from "lucide-react";
+import { Home, MessageSquare, FileText, CheckSquare, Upload, LayoutDashboard } from "lucide-react";
+import { Auth } from "aws-amplify";
 
 interface UnifiedNavigationProps {
   documentIdentifier?: string;
@@ -34,6 +35,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
   const viewportWidth = useViewportWidth();
   const isNarrowViewport = viewportWidth <= 320;
   const [isOpen, setIsOpen] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Determine current page/route
   const currentPath = location.pathname;
@@ -101,6 +103,27 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
       setIsOpen(false);
     }
   }, [isNarrowViewport, isOpen]);
+
+  // Check admin permissions on component mount
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const result = await Auth.currentAuthenticatedUser();
+        if (result && Object.keys(result).length > 0) {
+          const adminRole =
+            result?.signInUserSession?.idToken?.payload["custom:role"];
+          if (adminRole && adminRole.includes("Admin")) {
+            setIsAdmin(true);
+          }
+        }
+      } catch (e) {
+        // User not authenticated or error checking admin status
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdmin();
+  }, []);
 
   return (
     <>
@@ -296,6 +319,41 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
               {isOpen && <span style={{ marginLeft: "12px" }}>Home</span>}
             </button>
 
+            {/* Admin Dashboard - only visible to admins */}
+            {isAdmin && (
+              <button
+                onClick={() => navigate("/admin/dashboard")}
+                aria-label="Admin Dashboard"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  marginBottom: "8px",
+                  background: isDashboard ? "#2563eb" : "none",
+                  color: isDashboard ? "white" : "#e2e8f0",
+                  border: "none",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  transition: "background 0.2s, color 0.2s",
+                  textAlign: "left",
+                  fontFamily: "'Noto Sans', sans-serif",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background =
+                    isDashboard ? "#2563eb" : "#2d3748")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background =
+                    isDashboard ? "#2563eb" : "none")
+                }
+              >
+                <LayoutDashboard size={20} />
+                {isOpen && <span style={{ marginLeft: "12px" }}>Admin Dashboard</span>}
+              </button>
+            )}
+
             {/* Requirements */}
             {docId && (
               <button
@@ -365,50 +423,52 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             </button>
 
             {/* Chat Sessions - nested under Chat with AI */}
-            <button
-              onClick={handleChatSessionsNavigation}
-              aria-label="Chat Sessions"
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                padding: "8px 16px 8px 44px",
-                borderRadius: "8px",
-                marginBottom: "8px",
-                background: currentPath === "/chat/sessions" ? "#2563eb" : "none",
-                color: currentPath === "/chat/sessions" ? "white" : "#e2e8f0",
-                border: "none",
-                fontSize: "15px",
-                cursor: "pointer",
-                transition: "background 0.2s, color 0.2s",
-                textAlign: "left",
-                fontFamily: "'Noto Sans', sans-serif",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background =
-                  currentPath === "/chat/sessions" ? "#2563eb" : "#2d3748")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background =
-                  currentPath === "/chat/sessions" ? "#2563eb" : "none")
-              }
-            >
-              <svg
-                viewBox="0 0 24 24"
+            {isOpen && (
+              <button
+                onClick={handleChatSessionsNavigation}
+                aria-label="Chat Sessions"
                 style={{
-                  width: "18px",
-                  height: "18px",
-                  stroke: "currentColor",
-                  fill: "none",
-                  strokeWidth: 2,
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "8px 16px 8px 44px",
+                  borderRadius: "8px",
+                  marginBottom: "8px",
+                  background: currentPath === "/chat/sessions" ? "#2563eb" : "none",
+                  color: currentPath === "/chat/sessions" ? "white" : "#e2e8f0",
+                  border: "none",
+                  fontSize: "15px",
+                  cursor: "pointer",
+                  transition: "background 0.2s, color 0.2s",
+                  textAlign: "left",
+                  fontFamily: "'Noto Sans', sans-serif",
                 }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background =
+                    currentPath === "/chat/sessions" ? "#2563eb" : "#2d3748")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background =
+                    currentPath === "/chat/sessions" ? "#2563eb" : "none")
+                }
               >
-                <path d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-              {isOpen && <span style={{ marginLeft: "12px" }}>Chat Sessions</span>}
-            </button>
+                <svg
+                  viewBox="0 0 24 24"
+                  style={{
+                    width: "18px",
+                    height: "18px",
+                    stroke: "currentColor",
+                    fill: "none",
+                    strokeWidth: 2,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                  }}
+                >
+                  <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span style={{ marginLeft: "12px" }}>Chat Sessions</span>
+              </button>
+            )}
 
             {/* Write Application / Document Editor */}
             <button
@@ -445,37 +505,39 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             </button>
 
             {/* Drafts - nested under Write Application */}
-            <button
-              onClick={handleDraftsNavigation}
-              aria-label="Drafts"
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                padding: "8px 16px 8px 44px",
-                borderRadius: "8px",
-                marginBottom: "8px",
-                background: isDrafts ? "#2563eb" : "none",
-                color: isDrafts ? "white" : "#e2e8f0",
-                border: "none",
-                fontSize: "15px",
-                cursor: "pointer",
-                transition: "background 0.2s, color 0.2s",
-                textAlign: "left",
-                fontFamily: "'Noto Sans', sans-serif",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background =
-                  isDrafts ? "#2563eb" : "#2d3748")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background =
-                  isDrafts ? "#2563eb" : "none")
-              }
-            >
-              <FileText size={18} />
-              {isOpen && <span style={{ marginLeft: "12px" }}>Drafts</span>}
-            </button>
+            {isOpen && (
+              <button
+                onClick={handleDraftsNavigation}
+                aria-label="Drafts"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "8px 16px 8px 44px",
+                  borderRadius: "8px",
+                  marginBottom: "8px",
+                  background: isDrafts ? "#2563eb" : "none",
+                  color: isDrafts ? "white" : "#e2e8f0",
+                  border: "none",
+                  fontSize: "15px",
+                  cursor: "pointer",
+                  transition: "background 0.2s, color 0.2s",
+                  textAlign: "left",
+                  fontFamily: "'Noto Sans', sans-serif",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background =
+                    isDrafts ? "#2563eb" : "#2d3748")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background =
+                    isDrafts ? "#2563eb" : "none")
+                }
+              >
+                <FileText size={18} />
+                <span style={{ marginLeft: "12px" }}>Drafts</span>
+              </button>
+            )}
           </div>
 
           {/* Document Editor specific steps */}
