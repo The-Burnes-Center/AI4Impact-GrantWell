@@ -184,6 +184,14 @@ export default function Playground() {
     }
   }, [isLoading]);
 
+  // Restore checkbox state from localStorage when help dialog opens
+  useEffect(() => {
+    if (helpOpen) {
+      const hasSeenPlaygroundHelp = localStorage.getItem("playgroundHelpSeen");
+      setDontShowAgain(hasSeenPlaygroundHelp === "true");
+    }
+  }, [helpOpen]);
+
   // Focus trapping effect for modal
   useEffect(() => {
     if (!helpOpen) return;
@@ -310,6 +318,9 @@ export default function Playground() {
   const handleCloseModal = () => {
     if (dontShowAgain) {
       localStorage.setItem("playgroundHelpSeen", "true");
+    } else {
+      // If user unchecks the box, remove the preference
+      localStorage.removeItem("playgroundHelpSeen");
     }
     setHelpOpen(false);
     

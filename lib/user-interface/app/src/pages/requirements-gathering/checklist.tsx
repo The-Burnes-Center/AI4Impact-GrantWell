@@ -554,6 +554,14 @@ const Checklists: React.FC = () => {
     }
   }, [isLoading]);
 
+  // Restore checkbox state from localStorage when help dialog opens
+  useEffect(() => {
+    if (showHelp) {
+      const hasSeenHelp = localStorage.getItem("checklistsHelpSeen");
+      setDontShowAgain(hasSeenHelp === "true");
+    }
+  }, [showHelp]);
+
   // Focus trapping effect for modal
   useEffect(() => {
     if (!showHelp) return;
@@ -762,6 +770,9 @@ const Checklists: React.FC = () => {
   const handleCloseModal = () => {
     if (dontShowAgain) {
       localStorage.setItem("checklistsHelpSeen", "true");
+    } else {
+      // If user unchecks the box, remove the preference
+      localStorage.removeItem("checklistsHelpSeen");
     }
     setShowHelp(false);
   };
