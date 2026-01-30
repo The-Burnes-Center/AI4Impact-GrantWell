@@ -98,6 +98,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const handleExportPDF = async () => {
     // Gather all application data
     let draftData = null;
+    let grantName = null;
     if (appContext && selectedNofo) {
       try {
         const apiClient = new ApiClient(appContext);
@@ -106,6 +107,12 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           sessionId: sessionId,
           userId: username
         });
+        
+        // Fetch grant name from NOFO summary
+        const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo);
+        if (nofoSummary?.data?.GrantName) {
+          grantName = nofoSummary.data.GrantName;
+        }
       } catch (error) {
         console.error("Error fetching draft for PDF export:", error);
         alert("Failed to fetch draft data for export.");
@@ -120,9 +127,10 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     try {
       const apiClient = new ApiClient(appContext!);
       
-      // Generate PDF using Lambda function
+      // Generate PDF using Lambda function with grant name from NOFO summary
       const pdfBlob = await apiClient.drafts.generatePDF({
         title: draftData.title,
+        grantName: grantName || undefined,
         projectBasics: draftData.projectBasics,
         sections: draftData.sections,
       });

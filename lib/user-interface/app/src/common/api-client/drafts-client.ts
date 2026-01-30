@@ -428,6 +428,7 @@ export class DraftsClient {
   // Generates a tagged PDF from draft data
   async generatePDF(draftData: {
     title?: string;
+    grantName?: string;
     projectBasics?: any;
     sections?: Record<string, string>;
   }): Promise<Blob> {
@@ -443,6 +444,7 @@ export class DraftsClient {
       body: JSON.stringify({
         draftData: {
           title: draftData.title || 'Grant Application',
+          grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
         },
