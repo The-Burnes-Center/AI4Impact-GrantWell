@@ -12,9 +12,7 @@ import ReviewApplication from "./ReviewApplication";
 import UploadDocuments from "./UploadDocuments";
 import Modal from "../../components/common/Modal";
 import "../../styles/document-editor.css";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
 import { DraftsClient, DocumentDraft } from "../../common/api-client/drafts-client";
@@ -510,11 +508,36 @@ const DocumentEditor: React.FC = () => {
   };
 
   const steps = [
-    "Project Basics",
-    "Questionnaire",
-    "Upload Documents",
-    "Section Editor",
-    "Review",
+    {
+      id: "projectBasics",
+      label: "Project Basics",
+      description: "Basic information",
+      tooltip: "Enter your project name, organization details, requested amount, location, and contact information.",
+    },
+    {
+      id: "questionnaire",
+      label: "Questionnaire",
+      description: "Answer questions",
+      tooltip: "Answer NOFO-specific questions about your project. These responses will help generate your grant application.",
+    },
+    {
+      id: "uploadDocuments",
+      label: "Upload Documents",
+      description: "Supporting files",
+      tooltip: "Upload supporting documents (PDFs preferred) that will help our AI understand your project better and generate more accurate content.",
+    },
+    {
+      id: "sectionEditor",
+      label: "Section Editor",
+      description: "Edit sections",
+      tooltip: "Review and edit AI-generated narrative sections. You can regenerate individual sections or edit them directly.",
+    },
+    {
+      id: "reviewApplication",
+      label: "Review",
+      description: "Final review",
+      tooltip: "Review your complete application, check compliance, and export as PDF when ready.",
+    },
   ];
   const activeStep = (() => {
     switch (currentStep) {
@@ -647,53 +670,19 @@ const DocumentEditor: React.FC = () => {
           </div>
         </div>
 
-        <div
-          style={{
-            width: "100%",
-            background: "#f1f5fb",
-            borderRadius: "0",
-            padding: "20px 0",
-            marginTop: "0",
-            marginBottom: "0",
-            boxShadow: "0px 1px 2px rgba(0,0,0,0.05)",
-            position: "static",
+        <ProgressStepper
+          steps={steps}
+          activeStep={activeStep}
+          onStepClick={(stepIndex) => {
+            const stepId = steps[stepIndex].id;
+            // Only allow navigation to completed steps or next step
+            if (stepIndex <= activeStep || stepIndex === activeStep + 1) {
+              navigateToStep(stepId);
+            }
           }}
-        >
-          <Stepper
-            activeStep={activeStep}
-            alternativeLabel
-            sx={{
-              "& .MuiStepConnector-line": {
-                borderTopWidth: "2px",
-                borderColor: "#e2e8f0",
-              },
-              "& .MuiStepLabel-label": {
-                marginTop: "8px",
-                fontSize: "14px",
-                fontWeight: 500,
-              },
-              "& .MuiStepLabel-iconContainer": {
-                "& .MuiStepIcon-root": {
-                  width: "32px",
-                  height: "32px",
-                  color: "#e2e8f0",
-                  "&.Mui-active": {
-                    color: "#0088FF",
-                  },
-                  "&.Mui-completed": {
-                    color: "#0088FF",
-                  },
-                },
-              },
-            }}
-          >
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-        </div>
+          completedSteps={Array.from({ length: activeStep }, (_, i) => i)}
+          showProgress={true}
+        />
 
         <div
           className="document-editor-workspace"
