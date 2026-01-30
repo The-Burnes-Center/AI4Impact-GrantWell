@@ -5,6 +5,7 @@ import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { useNotifications } from "../../components/notif-manager";
 import { Utils } from "../../common/utils";
+import UnifiedNavigation from "../../components/unified-navigation";
 import {
   LuPin,
   LuPinOff,
@@ -1705,9 +1706,13 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="dashboard-container">
-      {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="breadcrumb">
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
+        <UnifiedNavigation />
+      </nav>
+      <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="breadcrumb">
         <div className="breadcrumb-item">
           <button
             className="breadcrumb-link"
@@ -2114,6 +2119,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </Modal>
+      </div>
     </div>
   );
 };

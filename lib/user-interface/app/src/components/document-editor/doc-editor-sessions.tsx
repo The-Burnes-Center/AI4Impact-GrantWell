@@ -159,6 +159,9 @@ export interface DocEditorSessionsProps {
   readonly toolsOpen: boolean;
   readonly documentIdentifier: string | null;
   onSessionSelect?: (sessionId: string) => void;
+  showAllNOFOs?: boolean;
+  onToggleShowAllNOFOs?: () => void;
+  hasDocId?: boolean;
 }
 
 interface Session {
@@ -182,7 +185,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const navigate = useNavigate();
 
-  const { documentIdentifier } = props;
+  const { documentIdentifier, showAllNOFOs, onToggleShowAllNOFOs, hasDocId } = props;
 
   const getSessions = async () => {
     if (!appContext) return;
@@ -192,8 +195,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       const username = (await Auth.currentAuthenticatedUser()).username;
 
       if (username) {
-        // Get all drafts regardless of NOFO - pass null to get all drafts
-        const result = await apiClient.drafts.getDrafts(username, null);
+        // Get drafts filtered by documentIdentifier (null means all drafts)
+        const result = await apiClient.drafts.getDrafts(username, documentIdentifier);
         setSessions(result.map(draft => ({
           draft_id: draft.sessionId,
           title: draft.title,
@@ -404,6 +407,20 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             >
               <FaPlus size={16} aria-hidden="true" /> New Draft
             </button>
+            {hasDocId && onToggleShowAllNOFOs && (
+              <button
+                style={{
+                  ...styles.button,
+                  backgroundColor: "#2563eb",
+                  color: "white",
+                  border: "none",
+                }}
+                onClick={onToggleShowAllNOFOs}
+                aria-label={showAllNOFOs ? "Show only current NOFO drafts" : "Show all NOFO drafts"}
+              >
+                {showAllNOFOs ? "Show Current NOFO Only" : "Show All NOFOs"}
+              </button>
+            )}
             <button
               style={{
                 ...styles.button,

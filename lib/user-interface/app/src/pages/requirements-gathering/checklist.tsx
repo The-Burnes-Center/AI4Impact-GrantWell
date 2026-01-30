@@ -12,7 +12,7 @@ import { AppContext } from "../../common/app-context";
 import { GrantTypeId } from "../../common/grant-types";
 import "../../styles/checklists.css";
 import { v4 as uuidv4 } from "uuid";
-import RequirementsNavigation from "./checklist-navigation";
+import UnifiedNavigation from "../../components/unified-navigation";
 
 // Grant type definitions for display
 const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
@@ -529,7 +529,6 @@ const Checklists: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState("eligibility");
   const [showHelp, setShowHelp] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const [isNavCollapsed, setIsNavCollapsed] = useState<boolean>(false);
   const modalRef = React.useRef<HTMLDivElement>(null);
   const modalPreviousFocusRef = React.useRef<HTMLElement | null>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -716,6 +715,15 @@ const Checklists: React.FC = () => {
     fetchData();
   }, [documentIdentifier]);
 
+  // Check if NOFO is selected
+  useEffect(() => {
+    if (!isLoading && !folderParam) {
+      setNofoSelectionDialogOpen(true);
+    } else {
+      setNofoSelectionDialogOpen(false);
+    }
+  }, [isLoading, folderParam]);
+
   const linkUrl = `/chat/${uuidv4()}?folder=${encodeURIComponent(
     documentIdentifier || ""
   )}`;
@@ -898,9 +906,8 @@ const Checklists: React.FC = () => {
           flexShrink: 0,
         }}
       >
-        <RequirementsNavigation
+        <UnifiedNavigation
           documentIdentifier={folderParam}
-          onCollapseChange={setIsNavCollapsed}
         />
       </nav>
 

@@ -118,6 +118,7 @@ export default function Playground() {
   const appContext = useContext(AppContext);
   const [helpOpen, setHelpOpen] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [nofoSelectionDialogOpen, setNofoSelectionDialogOpen] = useState(false);
   const navigate = useNavigate();
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const modalRef = React.useRef<HTMLDivElement>(null);
@@ -165,6 +166,15 @@ export default function Playground() {
 
     fetchNofoName();
   }, [documentIdentifier, appContext]);
+
+  // Check if NOFO is selected - only show dialog if no documentIdentifier
+  useEffect(() => {
+    if (!isLoading && !documentIdentifier && !helpOpen) {
+      setNofoSelectionDialogOpen(true);
+    } else {
+      setNofoSelectionDialogOpen(false);
+    }
+  }, [isLoading, documentIdentifier, helpOpen]);
 
   // Check localStorage and show help modal automatically on first visit
   useEffect(() => {

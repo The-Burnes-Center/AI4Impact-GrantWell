@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import DocEditorSessions from "../../components/document-editor/doc-editor-sessions";
-import DocumentNavigation from "./document-navigation";
+import UnifiedNavigation from "../../components/unified-navigation";
 
 const useViewportWidth = () => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -21,11 +21,16 @@ const useViewportWidth = () => {
 
 export default function DocEditorSessionsPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const params = useParams();
   const appContext = useContext(AppContext);
   const [latestDraftId, setLatestDraftId] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showAllNOFOs, setShowAllNOFOs] = useState(false);
   const viewportWidth = useViewportWidth();
   const isNarrowViewport = viewportWidth <= 320;
+
+  // Get documentIdentifier from URL params or query params
+  const docId = params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo') || null;
 
   useEffect(() => {
     const fetchLatestDraft = async () => {
@@ -170,20 +175,16 @@ export default function DocEditorSessionsPage() {
 
   return (
     <div className="document-editor-root" style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <DocumentNavigation
-        documentIdentifier={undefined}
-        currentStep="drafts"
-        onNavigate={handleNavigateToStep}
-        isOpen={sidebarOpen}
-        setIsOpen={setSidebarOpen}
-      />
+      <nav aria-label="Document editor navigation" style={{ flexShrink: 0 }}>
+        <UnifiedNavigation
+          documentIdentifier={docId || undefined}
+        />
+      </nav>
 
       <div
         className="document-content"
         style={{
-          marginLeft: isNarrowViewport ? "0" : (sidebarOpen ? "240px" : "60px"),
-          transition: "margin-left 0.3s ease",
-          width: isNarrowViewport ? "100%" : `calc(100% - ${sidebarOpen ? "240px" : "60px"})`,
+          flex: 1,
           display: "flex",
           flexDirection: "column",
           minWidth: 0,
@@ -209,8 +210,11 @@ export default function DocEditorSessionsPage() {
         </div>
         <DocEditorSessions
           toolsOpen={true}
-          documentIdentifier={null}
+          documentIdentifier={showAllNOFOs ? null : docId}
           onSessionSelect={handleDraftSelect}
+          showAllNOFOs={showAllNOFOs}
+          onToggleShowAllNOFOs={() => setShowAllNOFOs(!showAllNOFOs)}
+          hasDocId={!!docId}
         />
       </div>
     </div>

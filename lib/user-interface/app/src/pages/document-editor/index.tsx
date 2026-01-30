@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useContext, useRef } from "rea
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
-import DocumentNavigation from "./document-navigation";
+import UnifiedNavigation from "../../components/unified-navigation";
 import ProjectBasics from "./ProjectBasics";
 import QuickQuestionnaire from "./QuickQuestionnaire";
 import DraftView from "./DraftView";
@@ -187,7 +187,6 @@ const DocumentEditor: React.FC = () => {
   const [selectedNofo, setSelectedNofo] = useState<string | null>(null);
   const [nofoName, setNofoName] = useState<string>("");
   const [isNofoLoading, setIsNofoLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
   const [topOffset, setTopOffset] = useState<number>(100); // Default: 40px banner + 60px MDS header
   const appContext = useContext(AppContext);
@@ -282,6 +281,7 @@ const DocumentEditor: React.FC = () => {
       setWelcomeModalOpen(false);
     }
   }, [isLoading, sessionId]);
+
 
   // Create new document flow
   const startNewDocument = useCallback(async () => {
@@ -641,12 +641,10 @@ const DocumentEditor: React.FC = () => {
       }}
     >
       <nav aria-label="Document editor navigation" style={{ flexShrink: 0 }}>
-        <DocumentNavigation
+        <UnifiedNavigation
           documentIdentifier={selectedNofo}
           currentStep={currentStep}
           onNavigate={navigateToStep}
-          isOpen={sidebarOpen}
-          setIsOpen={setSidebarOpen}
         />
       </nav>
 
@@ -660,131 +658,136 @@ const DocumentEditor: React.FC = () => {
           padding: 0,
         }}
       >
-        <div
-          className="document-editor-header"
-          style={{
-            background: "#fff",
-            borderBottom: "1px solid #e5e7eb",
-            width: "100%",
-            maxWidth: "100%",
-            position: "sticky",
-            top: 0,
-            zIndex: 101,
-            overflow: "hidden",
-            boxSizing: "border-box",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
-          }}
-        >
-          <div
-            className="document-editor-header-inner"
-            style={{
-              padding: "16px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              width: "100%",
-              maxWidth: "100%",
-              minWidth: 0,
-              boxSizing: "border-box",
-            }}
-          >
+        {/* Only show header, progress stepper and form content if welcome modal is closed or if there's a sessionId */}
+        {(!welcomeModalOpen || sessionId) && (
+          <>
             <div
+              className="document-editor-header"
               style={{
-                display: "flex",
-                alignItems: "center",
+                background: "#fff",
+                borderBottom: "1px solid #e5e7eb",
                 width: "100%",
-                marginBottom: "0",
-                minWidth: 0,
+                maxWidth: "100%",
+                position: "sticky",
+                top: 0,
+                zIndex: 101,
+                overflow: "hidden",
+                boxSizing: "border-box",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
               }}
             >
-              <h1
-                className="document-editor-nofo-title"
+              <div
+                className="document-editor-header-inner"
                 style={{
-                  marginBottom: "0",
-                  textAlign: "left",
-                  fontSize: "22px",
-                  fontWeight: "600",
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
                   width: "100%",
                   maxWidth: "100%",
-                  wordWrap: "break-word",
-                  overflowWrap: "break-word",
-                  wordBreak: "break-word",
-                  lineHeight: "1.4",
+                  minWidth: 0,
+                  boxSizing: "border-box",
                 }}
               >
-                {isNofoLoading ? "Loading..." : nofoName || "Grant Application"}
-              </h1>
-            </div>
-          </div>
-        </div>
-
-        <ProgressStepper
-          steps={steps}
-          activeStep={activeStep}
-          onStepClick={(stepIndex) => {
-            const stepId = steps[stepIndex].id;
-            // Only allow navigation to completed steps or next step
-            if (stepIndex <= activeStep || stepIndex === activeStep + 1) {
-              navigateToStep(stepId);
-            }
-          }}
-          completedSteps={Array.from({ length: activeStep }, (_, i) => i)}
-          showProgress={true}
-        />
-
-        <div
-          className="document-editor-workspace"
-          style={{ flex: 1, padding: "20px", paddingBottom: "20px" }}
-        >
-          {isLoading ? (
-            <div
-              id="document-loading-region"
-              role="status"
-              aria-live="polite"
-              aria-busy="true"
-              aria-label="Loading document editor"
-              tabIndex={-1}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "60vh",
-              }}
-            >
-              <div style={{ textAlign: "center", maxWidth: "400px" }}>
                 <div
-                  role="img"
-                  aria-label="Loading spinner"
                   style={{
-                    width: "40px",
-                    height: "40px",
-                    border: "4px solid #f3f4f6",
-                    borderTopColor: "#0088FF",
-                    borderRadius: "50%",
-                    animation: "spin 1s linear infinite",
-                    margin: "0 auto 16px",
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    marginBottom: "0",
+                    minWidth: 0,
                   }}
-                ></div>
-                <p 
-                  id="loading-message"
-                  style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px" }}
                 >
-                  {loadingMessage}
-                </p>
-                {loadingMessage.includes("generation") && (
-                  <p 
-                    id="loading-help-text"
-                    style={{ color: "#9ca3af", fontSize: "14px", marginTop: "8px" }}
+                  <h1
+                    className="document-editor-nofo-title"
+                    style={{
+                      marginBottom: "0",
+                      textAlign: "left",
+                      fontSize: "22px",
+                      fontWeight: "600",
+                      width: "100%",
+                      maxWidth: "100%",
+                      wordWrap: "break-word",
+                      overflowWrap: "break-word",
+                      wordBreak: "break-word",
+                      lineHeight: "1.4",
+                    }}
                   >
-                    This may take 30-60 seconds. Please don't close this page.
-                  </p>
-                )}
+                    {isNofoLoading ? "Loading..." : nofoName || "Grant Application"}
+                  </h1>
+                </div>
               </div>
             </div>
-          ) : (
-            renderCurrentStep()
-          )}
-        </div>
+
+            <ProgressStepper
+              steps={steps}
+              activeStep={activeStep}
+              onStepClick={(stepIndex) => {
+                const stepId = steps[stepIndex].id;
+                // Only allow navigation to completed steps or next step
+                if (stepIndex <= activeStep || stepIndex === activeStep + 1) {
+                  navigateToStep(stepId);
+                }
+              }}
+              completedSteps={Array.from({ length: activeStep }, (_, i) => i)}
+              showProgress={true}
+            />
+
+            <div
+              className="document-editor-workspace"
+              style={{ flex: 1, padding: "20px", paddingBottom: "20px" }}
+            >
+              {isLoading ? (
+                <div
+                  id="document-loading-region"
+                  role="status"
+                  aria-live="polite"
+                  aria-busy="true"
+                  aria-label="Loading document editor"
+                  tabIndex={-1}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "60vh",
+                  }}
+                >
+                  <div style={{ textAlign: "center", maxWidth: "400px" }}>
+                    <div
+                      role="img"
+                      aria-label="Loading spinner"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        border: "4px solid #f3f4f6",
+                        borderTopColor: "#0088FF",
+                        borderRadius: "50%",
+                        animation: "spin 1s linear infinite",
+                        margin: "0 auto 16px",
+                      }}
+                    ></div>
+                    <p 
+                      id="loading-message"
+                      style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px" }}
+                    >
+                      {loadingMessage}
+                    </p>
+                    {loadingMessage.includes("generation") && (
+                      <p 
+                        id="loading-help-text"
+                        style={{ color: "#9ca3af", fontSize: "14px", marginTop: "8px" }}
+                      >
+                        This may take 30-60 seconds. Please don't close this page.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                renderCurrentStep()
+              )}
+            </div>
+          </>
+        )}
       </main>
       <style>
         {`
@@ -1031,7 +1034,11 @@ const DocumentEditor: React.FC = () => {
             ref={draftsButtonRef}
             onClick={() => {
               setWelcomeModalOpen(false);
-              navigate("/document-editor/drafts");
+              if (selectedNofo) {
+                navigate(`/document-editor/drafts?nofo=${encodeURIComponent(selectedNofo)}`);
+              } else {
+                navigate("/document-editor/drafts");
+              }
             }}
             style={{
               width: "100%",
