@@ -119,8 +119,7 @@ export default function MDSHeader({ showSignOut = true }: MDSHeaderProps) {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                fontFamily:
-                  "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+                fontFamily: "'Noto Sans', sans-serif",
                 fontSize: "16px",
                 fontWeight: "500",
                 letterSpacing: "0.01em",

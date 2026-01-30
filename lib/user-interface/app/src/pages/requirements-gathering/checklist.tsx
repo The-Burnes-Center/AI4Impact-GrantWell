@@ -73,7 +73,7 @@ const THEME = {
     gray: "#eaeaea",
   },
   fonts: {
-    base: "'Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif",
+    base: "'Noto Sans', sans-serif",
   },
   shadows: {
     small: "0 2px 4px rgba(0,0,0,0.08)",
