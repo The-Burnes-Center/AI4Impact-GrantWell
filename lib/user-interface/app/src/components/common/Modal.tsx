@@ -35,6 +35,8 @@ interface ModalProps {
   title: string;
   children: React.ReactNode;
   maxWidth?: string;
+  topOffset?: number;
+  hideCloseButton?: boolean;
 }
 
 /**
@@ -46,7 +48,7 @@ interface ModalProps {
  * - Consistent styling matching Dashboard
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, maxWidth = "500px" }) => {
+  ({ isOpen, onClose, title, children, maxWidth = "500px", topOffset = 0, hideCloseButton = false }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -128,7 +130,7 @@ export const Modal = React.memo<ModalProps>(
         className="modal-overlay"
         style={{
           position: "fixed",
-          top: 0,
+          top: topOffset,
           left: 0,
           right: 0,
           bottom: 0,
@@ -141,8 +143,8 @@ export const Modal = React.memo<ModalProps>(
           padding: "20px",
           boxSizing: "border-box",
         }}
-        onClick={onClose}
-        onKeyDown={(e) => {
+        onClick={hideCloseButton ? undefined : onClose}
+        onKeyDown={hideCloseButton ? undefined : (e) => {
           if (e.key === "Escape") onClose();
         }}
         role="dialog"
@@ -193,13 +195,15 @@ export const Modal = React.memo<ModalProps>(
             >
               {title}
             </h2>
-            <button
-              className="modal-close-button"
-              onClick={onClose}
-              aria-label="Close modal"
-            >
-              <LuX size={20} />
-            </button>
+            {!hideCloseButton && (
+              <button
+                className="modal-close-button"
+                onClick={onClose}
+                aria-label="Close modal"
+              >
+                <LuX size={20} />
+              </button>
+            )}
           </div>
           <div
             className="modal-body"

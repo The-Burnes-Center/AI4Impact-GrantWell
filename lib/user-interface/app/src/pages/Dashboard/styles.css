@@ -596,7 +596,7 @@ body {
   background-color: white !important;
   border-radius: 12px !important;
   width: 100% !important;
-  max-width: 500px !important;
+  max-width: 500px;
   max-height: 85vh !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
   position: relative !important;

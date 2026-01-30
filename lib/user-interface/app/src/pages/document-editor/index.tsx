@@ -10,7 +10,7 @@ import DraftView from "./DraftView";
 import SectionEditor from "./SectionsEditor";
 import ReviewApplication from "./ReviewApplication";
 import UploadDocuments from "./UploadDocuments";
-import Modal from "../../components/common/Modal";
+import { Modal } from "../../components/common/Modal";
 import "../../styles/document-editor.css";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { ApiClient } from "../../common/api-client/api-client";
