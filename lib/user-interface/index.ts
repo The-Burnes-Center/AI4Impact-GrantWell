@@ -88,7 +88,7 @@ export class UserInterface extends Construct {
           "sh",
           "-c",
           [
-            "npm --cache /tmp/.npm install",
+            "npm --cache /tmp/.npm install --legacy-peer-deps",
             `npm --cache /tmp/.npm run build`,
             "cp -aur /asset-input/dist/* /asset-output/",
           ].join(" && "),
@@ -103,7 +103,7 @@ export class UserInterface extends Construct {
                 },
               };
 
-              execSync(`npm --silent --prefix "${appPath}" ci`, options);
+              execSync(`npm --silent --prefix "${appPath}" install --legacy-peer-deps`, options);
               execSync(`npm --silent --prefix "${appPath}" run build`, options);
               Utils.copyDirRecursive(buildPath, outputDir);
             } catch (e) {

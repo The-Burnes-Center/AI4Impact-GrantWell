@@ -83,8 +83,8 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   const hasLoadedFromDocumentData = useRef(false);
 
   // Auto-save debounce refs
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const saveStatusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Auto-save function (debounced)
   const autoSave = useCallback((data: ProjectBasicsFormData) => {

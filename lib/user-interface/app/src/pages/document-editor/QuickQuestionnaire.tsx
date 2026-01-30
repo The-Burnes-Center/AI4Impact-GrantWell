@@ -59,8 +59,8 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   const { sessionId } = useParams();
 
   // Auto-save debounce refs
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const saveStatusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Load form data when documentData becomes available
   useEffect(() => {
