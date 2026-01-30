@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { addToRecentlyViewed } from "../utils/recently-viewed-nofos";
+import { addToRecentlyViewed } from "../common/helpers/recently-viewed-nofos";
 import { Home, MessageSquare, FileText, CheckSquare, Upload } from "lucide-react";
 
 interface UnifiedNavigationProps {

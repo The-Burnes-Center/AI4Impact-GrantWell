@@ -715,14 +715,13 @@ const Checklists: React.FC = () => {
     fetchData();
   }, [documentIdentifier]);
 
-  // Check if NOFO is selected
+  // Redirect to landing page if no NOFO/document identifier is provided
   useEffect(() => {
-    if (!isLoading && !folderParam) {
-      setNofoSelectionDialogOpen(true);
-    } else {
-      setNofoSelectionDialogOpen(false);
+    if (!isLoading && !folderParam && !documentIdentifier) {
+      console.warn("No NOFO selected, redirecting to landing page");
+      navigate("/");
     }
-  }, [isLoading, folderParam]);
+  }, [isLoading, folderParam, documentIdentifier, navigate]);
 
   const linkUrl = `/chat/${uuidv4()}?folder=${encodeURIComponent(
     documentIdentifier || ""
