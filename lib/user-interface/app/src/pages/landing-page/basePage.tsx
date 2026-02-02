@@ -893,11 +893,8 @@ export default function Welcome() {
               margin: "0",
             }}
           >
-            Use the{" "}
-            <strong style={{ color: "#14558F", fontWeight: "600" }}>
-              filters
-            </strong>{" "}
-            in the table below to narrow down grants by status, category, or grant type.
+            Use the search bar and the filters below to find grants by name, agency, or category.
+            <br />
             Click on any grant row to select it, then choose an action:{" "}
             <strong style={{ color: "#14558F", fontWeight: "600" }}>
               View Key Requirements
@@ -929,14 +926,14 @@ export default function Welcome() {
             role="note"
             aria-label="Screen reader navigation note"
           >
-            Screen-reader note: Use the dropdown filters in the table to narrow grants by status,
+            Screen-reader note: Use the search bar below to filter grants by name, agency, or category.
+            The table shows filtered results. Use the dropdown filters to narrow by status,
             category, or grant type. Click any grant row to select it, then action buttons will appear.
             Use heading navigation to explore the content on each screen.
           </div>
         </section>
 
-        {/* Search bar - temporarily removed */}
-        {/*
+        {/* Search bar */}
         <IntegratedSearchBar
           documents={documents}
           onSelectDocument={setSelectedDocument}
@@ -944,7 +941,6 @@ export default function Welcome() {
           searchTerm={searchTerm}
           onSearchTermChange={setSearchTerm}
         />
-        */}
 
         {/* Screen reader announcement for grant selection (WCAG 4.1.3) */}
         <div
@@ -1146,6 +1142,8 @@ export default function Welcome() {
               nofos={tableNofos} 
               loading={loading} 
               onSelectDocument={setSelectedDocument}
+              onSearchTermChange={setSearchTerm}
+              searchTerm={searchTerm}
             />
           </section>
         </ContentBox>
