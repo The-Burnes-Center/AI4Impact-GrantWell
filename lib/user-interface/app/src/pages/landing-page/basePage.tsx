@@ -860,7 +860,83 @@ export default function Welcome() {
           </p>
         </div>
 
-        {/* New integrated search bar */}
+        {/* How it works section - always visible */}
+        <section
+          aria-labelledby="how-it-works-heading"
+          style={{
+            margin: "0 auto 20px auto",
+            padding: "0",
+            maxWidth: "700px",
+            textAlign: "center",
+          }}
+        >
+          {/* Main Heading */}
+          <h2
+            id="how-it-works-heading"
+            style={{
+              fontSize: "18px",
+              fontWeight: "600",
+              color: "#14558F",
+              margin: "0 0 12px 0",
+              textAlign: "center",
+            }}
+          >
+            How it works
+          </h2>
+
+          {/* Single paragraph with inline links */}
+          <p
+            style={{
+              fontSize: "15px",
+              color: "#555",
+              lineHeight: "1.6",
+              margin: "0",
+            }}
+          >
+            Use the{" "}
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
+              filters
+            </strong>{" "}
+            in the table below to narrow down grants by status, category, or grant type.
+            Click on any grant row to select it, then choose an action:{" "}
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
+              View Key Requirements
+            </strong>{" "}
+            to see eligibility and NOFO requirements,{" "}
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
+              Write Project Narrative
+            </strong>{" "}
+            to draft your proposal, or{" "}
+            <strong style={{ color: "#14558F", fontWeight: "600" }}>
+              Get Grant Help
+            </strong>{" "}
+            to chat with our AI assistant.
+          </p>
+
+          {/* Screen reader notes - hidden visually */}
+          <div
+            style={{
+              position: "absolute",
+              width: "1px",
+              height: "1px",
+              padding: "0",
+              margin: "-1px",
+              overflow: "hidden",
+              clip: "rect(0, 0, 0, 0)",
+              whiteSpace: "nowrap",
+              border: "0",
+            }}
+            role="note"
+            aria-label="Screen reader navigation note"
+          >
+            Screen-reader note: Use the dropdown filters in the table to narrow grants by status,
+            category, or grant type. Click any grant row to select it, then action buttons will appear.
+            Use heading navigation to explore the content on each screen.
+          </div>
+        </section>
+
+        {/* Search bar - temporarily removed */}
+        {/*
         <IntegratedSearchBar
           documents={documents}
           onSelectDocument={setSelectedDocument}
@@ -868,6 +944,7 @@ export default function Welcome() {
           searchTerm={searchTerm}
           onSearchTermChange={setSearchTerm}
         />
+        */}
 
         {/* Screen reader announcement for grant selection (WCAG 4.1.3) */}
         <div
@@ -1042,142 +1119,6 @@ export default function Welcome() {
           </nav>
         )}
 
-        {/* How it works section - always visible */}
-        <section
-          aria-labelledby="how-it-works-heading"
-          style={{
-            margin: "20px auto 12px auto",
-            padding: "0",
-            maxWidth: "650px",
-            textAlign: "center",
-          }}
-        >
-          {/* Main Heading */}
-          <h2
-            id="how-it-works-heading"
-            style={{
-              fontSize: "18px",
-              fontWeight: "600",
-              color: "#14558F",
-              margin: "0 0 12px 0",
-              textAlign: "center",
-            }}
-          >
-            How it works
-          </h2>
-
-          {/* Single paragraph with inline links */}
-          <p
-            style={{
-              fontSize: "15px",
-              color: "#555",
-              lineHeight: "1.6",
-              margin: "0",
-            }}
-          >
-            Search for a grant above, select one from the results, then choose
-            an action:{" "}
-            <strong style={{ color: "#14558F", fontWeight: "600" }}>
-              View Key Requirements
-            </strong>{" "}
-            to see eligibility and other NOFO requirements,{" "}
-            <strong style={{ color: "#14558F", fontWeight: "600" }}>
-              Write Project Narrative
-            </strong>{" "}
-            to draft your proposal with AI assistance, or{" "}
-            <strong style={{ color: "#14558F", fontWeight: "600" }}>
-              Get Grant Help
-            </strong>{" "}
-            to chat with our AI assistant.
-          </p>
-
-          {/* Screen reader notes - hidden visually */}
-          <div
-            style={{
-              position: "absolute",
-              width: "1px",
-              height: "1px",
-              padding: "0",
-              margin: "-1px",
-              overflow: "hidden",
-              clip: "rect(0, 0, 0, 0)",
-              whiteSpace: "nowrap",
-              border: "0",
-            }}
-            role="note"
-            aria-label="Screen reader navigation note"
-          >
-            Screen-reader note: The search bar is the first interactive element
-            on this page. You can search for grants by describing what you need, or
-            use the filters below the "OR" divider to browse grants by status,
-            category, or grant type. After selecting a grant from search results or
-            the table, action buttons will appear above. Use heading navigation to
-            explore the content on each screen.
-          </div>
-        </section>
-
-        {/* OR divider */}
-        <div
-          role="separator"
-          aria-label="Alternative search method"
-          style={{
-            margin: "20px auto",
-            textAlign: "center",
-            fontSize: "16px",
-            fontWeight: "600",
-            color: "#14558F",
-          }}
-        >
-          OR
-        </div>
-
-        {/* Search using filters section */}
-        <section
-          aria-labelledby="filters-heading"
-          style={{
-            margin: "0 auto 12px auto",
-            padding: "0",
-            maxWidth: "650px",
-            textAlign: "center",
-          }}
-        >
-          <h2
-            id="filters-heading"
-            className="visually-hidden"
-            style={{
-              position: "absolute",
-              width: "1px",
-              height: "1px",
-              padding: "0",
-              margin: "-1px",
-              overflow: "hidden",
-              clip: "rect(0, 0, 0, 0)",
-              whiteSpace: "nowrap",
-              border: "0",
-            }}
-          >
-            Using Filters to Search Grants
-          </h2>
-          <p
-            style={{
-              fontSize: "15px",
-              color: "#555",
-              lineHeight: "1.6",
-              margin: "0",
-            }}
-          >
-            Use the filters below to narrow down grants by{" "}
-            <strong style={{ color: "#14558F", fontWeight: "600" }}>
-              Category
-            </strong>
-            {" "}or{" "}            
-            <strong style={{ color: "#14558F", fontWeight: "600" }}>
-              Grant Type
-            </strong>
-            <br/>Click on any grant to select it and view available actions.
-          </p>
-        </section>
-
         {/* Grants Table Section */}
         <ContentBox backgroundColor="#ffffff">
           <section
@@ -1205,7 +1146,6 @@ export default function Welcome() {
               nofos={tableNofos} 
               loading={loading} 
               onSelectDocument={setSelectedDocument}
-              onSearchTermChange={setSearchTerm}
             />
           </section>
         </ContentBox>

@@ -9,9 +9,10 @@ interface GrantsTableProps {
   loading: boolean;
   onSelectDocument: (document: { label: string; value: string }) => void;
   onSearchTermChange?: (term: string) => void;
+  searchTerm?: string;
 }
 
-export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSelectDocument, onSearchTermChange }) => {
+export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSelectDocument, onSearchTermChange, searchTerm = "" }) => {
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
@@ -37,9 +38,17 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
     return nofos.filter((nofo) => nofo.grantType === grantType).length;
   };
 
-  // Filter NOFOs based on filters
+  // Filter NOFOs based on filters and search term
   const getFilteredNofos = () => {
+    const searchLower = searchTerm.toLowerCase().trim();
+    
     let filtered = nofos.filter((nofo) => {
+      // Search term filter - matches name, agency, or category
+      const matchesSearch = searchLower === "" || 
+        nofo.name.toLowerCase().includes(searchLower) ||
+        (nofo.agency && nofo.agency.toLowerCase().includes(searchLower)) ||
+        (nofo.category && nofo.category.toLowerCase().includes(searchLower));
+      
       // Status filter
       const matchesStatus = statusFilter === "all" || nofo.status === statusFilter;
       
@@ -49,7 +58,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
       // Grant type filter
       const matchesGrantType = grantTypeFilter === "all" || nofo.grantType === grantTypeFilter;
 
-      return matchesStatus && matchesCategory && matchesGrantType;
+      return matchesSearch && matchesStatus && matchesCategory && matchesGrantType;
     });
 
     // Sort: pinned first, then alphabetically
@@ -70,10 +79,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
   const endIndex = startIndex + itemsPerPage;
   const paginatedNofos = filteredNofos.slice(startIndex, endIndex);
 
-  // Reset to page 1 when filters change
+  // Reset to page 1 when filters or search term change
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter, categoryFilter, grantTypeFilter]);
+  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm]);
 
   // Handle row click to select document (same as search bar)
   const handleRowClick = (nofo: NOFO) => {
@@ -192,14 +201,18 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
           {filteredNofos.length === 0 && (
             <div className="landing-no-data">
               <LuFileX size={24} className="landing-no-data-icon" />
-              <p>No grants found matching your filters</p>
+              <p>
+                {searchTerm 
+                  ? `No grants found matching "${searchTerm}"` 
+                  : "No grants found matching your filters"}
+              </p>
             </div>
           )}
-          {paginatedNofos.map((nofo, index) => {
+          {paginatedNofos.map((nofo) => {
             const isArchived = nofo.status === "archived";
             return (
               <div
-                key={nofo.id || index}
+                key={nofo.name}
                 className={`landing-table-row ${isArchived ? "archived" : ""}`}
                 onClick={() => !isArchived && handleRowClick(nofo)}
                 style={{

@@ -56,27 +56,11 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             id="grant-search-input"
             ref={ref}
             type="text"
-            placeholder="Search grants or describe what you need..."
-            aria-label="Search grants or describe what you need"
-            aria-describedby={
-              searchTerm.length === 0
-                ? "search-help-know-grant search-help-not-sure"
-                : aiError
-                ? "ai-error-message search-results-status"
-                : "search-results-status"
-            }
-            aria-autocomplete="list"
-            aria-expanded={showResults}
-            aria-controls={showResults ? "search-results-listbox" : undefined}
-            aria-activedescendant={
-              selectedIndex >= 0 && showResults
-                ? `search-result-${selectedIndex}`
-                : undefined
-            }
-            aria-busy={isLoading || isAISearching}
-            aria-invalid={aiError ? "true" : "false"}
-            aria-errormessage={aiError ? "ai-error-message" : undefined}
-            role="combobox"
+            placeholder="Search by grant name, agency, or category..."
+            aria-label="Search grants by name, agency, or category"
+            aria-describedby="search-help-text"
+            aria-busy={isLoading}
+            role="searchbox"
             style={{
               ...inputStyle,
               cursor: disabled ? "not-allowed" : "text",
