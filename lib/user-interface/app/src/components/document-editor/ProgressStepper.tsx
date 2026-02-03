@@ -12,6 +12,7 @@ interface ProgressStepperProps {
   onStepClick?: (stepIndex: number) => void;
   completedSteps?: number[];
   showProgress?: boolean;
+  isStepClickable?: (stepIndex: number) => boolean; // Custom function to determine if step is clickable
 }
 
 const ProgressStepper: React.FC<ProgressStepperProps> = ({
@@ -20,6 +21,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   onStepClick,
   completedSteps = [],
   showProgress = true,
+  isStepClickable: customIsStepClickable,
 }) => {
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
   const progressPercentage = ((activeStep + 1) / steps.length) * 100;
@@ -27,7 +29,9 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   const isStepActive = (index: number) => index === activeStep;
   const isStepClickable = (index: number) => {
     if (!onStepClick) return false;
-    // Allow clicking on completed steps or the next step
+    if (customIsStepClickable) {
+      return customIsStepClickable(index);
+    }
     return isStepCompleted(index) || index === activeStep + 1;
   };
 

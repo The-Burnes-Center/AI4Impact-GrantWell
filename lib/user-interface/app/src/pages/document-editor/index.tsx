@@ -15,7 +15,7 @@ import "../../styles/document-editor.css";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
-import { DraftsClient, DocumentDraft } from "../../common/api-client/drafts-client";
+import { DraftsClient, DocumentDraft, DraftStatus } from "../../common/api-client/drafts-client";
 import { Utils } from "../../common/utils";
 
 // Types
@@ -42,8 +42,33 @@ const ERROR_MESSAGES = {
   START_FAILED: "Failed to start new document",
 } as const;
 
+const stepToStatus = (step: string): string => {
+  const stepMap: Record<string, string> = {
+    'projectBasics': 'project_basics',
+    'questionnaire': 'questionnaire',
+    'uploadDocuments': 'uploading_documents',
+    'draftCreated': 'generating_draft',
+    'sectionEditor': 'editing_sections',
+    'reviewApplication': 'reviewing'
+  };
+  return stepMap[step] || 'project_basics';
+};
+
+const statusToStep = (status: string): string => {
+  const statusMap: Record<string, string> = {
+    'project_basics': 'projectBasics',
+    'questionnaire': 'questionnaire',
+    'uploading_documents': 'uploadDocuments',
+    'generating_draft': 'draftCreated',
+    'editing_sections': 'sectionEditor',
+    'reviewing': 'reviewApplication',
+    'submitted': 'reviewApplication'
+  };
+  return statusMap[status] || 'projectBasics';
+};
+
 // Custom hooks
-const useDocumentStorage = (nofoId: string | null) => {
+const useDocumentStorage = (nofoId: string | null, onStepRestore?: (step: string) => void) => {
   const [documentData, setDocumentData] = useState<DocumentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("Loading document editor...");
@@ -95,6 +120,11 @@ const useDocumentStorage = (nofoId: string | null) => {
             questionnaire: draft.questionnaire,
             lastModified: draft.lastModified || new Date().toISOString(),
           });
+          // Restore current step from draft status if available
+          if (draft.status && onStepRestore) {
+            const stepFromStatus = statusToStep(draft.status);
+            onStepRestore(stepFromStatus);
+          }
           setLoadingMessage("Document loaded successfully!");
         } else {
           setDocumentData({
@@ -113,7 +143,7 @@ const useDocumentStorage = (nofoId: string | null) => {
     } finally {
       setIsLoading(false);
     }
-  }, [nofoId, sessionId, appContext]);
+  }, [nofoId, sessionId, appContext, onStepRestore]);
 
   const saveDocument = useCallback(
     async (data: Partial<DocumentData>) => {
@@ -197,7 +227,7 @@ const DocumentEditor: React.FC = () => {
   const startButtonRef = useRef<HTMLButtonElement>(null);
   const draftsButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { documentData, setDocumentData, isLoading, loadingMessage, error, setError } = useDocumentStorage(selectedNofo);
+  const { documentData, setDocumentData, isLoading, loadingMessage, error, setError } = useDocumentStorage(selectedNofo, setCurrentStep);
 
   // Monitor brand banner + MDS header height changes (for minHeight calculations only)
   useEffect(() => {
@@ -245,6 +275,7 @@ const DocumentEditor: React.FC = () => {
       window.removeEventListener("scroll", updateTopOffset);
     };
   }, []);
+
 
   // Extract NOFO and step from URL parameters and handle session
   useEffect(() => {
@@ -306,7 +337,7 @@ const DocumentEditor: React.FC = () => {
           sections: {},
           projectBasics: {}, // Initialize empty project basics
           questionnaire: {},
-          status: 'nofo_selected', // Initial status when NOFO is selected
+          status: 'project_basics', // Initial status when starting
           lastModified: Utils.getCurrentTimestamp(),
         });
       }
@@ -353,10 +384,14 @@ const DocumentEditor: React.FC = () => {
             },
             projectBasics: documentData.projectBasics || currentDraft?.projectBasics,
             questionnaire: documentData.questionnaire || currentDraft?.questionnaire,
+            status: stepToStatus(step) as DraftStatus, // Save unified status based on step
             lastModified: Utils.getCurrentTimestamp(),
           });
         }
       }
+
+      // Update current step in state
+      setCurrentStep(step);
 
       // Navigate to the next step
       const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : '';
@@ -376,17 +411,18 @@ const DocumentEditor: React.FC = () => {
       const draftsClient = new DraftsClient(appContext);
       const username = (await Auth.currentAuthenticatedUser()).username;
       
-      if (username && sessionId) {
-        await draftsClient.updateDraft({
-          sessionId: sessionId,
-          userId: username,
-          title: `Application for ${selectedNofo}`,
-          documentIdentifier: selectedNofo || '',
-          sections: documentData.sections,
-          projectBasics: documentData.projectBasics,
-          questionnaire: documentData.questionnaire,
-        });
-      }
+        if (username && sessionId) {
+          await draftsClient.updateDraft({
+            sessionId: sessionId,
+            userId: username,
+            title: `Application for ${selectedNofo}`,
+            documentIdentifier: selectedNofo || '',
+            sections: documentData.sections,
+            projectBasics: documentData.projectBasics,
+            questionnaire: documentData.questionnaire,
+            status: stepToStatus(currentStep) as DraftStatus, // Save unified status
+          });
+        }
     } catch (error) {
       console.error('Failed to save progress:', error);
       setError(ERROR_MESSAGES.SAVE_FAILED);
@@ -459,6 +495,7 @@ const DocumentEditor: React.FC = () => {
                       sections: updatedData.sections || {},
                       projectBasics: updatedData.projectBasics,
                       questionnaire: updatedData.questionnaire,
+                      status: stepToStatus(currentStep) as DraftStatus, // Save unified status
                       lastModified: new Date().toISOString(),
                     });
                   }
@@ -498,6 +535,7 @@ const DocumentEditor: React.FC = () => {
                       sections: updatedData.sections || {},
                       projectBasics: updatedData.projectBasics,
                       questionnaire: updatedData.questionnaire,
+                      status: stepToStatus(currentStep) as DraftStatus, // Save unified status
                       lastModified: new Date().toISOString(),
                     });
                   }
@@ -516,6 +554,7 @@ const DocumentEditor: React.FC = () => {
             selectedNofo={selectedNofo}
             onNavigate={navigateToStep}
             sessionId={sessionId || ''}
+            documentData={documentData}
           />
         );
       case "draftCreated":
@@ -566,9 +605,9 @@ const DocumentEditor: React.FC = () => {
     },
     {
       id: "uploadDocuments",
-      label: "Upload Documents",
-      description: "Supporting files",
-      tooltip: "Upload supporting documents (PDFs preferred) that will help our AI understand your project better and generate more accurate content.",
+      label: "Additional Information",
+      description: "Additional context",
+      tooltip: "Share any additional context or information that will help generate your grant application.",
     },
     {
       id: "sectionEditor",
@@ -722,12 +761,23 @@ const DocumentEditor: React.FC = () => {
             <ProgressStepper
               steps={steps}
               activeStep={activeStep}
+              isStepClickable={(stepIndex) => {
+                const hasSections = documentData?.sections && Object.keys(documentData.sections).length > 0;
+                
+                if (stepIndex <= activeStep) {
+                  return true;
+                } else if (stepIndex === activeStep + 1) {
+                  if (stepIndex === 3 || stepIndex === 4) {
+                    return hasSections;
+                  } else {
+                    return true;
+                  }
+                }
+                return false;
+              }}
               onStepClick={(stepIndex) => {
                 const stepId = steps[stepIndex].id;
-                // Only allow navigation to completed steps or next step
-                if (stepIndex <= activeStep || stepIndex === activeStep + 1) {
-                  navigateToStep(stepId);
-                }
+                navigateToStep(stepId);
               }}
               completedSteps={Array.from({ length: activeStep }, (_, i) => i)}
               showProgress={true}
@@ -919,7 +969,7 @@ const DocumentEditor: React.FC = () => {
                   color: "#1f2937",
                 }}
               >
-                Upload Supporting Documents
+                Provide Additional Information
               </h4>
               <p
                 style={{
@@ -929,7 +979,7 @@ const DocumentEditor: React.FC = () => {
                   lineHeight: 1.6,
                 }}
               >
-                Add any supporting documents that will help our AI understand your project
+                Share any additional context or information that will help our AI understand your project
                 better and generate more accurate content.
               </p>
             </div>

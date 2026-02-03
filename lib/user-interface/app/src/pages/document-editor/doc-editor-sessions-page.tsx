@@ -73,50 +73,22 @@ export default function DocEditorSessionsPage() {
           return;
         }
         
-        // Determine step based on status
+        // Determine step based on unified status
         let step = 'projectBasics';
-        const status = selectedDraft.status || 'nofo_selected';
+        const status = selectedDraft.status || 'project_basics';
         
-        switch (status) {
-          case 'nofo_selected':
-            // NOFO selected but no project basics yet - go directly to project basics
-            step = 'projectBasics';
-            break;
-          case 'in_progress':
-            // Check which section they're on
-            if (selectedDraft.projectBasics && Object.keys(selectedDraft.projectBasics).length > 0) {
-              if (selectedDraft.questionnaire && Object.keys(selectedDraft.questionnaire).length > 0) {
-                // Both project basics and questionnaire done
-                // Check if draft sections exist - if yes, go to draftCreated, otherwise uploadDocuments
-                if (selectedDraft.sections && Object.keys(selectedDraft.sections).length > 0) {
-                  step = 'draftCreated';
-                } else {
-                  step = 'uploadDocuments';
-                }
-              } else {
-                // Project basics done, go to questionnaire
-                step = 'questionnaire';
-              }
-            } else {
-              // No project basics, start there
-              step = 'projectBasics';
-            }
-            break;
-          case 'draft_generated':
-            // Draft has been generated, go directly to draftCreated view
-            step = 'draftCreated';
-            break;
-          case 'review_ready':
-            // Ready for review
-            step = 'reviewApplication';
-            break;
-          case 'submitted':
-            // Already submitted, go to review
-            step = 'reviewApplication';
-            break;
-          default:
-            step = 'projectBasics';
-        }
+        // Map unified status to step
+        const statusToStepMap: Record<string, string> = {
+          'project_basics': 'projectBasics',
+          'questionnaire': 'questionnaire',
+          'uploading_documents': 'uploadDocuments',
+          'generating_draft': 'draftCreated',
+          'editing_sections': 'sectionEditor',
+          'reviewing': 'reviewApplication',
+          'submitted': 'reviewApplication'
+        };
+        
+        step = statusToStepMap[status] || 'projectBasics';
         
         const queryParams = `?step=${step}&nofo=${encodeURIComponent(selectedDraft.documentIdentifier)}`;
         navigate(`/document-editor/${draftId}${queryParams}`);

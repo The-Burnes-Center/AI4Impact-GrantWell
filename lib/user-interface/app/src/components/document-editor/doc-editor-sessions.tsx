@@ -117,7 +117,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           created_at: draft.lastModified,
           last_modified: draft.lastModified,
           document_identifier: draft.documentIdentifier,
-          status: draft.status || 'nofo_selected'
+          status: draft.status || 'project_basics'
         })));
       }
     } catch (e) {
@@ -222,30 +222,38 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
 
   const getStatusLabel = (status?: DraftStatus): string => {
     switch (status) {
-      case 'nofo_selected':
-        return 'NOFO Selected';
-      case 'in_progress':
-        return 'In Progress';
-      case 'draft_generated':
-        return 'Draft Generated';
-      case 'review_ready':
-        return 'Ready for Review';
+      case 'project_basics':
+        return 'Project Basics';
+      case 'questionnaire':
+        return 'Questionnaire';
+      case 'uploading_documents':
+        return 'Uploading Documents';
+      case 'generating_draft':
+        return 'Generating Draft';
+      case 'editing_sections':
+        return 'Editing Sections';
+      case 'reviewing':
+        return 'Reviewing';
       case 'submitted':
         return 'Submitted';
       default:
-        return 'NOFO Selected';
+        return 'Project Basics';
     }
   };
 
   const getStatusColor = (status?: DraftStatus): string => {
     switch (status) {
-      case 'nofo_selected':
+      case 'project_basics':
         return '#6b7280'; // gray - meets WCAG AA contrast
-      case 'in_progress':
+      case 'questionnaire':
         return '#2563eb'; // blue - meets WCAG AA contrast
-      case 'draft_generated':
+      case 'uploading_documents':
+        return '#0891b2'; // cyan - meets WCAG AA contrast
+      case 'generating_draft':
+        return '#7c2d12'; // orange - meets WCAG AA contrast
+      case 'editing_sections':
         return '#059669'; // green - meets WCAG AA contrast
-      case 'review_ready':
+      case 'reviewing':
         return '#d97706'; // amber - meets WCAG AA contrast
       case 'submitted':
         return '#7c3aed'; // purple - meets WCAG AA contrast
@@ -295,7 +303,12 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           <button
             className="action-button add-button"
             onClick={() => {
-              navigate(`/document-editor`);
+              // If documentIdentifier is available, pass it as NOFO parameter
+              if (props.documentIdentifier) {
+                navigate(`/document-editor?nofo=${encodeURIComponent(props.documentIdentifier)}`);
+              } else {
+                navigate(`/document-editor`);
+              }
             }}
             aria-label="Create new draft"
           >

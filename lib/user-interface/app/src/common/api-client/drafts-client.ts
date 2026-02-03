@@ -1,7 +1,15 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types";
 
-export type DraftStatus = 'nofo_selected' | 'in_progress' | 'draft_generated' | 'review_ready' | 'submitted';
+// Unified status that represents both the step and state in the grant writing flow
+export type DraftStatus = 
+  | 'project_basics'        // User is entering project basics
+  | 'questionnaire'         // User is answering questionnaire
+  | 'uploading_documents'   // User is uploading documents
+  | 'generating_draft'      // Draft generation in progress
+  | 'editing_sections'      // User is editing sections (draft exists)
+  | 'reviewing'            // User is reviewing application
+  | 'submitted';            // Application has been submitted
 
 export interface DocumentDraft {
   sessionId: string;
@@ -48,7 +56,9 @@ export class DraftsClient {
         title: draft.title,
         document_identifier: draft.documentIdentifier,
         sections: draft.sections || {},
-        status: draft.status,
+        project_basics: draft.projectBasics || {},
+        questionnaire: draft.questionnaire || {},
+        status: draft.status || 'project_basics',
       }),
     });
 
@@ -171,7 +181,7 @@ export class DraftsClient {
           userId: params.userId,
           title: output.title || '',
           documentIdentifier: output.document_identifier || '',
-          status: output.status || 'nofo_selected',
+          status: (output.status || 'project_basics') as DraftStatus,
           sections: output.sections || {},
           projectBasics: output.project_basics || {},
           questionnaire: output.questionnaire || {},
@@ -302,9 +312,9 @@ export class DraftsClient {
         return data.map((draft: any) => ({
           sessionId: draft.sessionId,
           userId: userId,
-          title: draft.title,
-          documentIdentifier: draft.documentIdentifier,
-          status: draft.status || 'nofo_selected',
+          title: draft.title || '',
+          documentIdentifier: draft.documentIdentifier || '',
+          status: draft.status || 'project_basics',
           lastModified: draft.lastModified
         }));
       }
@@ -321,9 +331,9 @@ export class DraftsClient {
         return drafts.map((draft: any) => ({
           sessionId: draft.sessionId,
           userId: userId,
-          title: draft.title,
-          documentIdentifier: draft.documentIdentifier,
-          status: draft.status || 'nofo_selected',
+          title: draft.title || '',
+          documentIdentifier: draft.documentIdentifier || '',
+          status: draft.status || 'project_basics',
           lastModified: draft.lastModified
         }));
       }

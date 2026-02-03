@@ -25,13 +25,13 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
         # Determine default status based on what data exists
         if status is None:
             if document_identifier and not project_basics:
-                status = "nofo_selected"
+                status = "project_basics"
             elif project_basics and not sections:
-                status = "in_progress"
+                status = "questionnaire"
             elif sections:
-                status = "draft_generated"
+                status = "editing_sections"
             else:
-                status = "nofo_selected"
+                status = "project_basics"
         
         # Create a new item in DynamoDB
         item = {
@@ -166,21 +166,21 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
                 
                 # Determine status based on content
                 if current_doc_id and not current_project_basics:
-                    auto_status = "nofo_selected"
+                    auto_status = "project_basics"
                 elif current_project_basics and not current_sections:
-                    auto_status = "in_progress"
+                    auto_status = "questionnaire"
                 elif current_sections:
-                    auto_status = "draft_generated"
+                    auto_status = "editing_sections"
                 else:
-                    auto_status = current_item.get("status", "nofo_selected")
+                    auto_status = current_item.get("status", "project_basics")
                 
                 update_parts.append("#st = :status")
                 expression_values[":status"] = auto_status
                 expression_names["#st"] = "status"
             except:
-                # If we can't get current item, default to in_progress
+                # If we can't get current item, default to project_basics
                 update_parts.append("#st = :status")
-                expression_values[":status"] = "in_progress"
+                expression_values[":status"] = "project_basics"
                 expression_names["#st"] = "status"
             
         # Always update last_modified
@@ -208,7 +208,7 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             "projectBasics": updated_item.get("project_basics", {}),
             "questionnaire": updated_item.get("questionnaire", {}),
             "lastModified": updated_item.get("last_modified", ""),
-            "status": updated_item.get("status", "nofo_selected")
+            "status": updated_item.get("status", "project_basics")
         }
         
         return {
@@ -364,7 +364,7 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
             "title": x.get("title", "").strip(),
             "documentIdentifier": x.get("document_identifier", ""),
             "lastModified": x.get("last_modified", ""),
-            "status": x.get("status", "nofo_selected")
+            "status": x.get("status", "project_basics")
         }, sorted_items))
 
         # Return the sorted items directly in the body
