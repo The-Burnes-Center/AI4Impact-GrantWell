@@ -423,7 +423,9 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         );
       }
 
-      const newExpirationDate = Utils.easternDateToUTC(editedNofoExpirationDate);
+      const newExpirationDate = editedNofoExpirationDate 
+        ? new Date(`${editedNofoExpirationDate}T23:59:59Z`).toISOString()
+        : null;
       const oldExpirationDate = selectedNofo.expirationDate || null;
 
       if (newExpirationDate !== oldExpirationDate) {
@@ -827,7 +829,9 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                 (editedNofoName === selectedNofo?.name &&
                   editedNofoStatus === selectedNofo?.status &&
                   editedNofoExpirationDate ===
-                    Utils.utcToEasternDateString(selectedNofo?.expirationDate) &&
+                    (selectedNofo?.expirationDate 
+                      ? new Date(selectedNofo.expirationDate).toISOString().split("T")[0]
+                      : "") &&
                   editedNofoGrantType === (selectedNofo?.grantType || ""))
               }
             >
