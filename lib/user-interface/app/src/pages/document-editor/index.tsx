@@ -566,9 +566,9 @@ const DocumentEditor: React.FC = () => {
     },
     {
       id: "uploadDocuments",
-      label: "Upload Documents",
-      description: "Supporting files",
-      tooltip: "Upload supporting documents (PDFs preferred) that will help our AI understand your project better and generate more accurate content.",
+      label: "Additional Information",
+      description: "Additional context",
+      tooltip: "Share any additional context or information that will help generate your grant application.",
     },
     {
       id: "sectionEditor",
@@ -919,7 +919,7 @@ const DocumentEditor: React.FC = () => {
                   color: "#1f2937",
                 }}
               >
-                Upload Supporting Documents
+                Provide Additional Information
               </h4>
               <p
                 style={{
@@ -929,7 +929,7 @@ const DocumentEditor: React.FC = () => {
                   lineHeight: 1.6,
                 }}
               >
-                Add any supporting documents that will help our AI understand your project
+                Share any additional context or information that will help our AI understand your project
                 better and generate more accurate content.
               </p>
             </div>

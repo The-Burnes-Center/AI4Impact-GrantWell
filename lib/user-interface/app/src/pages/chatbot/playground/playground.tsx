@@ -353,8 +353,8 @@ export default function Playground() {
               width: isMobile ? "100%" : "auto",
               flexDirection: isMobile ? "column" : "row",
             }}>
-              {/* Upload Data button - only show if documentIdentifier exists */}
-              {documentIdentifier && (
+              {/* Upload Data button - TEMPORARILY HIDDEN */}
+              {false && documentIdentifier && (
                 <button 
                   style={{
                     ...styles.uploadButton,
@@ -418,8 +418,8 @@ export default function Playground() {
             aria-hidden={helpOpen}
           >
             <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
-            {/* Upload Modal - only render if documentIdentifier exists */}
-            {documentIdentifier && (
+            {/* Upload Modal - TEMPORARILY HIDDEN */}
+            {false && documentIdentifier && (
               <UploadModal
                 isOpen={uploadModalOpen}
                 onClose={() => setUploadModalOpen(false)}
@@ -582,27 +582,6 @@ export default function Playground() {
                     Explain deadlines, submission requirements, budget rules, and compliance requirements
                   </li>
                 </ul>
-              </div>
-              
-              {/* Upload Documents section */}
-              <div style={{ marginBottom: "20px" }}>
-                <p style={{ 
-                  margin: 0,
-                  marginBottom: "6px",
-                  fontSize: "15px",
-                  color: "#0073BB",
-                  fontWeight: 600,
-                }}>
-                  Upload Documents
-                </p>
-                <p style={{ 
-                  margin: 0,
-                  lineHeight: "1.6",
-                  fontSize: "15px",
-                  color: "#555",
-                }}>
-                  Click "Upload Data" to upload supporting documents (mission statements, past projects, organizational charts, etc.) that will help the chatbot provide more contextual and relevant responses.
-                </p>
               </div>
               
               {/* Sources section */}

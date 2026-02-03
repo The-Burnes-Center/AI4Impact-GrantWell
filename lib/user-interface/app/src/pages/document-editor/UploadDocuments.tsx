@@ -310,11 +310,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
-      <h2 style={{ marginBottom: "16px" }}>Supporting Documents</h2>
+      <h2 style={{ marginBottom: "16px" }}>Additional Information</h2>
       <p style={{ color: "#3d4451", marginBottom: "24px" }}>
-        Upload supporting documents that will help generate your grant application. These documents will be available to the chatbot for context when creating your draft.
+        Share any additional context or information that will help generate your grant application.
       </p>
 
+      {/* Additional Information section */}
       <div
         style={{
           background: "white",
@@ -324,198 +325,30 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           marginBottom: "24px",
         }}
       >
-        <div style={{ marginBottom: "24px" }}>
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            onChange={handleFileSelect}
-            style={{ display: "none" }}
-          />
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={openFileSelector}
-            style={{
-              border: `2px dashed ${isDragging ? "#0088FF" : "#e2e8f0"}`,
-              borderRadius: "8px",
-              padding: "24px",
-              textAlign: "center",
-              background: isDragging ? "#f0f4ff" : "#f7fafc",
-              cursor: "pointer",
-              transition: "all 0.2s",
-            }}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              style={{
-                width: "40px",
-                height: "40px",
-                stroke: isDragging ? "#0088FF" : "#3d4451",
-                fill: "none",
-                strokeWidth: 2,
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                margin: "0 auto 12px",
-                display: "block",
-              }}
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
-            </svg>
-            <p style={{ marginBottom: "16px", color: isDragging ? "#0088FF" : "#3d4451" }}>
-              {isDragging
-                ? "Drop files here"
-                : "Drag and drop files here, or click to select"}
-            </p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                openFileSelector();
-              }}
-              style={{
-                background: "#14558F",
-                color: "white",
-                border: "none",
-                padding: "8px 16px",
-                borderRadius: "4px",
-                fontSize: "14px",
-                cursor: "pointer",
-              }}
-            >
-              Select Files
-            </button>
-          </div>
-          {uploadError && (
-            <div
-              role="alert"
-              aria-live="assertive"
-              style={{
-                marginTop: "12px",
-                padding: "12px",
-                background: "#fee",
-                border: "1px solid #fcc",
-                borderRadius: "4px",
-                color: "#c33",
-              }}
-            >
-              {uploadError}
-            </div>
-          )}
-          {uploading && (
-            <div style={{ marginTop: "12px" }}>
-              <div
-                style={{
-                  width: "100%",
-                  height: "8px",
-                  background: "#e2e8f0",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    width: `${uploadProgress}%`,
-                    height: "100%",
-                    background: "#14558F",
-                    transition: "width 0.3s",
-                  }}
-                />
-              </div>
-              <p style={{ marginTop: "8px", fontSize: "14px", color: "#3d4451" }}>
-                Uploading... {uploadProgress}%
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div style={{ marginBottom: "24px" }}>
-          <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>
-            Recommended Documents
-          </h3>
-          <ul style={{ color: "#3d4451", paddingLeft: "20px" }}>
-            <li>Letters of Support</li>
-            <li>Financial Statements</li>
-            <li>Maps or Geographic Data</li>
-            <li>Research Studies</li>
-            <li>Organizational Chart</li>
-            <li>Photos or Illustrations</li>
-          </ul>
-        </div>
-
-        {/* File list section */}
-        {files.length > 0 && (
-          <div style={{ marginBottom: "24px" }}>
-            <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>Selected Files</h3>
-            <div>
-              {files.map((file, index) => (
-                <div
-                  key={`${file.name}-${index}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "8px 12px",
-                    backgroundColor: "#f7fafc",
-                    borderRadius: "4px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <span style={{ marginRight: "8px", fontSize: "20px" }}>
-                    {getFileIcon(file.type)}
-                  </span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 500 }}>{file.name}</div>
-                    <div style={{ fontSize: "14px", color: "#5a6575" }}>
-                      {formatFileSize(file.size)}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setFiles(files.filter((_, i) => i !== index));
-                    }}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#a0aec0",
-                      cursor: "pointer",
-                      fontSize: "18px",
-                    }}
-                    aria-label={`Remove file: ${file.name}`}
-                    title="Remove file"
-                  >
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         <div>
-          <h3 style={{ marginBottom: "12px", fontSize: "16px" }}>
+          <h3 style={{ marginBottom: "12px", fontSize: "16px", fontWeight: 500 }}>
             Additional Information
           </h3>
           <p
             style={{ color: "#3d4451", marginBottom: "12px", fontSize: "14px" }}
           >
-            Is there anything else you'd like to share about these documents or
-            your application?
+            Is there anything else you'd like to share about your application?
           </p>
           <textarea
             value={additionalInfo}
             onChange={handleAdditionalInfoChange}
-            placeholder="Enter any additional context or notes about your uploaded documents..."
+            placeholder="Enter any additional context or notes about your application..."
             style={{
               width: "100%",
-              minHeight: "120px",
+              minHeight: "150px",
               padding: "12px",
               border: "1px solid #e2e8f0",
               borderRadius: "6px",
               fontSize: "16px",
               resize: "vertical",
+              fontFamily: "inherit",
             }}
+            aria-label="Additional information about your application"
           />
         </div>
       </div>
@@ -562,7 +395,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         <button
           onClick={handleSubmit}
           disabled={isLoading || generatingDraft}
-          aria-label={generatingDraft ? "Generating draft, please wait" : isLoading ? "Uploading files, please wait" : "Create draft"}
+          aria-label={generatingDraft ? "Generating draft, please wait" : isLoading ? "Processing, please wait" : "Create draft"}
           aria-busy={isLoading || generatingDraft}
           style={{
             display: "flex",
@@ -578,7 +411,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
           }}
         >
-          {generatingDraft ? "Generating Draft..." : isLoading ? "Uploading..." : "Create Draft"}
+          {generatingDraft ? "Generating Draft..." : isLoading ? "Processing..." : "Create Draft"}
           {!isLoading && !generatingDraft && (
             <svg
               xmlns="http://www.w3.org/2000/svg"

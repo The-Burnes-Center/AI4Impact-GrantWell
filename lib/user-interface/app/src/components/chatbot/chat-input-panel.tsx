@@ -432,8 +432,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
             **Offer Additional Resources:**
 
-            - Prompt the user to upload any additional documents or datasets that could strengthen the narrative:
-            - Example: "Before we officially get started, are there any other documents or datasets—aside from the main NOFO, the gathered info from the previous page, and any relevant state-provided data—that you'd like me to use? If you can't think of any right now, feel free to upload them later at any point during this writing process."
+            - You can help users incorporate additional context or information they provide through conversation to strengthen the narrative.
 
             **Section-by-Section Collaboration:**
 
