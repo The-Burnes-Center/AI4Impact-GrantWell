@@ -42,7 +42,6 @@ const ERROR_MESSAGES = {
   START_FAILED: "Failed to start new document",
 } as const;
 
-// Helper function to convert step to unified status
 const stepToStatus = (step: string): string => {
   const stepMap: Record<string, string> = {
     'projectBasics': 'project_basics',
@@ -55,7 +54,6 @@ const stepToStatus = (step: string): string => {
   return stepMap[step] || 'project_basics';
 };
 
-// Helper function to convert status to step
 const statusToStep = (status: string): string => {
   const statusMap: Record<string, string> = {
     'project_basics': 'projectBasics',
@@ -763,12 +761,23 @@ const DocumentEditor: React.FC = () => {
             <ProgressStepper
               steps={steps}
               activeStep={activeStep}
+              isStepClickable={(stepIndex) => {
+                const hasSections = documentData?.sections && Object.keys(documentData.sections).length > 0;
+                
+                if (stepIndex <= activeStep) {
+                  return true;
+                } else if (stepIndex === activeStep + 1) {
+                  if (stepIndex === 3 || stepIndex === 4) {
+                    return hasSections;
+                  } else {
+                    return true;
+                  }
+                }
+                return false;
+              }}
               onStepClick={(stepIndex) => {
                 const stepId = steps[stepIndex].id;
-                // Only allow navigation to completed steps or next step
-                if (stepIndex <= activeStep || stepIndex === activeStep + 1) {
-                  navigateToStep(stepId);
-                }
+                navigateToStep(stepId);
               }}
               completedSteps={Array.from({ length: activeStep }, (_, i) => i)}
               showProgress={true}
@@ -1035,7 +1044,6 @@ const DocumentEditor: React.FC = () => {
               if (selectedNofo) {
                 startNewDocument();
               } else {
-                // Navigate to landing page to select a NOFO instead of home
                 navigate("/");
               }
             }}
