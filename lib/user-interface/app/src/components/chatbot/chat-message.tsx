@@ -11,6 +11,7 @@ import { ApiClient } from "../../common/api-client/api-client";
 import {
   FaCopy,
   FaFileAlt,
+  FaCheck,
 } from "react-icons/fa";
 
 import "react-json-view-lite/dist/index.css";
@@ -26,8 +27,8 @@ export interface ChatMessageProps {
 export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { addNotification, removeNotification } = useNotifications();
-  // State for copy popup
-  const [showCopyPopup, setShowCopyPopup] = useState(false);
+  // State for copy icon feedback
+  const [copied, setCopied] = useState<boolean>(false);
   const [grantName, setGrantName] = useState<string>("");
   const appContext = useContext(AppContext);
 
@@ -80,6 +81,7 @@ export default function ChatMessage(props: ChatMessageProps) {
     display: "flex",
     alignItems: "center",
     paddingBottom: "4px",
+    position: "relative",
   };
 
   const copyButtonStyle: React.CSSProperties = {
@@ -303,8 +305,8 @@ export default function ChatMessage(props: ChatMessageProps) {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(props.message.content);
-    setShowCopyPopup(true);
-    setTimeout(() => setShowCopyPopup(false), 2000);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -479,43 +481,41 @@ export default function ChatMessage(props: ChatMessageProps) {
                     style={copyButtonStyle}
                     onClick={handleCopy}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#f3f4f6";
-                      e.currentTarget.style.color = "#14558F";
+                      if (!copied) {
+                        e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        e.currentTarget.style.color = "#14558F";
+                      }
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "transparent";
-                      e.currentTarget.style.color = "#6b7280";
+                      if (!copied) {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                        e.currentTarget.style.color = "#6b7280";
+                      }
                     }}
                     onFocus={(e) => {
-                      e.currentTarget.style.backgroundColor = "#f3f4f6";
-                      e.currentTarget.style.color = "#14558F";
+                      if (!copied) {
+                        e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        e.currentTarget.style.color = "#14558F";
+                      }
                       e.currentTarget.style.outline = "2px solid #0088FF";
                       e.currentTarget.style.outlineOffset = "2px";
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.backgroundColor = "transparent";
-                      e.currentTarget.style.color = "#6b7280";
+                      if (!copied) {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                        e.currentTarget.style.color = "#6b7280";
+                      }
                       e.currentTarget.style.outline = "none";
                       e.currentTarget.style.outlineOffset = "0";
                     }}
-                    aria-label="Copy message to clipboard"
+                    aria-label={copied ? "Copied to clipboard" : "Copy message to clipboard"}
                   >
-                    <FaCopy size={14} aria-hidden="true" />
+                    {copied ? (
+                      <FaCheck size={14} aria-hidden="true" style={{ color: "#059669" }} />
+                    ) : (
+                      <FaCopy size={14} aria-hidden="true" />
+                    )}
                   </button>
-                  {showCopyPopup && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        fontSize: "14px",
-                        color: "#059669",
-                        fontWeight: "500",
-                        whiteSpace: "nowrap",
-                        marginLeft: "4px",
-                      }}
-                    >
-                      Copied!
-                    </div>
-                  )}
                 </div>
               )}
             </div>
