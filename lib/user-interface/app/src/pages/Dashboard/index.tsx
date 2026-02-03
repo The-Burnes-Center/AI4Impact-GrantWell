@@ -388,9 +388,16 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
     setEditedNofoStatus(nofo.status || "active");
     setEditedNofoGrantType(nofo.grantType || "");
     if (nofo.expirationDate) {
-      const date = new Date(nofo.expirationDate);
-      const formattedDate = date.toISOString().split("T")[0];
-      setEditedNofoExpirationDate(formattedDate);
+      // Support both formats: "YYYY-MM-DD" (new) or ISO string (old)
+      if (/^\d{4}-\d{2}-\d{2}$/.test(nofo.expirationDate)) {
+        // Already in YYYY-MM-DD format
+        setEditedNofoExpirationDate(nofo.expirationDate);
+      } else {
+        // ISO string format - extract date part
+        const date = new Date(nofo.expirationDate);
+        const formattedDate = date.toISOString().split("T")[0];
+        setEditedNofoExpirationDate(formattedDate);
+      }
     } else {
       setEditedNofoExpirationDate("");
     }
@@ -423,12 +430,18 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
         );
       }
 
-      const newExpirationDate = editedNofoExpirationDate 
-        ? new Date(`${editedNofoExpirationDate}T23:59:59Z`).toISOString()
-        : null;
-      const oldExpirationDate = selectedNofo.expirationDate || null;
+      // Store in YYYY-MM-DD format (new format)
+      const newExpirationDate = editedNofoExpirationDate || null;
+      
+      // Normalize old expiration date for comparison (convert ISO to YYYY-MM-DD if needed)
+      let normalizedOldExpirationDate = selectedNofo.expirationDate || null;
+      if (normalizedOldExpirationDate && !/^\d{4}-\d{2}-\d{2}$/.test(normalizedOldExpirationDate)) {
+        // Convert ISO string to YYYY-MM-DD format for comparison
+        const date = new Date(normalizedOldExpirationDate);
+        normalizedOldExpirationDate = date.toISOString().split("T")[0];
+      }
 
-      if (newExpirationDate !== oldExpirationDate) {
+      if (newExpirationDate !== normalizedOldExpirationDate) {
         await apiClient.landingPage.updateNOFOStatus(
           editedNofoName.trim(),
           undefined,
@@ -830,7 +843,9 @@ export const NOFOsTab: React.FC<NOFOsTabProps> = ({
                   editedNofoStatus === selectedNofo?.status &&
                   editedNofoExpirationDate ===
                     (selectedNofo?.expirationDate 
-                      ? new Date(selectedNofo.expirationDate).toISOString().split("T")[0]
+                      ? (/^\d{4}-\d{2}-\d{2}$/.test(selectedNofo.expirationDate)
+                          ? selectedNofo.expirationDate
+                          : new Date(selectedNofo.expirationDate).toISOString().split("T")[0])
                       : "") &&
                   editedNofoGrantType === (selectedNofo?.grantType || ""))
               }

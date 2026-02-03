@@ -169,12 +169,33 @@ export class Utils {
 
   /**
    * Format expiration date for display
-   * @param utcDateString ISO date string in UTC (or null)
+   * Supports both formats:
+   * - "YYYY-MM-DD" (new format)
+   * - ISO date string (old format, e.g., "2026-03-13T23:59:59Z")
+   * @param dateString Date string in YYYY-MM-DD or ISO format (or null)
    * @returns Formatted date string, or null
    */
-  static formatExpirationDate(utcDateString: string | null | undefined): string | null {
-    if (!utcDateString) return null;
-    const date = new Date(utcDateString);
+  static formatExpirationDate(dateString: string | null | undefined): string | null {
+    if (!dateString) return null;
+    
+    // Check if it's already in YYYY-MM-DD format (new format)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      // Parse YYYY-MM-DD format
+      const [year, month, day] = dateString.split('-');
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+    
+    // Otherwise, treat as ISO string (old format)
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      console.warn(`Invalid date format: ${dateString}`);
+      return null;
+    }
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
