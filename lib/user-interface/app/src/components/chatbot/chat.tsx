@@ -9,6 +9,7 @@ import ChatInputPanel from "./chat-input-panel";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notif-manager";
 import { HelpCircle, ChevronDown } from "lucide-react";
+import { parseChatHistory } from "./utils";
 
 // Styles for components
 const styles: Record<string, React.CSSProperties> = {
@@ -158,20 +159,35 @@ export default function Chat(props: {
           (value) => value.username
         );
         if (!username) return;
-        const hist = await apiClient.sessions.getSession({
-          sessionId: props.sessionId,
-          userId: username,
-        });
+        
+        let hist;
+        try {
+          hist = await apiClient.sessions.getSession({
+            sessionId: props.sessionId,
+            userId: username,
+          });
+        } catch (error: any) {
+          // If session doesn't exist (404), create it with initial greeting
+          // Otherwise, rethrow the error
+          if (error.message && error.message.includes("No record found")) {
+            hist = null; // Session doesn't exist, will create it below
+          } else {
+            throw error; // Re-throw other errors
+          }
+        }
 
         if (hist?.chatHistory && hist.chatHistory.length > 0) {
-          setMessageHistory(hist.chatHistory);
+          // Convert backend format to frontend format
+          const parsedHistory = parseChatHistory(hist.chatHistory);
+          setMessageHistory(parsedHistory);
           // Scroll to bottom of message area to show latest messages
           setTimeout(() => {
             if (messageAreaRef.current) {
               messageAreaRef.current.scrollTop = messageAreaRef.current.scrollHeight;
             }
           }, 100);
-        } else if (!hist?.chatHistory || hist.chatHistory.length === 0) {
+        } else {
+          // Session doesn't exist or has no history - create initial greeting
           const summaryResult = await apiClient.landingPage.getNOFOSummary(
             props.documentIdentifier
           );
@@ -183,6 +199,20 @@ export default function Chat(props: {
             metadata: {},
           };
           setMessageHistory([initialMessage]);
+          
+          // Save the initial greeting to DynamoDB so it persists on refresh
+          try {
+            await apiClient.sessions.createSession({
+              sessionId: props.sessionId,
+              userId: username,
+              title: `Chat about ${grantName}`,
+              documentIdentifier: props.documentIdentifier || "",
+              chatHistory: [{ user: "", chatbot: initialMessage.content, metadata: "" }],
+            });
+          } catch (error) {
+            console.warn("Failed to save initial greeting:", error);
+            // Don't show error to user, just log it - the message is still displayed
+          }
         }
         setSession({ id: props.sessionId, loading: false });
         setRunning(false);
