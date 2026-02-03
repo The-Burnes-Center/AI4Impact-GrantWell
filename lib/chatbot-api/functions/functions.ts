@@ -62,7 +62,6 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly applicationPdfGeneratorFunction: lambda.Function;
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
-  public readonly backfillNofoExpiryDatesFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -1208,42 +1207,6 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.autoArchiveExpiredNofosFunction = autoArchiveExpiredNofosFunction;
-
-    // Add backfill NOFO expiry dates Lambda function
-    const backfillNofoExpiryDatesFunction = new lambda.Function(
-      scope,
-      'BackfillNofoExpiryDatesFunction',
-      {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, 'landing-page/backfill-nofo-expiry-dates')
-        ),
-        handler: 'index.handler',
-        environment: {
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          GRANTS_GOV_API_KEY: props.grantsGovApiKey,
-        },
-        timeout: cdk.Duration.minutes(15),
-      }
-    );
-
-    // Grant DynamoDB permissions
-    backfillNofoExpiryDatesFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'dynamodb:Scan',
-          'dynamodb:Query',
-          'dynamodb:UpdateItem',
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          `${props.nofoMetadataTable.tableArn}/index/*`,
-        ],
-      })
-    );
-
-    this.backfillNofoExpiryDatesFunction = backfillNofoExpiryDatesFunction;
 
     // Create EventBridge rule to run daily at 2 AM UTC
     const autoArchiveRule = new events.Rule(scope, 'AutoArchiveExpiredNofosRule', {
