@@ -15,7 +15,7 @@ import "../../styles/document-editor.css";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
-import { DraftsClient, DocumentDraft } from "../../common/api-client/drafts-client";
+import { DraftsClient, DocumentDraft, DraftStatus } from "../../common/api-client/drafts-client";
 import { Utils } from "../../common/utils";
 
 // Types
@@ -42,8 +42,35 @@ const ERROR_MESSAGES = {
   START_FAILED: "Failed to start new document",
 } as const;
 
+// Helper function to convert step to unified status
+const stepToStatus = (step: string): string => {
+  const stepMap: Record<string, string> = {
+    'projectBasics': 'project_basics',
+    'questionnaire': 'questionnaire',
+    'uploadDocuments': 'uploading_documents',
+    'draftCreated': 'generating_draft',
+    'sectionEditor': 'editing_sections',
+    'reviewApplication': 'reviewing'
+  };
+  return stepMap[step] || 'project_basics';
+};
+
+// Helper function to convert status to step
+const statusToStep = (status: string): string => {
+  const statusMap: Record<string, string> = {
+    'project_basics': 'projectBasics',
+    'questionnaire': 'questionnaire',
+    'uploading_documents': 'uploadDocuments',
+    'generating_draft': 'draftCreated',
+    'editing_sections': 'sectionEditor',
+    'reviewing': 'reviewApplication',
+    'submitted': 'reviewApplication'
+  };
+  return statusMap[status] || 'projectBasics';
+};
+
 // Custom hooks
-const useDocumentStorage = (nofoId: string | null) => {
+const useDocumentStorage = (nofoId: string | null, onStepRestore?: (step: string) => void) => {
   const [documentData, setDocumentData] = useState<DocumentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("Loading document editor...");
@@ -95,6 +122,11 @@ const useDocumentStorage = (nofoId: string | null) => {
             questionnaire: draft.questionnaire,
             lastModified: draft.lastModified || new Date().toISOString(),
           });
+          // Restore current step from draft status if available
+          if (draft.status && onStepRestore) {
+            const stepFromStatus = statusToStep(draft.status);
+            onStepRestore(stepFromStatus);
+          }
           setLoadingMessage("Document loaded successfully!");
         } else {
           setDocumentData({
@@ -113,7 +145,7 @@ const useDocumentStorage = (nofoId: string | null) => {
     } finally {
       setIsLoading(false);
     }
-  }, [nofoId, sessionId, appContext]);
+  }, [nofoId, sessionId, appContext, onStepRestore]);
 
   const saveDocument = useCallback(
     async (data: Partial<DocumentData>) => {
@@ -197,7 +229,7 @@ const DocumentEditor: React.FC = () => {
   const startButtonRef = useRef<HTMLButtonElement>(null);
   const draftsButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { documentData, setDocumentData, isLoading, loadingMessage, error, setError } = useDocumentStorage(selectedNofo);
+  const { documentData, setDocumentData, isLoading, loadingMessage, error, setError } = useDocumentStorage(selectedNofo, setCurrentStep);
 
   // Monitor brand banner + MDS header height changes (for minHeight calculations only)
   useEffect(() => {
@@ -245,6 +277,7 @@ const DocumentEditor: React.FC = () => {
       window.removeEventListener("scroll", updateTopOffset);
     };
   }, []);
+
 
   // Extract NOFO and step from URL parameters and handle session
   useEffect(() => {
@@ -306,7 +339,7 @@ const DocumentEditor: React.FC = () => {
           sections: {},
           projectBasics: {}, // Initialize empty project basics
           questionnaire: {},
-          status: 'nofo_selected', // Initial status when NOFO is selected
+          status: 'project_basics', // Initial status when starting
           lastModified: Utils.getCurrentTimestamp(),
         });
       }
@@ -353,10 +386,14 @@ const DocumentEditor: React.FC = () => {
             },
             projectBasics: documentData.projectBasics || currentDraft?.projectBasics,
             questionnaire: documentData.questionnaire || currentDraft?.questionnaire,
+            status: stepToStatus(step) as DraftStatus, // Save unified status based on step
             lastModified: Utils.getCurrentTimestamp(),
           });
         }
       }
+
+      // Update current step in state
+      setCurrentStep(step);
 
       // Navigate to the next step
       const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : '';
@@ -376,17 +413,18 @@ const DocumentEditor: React.FC = () => {
       const draftsClient = new DraftsClient(appContext);
       const username = (await Auth.currentAuthenticatedUser()).username;
       
-      if (username && sessionId) {
-        await draftsClient.updateDraft({
-          sessionId: sessionId,
-          userId: username,
-          title: `Application for ${selectedNofo}`,
-          documentIdentifier: selectedNofo || '',
-          sections: documentData.sections,
-          projectBasics: documentData.projectBasics,
-          questionnaire: documentData.questionnaire,
-        });
-      }
+        if (username && sessionId) {
+          await draftsClient.updateDraft({
+            sessionId: sessionId,
+            userId: username,
+            title: `Application for ${selectedNofo}`,
+            documentIdentifier: selectedNofo || '',
+            sections: documentData.sections,
+            projectBasics: documentData.projectBasics,
+            questionnaire: documentData.questionnaire,
+            status: stepToStatus(currentStep) as DraftStatus, // Save unified status
+          });
+        }
     } catch (error) {
       console.error('Failed to save progress:', error);
       setError(ERROR_MESSAGES.SAVE_FAILED);
@@ -459,6 +497,7 @@ const DocumentEditor: React.FC = () => {
                       sections: updatedData.sections || {},
                       projectBasics: updatedData.projectBasics,
                       questionnaire: updatedData.questionnaire,
+                      status: stepToStatus(currentStep) as DraftStatus, // Save unified status
                       lastModified: new Date().toISOString(),
                     });
                   }
@@ -498,6 +537,7 @@ const DocumentEditor: React.FC = () => {
                       sections: updatedData.sections || {},
                       projectBasics: updatedData.projectBasics,
                       questionnaire: updatedData.questionnaire,
+                      status: stepToStatus(currentStep) as DraftStatus, // Save unified status
                       lastModified: new Date().toISOString(),
                     });
                   }
@@ -516,6 +556,7 @@ const DocumentEditor: React.FC = () => {
             selectedNofo={selectedNofo}
             onNavigate={navigateToStep}
             sessionId={sessionId || ''}
+            documentData={documentData}
           />
         );
       case "draftCreated":
@@ -994,6 +1035,7 @@ const DocumentEditor: React.FC = () => {
               if (selectedNofo) {
                 startNewDocument();
               } else {
+                // Navigate to landing page to select a NOFO instead of home
                 navigate("/");
               }
             }}

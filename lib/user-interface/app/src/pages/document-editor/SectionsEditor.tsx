@@ -244,6 +244,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             sections: updated,
             projectBasics: currentDraft.projectBasics,
             questionnaire: currentDraft.questionnaire,
+                  status: 'editing_sections', // Save unified status
             lastModified: new Date().toISOString()
           });
         } else {
@@ -256,6 +257,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             sections: updated,
             projectBasics: {},
             questionnaire: {},
+                  status: 'editing_sections', // Save unified status
             lastModified: new Date().toISOString()
           });
         }
@@ -313,6 +315,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               sections: updated,
               projectBasics: currentDraft.projectBasics,
               questionnaire: currentDraft.questionnaire,
+                  status: 'editing_sections', // Save unified status
               lastModified: new Date().toISOString()
             });
           } else {
@@ -325,6 +328,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               sections: updated,
               projectBasics: {},
               questionnaire: {},
+                  status: 'editing_sections', // Save unified status
               lastModified: new Date().toISOString()
             });
           }
@@ -401,6 +405,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           },
           projectBasics: currentDraft.projectBasics,
           questionnaire: currentDraft.questionnaire,
+                  status: 'editing_sections', // Save unified status
           lastModified: new Date().toISOString()
         });
 

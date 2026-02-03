@@ -32,6 +32,7 @@ interface UploadDocumentsProps {
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
   sessionId: string;
+  documentData?: any; // Add documentData to check if draft exists
 }
 
 interface FileInfo {
@@ -46,6 +47,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   selectedNofo,
   onNavigate,
   sessionId,
+  documentData,
 }) => {
   const appContext = useContext(AppContext);
   const [files, setFiles] = useState<File[]>([]);
@@ -58,6 +60,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [generatingDraft, setGeneratingDraft] = useState(false);
   const [draftProgress, setDraftProgress] = useState<string>("");
+  const [hasExistingDraft, setHasExistingDraft] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Helper to extract NOFO name from documentIdentifier
@@ -66,19 +69,45 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     return docId.split("/").pop() || docId;
   };
 
-  // Get userId on mount
+  // Get userId on mount and check if draft already exists
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
         setUserId(user.username);
+        
+        // Check if draft already exists with sections
+        if (appContext && sessionId && user.username) {
+          try {
+            const apiClient = new ApiClient(appContext);
+            const draft = await apiClient.drafts.getDraft({
+              sessionId: sessionId,
+              userId: user.username
+            });
+            
+            // Check if draft has sections (meaning it was already generated)
+            if (draft && draft.sections && Object.keys(draft.sections).length > 0) {
+              setHasExistingDraft(true);
+            }
+          } catch (error) {
+            // Draft might not exist yet, that's okay
+            console.log('No existing draft found');
+          }
+        }
       } catch (error) {
         console.error("Error getting user:", error);
         setUploadError("Failed to authenticate user. Please refresh the page.");
       }
     };
     fetchUserId();
-  }, []);
+  }, [appContext, sessionId]);
+  
+  // Also check documentData prop for existing sections
+  useEffect(() => {
+    if (documentData?.sections && Object.keys(documentData.sections).length > 0) {
+      setHasExistingDraft(true);
+    }
+  }, [documentData]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -289,7 +318,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           ...draftToUse.sections,  // Preserve existing sections
           ...result  // Add new sections
         },
-        status: 'draft_generated', // Update status when draft sections are generated
+        status: 'editing_sections', // Draft generation complete, now editing sections
         additionalInfo: additionalInfo,
         uploadedFiles: uploadedFileInfo
       });
@@ -357,6 +386,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         style={{
           display: "flex",
           justifyContent: "space-between",
+          gap: "12px",
         }}
       >
         <button
@@ -392,45 +422,84 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           </svg>
           Back
         </button>
-        <button
-          onClick={handleSubmit}
-          disabled={isLoading || generatingDraft}
-          aria-label={generatingDraft ? "Generating draft, please wait" : isLoading ? "Processing, please wait" : "Create draft"}
-          aria-busy={isLoading || generatingDraft}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "12px 24px",
-            background: (isLoading || generatingDraft) ? "#a0aec0" : "#14558F",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            fontSize: "16px",
-            fontWeight: 500,
-            cursor: (isLoading || generatingDraft) ? "not-allowed" : "pointer",
-            boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
-          }}
-        >
-          {generatingDraft ? "Generating Draft..." : isLoading ? "Processing..." : "Create Draft"}
-          {!isLoading && !generatingDraft && (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ marginLeft: "8px" }}
-              aria-hidden="true"
+        <div style={{ display: "flex", gap: "12px" }}>
+          {hasExistingDraft && (
+            <button
+              onClick={() => onNavigate("sectionEditor")}
+              aria-label="Continue to section editor"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "12px 24px",
+                background: "white",
+                border: "2px solid #14558F",
+                borderRadius: "6px",
+                color: "#14558F",
+                fontSize: "16px",
+                fontWeight: 500,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
+              }}
             >
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
-            </svg>
+              Next
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ marginLeft: "8px" }}
+                aria-hidden="true"
+              >
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </button>
           )}
-        </button>
+          <button
+            onClick={handleSubmit}
+            disabled={isLoading || generatingDraft}
+            aria-label={generatingDraft ? "Generating draft, please wait" : isLoading ? "Processing, please wait" : hasExistingDraft ? "Generate draft again" : "Create draft"}
+            aria-busy={isLoading || generatingDraft}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "12px 24px",
+              background: (isLoading || generatingDraft) ? "#a0aec0" : "#14558F",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              fontSize: "16px",
+              fontWeight: 500,
+              cursor: (isLoading || generatingDraft) ? "not-allowed" : "pointer",
+              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
+            }}
+          >
+            {generatingDraft ? "Generating Draft..." : isLoading ? "Processing..." : hasExistingDraft ? "Generate Again" : "Create Draft"}
+            {!isLoading && !generatingDraft && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ marginLeft: "8px" }}
+                aria-hidden="true"
+              >
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
       {generatingDraft && draftProgress && (
         <div
