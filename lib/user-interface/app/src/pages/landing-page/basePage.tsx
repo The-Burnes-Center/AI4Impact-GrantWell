@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef, CSSProperties } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
@@ -28,6 +28,7 @@ export default function Welcome() {
   const [searchTerm, setSearchTerm] = useState("");
   const [highlightCTAButtons, setHighlightCTAButtons] = useState(false);
   const [srAnnouncement, setSrAnnouncement] = useState("");
+  const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
   const prevSelectedDocRef = useRef<any>(null);
   const firstCTAButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -35,6 +36,7 @@ export default function Welcome() {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // **Styles**
   const logoStyle: CSSProperties = {
@@ -135,6 +137,22 @@ export default function Welcome() {
     };
     fetchDocuments();
   }, []);
+
+  // Check for redirect message from URL query parameter
+  useEffect(() => {
+    const message = searchParams.get("message");
+    if (message) {
+      setRedirectMessage(message);
+      // Remove the message parameter from URL
+      searchParams.delete("message");
+      setSearchParams(searchParams, { replace: true });
+      // Clear the message after 5 seconds
+      const timer = setTimeout(() => {
+        setRedirectMessage(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, setSearchParams]);
 
   // Highlight CTA buttons when a new document is selected
   useEffect(() => {
@@ -859,6 +877,61 @@ export default function Welcome() {
             Free AI powered tool designed for finding and writing grants
           </p>
         </div>
+
+        {/* Redirect Message Banner */}
+        {redirectMessage && (
+          <div
+            style={{
+              backgroundColor: "#fff3cd",
+              border: "1px solid #ffc107",
+              borderRadius: "8px",
+              padding: "16px 20px",
+              margin: "20px auto",
+              maxWidth: "700px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            }}
+            role="alert"
+            aria-live="polite"
+          >
+            <div style={{ flex: 1 }}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "15px",
+                  color: "#856404",
+                  fontWeight: 500,
+                }}
+              >
+                {redirectMessage}
+              </p>
+            </div>
+            <button
+              onClick={() => setRedirectMessage(null)}
+              aria-label="Close message"
+              style={{
+                background: "none",
+                border: "none",
+                color: "#856404",
+                fontSize: "20px",
+                cursor: "pointer",
+                padding: "0 8px",
+                marginLeft: "12px",
+                fontWeight: "bold",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.opacity = "0.7";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.opacity = "1";
+              }}
+            >
+              ×
+            </button>
+          </div>
+        )}
 
         {/* How it works section - always visible */}
         <section

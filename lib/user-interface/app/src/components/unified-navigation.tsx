@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../common/helpers/recently-viewed-nofos";
 import { Home, MessageSquare, FileText, CheckSquare, Upload, LayoutDashboard } from "lucide-react";
 import { Auth } from "aws-amplify";
+import Modal from "./common/Modal";
 
 interface UnifiedNavigationProps {
   documentIdentifier?: string;
@@ -36,6 +37,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
   const isNarrowViewport = viewportWidth <= 320;
   const [isOpen, setIsOpen] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showNofoRequiredModal, setShowNofoRequiredModal] = useState(false);
 
   // Determine current page/route
   const currentPath = location.pathname;
@@ -48,8 +50,27 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
   // Get documentIdentifier from various sources
   const docId = documentIdentifier || params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo');
 
+  // Check if NOFO selection is required (when on dashboard and no docId)
+  const requiresNofoSelection = () => {
+    return isDashboard && !docId;
+  };
+
+  // Handle NOFO required modal - show alert and redirect to homepage
+  const handleNofoRequired = () => {
+    setShowNofoRequiredModal(true);
+  };
+
+  const handleNofoRequiredModalClose = () => {
+    setShowNofoRequiredModal(false);
+    navigate("/home?message=Please select a NOFO first to access this feature.");
+  };
+
   // Handle chat navigation
   const handleChatNavigation = () => {
+    if (requiresNofoSelection()) {
+      handleNofoRequired();
+      return;
+    }
     const newSessionId = uuidv4();
     const queryParams = docId
       ? `?folder=${encodeURIComponent(docId)}`
@@ -59,6 +80,10 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
 
   // Handle drafts navigation
   const handleDraftsNavigation = () => {
+    if (requiresNofoSelection()) {
+      handleNofoRequired();
+      return;
+    }
     if (docId) {
       navigate(`/document-editor/drafts?nofo=${encodeURIComponent(docId)}`);
     } else {
@@ -68,6 +93,10 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
 
   // Handle requirements navigation
   const handleRequirementsNavigation = () => {
+    if (requiresNofoSelection()) {
+      handleNofoRequired();
+      return;
+    }
     if (docId) {
       addToRecentlyViewed({
         label: docId.replace("/", ""),
@@ -83,6 +112,10 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
 
   // Handle document editor navigation
   const handleDocumentEditorNavigation = () => {
+    if (requiresNofoSelection()) {
+      handleNofoRequired();
+      return;
+    }
     if (docId) {
       navigate(`/document-editor?nofo=${encodeURIComponent(docId)}`);
     } else {
@@ -92,6 +125,10 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
 
   // Handle chat sessions navigation
   const handleChatSessionsNavigation = () => {
+    if (requiresNofoSelection()) {
+      handleNofoRequired();
+      return;
+    }
     const queryParams = docId
       ? `?folder=${encodeURIComponent(docId)}`
       : "";
@@ -127,6 +164,44 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
 
   return (
     <>
+      {/* NOFO Required Modal */}
+      <Modal
+        isOpen={showNofoRequiredModal}
+        onClose={handleNofoRequiredModalClose}
+        title="NOFO Selection Required"
+        hideCloseButton={false}
+      >
+        <div style={{ padding: "10px 0" }}>
+          <p style={{ marginBottom: "20px", fontSize: "16px", color: "#333" }}>
+            You need to select a Notice of Funding Opportunity (NOFO) before accessing this feature.
+          </p>
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+            <button
+              onClick={handleNofoRequiredModalClose}
+              style={{
+                backgroundColor: "#14558F",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                padding: "10px 20px",
+                fontSize: "14px",
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "background-color 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#104472";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#14558F";
+              }}
+            >
+              Go to Homepage
+            </button>
+          </div>
+        </div>
+      </Modal>
+
       {isNarrowViewport && !isOpen && (
         <button
           onClick={() => setIsOpen(true)}
