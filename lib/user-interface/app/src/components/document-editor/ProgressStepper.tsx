@@ -252,7 +252,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                   borderRadius: "50%",
                   border: `2px solid ${completed || active ? "#14558F" : "#e5e7eb"}`,
                   backgroundColor: completed || active ? "#14558F" : "#ffffff",
-                  color: completed || active ? "#ffffff" : "#9ca3af",
+                  color: completed || active ? "#ffffff" : "#4b5563",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -312,7 +312,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                     fontFamily: "'Noto Sans', sans-serif",
                     fontSize: "15px",
                     fontWeight: active ? 600 : 500,
-                    color: active ? "#14558F" : completed ? "#6b7280" : "#9ca3af",
+                    color: active ? "#14558F" : completed ? "#6b7280" : "#4b5563",
                     lineHeight: "1.4",
                     transition: "color 0.2s ease",
                     cursor: "default",
@@ -326,7 +326,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                     style={{
                       fontFamily: "'Noto Sans', sans-serif",
                       fontSize: "13px",
-                      color: "#9ca3af",
+                      color: "#4b5563",
                       marginTop: "4px",
                       lineHeight: "1.3",
                     }}

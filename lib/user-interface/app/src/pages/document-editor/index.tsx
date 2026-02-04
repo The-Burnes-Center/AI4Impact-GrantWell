@@ -687,7 +687,7 @@ const DocumentEditor: React.FC = () => {
         />
       </nav>
 
-      <main
+      <div
         className="document-content"
         style={{
           flex: 1,
@@ -838,7 +838,7 @@ const DocumentEditor: React.FC = () => {
             </div>
           </>
         )}
-      </main>
+      </div>
       <style>
         {`
           @keyframes spin {
