@@ -893,8 +893,8 @@ export default function Welcome() {
               margin: "0",
             }}
           >
-            Use the search bar and the filters below to find grants by name, agency, or category.
-            <br />
+            Use the filters below to find grants by name, agency, or category.
+            Or use the search for specific grants in the table.
             Click on any grant row to select it, then choose an action:{" "}
             <strong style={{ color: "#14558F", fontWeight: "600" }}>
               View Key Requirements
