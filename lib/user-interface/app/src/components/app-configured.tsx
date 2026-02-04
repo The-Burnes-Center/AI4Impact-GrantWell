@@ -176,7 +176,12 @@ export default function AppConfigured() {
         }}
         colorMode={theme === "dark" ? "dark" : "light"}
       >
-        <BrowserRouter>
+        <BrowserRouter
+          future={{
+            v7_relativeSplatPath: true,
+            v7_startTransition: true,
+          }}
+        >
           <AppLayoutContent
             authenticated={authenticated}
             configured={configured}
