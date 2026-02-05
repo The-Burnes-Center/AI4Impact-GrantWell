@@ -10,6 +10,8 @@ from botocore.exceptions import ClientError
 import json
 from datetime import datetime
 from boto3.dynamodb.conditions import Key, Attr
+from pydantic import ValidationError
+from shared.models import SessionOperationRequest, parse_lambda_event_body
 
 # Retrieve DynamoDB table name from environment variables
 DDB_TABLE_NAME = os.environ["DDB_TABLE_NAME"]
@@ -301,33 +303,68 @@ def list_sessions_by_user_id(user_id, document_identifier=None, limit=15):
 
 # Main Lambda handler function
 def lambda_handler(event, context):
-    data = json.loads(event['body'])
-    operation = data.get('operation')
-    user_id = data.get('user_id')
-    session_id = data.get('session_id')
-    chat_history = data.get('chat_history', None)
-    new_chat_entry = data.get('new_chat_entry')
-    title = data.get('title', f"Chat on {str(datetime.now())}")
-    document_identifier = data.get('document_identifier')
+    try:
+        # Parse and validate request using Pydantic
+        request = parse_lambda_event_body(event, SessionOperationRequest)
+        
+        # Extract validated fields
+        operation = request.operation
+        user_id = request.user_id
+        session_id = request.session_id
+        chat_history = request.chat_history
+        new_chat_entry = request.new_chat_entry
+        title = request.title or f"Chat on {str(datetime.now())}"
+        document_identifier = request.document_identifier
 
-    if operation == 'add_session':
-        return add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier)
-    elif operation == 'get_session':
-        return get_session(session_id, user_id)
-    elif operation == 'update_session':
-        return update_session(session_id, user_id, new_chat_entry)
-    elif operation == 'list_sessions_by_user_id':
-        return list_sessions_by_user_id(user_id, document_identifier=document_identifier)
-    elif operation == 'list_all_sessions_by_user_id':
-        return list_sessions_by_user_id(user_id, document_identifier=document_identifier, limit=100)
-    elif operation == 'delete_session':
-        return delete_session(session_id, user_id)
-    elif operation == 'delete_user_sessions':
-        return delete_user_sessions(user_id)
-    else:
-        response = {
+        # Route to appropriate operation handler
+        if operation == 'add_session':
+            return add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier)
+        elif operation == 'get_session':
+            return get_session(session_id, user_id)
+        elif operation == 'update_session':
+            return update_session(session_id, user_id, new_chat_entry)
+        elif operation == 'list_sessions_by_user_id':
+            return list_sessions_by_user_id(user_id, document_identifier=document_identifier)
+        elif operation == 'list_all_sessions_by_user_id':
+            return list_sessions_by_user_id(user_id, document_identifier=document_identifier, limit=100)
+        elif operation == 'delete_session':
+            return delete_session(session_id, user_id)
+        elif operation == 'delete_user_sessions':
+            return delete_user_sessions(user_id)
+        else:
+            return {
+                'statusCode': 400,
+                'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps(f'Operation not found/allowed! Operation Sent: {operation}')
+            }
+    except ValidationError as e:
+        # Return detailed validation errors
+        error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
+        return {
             'statusCode': 400,
             'headers': {'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps(f'Operation not found/allowed! Operation Sent: {operation}')
+            'body': json.dumps({
+                'error': 'Validation error',
+                'details': error_messages
+            })
         }
-        return response
+    except ValueError as e:
+        # Handle custom validation errors
+        return {
+            'statusCode': 400,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
+    except json.JSONDecodeError:
+        return {
+            'statusCode': 400,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps('Invalid JSON in request body')
+        }
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps('An unexpected error occurred')
+        }

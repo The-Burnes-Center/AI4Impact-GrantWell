@@ -10,6 +10,8 @@ from botocore.exceptions import ClientError
 import json
 from datetime import datetime
 from boto3.dynamodb.conditions import Key, Attr
+from pydantic import ValidationError
+from shared.models import DraftOperationRequest, parse_lambda_event_body
 
 # Retrieve DynamoDB table name from environment variables
 DDB_TABLE_NAME = os.environ["DRAFT_TABLE_NAME"]
@@ -423,48 +425,27 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
 # Main Lambda handler function
 def lambda_handler(event, context):
     try:
-        data = json.loads(event['body'])
-        operation = data.get('operation')
-        user_id = data.get('user_id')
-        session_id = data.get('session_id')
-        sections = data.get('sections', {})
-        title = data.get('title', f"Draft on {str(datetime.now())}")
-        document_identifier = data.get('document_identifier')
-        project_basics = data.get('project_basics')
-        questionnaire = data.get('questionnaire')
-        last_modified = data.get('last_modified')
-        status = data.get('status')
+        # Parse and validate request using Pydantic
+        request = parse_lambda_event_body(event, DraftOperationRequest)
+        
+        # Extract validated fields
+        operation = request.operation
+        user_id = request.user_id
+        session_id = request.session_id
+        sections = request.sections or {}
+        title = request.title or f"Draft on {str(datetime.now())}"
+        document_identifier = request.document_identifier
+        project_basics = request.project_basics or {}
+        questionnaire = request.questionnaire or {}
+        last_modified = request.last_modified
+        status = request.status
 
-        if not operation:
-            return {
-                'statusCode': 400,
-                'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps('Operation is required')
-            }
-
+        # Route to appropriate operation handler
         if operation == 'add_draft':
-            if not all([session_id, user_id]):
-                return {
-                    'statusCode': 400,
-                    'headers': {'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps('session_id and user_id are required for add_draft operation')
-                }
             return add_draft(session_id, user_id, sections, title, document_identifier, project_basics, questionnaire, last_modified, status)
         elif operation == 'get_draft':
-            if not all([session_id, user_id]):
-                return {
-                    'statusCode': 400,
-                    'headers': {'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps('session_id and user_id are required for get_draft operation')
-                }
             return get_draft(session_id, user_id)
         elif operation == 'update_draft':
-            if not all([session_id, user_id]):
-                return {
-                    'statusCode': 400,
-                    'headers': {'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps('session_id and user_id are required for update_draft operation')
-                }
             return update_draft(
                 session_id=session_id,
                 user_id=user_id,
@@ -477,40 +458,16 @@ def lambda_handler(event, context):
                 status=status
             )
         elif operation == 'list_drafts_by_user_id':
-            if not user_id:
-                return {
-                    'statusCode': 400,
-                    'headers': {'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps('user_id is required for list_drafts_by_user_id operation')
-                }
             # Convert undefined to None for document_identifier
             doc_id = None if document_identifier == 'undefined' else document_identifier
             return list_drafts_by_user_id(user_id, document_identifier=doc_id)
         elif operation == 'list_all_drafts_by_user_id':
-            if not user_id:
-                return {
-                    'statusCode': 400,
-                    'headers': {'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps('user_id is required for list_all_drafts_by_user_id operation')
-                }
             # Convert undefined to None for document_identifier
             doc_id = None if document_identifier == 'undefined' else document_identifier
             return list_drafts_by_user_id(user_id, document_identifier=doc_id, limit=100)
         elif operation == 'delete_draft':
-            if not all([session_id, user_id]):
-                return {
-                    'statusCode': 400,
-                    'headers': {'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps('session_id and user_id are required for delete_draft operation')
-                }
             return delete_draft(session_id, user_id)
         elif operation == 'delete_user_drafts':
-            if not user_id:
-                return {
-                    'statusCode': 400,
-                    'headers': {'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps('user_id is required for delete_user_drafts operation')
-                }
             return delete_user_drafts(user_id)
         else:
             return {
@@ -518,6 +475,24 @@ def lambda_handler(event, context):
                 'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps(f'Operation not found/allowed! Operation Sent: {operation}')
             }
+    except ValidationError as e:
+        # Return detailed validation errors
+        error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
+        return {
+            'statusCode': 400,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({
+                'error': 'Validation error',
+                'details': error_messages
+            })
+        }
+    except ValueError as e:
+        # Handle custom validation errors
+        return {
+            'statusCode': 400,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
     except json.JSONDecodeError:
         return {
             'statusCode': 400,
