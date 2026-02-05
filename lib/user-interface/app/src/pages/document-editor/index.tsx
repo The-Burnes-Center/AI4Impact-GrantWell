@@ -321,6 +321,9 @@ const DocumentEditor: React.FC = () => {
     }
     
     try {
+      localStorage.removeItem('projectBasics');
+      localStorage.removeItem('questionnaire');
+      
       // Generate new session ID when starting a new document
       const newSessionId = uuidv4();
       
