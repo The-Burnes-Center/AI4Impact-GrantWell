@@ -46,10 +46,10 @@ const stepToStatus = (step: string): string => {
   const stepMap: Record<string, string> = {
     'projectBasics': 'project_basics',
     'questionnaire': 'questionnaire',
-    'uploadDocuments': 'uploading_documents',
-    'draftCreated': 'generating_draft',
+    'uploadDocuments': 'questionnaire',
+    'draftCreated': 'editing_sections',
     'sectionEditor': 'editing_sections',
-    'reviewApplication': 'reviewing'
+    'reviewApplication': 'editing_sections'
   };
   return stepMap[step] || 'project_basics';
 };
