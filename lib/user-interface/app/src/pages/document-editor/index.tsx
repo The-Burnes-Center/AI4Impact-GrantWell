@@ -46,10 +46,10 @@ const stepToStatus = (step: string): string => {
   const stepMap: Record<string, string> = {
     'projectBasics': 'project_basics',
     'questionnaire': 'questionnaire',
-    'uploadDocuments': 'uploading_documents',
-    'draftCreated': 'generating_draft',
+    'uploadDocuments': 'questionnaire',
+    'draftCreated': 'editing_sections',
     'sectionEditor': 'editing_sections',
-    'reviewApplication': 'reviewing'
+    'reviewApplication': 'editing_sections'
   };
   return stepMap[step] || 'project_basics';
 };
@@ -321,6 +321,9 @@ const DocumentEditor: React.FC = () => {
     }
     
     try {
+      localStorage.removeItem('projectBasics');
+      localStorage.removeItem('questionnaire');
+      
       // Generate new session ID when starting a new document
       const newSessionId = uuidv4();
       
@@ -697,8 +700,8 @@ const DocumentEditor: React.FC = () => {
           padding: 0,
         }}
       >
-        {/* Only show header, progress stepper and form content if welcome modal is closed or if there's a sessionId */}
-        {(!welcomeModalOpen || sessionId) && (
+        {/* Only show header, progress stepper and form content if welcome modal is closed */}
+        {!welcomeModalOpen && (
           <>
             <div
               className="document-editor-header"

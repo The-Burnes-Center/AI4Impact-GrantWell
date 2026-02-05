@@ -11,23 +11,27 @@ The application features multiple interactive interfaces including a landing pag
 - **Smart Grant Matching**  
   AI-powered system that analyzes and matches grants to user needs, providing personalized recommendations based on project requirements.
 
-  <img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/landingpage.gif?raw=true" alt="Landing page gif" width="500">
+  <img src="lib/user-interface/app/public/images/Landing Page.png" alt="Landing page" width="500">
 
 - **Requirements Analysis**  
   Automatically scans and summarizes Notices of Funding Opportunities (NOFOs), presenting key information about eligibility, required documents, narrative sections, and deadlines.
 
-  <img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/reqpage.gif?raw=true" alt="Requirements page gif" width="500">
+  <img src="lib/user-interface/app/public/images/Req Page.png" alt="Requirements page" width="500">
 
 - **AI-Powered Writing Assistant**  
   Interactive chatbot that assists in drafting grant narratives by prompting for organization details and incorporating information from uploaded documents.
   
-  <img src="https://github.com/Anuttan/Grantwell-MVP/blob/main/lib/user-interface/app/public/images/chatbotreal-compress.gif?raw=true" alt="Chatbot interface gif" width="500">
+  <img src="lib/user-interface/app/public/images/Chatbot Page.png" alt="Chatbot interface" width="500">
 
 - **Document Editor**  
   Section-based editor for drafting and refining grant narratives with AI assistance, progress tracking, and export capabilities.
 
-- **User Management**  
-  Administrative dashboard for managing NOFOs, tracking progress across multiple grant applications, and controlling user access.
+  <img src="lib/user-interface/app/public/images/Writing Page.png" alt="Document editor page" width="500">
+
+- **Dashboard**  
+  Administrative dashboard for managing NOFOs, automated NOFO scraping, and inviting new users.
+
+  <img src="lib/user-interface/app/public/images/Dashboard Page.png" alt="Dashboard page" width="500">
 
 ## Architecture
 
@@ -50,13 +54,15 @@ For more information about the architecture, visit the [AWS GenAI LLM Chatbot](h
 
 ```bash
 # Clone the repo
-git clone https://github.com/The-Burnes-Center/AI4Impact-GrantWell.git
-cd AI4Impact-GrantWell
+git clone https://github.com/Anuttan/GrantWell-MVP.git
+cd GrantWell-MVP
 
 # Install dependencies
 npm install
 
-# Run development server
+# For frontend development, navigate to the app directory
+cd lib/user-interface/app
+npm install
 npm run dev
 ```
 
@@ -90,7 +96,7 @@ npm run dev
 ## Security & Privacy
 
 - AWS Cognito-based authentication
-- Self-signup disabled - users must be invited by administrators
+- Self-signup enabled - users can create accounts directly
 - Secure file storage in AWS S3
 - Role-based access control with admin privileges
 - Encrypted data transmission

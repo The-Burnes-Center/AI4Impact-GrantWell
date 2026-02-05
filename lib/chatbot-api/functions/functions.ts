@@ -66,6 +66,24 @@ export class LambdaFunctionStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
 
+    // Create Python shared models Lambda Layer
+    const pythonSharedLayer = new lambda.LayerVersion(scope, "PythonSharedLayer", {
+      layerVersionName: `${stackName}-python-shared-layer`,
+      compatibleRuntimes: [lambda.Runtime.PYTHON_3_12],
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "layers/python-shared-layer"), {
+        bundling: {
+          image: lambda.Runtime.PYTHON_3_12.bundlingImage,
+          command: [
+            'bash', '-c',
+            'pip install -r requirements.txt -t python && cp -au python /asset-output',
+          ],
+        },
+      }
+      ),
+      description: "Shared Pydantic models and utilities for Python Lambda functions",
+    });
+
     // Add draft editor Lambda function
     const draftAPIHandlerFunction = new lambda.Function(
       scope,
@@ -74,6 +92,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         runtime: lambda.Runtime.PYTHON_3_12,
         code: lambda.Code.fromAsset(path.join(__dirname, "draft-editor")),
         handler: "lambda_function.lambda_handler",
+        layers: [pythonSharedLayer],
         environment: {
           DRAFT_TABLE_NAME: props.draftTable.tableName,
         },
@@ -105,9 +124,10 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "SessionHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
-        code: lambda.Code.fromAsset(path.join(__dirname, "session-handler")), // Points to the lambda directory
-        handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
+        runtime: lambda.Runtime.PYTHON_3_12,
+        code: lambda.Code.fromAsset(path.join(__dirname, "session-handler")),
+        handler: "lambda_function.lambda_handler",
+        layers: [pythonSharedLayer],
         environment: {
           DDB_TABLE_NAME: props.sessionTable.tableName,
         },
@@ -254,9 +274,10 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "FeedbackHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
-        code: lambda.Code.fromAsset(path.join(__dirname, "feedback-handler")), // Points to the lambda directory
-        handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
+        runtime: lambda.Runtime.PYTHON_3_12,
+        code: lambda.Code.fromAsset(path.join(__dirname, "feedback-handler")),
+        handler: "lambda_function.lambda_handler",
+        layers: [pythonSharedLayer],
         environment: {
           FEEDBACK_TABLE: props.feedbackTable.tableName,
           FEEDBACK_S3_DOWNLOAD: props.feedbackBucket.bucketName,
@@ -301,11 +322,12 @@ export class LambdaFunctionStack extends cdk.Stack {
       "SyncKBHandlerFunction",
       {
         functionName: `${stackName}-syncKBFunction`,
-        runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
+        runtime: lambda.Runtime.PYTHON_3_12,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/kb-sync")
-        ), // Points to the lambda directory
-        handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
+        ),
+        handler: "lambda_function.lambda_handler",
+        layers: [pythonSharedLayer],
         environment: {
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SOURCE: props.knowledgeBaseSource.attrDataSourceId,
@@ -387,11 +409,12 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DeleteS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
+        runtime: lambda.Runtime.PYTHON_3_12,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/delete-s3")
-        ), // Points to the lambda directory
-        handler: "lambda_function.lambda_handler", // Points to the 'hello' file in the lambda directory
+        ),
+        handler: "lambda_function.lambda_handler",
+        layers: [pythonSharedLayer],
         environment: {
           BUCKET: props.userDocumentsBucket.bucketName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,

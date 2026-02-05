@@ -11,6 +11,15 @@ import os
 from datetime import datetime
 from boto3.dynamodb.conditions import Key
 from decimal import Decimal
+from pydantic import ValidationError
+from shared.models import (
+    PostFeedbackRequest,
+    DownloadFeedbackRequest,
+    FeedbackQueryParams,
+    FeedbackDeleteParams,
+    parse_lambda_event_body,
+    parse_query_params
+)
 
 # Initialize DynamoDB client
 dynamodb = boto3.resource('dynamodb')
@@ -54,29 +63,31 @@ def lambda_handler(event, context):
 
 def post_feedback(event):
     try:
-        # Load JSON data from the event body
-        feedback_data = json.loads(event['body'])
+        # Parse and validate request using Pydantic
+        request = parse_lambda_event_body(event, PostFeedbackRequest)
+        feedback_data = request.feedbackData
+        
         # Generate a unique feedback ID and current timestamp
         feedback_id = str(uuid.uuid4())
         timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+        
         # Prepare the item to store in DynamoDB
-        feedback_data = feedback_data['feedbackData']
         item = {
             'FeedbackID': feedback_id,
-            'SessionID': feedback_data['sessionId'],
-            'UserPrompt': feedback_data['prompt'],
-            'FeedbackComments': feedback_data.get('comment', ''),
-            'Topic': feedback_data.get('topic', 'N/A (Good Response)'),
-            'Problem': feedback_data.get("problem", ''),
-            'Feedback': feedback_data["feedback"],
-            'ChatbotMessage': feedback_data['completion'],
-            'Sources': feedback_data['sources'],
+            'SessionID': feedback_data.sessionId,
+            'UserPrompt': feedback_data.prompt,
+            'FeedbackComments': feedback_data.comment or '',
+            'Topic': feedback_data.topic or 'N/A (Good Response)',
+            'Problem': feedback_data.problem or '',
+            'Feedback': feedback_data.feedback,
+            'ChatbotMessage': feedback_data.completion,
+            'Sources': feedback_data.sources or [],
             'CreatedAt': timestamp,
             'Any': "YES"
         }
         # Put the item into the DynamoDB table
         table.put_item(Item=item)
-        if feedback_data["feedback"] == 0:
+        if feedback_data.feedback == 0:
             print("Negative feedback placed")
         return {
             'headers': {
@@ -84,6 +95,18 @@ def post_feedback(event):
             },
             'statusCode': 200,
             'body': json.dumps({'FeedbackID': feedback_id})
+        }
+    except ValidationError as e:
+        error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
+        return {
+            'headers': {
+                'Access-Control-Allow-Origin': "*"
+            },
+            'statusCode': 400,
+            'body': json.dumps({
+                'error': 'Validation error',
+                'details': error_messages
+            })
         }
     except Exception as e:
         print(e)
@@ -97,11 +120,24 @@ def post_feedback(event):
         }
 
 def download_feedback(event):
-    # Load parameters
-    data = json.loads(event['body'])
-    start_time = data.get('startTime')
-    end_time = data.get('endTime')
-    topic = data.get('topic')
+    try:
+        # Parse and validate request using Pydantic
+        request = parse_lambda_event_body(event, DownloadFeedbackRequest)
+        start_time = request.startTime
+        end_time = request.endTime
+        topic = request.topic
+    except ValidationError as e:
+        error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
+        return {
+            'headers': {
+                'Access-Control-Allow-Origin': "*"
+            },
+            'statusCode': 400,
+            'body': json.dumps({
+                'error': 'Validation error',
+                'details': error_messages
+            })
+        }
 
     response = None
 
@@ -164,12 +200,24 @@ def download_feedback(event):
 
 def get_feedback(event):
     try:
-        # Extract query parameters
-        query_params = event.get('queryStringParameters', {})
-        start_time = query_params.get('startTime')
-        end_time = query_params.get('endTime')
-        topic = query_params.get('topic')
-        exclusive_start_key = query_params.get('nextPageToken')  # Pagination token
+        # Parse and validate query parameters using Pydantic
+        params = parse_query_params(event, FeedbackQueryParams)
+        start_time = params.startTime
+        end_time = params.endTime
+        topic = params.topic
+        exclusive_start_key = params.nextPageToken  # Pagination token
+    except ValidationError as e:
+        error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
+        return {
+            'headers': {
+                'Access-Control-Allow-Origin': "*"
+            },
+            'statusCode': 400,
+            'body': json.dumps({
+                'error': 'Validation error',
+                'details': error_messages
+            })
+        }
 
         response = None
 
@@ -218,19 +266,22 @@ def get_feedback(event):
 
 def delete_feedback(event):
     try:
-        # Extract FeedbackID from the event
-        query_params = event.get('queryStringParameters', {})
-        topic = query_params.get('topic')
-        created_at = query_params.get('createdAt')
-
-        if not topic:
-            return {
-                'headers': {
-                    'Access-Control-Allow-Origin': '*'
-                },
-                'statusCode': 400,
-                'body': json.dumps('Missing FeedbackID')
-            }
+        # Parse and validate query parameters using Pydantic
+        params = parse_query_params(event, FeedbackDeleteParams)
+        topic = params.topic
+        created_at = params.createdAt
+    except ValidationError as e:
+        error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
+        return {
+            'headers': {
+                'Access-Control-Allow-Origin': '*'
+            },
+            'statusCode': 400,
+            'body': json.dumps({
+                'error': 'Validation error',
+                'details': error_messages
+            })
+        }
         # Delete the item from the DynamoDB table
         response = table.delete_item(
             Key={
