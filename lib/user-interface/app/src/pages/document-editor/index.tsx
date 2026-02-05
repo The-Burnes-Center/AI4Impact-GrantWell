@@ -700,8 +700,8 @@ const DocumentEditor: React.FC = () => {
           padding: 0,
         }}
       >
-        {/* Only show header, progress stepper and form content if welcome modal is closed or if there's a sessionId */}
-        {(!welcomeModalOpen || sessionId) && (
+        {/* Only show header, progress stepper and form content if welcome modal is closed */}
+        {!welcomeModalOpen && (
           <>
             <div
               className="document-editor-header"
