@@ -1,4 +1,4 @@
-import { GrantRecommendation } from "../../hooks/useGrantRecommendations";
+import { GrantRecommendation } from "../../hooks/use-grant-recommendations";
 import type { GrantTypeId } from "../../common/grant-types";
 
 // Grant type definitions for display

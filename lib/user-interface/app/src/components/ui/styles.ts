@@ -1,40 +1,55 @@
 /**
  * Shared UI Styles
- * 
+ *
  * Centralized style constants for consistent theming across the application.
- * Import these values instead of hardcoding colors and dimensions.
+ * These values mirror the CSS custom properties in styles/tokens.css.
+ * Use CSS variables (var(--mds-color-*)) in stylesheets; use these JS
+ * exports only when inline styles are unavoidable (e.g., dynamic values).
  */
 
 // Brand colors
 export const colors = {
-  // Primary brand colors
+  // Primary brand colors (Bay Blue)
   primary: "#14558F",
   primaryHover: "#104472",
-  primaryLight: "#e8f4fc",
-  
-  // Secondary colors
-  secondary: "#5a6575",
-  secondaryHover: "#4a5565",
-  
+  primaryActive: "#0A2B48",
+  primaryLight: "#f2f8fd",
+
+  // Accent (Berkshires Green)
+  accent: "#388557",
+  accentHover: "#32784E",
+
   // Status colors
-  success: "#28a745",
+  success: "#24A850",
   successLight: "#d4edda",
-  error: "#d32f2f",
+  danger: "#CD0D0D",
+  dangerLight: "#ffebee",
+  error: "#CD0D0D",
   errorLight: "#ffebee",
-  warning: "#ffc107",
+  warning: "#F6B622",
   warningLight: "#fff3cd",
   info: "#17a2b8",
   infoLight: "#d1ecf1",
-  
+
+  // Focus
+  focusLight: "#0088FF",
+  focusDark: "#B2DBFF",
+
   // Neutral colors
   white: "#ffffff",
-  background: "#f8f9fa",
+  background: "#f9fafb",
+  backgroundAlt: "#f8f9fa",
   border: "#e2e8f0",
   borderLight: "#f3f4f6",
-  text: "#1a202c",
-  textSecondary: "#5a6575",
+  text: "#333333",
+  textSecondary: "#5a5a5a",
   textMuted: "#9ca3af",
-  
+  heading: "#0a2e52",
+
+  // Disabled state
+  disabledBg: "#F0F0F0",
+  disabledText: "#707070",
+
   // Overlay
   overlay: "rgba(0, 0, 0, 0.6)",
 };
@@ -118,7 +133,7 @@ export const buttonStyles = {
     border: "none",
     outline: "none",
   } as React.CSSProperties,
-  
+
   sizes: {
     sm: {
       padding: `${spacing.sm} ${spacing.md}`,
@@ -136,7 +151,7 @@ export const buttonStyles = {
       borderRadius: borderRadius.lg,
     },
   },
-  
+
   variants: {
     primary: {
       backgroundColor: colors.primary,
@@ -148,7 +163,7 @@ export const buttonStyles = {
       border: `1px solid ${colors.border}`,
     },
     danger: {
-      backgroundColor: colors.error,
+      backgroundColor: colors.danger,
       color: colors.white,
     },
     ghost: {
@@ -170,11 +185,11 @@ export const inputStyles = {
     outline: "none",
     transition: transitions.fast,
   } as React.CSSProperties,
-  
+
   error: {
-    borderColor: colors.error,
+    borderColor: colors.danger,
   },
-  
+
   focus: {
     borderColor: colors.primary,
     boxShadow: `0 0 0 3px ${colors.primaryLight}`,
@@ -189,13 +204,13 @@ export const cardStyles = {
     boxShadow: shadows.md,
     overflow: "hidden",
   } as React.CSSProperties,
-  
+
   header: {
     background: colors.primary,
     color: colors.white,
     padding: `${spacing.xl} ${spacing["2xl"]}`,
   } as React.CSSProperties,
-  
+
   body: {
     padding: spacing["2xl"],
   } as React.CSSProperties,

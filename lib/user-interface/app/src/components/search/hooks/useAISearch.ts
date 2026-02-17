@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import useGrantRecommendations from "../../../hooks/useGrantRecommendations";
+import useGrantRecommendations from "../../../hooks/use-grant-recommendations";
 import { GrantRecommendation, LOADING_MESSAGES } from "../types";
 
 // Loading messages for RAG search phase

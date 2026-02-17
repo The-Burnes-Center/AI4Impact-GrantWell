@@ -1,7 +1,7 @@
 import React from "react";
 import { LuTriangle } from "react-icons/lu";
 import { Modal } from "./Modal";
-import "../../pages/Dashboard/styles.css";
+import "../../styles/dashboard.css";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
