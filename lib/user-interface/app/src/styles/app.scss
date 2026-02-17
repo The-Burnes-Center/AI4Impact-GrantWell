@@ -21,10 +21,6 @@ body {
   font-family: "Noto Sans", sans-serif;
 }
 
-body.awsui-dark-mode {
-  background-color: #0e1b2a;
-}
-
 /* Accessibility: Visually hidden class for screen readers only */
 .visually-hidden {
   position: absolute;
@@ -151,20 +147,6 @@ main#main-content:focus-visible {
   order: 2 !important;
 }
 
-.awsui-dark-mode {
-  .matrix-table {
-    border: 1px solid rgb(95, 107, 122);
-
-    th {
-      border: 1px solid rgb(95, 107, 122);
-    }
-
-    td {
-      border: 1px solid rgb(0, 247, 255);
-      padding: 12px;
-    }
-  }
-}
 
 
 .new-session-button {

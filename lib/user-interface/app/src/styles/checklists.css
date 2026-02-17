@@ -22,10 +22,6 @@ body {
   padding: 0;
 }
 
-.awsui-app-layout__content {
-  padding-left: 0 !important;
-}
-
 .full-height-content {
   height: auto;
   overflow: visible;
@@ -41,42 +37,6 @@ body {
   min-width: 0;
 }
 
-/* Ensure content aligns to the left edge */
-.awsui-box {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
-
-/* Override Cloudscape default spacing */
-#app-content > div {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-
-/* Improve tab styling */
-.awsui-tabs-container {
-  width: 100%;
-  margin-left: 0;
-  padding-left: 0;
-}
-
-.awsui-tabs-header-wrapper {
-  padding-left: 0;
-}
-
-.awsui-tabs-tab {
-  transition: all 0.2s ease;
-}
-
-.awsui-tabs-tab-active .awsui-tabs-tab-label {
-  font-weight: 600;
-}
-
-/* Fix content container */
-.awsui-tabs-content-container {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
 
 .custom-markdown {
   font-size: 14px;
@@ -122,15 +82,6 @@ body {
     font-size: 14px;
   }
 
-  /* Reduce padding in navigation elements */
-  .awsui-tabs-header-wrapper {
-    padding-left: 4px;
-  }
-
-  .awsui-tabs-content-container {
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
 }
 
 /* Small mobile (up to 480px) */

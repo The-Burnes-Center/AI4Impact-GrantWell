@@ -1,7 +1,7 @@
 import { Alert } from "react-bootstrap";
 import { useNotifications } from "./notif-manager";
 
-// Map Cloudscape notification types to Bootstrap Alert variants
+// Map notification types to Bootstrap Alert variants
 const mapNotificationTypeToVariant = (type: string): string => {
   switch (type) {
     case "error":
