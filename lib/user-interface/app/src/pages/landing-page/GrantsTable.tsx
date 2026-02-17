@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { LuFileX } from "react-icons/lu";
-import { NOFO, GRANT_TYPES, GrantTypeId } from "../dashboard/DashboardPage";
+import type { NOFO, GrantTypeId } from "../../common/types/nofo";
+import { GRANT_TYPES } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
 import "../../styles/landing-page-table.css";
 

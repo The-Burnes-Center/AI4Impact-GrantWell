@@ -1,5 +1,5 @@
 import { Utils } from "../utils";
-import { AppConfig } from "../types";
+import { AppConfig } from "../types/app";
 
 // Unified status that represents both the step and state in the grant writing flow
 export type DraftStatus = 

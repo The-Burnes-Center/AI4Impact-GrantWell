@@ -11,16 +11,11 @@
  * - WCAG 2.1 compliant form controls
  */
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  Card,
-  AutoSaveIndicator,
-  NavigationButtons,
-  FormErrorSummary,
-  colors,
-  typography,
-  spacing,
-  borderRadius,
-} from "../../components/ui";
+import Card from "../../components/ui/Card";
+import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import NavigationButtons from "../../components/ui/NavigationButtons";
+import FormErrorSummary from "../../components/ui/FormErrorSummary";
+import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
 
 interface ProjectBasicsProps {
   onContinue: () => void;

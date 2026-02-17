@@ -12,7 +12,7 @@ import {
   cleanupRecentlyViewed,
 } from "../../common/helpers/recently-viewed-nofos";
 import { GrantsTable } from "./GrantsTable";
-import { NOFO } from "../dashboard/DashboardPage";
+import type { NOFO } from "../../common/types/nofo";
 
 export default function Welcome() {
   // **State Variables**

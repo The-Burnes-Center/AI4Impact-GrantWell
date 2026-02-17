@@ -1,0 +1,112 @@
+/*
+ * Utility Classes
+ *
+ * Shared utility classes for accessibility, layout, and visual helpers.
+ * Import via tokens.css (already loaded in app.scss).
+ */
+
+/* ==============================
+ * Screen-reader-only (WCAG 2.1 AA)
+ *
+ * Visually hides content while keeping it accessible to assistive
+ * technology. Use .visually-hidden as the canonical class name.
+ * .sr-only is kept as an alias for compatibility.
+ * ============================== */
+
+.visually-hidden,
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Show the element when it receives focus (e.g., skip-nav link) */
+.visually-hidden-focusable:focus,
+.visually-hidden-focusable:active,
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  margin: 0;
+}
+
+/* ==============================
+ * Focus ring
+ * ============================== */
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light);
+  outline-offset: 2px;
+}
+
+/* ==============================
+ * Skip navigation link
+ * ============================== */
+
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--mds-color-primary);
+  color: var(--mds-color-white);
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--mds-color-focus-light);
+}
+
+.skip-to-main:focus {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+}
+
+/* ==============================
+ * Layout helpers
+ * ============================== */
+
+.container-fluid-padded {
+  width: 100%;
+  padding-left: var(--mds-spacing-xl);
+  padding-right: var(--mds-spacing-xl);
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==============================
+ * Text helpers
+ * ============================== */
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

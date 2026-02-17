@@ -1,5 +1,5 @@
 import { Utils } from "../utils";
-import { AppConfig } from "../types";
+import { AppConfig } from "../types/app";
 
 export interface ChatSession {
   sessionId: string;

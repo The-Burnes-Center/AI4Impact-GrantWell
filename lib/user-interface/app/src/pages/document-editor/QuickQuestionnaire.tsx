@@ -14,14 +14,11 @@ import React, { useState, useEffect, useContext, useRef, useCallback } from "rea
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { useParams } from "react-router-dom";
-import {
-  Card,
-  LoadingSpinner,
-  AutoSaveIndicator,
-  NavigationButtons,
-  colors,
-  typography,
-} from "../../components/ui";
+import Card from "../../components/ui/Card";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import NavigationButtons from "../../components/ui/NavigationButtons";
+import { colors, typography } from "../../components/ui/styles";
 
 interface QuickQuestionnaireProps {
   onContinue: () => void;

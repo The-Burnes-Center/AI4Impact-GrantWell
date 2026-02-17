@@ -12,6 +12,7 @@ import Checklists from "./pages/requirements/ChecklistPage";
 import DocumentEditor from "./pages/document-editor/DocumentEditorPage";
 import DocEditorSessionsPage from "./pages/document-editor/DocEditorSessionsPage";
 import Dashboard from "./pages/dashboard/DashboardPage";
+import { ErrorBoundary } from "./components/common/ErrorBoundary";
 import "./styles/app.scss";
 import { useEffect, useRef } from "react";
 
@@ -92,37 +93,38 @@ function AppContent() {
       <ScrollToTop />
       {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
       <main id="main-content" role="main" tabIndex={-1}>
-        <Routes>
-          <Route
-            index
-            path="/"
-            element={<Navigate to={`/home`} replace />} // root path
-          />
-          <Route path="/home" element={<Welcome />} />
-          <Route
-            path="/requirements/:documentIdentifier"
-            element={<Checklists />}
-          />
-          <Route path="/chat/:sessionId" element={<Playground />} />
-          <Route path="/chat/sessions" element={<SessionPage />} />
-          {/* Document editor routes - use the new DocumentEditor component */}
-          <Route path="/document-editor" element={<DocumentEditor />} />
-          <Route
-            path="/document-editor/:sessionId"
-            element={<DocumentEditor />}
-          />
-          <Route
-            path="/document-editor/drafts"
-            element={<DocEditorSessionsPage />}
-          />
-          <Route path="/admin" element={<Outlet />}>
-            <Route path="dashboard" element={<Dashboard />} />
-          </Route>
-          <Route
-            path="*"
-            element={<Navigate to={`/home`} replace />}
-          />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route
+              index
+              path="/"
+              element={<Navigate to={`/home`} replace />}
+            />
+            <Route path="/home" element={<Welcome />} />
+            <Route
+              path="/requirements/:documentIdentifier"
+              element={<Checklists />}
+            />
+            <Route path="/chat/:sessionId" element={<Playground />} />
+            <Route path="/chat/sessions" element={<SessionPage />} />
+            <Route path="/document-editor" element={<DocumentEditor />} />
+            <Route
+              path="/document-editor/:sessionId"
+              element={<DocumentEditor />}
+            />
+            <Route
+              path="/document-editor/drafts"
+              element={<DocEditorSessionsPage />}
+            />
+            <Route path="/admin" element={<Outlet />}>
+              <Route path="dashboard" element={<Dashboard />} />
+            </Route>
+            <Route
+              path="*"
+              element={<Navigate to={`/home`} replace />}
+            />
+          </Routes>
+        </ErrorBoundary>
       </main>
     </>
   );

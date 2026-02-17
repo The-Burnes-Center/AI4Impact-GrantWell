@@ -1,4 +1,4 @@
-import { AppConfig } from "../types";
+import { AppConfig } from "../types/app";
 import { SessionsClient } from "./sessions-client";
 import { KnowledgeManagementClient } from "./knowledge-management-client";
 import { LandingPageClient } from "./landing-page-clients";

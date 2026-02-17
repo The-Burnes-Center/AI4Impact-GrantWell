@@ -66,15 +66,19 @@ export const HistoryPanel: React.FC<Props> = ({ ... }) => <div>...</div>;
 import { HistoryPanel } from "./components/HistoryPanel";
 ```
 
-### Barrel Files
+### Imports -- Direct Only
 
-Every directory with 2+ exports must have an `index.ts` barrel file:
+- **Do NOT use barrel files** (`index.ts` re-exporting siblings). They cause circular-dependency issues and obscure where code actually lives.
+- Always import from the **exact file** that defines the symbol:
 
 ```ts
-// components/common/index.ts
-export { Modal } from "./Modal";
-export { ErrorBoundary } from "./ErrorBoundary";
-export { DeleteConfirmationModal } from "./DeleteConfirmationModal";
+// Good -- direct import
+import Card from "../../components/ui/Card";
+import { colors } from "../../components/ui/styles";
+import { ErrorBoundary } from "../../components/common/ErrorBoundary";
+
+// Bad -- barrel / index import
+import { Card, colors, ErrorBoundary } from "../../components/ui";
 ```
 
 ### Types Location

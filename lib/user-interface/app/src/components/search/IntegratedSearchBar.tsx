@@ -7,14 +7,7 @@ import { IntegratedSearchBarProps } from "./types";
 // import { usePinnedGrants } from "./hooks/usePinnedGrants";
 // import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
 
-import {
-  SearchInput,
-  // PinnedGrantsSection,
-  // AISuggestionsSection,
-  // ViewAllGrantsModal,
-  // SearchResultsStatus,
-  // EmptyState,
-} from "./components";
+import { SearchInput } from "./components/SearchInput";
 
 import { searchContainerStyle } from "./styles/searchStyles";
 

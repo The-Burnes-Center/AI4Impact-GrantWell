@@ -6,7 +6,7 @@ import {
 import { BrowserRouter } from "react-router-dom";
 import App from "../App";
 import { Amplify, Auth, Hub } from "aws-amplify";
-import { AppConfig } from "../common/types";
+import { AppConfig } from "../common/types/app";
 import { AppContext } from "../common/app-context";
 import { Alert, Spinner } from "react-bootstrap";
 import { StorageHelper } from "../common/helpers/storage-helper";

@@ -8,10 +8,13 @@ This library provides standardized UI components that ensure consistency across 
 
 ## Installation
 
-Components are already part of the project. Import them from the ui folder:
+Components are already part of the project. Import them directly from their files:
 
 ```tsx
-import { Button, Card, LoadingSpinner } from '../components/ui';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
+import { colors, spacing } from '../components/ui/styles';
 ```
 
 ## Components
@@ -21,7 +24,7 @@ import { Button, Card, LoadingSpinner } from '../components/ui';
 A versatile button component with multiple variants and sizes.
 
 ```tsx
-import { Button } from '../components/ui';
+import Button from '../components/ui/Button';
 
 // Primary button (default)
 <Button onClick={handleSubmit}>Submit</Button>
@@ -55,7 +58,7 @@ import { Button } from '../components/ui';
 A container component with optional header.
 
 ```tsx
-import { Card } from '../components/ui';
+import Card from '../components/ui/Card';
 
 // Simple card
 <Card>
@@ -91,7 +94,7 @@ import { Card } from '../components/ui';
 An accessible loading indicator.
 
 ```tsx
-import { LoadingSpinner } from '../components/ui';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
 
 // Default spinner
 <LoadingSpinner />
@@ -122,7 +125,7 @@ import { LoadingSpinner } from '../components/ui';
 A form input wrapper with label, help text, and error handling.
 
 ```tsx
-import { FormField } from '../components/ui';
+import FormField from '../components/ui/FormField';
 
 // Basic input
 <FormField
@@ -175,7 +178,7 @@ import { FormField } from '../components/ui';
 Displays a summary of form validation errors.
 
 ```tsx
-import { FormErrorSummary } from '../components/ui';
+import FormErrorSummary from '../components/ui/FormErrorSummary';
 
 <FormErrorSummary
   errors={{
@@ -204,7 +207,7 @@ import { FormErrorSummary } from '../components/ui';
 Shows auto-save status (saving/saved).
 
 ```tsx
-import { AutoSaveIndicator } from '../components/ui';
+import AutoSaveIndicator from '../components/ui/AutoSaveIndicator';
 
 const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
@@ -233,7 +236,7 @@ const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle'
 Back/Continue button pair for multi-step forms.
 
 ```tsx
-import { NavigationButtons } from '../components/ui';
+import NavigationButtons from '../components/ui/NavigationButtons';
 
 // Basic usage
 <NavigationButtons
@@ -281,7 +284,7 @@ import { NavigationButtons } from '../components/ui';
 Import design tokens for consistent styling:
 
 ```tsx
-import { colors, typography, spacing, borderRadius, shadows } from '../components/ui';
+import { colors, typography, spacing, borderRadius, shadows } from '../components/ui/styles';
 
 // Use in styles
 const myStyle = {
@@ -349,6 +352,6 @@ When adding new components:
 
 1. Place in `src/components/ui/`
 2. Add JSDoc comments with examples
-3. Export from `index.ts`
+3. Import directly from the file (no barrel/index files)
 4. Update this README
 5. Follow existing patterns for consistency
