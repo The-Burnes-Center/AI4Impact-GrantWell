@@ -8,7 +8,7 @@ import ChatMessage from "./ChatMessage";
 import ChatInputPanel from "./ChatInputPanel";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notifications/NotificationManager";
-import { HelpCircle, ChevronDown } from "lucide-react";
+import { HelpCircle, ChevronDown, Loader } from "lucide-react";
 import { parseChatHistory } from "./utils";
 
 // Styles for components
@@ -124,6 +124,7 @@ const styles: Record<string, React.CSSProperties> = {
 export default function Chat(props: {
   sessionId?: string;
   documentIdentifier?: string;
+  kbSyncing?: boolean;
 }) {
   const appContext = useContext(AppContext);
   const [running, setRunning] = useState<boolean>(true);
@@ -339,6 +340,33 @@ export default function Chat(props: {
         {session?.loading ? "Loading chat session" : ""}
       </div>
 
+      {/* KB indexing banner */}
+      {props.kbSyncing && (
+        <div
+          role="status"
+          aria-live="polite"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "10px 20px",
+            backgroundColor: "var(--mds-color-primary-light, #f2f8fd)",
+            borderTop: "1px solid var(--mds-color-border, #e2e8f0)",
+            color: "var(--mds-color-primary, #14558F)",
+            fontSize: "13px",
+            fontWeight: 500,
+            flexShrink: 0,
+          }}
+        >
+          <Loader
+            size={14}
+            aria-hidden="true"
+            style={{ animation: "spin 1s linear infinite" }}
+          />
+          Your documents are being indexed. Chat will be available once indexing completes.
+        </div>
+      )}
+
       {/* Chat input area */}
       <div style={styles.inputContainer}>
         <ChatInputPanel
@@ -349,6 +377,7 @@ export default function Chat(props: {
           setMessageHistory={(history) => setMessageHistory(history)}
           documentIdentifier={props.documentIdentifier}
           messageAreaRef={messageAreaRef}
+          kbSyncing={props.kbSyncing}
         />
       </div>
     </section>

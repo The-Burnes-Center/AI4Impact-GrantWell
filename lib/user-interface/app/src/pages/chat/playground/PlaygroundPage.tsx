@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import BaseAppLayout from "../../../layouts/ChatLayout";
 import Chat from "../../../components/chat/Chat";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { HelpCircle, Upload } from "lucide-react";
+import { HelpCircle, Upload, FileText } from "lucide-react";
 import { useApiClient } from "../../../hooks/use-api-client";
 import { useFocusTrap } from "../../../hooks/use-focus-trap";
 import DocumentManager from "../../../components/chat/DocumentManager";
@@ -19,7 +19,10 @@ export default function Playground() {
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [nofoSelectionDialogOpen, setNofoSelectionDialogOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [kbSyncing, setKbSyncing] = useState(false);
+  const [uploadedFileCount, setUploadedFileCount] = useState(0);
   const helpButtonRef = React.useRef<HTMLButtonElement>(null);
+  const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const handleCloseModal = useCallback(() => {
     if (dontShowAgain) {
@@ -67,6 +70,31 @@ export default function Playground() {
     }
   }, [isLoading, documentIdentifier, helpOpen]);
 
+  const handleSyncStarted = useCallback(() => {
+    setKbSyncing(true);
+
+    if (syncPollRef.current) clearInterval(syncPollRef.current);
+
+    syncPollRef.current = setInterval(async () => {
+      try {
+        const status = await apiClient.kbSync.isSyncing();
+        if (typeof status === "string" && status.includes("DONE")) {
+          setKbSyncing(false);
+          if (syncPollRef.current) clearInterval(syncPollRef.current);
+          syncPollRef.current = null;
+        }
+      } catch {
+        // Keep polling on transient errors
+      }
+    }, 5000);
+  }, [apiClient]);
+
+  useEffect(() => {
+    return () => {
+      if (syncPollRef.current) clearInterval(syncPollRef.current);
+    };
+  }, []);
+
   useEffect(() => {
     const hasSeenPlaygroundHelp = localStorage.getItem("playgroundHelpSeen");
     if (!hasSeenPlaygroundHelp && !isLoading) {
@@ -94,9 +122,15 @@ export default function Playground() {
                 <button
                   className="pg-upload-btn"
                   onClick={() => setUploadModalOpen(true)}
-                  aria-label="Upload supporting documents"
+                  aria-label={`Upload supporting documents${uploadedFileCount > 0 ? `. ${uploadedFileCount} files uploaded.` : ""}`}
                 >
                   <Upload size={16} /> Upload Documents
+                  {uploadedFileCount > 0 && (
+                    <span className="pg-upload-badge" aria-hidden="true">
+                      <FileText size={11} aria-hidden="true" />
+                      {uploadedFileCount}
+                    </span>
+                  )}
                 </button>
               )}
               <button
@@ -116,12 +150,14 @@ export default function Playground() {
         modalOpen={helpOpen}
         content={
           <div className="pg-content" aria-hidden={helpOpen}>
-            <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
+            <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} kbSyncing={kbSyncing} />
             {documentIdentifier && (
               <DocumentManager
                 isOpen={uploadModalOpen}
                 onClose={() => setUploadModalOpen(false)}
                 documentIdentifier={documentIdentifier}
+                onSyncStarted={handleSyncStarted}
+                onFileCountChange={setUploadedFileCount}
               />
             )}
           </div>

@@ -12,6 +12,8 @@ import {
   FaCopy,
   FaFileAlt,
   FaCheck,
+  FaChevronDown,
+  FaChevronRight,
 } from "react-icons/fa";
 
 import "react-json-view-lite/dist/index.css";
@@ -27,9 +29,9 @@ export interface ChatMessageProps {
 function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { addNotification, removeNotification } = useNotifications();
-  // State for copy icon feedback
   const [copied, setCopied] = useState<boolean>(false);
   const [grantName, setGrantName] = useState<string>("");
+  const [sourcesExpanded, setSourcesExpanded] = useState<boolean>(false);
   const appContext = useContext(AppContext);
 
 
@@ -294,7 +296,12 @@ function ChatMessage(props: ChatMessageProps) {
     fetchGrantName();
   }, [props.documentIdentifier, appContext, showSources]);
 
-  // Separate sources into grant sources (NOFO) and uploaded files (userDocuments)
+  const cleanSourceTitle = (title: string) => {
+    return title
+      .replace(/\s*\(Bedrock Knowledge Base\)\s*$/i, "")
+      .replace(/\+/g, " ");
+  };
+
   const sources = showSources ? (props.message.metadata.Sources as Array<{ title: string; uri: string }>) : [];
   const grantSources = sources.filter((source) => 
     source.uri && !source.uri.includes("userDocuments")
@@ -302,6 +309,7 @@ function ChatMessage(props: ChatMessageProps) {
   const uploadedFiles = sources.filter((source) => 
     source.uri && source.uri.includes("userDocuments")
   );
+  const totalSourceCount = grantSources.length + uploadedFiles.length;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(props.message.content);
@@ -414,61 +422,123 @@ function ChatMessage(props: ChatMessageProps) {
                       </ReactMarkdown>
                     </div>
 
-                    {/* Sources section inside the bubble */}
+                    {/* Collapsible sources section */}
                     {showSources && (
-                      <>
-                        {/* Separator line */}
-                        <div
+                      <div
+                        style={{
+                          borderTop: "1px solid #e0e0e0",
+                          marginTop: "12px",
+                          paddingTop: "8px",
+                        }}
+                      >
+                        <button
+                          onClick={() => setSourcesExpanded(!sourcesExpanded)}
+                          aria-expanded={sourcesExpanded}
+                          aria-controls="source-list"
                           style={{
-                            borderTop: "1px solid #e0e0e0",
-                            marginTop: "12px",
-                            paddingTop: "12px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: "4px 0",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#374151",
+                            width: "100%",
+                            textAlign: "left",
+                            minHeight: "32px",
                           }}
                         >
-                          <div>
-                            {/* Show grant name if available, otherwise show sources count */}
-                            {(grantName || grantSources.length > 0) && (
-                              <div
-                                style={{
-                                  fontSize: "14px",
-                                  color: "#374151",
-                                  fontWeight: 500,
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  gap: "4px",
-                                  marginBottom: uploadedFiles.length > 0 ? "8px" : "0",
-                                }}
-                              >
-                                <FaFileAlt size={12} aria-hidden="true" />
-                                {grantName || "Grant Document"}
-                              </div>
-                            )}
-                            
-                            {/* Show uploaded file names if any */}
-                            {uploadedFiles.length > 0 && (
-                              <div style={{ marginTop: grantName || grantSources.length > 0 ? "8px" : "0" }}>
-                                {uploadedFiles.map((file, index) => (
+                          {sourcesExpanded
+                            ? <FaChevronDown size={10} aria-hidden="true" />
+                            : <FaChevronRight size={10} aria-hidden="true" />}
+                          Sources ({totalSourceCount})
+                        </button>
+
+                        {sourcesExpanded && (
+                          <div
+                            id="source-list"
+                            role="list"
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "6px",
+                              paddingTop: "4px",
+                              paddingLeft: "4px",
+                            }}
+                          >
+                            {grantSources.length > 0 && (
+                              <div role="listitem">
+                                <div style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: "#6b7280",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.5px",
+                                  marginBottom: "4px",
+                                }}>
+                                  {grantName || "Grant Document"}
+                                </div>
+                                {grantSources.map((source, idx) => (
                                   <div
-                                    key={index}
+                                    key={idx}
+                                    role="listitem"
                                     style={{
-                                      fontSize: "14px",
-                                      color: "#374151",
-                                      fontWeight: 500,
-                                      display: "inline-flex",
+                                      display: "flex",
                                       alignItems: "center",
-                                      gap: "4px",
-                                      marginBottom: index < uploadedFiles.length - 1 ? "4px" : "0",
+                                      gap: "6px",
+                                      fontSize: "13px",
+                                      color: "#374151",
+                                      padding: "3px 0",
                                     }}
                                   >
-                                    <FaFileAlt size={12} aria-hidden="true" />
-                                    {file.title}
+                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "#6b7280" }} />
+                                    <span style={{ wordBreak: "break-word" }}>
+                                      {cleanSourceTitle(source.title)}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {uploadedFiles.length > 0 && (
+                              <div role="listitem" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
+                                <div style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: "#6b7280",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.5px",
+                                  marginBottom: "4px",
+                                }}>
+                                  Your Uploaded Documents
+                                </div>
+                                {uploadedFiles.map((file, idx) => (
+                                  <div
+                                    key={idx}
+                                    role="listitem"
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "6px",
+                                      fontSize: "13px",
+                                      color: "#374151",
+                                      padding: "3px 0",
+                                    }}
+                                  >
+                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "#388557" }} />
+                                    <span style={{ wordBreak: "break-word", flex: 1 }}>
+                                      {cleanSourceTitle(file.title)}
+                                    </span>
                                   </div>
                                 ))}
                               </div>
                             )}
                           </div>
-                        </div>
-                      </>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>

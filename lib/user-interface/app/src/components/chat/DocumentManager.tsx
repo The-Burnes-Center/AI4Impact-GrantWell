@@ -53,6 +53,8 @@ interface DocumentManagerProps {
   isOpen: boolean;
   onClose: () => void;
   documentIdentifier: string | null;
+  onSyncStarted?: () => void;
+  onFileCountChange?: (count: number) => void;
 }
 
 interface UploadedFile {
@@ -74,6 +76,8 @@ export default function DocumentManager({
   isOpen,
   onClose,
   documentIdentifier,
+  onSyncStarted,
+  onFileCountChange,
 }: DocumentManagerProps) {
   const [activeTab, setActiveTab] = useState<"upload" | "view">("upload");
   const [dragActive, setDragActive] = useState(false);
@@ -224,8 +228,10 @@ export default function DocumentManager({
           );
 
         setExistingFiles(files);
+        onFileCountChange?.(files.length);
       } else {
         setExistingFiles([]);
+        onFileCountChange?.(0);
       }
     } catch (err) {
       console.error("Error fetching existing files:", err);
@@ -233,7 +239,7 @@ export default function DocumentManager({
     } finally {
       setLoadingFiles(false);
     }
-  }, [appContext, documentIdentifier, userId]);
+  }, [appContext, documentIdentifier, userId, onFileCountChange]);
 
   useEffect(() => {
     if (isOpen && activeTab === "view") {
@@ -247,6 +253,13 @@ export default function DocumentManager({
       fetchExistingFiles();
     }
   }, [isOpen, userId, appContext, documentIdentifier, fetchExistingFiles]);
+
+  // Fetch file count on mount (for badge display even when modal is closed)
+  useEffect(() => {
+    if (userId && appContext && documentIdentifier && onFileCountChange) {
+      fetchExistingFiles();
+    }
+  }, [userId, appContext, documentIdentifier]);
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -416,6 +429,7 @@ export default function DocumentManager({
 
       try {
         await apiClient.kbSync.syncKB();
+        onSyncStarted?.();
       } catch (syncError) {
         console.error("Error syncing knowledge base:", syncError);
       }

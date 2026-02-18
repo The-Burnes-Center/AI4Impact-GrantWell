@@ -61,6 +61,20 @@
   outline-offset: 2px;
 }
 
+.pg-upload-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background-color: rgba(255, 255, 255, 0.25);
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  min-width: 20px;
+  justify-content: center;
+}
+
 .pg-help-btn {
   display: flex;
   align-items: center;

@@ -132,6 +132,7 @@ export interface ChatInputPanelProps {
   setMessageHistory: (history: ChatBotHistoryItem[]) => void;
   documentIdentifier: string;
   messageAreaRef?: React.RefObject<HTMLDivElement>;
+  kbSyncing?: boolean;
 }
 
 // Define type for select option
@@ -573,7 +574,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       }}
     >
       <label htmlFor="chat-input" className="sr-only">
-        Message the GrantWell assistant
+        {props.kbSyncing
+          ? "Chat is disabled while documents are being indexed"
+          : "Message the GrantWell assistant"}
       </label>
       {/* Microphone button with enhanced feedback */}
       {browserSupportsSpeechRecognition ? (
@@ -688,8 +691,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         onFocus={() => setIsInputFocused(true)}
         onBlur={() => setIsInputFocused(false)}
         value={state.value}
-        placeholder="Type your message..."
-        aria-placeholder="Type your message..."
+        placeholder={props.kbSyncing ? "Waiting for document indexing..." : "Type your message..."}
+        disabled={props.kbSyncing}
       />
       <span id="chat-input-help" className="sr-only">
         Press Enter to send, Shift+Enter for new line
@@ -701,7 +704,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           ...(readyState !== ReadyState.OPEN ||
           props.running ||
           state.value.trim().length === 0 ||
-          props.session.loading
+          props.session.loading ||
+          props.kbSyncing
             ? { ...styles.sendButton, ...styles.sendButtonDisabled }
             : {
                 ...styles.sendButton,
@@ -717,7 +721,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           readyState !== ReadyState.OPEN ||
           props.running ||
           state.value.trim().length === 0 ||
-          props.session.loading
+          props.session.loading ||
+          props.kbSyncing
         }
         onClick={handleSendMessage}
         onMouseEnter={() => setIsHovered(true)}
