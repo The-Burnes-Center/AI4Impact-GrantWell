@@ -544,3 +544,208 @@
   outline: 2px solid var(--mds-color-focus-light, #0088FF);
   outline-offset: 2px;
 }
+
+/* ── Per-file upload status ── */
+.dm-file-status {
+  display: flex;
+  align-items: center;
+  gap: var(--mds-spacing-sm, 8px);
+  min-width: 100px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.dm-file-status-text {
+  font-size: var(--mds-font-size-xs, 12px);
+  color: var(--mds-color-text-secondary, #5a5a5a);
+  white-space: nowrap;
+}
+
+.dm-file-status-text.dm-status-complete {
+  color: var(--mds-color-success, #24A850);
+  font-weight: var(--mds-font-weight-medium, 500);
+}
+
+.dm-file-status-text.dm-status-failed {
+  color: var(--mds-color-danger, #CD0D0D);
+  font-weight: var(--mds-font-weight-medium, 500);
+}
+
+.dm-file-progress-bar {
+  width: 80px;
+  height: 4px;
+  background-color: var(--mds-color-border, #e2e8f0);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.dm-file-progress-fill {
+  height: 100%;
+  background-color: var(--mds-color-primary, #14558F);
+  transition: width 0.2s ease;
+}
+
+.dm-file-progress-fill.dm-progress-complete {
+  background-color: var(--mds-color-success, #24A850);
+}
+
+.dm-file-progress-fill.dm-progress-failed {
+  background-color: var(--mds-color-danger, #CD0D0D);
+  width: 100% !important;
+}
+
+.dm-file-status-icon {
+  flex-shrink: 0;
+}
+
+.dm-file-status-icon.dm-icon-complete {
+  color: var(--mds-color-success, #24A850);
+}
+
+.dm-file-status-icon.dm-icon-failed {
+  color: var(--mds-color-danger, #CD0D0D);
+}
+
+.dm-file-status-icon.dm-icon-pending {
+  color: var(--mds-color-text-muted, #9ca3af);
+}
+
+/* ── Retry button ── */
+.dm-retry-btn {
+  background-color: var(--mds-color-warning, #F6B622);
+  color: var(--mds-color-heading, #0a2e52);
+  border: none;
+  border-radius: var(--mds-radius-md, 6px);
+  padding: var(--mds-spacing-sm, 8px) var(--mds-spacing-lg, 16px);
+  font-size: var(--mds-font-size-sm, 14px);
+  font-weight: var(--mds-font-weight-medium, 500);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--mds-spacing-sm, 8px);
+  margin-top: var(--mds-spacing-sm, 8px);
+  min-height: 44px;
+  transition: var(--mds-transition-normal, all 0.2s ease);
+}
+
+.dm-retry-btn:hover {
+  background-color: #e5a91f;
+}
+
+.dm-retry-btn:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
+}
+
+/* ── Upload actions row ── */
+.dm-upload-actions {
+  display: flex;
+  gap: var(--mds-spacing-md, 12px);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ── Toast notification ── */
+.dm-toast-container {
+  position: absolute;
+  top: var(--mds-spacing-lg, 16px);
+  right: var(--mds-spacing-lg, 16px);
+  z-index: 10;
+}
+
+.dm-toast {
+  background-color: var(--mds-color-success-light, #d4edda);
+  border: 1px solid var(--mds-color-success, #24A850);
+  border-radius: var(--mds-radius-md, 6px);
+  padding: var(--mds-spacing-md, 12px) var(--mds-spacing-lg, 16px);
+  display: flex;
+  align-items: center;
+  gap: var(--mds-spacing-sm, 8px);
+  box-shadow: var(--mds-shadow-lg, 0 4px 6px rgba(0, 0, 0, 0.1));
+  animation: dm-toast-in 0.3s ease;
+  max-width: 400px;
+}
+
+@keyframes dm-toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dm-toast-icon {
+  color: var(--mds-color-success, #24A850);
+  flex-shrink: 0;
+}
+
+.dm-toast-message {
+  font-size: var(--mds-font-size-sm, 14px);
+  color: var(--mds-color-text, #333333);
+  flex: 1;
+}
+
+.dm-toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--mds-color-text-secondary, #5a5a5a);
+  padding: var(--mds-spacing-xs, 4px);
+  min-width: 28px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mds-radius-sm, 4px);
+  flex-shrink: 0;
+}
+
+.dm-toast-close:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dm-toast-close:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
+}
+
+/* ── Duplicate confirmation dialog ── */
+.dm-duplicate-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--mds-spacing-md, 12px) 0;
+}
+
+.dm-duplicate-item {
+  display: flex;
+  align-items: center;
+  gap: var(--mds-spacing-sm, 8px);
+  padding: var(--mds-spacing-sm, 8px) 0;
+  font-size: var(--mds-font-size-sm, 14px);
+  color: var(--mds-color-text, #333333);
+  border-bottom: 1px solid var(--mds-color-border-light, #f3f4f6);
+}
+
+.dm-duplicate-item:last-child {
+  border-bottom: none;
+}
+
+.dm-confirm-replace-btn {
+  padding: var(--mds-spacing-sm, 8px) var(--mds-spacing-lg, 16px);
+  border-radius: var(--mds-radius-md, 6px);
+  font-size: var(--mds-font-size-sm, 14px);
+  font-weight: var(--mds-font-weight-medium, 500);
+  cursor: pointer;
+  min-height: 44px;
+  background-color: var(--mds-color-primary, #14558F);
+  color: var(--mds-color-white, #ffffff);
+  border: none;
+  transition: var(--mds-transition-normal, all 0.2s ease);
+}
+
+.dm-confirm-replace-btn:hover {
+  background-color: var(--mds-color-primary-hover, #104472);
+}
+
+.dm-confirm-replace-btn:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
+}

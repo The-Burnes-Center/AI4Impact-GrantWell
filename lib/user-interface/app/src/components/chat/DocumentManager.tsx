@@ -10,6 +10,10 @@ import {
   FileText,
   RefreshCw,
   Download,
+  Check,
+  AlertCircle,
+  Clock,
+  RotateCcw,
 } from "lucide-react";
 import "../../styles/document-manager.css";
 
@@ -53,6 +57,15 @@ interface UploadedFile {
   uploadDate: string;
 }
 
+type FileUploadStatus = "pending" | "uploading" | "complete" | "failed";
+
+interface FileStatus {
+  file: File;
+  status: FileUploadStatus;
+  progress: number;
+  error?: string;
+}
+
 export default function DocumentManager({
   isOpen,
   onClose,
@@ -61,8 +74,8 @@ export default function DocumentManager({
   const [activeTab, setActiveTab] = useState<"upload" | "view">("upload");
   const [dragActive, setDragActive] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [fileStatuses, setFileStatuses] = useState<Record<string, FileStatus>>({});
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatusAnnouncement, setUploadStatusAnnouncement] = useState("");
   const [existingFiles, setExistingFiles] = useState<UploadedFile[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -70,11 +83,16 @@ export default function DocumentManager({
   const [downloadingFile, setDownloadingFile] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+  const [duplicateFiles, setDuplicateFiles] = useState<File[]>([]);
+  const [pendingUploadFiles, setPendingUploadFiles] = useState<File[]>([]);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const appContext = useContext(AppContext);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const confirmDialogRef = useRef<HTMLDivElement>(null);
+  const duplicateDialogRef = useRef<HTMLDivElement>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const extractNofoName = (docId: string | null): string => {
     if (!docId) return "";
@@ -151,12 +169,28 @@ export default function DocumentManager({
     return () => document.removeEventListener("keydown", handleTabKey);
   }, [isOpen]);
 
-  // Focus the confirm dialog when it opens
   useEffect(() => {
     if (fileToDelete && confirmDialogRef.current) {
       confirmDialogRef.current.focus();
     }
   }, [fileToDelete]);
+
+  useEffect(() => {
+    if (duplicateFiles.length > 0 && duplicateDialogRef.current) {
+      duplicateDialogRef.current.focus();
+    }
+  }, [duplicateFiles]);
+
+  // Auto-dismiss toast
+  useEffect(() => {
+    if (toastMessage) {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = setTimeout(() => setToastMessage(null), 5000);
+    }
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, [toastMessage]);
 
   const fetchExistingFiles = useCallback(async () => {
     if (!appContext || !documentIdentifier || !userId) return;
@@ -198,10 +232,16 @@ export default function DocumentManager({
     }
   }, [isOpen, activeTab, fetchExistingFiles]);
 
+  // Pre-fetch existing files when modal opens (needed for duplicate detection)
+  useEffect(() => {
+    if (isOpen && userId && appContext && documentIdentifier) {
+      fetchExistingFiles();
+    }
+  }, [isOpen, userId, appContext, documentIdentifier, fetchExistingFiles]);
+
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(true);
     } else if (e.type === "dragleave") {
@@ -213,7 +253,6 @@ export default function DocumentManager({
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFiles(Array.from(e.dataTransfer.files));
     }
@@ -231,19 +270,16 @@ export default function DocumentManager({
 
     for (const file of files) {
       const extension = "." + file.name.split(".").pop()?.toLowerCase();
-
       if (!SUPPORTED_EXTENSIONS.includes(extension)) {
         setError(
           `Unsupported file type: ${extension}. Supported formats: ${SUPPORTED_EXTENSIONS.join(", ")}`
         );
         continue;
       }
-
       if (file.size > 100 * 1024 * 1024) {
         setError("File size exceeds 100MB limit.");
         continue;
       }
-
       validFiles.push(file);
     }
 
@@ -251,77 +287,161 @@ export default function DocumentManager({
   };
 
   const removeFile = (index: number) => {
-    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    setSelectedFiles((prev) => {
+      const removed = prev[index];
+      setFileStatuses((statuses) => {
+        const updated = { ...statuses };
+        delete updated[removed.name];
+        return updated;
+      });
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
-  const uploadFiles = async () => {
+  const startUpload = async () => {
     if (!appContext || !documentIdentifier || !userId || selectedFiles.length === 0) return;
 
+    // Check for duplicates before uploading
+    const existingNames = new Set(existingFiles.map((f) => f.name));
+    const dupes = selectedFiles.filter((f) => existingNames.has(f.name));
+
+    if (dupes.length > 0) {
+      setDuplicateFiles(dupes);
+      setPendingUploadFiles(selectedFiles);
+      return;
+    }
+
+    await executeUpload(selectedFiles);
+  };
+
+  const handleDuplicateReplace = async () => {
+    setDuplicateFiles([]);
+    await executeUpload(pendingUploadFiles);
+    setPendingUploadFiles([]);
+  };
+
+  const handleDuplicateSkip = async () => {
+    const dupeNames = new Set(duplicateFiles.map((f) => f.name));
+    const nonDupes = pendingUploadFiles.filter((f) => !dupeNames.has(f.name));
+    setDuplicateFiles([]);
+    setPendingUploadFiles([]);
+
+    if (nonDupes.length === 0) {
+      setError("All selected files already exist. No files to upload.");
+      return;
+    }
+
+    setSelectedFiles(nonDupes);
+    await executeUpload(nonDupes);
+  };
+
+  const handleDuplicateCancel = () => {
+    setDuplicateFiles([]);
+    setPendingUploadFiles([]);
+  };
+
+  const executeUpload = async (filesToUpload: File[]) => {
+    if (!appContext || !documentIdentifier || !userId) return;
+
     setUploading(true);
-    setUploadProgress(0);
     setError(null);
     setUploadStatusAnnouncement("Uploading files");
+
+    const initialStatuses: Record<string, FileStatus> = {};
+    for (const file of filesToUpload) {
+      initialStatuses[file.name] = { file, status: "pending", progress: 0 };
+    }
+    setFileStatuses(initialStatuses);
 
     const uploader = new FileUploader();
     const apiClient = new ApiClient(appContext);
     const nofoName = extractNofoName(documentIdentifier);
-    const totalSize = selectedFiles.reduce((acc, file) => acc + file.size, 0);
-    let uploadedSize = 0;
+    let completedCount = 0;
+    let failedCount = 0;
 
-    try {
-      for (const file of selectedFiles) {
-        const fileExt = "." + file.name.split(".").pop()?.toLowerCase();
-        const fileType = MIME_TYPES[fileExt] || "application/octet-stream";
+    for (const file of filesToUpload) {
+      setFileStatuses((prev) => ({
+        ...prev,
+        [file.name]: { ...prev[file.name], status: "uploading", progress: 0 },
+      }));
 
-        try {
-          const uploadUrl = await apiClient.knowledgeManagement.getUploadURL(
-            file.name, fileType, userId, nofoName
-          );
+      const fileExt = "." + file.name.split(".").pop()?.toLowerCase();
+      const fileType = MIME_TYPES[fileExt] || "application/octet-stream";
 
-          await uploader.upload(file, uploadUrl, fileType, (uploaded: number) => {
-            const progress = Math.round(((uploadedSize + uploaded) / totalSize) * 100);
-            setUploadProgress(progress);
-          });
+      try {
+        const uploadUrl = await apiClient.knowledgeManagement.getUploadURL(
+          file.name, fileType, userId, nofoName
+        );
 
-          uploadedSize += file.size;
-        } catch (err) {
-          console.error(`Error uploading file ${file.name}:`, err);
-          setError(`Failed to upload ${file.name}. Please try again.`);
-          setUploading(false);
-          setUploadStatusAnnouncement("");
-          return;
-        }
+        await uploader.upload(file, uploadUrl, fileType, (uploaded: number) => {
+          const progress = Math.min(Math.round((uploaded / file.size) * 100), 100);
+          setFileStatuses((prev) => ({
+            ...prev,
+            [file.name]: { ...prev[file.name], progress },
+          }));
+        });
+
+        setFileStatuses((prev) => ({
+          ...prev,
+          [file.name]: { ...prev[file.name], status: "complete", progress: 100 },
+        }));
+        completedCount++;
+      } catch (err) {
+        console.error(`Error uploading file ${file.name}:`, err);
+        setFileStatuses((prev) => ({
+          ...prev,
+          [file.name]: {
+            ...prev[file.name],
+            status: "failed",
+            error: `Failed to upload ${file.name}`,
+          },
+        }));
+        failedCount++;
       }
+    }
 
-      setSelectedFiles([]);
-      setUploadProgress(100);
-      setUploadStatusAnnouncement("Files uploaded. Indexing documents.");
+    if (completedCount > 0) {
+      setUploadStatusAnnouncement(
+        `${completedCount} file${completedCount !== 1 ? "s" : ""} uploaded.${failedCount > 0 ? ` ${failedCount} failed.` : " Indexing documents."}`
+      );
 
       try {
         await apiClient.knowledgeManagement.syncKendra();
-        setUploadStatusAnnouncement("Indexing complete. Viewing uploaded files.");
       } catch (syncError) {
         console.error("Error syncing knowledge base:", syncError);
-        setUploadStatusAnnouncement("Files uploaded successfully. Viewing uploaded files.");
       }
 
-      if (activeTab === "view") {
-        fetchExistingFiles();
-      }
+      const toastMsg = failedCount > 0
+        ? `${completedCount} file${completedCount !== 1 ? "s" : ""} uploaded. ${failedCount} failed.`
+        : `${completedCount} file${completedCount !== 1 ? "s" : ""} uploaded. Documents will be available in chat shortly.`;
+      setToastMessage(toastMsg);
+    }
 
+    if (failedCount === 0) {
       setTimeout(() => {
+        setSelectedFiles([]);
+        setFileStatuses({});
         setUploading(false);
         setActiveTab("view");
+        fetchExistingFiles();
         setUploadStatusAnnouncement("");
-      }, 1000);
-    } catch (err) {
-      console.error("Error during upload:", err);
-      setError("An error occurred during upload. Please try again.");
+      }, 1500);
+    } else {
       setUploading(false);
-      setUploadStatusAnnouncement("");
+      setUploadStatusAnnouncement(`${failedCount} file${failedCount !== 1 ? "s" : ""} failed. Use retry to try again.`);
     }
   };
 
+  const retryFailed = async () => {
+    const failedFiles = Object.values(fileStatuses)
+      .filter((fs) => fs.status === "failed")
+      .map((fs) => fs.file);
+
+    if (failedFiles.length === 0) return;
+    await executeUpload(failedFiles);
+  };
+
+  const hasFailedFiles = Object.values(fileStatuses).some((fs) => fs.status === "failed");
   const confirmDelete = (fileName: string) => {
     setFileToDelete(fileName);
   };
@@ -355,7 +475,6 @@ export default function DocumentManager({
       setError(null);
       const apiClient = new ApiClient(appContext);
       const nofoName = extractNofoName(documentIdentifier);
-
       const fileExt = "." + fileName.split(".").pop()?.toLowerCase();
       const fileType = MIME_TYPES[fileExt] || "application/octet-stream";
 
@@ -388,6 +507,44 @@ export default function DocumentManager({
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
+  const renderFileStatusIndicator = (fileName: string) => {
+    const status = fileStatuses[fileName];
+    if (!status) return null;
+
+    switch (status.status) {
+      case "pending":
+        return (
+          <div className="dm-file-status">
+            <Clock size={14} className="dm-file-status-icon dm-icon-pending" aria-hidden="true" />
+            <span className="dm-file-status-text">Pending</span>
+          </div>
+        );
+      case "uploading":
+        return (
+          <div className="dm-file-status">
+            <div className="dm-file-progress-bar">
+              <div className="dm-file-progress-fill" style={{ width: `${status.progress}%` }} />
+            </div>
+            <span className="dm-file-status-text">{status.progress}%</span>
+          </div>
+        );
+      case "complete":
+        return (
+          <div className="dm-file-status">
+            <Check size={14} className="dm-file-status-icon dm-icon-complete" aria-hidden="true" />
+            <span className="dm-file-status-text dm-status-complete">Done</span>
+          </div>
+        );
+      case "failed":
+        return (
+          <div className="dm-file-status">
+            <AlertCircle size={14} className="dm-file-status-icon dm-icon-failed" aria-hidden="true" />
+            <span className="dm-file-status-text dm-status-failed">Failed</span>
+          </div>
+        );
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -405,7 +562,25 @@ export default function DocumentManager({
         onKeyDown={(e) => e.stopPropagation()}
         role="document"
         aria-labelledby="dm-title"
+        style={{ position: "relative" }}
       >
+        {/* Toast notification */}
+        {toastMessage && (
+          <div className="dm-toast-container" role="status" aria-live="polite">
+            <div className="dm-toast">
+              <Check size={16} className="dm-toast-icon" aria-hidden="true" />
+              <span className="dm-toast-message">{toastMessage}</span>
+              <button
+                className="dm-toast-close"
+                onClick={() => setToastMessage(null)}
+                aria-label="Dismiss notification"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="dm-header">
           <h2 id="dm-title" className="dm-title">Document Manager</h2>
           <button className="dm-close-btn" onClick={onClose} aria-label="Close document manager">
@@ -481,47 +656,47 @@ export default function DocumentManager({
                     Selected Files ({selectedFiles.length})
                   </p>
                   {selectedFiles.map((file, index) => (
-                    <div key={index} className="dm-file-item">
+                    <div key={`${file.name}-${index}`} className="dm-file-item">
                       <FileText size={20} className="dm-file-icon" aria-hidden="true" />
                       <div className="dm-file-details">
                         <p className="dm-file-name">{file.name}</p>
                         <p className="dm-file-size">{formatFileSize(file.size)}</p>
                       </div>
-                      <button
-                        className="dm-delete-btn"
-                        onClick={() => removeFile(index)}
-                        disabled={uploading}
-                        aria-label={`Remove ${file.name} from upload queue`}
-                      >
-                        <Trash2 size={16} aria-hidden="true" />
-                      </button>
+                      {renderFileStatusIndicator(file.name)}
+                      {!uploading && (
+                        <button
+                          className="dm-delete-btn"
+                          onClick={() => removeFile(index)}
+                          aria-label={`Remove ${file.name} from upload queue`}
+                        >
+                          <Trash2 size={16} aria-hidden="true" />
+                        </button>
+                      )}
                     </div>
                   ))}
 
-                  <button
-                    className="dm-upload-btn"
-                    onClick={uploadFiles}
-                    disabled={uploading || selectedFiles.length === 0}
-                    aria-label={
-                      uploading
-                        ? `Uploading files, ${uploadProgress}% complete`
-                        : `Upload ${selectedFiles.length} selected files`
-                    }
-                  >
-                    <Upload size={16} aria-hidden="true" />
-                    {uploading ? `Uploading... ${uploadProgress}%` : "Upload Files"}
-                  </button>
+                  <div className="dm-upload-actions">
+                    <button
+                      className="dm-upload-btn"
+                      onClick={startUpload}
+                      disabled={uploading || selectedFiles.length === 0}
+                      aria-label={
+                        uploading
+                          ? "Upload in progress"
+                          : `Upload ${selectedFiles.length} selected files`
+                      }
+                    >
+                      <Upload size={16} aria-hidden="true" />
+                      {uploading ? "Uploading..." : "Upload Files"}
+                    </button>
 
-                  {uploading && (
-                    <div className="dm-progress-container">
-                      <div className="dm-progress-bar">
-                        <div
-                          className="dm-progress-fill"
-                          style={{ width: `${uploadProgress}%` }}
-                        />
-                      </div>
-                    </div>
-                  )}
+                    {hasFailedFiles && !uploading && (
+                      <button className="dm-retry-btn" onClick={retryFailed}>
+                        <RotateCcw size={16} aria-hidden="true" />
+                        Retry Failed
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -615,6 +790,7 @@ export default function DocumentManager({
         </div>
       </div>
 
+      {/* Delete confirmation dialog */}
       {fileToDelete && (
         <div
           className="dm-confirm-overlay"
@@ -643,6 +819,53 @@ export default function DocumentManager({
               </button>
               <button className="dm-confirm-delete-btn" onClick={executeDelete}>
                 Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Duplicate file confirmation dialog */}
+      {duplicateFiles.length > 0 && (
+        <div
+          className="dm-confirm-overlay"
+          onClick={handleDuplicateCancel}
+          onKeyDown={(e) => { if (e.key === "Escape") handleDuplicateCancel(); }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dm-duplicate-title"
+        >
+          <div
+            ref={duplicateDialogRef}
+            className="dm-confirm-dialog"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+            tabIndex={-1}
+          >
+            <h3 id="dm-duplicate-title" className="dm-confirm-title">
+              {duplicateFiles.length === 1 ? "File Already Exists" : "Files Already Exist"}
+            </h3>
+            <p className="dm-confirm-message" style={{ wordBreak: "normal" }}>
+              The following {duplicateFiles.length === 1 ? "file already exists" : "files already exist"}.
+              Would you like to replace {duplicateFiles.length === 1 ? "it" : "them"} or skip?
+            </p>
+            <ul className="dm-duplicate-list">
+              {duplicateFiles.map((file) => (
+                <li key={file.name} className="dm-duplicate-item">
+                  <FileText size={14} aria-hidden="true" />
+                  {file.name}
+                </li>
+              ))}
+            </ul>
+            <div className="dm-confirm-actions">
+              <button className="dm-confirm-cancel-btn" onClick={handleDuplicateCancel}>
+                Cancel
+              </button>
+              <button className="dm-confirm-cancel-btn" onClick={handleDuplicateSkip}>
+                Skip Duplicates
+              </button>
+              <button className="dm-confirm-replace-btn" onClick={handleDuplicateReplace}>
+                Replace
               </button>
             </div>
           </div>
