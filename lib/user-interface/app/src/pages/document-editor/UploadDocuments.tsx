@@ -144,7 +144,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         const fileType = MIME_TYPES[fileExt] || "application/octet-stream";
 
         try {
-          const uploadUrl = await apiClient.knowledgeManagement.getUploadURL(
+          const uploadUrl = await apiClient.userDocuments.getUploadURL(
             file.name, fileType, userId, nofoName
           );
           await uploader.upload(file, uploadUrl, fileType, (uploaded: number) => {
@@ -161,7 +161,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
       setUploadProgress(100);
       try {
-        await apiClient.knowledgeManagement.syncKendra();
+        await apiClient.kbSync.syncKB();
       } catch (syncError) {
         console.error("Error syncing knowledge base:", syncError);
       }

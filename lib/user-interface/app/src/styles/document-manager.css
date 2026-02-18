@@ -749,3 +749,159 @@
   outline: 2px solid var(--mds-color-focus-light, #0088FF);
   outline-offset: 2px;
 }
+
+/* ── Toolbar (search, sort, bulk actions) ── */
+
+.dm-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--mds-spacing-sm, 8px);
+  padding: var(--mds-spacing-sm, 8px) 0;
+  flex-wrap: wrap;
+}
+
+.dm-search-wrapper {
+  position: relative;
+  flex: 1 1 180px;
+  min-width: 140px;
+}
+
+.dm-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--mds-color-text-secondary, #5a5a5a);
+  pointer-events: none;
+}
+
+.dm-search-input {
+  width: 100%;
+  padding: 6px 10px 6px 30px;
+  border: 1px solid var(--mds-color-border, #e2e8f0);
+  border-radius: 6px;
+  font-size: var(--mds-font-size-sm, 13px);
+  background: var(--mds-color-white, #ffffff);
+  color: var(--mds-color-text, #333333);
+  transition: border-color 0.2s;
+}
+
+.dm-search-input:focus {
+  border-color: var(--mds-color-primary, #14558F);
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 1px;
+}
+
+.dm-sort-controls {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.dm-sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 8px;
+  font-size: var(--mds-font-size-xs, 12px);
+  border: 1px solid var(--mds-color-border, #e2e8f0);
+  border-radius: 4px;
+  background: var(--mds-color-white, #ffffff);
+  color: var(--mds-color-text-secondary, #5a5a5a);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  min-height: 32px;
+  min-width: 44px;
+  justify-content: center;
+}
+
+.dm-sort-btn:hover {
+  background: var(--mds-color-primary-light, #f2f8fd);
+  border-color: var(--mds-color-primary, #14558F);
+  color: var(--mds-color-primary, #14558F);
+}
+
+.dm-sort-btn.dm-sort-active {
+  background: var(--mds-color-primary-light, #f2f8fd);
+  border-color: var(--mds-color-primary, #14558F);
+  color: var(--mds-color-primary, #14558F);
+  font-weight: var(--mds-font-weight-medium, 500);
+}
+
+.dm-sort-btn:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
+}
+
+.dm-bulk-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  font-size: var(--mds-font-size-xs, 12px);
+  border: 1px solid var(--mds-color-danger, #CD0D0D);
+  border-radius: 4px;
+  background: var(--mds-color-white, #ffffff);
+  color: var(--mds-color-danger, #CD0D0D);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  min-height: 32px;
+  min-width: 44px;
+}
+
+.dm-bulk-delete-btn:hover {
+  background: var(--mds-color-danger, #CD0D0D);
+  color: var(--mds-color-white, #ffffff);
+}
+
+.dm-bulk-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dm-bulk-delete-btn:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
+}
+
+/* ── Select all row ── */
+
+.dm-select-all-row {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--mds-color-border, #e2e8f0);
+  margin-bottom: 4px;
+}
+
+.dm-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--mds-font-size-sm, 13px);
+  color: var(--mds-color-text-secondary, #5a5a5a);
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.dm-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--mds-color-primary, #14558F);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Screen reader only ── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -14,6 +14,10 @@ import {
   AlertCircle,
   Clock,
   RotateCcw,
+  Search,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import "../../styles/document-manager.css";
 
@@ -86,6 +90,11 @@ export default function DocumentManager({
   const [duplicateFiles, setDuplicateFiles] = useState<File[]>([]);
   const [pendingUploadFiles, setPendingUploadFiles] = useState<File[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [searchFilter, setSearchFilter] = useState("");
+  const [sortBy, setSortBy] = useState<"name" | "date" | "size">("date");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [selectedForDelete, setSelectedForDelete] = useState<Set<string>>(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const appContext = useContext(AppContext);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -201,7 +210,7 @@ export default function DocumentManager({
     try {
       const apiClient = new ApiClient(appContext);
       const nofoName = extractNofoName(documentIdentifier);
-      const result = await apiClient.knowledgeManagement.getDocuments(userId, nofoName);
+      const result = await apiClient.userDocuments.getDocuments(userId, nofoName);
 
       if (result && result.Contents) {
         const files = result.Contents
@@ -369,7 +378,7 @@ export default function DocumentManager({
       const fileType = MIME_TYPES[fileExt] || "application/octet-stream";
 
       try {
-        const uploadUrl = await apiClient.knowledgeManagement.getUploadURL(
+        const uploadUrl = await apiClient.userDocuments.getUploadURL(
           file.name, fileType, userId, nofoName
         );
 
@@ -406,7 +415,7 @@ export default function DocumentManager({
       );
 
       try {
-        await apiClient.knowledgeManagement.syncKendra();
+        await apiClient.kbSync.syncKB();
       } catch (syncError) {
         console.error("Error syncing knowledge base:", syncError);
       }
@@ -459,7 +468,7 @@ export default function DocumentManager({
     try {
       const apiClient = new ApiClient(appContext);
       const nofoName = extractNofoName(documentIdentifier);
-      await apiClient.knowledgeManagement.deleteFile(userId, nofoName, fileName);
+      await apiClient.userDocuments.deleteFile(userId, nofoName, fileName);
       fetchExistingFiles();
     } catch (err) {
       console.error(`Error deleting file ${fileName}:`, err);
@@ -475,11 +484,9 @@ export default function DocumentManager({
       setError(null);
       const apiClient = new ApiClient(appContext);
       const nofoName = extractNofoName(documentIdentifier);
-      const fileExt = "." + fileName.split(".").pop()?.toLowerCase();
-      const fileType = MIME_TYPES[fileExt] || "application/octet-stream";
 
-      const downloadUrl = await apiClient.knowledgeManagement.getUploadURL(
-        fileName, fileType, userId, nofoName
+      const downloadUrl = await apiClient.userDocuments.getDownloadURL(
+        fileName, userId, nofoName
       );
 
       const link = document.createElement("a");
@@ -543,6 +550,95 @@ export default function DocumentManager({
           </div>
         );
     }
+  };
+
+  const filteredAndSortedFiles = React.useMemo(() => {
+    let files = [...existingFiles];
+
+    if (searchFilter.trim()) {
+      const query = searchFilter.toLowerCase();
+      files = files.filter((f) => f.name.toLowerCase().includes(query));
+    }
+
+    files.sort((a, b) => {
+      let cmp = 0;
+      if (sortBy === "name") {
+        cmp = a.name.localeCompare(b.name);
+      } else if (sortBy === "size") {
+        cmp = a.size - b.size;
+      } else {
+        cmp = new Date(a.uploadDate).getTime() - new Date(b.uploadDate).getTime();
+      }
+      return sortDirection === "asc" ? cmp : -cmp;
+    });
+
+    return files;
+  }, [existingFiles, searchFilter, sortBy, sortDirection]);
+
+  const allFilteredSelected =
+    filteredAndSortedFiles.length > 0 &&
+    filteredAndSortedFiles.every((f) => selectedForDelete.has(f.name));
+
+  const toggleSelectFile = (name: string) => {
+    setSelectedForDelete((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (allFilteredSelected) {
+      setSelectedForDelete(new Set());
+    } else {
+      setSelectedForDelete(new Set(filteredAndSortedFiles.map((f) => f.name)));
+    }
+  };
+
+  const handleSortToggle = (field: "name" | "date" | "size") => {
+    if (sortBy === field) {
+      setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(field);
+      setSortDirection(field === "name" ? "asc" : "desc");
+    }
+  };
+
+  const executeBulkDelete = async () => {
+    if (!appContext || !documentIdentifier || !userId || selectedForDelete.size === 0) return;
+    setBulkDeleting(true);
+    setError(null);
+
+    const apiClient = new ApiClient(appContext);
+    const nofoName = extractNofoName(documentIdentifier);
+    const names = Array.from(selectedForDelete);
+    let failCount = 0;
+
+    for (const fileName of names) {
+      try {
+        await apiClient.userDocuments.deleteFile(userId, nofoName, fileName);
+      } catch {
+        failCount++;
+      }
+    }
+
+    setSelectedForDelete(new Set());
+    setBulkDeleting(false);
+    fetchExistingFiles();
+
+    if (failCount > 0) {
+      setError(`Failed to delete ${failCount} of ${names.length} files.`);
+    } else {
+      setToastMessage(`${names.length} file${names.length > 1 ? "s" : ""} deleted.`);
+    }
+  };
+
+  const SortIcon = ({ field }: { field: "name" | "date" | "size" }) => {
+    if (sortBy !== field) return <ArrowUpDown size={12} aria-hidden="true" />;
+    return sortDirection === "asc"
+      ? <ArrowUp size={12} aria-hidden="true" />
+      : <ArrowDown size={12} aria-hidden="true" />;
   };
 
   if (!isOpen) return null;
@@ -715,6 +811,74 @@ export default function DocumentManager({
                 </button>
               </div>
 
+              {existingFiles.length > 0 && (
+                <div className="dm-toolbar">
+                  <div className="dm-search-wrapper">
+                    <Search size={14} className="dm-search-icon" aria-hidden="true" />
+                    <label htmlFor="dm-search-input" className="sr-only">Search files</label>
+                    <input
+                      id="dm-search-input"
+                      type="text"
+                      className="dm-search-input"
+                      placeholder="Search files..."
+                      value={searchFilter}
+                      onChange={(e) => setSearchFilter(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="dm-sort-controls" role="group" aria-label="Sort files">
+                    <button
+                      className={`dm-sort-btn${sortBy === "name" ? " dm-sort-active" : ""}`}
+                      onClick={() => handleSortToggle("name")}
+                      aria-label={`Sort by name ${sortBy === "name" ? (sortDirection === "asc" ? "ascending" : "descending") : ""}`}
+                    >
+                      Name <SortIcon field="name" />
+                    </button>
+                    <button
+                      className={`dm-sort-btn${sortBy === "date" ? " dm-sort-active" : ""}`}
+                      onClick={() => handleSortToggle("date")}
+                      aria-label={`Sort by date ${sortBy === "date" ? (sortDirection === "asc" ? "ascending" : "descending") : ""}`}
+                    >
+                      Date <SortIcon field="date" />
+                    </button>
+                    <button
+                      className={`dm-sort-btn${sortBy === "size" ? " dm-sort-active" : ""}`}
+                      onClick={() => handleSortToggle("size")}
+                      aria-label={`Sort by size ${sortBy === "size" ? (sortDirection === "asc" ? "ascending" : "descending") : ""}`}
+                    >
+                      Size <SortIcon field="size" />
+                    </button>
+                  </div>
+
+                  {selectedForDelete.size > 0 && (
+                    <button
+                      className="dm-bulk-delete-btn"
+                      onClick={executeBulkDelete}
+                      disabled={bulkDeleting}
+                      aria-label={`Delete ${selectedForDelete.size} selected files`}
+                    >
+                      <Trash2 size={14} aria-hidden="true" />
+                      {bulkDeleting ? "Deleting..." : `Delete (${selectedForDelete.size})`}
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {existingFiles.length > 0 && filteredAndSortedFiles.length > 0 && (
+                <div className="dm-select-all-row">
+                  <label className="dm-checkbox-label" htmlFor="dm-select-all">
+                    <input
+                      type="checkbox"
+                      id="dm-select-all"
+                      className="dm-checkbox"
+                      checked={allFilteredSelected}
+                      onChange={toggleSelectAll}
+                    />
+                    Select all ({filteredAndSortedFiles.length})
+                  </label>
+                </div>
+              )}
+
               <div role="status" aria-live="polite" className="sr-only">
                 {loadingFiles ? "Loading files" : ""}
               </div>
@@ -727,9 +891,20 @@ export default function DocumentManager({
                 <div className="dm-empty-state">
                   <p>No files have been uploaded yet.</p>
                 </div>
+              ) : filteredAndSortedFiles.length === 0 ? (
+                <div className="dm-empty-state">
+                  <p>No files match &ldquo;{searchFilter}&rdquo;</p>
+                </div>
               ) : (
-                existingFiles.map((file, index) => (
+                filteredAndSortedFiles.map((file, index) => (
                   <div key={index} className="dm-file-item">
+                    <input
+                      type="checkbox"
+                      className="dm-checkbox"
+                      checked={selectedForDelete.has(file.name)}
+                      onChange={() => toggleSelectFile(file.name)}
+                      aria-label={`Select ${file.name} for deletion`}
+                    />
                     <FileText size={20} className="dm-file-icon" aria-hidden="true" />
                     <div
                       className="dm-file-details-clickable"

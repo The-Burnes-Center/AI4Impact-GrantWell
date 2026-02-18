@@ -44,6 +44,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly deleteS3Function: lambda.Function;
   public readonly getS3Function: lambda.Function;
   public readonly uploadS3Function: lambda.Function;
+  public readonly downloadS3Function: lambda.Function;
   public readonly uploadNOFOS3Function: lambda.Function;
   public readonly syncKBFunction: lambda.Function;
   public readonly createMetadataFunction: lambda.Function;
@@ -340,7 +341,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     kbSyncAPIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["bedrock:*"],
+        actions: ["bedrock:StartIngestionJob", "bedrock:ListIngestionJobs", "bedrock:GetIngestionJob"],
         resources: [props.knowledgeBase.attrKnowledgeBaseArn],
       })
     );
@@ -411,12 +412,11 @@ export class LambdaFunctionStack extends cdk.Stack {
       {
         runtime: lambda.Runtime.PYTHON_3_12,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "knowledge-management/delete-s3")
+          path.join(__dirname, "knowledge-management/delete-document")
         ),
         handler: "lambda_function.lambda_handler",
         layers: [pythonSharedLayer],
         environment: {
-          BUCKET: props.userDocumentsBucket.bucketName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
         },
@@ -427,9 +427,8 @@ export class LambdaFunctionStack extends cdk.Stack {
     deleteS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:*"],
+        actions: ["s3:DeleteObject", "s3:GetObject"],
         resources: [
-          props.userDocumentsBucket.bucketArn,
           props.userDocumentsBucket.bucketArn + "/*",
         ],
       })
@@ -450,13 +449,12 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+        runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "knowledge-management/get-s3")
-        ), // Points to the lambda directory
-        handler: "index.handler", // Points to the 'hello' file in the lambda directory
+          path.join(__dirname, "knowledge-management/list-documents")
+        ),
+        handler: "index.handler",
         environment: {
-          BUCKET: props.userDocumentsBucket.bucketName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(30),
@@ -466,10 +464,9 @@ export class LambdaFunctionStack extends cdk.Stack {
     getS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:*"],
+        actions: ["s3:ListBucket"],
         resources: [
           props.userDocumentsBucket.bucketArn,
-          props.userDocumentsBucket.bucketArn + "/*",
         ],
       })
     );
@@ -895,13 +892,12 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "UploadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+        runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "knowledge-management/upload-s3")
-        ), // Points to the lambda directory
-        handler: "index.handler", // Points to the 'hello' file in the lambda directory
+          path.join(__dirname, "knowledge-management/generate-upload-url")
+        ),
+        handler: "index.handler",
         environment: {
-          BUCKET: props.userDocumentsBucket.bucketName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(30),
@@ -911,14 +907,40 @@ export class LambdaFunctionStack extends cdk.Stack {
     uploadS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:*"],
+        actions: ["s3:PutObject"],
         resources: [
-          props.userDocumentsBucket.bucketArn,
           props.userDocumentsBucket.bucketArn + "/*",
         ],
       })
     );
     this.uploadS3Function = uploadS3APIHandlerFunction;
+
+    const downloadS3APIHandlerFunction = new lambda.Function(
+      scope,
+      "DownloadS3FilesHandlerFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "knowledge-management/generate-download-url")
+        ),
+        handler: "index.handler",
+        environment: {
+          USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+        },
+        timeout: cdk.Duration.seconds(30),
+      }
+    );
+
+    downloadS3APIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject"],
+        resources: [
+          props.userDocumentsBucket.bucketArn + "/*",
+        ],
+      })
+    );
+    this.downloadS3Function = downloadS3APIHandlerFunction;
 
     // Add draft generator function
     const draftGeneratorFunction = new lambda.Function(
