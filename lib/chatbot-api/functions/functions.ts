@@ -234,6 +234,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SESSION_HANDLER: this.sessionFunction.functionName,
+          USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(300),
       }
@@ -247,6 +248,14 @@ export class LambdaFunctionStack extends cdk.Stack {
           "bedrock:InvokeModel",
         ],
         resources: ["*"],
+      })
+    );
+
+    websocketAPIFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket"],
+        resources: [props.userDocumentsBucket.bucketArn],
       })
     );
 
