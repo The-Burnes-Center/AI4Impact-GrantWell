@@ -423,15 +423,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   });
 
   return (
-    <>
-      <style>{`
-        input:focus, textarea:focus, select:focus, button:focus, a:focus {
-          outline: 2px solid ${colors.primary} !important;
-          outline-offset: 2px !important;
-        }
-      `}</style>
-      
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
         <Card
           header="Project Basics"
           headerActions={<AutoSaveIndicator status={saveStatus} />}
@@ -547,7 +539,6 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           onContinue={handleContinue}
         />
       </div>
-    </>
   );
 };
 

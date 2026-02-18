@@ -10,9 +10,8 @@
  * - LocalStorage fallback for data persistence
  * - Accessible form with ARIA attributes
  */
-import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
-import { AppContext } from "../../common/app-context";
-import { ApiClient } from "../../common/api-client/api-client";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useApiClient } from "../../hooks/use-api-client";
 import { useParams } from "react-router-dom";
 import Card from "../../components/ui/Card";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
@@ -52,7 +51,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const isInitialLoad = useRef(true);
   const hasLoadedFromDocumentData = useRef(false);
-  const appContext = useContext(AppContext);
+  const apiClient = useApiClient();
   const { sessionId } = useParams();
 
   // Auto-save debounce refs
@@ -101,9 +100,8 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
           return;
         }
 
-        if (appContext && selectedNofo) {
+        if (selectedNofo) {
           try {
-            const apiClient = new ApiClient(appContext);
             const result = await apiClient.landingPage.getNOFOQuestions(selectedNofo);
 
             if (
@@ -139,7 +137,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     };
 
     fetchQuestions();
-  }, [selectedNofo, appContext]);
+  }, [selectedNofo, apiClient]);
 
   // Auto-save function (debounced)
   const autoSave = useCallback((data: QuestionnaireFormData) => {

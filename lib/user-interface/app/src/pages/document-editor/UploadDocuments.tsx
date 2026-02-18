@@ -1,8 +1,9 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
-import { AppContext } from "../../common/app-context";
-import { ApiClient } from "../../common/api-client/api-client";
+import React, { useState, useRef, useEffect } from "react";
+import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import { FileUploader } from "../../common/file-uploader";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import "../../styles/document-editor.css";
 
 // File type mapping
 const MIME_TYPES: Record<string, string> = {
@@ -49,7 +50,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   sessionId,
   documentData,
 }) => {
-  const appContext = useContext(AppContext);
+  const apiClient = useApiClient();
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [additionalInfo, setAdditionalInfo] = useState("");
@@ -77,9 +78,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         setUserId(user.username);
         
         // Check if draft already exists with sections
-        if (appContext && sessionId && user.username) {
+        if (sessionId && user.username) {
           try {
-            const apiClient = new ApiClient(appContext);
             const draft = await apiClient.drafts.getDraft({
               sessionId: sessionId,
               userId: user.username
@@ -100,7 +100,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
     };
     fetchUserId();
-  }, [appContext, sessionId]);
+  }, [apiClient, sessionId]);
   
   // Also check documentData prop for existing sections
   useEffect(() => {
@@ -147,14 +147,13 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   };
 
   const uploadFiles = async () => {
-    if (!appContext || !selectedNofo || !userId || files.length === 0) return;
+    if (!selectedNofo || !userId || files.length === 0) return;
 
     setUploading(true);
     setUploadProgress(0);
     setUploadError(null);
 
     const uploader = new FileUploader();
-    const apiClient = new ApiClient(appContext);
     const nofoName = extractNofoName(selectedNofo);
     const totalSize = files.reduce((acc, file) => acc + file.size, 0);
     let uploadedSize = 0;
@@ -251,7 +250,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   };
 
   const handleSubmit = async () => {
-    if (!appContext || !selectedNofo) return;
+    if (!selectedNofo) return;
     
     try {
       setIsLoading(true);
@@ -263,7 +262,6 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         await new Promise(resolve => setTimeout(resolve, 500));
       }
 
-      const apiClient = new ApiClient(appContext);
       const username = userId || (await Auth.currentAuthenticatedUser()).username;
 
       console.log('Fetching current draft from DB:', { sessionId, username });
@@ -329,7 +327,6 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     } catch (error) {
       console.error('Error creating draft:', error);
       setUploadError(error instanceof Error ? error.message : 'Failed to create draft. Please try again.');
-      alert(error instanceof Error ? error.message : 'Failed to create draft. Please try again.');
     } finally {
       setIsLoading(false);
       setGeneratingDraft(false);
@@ -338,211 +335,74 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
-      <h2 style={{ marginBottom: "16px" }}>Additional Information</h2>
-      <p style={{ color: "#3d4451", marginBottom: "24px" }}>
+    <div className="ud-container">
+      <h2 className="ud-title">Additional Information</h2>
+      <p className="ud-subtitle">
         Share any additional context or information that will help generate your grant application.
       </p>
 
-      {/* Additional Information section */}
-      <div
-        style={{
-          background: "white",
-          borderRadius: "8px",
-          padding: "24px",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-          marginBottom: "24px",
-        }}
-      >
+      <div className="ud-card">
         <div>
-          <h3 style={{ marginBottom: "12px", fontSize: "16px", fontWeight: 500 }}>
-            Additional Information
-          </h3>
-          <p
-            style={{ color: "#3d4451", marginBottom: "12px", fontSize: "14px" }}
-          >
+          <h3 className="ud-card__title">Additional Information</h3>
+          <p className="ud-card__desc">
             Is there anything else you'd like to share about your application?
           </p>
           <textarea
+            className="ud-textarea"
             value={additionalInfo}
             onChange={handleAdditionalInfoChange}
             placeholder="Enter any additional context or notes about your application..."
-            style={{
-              width: "100%",
-              minHeight: "150px",
-              padding: "12px",
-              border: "1px solid #e2e8f0",
-              borderRadius: "6px",
-              fontSize: "16px",
-              resize: "vertical",
-              fontFamily: "inherit",
-            }}
             aria-label="Additional information about your application"
           />
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "12px",
-        }}
-      >
+      <div className="ud-actions">
         <button
+          className="ud-btn ud-btn--back"
           onClick={() => onNavigate("questionnaire")}
           aria-label="Go back to questionnaire"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "12px 20px",
-            background: "white",
-            border: "1px solid #e2e8f0",
-            borderRadius: "6px",
-            color: "#3d4451",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ marginRight: "8px" }}
-            aria-hidden="true"
-          >
-            <path d="M19 12H5"></path>
-            <path d="m12 19-7-7 7-7"></path>
-          </svg>
+          <ArrowLeft size={18} aria-hidden="true" style={{ marginRight: 8 }} />
           Back
         </button>
-        <div style={{ display: "flex", gap: "12px" }}>
+        <div className="ud-actions__right">
           {hasExistingDraft && (
             <button
+              className="ud-btn ud-btn--outline"
               onClick={() => onNavigate("sectionEditor")}
               aria-label="Continue to section editor"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "12px 24px",
-                background: "white",
-                border: "2px solid #14558F",
-                borderRadius: "6px",
-                color: "#14558F",
-                fontSize: "16px",
-                fontWeight: 500,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
-              }}
             >
               Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ marginLeft: "8px" }}
-                aria-hidden="true"
-              >
-                <path d="M5 12h14"></path>
-                <path d="m12 5 7 7-7 7"></path>
-              </svg>
+              <ArrowRight size={18} aria-hidden="true" style={{ marginLeft: 8 }} />
             </button>
           )}
           <button
+            className="ud-btn ud-btn--primary"
             onClick={handleSubmit}
             disabled={isLoading || generatingDraft}
             aria-label={generatingDraft ? "Generating draft, please wait" : isLoading ? "Processing, please wait" : hasExistingDraft ? "Generate draft again" : "Create draft"}
             aria-busy={isLoading || generatingDraft}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "12px 24px",
-              background: (isLoading || generatingDraft) ? "#a0aec0" : "#14558F",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              fontSize: "16px",
-              fontWeight: 500,
-              cursor: (isLoading || generatingDraft) ? "not-allowed" : "pointer",
-              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
-            }}
           >
             {generatingDraft ? "Generating Draft..." : isLoading ? "Processing..." : hasExistingDraft ? "Generate Again" : "Create Draft"}
             {!isLoading && !generatingDraft && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ marginLeft: "8px" }}
-                aria-hidden="true"
-              >
-                <path d="M5 12h14"></path>
-                <path d="m12 5 7 7-7 7"></path>
-              </svg>
+              <ArrowRight size={18} aria-hidden="true" style={{ marginLeft: 8 }} />
             )}
           </button>
         </div>
       </div>
       {generatingDraft && draftProgress && (
         <div
+          className="ud-progress-banner"
           role="status"
           aria-live="polite"
           aria-atomic="true"
           aria-label="Draft generation progress"
-          style={{
-            marginTop: "16px",
-            padding: "12px 16px",
-            background: "#e0f2fe",
-            border: "1px solid #0284c7",
-            borderRadius: "6px",
-            color: "#0369a1",
-            fontSize: "14px",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
         >
-          <div
-            role="img"
-            aria-label="Loading"
-            style={{
-              width: "16px",
-              height: "16px",
-              border: "2px solid #0284c7",
-              borderTopColor: "transparent",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-              flexShrink: 0,
-            }}
-          />
+          <div className="ud-progress-spinner" role="img" aria-label="Loading" />
           <span>{draftProgress}</span>
         </div>
       )}
-      <style>
-        {`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}
-      </style>
     </div>
   );
 };

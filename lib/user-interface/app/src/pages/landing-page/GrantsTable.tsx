@@ -85,38 +85,24 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
     setCurrentPage(1);
   }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm]);
 
-  // Handle row click to select document (same as search bar)
+  // Handle row click to select document without resetting filters
   const handleRowClick = (nofo: NOFO) => {
     const selectedDoc = {
       label: nofo.name,
       value: nofo.name + "/",
     };
     
-    // Update filters to match the selected grant
-    if (nofo.status) {
-      setStatusFilter(nofo.status);
-    }
-    if (nofo.category) {
-      setCategoryFilter(nofo.category);
-    }
-    if (nofo.grantType) {
-      setGrantTypeFilter(nofo.grantType);
-    }
-    
-    // Update the search bar with the grant name first (so dropdown recognizes it)
+    // Update the search bar with the grant name (so dropdown recognizes it)
     if (onSearchTermChange) {
       onSearchTermChange(nofo.name);
     }
     
-    // Then select the document (this will update the dropdown and show CTA buttons)
+    // Select the document (this will update the dropdown and show CTA buttons)
     onSelectDocument(selectedDoc);
     
     // Scroll to top to show the CTA buttons after state updates complete
     setTimeout(() => {
-      // Try multiple scroll methods for cross-browser compatibility
       window.scrollTo({ top: 0, behavior: "smooth" });
-      document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
-      document.body.scrollTo({ top: 0, behavior: "smooth" });
     }, 150);
   };
 

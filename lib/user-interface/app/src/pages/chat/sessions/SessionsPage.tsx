@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Sessions from "../../../components/chat/SessionList";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { ApiClient } from "../../../common/api-client/api-client";
-import { AppContext } from "../../../common/app-context";
+import { useApiClient } from "../../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import UnifiedNavigation from "../../../components/navigation/UnifiedNavigation";
@@ -12,16 +11,15 @@ export default function SessionPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const documentIdentifier = searchParams.get("folder");
-  const appContext = useContext(AppContext);
+  const apiClient = useApiClient();
   const [latestSessionId, setLatestSessionId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch the latest session ID when the component mounts
   useEffect(() => {
     const fetchLatestSession = async () => {
-      if (!appContext) return;
-
+      setIsLoading(true);
       try {
-        const apiClient = new ApiClient(appContext);
         const username = await Auth.currentAuthenticatedUser().then(
           (value) => value.username
         );
@@ -51,11 +49,13 @@ export default function SessionPage() {
         console.error("Error fetching latest session:", e);
         // If there's an error, still set a fallback session ID
         setLatestSessionId(uuidv4());
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchLatestSession();
-  }, [appContext, documentIdentifier]);
+  }, [apiClient, documentIdentifier]);
 
   // Handle navigation when a session is selected
   const handleSessionSelect = (sessionId: string) => {
@@ -68,14 +68,9 @@ export default function SessionPage() {
     navigate(`/chat/${sessionId}${queryParams}`);
   };
 
-  // Handle navigation
   const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Include document identifier in the navigation if available
-    const queryParams = documentIdentifier
-      ? `?folder=${encodeURIComponent(documentIdentifier)}`
-      : "";
-    navigate(`/${queryParams}`);
+    navigate("/");
   };
 
   return (
@@ -90,14 +85,6 @@ export default function SessionPage() {
             <button
               className="breadcrumb-link"
               onClick={handleHomeClick}
-              style={{
-                cursor: "pointer",
-                background: "none",
-                border: "none",
-                padding: 0,
-                color: "inherit",
-                textDecoration: "underline",
-              }}
             >
               Home
             </button>
@@ -108,11 +95,17 @@ export default function SessionPage() {
         </nav>
 
         <div className="dashboard-main-content">
-          <Sessions
-            toolsOpen={true}
-            documentIdentifier={documentIdentifier}
-            onSessionSelect={handleSessionSelect}
-          />
+          {isLoading ? (
+            <div style={{ display: "flex", justifyContent: "center", padding: "48px" }} role="status" aria-label="Loading sessions">
+              <p style={{ color: "#6b7280" }}>Loading sessions...</p>
+            </div>
+          ) : (
+            <Sessions
+              toolsOpen={true}
+              documentIdentifier={documentIdentifier}
+              onSessionSelect={handleSessionSelect}
+            />
+          )}
         </div>
       </div>
     </div>

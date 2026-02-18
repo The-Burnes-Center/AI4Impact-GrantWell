@@ -8,7 +8,6 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
 
   const handleAuthSuccess = () => {
-    window.location.reload();
   };
 
   return (
