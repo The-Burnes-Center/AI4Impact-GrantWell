@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
-import { AppContext } from "../../common/app-context";
-import { ApiClient } from "../../common/api-client/api-client";
+import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
+import { statusToStep } from "../../common/helpers/document-editor-utils";
 import DocEditorSessions from "../../components/document-editor/DocEditorSessions";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import "../../styles/dashboard.css";
@@ -12,7 +12,7 @@ export default function DocEditorSessionsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const params = useParams();
-  const appContext = useContext(AppContext);
+  const apiClient = useApiClient();
   const [latestDraftId, setLatestDraftId] = useState<string | null>(null);
   const [showAllNOFOs, setShowAllNOFOs] = useState(false);
 
@@ -21,10 +21,7 @@ export default function DocEditorSessionsPage() {
 
   useEffect(() => {
     const fetchLatestDraft = async () => {
-      if (!appContext) return;
-
       try {
-        const apiClient = new ApiClient(appContext);
         const username = await Auth.currentAuthenticatedUser().then(
           (value) => value.username
         );
@@ -51,12 +48,11 @@ export default function DocEditorSessionsPage() {
     };
 
     fetchLatestDraft();
-  }, [appContext]);
+  }, [apiClient]);
 
   const handleDraftSelect = async (draftId: string) => {
     setLatestDraftId(draftId);
     try {
-      const apiClient = new ApiClient(appContext);
       const username = await Auth.currentAuthenticatedUser().then(
         (value) => value.username
       );
@@ -73,22 +69,8 @@ export default function DocEditorSessionsPage() {
           return;
         }
         
-        // Determine step based on unified status
-        let step = 'projectBasics';
         const status = selectedDraft.status || 'project_basics';
-        
-        // Map unified status to step
-        const statusToStepMap: Record<string, string> = {
-          'project_basics': 'projectBasics',
-          'questionnaire': 'questionnaire',
-          'uploading_documents': 'uploadDocuments',
-          'generating_draft': 'draftCreated',
-          'editing_sections': 'sectionEditor',
-          'reviewing': 'reviewApplication',
-          'submitted': 'reviewApplication'
-        };
-        
-        step = statusToStepMap[status] || 'projectBasics';
+        const step = statusToStep(status);
         
         const queryParams = `?step=${step}&nofo=${encodeURIComponent(selectedDraft.documentIdentifier)}`;
         navigate(`/document-editor/${draftId}${queryParams}`);
@@ -117,14 +99,6 @@ export default function DocEditorSessionsPage() {
             <button
               className="breadcrumb-link"
               onClick={handleHomeClick}
-              style={{
-                cursor: "pointer",
-                background: "none",
-                border: "none",
-                padding: 0,
-                color: "inherit",
-                textDecoration: "underline",
-              }}
             >
               Home
             </button>

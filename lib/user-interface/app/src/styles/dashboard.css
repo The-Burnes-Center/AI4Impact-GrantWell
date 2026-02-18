@@ -972,6 +972,11 @@ select.form-input {
   color: #14558F;
   text-decoration: none;
   transition: color 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
 }
 
 .breadcrumb-link:hover {
