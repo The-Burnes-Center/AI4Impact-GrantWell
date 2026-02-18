@@ -11,10 +11,11 @@ interface HistoryPanelProps {
   onSelect: (href: string, nofo: RecentNOFO) => void;
 }
 
-const HistoryPanel: React.FC<HistoryPanelProps> = ({
+const HistoryPanel = React.memo(function HistoryPanel({
   recentlyViewedNOFOs,
   onSelect,
-}) => (
+}: HistoryPanelProps) {
+  return (
   <div className="history-panel">
     <h2 className="history-panel__heading">
       Recently viewed funding calls (NOFOs)
@@ -44,6 +45,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
       </p>
     )}
   </div>
-);
+  );
+});
 
 export default HistoryPanel;

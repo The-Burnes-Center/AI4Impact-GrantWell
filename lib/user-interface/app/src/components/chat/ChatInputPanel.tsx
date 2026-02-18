@@ -1,4 +1,4 @@
-import {
+import React, {
   Dispatch,
   SetStateAction,
   useContext,
@@ -146,7 +146,7 @@ export abstract class ChatScrollState {
   static skipNextHistoryUpdate = false;
 }
 
-export default function ChatInputPanel(props: ChatInputPanelProps) {
+function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
   const { needsRefresh, setNeedsRefresh } = useContext(SessionRefreshContext);
   const [micPermissionDenied, setMicPermissionDenied] = useState(false);
@@ -323,9 +323,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
 
-    let username;
+    let username: string | undefined;
     await Auth.currentAuthenticatedUser().then(
-      (value) => (username = value.username)
+      (value: { username: string }) => (username = value.username)
     );
     if (!username) return;
 
@@ -392,7 +392,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       const ws = new WebSocket(wsUrl);
 
       let incomingMetadata: boolean = false;
-      let sources = {};
+      let sources: Record<string, Array<{ title: string; uri: string }>> = {};
 
       /**If there is no response after a minute, time out the response to try again. */
       setTimeout(() => {
@@ -497,12 +497,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         if (!incomingMetadata) {
           receivedData += data.data;
         } else {
-          let sourceData = JSON.parse(data.data);
-          sourceData = sourceData.map((item) => {
+          const parsed: Array<{ title: string; uri: string }> = JSON.parse(data.data);
+          const sourceData = parsed.map((item: { title: string; uri: string }) => {
             if (item.title == "") {
               return {
                 title: item.uri.slice(
-                  (item.uri as string).lastIndexOf("/") + 1
+                  item.uri.lastIndexOf("/") + 1
                 ),
                 uri: item.uri,
               };
@@ -734,3 +734,5 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     </div>
   );
 }
+
+export default React.memo(ChatInputPanel);

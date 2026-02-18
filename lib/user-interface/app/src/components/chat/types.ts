@@ -22,7 +22,14 @@ export interface ChatBotHistoryItem {
   content: string;
   metadata: Record<
     string,
-    string | boolean | number | null | undefined | string[] | string[][]
+    | string
+    | boolean
+    | number
+    | null
+    | undefined
+    | string[]
+    | string[][]
+    | Array<{ title: string; uri: string }>
   >;
 }
 

@@ -477,11 +477,11 @@ export default function UploadModal({
 
       if (result && result.Contents) {
         // Transform the results into our expected format
-        const files = result.Contents.map((item) => ({
+        const files = result.Contents.map((item: { Key: string; Size: number; LastModified: string }) => ({
           name: item.Key.split("/").pop() || item.Key,
           size: item.Size,
           uploadDate: item.LastModified,
-        })).filter((file) => file.name !== ""); // Filter out folder entries
+        })).filter((file: { name: string }) => file.name !== ""); // Filter out folder entries
 
         setExistingFiles(files);
       } else {

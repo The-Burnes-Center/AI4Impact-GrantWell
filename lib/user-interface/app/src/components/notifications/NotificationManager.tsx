@@ -1,19 +1,36 @@
 import * as React from "react";
 import { createContext, useState, useContext } from "react";
-import { v4 as uuidv4 } from 'uuid';  // Import the UUID function
+import { v4 as uuidv4 } from 'uuid';
 
-// Create a context for the notification manager
-export const NotificationContext = createContext({
+interface Notification {
+  id: string;
+  type: string;
+  content: string;
+  date: number;
+  dismissible: boolean;
+  dismissLabel: string;
+  onDismiss: () => void;
+}
+
+interface NotificationContextValue {
+  notifications: Notification[];
+  addNotification: (type: string, content: string) => string;
+  removeNotification: (id: string) => void;
+}
+
+const defaultContextValue: NotificationContextValue = {
   notifications: [],
-  addNotification: (type, content) => {String},
-  removeNotification: (id) => {}
-});
+  addNotification: (_type: string, _content: string) => "",
+  removeNotification: (_id: string) => {},
+};
 
-export const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState([]);
+export const NotificationContext = createContext<NotificationContextValue>(defaultContextValue);
 
-  const addNotification = (type, content) : string => {
-    const id = uuidv4();  // Generate a UUID for each new notification
+export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const addNotification = (type: string, content: string): string => {
+    const id = uuidv4();
 
     setNotifications(prev => [...prev, {
       id: id,
@@ -27,7 +44,7 @@ export const NotificationProvider = ({ children }) => {
     return id;
   };
 
-  const removeNotification = (id) => {
+  const removeNotification = (id: string) => {
     setNotifications(prev => {
       const updatedNotifications = prev.filter(notif => notif.id !== id);
       return updatedNotifications;

@@ -193,12 +193,7 @@ export interface SessionsProps {
   onSessionSelect?: (sessionId: string) => void;
 }
 
-interface Session {
-  session_id: string;
-  title: string;
-  time_stamp: string;
-  document_identifier?: string;
-}
+type Session = import("../../common/api-client/sessions-client").SessionListItem;
 
 export default function Sessions(props: SessionsProps) {
   const appContext = useContext(AppContext);

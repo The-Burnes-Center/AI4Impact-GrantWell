@@ -1,10 +1,11 @@
 import { Utils } from "../utils";
+import { AppConfig } from "../types/app";
 
 export class LandingPageClient {
   private readonly baseUrl: string;
   private readonly API: string;
 
-  constructor(appConfig: any) {
+  constructor(appConfig: AppConfig) {
     this.baseUrl = appConfig.httpEndpoint;
     this.API = appConfig.httpEndpoint;
   }
@@ -33,7 +34,7 @@ export class LandingPageClient {
   }
 
   // Return NOFO summary from S3 bucket
-  async getNOFOSummary(documentKey) {
+  async getNOFOSummary(documentKey: string) {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/s3-nofo-summary`);
@@ -59,7 +60,7 @@ export class LandingPageClient {
   }
 
   // Return NOFO questions from S3 bucket
-  async getNOFOQuestions(documentKey) {
+  async getNOFOQuestions(documentKey: string) {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/s3-nofo-questions`);

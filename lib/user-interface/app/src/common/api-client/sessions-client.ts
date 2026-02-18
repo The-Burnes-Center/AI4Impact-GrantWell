@@ -1,13 +1,22 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
+import type { ChatHistoryEntry } from "../types/document";
 
 export interface ChatSession {
   sessionId: string;
   userId: string;
   title: string;
   documentIdentifier: string;
-  chatHistory: any[];
+  chatHistory: ChatHistoryEntry[];
   lastModified?: string;
+}
+
+/** Raw session record as returned by the list sessions API (snake_case). */
+export interface SessionListItem {
+  session_id: string;
+  title: string;
+  time_stamp: string;
+  document_identifier?: string;
 }
 
 export class SessionsClient {
@@ -151,7 +160,7 @@ export class SessionsClient {
   }
 
   // Lists all chat sessions
-  async getSessions(userId: string, documentIdentifier?: string | null, all: boolean = false): Promise<any[]> {
+  async getSessions(userId: string, documentIdentifier?: string | null, all: boolean = false): Promise<SessionListItem[]> {
     const auth = await Utils.authenticate();
     const response = await fetch(this.API + '/user-session', {
       method: 'POST',

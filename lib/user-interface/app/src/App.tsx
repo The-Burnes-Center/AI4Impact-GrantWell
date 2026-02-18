@@ -1,3 +1,4 @@
+import React, { Suspense, useEffect, useRef } from "react";
 import {
   Outlet,
   Route,
@@ -5,18 +6,18 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import Playground from "./pages/chat/playground/PlaygroundPage";
-import SessionPage from "./pages/chat/sessions/SessionsPage";
-import Welcome from "./pages/landing-page/LandingPage";
-import Checklists from "./pages/requirements/ChecklistPage";
-import DocumentEditor from "./pages/document-editor/DocumentEditorPage";
-import DocEditorSessionsPage from "./pages/document-editor/DocEditorSessionsPage";
-import Dashboard from "./pages/dashboard/DashboardPage";
 import { ErrorBoundary } from "./components/common/ErrorBoundary";
 import "./styles/app.scss";
-import { useEffect, useRef } from "react";
 
-function ScrollToTop() {
+const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
+const SessionPage = React.lazy(() => import("./pages/chat/sessions/SessionsPage"));
+const Welcome = React.lazy(() => import("./pages/landing-page/LandingPage"));
+const Checklists = React.lazy(() => import("./pages/requirements/ChecklistPage"));
+const DocumentEditor = React.lazy(() => import("./pages/document-editor/DocumentEditorPage"));
+const DocEditorSessionsPage = React.lazy(() => import("./pages/document-editor/DocEditorSessionsPage"));
+const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
+
+function ScrollToTop(): null {
   const { pathname, search } = useLocation();
   const prevPathRef = useRef<string>("");
 
@@ -94,7 +95,8 @@ function AppContent() {
       {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
       <main id="main-content" role="main" tabIndex={-1}>
         <ErrorBoundary>
-          <Routes>
+          <Suspense fallback={<div className="lazy-loading-fallback" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>Loading...</div>}>
+            <Routes>
             <Route
               index
               path="/"
@@ -123,7 +125,8 @@ function AppContent() {
               path="*"
               element={<Navigate to={`/home`} replace />}
             />
-          </Routes>
+            </Routes>
+          </Suspense>
         </ErrorBoundary>
       </main>
     </>

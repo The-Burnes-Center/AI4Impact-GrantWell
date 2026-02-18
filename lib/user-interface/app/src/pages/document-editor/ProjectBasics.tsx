@@ -16,12 +16,13 @@ import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import FormErrorSummary from "../../components/ui/FormErrorSummary";
 import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
+import type { DocumentData } from "../../common/types/document";
 
 interface ProjectBasicsProps {
   onContinue: () => void;
   selectedNofo: string | null;
-  documentData?: any;
-  onUpdateData?: (data: any) => void;
+  documentData?: DocumentData | null;
+  onUpdateData?: (data: Partial<DocumentData>) => void;
 }
 
 interface ProjectBasicsFormData {

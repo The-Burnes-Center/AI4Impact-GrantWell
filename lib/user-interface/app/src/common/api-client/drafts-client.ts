@@ -1,5 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
+import type { ProjectBasicsData, RawDraftRecord } from "../types/document";
 
 // Unified status that represents both the step and state in the grant writing flow
 export type DraftStatus = 
@@ -17,9 +18,9 @@ export interface DocumentDraft {
   title: string;
   documentIdentifier: string;
   status?: DraftStatus;
-  sections?: Record<string, any>;
-  projectBasics?: any;
-  questionnaire?: any;
+  sections?: Record<string, string>;
+  projectBasics?: ProjectBasicsData;
+  questionnaire?: Record<string, string>;
   additionalInfo?: string;
   uploadedFiles?: Array<{
     name: string;
@@ -309,12 +310,12 @@ export class DraftsClient {
 
       // If data is an array directly, use it
       if (Array.isArray(data)) {
-        return data.map((draft: any) => ({
+        return data.map((draft: RawDraftRecord) => ({
           sessionId: draft.sessionId,
           userId: userId,
           title: draft.title || '',
           documentIdentifier: draft.documentIdentifier || '',
-          status: draft.status || 'project_basics',
+          status: (draft.status || 'project_basics') as DraftStatus,
           lastModified: draft.lastModified
         }));
       }
@@ -328,12 +329,12 @@ export class DraftsClient {
           throw new Error('Invalid response format: body is not an array');
         }
         
-        return drafts.map((draft: any) => ({
+        return drafts.map((draft: RawDraftRecord) => ({
           sessionId: draft.sessionId,
           userId: userId,
           title: draft.title || '',
           documentIdentifier: draft.documentIdentifier || '',
-          status: draft.status || 'project_basics',
+          status: (draft.status || 'project_basics') as DraftStatus,
           lastModified: draft.lastModified
         }));
       }
@@ -351,11 +352,11 @@ export class DraftsClient {
   async generateDraft(params: {
     query: string;
     documentIdentifier: string;
-    projectBasics?: any;
-    questionnaire?: any;
+    projectBasics?: ProjectBasicsData;
+    questionnaire?: Record<string, string>;
     sessionId: string;
     onProgress?: (status: string) => void;
-  }): Promise<Record<string, any>> {
+  }): Promise<Record<string, string>> {
     const auth = await Utils.authenticate();
     console.log('Calling /draft-generation with:', params);
     
@@ -439,7 +440,7 @@ export class DraftsClient {
   async generatePDF(draftData: {
     title?: string;
     grantName?: string;
-    projectBasics?: any;
+    projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
   }): Promise<Blob> {
     const auth = await Utils.authenticate();

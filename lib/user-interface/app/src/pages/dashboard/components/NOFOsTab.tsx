@@ -21,7 +21,7 @@ interface NOFOsTabProps {
   addNotification: (type: string, message: string) => void;
 }
 
-const NOFOsTab: React.FC<NOFOsTabProps> = ({
+const NOFOsTab = React.memo(function NOFOsTab({
   nofos,
   searchQuery,
   apiClient,
@@ -30,7 +30,7 @@ const NOFOsTab: React.FC<NOFOsTabProps> = ({
   setUploadNofoModalOpen,
   showGrantSuccessBanner,
   addNotification,
-}) => {
+}: NOFOsTabProps) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedNofo, setSelectedNofo] = useState<NOFO | null>(null);
@@ -396,6 +396,6 @@ const NOFOsTab: React.FC<NOFOsTabProps> = ({
       </Modal>
     </div>
   );
-};
+});
 
 export default NOFOsTab;

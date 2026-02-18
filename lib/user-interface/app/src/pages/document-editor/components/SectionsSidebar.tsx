@@ -13,12 +13,12 @@ interface SectionsSidebarProps {
   sectionAnswers: { [key: string]: string };
 }
 
-const SectionsSidebar: React.FC<SectionsSidebarProps> = ({
+const SectionsSidebar = React.memo(function SectionsSidebar({
   sections,
   activeSection,
   setActiveSection,
   sectionAnswers,
-}) => {
+}: SectionsSidebarProps) {
   return (
     <div className="se-sidebar">
       <h3 className="se-sidebar__title">Sections</h3>
@@ -39,6 +39,6 @@ const SectionsSidebar: React.FC<SectionsSidebarProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default SectionsSidebar;

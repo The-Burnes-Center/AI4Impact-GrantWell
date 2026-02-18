@@ -1,6 +1,7 @@
 import React from "react";
 
-const AboutPanel: React.FC = () => (
+const AboutPanel = React.memo(function AboutPanel() {
+  return (
   <div className="about-panel">
     <h2 className="about-panel__heading">About GrantWell</h2>
     <p className="about-panel__text">
@@ -18,6 +19,7 @@ const AboutPanel: React.FC = () => (
       reducing the complexity and time required for grant applications.
     </p>
   </div>
-);
+  );
+});
 
 export default AboutPanel;

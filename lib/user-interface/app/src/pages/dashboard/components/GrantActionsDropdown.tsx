@@ -9,12 +9,12 @@ interface GrantActionsDropdownProps {
   onDelete: () => void;
 }
 
-const GrantActionsDropdown: React.FC<GrantActionsDropdownProps> = ({
+const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
   nofo,
   onToggleStatus,
   onEdit,
   onDelete,
-}) => {
+}: GrantActionsDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -89,6 +89,6 @@ const GrantActionsDropdown: React.FC<GrantActionsDropdownProps> = ({
       )}
     </div>
   );
-};
+});
 
 export default GrantActionsDropdown;

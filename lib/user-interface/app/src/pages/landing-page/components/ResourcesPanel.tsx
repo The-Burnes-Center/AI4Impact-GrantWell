@@ -15,7 +15,8 @@ const RESOURCES = [
   },
 ];
 
-const ResourcesPanel: React.FC = () => (
+const ResourcesPanel = React.memo(function ResourcesPanel() {
+  return (
   <div className="resources-panel">
     <h2 className="resources-panel__heading">Additional Resources</h2>
     {RESOURCES.map((resource, index) => (
@@ -32,6 +33,7 @@ const ResourcesPanel: React.FC = () => (
       </div>
     ))}
   </div>
-);
+  );
+});
 
 export default ResourcesPanel;

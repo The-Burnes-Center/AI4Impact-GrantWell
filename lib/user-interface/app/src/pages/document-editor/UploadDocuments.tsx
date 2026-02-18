@@ -3,6 +3,7 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import { FileUploader } from "../../common/file-uploader";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import type { DocumentData } from "../../common/types/document";
 import "../../styles/document-editor.css";
 
 // File type mapping
@@ -33,7 +34,7 @@ interface UploadDocumentsProps {
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
   sessionId: string;
-  documentData?: any; // Add documentData to check if draft exists
+  documentData?: DocumentData | null;
 }
 
 interface FileInfo {

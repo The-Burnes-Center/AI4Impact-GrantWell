@@ -15,13 +15,14 @@ interface WelcomeModalProps {
   topOffset?: number;
 }
 
-const WelcomeModal: React.FC<WelcomeModalProps> = ({
+const WelcomeModal = React.memo(function WelcomeModal({
   isOpen,
   onClose,
   onGetStarted,
   onViewDrafts,
   topOffset,
-}) => (
+}: WelcomeModalProps) {
+  return (
   <Modal
     isOpen={isOpen}
     onClose={onClose}
@@ -59,6 +60,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({
       </button>
     </div>
   </Modal>
-);
+  );
+});
 
 export default WelcomeModal;

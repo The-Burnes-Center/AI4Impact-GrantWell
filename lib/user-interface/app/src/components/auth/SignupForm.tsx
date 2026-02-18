@@ -105,8 +105,8 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
         },
       });
       setShowVerification(true);
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during sign up');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An error occurred during sign up');
     } finally {
       setLoading(false);
     }
@@ -122,8 +122,8 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
     try {
       await Auth.confirmSignUp(email.toLowerCase().trim(), verificationCode);
       onSuccess();
-    } catch (err: any) {
-      setError(err.message || 'Invalid verification code');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Invalid verification code');
     } finally {
       setLoading(false);
     }
@@ -138,8 +138,8 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
       await Auth.resendSignUp(email.toLowerCase().trim());
       setSuccess('Verification code resent to your email');
       setError(null);
-    } catch (err: any) {
-      setError(err.message || 'Failed to resend verification code');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to resend verification code');
       setSuccess(null);
     } finally {
       setLoading(false);

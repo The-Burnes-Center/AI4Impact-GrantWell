@@ -6,7 +6,7 @@ interface RowActionsProps {
   onDelete: () => void;
 }
 
-const RowActions: React.FC<RowActionsProps> = ({ onEdit, onDelete }) => {
+const RowActions = React.memo(function RowActions({ onEdit, onDelete }: RowActionsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +59,6 @@ const RowActions: React.FC<RowActionsProps> = ({ onEdit, onDelete }) => {
       )}
     </div>
   );
-};
+});
 
 export default RowActions;

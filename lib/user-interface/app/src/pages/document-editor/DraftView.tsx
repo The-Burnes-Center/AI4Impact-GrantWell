@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
+import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import "../../styles/document-editor.css";
 
 interface DraftViewProps {
@@ -14,7 +15,7 @@ const DraftView: React.FC<DraftViewProps> = ({
   selectedNofo,
   sessionId,
 }) => {
-  const [draftData, setDraftData] = useState<any>(null);
+  const [draftData, setDraftData] = useState<DocumentDraft | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingMessage, setLoadingMessage] = useState<string>("Loading draft...");
   const apiClient = useApiClient();

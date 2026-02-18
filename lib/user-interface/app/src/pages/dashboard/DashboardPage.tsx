@@ -12,6 +12,7 @@ import {
 } from "react-icons/lu";
 import { Modal } from "../../components/common/Modal";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
+import type { RawNOFOData } from "../../common/types/document";
 import "../../styles/dashboard.css";
 
 const Dashboard: React.FC = () => {
@@ -55,7 +56,7 @@ const Dashboard: React.FC = () => {
       const nofoResult = await apiClient.landingPage.getNOFOs();
 
       if (nofoResult.nofoData) {
-        setNofos(nofoResult.nofoData.map((nofo: any, index: number) => ({
+        setNofos(nofoResult.nofoData.map((nofo: RawNOFOData, index: number) => ({
           id: index,
           name: nofo.name,
           status: nofo.status || "active",
@@ -66,7 +67,7 @@ const Dashboard: React.FC = () => {
           category: nofo.category || null,
         })));
       } else {
-        setNofos((nofoResult.folders || []).map((nofo: string, index: number) => ({
+        setNofos((nofoResult.folders || []).map((nofo: string, index: number): NOFO => ({
           id: index, name: nofo, status: "active", isPinned: false,
           expirationDate: null, grantType: null, agency: null, category: null,
         })));

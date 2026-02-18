@@ -69,7 +69,7 @@ const Checklists: React.FC = () => {
   useEffect(() => {
     if (!documentIdentifier) return;
 
-    const processApiItems = (items: any[]) => {
+    const processApiItems = (items: Array<{ item?: unknown; description?: unknown }>) => {
       if (!items || !Array.isArray(items)) return "";
       return items
         .map((section) => {
@@ -91,7 +91,7 @@ const Checklists: React.FC = () => {
         try {
           const nofoResult = await apiClient.landingPage.getNOFOs();
           if (nofoResult.nofoData) {
-            const match = nofoResult.nofoData.find((n: any) => n.name === documentIdentifier);
+            const match = nofoResult.nofoData.find((n: { name: string; grant_type?: string }) => n.name === documentIdentifier);
             if (match) setGrantType(match.grant_type || null);
           }
         } catch { /* grant type is optional */ }

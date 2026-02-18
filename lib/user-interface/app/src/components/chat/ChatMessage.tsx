@@ -24,7 +24,7 @@ export interface ChatMessageProps {
   documentIdentifier?: string;
 }
 
-export default function ChatMessage(props: ChatMessageProps) {
+function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { addNotification, removeNotification } = useNotifications();
   // State for copy icon feedback
@@ -295,7 +295,7 @@ export default function ChatMessage(props: ChatMessageProps) {
   }, [props.documentIdentifier, appContext, showSources]);
 
   // Separate sources into grant sources (NOFO) and uploaded files (userDocuments)
-  const sources = showSources ? (props.message.metadata.Sources as any[]) : [];
+  const sources = showSources ? (props.message.metadata.Sources as Array<{ title: string; uri: string }>) : [];
   const grantSources = sources.filter((source) => 
     source.uri && !source.uri.includes("userDocuments")
   );
@@ -542,3 +542,5 @@ export default function ChatMessage(props: ChatMessageProps) {
     </article>
   );
 }
+
+export default React.memo(ChatMessage);

@@ -1,6 +1,8 @@
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 
-function pairwise(arr: ChatBotHistoryItem[], func) {
+type ChatMetadata = ChatBotHistoryItem["metadata"];
+
+function pairwise(arr: ChatBotHistoryItem[], func: (a: ChatBotHistoryItem, b: ChatBotHistoryItem) => void) {
   for (let i = 0; i < arr.length - 1; i++) {
     func(arr[i], arr[i + 1]);
   }
@@ -10,7 +12,7 @@ function pairwise(arr: ChatBotHistoryItem[], func) {
  * Assembles the chat history into a format expected by the API
  */
 export function assembleHistory(history: ChatBotHistoryItem[]) {
-  const hist: Object[] = [];
+  const hist: Array<{ user: string; chatbot: string; metadata: string }> = [];
   for (let i = 0; i < history.length - 1; i++) {
     if (history[i].type == ChatBotMessageType.Human) {
       hist.push({ "user": history[i].content, "chatbot": history[i+1].content, "metadata" : JSON.stringify(history[i+1].metadata)})
@@ -25,7 +27,7 @@ export function assembleHistory(history: ChatBotHistoryItem[]) {
  * Backend format: [{ user: "message", chatbot: "response", metadata: "..." }]
  * Frontend format: [{ type: "Human", content: "...", metadata: {} }, { type: "AI", content: "...", metadata: {...} }]
  */
-export function parseChatHistory(backendHistory: any[]): ChatBotHistoryItem[] {
+export function parseChatHistory(backendHistory: Array<Record<string, unknown>>): ChatBotHistoryItem[] {
   if (!backendHistory || !Array.isArray(backendHistory)) {
     return [];
   }
@@ -39,23 +41,23 @@ export function parseChatHistory(backendHistory: any[]): ChatBotHistoryItem[] {
       // Handle case where user is empty string (initial greeting)
       const isEmptyUser = entry.user === "";
       
-      let metadata = {};
+      let metadata: ChatMetadata = {};
       try {
         // Metadata might be a string or already an object
         if (typeof entry.metadata === 'string') {
           const parsed = JSON.parse(entry.metadata);
           // If parsed result is an array, wrap it in Sources object (for compatibility with ChatMessage component)
           if (Array.isArray(parsed)) {
-            metadata = { Sources: parsed };
+            metadata = { Sources: parsed } as ChatMetadata;
           } else {
-            metadata = parsed;
+            metadata = parsed as ChatMetadata;
           }
         } else if (entry.metadata) {
           // If it's already an object but has an array at root, wrap it
           if (Array.isArray(entry.metadata)) {
-            metadata = { Sources: entry.metadata };
+            metadata = { Sources: entry.metadata } as ChatMetadata;
           } else {
-            metadata = entry.metadata;
+            metadata = entry.metadata as ChatMetadata;
           }
         }
       } catch (e) {
@@ -67,28 +69,28 @@ export function parseChatHistory(backendHistory: any[]): ChatBotHistoryItem[] {
       if (!isEmptyUser) {
         frontendHistory.push({
           type: ChatBotMessageType.Human,
-          content: entry.user,
+          content: String(entry.user),
           metadata: {},
         });
       }
 
       frontendHistory.push({
         type: ChatBotMessageType.AI,
-        content: entry.chatbot,
+        content: String(entry.chatbot),
         metadata: metadata,
       });
     } else if (entry.type && entry.content) {
       // Already in frontend format, just ensure metadata is an object
-      let metadata = entry.metadata || {};
+      let metadata: ChatMetadata = (entry.metadata || {}) as ChatMetadata;
       
       // Ensure Sources array is properly formatted if metadata exists
-      if (metadata && typeof metadata === 'object' && !metadata.Sources && Array.isArray(metadata)) {
-        metadata = { Sources: metadata };
+      if (metadata && typeof metadata === 'object' && !('Sources' in metadata) && Array.isArray(metadata)) {
+        metadata = { Sources: metadata } as ChatMetadata;
       }
       
       frontendHistory.push({
         type: entry.type as ChatBotMessageType,
-        content: entry.content,
+        content: String(entry.content),
         metadata: metadata,
       });
     }

@@ -17,17 +17,9 @@ import WelcomeModal from "./components/WelcomeModal";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { Auth } from "aws-amplify";
 import type { DraftStatus } from "../../common/api-client/drafts-client";
+import type { DocumentData } from "../../common/types/document";
 import { Utils } from "../../common/utils";
 import "../../styles/document-editor.css";
-
-interface DocumentData {
-  id: string;
-  nofoId: string;
-  sections: Record<string, any>;
-  projectBasics?: any;
-  questionnaire?: any;
-  lastModified: string;
-}
 
 const ERROR_MESSAGES = {
   LOAD_FAILED: "Failed to load document data",

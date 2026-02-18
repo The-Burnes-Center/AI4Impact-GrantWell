@@ -166,10 +166,10 @@ export default function Chat(props: {
             sessionId: props.sessionId,
             userId: username,
           });
-        } catch (error: any) {
+        } catch (error: unknown) {
           // If session doesn't exist (404), create it with initial greeting
           // Otherwise, rethrow the error
-          if (error.message && error.message.includes("No record found")) {
+          if (error instanceof Error && error.message.includes("No record found")) {
             hist = null; // Session doesn't exist, will create it below
           } else {
             throw error; // Re-throw other errors
@@ -178,7 +178,7 @@ export default function Chat(props: {
 
         if (hist?.chatHistory && hist.chatHistory.length > 0) {
           // Convert backend format to frontend format
-          const parsedHistory = parseChatHistory(hist.chatHistory);
+          const parsedHistory = parseChatHistory(hist.chatHistory as unknown as Array<Record<string, unknown>>);
           setMessageHistory(parsedHistory);
           // Scroll to bottom of message area to show latest messages
           setTimeout(() => {
@@ -218,7 +218,7 @@ export default function Chat(props: {
         setRunning(false);
       } catch (error) {
         console.log(error);
-        addNotification("error", error.message);
+        addNotification("error", error instanceof Error ? error.message : String(error));
         addNotification("info", "Please refresh the page");
       }
     })();

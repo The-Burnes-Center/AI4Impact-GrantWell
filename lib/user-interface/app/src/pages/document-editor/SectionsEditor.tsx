@@ -61,7 +61,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             const apiSections = result.data.ProjectNarrativeSections;
 
             if (Array.isArray(apiSections) && apiSections.length > 0) {
-              const formattedSections = apiSections.map((section) => ({
+              const formattedSections = apiSections.map((section: { item?: string; description?: string }) => ({
                 name: section.item || "Untitled Section",
                 description: section.description || "No description provided.",
               }));

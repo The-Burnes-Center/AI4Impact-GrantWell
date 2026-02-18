@@ -16,21 +16,29 @@ import AboutPanel from "./components/AboutPanel";
 import ResourcesPanel from "./components/ResourcesPanel";
 import FeedbackForm from "./components/FeedbackForm";
 import type { NOFO } from "../../common/types/nofo";
+import type { RawNOFOData } from "../../common/types/document";
+import type { RecentlyViewedNOFO } from "../../common/helpers/recently-viewed-nofos";
 import "../../styles/base-page.css";
 import "../../styles/landing-page.css";
+
+interface SelectableDocument {
+  label: string;
+  value: string;
+  status?: "active" | "archived";
+}
 
 export default function Welcome() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedDocument, setSelectedDocument] = useState<any>(null);
-  const [documents, setDocuments] = useState<any[]>([]);
-  const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<any[]>([]);
+  const [selectedDocument, setSelectedDocument] = useState<SelectableDocument | null>(null);
+  const [documents, setDocuments] = useState<SelectableDocument[]>([]);
+  const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<RecentlyViewedNOFO[]>([]);
   const [tableNofos, setTableNofos] = useState<NOFO[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [highlightCTAButtons, setHighlightCTAButtons] = useState(false);
   const [srAnnouncement, setSrAnnouncement] = useState("");
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
-  const prevSelectedDocRef = useRef<any>(null);
+  const prevSelectedDocRef = useRef<SelectableDocument | null>(null);
   const firstCTAButtonRef = useRef<HTMLButtonElement>(null);
 
   const apiClient = useApiClient();
@@ -61,7 +69,7 @@ export default function Welcome() {
 
         if (result.nofoData) {
           const sortedNofos = [...result.nofoData].sort(
-            (a: { name: string; status: string }, b: { name: string; status: string }) => {
+            (a: RawNOFOData, b: RawNOFOData) => {
               if (a.status === "active" && b.status !== "active") return -1;
               if (a.status !== "active" && b.status === "active") return 1;
               return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
@@ -69,7 +77,7 @@ export default function Welcome() {
           );
 
           setDocuments(
-            sortedNofos.map((nofo: { name: string; status: string }) => ({
+            sortedNofos.map((nofo: RawNOFOData) => ({
               label: nofo.name,
               value: nofo.name + "/",
               status: nofo.status as "active" | "archived",
@@ -77,13 +85,13 @@ export default function Welcome() {
           );
 
           setTableNofos(
-            sortedNofos.map((nofo: any, index: number) => ({
+            sortedNofos.map((nofo: RawNOFOData, index: number) => ({
               id: index,
               name: nofo.name,
               status: nofo.status as "active" | "archived",
               isPinned: nofo.isPinned || false,
               expirationDate: nofo.expiration_date || null,
-              grantType: nofo.grant_type || null,
+              grantType: (nofo.grant_type as NOFO["grantType"]) || null,
               agency: nofo.agency || null,
               category: nofo.category || null,
             }))
@@ -100,7 +108,7 @@ export default function Welcome() {
             }))
           );
           setTableNofos(
-            sortedFolders.map((folder: string, index: number) => ({
+            sortedFolders.map((folder: string, index: number): NOFO => ({
               id: index, name: folder, status: "active" as const,
               isPinned: false, expirationDate: null, grantType: null,
               agency: null, category: null,
@@ -152,8 +160,13 @@ export default function Welcome() {
     prevSelectedDocRef.current = selectedDocument;
   }, [selectedDocument]);
 
+  const handleSelectDocument = useCallback(
+    (doc: SelectableDocument | null) => setSelectedDocument(doc),
+    []
+  );
+
   const handleNOFOSelect = useCallback(
-    (href: string, selectedNOFO: any) => {
+    (href: string, selectedNOFO: { label: string; value: string }) => {
       setRecentlyViewedNOFOs(addToRecentlyViewed(selectedNOFO));
       navigate(href);
     },
@@ -247,7 +260,7 @@ export default function Welcome() {
         {/* Search bar */}
         <IntegratedSearchBar
           documents={documents}
-          onSelectDocument={setSelectedDocument}
+          onSelectDocument={handleSelectDocument}
           isLoading={loading}
           searchTerm={searchTerm}
           onSearchTermChange={setSearchTerm}
@@ -285,7 +298,7 @@ export default function Welcome() {
             <GrantsTable
               nofos={tableNofos}
               loading={loading}
-              onSelectDocument={setSelectedDocument}
+              onSelectDocument={handleSelectDocument}
               onSearchTermChange={setSearchTerm}
               searchTerm={searchTerm}
             />

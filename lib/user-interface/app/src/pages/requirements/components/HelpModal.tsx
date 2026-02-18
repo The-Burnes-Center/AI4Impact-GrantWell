@@ -7,7 +7,7 @@ interface HelpModalProps {
   onClose: () => void;
 }
 
-const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
+const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalProps) {
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const modalRef = useFocusTrap({ isOpen, onEscape: handleClose, lockScroll: true });
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -108,6 +108,6 @@ const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
     </div>,
     document.body
   );
-};
+});
 
 export default HelpModal;

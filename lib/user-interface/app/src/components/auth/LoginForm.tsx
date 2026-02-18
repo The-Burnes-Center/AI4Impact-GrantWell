@@ -20,7 +20,7 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: Logi
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [formView, setFormView] = useState<FormView>('login');
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<unknown>(null);
   const [newPassword, setNewPassword] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   
@@ -73,8 +73,8 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: Logi
       }
 
       onSuccess();
-    } catch (err: any) {
-      const errorMessage = err.message || 'An error occurred during sign in';
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred during sign in';
       if (errorMessage.toLowerCase().includes('pending sign in attempt')) {
         setLoading(false);
         return;
@@ -101,8 +101,8 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: Logi
     try {
       await Auth.completeNewPassword(currentUser, newPassword);
       onSuccess();
-    } catch (err: any) {
-      const errorMessage = err.message || 'An error occurred setting new password';
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred setting new password';
       if (errorMessage.toLowerCase().includes('pending sign in attempt')) {
         setLoading(false);
         return;
@@ -129,8 +129,8 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: Logi
       await Auth.forgotPassword(email.toLowerCase().trim());
       setSuccess('Verification code sent to your email');
       setFormView('reset-password');
-    } catch (err: any) {
-      setError(err.message || 'Failed to send password reset code');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to send password reset code');
     } finally {
       setLoading(false);
     }
@@ -155,8 +155,8 @@ export default function LoginForm({ onSuccess, onError, onSwitchToSignUp }: Logi
       setNewPassword('');
       setVerificationCode('');
       setFormView('login');
-    } catch (err: any) {
-      setError(err.message || 'Failed to reset password');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to reset password');
     } finally {
       setLoading(false);
     }

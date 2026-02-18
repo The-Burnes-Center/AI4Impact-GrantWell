@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const FeedbackForm: React.FC = () => {
+const FeedbackForm = React.memo(function FeedbackForm() {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -153,6 +153,6 @@ const FeedbackForm: React.FC = () => {
       )}
     </div>
   );
-};
+});
 
 export default FeedbackForm;

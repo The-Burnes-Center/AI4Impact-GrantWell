@@ -5,13 +5,15 @@ interface ContentBoxProps {
   backgroundColor?: string;
 }
 
-const ContentBox: React.FC<ContentBoxProps> = ({
+const ContentBox = React.memo(function ContentBox({
   children,
   backgroundColor = "#f1f6f9",
-}) => (
+}: ContentBoxProps) {
+  return (
   <div className="content-box" style={{ backgroundColor }}>
     <div className="content-box__inner">{children}</div>
   </div>
-);
+  );
+});
 
 export default ContentBox;
