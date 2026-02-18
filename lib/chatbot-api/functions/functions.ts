@@ -362,12 +362,14 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           NOFO_BUCKET: props.ffioNofosBucket.bucketName,
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+          KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
+          SOURCE: props.knowledgeBaseSource.attrDataSourceId,
+          USER_DOCUMENTS_SOURCE: props.userDocumentsDataSource?.attrDataSourceId || "",
         },
         timeout: cdk.Duration.seconds(30),
       }
     );
 
-    // Grant S3 read/write permissions for both buckets
     createMetadataFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -379,12 +381,33 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // Grant s3:ListBucket so GetObject returns NoSuchKey (not AccessDenied) for missing keys
+    createMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket"],
+        resources: [
+          props.userDocumentsBucket.bucketArn,
+          props.ffioNofosBucket.bucketArn,
+        ],
+      })
+    );
+
     // Grant permission to invoke KB sync function
     createMetadataFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["lambda:InvokeFunction"],
         resources: [kbSyncAPIHandlerFunction.functionArn],
+      })
+    );
+
+    // Grant Bedrock permissions for checking sync status before triggering
+    createMetadataFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:ListIngestionJobs"],
+        resources: [props.knowledgeBase.attrKnowledgeBaseArn],
       })
     );
 
