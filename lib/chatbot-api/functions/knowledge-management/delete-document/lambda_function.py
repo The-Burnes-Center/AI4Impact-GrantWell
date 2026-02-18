@@ -47,7 +47,8 @@ def lambda_handler(event, context):
             try:
                 lambda_client.invoke(
                     FunctionName=SYNC_FUNCTION,
-                    InvocationType='Event'
+                    InvocationType='Event',
+                    Payload=json.dumps({'syncSource': 'user-documents'})
                 )
                 print("Triggered KB sync")
             except Exception as sync_err:

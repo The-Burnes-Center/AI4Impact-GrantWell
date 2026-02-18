@@ -136,29 +136,56 @@ def lambda_handler(event, context):
     # Retrieve the resource path from the event dictionary
     resource_path = event.get('rawPath', '')
 
+    # Targeted sync: create-metadata passes syncSource to sync only the relevant data source
+    sync_source = event.get('syncSource', '')
+
     if not resource_path:
+        if sync_source == 'user-documents' and user_documents_source:
+            if check_running(user_documents_source):
+                print("User documents sync already in progress.")
+                return
+            client.start_ingestion_job(
+                dataSourceId=user_documents_source,
+                knowledgeBaseId=kb_index
+            )
+            print(f"Started user documents sync for data source: {user_documents_source}")
+            return
+
+        if sync_source == 'nofo' and source_index:
+            if check_running(source_index):
+                print("NOFO sync already in progress.")
+                return
+            client.start_ingestion_job(
+                dataSourceId=source_index,
+                knowledgeBaseId=kb_index
+            )
+            print(f"Started NOFO bucket sync for data source: {source_index}")
+            return
+
+        # No syncSource specified — sync both (legacy / direct invocations)
         if check_any_running():
             print("Sync already in progress.")
             return
-        else:
-            # Start sync for NOFO bucket data source
-            if source_index:
-                client.start_ingestion_job(
-                    dataSourceId=source_index,
-                    knowledgeBaseId=kb_index
-                )
-                print(f"Started NOFO bucket sync for data source: {source_index}")
-            
-            # Start sync for user documents bucket data source
-            if user_documents_source:
+
+        if source_index:
+            client.start_ingestion_job(
+                dataSourceId=source_index,
+                knowledgeBaseId=kb_index
+            )
+            print(f"Started NOFO bucket sync for data source: {source_index}")
+
+        if user_documents_source:
+            try:
                 client.start_ingestion_job(
                     dataSourceId=user_documents_source,
                     knowledgeBaseId=kb_index
                 )
                 print(f"Started user documents bucket sync for data source: {user_documents_source}")
-            
-            print("Started knowledge base sync for all data sources.")
-            return
+            except client.exceptions.ConflictException:
+                print("Skipped user documents sync — another ingestion job is already running.")
+
+        print("Started knowledge base sync.")
+        return
     
     # Check admin access    
     try:
@@ -188,7 +215,6 @@ def lambda_handler(event, context):
                 'body': json.dumps('STILL SYNCING')
             }
         else:
-            # Start sync for NOFO bucket data source
             if source_index:
                 client.start_ingestion_job(
                     dataSourceId=source_index,
@@ -196,13 +222,15 @@ def lambda_handler(event, context):
                 )
                 print(f"Started NOFO bucket sync for data source: {source_index}")
             
-            # Start sync for user documents bucket data source
             if user_documents_source:
-                client.start_ingestion_job(
-                    dataSourceId=user_documents_source,
-                    knowledgeBaseId=kb_index
-                )
-                print(f"Started user documents bucket sync for data source: {user_documents_source}")
+                try:
+                    client.start_ingestion_job(
+                        dataSourceId=user_documents_source,
+                        knowledgeBaseId=kb_index
+                    )
+                    print(f"Started user documents bucket sync for data source: {user_documents_source}")
+                except client.exceptions.ConflictException:
+                    print("Skipped user documents sync — another ingestion job is already running.")
             
             return {
                 'statusCode': 200,
