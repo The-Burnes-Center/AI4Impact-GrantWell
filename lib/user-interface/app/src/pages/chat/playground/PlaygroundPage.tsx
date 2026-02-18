@@ -5,7 +5,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { HelpCircle, Upload } from "lucide-react";
 import { useApiClient } from "../../../hooks/use-api-client";
 import { useFocusTrap } from "../../../hooks/use-focus-trap";
-import UploadModal from "../../../components/chat/UploadModal";
+import DocumentManager from "../../../components/chat/DocumentManager";
 import "../../../styles/playground.css";
 
 export default function Playground() {
@@ -96,7 +96,7 @@ export default function Playground() {
                   onClick={() => setUploadModalOpen(true)}
                   aria-label="Upload supporting documents"
                 >
-                  <Upload size={16} /> Upload Data
+                  <Upload size={16} /> Upload Documents
                 </button>
               )}
               <button
@@ -118,7 +118,7 @@ export default function Playground() {
           <div className="pg-content" aria-hidden={helpOpen}>
             <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
             {documentIdentifier && (
-              <UploadModal
+              <DocumentManager
                 isOpen={uploadModalOpen}
                 onClose={() => setUploadModalOpen(false)}
                 documentIdentifier={documentIdentifier}

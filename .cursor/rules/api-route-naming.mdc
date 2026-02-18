@@ -1,0 +1,78 @@
+---
+description: API route naming conventions and frontend client organization for GrantWell
+globs: "**/api-routes/**,**/api-client/**"
+alwaysApply: false
+---
+
+# API Route & Client Naming Conventions
+
+## Route Naming
+
+Routes use **noun-based paths** grouped by resource. Describe the domain operation, not the storage technology.
+
+### Pattern
+
+```
+/{resource}/{action}
+/{resource}/{id}
+```
+
+### User Documents Routes
+
+| Route | Method | Lambda | Description |
+|-------|--------|--------|-------------|
+| `/user-documents/upload-url` | POST | generate-upload-url | Get presigned PUT URL |
+| `/user-documents/download-url` | POST | generate-download-url | Get presigned GET URL |
+| `/user-documents/list` | POST | list-user-documents | List user's uploaded files |
+| `/user-documents/delete` | POST | delete-user-document | Delete a file |
+
+### KB Sync Routes
+
+| Route | Method | Lambda | Description |
+|-------|--------|--------|-------------|
+| `/kb-sync/sync` | POST | kb-sync | Trigger KB sync |
+| `/kb-sync/status` | GET | kb-sync | Check if sync is running |
+| `/kb-sync/last-sync` | GET | kb-sync | Get last sync timestamp |
+
+### Naming Rules
+
+1. **No storage technology in route names** -- routes describe what the user is doing, not how it's stored
+   - `/user-documents/list` not `/get-s3` or `/s3-bucket-data`
+   - `/user-documents/delete` not `/delete-s3-file`
+   - `/user-documents/upload-url` not `/signed-url`
+
+2. **Resource-first paths** -- the resource noun comes first, action second
+   - `/user-documents/upload-url` not `/upload-user-document`
+
+3. **Consistent pluralization** -- use plural nouns for collections
+   - `/user-documents/` not `/user-document/`
+
+## Frontend API Client Classes
+
+Client class names match the resource they interact with:
+
+| Client Class | Resource | Methods |
+|-------------|----------|---------|
+| `UserDocumentsClient` | `/user-documents/*` | `getUploadURL()`, `getDownloadURL()`, `listDocuments()`, `deleteDocument()` |
+| `KBSyncClient` | `/kb-sync/*` | `startSync()`, `isSyncing()`, `getLastSync()` |
+
+### Rules
+
+1. **One client per resource group** -- don't mix user document operations with KB sync operations
+2. **Method names describe the action** -- `getUploadURL()` not `getSignedUrl()`
+3. **Client file names use kebab-case** -- `user-documents-client.ts`, `kb-sync-client.ts`
+4. **No generic names** -- `UserDocumentsClient` not `KnowledgeManagementClient` or `S3Client`
+
+## Lambda Folder Naming
+
+Lambda folders under `knowledge-management/` describe the operation:
+
+| Folder | Description |
+|--------|-------------|
+| `generate-upload-url/` | Generates presigned PUT URLs |
+| `generate-download-url/` | Generates presigned GET URLs |
+| `list-user-documents/` | Lists files in user's S3 prefix |
+| `delete-user-document/` | Deletes a file and its metadata |
+| `create-metadata/` | Auto-creates .metadata.json sidecar files |
+| `kb-sync/` | Manages KB ingestion jobs |
+| `shared/` | Shared utilities (auth, response, s3) |
