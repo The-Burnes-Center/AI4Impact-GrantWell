@@ -451,9 +451,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       {
         runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "knowledge-management/list-documents")
+          path.join(__dirname, "knowledge-management")
         ),
-        handler: "index.handler",
+        handler: "list-documents/index.handler",
         environment: {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
         },
@@ -894,9 +894,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       {
         runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "knowledge-management/generate-upload-url")
+          path.join(__dirname, "knowledge-management")
         ),
-        handler: "index.handler",
+        handler: "generate-upload-url/index.handler",
         environment: {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
         },
@@ -921,9 +921,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       {
         runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "knowledge-management/generate-download-url")
+          path.join(__dirname, "knowledge-management")
         ),
-        handler: "index.handler",
+        handler: "generate-download-url/index.handler",
         environment: {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
         },

@@ -8,10 +8,6 @@ export class UserDocumentsClient {
     this.API = _appConfig.httpEndpoint.slice(0, -1);
   }
 
-  private extractNofoName(documentIdentifier: string): string {
-    return documentIdentifier.split("/").pop() || documentIdentifier;
-  }
-
   async getUploadURL(
     fileName: string,
     fileType: string,
