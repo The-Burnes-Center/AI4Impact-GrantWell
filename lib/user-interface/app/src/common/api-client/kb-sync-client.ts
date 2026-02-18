@@ -8,21 +8,6 @@ export class KBSyncClient {
     this.API = _appConfig.httpEndpoint.slice(0, -1);
   }
 
-  async syncKB(): Promise<string> {
-    const auth = await Utils.authenticate();
-    const response = await fetch(`${this.API}/kb-sync/sync-kb`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: auth,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to sync");
-    }
-    return await response.json();
-  }
-
   async isSyncing(): Promise<string> {
     const auth = await Utils.authenticate();
     const response = await fetch(`${this.API}/kb-sync/still-syncing`, {

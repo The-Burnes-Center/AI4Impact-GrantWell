@@ -427,12 +427,7 @@ export default function DocumentManager({
         `${completedCount} file${completedCount !== 1 ? "s" : ""} uploaded.${failedCount > 0 ? ` ${failedCount} failed.` : " Indexing documents."}`
       );
 
-      try {
-        await apiClient.kbSync.syncKB();
-        onSyncStarted?.();
-      } catch (syncError) {
-        console.error("Error syncing knowledge base:", syncError);
-      }
+      onSyncStarted?.();
 
       const toastMsg = failedCount > 0
         ? `${completedCount} file${completedCount !== 1 ? "s" : ""} uploaded. ${failedCount} failed.`

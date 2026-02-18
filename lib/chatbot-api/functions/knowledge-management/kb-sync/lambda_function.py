@@ -167,13 +167,6 @@ def lambda_handler(event, context):
             print("Sync already in progress.")
             return
 
-        if source_index:
-            client.start_ingestion_job(
-                dataSourceId=source_index,
-                knowledgeBaseId=kb_index
-            )
-            print(f"Started NOFO bucket sync for data source: {source_index}")
-
         if user_documents_source:
             try:
                 client.start_ingestion_job(
@@ -183,6 +176,16 @@ def lambda_handler(event, context):
                 print(f"Started user documents bucket sync for data source: {user_documents_source}")
             except client.exceptions.ConflictException:
                 print("Skipped user documents sync — another ingestion job is already running.")
+
+        if source_index:
+            try:
+                client.start_ingestion_job(
+                    dataSourceId=source_index,
+                    knowledgeBaseId=kb_index
+                )
+                print(f"Started NOFO bucket sync for data source: {source_index}")
+            except client.exceptions.ConflictException:
+                print("Skipped NOFO sync — another ingestion job is already running.")
 
         print("Started knowledge base sync.")
         return
@@ -206,40 +209,8 @@ def lambda_handler(event, context):
             'body': json.dumps(f'Unable to check user role, please ensure you have Cognito configured correctly with a custom:role attribute. Error: {e}')
         }    
         
-    # Check if the request is for syncing Knowledge Base
-    if "sync-kb" in resource_path:
-        if check_any_running():
-            return {
-                'statusCode': 200,
-                'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps('STILL SYNCING')
-            }
-        else:
-            if source_index:
-                client.start_ingestion_job(
-                    dataSourceId=source_index,
-                    knowledgeBaseId=kb_index
-                )
-                print(f"Started NOFO bucket sync for data source: {source_index}")
-            
-            if user_documents_source:
-                try:
-                    client.start_ingestion_job(
-                        dataSourceId=user_documents_source,
-                        knowledgeBaseId=kb_index
-                    )
-                    print(f"Started user documents bucket sync for data source: {user_documents_source}")
-                except client.exceptions.ConflictException:
-                    print("Skipped user documents sync — another ingestion job is already running.")
-            
-            return {
-                'statusCode': 200,
-                'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps('STARTED SYNCING')
-            }
-   
-    # Check if the request is for checking the sync status        
-    elif "still-syncing" in resource_path:
+    # Check if the request is for checking the sync status
+    if "still-syncing" in resource_path:
         status_msg = 'STILL SYNCING' if check_any_running() else 'DONE SYNCING'
         return {
             'statusCode': 200,

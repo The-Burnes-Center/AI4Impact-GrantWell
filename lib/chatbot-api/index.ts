@@ -269,17 +269,6 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    const kbSyncAPIIntegration = new HttpLambdaIntegration(
-      "KBSyncAPIIntegration",
-      lambdaFunctions.syncKBFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/kb-sync/sync-kb",
-      methods: [apigwv2.HttpMethod.GET],
-      integration: kbSyncAPIIntegration,
-      authorizer: httpAuthorizer,
-    });
-
     const kbLastSyncAPIIntegration = new HttpLambdaIntegration(
       "KBLastSyncAPIIntegration",
       lambdaFunctions.syncKBFunction

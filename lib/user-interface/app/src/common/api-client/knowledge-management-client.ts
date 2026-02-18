@@ -106,43 +106,4 @@ export class KnowledgeManagementClient {
     return await response.json()
   }
 
-  // Runs a sync job on Kendra (hardcoded datasource as well as index on the backend)
-  async syncKendra() : Promise<string> {
-    const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/kb-sync/sync-kb', {headers: {
-      'Content-Type': 'application/json',
-      'Authorization' : auth
-    }})
-    if (!response.ok) {
-      throw new Error('Failed to sync');
-    }
-    return await response.json()
-  }
-
-  // Checks if Kendra is currently syncing (used to disable the sync button)
-  async kendraIsSyncing() : Promise<string> {
-    const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/kb-sync/still-syncing', {headers: {
-      'Content-Type': 'application/json',
-      'Authorization' : auth
-    }})
-    if (!response.ok) {
-      throw new Error('Failed to check sync status');
-    }
-    return await response.json()
-  }
-
-  // Checks the last time Kendra was synced
-  async lastKendraSync() : Promise<string> {
-    const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/kb-sync/get-last-sync', {headers: {
-      'Content-Type': 'application/json',
-      'Authorization' : auth
-    }})
-    if (!response.ok) {
-      throw new Error('Failed to check last status');
-    }
-    return await response.json()
-  }
-
 }

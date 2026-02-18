@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, type CSSProperties } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import { FileUploader } from "../../common/file-uploader";
@@ -58,7 +58,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [generatingDraft, setGeneratingDraft] = useState(false);
   const [draftProgress, setDraftProgress] = useState<string>("");
   const [hasExistingDraft, setHasExistingDraft] = useState(false);
+  const [kbIndexing, setKbIndexing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const extractNofoName = (docId: string | null): string => {
     if (!docId) return "";
@@ -97,6 +99,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setHasExistingDraft(true);
     }
   }, [documentData]);
+
+  useEffect(() => {
+    return () => {
+      if (syncPollRef.current) clearInterval(syncPollRef.current);
+    };
+  }, []);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -160,11 +168,21 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
 
       setUploadProgress(100);
-      try {
-        await apiClient.kbSync.syncKB();
-      } catch (syncError) {
-        console.error("Error syncing knowledge base:", syncError);
-      }
+      setKbIndexing(true);
+
+      if (syncPollRef.current) clearInterval(syncPollRef.current);
+      syncPollRef.current = setInterval(async () => {
+        try {
+          const status = await apiClient.kbSync.isSyncing();
+          if (typeof status === "string" && status.includes("DONE")) {
+            setKbIndexing(false);
+            if (syncPollRef.current) clearInterval(syncPollRef.current);
+            syncPollRef.current = null;
+          }
+        } catch {
+          // Keep polling on transient errors
+        }
+      }, 5000);
 
       setTimeout(() => {
         setFiles([]);
@@ -439,6 +457,40 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               }}>
                 Uploading... {uploadProgress}%
               </p>
+            </div>
+          )}
+
+          {kbIndexing && !uploading && (
+            <div
+              role="status"
+              aria-live="polite"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: spacing.md,
+                marginTop: spacing.lg,
+                padding: `${spacing.md} ${spacing.lg}`,
+                backgroundColor: colors.primaryLight,
+                borderRadius: borderRadius.md,
+                border: `1px solid ${colors.border}`,
+                fontSize: typography.fontSize.sm,
+                color: colors.primary,
+                fontFamily: typography.fontFamily,
+              } satisfies CSSProperties}
+            >
+              <div
+                aria-hidden="true"
+                style={{
+                  width: "14px",
+                  height: "14px",
+                  border: `2px solid ${colors.primary}`,
+                  borderTopColor: "transparent",
+                  borderRadius: "50%",
+                  animation: "spin 1s linear infinite",
+                  flexShrink: 0,
+                }}
+              />
+              Your documents are being indexed and will be available shortly.
             </div>
           )}
         </div>

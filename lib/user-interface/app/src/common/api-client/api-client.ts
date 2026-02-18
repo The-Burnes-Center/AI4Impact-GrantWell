@@ -1,6 +1,5 @@
 import { AppConfig } from "../types/app";
 import { SessionsClient } from "./sessions-client";
-import { KnowledgeManagementClient } from "./knowledge-management-client";
 import { UserDocumentsClient } from "./user-documents-client";
 import { KBSyncClient } from "./kb-sync-client";
 import { LandingPageClient } from "./landing-page-clients";
@@ -9,20 +8,11 @@ import { DraftsClient } from "./drafts-client";
 
 export class ApiClient {
   private _sessionsClient: SessionsClient | undefined;
-  private _knowledgeManagementClient: KnowledgeManagementClient | undefined;
   private _userDocumentsClient: UserDocumentsClient | undefined;
   private _kbSyncClient: KBSyncClient | undefined;
   private _landingPageClient: LandingPageClient | undefined;
   private _userManagementClient: UserManagementClient | undefined;
   private _draftsClient: DraftsClient | undefined;
-
-  /** @deprecated Use userDocuments and kbSync instead */
-  public get knowledgeManagement() {
-    if (!this._knowledgeManagementClient) {
-      this._knowledgeManagementClient = new KnowledgeManagementClient(this._appConfig);
-    }
-    return this._knowledgeManagementClient;
-  }
 
   public get userDocuments() {
     if (!this._userDocumentsClient) {
