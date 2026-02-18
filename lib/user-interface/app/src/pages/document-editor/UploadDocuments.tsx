@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import { FileUploader } from "../../common/file-uploader";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import Card from "../../components/ui/Card";
+import NavigationButtons from "../../components/ui/NavigationButtons";
+import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import type { DocumentData } from "../../common/types/document";
-import "../../styles/document-editor.css";
 
-// File type mapping
 const MIME_TYPES: Record<string, string> = {
   ".pdf": "application/pdf",
   ".doc": "application/msword",
@@ -29,19 +29,14 @@ const MIME_TYPES: Record<string, string> = {
   ".msg": "application/vnd.ms-outlook",
 };
 
+const SUPPORTED_ACCEPT = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.html,.json,.xml,.md,.rtf,.epub,.odt,.tsv,.eml,.msg";
+
 interface UploadDocumentsProps {
   onContinue: () => void;
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
   sessionId: string;
   documentData?: DocumentData | null;
-}
-
-interface FileInfo {
-  name: string;
-  size: number;
-  type: string;
-  lastModified: number;
 }
 
 const UploadDocuments: React.FC<UploadDocumentsProps> = ({
@@ -65,34 +60,28 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [hasExistingDraft, setHasExistingDraft] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Helper to extract NOFO name from documentIdentifier
   const extractNofoName = (docId: string | null): string => {
     if (!docId) return "";
     return docId.split("/").pop() || docId;
   };
 
-  // Get userId on mount and check if draft already exists
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
         setUserId(user.username);
-        
-        // Check if draft already exists with sections
+
         if (sessionId && user.username) {
           try {
             const draft = await apiClient.drafts.getDraft({
-              sessionId: sessionId,
-              userId: user.username
+              sessionId,
+              userId: user.username,
             });
-            
-            // Check if draft has sections (meaning it was already generated)
-            if (draft && draft.sections && Object.keys(draft.sections).length > 0) {
+            if (draft?.sections && Object.keys(draft.sections).length > 0) {
               setHasExistingDraft(true);
             }
-          } catch (error) {
-            // Draft might not exist yet, that's okay
-            console.log('No existing draft found');
+          } catch {
+            console.log("No existing draft found");
           }
         }
       } catch (error) {
@@ -102,8 +91,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     };
     fetchUserId();
   }, [apiClient, sessionId]);
-  
-  // Also check documentData prop for existing sections
+
   useEffect(() => {
     if (documentData?.sections && Object.keys(documentData.sections).length > 0) {
       setHasExistingDraft(true);
@@ -111,10 +99,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   }, [documentData]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles && selectedFiles.length > 0) {
-      const newFiles: File[] = Array.from(selectedFiles);
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    if (event.target.files && event.target.files.length > 0) {
+      setFiles((prev) => [...prev, ...Array.from(event.target.files!)]);
       setUploadError(null);
     }
   };
@@ -132,22 +118,15 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-
-    const droppedFiles = e.dataTransfer.files;
-    if (droppedFiles && droppedFiles.length > 0) {
-      const newFiles: File[] = Array.from(droppedFiles);
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setFiles((prev) => [...prev, ...Array.from(e.dataTransfer.files)]);
       setUploadError(null);
     }
   };
 
-  const openFileSelector = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
+  const openFileSelector = () => fileInputRef.current?.click();
 
-  const uploadFiles = async () => {
+  const uploadFiles = useCallback(async () => {
     if (!selectedNofo || !userId || files.length === 0) return;
 
     setUploading(true);
@@ -162,31 +141,15 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     try {
       for (const file of files) {
         const fileExt = "." + file.name.split(".").pop()?.toLowerCase();
-        const fileType =
-          MIME_TYPES[fileExt] || "application/octet-stream";
+        const fileType = MIME_TYPES[fileExt] || "application/octet-stream";
 
         try {
-          // Get upload URL from API (path will be constructed as userId/nofoName/filename)
           const uploadUrl = await apiClient.knowledgeManagement.getUploadURL(
-            file.name,  // Just the filename
-            fileType,
-            userId,     // User ID
-            nofoName    // NOFO name
+            file.name, fileType, userId, nofoName
           );
-
-          // Upload the file
-          await uploader.upload(
-            file,
-            uploadUrl,
-            fileType,
-            (uploaded: number) => {
-              const progress = Math.round(
-                ((uploadedSize + uploaded) / totalSize) * 100
-              );
-              setUploadProgress(progress);
-            }
-          );
-
+          await uploader.upload(file, uploadUrl, fileType, (uploaded: number) => {
+            setUploadProgress(Math.round(((uploadedSize + uploaded) / totalSize) * 100));
+          });
           uploadedSize += file.size;
         } catch (error) {
           console.error(`Error uploading file ${file.name}:`, error);
@@ -196,18 +159,13 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         }
       }
 
-      // All files uploaded successfully
       setUploadProgress(100);
-
-      // Sync KB after upload to ensure documents are indexed
       try {
         await apiClient.knowledgeManagement.syncKendra();
       } catch (syncError) {
         console.error("Error syncing knowledge base:", syncError);
-        // Non-critical error, don't show to user since files were uploaded successfully
       }
 
-      // Clear files after successful upload
       setTimeout(() => {
         setFiles([]);
         setUploading(false);
@@ -218,116 +176,78 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setUploadError("An error occurred during upload. Please try again.");
       setUploading(false);
     }
-  };
+  }, [selectedNofo, userId, files, apiClient]);
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) {
-      return bytes + " bytes";
-    } else if (bytes < 1024 * 1024) {
-      return (bytes / 1024).toFixed(1) + " KB";
-    } else {
-      return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-    }
+    if (bytes < 1024) return bytes + " bytes";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
   };
 
   const getFileIcon = (fileType: string): string => {
-    if (fileType.includes("pdf")) {
-      return "📄";
-    } else if (fileType.includes("image")) {
-      return "🖼️";
-    } else if (fileType.includes("word") || fileType.includes("document")) {
-      return "📝";
-    } else if (fileType.includes("excel") || fileType.includes("spreadsheet")) {
-      return "📊";
-    } else {
-      return "📎";
-    }
-  };
-
-  const handleAdditionalInfoChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setAdditionalInfo(e.target.value);
+    if (fileType.includes("pdf")) return "\u{1F4C4}";
+    if (fileType.includes("image")) return "\u{1F5BC}\uFE0F";
+    if (fileType.includes("word") || fileType.includes("document")) return "\u{1F4DD}";
+    if (fileType.includes("excel") || fileType.includes("spreadsheet")) return "\u{1F4CA}";
+    return "\u{1F4CE}";
   };
 
   const handleSubmit = async () => {
     if (!selectedNofo) return;
-    
+
     try {
       setIsLoading(true);
-      
-      // Upload files first if any are selected
+
       if (files.length > 0 && userId) {
         await uploadFiles();
-        // Wait a moment for upload to complete
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
       const username = userId || (await Auth.currentAuthenticatedUser()).username;
-
-      console.log('Fetching current draft from DB:', { sessionId, username });
-      // Get project basics and questionnaire from the database
-      // getDraft() will wait if draft generation is in progress
-      const draftToUse = await apiClient.drafts.getDraft({
-        sessionId: sessionId,
-        userId: username
-      });
-      console.log('Fetched current draft:', draftToUse);
+      const draftToUse = await apiClient.drafts.getDraft({ sessionId, userId: username });
 
       if (!draftToUse) {
-        throw new Error('Draft not found. Please start a new document first.');
+        throw new Error("Draft not found. Please start a new document first.");
       }
 
-      console.log('Generating draft sections...');
       setGeneratingDraft(true);
-      setDraftProgress('Starting draft generation...');
-      
-      // Generate draft sections using data from the database
-      // This uses async polling internally
+      setDraftProgress("Starting draft generation...");
+
       const result = await apiClient.drafts.generateDraft({
         query: "Generate all sections for the grant application",
         documentIdentifier: selectedNofo,
         projectBasics: draftToUse.projectBasics || {},
         questionnaire: draftToUse.questionnaire || {},
-        sessionId: sessionId,
+        sessionId,
         onProgress: (status: string) => {
           setDraftProgress(`Generating draft sections... (${status})`);
-        }
+        },
       });
-      console.log('Generated draft sections:', result);
 
       if (!result || Object.keys(result).length === 0) {
-        throw new Error('Failed to generate sections');
+        throw new Error("Failed to generate sections");
       }
-      
-      setDraftProgress('Draft generation completed!');
 
-      console.log('Updating draft in DB with new sections, additionalInfo, and uploadedFiles...');
-      // Update the draft with generated sections
-      // Include uploaded file info in the draft
-      const uploadedFileInfo = files.map(f => ({
+      setDraftProgress("Draft generation completed!");
+
+      const uploadedFileInfo = files.map((f) => ({
         name: f.name,
         size: f.size,
         type: f.type,
-        lastModified: f.lastModified
+        lastModified: f.lastModified,
       }));
       await apiClient.drafts.updateDraft({
         ...draftToUse,
-        sections: {
-          ...draftToUse.sections,  // Preserve existing sections
-          ...result  // Add new sections
-        },
-        status: 'editing_sections', // Draft generation complete, now editing sections
-        additionalInfo: additionalInfo,
-        uploadedFiles: uploadedFileInfo
+        sections: { ...draftToUse.sections, ...result },
+        status: "editing_sections",
+        additionalInfo,
+        uploadedFiles: uploadedFileInfo,
       });
-      console.log('Draft updated successfully. Navigating to next step.');
 
-      // Skip the "draft created" step and go directly to section editor
       onNavigate("sectionEditor");
     } catch (error) {
-      console.error('Error creating draft:', error);
-      setUploadError(error instanceof Error ? error.message : 'Failed to create draft. Please try again.');
+      console.error("Error creating draft:", error);
+      setUploadError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
     } finally {
       setIsLoading(false);
       setGeneratingDraft(false);
@@ -335,75 +255,367 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     }
   };
 
-  return (
-    <div className="ud-container">
-      <h2 className="ud-title">Additional Information</h2>
-      <p className="ud-subtitle">
-        Share any additional context or information that will help generate your grant application.
-      </p>
+  const dropzoneStyle: React.CSSProperties = {
+    border: `2px dashed ${isDragging ? colors.primary : colors.border}`,
+    borderRadius: borderRadius.lg,
+    padding: `${spacing["3xl"]} ${spacing.xl}`,
+    textAlign: "center",
+    backgroundColor: isDragging ? colors.primaryLight : colors.background,
+    cursor: "pointer",
+    transition: transitions.normal,
+    minHeight: "44px",
+  };
 
-      <div className="ud-card">
+  return (
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+      <Card header="Upload & Additional Info">
+        <p style={{ color: colors.textSecondary, marginBottom: spacing["2xl"], fontFamily: typography.fontFamily }}>
+          Upload supporting documents and share any additional context to help
+          generate your grant application.
+        </p>
+
+        {/* Upload Supporting Documents */}
+        <div style={{ marginBottom: spacing["3xl"] }}>
+          <h3 style={{
+            fontSize: typography.fontSize.lg,
+            fontWeight: typography.fontWeight.semibold,
+            color: colors.text,
+            marginBottom: spacing.sm,
+            fontFamily: typography.fontFamily,
+          }}>
+            Supporting Documents
+          </h3>
+          <p style={{
+            fontSize: typography.fontSize.sm,
+            color: colors.textSecondary,
+            marginBottom: spacing.lg,
+            fontFamily: typography.fontFamily,
+          }}>
+            Upload any documents that will strengthen your application
+            (e.g., organizational details, past performance reports, budget templates).
+          </p>
+
+          <div
+            style={dropzoneStyle}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={openFileSelector}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openFileSelector();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="Upload files by clicking or dragging and dropping"
+          >
+            <p style={{
+              fontSize: typography.fontSize.base,
+              fontWeight: typography.fontWeight.medium,
+              color: colors.text,
+              margin: `0 0 ${spacing.sm}`,
+              fontFamily: typography.fontFamily,
+            }}>
+              Drag and drop files here, or{" "}
+              <span style={{ color: colors.primary, textDecoration: "underline" }}>browse files</span>
+            </p>
+            <p style={{
+              fontSize: typography.fontSize.sm,
+              color: colors.textSecondary,
+              margin: 0,
+              fontFamily: typography.fontFamily,
+            }}>
+              Supported formats: PDF, DOC, DOCX, XLSX, PPTX, TXT, CSV, and more
+            </p>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileSelect}
+            style={{ display: "none" }}
+            accept={SUPPORTED_ACCEPT}
+            aria-label="Select files to upload"
+          />
+
+          {files.length > 0 && (
+            <div style={{ marginTop: spacing.lg }}>
+              <p style={{
+                fontSize: typography.fontSize.sm,
+                fontWeight: typography.fontWeight.semibold,
+                color: colors.text,
+                marginBottom: spacing.md,
+                fontFamily: typography.fontFamily,
+              }}>
+                Selected Files ({files.length})
+              </p>
+              {files.map((file, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: `${spacing.md} ${spacing.lg}`,
+                    borderRadius: borderRadius.md,
+                    backgroundColor: colors.background,
+                    border: `1px solid ${colors.border}`,
+                    marginBottom: spacing.sm,
+                    gap: spacing.md,
+                  }}
+                >
+                  <span style={{ fontSize: "20px", flexShrink: 0 }} aria-hidden="true">
+                    {getFileIcon(file.type)}
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{
+                      display: "block",
+                      fontSize: typography.fontSize.sm,
+                      fontWeight: typography.fontWeight.medium,
+                      color: colors.text,
+                      wordBreak: "break-all",
+                      fontFamily: typography.fontFamily,
+                    }}>
+                      {file.name}
+                    </span>
+                    <span style={{
+                      display: "block",
+                      fontSize: typography.fontSize.xs,
+                      color: colors.textSecondary,
+                      fontFamily: typography.fontFamily,
+                    }}>
+                      {formatFileSize(file.size)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setFiles((prev) => prev.filter((_, i) => i !== index))}
+                    aria-label={`Remove ${file.name}`}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: colors.danger,
+                      cursor: "pointer",
+                      fontSize: "20px",
+                      lineHeight: 1,
+                      minWidth: "44px",
+                      minHeight: "44px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: borderRadius.sm,
+                      flexShrink: 0,
+                    }}
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {uploading && (
+            <div style={{ marginTop: spacing.lg }} role="status" aria-live="polite">
+              <div style={{
+                height: "6px",
+                backgroundColor: colors.border,
+                borderRadius: borderRadius.sm,
+                overflow: "hidden",
+              }}>
+                <div style={{
+                  height: "100%",
+                  width: `${uploadProgress}%`,
+                  backgroundColor: colors.primary,
+                  transition: transitions.slow,
+                  borderRadius: borderRadius.sm,
+                }} />
+              </div>
+              <p style={{
+                fontSize: typography.fontSize.sm,
+                color: colors.textSecondary,
+                marginTop: spacing.xs,
+                fontFamily: typography.fontFamily,
+              }}>
+                Uploading... {uploadProgress}%
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Additional Information */}
         <div>
-          <h3 className="ud-card__title">Additional Information</h3>
-          <p className="ud-card__desc">
+          <h3 style={{
+            fontSize: typography.fontSize.lg,
+            fontWeight: typography.fontWeight.semibold,
+            color: colors.text,
+            marginBottom: spacing.sm,
+            fontFamily: typography.fontFamily,
+          }}>
+            Additional Information
+          </h3>
+          <p style={{
+            fontSize: typography.fontSize.sm,
+            color: colors.textSecondary,
+            marginBottom: spacing.lg,
+            fontFamily: typography.fontFamily,
+          }}>
             Is there anything else you'd like to share about your application?
           </p>
+          <label htmlFor="additional-info" className="sr-only">
+            Additional information about your application
+          </label>
           <textarea
-            className="ud-textarea"
+            id="additional-info"
             value={additionalInfo}
-            onChange={handleAdditionalInfoChange}
+            onChange={(e) => setAdditionalInfo(e.target.value)}
             placeholder="Enter any additional context or notes about your application..."
-            aria-label="Additional information about your application"
+            aria-describedby="additional-info-help"
+            style={{
+              width: "100%",
+              padding: spacing.md,
+              border: `1px solid ${colors.border}`,
+              borderRadius: borderRadius.md,
+              fontSize: typography.fontSize.base,
+              fontFamily: typography.fontFamily,
+              minHeight: "120px",
+              resize: "vertical",
+            }}
           />
-        </div>
-      </div>
-
-      <div className="ud-actions">
-        <button
-          className="ud-btn ud-btn--back"
-          onClick={() => onNavigate("questionnaire")}
-          aria-label="Go back to questionnaire"
-        >
-          <ArrowLeft size={18} aria-hidden="true" style={{ marginRight: 8 }} />
-          Back
-        </button>
-        <div className="ud-actions__right">
-          {hasExistingDraft && (
-            <button
-              className="ud-btn ud-btn--outline"
-              onClick={() => onNavigate("sectionEditor")}
-              aria-label="Continue to section editor"
-            >
-              Next
-              <ArrowRight size={18} aria-hidden="true" style={{ marginLeft: 8 }} />
-            </button>
-          )}
-          <button
-            className="ud-btn ud-btn--primary"
-            onClick={handleSubmit}
-            disabled={isLoading || generatingDraft}
-            aria-label={generatingDraft ? "Generating draft, please wait" : isLoading ? "Processing, please wait" : hasExistingDraft ? "Generate draft again" : "Create draft"}
-            aria-busy={isLoading || generatingDraft}
+          <span
+            id="additional-info-help"
+            style={{
+              display: "block",
+              fontSize: typography.fontSize.sm,
+              color: colors.textSecondary,
+              marginTop: spacing.xs,
+              lineHeight: "1.4",
+              fontFamily: typography.fontFamily,
+            }}
           >
-            {generatingDraft ? "Generating Draft..." : isLoading ? "Processing..." : hasExistingDraft ? "Generate Again" : "Create Draft"}
-            {!isLoading && !generatingDraft && (
-              <ArrowRight size={18} aria-hidden="true" style={{ marginLeft: 8 }} />
-            )}
-          </button>
+            This information will help tailor the generated draft to your needs.
+          </span>
         </div>
-      </div>
+
+        {uploadError && (
+          <div
+            role="alert"
+            style={{
+              marginTop: spacing.lg,
+              padding: `${spacing.md} ${spacing.lg}`,
+              borderRadius: borderRadius.md,
+              backgroundColor: colors.errorLight,
+              border: `1px solid ${colors.danger}`,
+              color: colors.danger,
+              fontSize: typography.fontSize.sm,
+              fontFamily: typography.fontFamily,
+            }}
+          >
+            {uploadError}
+          </div>
+        )}
+      </Card>
+
       {generatingDraft && draftProgress && (
         <div
-          className="ud-progress-banner"
           role="status"
           aria-live="polite"
           aria-atomic="true"
           aria-label="Draft generation progress"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: spacing.md,
+            marginTop: spacing.lg,
+            padding: `${spacing.md} ${spacing.lg}`,
+            backgroundColor: colors.primaryLight,
+            borderRadius: borderRadius.md,
+            border: `1px solid ${colors.primary}`,
+            fontSize: typography.fontSize.sm,
+            color: colors.primary,
+            fontFamily: typography.fontFamily,
+          }}
         >
-          <div className="ud-progress-spinner" role="img" aria-label="Loading" />
+          <div
+            role="img"
+            aria-label="Loading"
+            style={{
+              width: "16px",
+              height: "16px",
+              border: `2px solid ${colors.primary}`,
+              borderTopColor: "transparent",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+              flexShrink: 0,
+            }}
+          />
           <span>{draftProgress}</span>
         </div>
       )}
+
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: spacing.lg,
+        marginTop: spacing["2xl"],
+      }}>
+        <NavigationButtons
+          onBack={() => onNavigate("questionnaire")}
+          showContinue={false}
+          justify="flex-start"
+        />
+
+        <div style={{ display: "flex", gap: spacing.md, alignItems: "center" }}>
+          {hasExistingDraft && (
+            <button
+              type="button"
+              onClick={() => onNavigate("sectionEditor")}
+              aria-label="Skip to section editor"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: spacing.sm,
+                padding: `${spacing.md} ${spacing.xl}`,
+                background: colors.white,
+                border: `1px solid ${colors.border}`,
+                borderRadius: borderRadius.md,
+                color: colors.text,
+                fontSize: typography.fontSize.base,
+                fontWeight: typography.fontWeight.medium,
+                fontFamily: typography.fontFamily,
+                cursor: "pointer",
+                transition: transitions.normal,
+                minHeight: "44px",
+              }}
+            >
+              Skip
+            </button>
+          )}
+          <NavigationButtons
+            showBack={false}
+            onContinue={handleSubmit}
+            continueLabel={
+              generatingDraft
+                ? "Generating Draft..."
+                : isLoading
+                  ? "Processing..."
+                  : hasExistingDraft
+                    ? "Generate Again"
+                    : "Create Draft"
+            }
+            continueDisabled={isLoading || generatingDraft}
+            continueLoading={isLoading || generatingDraft}
+            justify="flex-end"
+          />
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };

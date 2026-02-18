@@ -90,8 +90,7 @@ export default function Playground() {
               {isLoading ? "Loading..." : nofoName}
             </h1>
             <div className="pg-header-actions">
-              {/* Upload Data button — TEMPORARILY HIDDEN */}
-              {false && documentIdentifier && (
+              {documentIdentifier && (
                 <button
                   className="pg-upload-btn"
                   onClick={() => setUploadModalOpen(true)}
@@ -118,8 +117,7 @@ export default function Playground() {
         content={
           <div className="pg-content" aria-hidden={helpOpen}>
             <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
-            {/* Upload Modal — TEMPORARILY HIDDEN */}
-            {false && documentIdentifier && (
+            {documentIdentifier && (
               <UploadModal
                 isOpen={uploadModalOpen}
                 onClose={() => setUploadModalOpen(false)}
