@@ -113,18 +113,17 @@ export class KnowledgeBaseStack extends cdk.Stack {
 
       },
       knowledgeBaseId: knowledgeBase.attrKnowledgeBaseId,
-      name: `${stackName}-kb-datasource`,
+      name: `${stackName}-kb-nofo-datasource`,
 
       // the properties below are optional      
       description: 'S3 data source',
       vectorIngestionConfiguration: {
         chunkingConfiguration: {
-          chunkingStrategy: 'FIXED_SIZE',
-
-          // the properties below are optional
-          fixedSizeChunkingConfiguration: {
-            maxTokens: 300,
-            overlapPercentage: 10,
+          chunkingStrategy: 'SEMANTIC',
+          semanticChunkingConfiguration: {
+            maxTokens: 512,
+            bufferSize: 1,
+            breakpointPercentileThreshold: 95,
           },
         },
       },
@@ -143,14 +142,14 @@ export class KnowledgeBaseStack extends cdk.Stack {
           },
         },
         knowledgeBaseId: knowledgeBase.attrKnowledgeBaseId,
-        name: `${stackName}-kb-user-documents-datasource`,
+        name: `${stackName}-kb-user-docs-datasource`,
         description: 'User uploaded documents data source',
         vectorIngestionConfiguration: {
           chunkingConfiguration: {
             chunkingStrategy: 'FIXED_SIZE',
             fixedSizeChunkingConfiguration: {
-              maxTokens: 300,
-              overlapPercentage: 10,
+              maxTokens: 512,
+              overlapPercentage: 20,
             },
           },
         },
