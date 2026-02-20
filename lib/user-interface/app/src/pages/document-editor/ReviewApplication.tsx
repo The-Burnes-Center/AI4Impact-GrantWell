@@ -1,7 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
-import { AppContext } from "../../common/app-context";
-import { ApiClient } from "../../common/api-client/api-client";
+import React, { useState, useEffect } from "react";
+import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
+import {
+  FileText,
+  Download,
+  ArrowLeft,
+  Edit,
+  Info,
+  CheckCircle,
+  AlertTriangle,
+} from "lucide-react";
+import "../../styles/document-editor.css";
 
 interface ReviewApplicationProps {
   onExport: () => void;
@@ -22,46 +31,40 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   onNavigate,
 }) => {
   const [sections, setSections] = useState<Section[]>([]);
-  const [sectionAnswers, setSectionAnswers] = useState<{
-    [key: string]: string;
-  }>({});
+  const [sectionAnswers, setSectionAnswers] = useState<Record<string, string>>({});
   const [compliancePassed, setCompliancePassed] = useState(false);
-  const [stats, setStats] = useState({
-    wordCount: 0,
-    pageCount: 0,
-    complete: 0,
-  });
-  const appContext = useContext(AppContext);
+  const [stats, setStats] = useState({ wordCount: 0, pageCount: 0, complete: 0 });
+  const apiClient = useApiClient();
 
   useEffect(() => {
     const fetchDraftData = async () => {
-      if (!appContext || !selectedNofo) return;
+      if (!selectedNofo) return;
 
       try {
-        const apiClient = new ApiClient(appContext);
         const username = (await Auth.currentAuthenticatedUser()).username;
-        
-        // Get draft from database
+
         const currentDraft = await apiClient.drafts.getDraft({
           sessionId: sessionId,
-          userId: username
+          userId: username,
         });
 
         if (currentDraft) {
-          // Set sections from draft
           if (currentDraft.sections) {
             setSectionAnswers(currentDraft.sections);
           }
 
-          // Set sections from NOFO summary
-          const result = await apiClient.landingPage.getNOFOSummary(selectedNofo);
+          const result =
+            await apiClient.landingPage.getNOFOSummary(selectedNofo);
           if (result?.data?.ProjectNarrativeSections) {
             const apiSections = result.data.ProjectNarrativeSections;
             if (Array.isArray(apiSections) && apiSections.length > 0) {
-              setSections(apiSections.map(section => ({
-                name: section.item || "Untitled Section",
-                description: section.description || "No description provided."
-              })));
+              setSections(
+                apiSections.map((section) => ({
+                  name: section.item || "Untitled Section",
+                  description:
+                    section.description || "No description provided.",
+                }))
+              );
             }
           }
         }
@@ -71,17 +74,15 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     };
 
     fetchDraftData();
-  }, [appContext, selectedNofo, sessionId]);
+  }, [apiClient, selectedNofo, sessionId]);
 
   useEffect(() => {
-    // Compliance: all sections must be non-empty
     if (sections.length > 0) {
       const complete = sections.filter(
         (s) => (sectionAnswers[s.name] || "").trim().length > 0
       ).length;
       setCompliancePassed(complete === sections.length);
 
-      // Calculate stats
       const allText = sections
         .map((s) => sectionAnswers[s.name] || "")
         .join(" ");
@@ -96,38 +97,32 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   };
 
   const handleExportPDF = async () => {
-    // Gather all application data
     let draftData = null;
     let grantName = null;
-    if (appContext && selectedNofo) {
+    if (selectedNofo) {
       try {
-        const apiClient = new ApiClient(appContext);
         const username = (await Auth.currentAuthenticatedUser()).username;
         draftData = await apiClient.drafts.getDraft({
           sessionId: sessionId,
-          userId: username
+          userId: username,
         });
-        
-        // Fetch grant name from NOFO summary
-        const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo);
+
+        const nofoSummary =
+          await apiClient.landingPage.getNOFOSummary(selectedNofo);
         if (nofoSummary?.data?.GrantName) {
           grantName = nofoSummary.data.GrantName;
         }
       } catch (error) {
         console.error("Error fetching draft for PDF export:", error);
-        alert("Failed to fetch draft data for export.");
         return;
       }
     }
     if (!draftData) {
-      alert("No draft data available for export.");
+      console.error("No draft data available for export.");
       return;
     }
 
     try {
-      const apiClient = new ApiClient(appContext!);
-      
-      // Generate PDF using Lambda function with grant name from NOFO summary
       const pdfBlob = await apiClient.drafts.generatePDF({
         title: draftData.title,
         grantName: grantName || undefined,
@@ -135,262 +130,71 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         sections: draftData.sections,
       });
 
-      // Create a download link and trigger download
       const url = window.URL.createObjectURL(pdfBlob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.download = 'grant-application.pdf';
+      link.download = "grant-application.pdf";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error generating PDF:", error);
-      alert(`Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
+  const complianceClass = compliancePassed
+    ? "ra-compliance--passed"
+    : "ra-compliance--incomplete";
+
   return (
-    <div
-      style={{
-        maxWidth: "900px",
-        margin: "0 auto",
-        padding: "32px",
-        background: "white",
-      }}
-    >
+    <div className="ra-container">
       {/* Application Summary Section */}
-      <div
-        style={{
-          background: "white",
-          borderRadius: "12px",
-          padding: "24px",
-          marginBottom: "24px",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            style={{
-              width: "24px",
-              height: "24px",
-              stroke: "#0088FF",
-              fill: "none",
-              strokeWidth: 2,
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              marginRight: "12px",
-            }}
-          >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <line x1="10" y1="9" x2="8" y2="9"></line>
-          </svg>
-          <h2
-            style={{
-              fontSize: "22px",
-              fontWeight: 600,
-              color: "#111827",
-              margin: 0,
-            }}
-          >
-            Application Summary
-          </h2>
+      <div className="ra-card">
+        <div className="ra-header">
+          <FileText className="ra-header__icon" aria-hidden="true" />
+          <h2 className="ra-header__title">Application Summary</h2>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "16px",
-            marginBottom: "20px",
-          }}
-        >
-          <div
-            style={{
-              background: "#f9fafb",
-              padding: "24px",
-              textAlign: "center",
-              borderRadius: "12px",
-              border: "1px solid #e5e7eb",
-            }}
-          >
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: "48px",
-                color: "#2563eb",
-                marginBottom: "8px",
-              }}
-            >
+        <div className="ra-stats-grid">
+          <div className="ra-stat-card">
+            <div className="ra-stat-card__value ra-stat-card__value--words">
               {stats.wordCount}
             </div>
-            <div
-              style={{
-                fontSize: "16px",
-                fontWeight: 600,
-                color: "#111827",
-                marginBottom: "4px",
-              }}
-            >
-              Total Word Count
-            </div>
-            <div
-              style={{
-                fontSize: "14px",
-                color: "#6b7280",
-              }}
-            >
-              Across all sections
-            </div>
+            <div className="ra-stat-card__label">Total Word Count</div>
+            <div className="ra-stat-card__sublabel">Across all sections</div>
           </div>
 
-          <div
-            style={{
-              background: "#f9fafb",
-              padding: "24px",
-              textAlign: "center",
-              borderRadius: "12px",
-              border: "1px solid #e5e7eb",
-            }}
-          >
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: "48px",
-                color: "#9333ea",
-                marginBottom: "8px",
-              }}
-            >
+          <div className="ra-stat-card">
+            <div className="ra-stat-card__value ra-stat-card__value--pages">
               {stats.pageCount}
             </div>
-            <div
-              style={{
-                fontSize: "16px",
-                fontWeight: 600,
-                color: "#111827",
-                marginBottom: "4px",
-              }}
-            >
-              Estimated Pages
-            </div>
-            <div
-              style={{
-                fontSize: "14px",
-                color: "#6b7280",
-              }}
-            >
-              In PDF format
-            </div>
+            <div className="ra-stat-card__label">Estimated Pages</div>
+            <div className="ra-stat-card__sublabel">In PDF format</div>
           </div>
 
-          <div
-            style={{
-              background: "#f9fafb",
-              padding: "24px",
-              textAlign: "center",
-              borderRadius: "12px",
-              border: "1px solid #e5e7eb",
-            }}
-          >
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: "48px",
-                color: compliancePassed ? "#047857" : "#d97706",
-                marginBottom: "8px",
-              }}
-            >
+          <div className="ra-stat-card">
+            <div className={`ra-stat-card__value ${compliancePassed ? "ra-stat-card__value--passed" : "ra-stat-card__value--incomplete"}`}>
               {stats.complete}/{sections.length}
             </div>
-            <div
-              style={{
-                fontSize: "16px",
-                fontWeight: 600,
-                color: "#111827",
-                marginBottom: "4px",
-              }}
-            >
-              Completion Status
-            </div>
-            <div
-              style={{
-                fontSize: "14px",
-                color: "#6b7280",
-              }}
-            >
-              Sections complete
-            </div>
+            <div className="ra-stat-card__label">Completion Status</div>
+            <div className="ra-stat-card__sublabel">Sections complete</div>
           </div>
         </div>
 
         {/* Compliance Check Message */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            padding: "16px",
-            borderRadius: "8px",
-            background: compliancePassed ? "#f0fff4" : "#fffbeb",
-            border: `1px solid ${compliancePassed ? "#c6f6d5" : "#fef3c7"}`,
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            style={{
-              width: "24px",
-              height: "24px",
-              stroke: compliancePassed ? "#047857" : "#d97706",
-              fill: "none",
-              strokeWidth: 2,
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              marginRight: "16px",
-              flexShrink: 0,
-              marginTop: "4px",
-            }}
-          >
-            {compliancePassed ? (
-              <>
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <path d="M22 4 12 14.01l-3-3"></path>
-              </>
-            ) : (
-              <>
-                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                <line x1="12" y1="9" x2="12" y2="13"></line>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </>
-            )}
-          </svg>
+        <div className={`ra-compliance ${complianceClass}`}>
+          {compliancePassed
+            ? <CheckCircle className="ra-compliance__icon" aria-hidden="true" />
+            : <AlertTriangle className="ra-compliance__icon" aria-hidden="true" />
+          }
           <div>
-            <h3
-              style={{
-                fontWeight: 600,
-                fontSize: "18px",
-                color: compliancePassed ? "#065f46" : "#92400e",
-                marginBottom: "4px",
-              }}
-            >
+            <h3 className="ra-compliance__title">
               {compliancePassed
                 ? "Compliance Check Passed!"
                 : "Some sections are incomplete"}
             </h3>
-            <p
-              style={{
-                color: compliancePassed ? "#047857" : "#78350f",
-                margin: 0,
-              }}
-            >
+            <p className="ra-compliance__text">
               {compliancePassed
                 ? "Your application meets all the requirements for submission. All required sections are complete and formatted correctly."
                 : "Please complete all required sections before exporting your application."}
@@ -400,101 +204,22 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       </div>
 
       {/* Before You Export Section */}
-      <div
-        style={{
-          background: "white",
-          borderRadius: "12px",
-          padding: "24px",
-          marginBottom: "24px",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <h3
-          style={{
-            fontSize: "20px",
-            fontWeight: 600,
-            color: "#111827",
-            marginBottom: "20px",
-            marginTop: 0,
-          }}
-        >
-          Before You Export
-        </h3>
+      <div className="ra-card">
+        <h3 className="ra-export-section__title">Before You Export</h3>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "16px",
-          }}
-        >
+        <div className="ra-export-grid">
           {/* <button
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "20px",
-              background: "#eff6ff",
-              border: "2px solid #3b82f6",
-              borderRadius: "12px",
-              cursor: "pointer",
-              transition: "all 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#dbeafe";
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#eff6ff";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
+            className="ra-preview-btn"
             aria-label="Preview full application (coming soon)"
           >
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
-                background: "#3b82f6",
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginRight: "16px",
-                flexShrink: 0,
-              }}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  stroke: "white",
-                  fill: "none",
-                  strokeWidth: 2,
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                }}
-              >
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
+            <div className="ra-preview-btn__icon-wrapper">
+              <FileText className="ra-preview-btn__icon" />
             </div>
-            <div style={{ textAlign: "left" }}>
-              <div
-                style={{
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  color: "#1e40af",
-                  marginBottom: "4px",
-                }}
-              >
+            <div className="ra-preview-btn__text">
+              <div className="ra-preview-btn__title">
                 Preview Full Application
               </div>
-              <div
-                style={{
-                  fontSize: "14px",
-                  color: "#1e40af",
-                }}
-              >
+              <div className="ra-preview-btn__subtitle">
                 View as a single document
               </div>
             </div>
@@ -502,72 +227,15 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
           <button
             onClick={() => onNavigate("sectionEditor")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "20px",
-              background: "#fef3c7",
-              border: "2px solid #f59e0b",
-              borderRadius: "12px",
-              cursor: "pointer",
-              transition: "all 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#fde68a";
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#fef3c7";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
+            className="ra-edit-btn"
             aria-label="Make final edits - return to section editor"
           >
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
-                background: "#f59e0b",
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginRight: "16px",
-                flexShrink: 0,
-              }}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  stroke: "white",
-                  fill: "none",
-                  strokeWidth: 2,
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                }}
-              >
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-              </svg>
+            <div className="ra-edit-btn__icon-wrapper">
+              <Edit className="ra-edit-btn__icon" aria-hidden="true" />
             </div>
-            <div style={{ textAlign: "left" }}>
-              <div
-                style={{
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  color: "#92400e",
-                  marginBottom: "4px",
-                }}
-              >
-                Make Final Edits
-              </div>
-              <div
-                style={{
-                  fontSize: "14px",
-                  color: "#92400e",
-                }}
-              >
+            <div className="ra-edit-btn__text">
+              <div className="ra-edit-btn__title">Make Final Edits</div>
+              <div className="ra-edit-btn__subtitle">
                 Return to section editor
               </div>
             </div>
@@ -576,166 +244,43 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       </div>
 
       {/* What Happens After Export Section */}
-      <div
-        style={{
-          background: "#eff6ff",
-          borderRadius: "12px",
-          padding: "24px",
-          marginBottom: "32px",
-          border: "2px solid #3b82f6",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "16px",
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            style={{
-              width: "24px",
-              height: "24px",
-              stroke: "#1e40af",
-              fill: "none",
-              strokeWidth: 2,
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              marginRight: "12px",
-            }}
-          >
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 16v-4"></path>
-            <path d="M12 8h.01"></path>
-          </svg>
-          <h3
-            style={{
-              fontSize: "18px",
-              fontWeight: 600,
-              color: "#1e40af",
-              margin: 0,
-            }}
-          >
+      <div className="ra-info-section">
+        <div className="ra-info-header">
+          <Info className="ra-info-header__icon" aria-hidden="true" />
+          <h3 className="ra-info-header__title">
             What Happens After Export?
           </h3>
         </div>
-        <ul
-          style={{
-            marginLeft: "20px",
-            color: "#1e40af",
-            paddingLeft: "16px",
-            marginTop: 0,
-            marginBottom: 0,
-          }}
-        >
-          <li style={{ marginBottom: "8px", lineHeight: 1.6 }}>
-            You'll download a professionally formatted PDF of your application
+        <ul className="ra-info-list">
+          <li className="ra-info-list__item">
+            You&apos;ll download a professionally formatted PDF of your
+            application
           </li>
-          <li style={{ marginBottom: "8px", lineHeight: 1.6 }}>
+          <li className="ra-info-list__item">
             Submit the PDF through the official grants.gov portal
           </li>
-          <li style={{ lineHeight: 1.6 }}>
+          <li className="ra-info-list__item">
             Complete the SF-424 form separately (if required)
           </li>
         </ul>
       </div>
 
       {/* Action Buttons */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "16px",
-        }}
-      >
+      <div className="ra-actions">
         <button
           onClick={() => onNavigate("sectionEditor")}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "14px 24px",
-            background: "white",
-            border: "2px solid #e5e7eb",
-            borderRadius: "8px",
-            color: "#374151",
-            fontSize: "16px",
-            fontWeight: 500,
-            cursor: "pointer",
-            transition: "all 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#f9fafb";
-            e.currentTarget.style.borderColor = "#d1d5db";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "white";
-            e.currentTarget.style.borderColor = "#e5e7eb";
-          }}
+          className="ra-back-btn"
         >
-          <svg
-            viewBox="0 0 24 24"
-            style={{
-              width: "20px",
-              height: "20px",
-              stroke: "currentColor",
-              fill: "none",
-              strokeWidth: 2,
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              marginRight: "8px",
-            }}
-          >
-            <path d="M19 12H5"></path>
-            <path d="m12 19-7-7 7-7"></path>
-          </svg>
+          <ArrowLeft className="ra-back-btn__icon" aria-hidden="true" />
           Back to Editing
         </button>
 
         <button
           onClick={handleExportPDF}
           disabled={!compliancePassed}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "14px 32px",
-            background: compliancePassed ? "#047857" : "#d1d5db",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            fontSize: "16px",
-            fontWeight: 600,
-            cursor: compliancePassed ? "pointer" : "not-allowed",
-            transition: "all 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            if (compliancePassed) {
-              e.currentTarget.style.background = "#065f46";
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (compliancePassed) {
-              e.currentTarget.style.background = "#047857";
-            }
-          }}
+          className="ra-export-pdf-btn"
         >
-          <svg
-            viewBox="0 0 24 24"
-            style={{
-              width: "20px",
-              height: "20px",
-              stroke: "currentColor",
-              fill: "none",
-              strokeWidth: 2,
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              marginRight: "8px",
-            }}
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
+          <Download className="ra-export-pdf-btn__icon" aria-hidden="true" />
           Export Application as PDF
         </button>
       </div>
@@ -744,4 +289,3 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 };
 
 export default ReviewApplication;
-

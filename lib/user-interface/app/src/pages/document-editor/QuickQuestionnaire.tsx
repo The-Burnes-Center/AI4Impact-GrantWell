@@ -10,25 +10,22 @@
  * - LocalStorage fallback for data persistence
  * - Accessible form with ARIA attributes
  */
-import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
-import { AppContext } from "../../common/app-context";
-import { ApiClient } from "../../common/api-client/api-client";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useApiClient } from "../../hooks/use-api-client";
 import { useParams } from "react-router-dom";
-import {
-  Card,
-  LoadingSpinner,
-  AutoSaveIndicator,
-  NavigationButtons,
-  colors,
-  typography,
-} from "../../components/ui";
+import Card from "../../components/ui/Card";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import NavigationButtons from "../../components/ui/NavigationButtons";
+import { colors, typography } from "../../components/ui/styles";
+import type { DocumentData } from "../../common/types/document";
 
 interface QuickQuestionnaireProps {
   onContinue: () => void;
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
-  documentData?: any;
-  onUpdateData?: (data: any) => void;
+  documentData?: DocumentData | null;
+  onUpdateData?: (data: Partial<DocumentData>) => void;
 }
 
 interface QuestionData {
@@ -55,7 +52,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const isInitialLoad = useRef(true);
   const hasLoadedFromDocumentData = useRef(false);
-  const appContext = useContext(AppContext);
+  const apiClient = useApiClient();
   const { sessionId } = useParams();
 
   // Auto-save debounce refs
@@ -74,7 +71,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
         if (savedData) {
           const parsedData = JSON.parse(savedData);
           const hasData = Object.keys(parsedData).length > 0 && 
-                         Object.values(parsedData).some((val: any) => val && val.trim && val.trim().length > 0);
+                         Object.values(parsedData).some((val: unknown) => typeof val === "string" && val.trim().length > 0);
           
           if (hasData) {
             setFormData(parsedData);
@@ -104,9 +101,8 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
           return;
         }
 
-        if (appContext && selectedNofo) {
+        if (selectedNofo) {
           try {
-            const apiClient = new ApiClient(appContext);
             const result = await apiClient.landingPage.getNOFOQuestions(selectedNofo);
 
             if (
@@ -118,7 +114,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
               
               if (Object.keys(formData).length === 0 && !hasLoadedFromDocumentData.current) {
                 const initialFormData: QuestionnaireFormData = {};
-                result.data.questions.forEach((q) => {
+                result.data.questions.forEach((q: { id: string | number }) => {
                   initialFormData[`question_${q.id}`] = "";
                 });
                 setFormData(initialFormData);
@@ -142,7 +138,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     };
 
     fetchQuestions();
-  }, [selectedNofo, appContext]);
+  }, [selectedNofo, apiClient]);
 
   // Auto-save function (debounced)
   const autoSave = useCallback((data: QuestionnaireFormData) => {

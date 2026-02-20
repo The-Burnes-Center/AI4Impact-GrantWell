@@ -1,0 +1,116 @@
+---
+description: React component organization, folder structure, and naming conventions for GrantWell
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# Component Organization & Folder Structure
+
+## File Naming
+
+- **React components:** PascalCase -- `MyComponent.tsx`, `GrantsTable.tsx`
+- **Hooks:** kebab-case with `use-` prefix -- `use-focus-trap.ts`, `use-api-client.ts`
+- **Utilities, types, constants:** kebab-case -- `api-client.ts`, `storage-helper.ts`
+- **Styles:** kebab-case -- `landing-page.css`, `document-editor.css`
+- **Directories:** always kebab-case -- `landing-page/`, `document-editor/`
+
+## Directory Structure
+
+```
+src/
+├── common/          # Shared utilities, API clients, types
+│   ├── api-client/  # API client classes
+│   ├── helpers/     # Utility functions
+│   └── types/       # Shared TypeScript types (domain-specific files)
+├── hooks/           # Shared custom hooks
+├── layouts/         # Page layout components
+├── components/      # Shared reusable components
+│   ├── auth/        # Auth-specific components
+│   ├── chat/        # Chat-specific shared components
+│   ├── common/      # Modal, ErrorBoundary, etc.
+│   ├── mds/         # Massachusetts Design System wrappers
+│   ├── navigation/  # Navigation components
+│   ├── notifications/ # Alert/notification components
+│   ├── search/      # Search bar and related components
+│   └── ui/          # Generic UI primitives (Button, Card, etc.)
+├── pages/           # Route-level page components
+│   └── <page>/
+│       ├── components/  # Page-specific sub-components
+│       └── PageName.tsx # Main page component
+└── styles/          # All CSS/SCSS files
+```
+
+## Component Rules
+
+### Max File Length
+
+- **300 lines maximum** per component file
+- If a component exceeds 300 lines, extract sub-components into a `components/` subfolder
+
+### No Inline Sub-Components
+
+Components defined inside other components are re-created every render.
+
+```tsx
+// Bad -- HistoryPanel re-created every render of Welcome
+function Welcome() {
+  const HistoryPanel = () => <div>...</div>;
+  return <HistoryPanel />;
+}
+
+// Good -- separate file
+// components/HistoryPanel.tsx
+export const HistoryPanel: React.FC<Props> = ({ ... }) => <div>...</div>;
+
+// Welcome.tsx
+import { HistoryPanel } from "./components/HistoryPanel";
+```
+
+### Imports -- Direct Only
+
+- **Do NOT use barrel files** (`index.ts` re-exporting siblings). They cause circular-dependency issues and obscure where code actually lives.
+- Always import from the **exact file** that defines the symbol:
+
+```ts
+// Good -- direct import
+import Card from "../../components/ui/Card";
+import { colors } from "../../components/ui/styles";
+import { ErrorBoundary } from "../../components/common/ErrorBoundary";
+
+// Bad -- barrel / index import
+import { Card, colors, ErrorBoundary } from "../../components/ui";
+```
+
+### Types Location
+
+- **Shared types** (used by 2+ files): `common/types/<domain>.ts`
+- **Component prop interfaces**: stay in the component file (not shared)
+- **Never** define shared types inside page or component files
+
+### Hooks Location
+
+- **Shared hooks** (used by 2+ pages): `src/hooks/`
+- **Feature-specific hooks** (used only within one feature): colocate with the feature, e.g., `components/search/hooks/`
+
+### Styles
+
+- One CSS file per page or feature in `src/styles/`
+- Use CSS custom properties from `styles/tokens.css`
+- No CSS-in-JS or `document.createElement("style")` injection
+- No `@use "@cloudscape-design/design-tokens"`
+
+### Error Boundaries
+
+- Wrap each route with `<ErrorBoundary>` in `App.tsx`
+- Use React Bootstrap `Alert` for error display
+
+### No Duplicate Definitions
+
+Types, constants, and utility functions must exist in exactly one canonical location:
+
+| Item | Canonical Location |
+|------|-------------------|
+| `NOFO`, `GrantTypeId`, `GRANT_TYPES` | `common/types/nofo.ts` |
+| `stepToStatus`, `statusToStep` | `common/types/document-editor.ts` |
+| `Session` interface | `common/types/chat.ts` |
+| MDS color values | `styles/tokens.css` + `components/ui/styles.ts` |

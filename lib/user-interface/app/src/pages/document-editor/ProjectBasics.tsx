@@ -11,22 +11,18 @@
  * - WCAG 2.1 compliant form controls
  */
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  Card,
-  AutoSaveIndicator,
-  NavigationButtons,
-  FormErrorSummary,
-  colors,
-  typography,
-  spacing,
-  borderRadius,
-} from "../../components/ui";
+import Card from "../../components/ui/Card";
+import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import NavigationButtons from "../../components/ui/NavigationButtons";
+import FormErrorSummary from "../../components/ui/FormErrorSummary";
+import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
+import type { DocumentData } from "../../common/types/document";
 
 interface ProjectBasicsProps {
   onContinue: () => void;
   selectedNofo: string | null;
-  documentData?: any;
-  onUpdateData?: (data: any) => void;
+  documentData?: DocumentData | null;
+  onUpdateData?: (data: Partial<DocumentData>) => void;
 }
 
 interface ProjectBasicsFormData {
@@ -428,15 +424,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   });
 
   return (
-    <>
-      <style>{`
-        input:focus, textarea:focus, select:focus, button:focus, a:focus {
-          outline: 2px solid ${colors.primary} !important;
-          outline-offset: 2px !important;
-        }
-      `}</style>
-      
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
         <Card
           header="Project Basics"
           headerActions={<AutoSaveIndicator status={saveStatus} />}
@@ -552,7 +540,6 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           onContinue={handleContinue}
         />
       </div>
-    </>
   );
 };
 

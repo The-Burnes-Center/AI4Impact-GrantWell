@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { LuX } from "react-icons/lu";
-import "../../pages/Dashboard/styles.css";
+import "../../styles/dashboard.css";
 
 /**
  * Custom hook to handle modal side effects

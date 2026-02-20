@@ -1,0 +1,156 @@
+/*
+ * MDS Design Tokens
+ *
+ * Massachusetts Design System aligned CSS custom properties.
+ * These are the single source of truth for all colors, spacing,
+ * typography, and other design values used across the application.
+ *
+ * Usage: var(--mds-color-primary)
+ */
+
+:root {
+  /* ==============================
+   * Brand Colors
+   * ============================== */
+
+  /* Bay Blue (Primary) */
+  --mds-color-bay-blue: #14558F;
+  --mds-color-bay-blue-hover: #104472;
+  --mds-color-bay-blue-active: #0A2B48;
+
+  /* Berkshires Green (Accent) */
+  --mds-color-berkshires-green: #388557;
+  --mds-color-berkshires-green-hover: #32784E;
+  --mds-color-berkshires-green-active: #275D3D;
+
+  /* Duckling Yellow (Highlight - use sparingly) */
+  --mds-color-duckling-yellow: #F6C51B;
+
+  /* Independence Cranberry (Graphics only) */
+  --mds-color-independence-cranberry: #680A1D;
+
+  /* Granite Gray (Neutral) */
+  --mds-color-granite-gray: #535353;
+
+  /* ==============================
+   * Semantic Color Aliases
+   * ============================== */
+
+  --mds-color-primary: var(--mds-color-bay-blue);
+  --mds-color-primary-hover: var(--mds-color-bay-blue-hover);
+  --mds-color-primary-active: var(--mds-color-bay-blue-active);
+  --mds-color-primary-light: #f2f8fd;
+
+  --mds-color-accent: var(--mds-color-berkshires-green);
+  --mds-color-accent-hover: var(--mds-color-berkshires-green-hover);
+
+  /* ==============================
+   * Utility / Status Colors
+   * ============================== */
+
+  --mds-color-success: #24A850;
+  --mds-color-success-light: #d4edda;
+  --mds-color-warning: #F6B622;
+  --mds-color-warning-light: #fff3cd;
+  --mds-color-danger: #CD0D0D;
+  --mds-color-danger-light: #ffebee;
+  --mds-color-info: #17a2b8;
+  --mds-color-info-light: #d1ecf1;
+
+  /* ==============================
+   * Focus Colors
+   * ============================== */
+
+  --mds-color-focus-light: #0088FF;
+  --mds-color-focus-dark: #B2DBFF;
+
+  /* ==============================
+   * Neutral / UI Colors
+   * ============================== */
+
+  --mds-color-white: #ffffff;
+  --mds-color-background: #f9fafb;
+  --mds-color-background-alt: #f8f9fa;
+  --mds-color-border: #e2e8f0;
+  --mds-color-border-light: #f3f4f6;
+
+  --mds-color-text: #333333;
+  --mds-color-text-secondary: #5a5a5a;
+  --mds-color-text-muted: #9ca3af;
+  --mds-color-heading: #0a2e52;
+
+  /* Disabled state */
+  --mds-color-disabled-bg: #F0F0F0;
+  --mds-color-disabled-text: #707070;
+
+  /* Overlay */
+  --mds-color-overlay: rgba(0, 0, 0, 0.6);
+
+  /* ==============================
+   * Spacing
+   * ============================== */
+
+  --mds-spacing-xs: 4px;
+  --mds-spacing-sm: 8px;
+  --mds-spacing-md: 12px;
+  --mds-spacing-lg: 16px;
+  --mds-spacing-xl: 20px;
+  --mds-spacing-2xl: 24px;
+  --mds-spacing-3xl: 32px;
+  --mds-spacing-4xl: 48px;
+
+  /* ==============================
+   * Border Radius
+   * ============================== */
+
+  --mds-radius-sm: 4px;
+  --mds-radius-md: 6px;
+  --mds-radius-lg: 8px;
+  --mds-radius-xl: 12px;
+  --mds-radius-full: 9999px;
+
+  /* ==============================
+   * Shadows
+   * ============================== */
+
+  --mds-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --mds-shadow-md: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --mds-shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --mds-shadow-xl: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+  /* ==============================
+   * Typography
+   * ============================== */
+
+  --mds-font-family: 'Noto Sans', sans-serif;
+  --mds-font-size-xs: 12px;
+  --mds-font-size-sm: 14px;
+  --mds-font-size-base: 16px;
+  --mds-font-size-lg: 18px;
+  --mds-font-size-xl: 20px;
+  --mds-font-size-2xl: 24px;
+  --mds-font-size-3xl: 30px;
+
+  --mds-font-weight-normal: 400;
+  --mds-font-weight-medium: 500;
+  --mds-font-weight-semibold: 600;
+  --mds-font-weight-bold: 700;
+
+  /* ==============================
+   * Transitions
+   * ============================== */
+
+  --mds-transition-fast: all 0.15s ease;
+  --mds-transition-normal: all 0.2s ease;
+  --mds-transition-slow: all 0.3s ease;
+
+  /* ==============================
+   * Z-Index Layers
+   * ============================== */
+
+  --mds-z-dropdown: 100;
+  --mds-z-sticky: 200;
+  --mds-z-modal: 1000;
+  --mds-z-popover: 1100;
+  --mds-z-tooltip: 1200;
+}

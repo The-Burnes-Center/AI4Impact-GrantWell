@@ -1,9 +1,10 @@
 import { Utils } from '../utils';
+import { AppConfig } from '../types/app';
 
 export class UserManagementClient {
   private readonly baseUrl: string;
 
-  constructor(appConfig: any) {
+  constructor(appConfig: AppConfig) {
     this.baseUrl = appConfig.httpEndpoint;
   }
 

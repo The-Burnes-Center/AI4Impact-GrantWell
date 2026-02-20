@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
-import { AppContext } from "../../common/app-context";
-import { ApiClient } from "../../common/api-client/api-client";
+import React, { useState, useEffect } from "react";
+import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
+import type { DocumentDraft } from "../../common/api-client/drafts-client";
+import "../../styles/document-editor.css";
 
 interface DraftViewProps {
   onStartEditing: () => void;
@@ -14,24 +15,21 @@ const DraftView: React.FC<DraftViewProps> = ({
   selectedNofo,
   sessionId,
 }) => {
-  const [draftData, setDraftData] = useState<any>(null);
+  const [draftData, setDraftData] = useState<DocumentDraft | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingMessage, setLoadingMessage] = useState<string>("Loading draft...");
-  const appContext = useContext(AppContext);
+  const apiClient = useApiClient();
 
   useEffect(() => {
     const fetchDraftData = async () => {
-      if (!appContext || !selectedNofo || !sessionId) return;
+      if (!selectedNofo || !sessionId) return;
 
       try {
         setIsLoading(true);
         setLoadingMessage("Loading draft...");
         
-        const apiClient = new ApiClient(appContext);
         const username = (await Auth.currentAuthenticatedUser()).username;
         
-        // Get draft from database
-        // getDraft() will wait if draft generation is in progress
         const currentDraft = await apiClient.drafts.getDraft({
           sessionId: sessionId,
           userId: username,
@@ -61,95 +59,35 @@ const DraftView: React.FC<DraftViewProps> = ({
     };
 
     fetchDraftData();
-  }, [appContext, selectedNofo, sessionId]);
+  }, [apiClient, selectedNofo, sessionId]);
 
   if (isLoading) {
     return (
       <div 
+        className="dv-loading"
         role="status"
         aria-live="polite"
         aria-busy="true"
         aria-label="Loading draft"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "60vh",
-          padding: "32px"
-        }}
       >
-        <div 
-          role="img"
-          aria-label="Loading spinner"
-          style={{
-            width: "40px",
-            height: "40px",
-            border: "4px solid #f3f3f3",
-            borderTop: "4px solid #3498db",
-            borderRadius: "50%",
-            animation: "spin 1s linear infinite",
-            marginBottom: "16px"
-          }}
-        ></div>
-        <p 
-          id="draft-loading-message"
-          style={{ color: "#5a6169", fontSize: "16px", marginBottom: "8px", textAlign: "center" }}
-        >
-          {loadingMessage}
-        </p>
+        <div className="dv-spinner" role="img" aria-label="Loading spinner" />
+        <p className="dv-loading__message">{loadingMessage}</p>
         {loadingMessage.includes("generation") && (
-          <p 
-            id="draft-loading-help"
-            style={{ color: "#9ca3af", fontSize: "14px", textAlign: "center", maxWidth: "400px" }}
-          >
+          <p className="dv-loading__help">
             This may take 30-60 seconds. Please don't close this page.
           </p>
         )}
-        <style>
-          {`
-            @keyframes spin {
-              to { transform: rotate(360deg); }
-            }
-          `}
-        </style>
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "300px",
-        background: "#f0f4ff",
-        padding: "32px",
-        borderRadius: "8px",
-        textAlign: "center",
-      }}
-    >
-      <h2 style={{ color: "#1e40af", fontSize: "22px", fontWeight: 700, marginBottom: "16px" }}>
-        Draft Created Successfully!
-      </h2>
-      <p style={{ color: "#374151", fontSize: "16px", marginBottom: "32px" }}>
+    <div className="dv-success">
+      <h2 className="dv-success__title">Draft Created Successfully!</h2>
+      <p className="dv-success__text">
         Your draft has been created. You can now start editing your application.
       </p>
-      <button
-        onClick={onStartEditing}
-        style={{
-          padding: "12px 32px",
-          background: "#14558F",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          fontSize: "18px",
-          fontWeight: 600,
-          cursor: "pointer",
-        }}
-      >
+      <button className="dv-success__btn" onClick={onStartEditing}>
         Start Editing
       </button>
     </div>

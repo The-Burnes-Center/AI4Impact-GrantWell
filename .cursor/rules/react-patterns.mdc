@@ -1,0 +1,102 @@
+---
+description: React coding standards for GrantWell -- React Bootstrap as primary UI library, no Cloudscape
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# React Coding Standards
+
+## Component Library Rules
+
+- **Primary UI library:** React Bootstrap (`react-bootstrap`). Use for buttons, forms, modals, tables, tabs, alerts, spinners, pagination, dropdowns, cards, badges, toasts
+- **State branding:** `@massds/mayflower-react` for `HeaderSlim`, `SiteLogo`, `Footer`, `BrandBanner` only
+- **DO NOT USE:** `@cloudscape-design/*` or `@awsui/*` packages -- they are being removed
+- **Icons:** `lucide-react` or `react-icons/lu` -- no custom inline SVGs
+
+```tsx
+// Good
+import { Button, Modal, Form, Table, Spinner, Alert } from "react-bootstrap";
+import { HeaderSlim } from "@massds/mayflower-react";
+import { Upload, HelpCircle } from "lucide-react";
+
+// Bad
+import { SpaceBetween, Container } from "@cloudscape-design/components";
+```
+
+## Styling Rules
+
+- **Prefer CSS classes** over inline `style={{}}` objects
+- **Use CSS pseudo-classes** (`:hover`, `:focus-visible`, `:active`) instead of JS `onMouseEnter`/`onMouseLeave` event handlers
+- **Use MDS CSS variables** (`var(--mds-color-*)`) instead of hard-coded hex values
+- Styles go in dedicated CSS files in `src/styles/`, not inline
+
+```tsx
+// Bad -- inline styles with JS hover handlers
+<button
+  style={{ backgroundColor: "#14558F", color: "white" }}
+  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#104472"; }}
+  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#14558F"; }}
+>
+
+// Good -- CSS class with pseudo-class
+<button className="btn-primary">
+```
+
+```css
+.btn-primary {
+  background-color: var(--mds-color-primary);
+  color: var(--mds-color-white);
+}
+.btn-primary:hover {
+  background-color: var(--mds-color-primary-hover);
+}
+```
+
+## API Client Rules
+
+- **Never** create API clients during render: `const apiClient = new ApiClient(appContext)` in component body
+- Use the `useApiClient()` hook or `useMemo` to memoize the client instance
+
+```tsx
+// Bad
+function MyComponent() {
+  const appContext = useContext(AppContext);
+  const apiClient = new ApiClient(appContext); // created every render!
+
+// Good
+function MyComponent() {
+  const apiClient = useApiClient();
+```
+
+## Navigation Rules
+
+- Use React Router `navigate()` for all in-app navigation
+- **Never** use `window.location.href = ...` -- it causes a full page reload
+- Use `useSearchParams` hook instead of `window.location.search`
+
+```tsx
+// Bad
+window.location.href = `/chat/${sessionId}?folder=${folder}`;
+
+// Good
+navigate(`/chat/${sessionId}?folder=${encodeURIComponent(folder)}`);
+```
+
+## Error Handling
+
+- API calls must always have user-facing error states -- not just `console.error`
+- Use React Bootstrap `Alert variant="danger"` for error messages
+- Use the notification system (`addNotification("error", message)`) for transient errors
+- **Never** use `alert()` for error messages
+
+## TypeScript
+
+- No `any` types. Define proper interfaces in `common/types/`
+- All API responses must be typed
+- Component props must be explicitly typed (interface, not inline)
+
+## Dead Code
+
+- Remove `{false && ...}` blocks -- use feature flags or delete the code
+- Remove commented-out code blocks
+- Remove unused imports

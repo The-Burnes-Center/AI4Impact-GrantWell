@@ -1,4 +1,4 @@
-import { NavigationPanelState } from "../types";
+import { NavigationPanelState } from "../types/app";
 
 const PREFIX = "aws-genai-llm-chatbot";
 const THEME_STORAGE_NAME = `${PREFIX}-theme`;

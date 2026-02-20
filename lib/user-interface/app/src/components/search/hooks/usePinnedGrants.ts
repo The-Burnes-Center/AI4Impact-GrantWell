@@ -63,28 +63,28 @@ export function usePinnedGrants(): UsePinnedGrantsReturn {
         if (result.nofoData) {
           // Create grant type mapping
           const typeMap: Record<string, GrantTypeId | null> = {};
-          result.nofoData.forEach((nofo) => {
-            typeMap[nofo.name] = nofo.grant_type || null;
+          result.nofoData.forEach((nofo: { name: string; grant_type?: string | null; isPinned?: boolean }) => {
+            typeMap[nofo.name] = (nofo.grant_type as GrantTypeId) || null;
           });
           setGrantTypeMap(typeMap);
 
           // Load pinned grants
           const pinned = result.nofoData
-            .filter((nofo) => nofo.isPinned)
-            .map((nofo) => ({
+            .filter((nofo: { isPinned?: boolean }) => nofo.isPinned)
+            .map((nofo: { name: string; grant_type?: string | null }) => ({
               id: nofo.name,
               name: nofo.name,
               isPinned: true,
-              grantType: nofo.grant_type || null,
+              grantType: (nofo.grant_type as GrantTypeId) || null,
               matchScore: 80,
               eligibilityMatch: true,
               matchReason: "Admin selected",
               fundingAmount: "Varies",
               deadline: "See details",
-              keyRequirements: [],
+              keyRequirements: [] as string[],
               summaryUrl: `${nofo.name}/`,
             }))
-            .sort((a, b) =>
+            .sort((a: { name: string }, b: { name: string }) =>
               a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
             );
           setPinnedGrants(pinned);

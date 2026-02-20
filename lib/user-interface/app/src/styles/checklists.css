@@ -22,10 +22,6 @@ body {
   padding: 0;
 }
 
-.awsui-app-layout__content {
-  padding-left: 0 !important;
-}
-
 .full-height-content {
   height: auto;
   overflow: visible;
@@ -41,46 +37,10 @@ body {
   min-width: 0;
 }
 
-/* Ensure content aligns to the left edge */
-.awsui-box {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
-
-/* Override Cloudscape default spacing */
-#app-content > div {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-
-/* Improve tab styling */
-.awsui-tabs-container {
-  width: 100%;
-  margin-left: 0;
-  padding-left: 0;
-}
-
-.awsui-tabs-header-wrapper {
-  padding-left: 0;
-}
-
-.awsui-tabs-tab {
-  transition: all 0.2s ease;
-}
-
-.awsui-tabs-tab-active .awsui-tabs-tab-label {
-  font-weight: 600;
-}
-
-/* Fix content container */
-.awsui-tabs-content-container {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
 
 .custom-markdown {
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: inherit;
+  line-height: 1.7;
   margin-top: 15px;
 }
 
@@ -119,18 +79,9 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
-    font-size: 14px;
+    font-size: 16px;
   }
 
-  /* Reduce padding in navigation elements */
-  .awsui-tabs-header-wrapper {
-    padding-left: 4px;
-  }
-
-  .awsui-tabs-content-container {
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
 }
 
 /* Small mobile (up to 480px) */
@@ -153,4 +104,477 @@ body {
   .checklist-container {
     padding: 0 20px;
   }
+}
+
+/* Checklist Page Styles - moved from inline */
+
+/* Spinner animation (was dynamically injected) */
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--mds-color-primary, #14558F);
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 24px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Custom markdown bullet points */
+.custom-markdown li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--mds-color-primary, #14558F);
+}
+
+.custom-markdown li {
+  list-style-type: none;
+  padding-left: 24px;
+}
+
+/* Checklist layout */
+.checklist-layout {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  position: static;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.checklist-main {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  padding-left: 0;
+  min-height: calc(100vh - 120px);
+}
+
+.checklist-main-container {
+  background-color: #f9fafb;
+  padding: 32px 16px 16px 16px;
+}
+
+/* Content container */
+.checklist-content {
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px;
+  font-size: 18px;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  color: #333;
+  line-height: 1.5;
+  position: relative;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+}
+
+.checklist-content__header {
+  position: relative;
+  margin-bottom: 48px;
+}
+
+.checklist-content__header-inner {
+  padding-right: 120px;
+}
+
+.checklist-content__heading {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 600;
+  color: #0a2e52;
+  letter-spacing: -0.01em;
+  font-size: 32px;
+  line-height: 1.4;
+  margin: 0 0 20px 0;
+  word-spacing: 0.05em;
+}
+
+.checklist-content__heading-accent {
+  color: var(--mds-color-primary, #14558F);
+}
+
+.checklist-content__description {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  margin-top: 12px;
+  margin-bottom: 24px;
+  color: #444;
+}
+
+.checklist-content__note {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-top: 12px;
+  margin-bottom: 0;
+  color: #444;
+  font-style: italic;
+}
+
+/* Help button */
+.checklist-help-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--mds-color-primary, #14558F);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  position: absolute;
+  top: 32px;
+  right: 32px;
+}
+
+.checklist-help-btn:hover {
+  background-color: var(--mds-color-primary-hover, #104472);
+}
+
+.checklist-help-btn:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
+}
+
+/* Tabs */
+.checklist-tabs {
+  margin-top: 20px;
+  margin-bottom: 24px;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.checklist-tabs__header {
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.checklist-tab {
+  padding: 18px 28px;
+  cursor: pointer;
+  background-color: transparent;
+  font-weight: normal;
+  font-size: 17px;
+  transition: all 0.2s ease;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  border-bottom: 3px solid transparent;
+}
+
+.checklist-tab--active {
+  background-color: #f2f8fd;
+  font-weight: 600;
+  color: #0a2e52;
+  border-bottom: 3px solid var(--mds-color-primary, #14558F);
+}
+
+.checklist-tab:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
+}
+
+.checklist-tabs__content {
+  padding: 28px;
+}
+
+.checklist-tabs__markdown {
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+/* Info box inside eligibility tab */
+.checklist-info-box {
+  background-color: #e6f7ff;
+  padding: 20px 24px;
+  max-width: 850px;
+  margin-top: 24px;
+  margin-left: 0;
+  margin-right: auto;
+  border-radius: 6px;
+  border: 1px solid var(--mds-color-primary, #14558F);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.checklist-info-box__title {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0a2e52;
+}
+
+.checklist-info-box__text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* Grant type badge */
+.checklist-grant-badge {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 16px;
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+/* Loading state */
+.checklist-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  width: 100%;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.checklist-loading__spinner {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 32px;
+}
+
+.checklist-loading__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.checklist-loading__text {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.checklist-loading__tip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #f0f7ff;
+  padding: 16px 24px;
+  border-radius: 8px;
+  max-width: 600px;
+}
+
+.checklist-loading__tip-text {
+  font-size: 14px;
+  color: var(--mds-color-primary, #14558F);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Error state */
+.checklist-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 40px;
+  text-align: center;
+}
+
+.checklist-error__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.checklist-error__text {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.checklist-error__btn {
+  padding: 10px 24px;
+  background-color: var(--mds-color-primary, #14558F);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checklist-error__btn:hover {
+  background-color: var(--mds-color-primary-hover, #104472);
+}
+
+/* Help modal */
+.help-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.help-modal {
+  width: 650px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+
+.help-modal__header {
+  background-color: var(--mds-color-primary, #14558F);
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.help-modal__title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.help-modal__close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: background 0.2s;
+}
+
+.help-modal__close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.help-modal__close:focus-visible {
+  background: #ffffff;
+  color: var(--mds-color-primary, #14558F);
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.help-modal__body {
+  padding: 28px 32px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.help-modal__text {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #555;
+}
+
+.help-modal__highlight {
+  border-left: 4px solid var(--mds-color-primary, #14558F);
+  background-color: #F0F7FF;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-radius: 4px;
+}
+
+.help-modal__section-title {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  color: var(--mds-color-primary, #14558F);
+  font-weight: 600;
+}
+
+.help-modal__section-text {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #555;
+}
+
+.help-modal__checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+  margin-bottom: 20px;
+}
+
+.help-modal__checkbox {
+  margin-right: 10px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--mds-color-primary, #14558F);
+}
+
+.help-modal__checkbox-label {
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  user-select: none;
+}
+
+.help-modal__confirm-btn {
+  padding: 14px 24px;
+  background-color: var(--mds-color-primary, #14558F);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.help-modal__confirm-btn:hover {
+  background-color: var(--mds-color-primary-hover, #104472);
+}
+
+.help-modal__confirm-btn:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
 }

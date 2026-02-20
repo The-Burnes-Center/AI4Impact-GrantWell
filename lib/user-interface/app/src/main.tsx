@@ -1,7 +1,7 @@
 import "regenerator-runtime/runtime";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import AppConfigured from "./components/app-configured";
+import AppConfigured from "./components/AppConfigured";
 import { StorageHelper } from "./common/helpers/storage-helper";
 import "bootstrap/dist/css/bootstrap.min.css";
 

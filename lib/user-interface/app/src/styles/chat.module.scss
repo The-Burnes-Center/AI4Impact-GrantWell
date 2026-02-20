@@ -1,4 +1,4 @@
-@use "@cloudscape-design/design-tokens" as awsui;
+/* MDS design tokens (replaces Cloudscape) */
 
 .chat_container {
   position: relative;
@@ -86,7 +86,7 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: minmax(300px, 800px) minmax(180px, auto);
-  gap: awsui.$space-scaled-xs;
+  gap: 4px;
   align-items: center;
 
   .input_controls_selects_2 {
@@ -94,7 +94,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    gap: awsui.$space-scaled-xs;
+    gap: 4px;
   }
 
   .input_controls_selects_1 {
@@ -102,7 +102,7 @@
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
-    gap: awsui.$space-scaled-xs;
+    gap: 4px;
   }
 
   .input_controls_right {
@@ -129,7 +129,7 @@
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr;
-    gap: awsui.$space-scaled-xs;
+    gap: 4px;
   }
 }
 
@@ -138,12 +138,12 @@
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr;
-    gap: awsui.$space-scaled-xs;
+    gap: 4px;
   }
 }
 
 .codeMarkdown {
-  background-color: awsui.$color-charts-line-grid;
+  background-color: #e8e8e8;
   text-overflow: ellipsis;
   overflow: scroll;
   border-radius: 5px;
@@ -154,23 +154,23 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 1em;
-  border: 1px solid awsui.$color-border-divider-default;
-  border-radius: awsui.$border-radius-container;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
 }
 
 .markdownTable th,
 .markdownTable td {
-  border: 1px solid awsui.$color-border-divider-default;
+  border: 1px solid #e2e8f0;
   padding: 8px;
   text-align: left;
 }
 
 .markdownTable th {
-  background-color: awsui.$color-background-container-header;
+  background-color: #f2f8fd;
 }
 
 .markdownTable tr:nth-child(even) {
-  background-color: awsui.$color-background-container-content;
+  background-color: #ffffff;
 }
 
 .thumbsContainer {

@@ -186,7 +186,7 @@ export class ChatBotApi extends Construct {
       lambdaFunctions.getS3Function
     );
     restBackend.restAPI.addRoutes({
-      path: "/s3-bucket-data",
+      path: "/user-documents/list",
       methods: [apigwv2.HttpMethod.POST],
       integration: s3GetAPIIntegration,
       authorizer: httpAuthorizer,
@@ -219,7 +219,7 @@ export class ChatBotApi extends Construct {
       lambdaFunctions.deleteS3Function
     );
     restBackend.restAPI.addRoutes({
-      path: "/delete-s3-file",
+      path: "/user-documents/delete",
       methods: [apigwv2.HttpMethod.POST],
       integration: s3DeleteAPIIntegration,
       authorizer: httpAuthorizer,
@@ -230,9 +230,20 @@ export class ChatBotApi extends Construct {
       lambdaFunctions.uploadS3Function
     );
     restBackend.restAPI.addRoutes({
-      path: "/signed-url",
+      path: "/user-documents/upload-url",
       methods: [apigwv2.HttpMethod.POST],
       integration: s3UploadAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const s3DownloadAPIIntegration = new HttpLambdaIntegration(
+      "S3DownloadAPIIntegration",
+      lambdaFunctions.downloadS3Function
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-documents/download-url",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: s3DownloadAPIIntegration,
       authorizer: httpAuthorizer,
     });
 
@@ -255,17 +266,6 @@ export class ChatBotApi extends Construct {
       path: "/kb-sync/still-syncing",
       methods: [apigwv2.HttpMethod.GET],
       integration: kbSyncProgressAPIIntegration,
-      authorizer: httpAuthorizer,
-    });
-
-    const kbSyncAPIIntegration = new HttpLambdaIntegration(
-      "KBSyncAPIIntegration",
-      lambdaFunctions.syncKBFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/kb-sync/sync-kb",
-      methods: [apigwv2.HttpMethod.GET],
-      integration: kbSyncAPIIntegration,
       authorizer: httpAuthorizer,
     });
 

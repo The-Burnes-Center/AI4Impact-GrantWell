@@ -1,0 +1,110 @@
+---
+description: Backend Lambda function structure, shared utilities, error handling, IAM, and environment variable standards
+globs: "**/functions/**/*.mjs,**/functions/**/*.py,**/functions/**/*.ts"
+alwaysApply: false
+---
+
+# Lambda Backend Standards
+
+## Single Responsibility
+
+- Each Lambda function handles exactly **one operation** (e.g., generate a presigned URL, delete a file, list objects).
+- If a Lambda handler branches on `rawPath` or `httpMethod` to do different things, split it into separate functions.
+- Event-triggered Lambdas (S3, SQS) process one event type only.
+
+## Shared Utilities (Node.js)
+
+Node.js Lambdas under `knowledge-management/` must use the shared module at `knowledge-management/shared/`:
+
+```javascript
+// Good -- import from shared
+import { extractUserId } from '../shared/auth.mjs';
+import { success, forbidden, serverError } from '../shared/response.mjs';
+
+// Bad -- duplicated inline
+const claims = event.requestContext.authorizer.jwt.claims;
+const userId = claims['cognito:username'] || claims.username;
+```
+
+### Shared modules
+
+| Module | Exports | Purpose |
+|--------|---------|---------|
+| `auth.mjs` | `extractUserId(event)` | Extract and validate `cognito:username` from JWT claims |
+| `response.mjs` | `success(body)`, `forbidden(msg)`, `badRequest(msg)`, `serverError(msg)` | Standardized HTTP response builders |
+| `s3.mjs` | `getS3Client()`, `getBucketName()` | Lazy-initialized S3 client and bucket name from env |
+
+## Standardized Error Responses
+
+All Lambdas must return consistent response shapes:
+
+```json
+{
+  "statusCode": 200,
+  "headers": { "Access-Control-Allow-Origin": "*" },
+  "body": "{\"message\": \"...\", \"data\": {...}}"
+}
+```
+
+- `body` is always a JSON string with a `message` field
+- Error responses include `message` describing the error
+- Never return bare strings in `body` (e.g., `json.dumps('STILL SYNCING')`)
+- Never return `null` or `undefined` from a handler
+
+## IAM Permissions (CDK)
+
+Never use wildcard actions in IAM policy statements:
+
+```typescript
+// Bad
+actions: ["s3:*"]
+actions: ["bedrock:*"]
+
+// Good -- specific actions only
+actions: ["s3:PutObject"]
+actions: ["s3:GetObject", "s3:DeleteObject"]
+actions: ["bedrock:Retrieve", "bedrock:StartIngestionJob", "bedrock:ListIngestionJobs"]
+```
+
+Each Lambda gets only the permissions it needs:
+- Upload URL generator: `s3:PutObject`
+- Download URL generator: `s3:GetObject`
+- List documents: `s3:ListBucket`, `s3:GetObject`
+- Delete document: `s3:DeleteObject`, `s3:GetObject`
+- KB sync: `bedrock:StartIngestionJob`, `bedrock:ListIngestionJobs`
+
+## Environment Variables
+
+- Use `USER_DOCUMENTS_BUCKET` consistently for the user documents S3 bucket
+- Never have two env vars pointing to the same resource (e.g., both `BUCKET` and `USER_DOCUMENTS_BUCKET`)
+- Env var names use SCREAMING_SNAKE_CASE
+- Document required env vars at the top of each Lambda file
+
+```javascript
+// Good -- single, clear name
+const bucketName = process.env.USER_DOCUMENTS_BUCKET;
+
+// Bad -- ambiguous duplicate
+const bucketName = process.env.USER_DOCUMENTS_BUCKET || process.env.BUCKET;
+```
+
+## Logging
+
+- Log operation, bucket, and key for traceability
+- Never log full presigned URLs (they contain credentials)
+- Never log full event payloads in production (may contain PII)
+- Use structured messages: `console.log('Operation:', { bucket, key, userId })`
+
+```javascript
+// Good
+console.log('Generating upload URL', { bucket: bucketName, key: fileName, userId });
+
+// Bad -- logs full presigned URL with credentials
+console.log('Presigned URL generated:', signedUrl);
+```
+
+## Security
+
+- Always validate that `userId` in the request path matches the JWT-authenticated user
+- Never trust client-provided userId without verification against JWT claims
+- Presigned URLs should expire in 300 seconds (5 minutes) or less

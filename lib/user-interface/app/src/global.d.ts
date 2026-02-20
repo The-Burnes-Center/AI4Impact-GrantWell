@@ -1,8 +1,10 @@
 declare module "*.module.css";
 declare module "*.module.scss";
+declare module "react-speech-recognition";
+declare module "@massds/mayflower-react";
 
 interface Window {
-  dataLayer: any[];
+  dataLayer: Record<string, unknown>[];
   gtag: (
     command: string,
     targetId: string,
@@ -10,7 +12,7 @@ interface Window {
       page_title?: string;
       page_path?: string;
       page_location?: string;
-      [key: string]: any;
+      [key: string]: string | undefined;
     }
   ) => void;
   __ENVIRONMENT__?: string;
