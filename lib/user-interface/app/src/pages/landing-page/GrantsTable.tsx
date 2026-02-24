@@ -18,7 +18,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
 
   const uniqueCategories = Array.from(
     new Set(nofos.map((nofo) => nofo.category).filter((category): category is string => !!category))
