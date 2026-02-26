@@ -13,4 +13,5 @@ export interface IntegratedSearchBarProps {
   onSearch?: (query: string) => void;
   isSearching?: boolean;
   onClearSearch?: () => void;
+  onSearchPendingChange?: (isPending: boolean) => void;
 }

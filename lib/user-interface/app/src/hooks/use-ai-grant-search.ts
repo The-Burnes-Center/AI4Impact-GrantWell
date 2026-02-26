@@ -1,4 +1,4 @@
-import { useCallback, useState, useContext } from "react";
+import { useCallback, useState, useContext, useRef } from "react";
 import { Auth } from "aws-amplify";
 import { AppContext } from "../common/app-context";
 
@@ -13,6 +13,14 @@ interface AISearchResponse {
   results: AISearchResult[];
   query: string;
   searchTimeMs: number;
+}
+
+const CACHE_MAX_SIZE = 5;
+
+interface CacheEntry {
+  results: AISearchResult[];
+  searchTimeMs: number;
+  timestamp: number;
 }
 
 export interface UseAIGrantSearchReturn {
@@ -32,6 +40,7 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
   const [results, setResults] = useState<AISearchResult[] | null>(null);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [searchTimeMs, setSearchTimeMs] = useState<number | null>(null);
+  const cacheRef = useRef<Map<string, CacheEntry>>(new Map());
 
   const search = useCallback(
     async (query: string) => {
@@ -44,11 +53,20 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         return;
       }
 
+      const trimmed = query.trim().toLowerCase();
+
+      const cached = cacheRef.current.get(trimmed);
+      if (cached) {
+        setResults(cached.results);
+        setSearchTimeMs(cached.searchTimeMs);
+        setSearchQuery(query.trim());
+        setError(null);
+        return;
+      }
+
       setIsSearching(true);
       setError(null);
-      setResults(null);
       setSearchQuery(query.trim());
-      setSearchTimeMs(null);
 
       try {
         const session = await Auth.currentSession();
@@ -72,8 +90,21 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         }
 
         const data: AISearchResponse = await response.json();
-        setResults(data.results || []);
+        const newResults = data.results || [];
+        setResults(newResults);
         setSearchTimeMs(data.searchTimeMs);
+
+        if (cacheRef.current.size >= CACHE_MAX_SIZE) {
+          const oldestKey = cacheRef.current.keys().next().value;
+          if (oldestKey !== undefined) {
+            cacheRef.current.delete(oldestKey);
+          }
+        }
+        cacheRef.current.set(trimmed, {
+          results: newResults,
+          searchTimeMs: data.searchTimeMs,
+          timestamp: Date.now(),
+        });
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Search failed";

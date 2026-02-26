@@ -36,6 +36,7 @@ export default function Welcome() {
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<RecentlyViewedNOFO[]>([]);
   const [tableNofos, setTableNofos] = useState<NOFO[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchPending, setIsSearchPending] = useState(false);
   const [highlightCTAButtons, setHighlightCTAButtons] = useState(false);
   const [srAnnouncement, setSrAnnouncement] = useState("");
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
@@ -280,6 +281,7 @@ export default function Welcome() {
           onSearch={handleSearch}
           isSearching={aiSearch.isSearching}
           onClearSearch={handleClearSearch}
+          onSearchPendingChange={setIsSearchPending}
         />
 
         {/* Screen reader announcement */}
@@ -319,6 +321,7 @@ export default function Welcome() {
               searchTerm={searchTerm}
               searchResults={aiSearch.results}
               isSearching={aiSearch.isSearching}
+              isSearchPending={isSearchPending}
               searchError={aiSearch.error}
               onClearSearch={handleClearSearch}
             />

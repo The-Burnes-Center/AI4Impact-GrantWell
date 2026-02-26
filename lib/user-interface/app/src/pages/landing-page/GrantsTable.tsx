@@ -14,6 +14,7 @@ interface GrantsTableProps {
   searchTerm?: string;
   searchResults?: AISearchResult[] | null;
   isSearching?: boolean;
+  isSearchPending?: boolean;
   searchError?: string | null;
   onClearSearch?: () => void;
 }
@@ -26,6 +27,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   searchTerm = "",
   searchResults = null,
   isSearching = false,
+  isSearchPending = false,
   searchError = null,
   onClearSearch,
 }) => {
@@ -60,6 +62,8 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     return map;
   }, [searchResults]);
 
+  const awaitingAIResults = isSearching || isSearchPending;
+
   const getFilteredNofos = () => {
     const searchLower = searchTerm.toLowerCase().trim();
     const hasRankedResults = scoreMap !== null && scoreMap.size > 0;
@@ -69,11 +73,17 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
       if (hasRankedResults) {
         if (!scoreMap.has(normalizedName)) return false;
-      } else {
-        const matchesSearch = searchLower === "" ||
-          nofo.name.toLowerCase().includes(searchLower) ||
-          (nofo.agency && nofo.agency.toLowerCase().includes(searchLower)) ||
-          (nofo.category && nofo.category.toLowerCase().includes(searchLower));
+      } else if (searchLower !== "" && !awaitingAIResults) {
+        const tokens = searchLower.split(/\s+/).filter(Boolean);
+        const searchableText = [
+          nofo.name,
+          nofo.agency,
+          nofo.category,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        const matchesSearch = tokens.some((token) => searchableText.includes(token));
         if (!matchesSearch) return false;
       }
 
@@ -229,10 +239,23 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
 
         <div className="landing-table-body">
-          {isSearching ? (
-            <div className="landing-no-data">
-              <div className="search-spinner" />
-              <p>Searching...</p>
+          {awaitingAIResults ? (
+            <div className="landing-search-loading" role="status" aria-busy="true" aria-label="Searching grants with AI">
+              <div className="skeleton-row-group">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="skeleton-row" aria-hidden="true">
+                    <div className="skeleton-cell skeleton-cell--wide"><div className="skeleton-bar" /></div>
+                    <div className="skeleton-cell"><div className="skeleton-bar" /></div>
+                    <div className="skeleton-cell"><div className="skeleton-bar" /></div>
+                    <div className="skeleton-cell skeleton-cell--narrow"><div className="skeleton-bar" /></div>
+                    <div className="skeleton-cell skeleton-cell--narrow"><div className="skeleton-bar" /></div>
+                  </div>
+                ))}
+              </div>
+              <p className="search-loading-text">
+                <span className="search-spinner" />
+                Searching grants with AI&hellip;
+              </p>
             </div>
           ) : filteredNofos.length === 0 ? (
             <div className="landing-no-data">
@@ -244,7 +267,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
               </p>
             </div>
           ) : null}
-          {!isSearching && paginatedNofos.map((nofo) => {
+          {!awaitingAIResults && paginatedNofos.map((nofo) => {
             const isArchived = nofo.status === "archived";
             return (
               <div
@@ -311,7 +334,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       </div>
 
       {/* Pagination */}
-      {!isSearching && filteredNofos.length > 0 && totalPages > 1 && (
+      {!awaitingAIResults && filteredNofos.length > 0 && totalPages > 1 && (
         <div className="landing-table-pagination">
           <div className="landing-pagination-info">
             Showing {startIndex + 1}-{Math.min(endIndex, filteredNofos.length)} of {filteredNofos.length} grants

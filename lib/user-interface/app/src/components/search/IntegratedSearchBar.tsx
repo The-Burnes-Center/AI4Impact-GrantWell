@@ -4,7 +4,7 @@ import { IntegratedSearchBarProps } from "./types";
 import { SearchInput } from "./components/SearchInput";
 import { searchContainerStyle } from "./styles/searchStyles";
 
-const SEARCH_DEBOUNCE_MS = 600;
+const SEARCH_DEBOUNCE_MS = 400;
 const MIN_QUERY_LENGTH = 3;
 
 const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
@@ -15,6 +15,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   onSearch,
   isSearching = false,
   onClearSearch,
+  onSearchPendingChange,
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
   const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
@@ -32,8 +33,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     const trimmed = searchTerm.trim();
     if (trimmed.length < MIN_QUERY_LENGTH) {
       lastSubmittedQuery.current = "";
+      onSearchPendingChange?.(false);
       return;
     }
+    if (trimmed === lastSubmittedQuery.current) {
+      onSearchPendingChange?.(false);
+      return;
+    }
+    onSearchPendingChange?.(true);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       debounceRef.current = null;
@@ -41,19 +48,21 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         lastSubmittedQuery.current = trimmed;
         onSearch(trimmed);
       }
+      onSearchPendingChange?.(false);
     }, SEARCH_DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [searchTerm, onSearch]);
+  }, [searchTerm, onSearch, onSearchPendingChange]);
 
   const handleClear = useCallback(() => {
     setSearchTerm("");
     lastSubmittedQuery.current = "";
+    onSearchPendingChange?.(false);
     onSelectDocument(null);
     onClearSearch?.();
     inputRef.current?.focus();
-  }, [onSelectDocument, setSearchTerm, onClearSearch]);
+  }, [onSelectDocument, setSearchTerm, onClearSearch, onSearchPendingChange]);
 
   const handleInputChange = useCallback(
     (value: string) => {
