@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { LuFileX } from "react-icons/lu";
+import React, { useState, useEffect, useMemo } from "react";
+import { LuFileX, LuSparkles, LuX } from "react-icons/lu";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
 import { GRANT_TYPES } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
+import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
 
 interface GrantsTableProps {
@@ -11,9 +12,27 @@ interface GrantsTableProps {
   onSelectDocument: (document: { label: string; value: string }) => void;
   onSearchTermChange?: (term: string) => void;
   searchTerm?: string;
+  aiResults?: AISearchResult[] | null;
+  isAISearching?: boolean;
+  aiSearchQuery?: string | null;
+  aiSearchTimeMs?: number | null;
+  aiError?: string | null;
+  onClearAISearch?: () => void;
 }
 
-export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSelectDocument, onSearchTermChange, searchTerm = "" }) => {
+export const GrantsTable: React.FC<GrantsTableProps> = ({
+  nofos,
+  loading,
+  onSelectDocument,
+  onSearchTermChange,
+  searchTerm = "",
+  aiResults = null,
+  isAISearching = false,
+  aiSearchQuery = null,
+  aiSearchTimeMs = null,
+  aiError = null,
+  onClearAISearch,
+}) => {
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
@@ -39,35 +58,52 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
     return nofos.filter((nofo) => nofo.grantType === grantType).length;
   };
 
-  // Filter NOFOs based on filters and search term
+  const aiScoreMap = useMemo(() => {
+    if (!aiResults) return null;
+    const map = new Map<string, AISearchResult>();
+    for (const r of aiResults) {
+      map.set(r.name.toLowerCase().replace(/\/$/, ""), r);
+    }
+    return map;
+  }, [aiResults]);
+
   const getFilteredNofos = () => {
     const searchLower = searchTerm.toLowerCase().trim();
-    
+    const hasAIResults = aiScoreMap !== null && aiScoreMap.size > 0;
+
     let filtered = nofos.filter((nofo) => {
-      // Search term filter - matches name, agency, or category
-      const matchesSearch = searchLower === "" || 
-        nofo.name.toLowerCase().includes(searchLower) ||
-        (nofo.agency && nofo.agency.toLowerCase().includes(searchLower)) ||
-        (nofo.category && nofo.category.toLowerCase().includes(searchLower));
-      
-      // Status filter
+      const normalizedName = nofo.name.toLowerCase().replace(/\/$/, "");
+
+      if (hasAIResults) {
+        if (!aiScoreMap.has(normalizedName)) return false;
+      } else {
+        const matchesSearch = searchLower === "" ||
+          nofo.name.toLowerCase().includes(searchLower) ||
+          (nofo.agency && nofo.agency.toLowerCase().includes(searchLower)) ||
+          (nofo.category && nofo.category.toLowerCase().includes(searchLower));
+        if (!matchesSearch) return false;
+      }
+
       const matchesStatus = statusFilter === "all" || nofo.status === statusFilter;
-      
-      // Category filter
       const matchesCategory = categoryFilter === "all" || nofo.category === categoryFilter;
-      
-      // Grant type filter
       const matchesGrantType = grantTypeFilter === "all" || nofo.grantType === grantTypeFilter;
 
-      return matchesSearch && matchesStatus && matchesCategory && matchesGrantType;
+      return matchesStatus && matchesCategory && matchesGrantType;
     });
 
-    // Sort: pinned first, then alphabetically
-    filtered.sort((a, b) => {
-      if (a.isPinned && !b.isPinned) return -1;
-      if (!a.isPinned && b.isPinned) return 1;
-      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
-    });
+    if (hasAIResults) {
+      filtered.sort((a, b) => {
+        const scoreA = aiScoreMap.get(a.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
+        const scoreB = aiScoreMap.get(b.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
+        return scoreB - scoreA;
+      });
+    } else {
+      filtered.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+      });
+    }
 
     return filtered;
   };
@@ -83,7 +119,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
   // Reset to page 1 when filters or search term change
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm]);
+  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm, aiResults]);
 
   // Handle row click to select document without resetting filters
   const handleRowClick = (nofo: NOFO) => {
@@ -173,6 +209,45 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
           </select>
         </div>
       </div>
+
+      {/* AI Search Status */}
+      {isAISearching && (
+        <div className="ai-search-loading" role="status" aria-busy="true">
+          <div className="ai-search-loading__spinner" />
+          <span>Searching grants with AI...</span>
+        </div>
+      )}
+
+      {aiError && (
+        <div className="ai-results-banner ai-results-banner--error" role="alert" aria-live="assertive">
+          <span>AI search error: {aiError}</span>
+          {onClearAISearch && (
+            <button className="ai-clear-button" onClick={onClearAISearch} aria-label="Dismiss error">
+              <LuX size={16} />
+            </button>
+          )}
+        </div>
+      )}
+
+      {aiResults && !isAISearching && !aiError && (
+        <div className="ai-results-banner" aria-live="polite">
+          <div className="ai-results-banner__content">
+            <LuSparkles size={16} className="ai-results-banner__icon" />
+            <span>
+              AI found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
+              {" "}&ldquo;{aiSearchQuery}&rdquo;
+              {aiSearchTimeMs !== null && (
+                <span className="ai-results-banner__time"> ({(aiSearchTimeMs / 1000).toFixed(1)}s)</span>
+              )}
+            </span>
+          </div>
+          {onClearAISearch && (
+            <button className="ai-clear-button" onClick={onClearAISearch} aria-label="Clear AI search results">
+              Clear
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Table */}
       <div className="landing-table-container">

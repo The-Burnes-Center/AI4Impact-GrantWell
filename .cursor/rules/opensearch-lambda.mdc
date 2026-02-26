@@ -1,0 +1,58 @@
+---
+description: Lambda functions that query OpenSearch Serverless directly (not via Bedrock KB)
+globs: "**/functions/**/ai-grant-search/**"
+alwaysApply: false
+---
+
+# OpenSearch Lambda Standards
+
+## Client Setup
+
+Always use `@opensearch-project/opensearch` with `AwsSigv4Signer`. Never use raw `fetch` to AOSS endpoints.
+
+```javascript
+import { Client } from '@opensearch-project/opensearch';
+import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
+import { defaultProvider } from '@aws-sdk/credential-provider-node';
+
+const ossClient = new Client({
+  ...AwsSigv4Signer({
+    region: process.env.AWS_REGION || 'us-east-1',
+    service: 'aoss',
+    getCredentials: () => defaultProvider()(),
+  }),
+  node: `https://${process.env.OPENSEARCH_ENDPOINT}`,
+  requestTimeout: 15000,
+});
+```
+
+## SigV4 Auth
+
+Use `defaultProvider` from `@aws-sdk/credential-provider-node`. Never hard-code credentials.
+
+## Connection Reuse
+
+Instantiate the OpenSearch client **outside** the handler (module-level) so Lambda warm starts reuse the TCP connection.
+
+## Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `OPENSEARCH_ENDPOINT` | Collection endpoint without `https://` prefix | `abc123.us-east-1.aoss.amazonaws.com` |
+| `OPENSEARCH_INDEX` | Index name | `knowledge-base-index-staging` |
+| `AWS_REGION` | Auto-set by Lambda runtime | `us-east-1` |
+
+## Query Patterns
+
+- k-NN queries must specify `k` and `vector` fields
+- BM25 queries use `match` on `text_field`
+- Never query `metadata_field` (it has `index: false`)
+- Always include `_source: ["metadata_field"]` in queries to retrieve document metadata
+
+## Error Handling
+
+Wrap all OpenSearch calls in try/catch. Return empty results on search failure, never throw to the client.
+
+## Timeout
+
+Set `requestTimeout: 15000` (15 seconds) to leave headroom within the 30s Lambda timeout.

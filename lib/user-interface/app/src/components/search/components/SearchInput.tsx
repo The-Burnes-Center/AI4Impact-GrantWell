@@ -56,10 +56,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             id="grant-search-input"
             ref={ref}
             type="text"
-            placeholder="Search by grant name, agency, or category..."
-            aria-label="Search grants by name, agency, or category"
+            placeholder="Search by keyword, category, or describe what you need... (Enter for AI search)"
+            aria-label="Search grants by name, agency, or category. Press Enter for AI-powered search."
             aria-describedby="search-help-text"
-            aria-busy={isLoading}
+            aria-busy={isLoading || isAISearching}
             role="searchbox"
             style={{
               ...inputStyle,
@@ -72,7 +72,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             onKeyDown={onKeyDown}
             disabled={disabled}
           />
-          {searchTerm && !isLoading && (
+          {searchTerm && !isLoading && !isAISearching && (
             <button
               style={clearButtonStyle}
               onClick={onClear}
@@ -100,13 +100,16 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               </svg>
             </button>
           )}
-          {isLoading && (
+          {(isLoading || isAISearching) && (
             <div
               style={{
                 position: "absolute",
                 right: "15px",
                 top: "50%",
                 transform: "translateY(-50%)",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
               }}
             >
               <Spinner
@@ -114,8 +117,13 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                 size="sm"
                 variant="primary"
                 role="status"
-                aria-label="Loading"
+                aria-label={isAISearching ? "Searching with AI" : "Loading"}
               />
+              {isAISearching && (
+                <span style={{ fontSize: "12px", color: "#14558F", whiteSpace: "nowrap" }}>
+                  AI searching...
+                </span>
+              )}
             </div>
           )}
         </div>

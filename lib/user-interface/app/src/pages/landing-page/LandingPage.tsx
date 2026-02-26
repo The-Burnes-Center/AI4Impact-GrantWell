@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
+import { useAIGrantSearch } from "../../hooks/use-ai-grant-search";
 import {
   addToRecentlyViewed,
   getRecentlyViewed,
@@ -45,6 +46,18 @@ export default function Welcome() {
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const aiSearch = useAIGrantSearch();
+
+  const handleAISearch = useCallback(
+    (query: string) => {
+      aiSearch.search(query);
+    },
+    [aiSearch.search]
+  );
+
+  const handleClearAISearch = useCallback(() => {
+    aiSearch.clearResults();
+  }, [aiSearch.clearResults]);
 
   // Load recently viewed NOFOs
   useEffect(() => {
@@ -264,6 +277,8 @@ export default function Welcome() {
           isLoading={loading}
           searchTerm={searchTerm}
           onSearchTermChange={setSearchTerm}
+          onAISearch={handleAISearch}
+          isAISearching={aiSearch.isSearching}
         />
 
         {/* Screen reader announcement */}
@@ -301,6 +316,12 @@ export default function Welcome() {
               onSelectDocument={handleSelectDocument}
               onSearchTermChange={setSearchTerm}
               searchTerm={searchTerm}
+              aiResults={aiSearch.results}
+              isAISearching={aiSearch.isSearching}
+              aiSearchQuery={aiSearch.searchQuery}
+              aiSearchTimeMs={aiSearch.searchTimeMs}
+              aiError={aiSearch.error}
+              onClearAISearch={handleClearAISearch}
             />
           </section>
         </ContentBox>

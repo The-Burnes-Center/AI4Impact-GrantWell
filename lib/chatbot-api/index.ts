@@ -72,6 +72,7 @@ export class ChatBotApi extends Construct {
       ffioNofosBucket: buckets.ffioNofosBucket,
       userDocumentsBucket: buckets.userDocumentsBucket,
       grantsGovApiKey: props.grantsGovApiKey,
+      openSearchCollection: openSearch.openSearchCollection,
     });
 
     const wsAuthorizer = new WebSocketLambdaAuthorizer(
@@ -289,6 +290,18 @@ export class ChatBotApi extends Construct {
       path: "/grant-recommendations",
       methods: [apigwv2.HttpMethod.POST],
       integration: grantRecommendationAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for AI grant search (hybrid BM25 + semantic)
+    const aiGrantSearchAPIIntegration = new HttpLambdaIntegration(
+      "AIGrantSearchAPIIntegration",
+      lambdaFunctions.aiGrantSearchFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/ai-grant-search",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: aiGrantSearchAPIIntegration,
       authorizer: httpAuthorizer,
     });
 

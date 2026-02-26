@@ -30,6 +30,8 @@ export interface IntegratedSearchBarProps {
   isLoading: boolean;
   searchTerm?: string;
   onSearchTermChange?: (term: string) => void;
+  onAISearch?: (query: string) => void;
+  isAISearching?: boolean;
 }
 
 // AI search state

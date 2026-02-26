@@ -19,6 +19,8 @@ import * as bedrock from "aws-cdk-lib/aws-bedrock";
 import { S3EventSource, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
+import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
+import { knowledgeBaseIndexName } from "../../constants";
 
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
@@ -35,6 +37,7 @@ interface LambdaFunctionStackProps {
   readonly knowledgeBaseSource: bedrock.CfnDataSource;
   readonly userDocumentsDataSource?: bedrock.CfnDataSource;
   readonly grantsGovApiKey: string;
+  readonly openSearchCollection: opensearchserverless.CfnCollection;
 }
 
 export class LambdaFunctionStack extends cdk.Stack {
@@ -63,6 +66,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly applicationPdfGeneratorFunction: lambda.Function;
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
+  public readonly aiGrantSearchFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -1312,5 +1316,67 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+
+    // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
+    const aiGrantSearchFunction = new lambda.Function(
+      scope,
+      "AIGrantSearchFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "landing-page/ai-grant-search"),
+          {
+            bundling: {
+              image: lambda.Runtime.NODEJS_20_X.bundlingImage,
+              command: [
+                "bash",
+                "-c",
+                "cp -au . /asset-output && cd /asset-output && npm install --omit=dev",
+              ],
+            },
+          }
+        ),
+        handler: "index.handler",
+        environment: {
+          OPENSEARCH_ENDPOINT: `${props.openSearchCollection.attrId}.${stack.region}.aoss.amazonaws.com`,
+          OPENSEARCH_INDEX: knowledgeBaseIndexName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        },
+        timeout: cdk.Duration.seconds(30),
+        memorySize: 512,
+      }
+    );
+
+    aiGrantSearchFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["aoss:APIAccessAll"],
+        resources: [
+          `arn:aws:aoss:${stack.region}:${stack.account}:collection/${props.openSearchCollection.attrId}`,
+        ],
+      })
+    );
+
+    aiGrantSearchFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:InvokeModel"],
+        resources: [
+          `arn:aws:bedrock:${stack.region}::foundation-model/amazon.titan-embed-text-v2:0`,
+        ],
+      })
+    );
+
+    aiGrantSearchFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:Scan"],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+        ],
+      })
+    );
+
+    this.aiGrantSearchFunction = aiGrantSearchFunction;
   }
 }
