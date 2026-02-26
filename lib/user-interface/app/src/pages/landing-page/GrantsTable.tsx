@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { LuFileX, LuSparkles, LuX } from "react-icons/lu";
+import { LuFileX, LuX } from "react-icons/lu";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
 import { GRANT_TYPES } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
@@ -12,12 +12,10 @@ interface GrantsTableProps {
   onSelectDocument: (document: { label: string; value: string }) => void;
   onSearchTermChange?: (term: string) => void;
   searchTerm?: string;
-  aiResults?: AISearchResult[] | null;
-  isAISearching?: boolean;
-  aiSearchQuery?: string | null;
-  aiSearchTimeMs?: number | null;
-  aiError?: string | null;
-  onClearAISearch?: () => void;
+  searchResults?: AISearchResult[] | null;
+  isSearching?: boolean;
+  searchError?: string | null;
+  onClearSearch?: () => void;
 }
 
 export const GrantsTable: React.FC<GrantsTableProps> = ({
@@ -26,12 +24,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   onSelectDocument,
   onSearchTermChange,
   searchTerm = "",
-  aiResults = null,
-  isAISearching = false,
-  aiSearchQuery = null,
-  aiSearchTimeMs = null,
-  aiError = null,
-  onClearAISearch,
+  searchResults = null,
+  isSearching = false,
+  searchError = null,
+  onClearSearch,
 }) => {
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -43,39 +39,36 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     new Set(nofos.map((nofo) => nofo.category).filter((category): category is string => !!category))
   ).sort();
 
-  // Calculate grant count per category
   const getCategoryCount = (category: string) => {
     return nofos.filter((nofo) => nofo.category === category).length;
   };
 
-  // Calculate grant count per status
   const getStatusCount = (status: "active" | "archived") => {
     return nofos.filter((nofo) => nofo.status === status).length;
   };
 
-  // Calculate grant count per grant type
   const getGrantTypeCount = (grantType: GrantTypeId) => {
     return nofos.filter((nofo) => nofo.grantType === grantType).length;
   };
 
-  const aiScoreMap = useMemo(() => {
-    if (!aiResults) return null;
+  const scoreMap = useMemo(() => {
+    if (!searchResults) return null;
     const map = new Map<string, AISearchResult>();
-    for (const r of aiResults) {
+    for (const r of searchResults) {
       map.set(r.name.toLowerCase().replace(/\/$/, ""), r);
     }
     return map;
-  }, [aiResults]);
+  }, [searchResults]);
 
   const getFilteredNofos = () => {
     const searchLower = searchTerm.toLowerCase().trim();
-    const hasAIResults = aiScoreMap !== null && aiScoreMap.size > 0;
+    const hasRankedResults = scoreMap !== null && scoreMap.size > 0;
 
     let filtered = nofos.filter((nofo) => {
       const normalizedName = nofo.name.toLowerCase().replace(/\/$/, "");
 
-      if (hasAIResults) {
-        if (!aiScoreMap.has(normalizedName)) return false;
+      if (hasRankedResults) {
+        if (!scoreMap.has(normalizedName)) return false;
       } else {
         const matchesSearch = searchLower === "" ||
           nofo.name.toLowerCase().includes(searchLower) ||
@@ -91,10 +84,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       return matchesStatus && matchesCategory && matchesGrantType;
     });
 
-    if (hasAIResults) {
+    if (hasRankedResults) {
       filtered.sort((a, b) => {
-        const scoreA = aiScoreMap.get(a.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
-        const scoreB = aiScoreMap.get(b.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
+        const scoreA = scoreMap.get(a.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
+        const scoreB = scoreMap.get(b.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
         return scoreB - scoreA;
       });
     } else {
@@ -109,34 +102,22 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   };
 
   const filteredNofos = getFilteredNofos();
-  
-  // Pagination calculations
+
   const totalPages = Math.ceil(filteredNofos.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedNofos = filteredNofos.slice(startIndex, endIndex);
 
-  // Reset to page 1 when filters or search term change
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm, aiResults]);
+  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm, searchResults]);
 
-  // Handle row click to select document without resetting filters
   const handleRowClick = (nofo: NOFO) => {
-    const selectedDoc = {
+    onSelectDocument({
       label: nofo.name,
       value: nofo.name + "/",
-    };
-    
-    // Update the search bar with the grant name (so dropdown recognizes it)
-    if (onSearchTermChange) {
-      onSearchTermChange(nofo.name);
-    }
-    
-    // Select the document (this will update the dropdown and show CTA buttons)
-    onSelectDocument(selectedDoc);
-    
-    // Scroll to top to show the CTA buttons after state updates complete
+    });
+
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 150);
@@ -210,40 +191,28 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
       </div>
 
-      {/* AI Search Status */}
-      {isAISearching && (
-        <div className="ai-search-loading" role="status" aria-busy="true">
-          <div className="ai-search-loading__spinner" />
-          <span>Searching grants with AI...</span>
-        </div>
-      )}
-
-      {aiError && (
-        <div className="ai-results-banner ai-results-banner--error" role="alert" aria-live="assertive">
-          <span>AI search error: {aiError}</span>
-          {onClearAISearch && (
-            <button className="ai-clear-button" onClick={onClearAISearch} aria-label="Dismiss error">
+      {/* Error banner */}
+      {searchError && (
+        <div className="search-status-banner search-status-banner--error" role="alert" aria-live="assertive">
+          <span>Search failed: {searchError}</span>
+          {onClearSearch && (
+            <button className="search-clear-button" onClick={onClearSearch} aria-label="Dismiss error">
               <LuX size={16} />
             </button>
           )}
         </div>
       )}
 
-      {aiResults && !isAISearching && !aiError && (
-        <div className="ai-results-banner" aria-live="polite">
-          <div className="ai-results-banner__content">
-            <LuSparkles size={16} className="ai-results-banner__icon" />
-            <span>
-              AI found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
-              {" "}&ldquo;{aiSearchQuery}&rdquo;
-              {aiSearchTimeMs !== null && (
-                <span className="ai-results-banner__time"> ({(aiSearchTimeMs / 1000).toFixed(1)}s)</span>
-              )}
-            </span>
-          </div>
-          {onClearAISearch && (
-            <button className="ai-clear-button" onClick={onClearAISearch} aria-label="Clear AI search results">
-              Clear
+      {/* Results summary with Show All */}
+      {searchResults && !isSearching && !searchError && (
+        <div className="search-status-banner" aria-live="polite">
+          <span>
+            Found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
+            your search
+          </span>
+          {onClearSearch && (
+            <button className="search-clear-button" onClick={onClearSearch} aria-label="Show all grants">
+              Show all
             </button>
           )}
         </div>
@@ -260,17 +229,22 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
 
         <div className="landing-table-body">
-          {filteredNofos.length === 0 && (
+          {isSearching ? (
+            <div className="landing-no-data">
+              <div className="search-spinner" />
+              <p>Searching...</p>
+            </div>
+          ) : filteredNofos.length === 0 ? (
             <div className="landing-no-data">
               <LuFileX size={24} className="landing-no-data-icon" />
               <p>
-                {searchTerm 
-                  ? `No grants found matching "${searchTerm}"` 
+                {searchTerm
+                  ? `No grants found matching "${searchTerm}"`
                   : "No grants found matching your filters"}
               </p>
             </div>
-          )}
-          {paginatedNofos.map((nofo) => {
+          ) : null}
+          {!isSearching && paginatedNofos.map((nofo) => {
             const isArchived = nofo.status === "archived";
             return (
               <div
@@ -337,7 +311,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       </div>
 
       {/* Pagination */}
-      {filteredNofos.length > 0 && totalPages > 1 && (
+      {!isSearching && filteredNofos.length > 0 && totalPages > 1 && (
         <div className="landing-table-pagination">
           <div className="landing-pagination-info">
             Showing {startIndex + 1}-{Math.min(endIndex, filteredNofos.length)} of {filteredNofos.length} grants
@@ -353,7 +327,6 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             </button>
             <div className="landing-pagination-pages">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                // Show first page, last page, current page, and pages around current
                 if (
                   page === 1 ||
                   page === totalPages ||

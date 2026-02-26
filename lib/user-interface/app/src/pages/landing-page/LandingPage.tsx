@@ -48,14 +48,14 @@ export default function Welcome() {
   const [searchParams, setSearchParams] = useSearchParams();
   const aiSearch = useAIGrantSearch();
 
-  const handleAISearch = useCallback(
+  const handleSearch = useCallback(
     (query: string) => {
       aiSearch.search(query);
     },
     [aiSearch.search]
   );
 
-  const handleClearAISearch = useCallback(() => {
+  const handleClearSearch = useCallback(() => {
     aiSearch.clearResults();
   }, [aiSearch.clearResults]);
 
@@ -277,8 +277,9 @@ export default function Welcome() {
           isLoading={loading}
           searchTerm={searchTerm}
           onSearchTermChange={setSearchTerm}
-          onAISearch={handleAISearch}
-          isAISearching={aiSearch.isSearching}
+          onSearch={handleSearch}
+          isSearching={aiSearch.isSearching}
+          onClearSearch={handleClearSearch}
         />
 
         {/* Screen reader announcement */}
@@ -316,12 +317,10 @@ export default function Welcome() {
               onSelectDocument={handleSelectDocument}
               onSearchTermChange={setSearchTerm}
               searchTerm={searchTerm}
-              aiResults={aiSearch.results}
-              isAISearching={aiSearch.isSearching}
-              aiSearchQuery={aiSearch.searchQuery}
-              aiSearchTimeMs={aiSearch.searchTimeMs}
-              aiError={aiSearch.error}
-              onClearAISearch={handleClearAISearch}
+              searchResults={aiSearch.results}
+              isSearching={aiSearch.isSearching}
+              searchError={aiSearch.error}
+              onClearSearch={handleClearSearch}
             />
           </section>
         </ContentBox>

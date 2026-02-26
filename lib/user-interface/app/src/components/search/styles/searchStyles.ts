@@ -188,36 +188,6 @@ export const selectedAiSuggestionCardStyle: React.CSSProperties = {
   borderLeft: "3px solid #14558F",
 };
 
-export const aiLoadingStyle: React.CSSProperties = {
-  padding: "24px 16px",
-  textAlign: "center",
-  backgroundColor: "#f8f9ff",
-  borderRadius: "8px",
-  margin: "8px 12px",
-};
-
-export const aiErrorStyle: React.CSSProperties = {
-  padding: "16px",
-  margin: "8px 12px",
-  backgroundColor: "#fee",
-  border: "1px solid #fcc",
-  borderRadius: "8px",
-  color: "#c33",
-  fontSize: "14px",
-};
-
-export const aiPromptStyle: React.CSSProperties = {
-  padding: "12px 16px",
-  margin: "8px 12px",
-  backgroundColor: "#f0f7ff",
-  borderRadius: "8px",
-  border: "1px dashed #14558F",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "12px",
-};
-
 export const viewAllButtonStyle: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
