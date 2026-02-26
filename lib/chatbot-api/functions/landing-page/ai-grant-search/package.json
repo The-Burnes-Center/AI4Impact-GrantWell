@@ -1,8 +1,0 @@
-{
-  "name": "ai-grant-search",
-  "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "@opensearch-project/opensearch": "^2.12.0"
-  }
-}

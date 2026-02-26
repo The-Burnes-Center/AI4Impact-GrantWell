@@ -1324,17 +1324,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       {
         runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/ai-grant-search"),
-          {
-            bundling: {
-              image: lambda.Runtime.NODEJS_20_X.bundlingImage,
-              command: [
-                "bash",
-                "-c",
-                "cp -au . /asset-output && cd /asset-output && npm install --omit=dev",
-              ],
-            },
-          }
+          path.join(__dirname, "landing-page/ai-grant-search")
         ),
         handler: "index.handler",
         environment: {
