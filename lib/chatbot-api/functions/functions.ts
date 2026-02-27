@@ -28,7 +28,6 @@ interface LambdaFunctionStackProps {
   readonly feedbackTable: Table;
   readonly draftTable: Table;
   readonly nofoMetadataTable: Table;
-  readonly searchJobsTable: Table;
   readonly draftGenerationJobsTable: Table;
   readonly feedbackBucket: s3.Bucket;
   readonly ffioNofosBucket: s3.Bucket;
@@ -55,7 +54,6 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly getNOFOSummary: lambda.Function;
   public readonly getNOFOQuestions: lambda.Function;
   public readonly processAndSummarizeNOFO: lambda.Function;
-  public readonly grantRecommendationFunction: lambda.Function;
   public readonly nofoStatusFunction: lambda.Function;
   public readonly nofoRenameFunction: lambda.Function;
   public readonly nofoDeleteFunction: lambda.Function;
@@ -160,73 +158,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.sessionFunction = sessionAPIHandlerFunction;
 
-    // Grant Recommendation Lambda function
-    const grantRecommendationFunction = new lambda.Function(
-      scope,
-      "GrantRecommendationFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/grant-recommendation")
-        ),
-        handler: "index.handler",
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          SEARCH_JOBS_TABLE_NAME: props.searchJobsTable.tableName,
-          ENABLE_DYNAMODB_CACHE: "true",
-        },
-        timeout: cdk.Duration.minutes(5),
-      }
-    );
-
-    // S3 permissions for grant recommendation function
-    grantRecommendationFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:ListBucket"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
-      })
-    );
-
-    // Bedrock permissions for grant recommendation function
-    grantRecommendationFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "bedrock:InvokeModel",
-          "bedrock:Retrieve",
-          "bedrock-agent:Retrieve",
-        ],
-        resources: ["*"],
-      })
-    );
-
-    // DynamoDB permissions for grant recommendation function (for auto-detection, metadata checks, and search jobs)
-    grantRecommendationFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "dynamodb:GetItem",
-          "dynamodb:Scan",
-          "dynamodb:PutItem",
-          "dynamodb:UpdateItem",
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          `${props.nofoMetadataTable.tableArn}/index/*`,
-          props.searchJobsTable.tableArn,
-        ],
-      })
-    );
-
-    this.grantRecommendationFunction = grantRecommendationFunction;
-
-    // Update WebSocket chat function
+    // WebSocket chat function
     const websocketAPIFunction = new lambda.Function(
       scope,
       "ChatHandlerFunction",
@@ -277,7 +209,6 @@ export class LambdaFunctionStack extends cdk.Stack {
         actions: ["lambda:InvokeFunction"],
         resources: [
           this.sessionFunction.functionArn,
-          this.grantRecommendationFunction.functionArn,
         ],
       })
     );
@@ -1304,18 +1235,8 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Add the Lambda function as a target for the EventBridge rule
     autoArchiveRule.addTarget(new targets.LambdaFunction(autoArchiveExpiredNofosFunction));
 
-    // Lambda invoke permission for async RAG search (self-invoke)
+    // Get the stack object
     const stack = cdk.Stack.of(this);
-    this.grantRecommendationFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        sid: 'AllowSelfInvoke',
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [
-          `arn:aws:lambda:${stack.region}:${stack.account}:function:*`,
-        ],
-      })
-    );
 
     // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
     const aiGrantSearchFunction = new lambda.Function(

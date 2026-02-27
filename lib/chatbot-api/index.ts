@@ -63,7 +63,6 @@ export class ChatBotApi extends Construct {
       feedbackTable: tables.feedbackTable,
       draftTable: tables.draftTable,
       nofoMetadataTable: tables.nofoMetadataTable,
-      searchJobsTable: tables.searchJobsTable,
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
       feedbackBucket: buckets.feedbackBucket,
       knowledgeBase: knowledgeBase.knowledgeBase,
@@ -281,18 +280,6 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    // Add REST API route for grant recommendations
-    const grantRecommendationAPIIntegration = new HttpLambdaIntegration(
-      "GrantRecommendationAPIIntegration",
-      lambdaFunctions.grantRecommendationFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/grant-recommendations",
-      methods: [apigwv2.HttpMethod.POST],
-      integration: grantRecommendationAPIIntegration,
-      authorizer: httpAuthorizer,
-    });
-
     // Add REST API route for AI grant search (hybrid BM25 + semantic)
     const aiGrantSearchAPIIntegration = new HttpLambdaIntegration(
       "AIGrantSearchAPIIntegration",
@@ -302,31 +289,6 @@ export class ChatBotApi extends Construct {
       path: "/ai-grant-search",
       methods: [apigwv2.HttpMethod.POST],
       integration: aiGrantSearchAPIIntegration,
-      authorizer: httpAuthorizer,
-    });
-
-    // Add REST API route for search job status polling
-    const searchJobStatusFunction = new lambda.Function(this, "SearchJobStatusFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "functions/landing-page/search-job-status")
-      ),
-      handler: "index.handler",
-      environment: {
-        SEARCH_JOBS_TABLE_NAME: tables.searchJobsTable.tableName,
-      },
-      timeout: cdk.Duration.seconds(10),
-    });
-    tables.searchJobsTable.grantReadData(searchJobStatusFunction);
-    
-    const searchJobStatusAPIIntegration = new HttpLambdaIntegration(
-      "SearchJobStatusAPIIntegration",
-      searchJobStatusFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/search-jobs/{jobId}",
-      methods: [apigwv2.HttpMethod.GET],
-      integration: searchJobStatusAPIIntegration,
       authorizer: httpAuthorizer,
     });
 

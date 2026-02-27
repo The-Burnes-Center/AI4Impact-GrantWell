@@ -123,6 +123,12 @@ export class TableStack extends Stack {
     });
 
     this.searchJobsTable = searchJobsTable;
+    this.exportValue(this.searchJobsTable.tableName, {
+      name: 'gwstackstagingChatbotAPITableStack1CC2A7DA:ExportsOutputRefSearchJobsTableA2558B7A8D23931E',
+    });
+    this.exportValue(this.searchJobsTable.tableArn, {
+      name: 'gwstackstagingChatbotAPITableStack1CC2A7DA:ExportsOutputFnGetAttSearchJobsTableA2558B7AArnA7DEE49B',
+    });
 
     // Define the Draft Generation Jobs Table for async draft generation
     // Stores job status and results for polling
