@@ -13,7 +13,6 @@ export class TableStack extends Stack {
   public readonly feedbackTable: Table;
   public readonly draftTable: Table;
   public readonly nofoMetadataTable: Table;
-  public readonly searchJobsTable: Table;
   public readonly draftGenerationJobsTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -114,21 +113,6 @@ export class TableStack extends Stack {
     // });
 
     this.nofoMetadataTable = nofoMetadataTable;
-
-    // Define the Search Jobs Table for async grant recommendation searches
-    // Stores job status and results for polling
-    const searchJobsTable = new Table(this, 'SearchJobsTable', {
-      partitionKey: { name: 'jobId', type: AttributeType.STRING },
-      timeToLiveAttribute: 'ttl', // Auto-delete jobs after expiry
-    });
-
-    this.searchJobsTable = searchJobsTable;
-    this.exportValue(this.searchJobsTable.tableName, {
-      name: 'gwstackstagingChatbotAPITableStack1CC2A7DA:ExportsOutputRefSearchJobsTableA2558B7A8D23931E',
-    });
-    this.exportValue(this.searchJobsTable.tableArn, {
-      name: 'gwstackstagingChatbotAPITableStack1CC2A7DA:ExportsOutputFnGetAttSearchJobsTableA2558B7AArnA7DEE49B',
-    });
 
     // Define the Draft Generation Jobs Table for async draft generation
     // Stores job status and results for polling
