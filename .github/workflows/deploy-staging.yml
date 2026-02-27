@@ -47,8 +47,10 @@ jobs:
       - name: Bootstrap AWS environment
         run: cdk bootstrap
 
-      - name: Deploy CDK stack to staging
-        run: cdk deploy ${{ env.STACK_NAME }} --require-approval never
+      - name: Deploy CDK stacks to staging (consumer first, then dependency)
+        run: |
+          cdk deploy ${{ env.STACK_NAME }} --exclusively --require-approval never
+          cdk deploy ${{ env.STACK_NAME }}/ChatbotAPI/TableStack --require-approval never
 
       - name: Fetch CloudFormation Outputs
         run: |

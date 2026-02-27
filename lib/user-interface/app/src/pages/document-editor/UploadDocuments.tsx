@@ -4,6 +4,7 @@ import { Auth } from "aws-amplify";
 import { FileUploader } from "../../common/file-uploader";
 import Card from "../../components/ui/Card";
 import NavigationButtons from "../../components/ui/NavigationButtons";
+import { Modal } from "../../components/common/Modal";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import type { DocumentData } from "../../common/types/document";
 
@@ -57,6 +58,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [generatingDraft, setGeneratingDraft] = useState(false);
   const [draftProgress, setDraftProgress] = useState<string>("");
+  const [draftProgressPercent, setDraftProgressPercent] = useState(0);
   const [hasExistingDraft, setHasExistingDraft] = useState(false);
   const [kbIndexing, setKbIndexing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -229,7 +231,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
 
       setGeneratingDraft(true);
-      setDraftProgress("Starting draft generation...");
+      setDraftProgress("Checking status…");
+      setDraftProgressPercent(0);
 
       const result = await apiClient.drafts.generateDraft({
         query: "Generate all sections for the grant application",
@@ -237,8 +240,14 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         projectBasics: draftToUse.projectBasics || {},
         questionnaire: draftToUse.questionnaire || {},
         sessionId,
-        onProgress: (status: string) => {
-          setDraftProgress(`Generating draft sections... (${status})`);
+        onProgress: (status: string, pollCount?: number, maxPolls?: number) => {
+          if (status === "completed") {
+            setDraftProgressPercent(100);
+            setDraftProgress("Complete!");
+          } else if (typeof pollCount === "number" && typeof maxPolls === "number" && maxPolls > 0) {
+            setDraftProgressPercent(Math.min(90, (pollCount / maxPolls) * 100));
+            setDraftProgress("Checking status…");
+          }
         },
       });
 
@@ -246,7 +255,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         throw new Error("Failed to generate sections");
       }
 
-      setDraftProgress("Draft generation completed!");
+      setDraftProgressPercent(100);
+      setDraftProgress("Complete!");
 
       const uploadedFileInfo = files.map((f) => ({
         name: f.name,
@@ -270,6 +280,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setIsLoading(false);
       setGeneratingDraft(false);
       setDraftProgress("");
+      setDraftProgressPercent(0);
     }
   };
 
@@ -568,42 +579,67 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         )}
       </Card>
 
-      {generatingDraft && draftProgress && (
+      <Modal
+        isOpen={generatingDraft}
+        onClose={() => {}}
+        title="Generating your draft"
+        hideCloseButton
+      >
         <div
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          aria-label="Draft generation progress"
           style={{
             display: "flex",
-            alignItems: "center",
-            gap: spacing.md,
-            marginTop: spacing.lg,
-            padding: `${spacing.md} ${spacing.lg}`,
-            backgroundColor: colors.primaryLight,
-            borderRadius: borderRadius.md,
-            border: `1px solid ${colors.primary}`,
-            fontSize: typography.fontSize.sm,
-            color: colors.primary,
+            flexDirection: "column",
+            gap: spacing.lg,
             fontFamily: typography.fontFamily,
           }}
         >
           <div
-            role="img"
-            aria-label="Loading"
+            role="progressbar"
+            aria-valuenow={draftProgressPercent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Draft generation progress"
+            aria-valuetext={`${Math.round(draftProgressPercent)}% complete`}
             style={{
-              width: "16px",
-              height: "16px",
-              border: `2px solid ${colors.primary}`,
-              borderTopColor: "transparent",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-              flexShrink: 0,
+              width: "100%",
+              height: "12px",
+              backgroundColor: colors.border,
+              borderRadius: borderRadius.full,
+              overflow: "hidden",
             }}
-          />
-          <span>{draftProgress}</span>
+          >
+            <div
+              style={{
+                width: `${draftProgressPercent}%`,
+                height: "100%",
+                backgroundColor: colors.primary,
+                borderRadius: borderRadius.full,
+                transition: "width 0.3s ease",
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: spacing.md }}>
+            <div
+              aria-hidden
+              style={{
+                width: "24px",
+                height: "24px",
+                border: `2px solid ${colors.primary}`,
+                borderTopColor: "transparent",
+                borderRadius: "50%",
+                animation: "spin 1s linear infinite",
+                flexShrink: 0,
+              }}
+            />
+            <span style={{ fontSize: typography.fontSize.sm, color: colors.textSecondary }}>
+              {draftProgress}
+            </span>
+          </div>
         </div>
-      )}
+      </Modal>
 
       <div style={{
         display: "flex",

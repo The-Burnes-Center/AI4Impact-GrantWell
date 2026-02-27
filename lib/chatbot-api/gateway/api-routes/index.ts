@@ -22,12 +22,10 @@ export interface RoutesProps {
   getNOFOsFunction: lambda.Function;
   getNOFOSummaryFunction: lambda.Function;
   kbSyncFunction: lambda.Function;
-  grantRecommendationFunction: lambda.Function;
-  draftGeneratorFunction: lambda.Function; // Add draft generator function prop
-  automatedNofoScraperFunction: lambda.Function; // Add automated NOFO scraper function prop
-  applicationPdfGeneratorFunction: lambda.Function; // Add application PDF generator function prop
-  searchJobsTableName: string; // For search job status polling
-  draftGenerationJobsTableName: string; // For draft generation job status polling
+  draftGeneratorFunction: lambda.Function;
+  automatedNofoScraperFunction: lambda.Function;
+  applicationPdfGeneratorFunction: lambda.Function;
+  draftGenerationJobsTableName: string;
 }
 
 export class Routes extends Construct {
@@ -142,76 +140,8 @@ export class Routes extends Construct {
       integration: kbSyncIntegration,
     });
 
-    // Grant Recommendation Lambda Integration
-    // Create a new dedicated Lambda function for the REST API endpoint
-    // Note: API Gateway HTTP API has a hard limit of 30 seconds for synchronous requests
-    const grantRecommendationAPIFunction = new lambda.Function(this, 'GrantRecommendationAPIFunction', {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, 'grant-recommendation')),
-      handler: 'index.handler',
-      environment: {
-        GRANT_RECOMMENDATION_FUNCTION: props.grantRecommendationFunction.functionName,
-      },
-      timeout: Duration.seconds(30), // Max allowed by API Gateway HTTP API
-    });
-
-    // Grant the API function permission to invoke the Grant Recommendation function
-    grantRecommendationAPIFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ['lambda:InvokeFunction'],
-        resources: [props.grantRecommendationFunction.functionArn],
-      })
-    );
-
-    // Create the API integration
-    const grantRecommendationIntegration = new HttpLambdaIntegration(
-      'GrantRecommendationIntegration',
-      grantRecommendationAPIFunction
-    );
-
-    // Add the route to the HTTP API
-    props.httpApi.addRoutes({
-      path: '/grant-recommendations',
-      methods: [apigwv2.HttpMethod.POST, apigwv2.HttpMethod.OPTIONS],
-      integration: grantRecommendationIntegration,
-    });
-
-    // Search Job Status Lambda Integration
-    // Allows frontend to poll for async RAG search results
-    const searchJobStatusFunction = new lambda.Function(this, 'SearchJobStatusFunction', {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, 'search-job-status')),
-      handler: 'index.handler',
-      environment: {
-        SEARCH_JOBS_TABLE_NAME: props.searchJobsTableName,
-      },
-      timeout: Duration.seconds(10),
-    });
-
-    // Grant DynamoDB read permissions
-    searchJobStatusFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ['dynamodb:GetItem'],
-        resources: [`arn:aws:dynamodb:*:*:table/${props.searchJobsTableName}`],
-      })
-    );
-
-    const searchJobStatusIntegration = new HttpLambdaIntegration(
-      'SearchJobStatusIntegration',
-      searchJobStatusFunction
-    );
-
-    props.httpApi.addRoutes({
-      path: '/search-jobs/{jobId}',
-      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.OPTIONS],
-      integration: searchJobStatusIntegration,
-    });
-
     // Draft Generation Lambda Integration
     // Create a new dedicated Lambda function for the REST API endpoint
-    // Note: API Gateway HTTP API has a hard limit of 30 seconds for synchronous requests
     const draftGeneratorAPIFunction = new lambda.Function(this, 'DraftGeneratorAPIFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(path.join(__dirname, 'draft-generation')),

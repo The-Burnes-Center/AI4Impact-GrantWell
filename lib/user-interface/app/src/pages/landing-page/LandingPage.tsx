@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
+import { useAIGrantSearch } from "../../hooks/use-ai-grant-search";
 import {
   addToRecentlyViewed,
   getRecentlyViewed,
@@ -35,6 +36,7 @@ export default function Welcome() {
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<RecentlyViewedNOFO[]>([]);
   const [tableNofos, setTableNofos] = useState<NOFO[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchPending, setIsSearchPending] = useState(false);
   const [highlightCTAButtons, setHighlightCTAButtons] = useState(false);
   const [srAnnouncement, setSrAnnouncement] = useState("");
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
@@ -45,6 +47,18 @@ export default function Welcome() {
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const aiSearch = useAIGrantSearch();
+
+  const handleSearch = useCallback(
+    (query: string) => {
+      aiSearch.search(query);
+    },
+    [aiSearch.search]
+  );
+
+  const handleClearSearch = useCallback(() => {
+    aiSearch.clearResults();
+  }, [aiSearch.clearResults]);
 
   // Load recently viewed NOFOs
   useEffect(() => {
@@ -264,6 +278,10 @@ export default function Welcome() {
           isLoading={loading}
           searchTerm={searchTerm}
           onSearchTermChange={setSearchTerm}
+          onSearch={handleSearch}
+          isSearching={aiSearch.isSearching}
+          onClearSearch={handleClearSearch}
+          onSearchPendingChange={setIsSearchPending}
         />
 
         {/* Screen reader announcement */}
@@ -301,6 +319,11 @@ export default function Welcome() {
               onSelectDocument={handleSelectDocument}
               onSearchTermChange={setSearchTerm}
               searchTerm={searchTerm}
+              searchResults={aiSearch.results}
+              isSearching={aiSearch.isSearching}
+              isSearchPending={isSearchPending}
+              searchError={aiSearch.error}
+              onClearSearch={handleClearSearch}
             />
           </section>
         </ContentBox>
