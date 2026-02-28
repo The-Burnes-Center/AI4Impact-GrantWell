@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { LuFileX } from "react-icons/lu";
+import React, { useState, useEffect, useMemo } from "react";
+import { LuFileX, LuX } from "react-icons/lu";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
 import { GRANT_TYPES } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
+import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
 
 interface GrantsTableProps {
@@ -11,96 +12,122 @@ interface GrantsTableProps {
   onSelectDocument: (document: { label: string; value: string }) => void;
   onSearchTermChange?: (term: string) => void;
   searchTerm?: string;
+  searchResults?: AISearchResult[] | null;
+  isSearching?: boolean;
+  isSearchPending?: boolean;
+  searchError?: string | null;
+  onClearSearch?: () => void;
 }
 
-export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSelectDocument, onSearchTermChange, searchTerm = "" }) => {
+export const GrantsTable: React.FC<GrantsTableProps> = ({
+  nofos,
+  loading,
+  onSelectDocument,
+  onSearchTermChange,
+  searchTerm = "",
+  searchResults = null,
+  isSearching = false,
+  isSearchPending = false,
+  searchError = null,
+  onClearSearch,
+}) => {
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
 
   const uniqueCategories = Array.from(
     new Set(nofos.map((nofo) => nofo.category).filter((category): category is string => !!category))
   ).sort();
 
-  // Calculate grant count per category
   const getCategoryCount = (category: string) => {
     return nofos.filter((nofo) => nofo.category === category).length;
   };
 
-  // Calculate grant count per status
   const getStatusCount = (status: "active" | "archived") => {
     return nofos.filter((nofo) => nofo.status === status).length;
   };
 
-  // Calculate grant count per grant type
   const getGrantTypeCount = (grantType: GrantTypeId) => {
     return nofos.filter((nofo) => nofo.grantType === grantType).length;
   };
 
-  // Filter NOFOs based on filters and search term
+  const scoreMap = useMemo(() => {
+    if (!searchResults) return null;
+    const map = new Map<string, AISearchResult>();
+    for (const r of searchResults) {
+      map.set(r.name.toLowerCase().replace(/\/$/, ""), r);
+    }
+    return map;
+  }, [searchResults]);
+
+  const awaitingAIResults = isSearching || isSearchPending;
+
   const getFilteredNofos = () => {
     const searchLower = searchTerm.toLowerCase().trim();
-    
+    const hasRankedResults = scoreMap !== null && scoreMap.size > 0;
+
     let filtered = nofos.filter((nofo) => {
-      // Search term filter - matches name, agency, or category
-      const matchesSearch = searchLower === "" || 
-        nofo.name.toLowerCase().includes(searchLower) ||
-        (nofo.agency && nofo.agency.toLowerCase().includes(searchLower)) ||
-        (nofo.category && nofo.category.toLowerCase().includes(searchLower));
-      
-      // Status filter
+      const normalizedName = nofo.name.toLowerCase().replace(/\/$/, "");
+
+      if (hasRankedResults) {
+        if (!scoreMap.has(normalizedName)) return false;
+      } else if (searchLower !== "" && !awaitingAIResults) {
+        const tokens = searchLower.split(/\s+/).filter(Boolean);
+        const searchableText = [
+          nofo.name,
+          nofo.agency,
+          nofo.category,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        const matchesSearch = tokens.some((token) => searchableText.includes(token));
+        if (!matchesSearch) return false;
+      }
+
       const matchesStatus = statusFilter === "all" || nofo.status === statusFilter;
-      
-      // Category filter
       const matchesCategory = categoryFilter === "all" || nofo.category === categoryFilter;
-      
-      // Grant type filter
       const matchesGrantType = grantTypeFilter === "all" || nofo.grantType === grantTypeFilter;
 
-      return matchesSearch && matchesStatus && matchesCategory && matchesGrantType;
+      return matchesStatus && matchesCategory && matchesGrantType;
     });
 
-    // Sort: pinned first, then alphabetically
-    filtered.sort((a, b) => {
-      if (a.isPinned && !b.isPinned) return -1;
-      if (!a.isPinned && b.isPinned) return 1;
-      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
-    });
+    if (hasRankedResults) {
+      filtered.sort((a, b) => {
+        const scoreA = scoreMap.get(a.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
+        const scoreB = scoreMap.get(b.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
+        return scoreB - scoreA;
+      });
+    } else {
+      filtered.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+      });
+    }
 
     return filtered;
   };
 
   const filteredNofos = getFilteredNofos();
-  
-  // Pagination calculations
+
   const totalPages = Math.ceil(filteredNofos.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedNofos = filteredNofos.slice(startIndex, endIndex);
 
-  // Reset to page 1 when filters or search term change
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm]);
+  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm, searchResults]);
 
-  // Handle row click to select document without resetting filters
   const handleRowClick = (nofo: NOFO) => {
-    const selectedDoc = {
+    onSelectDocument({
       label: nofo.name,
       value: nofo.name + "/",
-    };
-    
-    // Update the search bar with the grant name (so dropdown recognizes it)
-    if (onSearchTermChange) {
-      onSearchTermChange(nofo.name);
-    }
-    
-    // Select the document (this will update the dropdown and show CTA buttons)
-    onSelectDocument(selectedDoc);
-    
-    // Scroll to top to show the CTA buttons after state updates complete
+    });
+
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 150);
@@ -174,6 +201,33 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
         </div>
       </div>
 
+      {/* Error banner */}
+      {searchError && (
+        <div className="search-status-banner search-status-banner--error" role="alert" aria-live="assertive">
+          <span>Search failed: {searchError}</span>
+          {onClearSearch && (
+            <button className="search-clear-button" onClick={onClearSearch} aria-label="Dismiss error">
+              <LuX size={16} />
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Results summary with Show All */}
+      {searchResults && !isSearching && !searchError && (
+        <div className="search-status-banner" aria-live="polite">
+          <span>
+            Found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
+            your search
+          </span>
+          {onClearSearch && (
+            <button className="search-clear-button" onClick={onClearSearch} aria-label="Show all grants">
+              Show all
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Table */}
       <div className="landing-table-container">
         <div className="landing-table-header">
@@ -185,17 +239,35 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
         </div>
 
         <div className="landing-table-body">
-          {filteredNofos.length === 0 && (
+          {awaitingAIResults ? (
+            <div className="landing-search-loading" role="status" aria-busy="true" aria-label="Searching grants with AI">
+              <div className="skeleton-row-group">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="skeleton-row" aria-hidden="true">
+                    <div className="skeleton-cell skeleton-cell--wide"><div className="skeleton-bar" /></div>
+                    <div className="skeleton-cell"><div className="skeleton-bar" /></div>
+                    <div className="skeleton-cell"><div className="skeleton-bar" /></div>
+                    <div className="skeleton-cell skeleton-cell--narrow"><div className="skeleton-bar" /></div>
+                    <div className="skeleton-cell skeleton-cell--narrow"><div className="skeleton-bar" /></div>
+                  </div>
+                ))}
+              </div>
+              <p className="search-loading-text">
+                <span className="search-spinner" />
+                Searching grants with AI&hellip;
+              </p>
+            </div>
+          ) : filteredNofos.length === 0 ? (
             <div className="landing-no-data">
               <LuFileX size={24} className="landing-no-data-icon" />
               <p>
-                {searchTerm 
-                  ? `No grants found matching "${searchTerm}"` 
+                {searchTerm
+                  ? `No grants found matching "${searchTerm}"`
                   : "No grants found matching your filters"}
               </p>
             </div>
-          )}
-          {paginatedNofos.map((nofo) => {
+          ) : null}
+          {!awaitingAIResults && paginatedNofos.map((nofo) => {
             const isArchived = nofo.status === "archived";
             return (
               <div
@@ -262,7 +334,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
       </div>
 
       {/* Pagination */}
-      {filteredNofos.length > 0 && totalPages > 1 && (
+      {!awaitingAIResults && filteredNofos.length > 0 && totalPages > 1 && (
         <div className="landing-table-pagination">
           <div className="landing-pagination-info">
             Showing {startIndex + 1}-{Math.min(endIndex, filteredNofos.length)} of {filteredNofos.length} grants
@@ -278,7 +350,6 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({ nofos, loading, onSele
             </button>
             <div className="landing-pagination-pages">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                // Show first page, last page, current page, and pages around current
                 if (
                   page === 1 ||
                   page === totalPages ||

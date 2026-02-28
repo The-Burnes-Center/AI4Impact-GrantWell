@@ -12,8 +12,7 @@ import {
 interface SearchInputProps {
   searchTerm: string;
   isLoading: boolean;
-  isAISearching: boolean;
-  aiError: string | null;
+  isSearching?: boolean;
   showResults: boolean;
   selectedIndex: number;
   disabled: boolean;
@@ -28,8 +27,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     {
       searchTerm,
       isLoading,
-      isAISearching,
-      aiError,
+      isSearching = false,
       showResults,
       selectedIndex,
       disabled,
@@ -56,10 +54,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             id="grant-search-input"
             ref={ref}
             type="text"
-            placeholder="Search by grant name, agency, or category..."
+            placeholder="Search by keyword, category, or describe what you need..."
             aria-label="Search grants by name, agency, or category"
             aria-describedby="search-help-text"
-            aria-busy={isLoading}
+            aria-busy={isLoading || isSearching}
             role="searchbox"
             style={{
               ...inputStyle,
@@ -72,7 +70,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             onKeyDown={onKeyDown}
             disabled={disabled}
           />
-          {searchTerm && !isLoading && (
+          {searchTerm && !isLoading && !isSearching && (
             <button
               style={clearButtonStyle}
               onClick={onClear}
@@ -100,13 +98,16 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               </svg>
             </button>
           )}
-          {isLoading && (
+          {(isLoading || isSearching) && (
             <div
               style={{
                 position: "absolute",
                 right: "15px",
                 top: "50%",
                 transform: "translateY(-50%)",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
               }}
             >
               <Spinner
@@ -114,8 +115,13 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                 size="sm"
                 variant="primary"
                 role="status"
-                aria-label="Loading"
+                aria-label="Searching"
               />
+              {isSearching && (
+                <span style={{ fontSize: "12px", color: "#14558F", whiteSpace: "nowrap" }}>
+                  Searching...
+                </span>
+              )}
             </div>
           )}
         </div>

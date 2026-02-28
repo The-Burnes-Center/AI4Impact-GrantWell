@@ -1,0 +1,41 @@
+---
+description: AI search feature conventions for the hybrid BM25 + semantic search system
+globs: "**/ai-grant-search/**,**/use-ai-grant-search*,**/GrantsTable*,**/IntegratedSearchBar*"
+alwaysApply: false
+---
+
+# AI Search Feature Conventions
+
+## Embedding Model
+
+Always use `amazon.titan-embed-text-v2:0` (1024 dimensions). This matches the KB indexing model; using a different model will produce incompatible vectors.
+
+## Score Normalization
+
+BM25 and k-NN scores are on different scales. When merging:
+1. Normalize each to 0-1 range
+2. Default weights: 0.4 BM25 + 0.6 semantic
+3. For innerproduct with normalized vectors (Titan Embed v2), k-NN scores are already ~0-1
+
+## Grant ID Extraction
+
+NOFO name is extracted from the S3 URI stored in `metadata_field`. Parse the JSON to get the `source` field, then split by `/` and take index 3 (the folder name). Always normalize: lowercase, trim trailing slashes.
+
+## DynamoDB Caching
+
+Agency/category lists cached in module-level variables with 5-minute TTL. Never disable caching.
+
+## Response Shape
+
+AI search endpoints always return:
+```json
+{
+  "results": [{ "name": "...", "score": 0.85, "source": "hybrid", "reason": "..." }],
+  "query": "...",
+  "searchTimeMs": 3200
+}
+```
+
+## Frontend Contract
+
+AI results are matched against the already-loaded `tableNofos` by name. The backend returns names only, never full grant objects.

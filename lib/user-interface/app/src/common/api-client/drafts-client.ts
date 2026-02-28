@@ -355,7 +355,7 @@ export class DraftsClient {
     projectBasics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
     sessionId: string;
-    onProgress?: (status: string) => void;
+    onProgress?: (status: string, pollCount?: number, maxPolls?: number) => void;
   }): Promise<Record<string, string>> {
     const auth = await Utils.authenticate();
     console.log('Calling /draft-generation with:', params);
@@ -386,15 +386,15 @@ export class DraftsClient {
     const startData = await startResponse.json();
     const jobId = startData.jobId;
     console.log('Draft generation job started:', jobId);
-    
-    if (params.onProgress) {
-      params.onProgress('in_progress');
-    }
 
     // Poll for job status
     let pollCount = 0;
     const maxPolls = 60; // Max 60 polls (about 2 minutes with 2s interval)
     const pollInterval = 2000; // 2 seconds
+
+    if (params.onProgress) {
+      params.onProgress('in_progress', 0, maxPolls);
+    }
     
     while (pollCount < maxPolls) {
       await new Promise(resolve => setTimeout(resolve, pollInterval));
@@ -412,6 +412,7 @@ export class DraftsClient {
         
         if (!statusResponse.ok) {
           console.warn(`[Polling] Job status check failed: ${statusResponse.status}`);
+          if (params.onProgress) params.onProgress('in_progress', pollCount, maxPolls);
           continue;
         }
         
@@ -420,14 +421,17 @@ export class DraftsClient {
         
         if (statusData.status === 'completed') {
           console.log('Draft generation completed:', statusData.sections);
+          if (params.onProgress) params.onProgress('completed', pollCount, maxPolls);
           return statusData.sections || {};
         } else if (statusData.status === 'error') {
           throw new Error(statusData.error || 'Draft generation failed');
         }
         
+        if (params.onProgress) params.onProgress('in_progress', pollCount, maxPolls);
         // Continue polling if still in progress
       } catch (err) {
         console.error('[Polling] Error checking job status:', err);
+        if (params.onProgress) params.onProgress('in_progress', pollCount, maxPolls);
         // Continue polling on error
       }
     }
