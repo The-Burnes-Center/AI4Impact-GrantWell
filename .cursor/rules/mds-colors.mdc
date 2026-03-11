@@ -1,0 +1,85 @@
+---
+description: Massachusetts Design System (MDS) official color palette enforcement for GrantWell
+alwaysApply: true
+---
+
+# Massachusetts Design System Color Palette
+
+All colors in GrantWell must come from the official MDS palette. No exceptions.
+
+## Brand Colors
+
+### Bay Blue (Primary)
+
+| State    | Hex       | CSS Variable                  |
+|----------|-----------|-------------------------------|
+| Default  | `#14558F` | `var(--mds-color-bay-blue)`   |
+| Hover    | `#104472` | `var(--mds-color-bay-blue-hover)` |
+| Active   | `#0A2B48` | `var(--mds-color-bay-blue-active)` |
+| Disabled | `#F0F0F0` | `var(--mds-color-disabled-bg)` |
+
+### Berkshires Green (Accent)
+
+| State    | Hex       | CSS Variable                        |
+|----------|-----------|-------------------------------------|
+| Default  | `#388557` | `var(--mds-color-berkshires-green)`  |
+| Hover    | `#32784E` | `var(--mds-color-berkshires-green-hover)` |
+| Active   | `#275D3D` | (inline OK for rare use)            |
+
+### Other Brand Colors
+
+- **Duckling Yellow** `#F6C51B` -- highlight only, use sparingly
+- **Independence Cranberry** `#680A1D` -- decorative graphics only, never for interactive elements
+- **Granite Gray** `#535353` -- neutral backgrounds for contrast
+
+## Utility Colors (System States Only)
+
+| Purpose  | Hex       | CSS Variable              | Use For                    |
+|----------|-----------|---------------------------|----------------------------|
+| Success  | `#24A850` | `var(--mds-color-success)` | Confirmations, completed   |
+| Warning  | `#F6B622` | `var(--mds-color-warning)` | Caution, incomplete        |
+| Danger   | `#CD0D0D` | `var(--mds-color-danger)`  | Errors, destructive actions|
+| Focus    | `#0088FF` | `var(--mds-color-focus-light)` | Focus rings on light bg |
+| Focus    | `#B2DBFF` | `var(--mds-color-focus-dark)`  | Focus rings on dark bg  |
+
+## Semantic Aliases
+
+Use these for most code -- they map to the brand colors above:
+
+```css
+var(--mds-color-primary)        /* Bay Blue #14558F */
+var(--mds-color-primary-hover)  /* #104472 */
+var(--mds-color-primary-active) /* #0A2B48 */
+var(--mds-color-primary-light)  /* #f2f8fd */
+var(--mds-color-accent)         /* Berkshires Green #388557 */
+var(--mds-color-text)           /* #333333 */
+var(--mds-color-text-secondary) /* #5a5a5a */
+var(--mds-color-heading)        /* #0a2e52 */
+var(--mds-color-background)     /* #f9fafb */
+var(--mds-color-border)         /* #e2e8f0 */
+var(--mds-color-white)          /* #ffffff */
+```
+
+## Rules
+
+1. **NEVER hard-code hex colors in components.** Always use `var(--mds-color-*)` in CSS or import from `components/ui/styles.ts` in JS/TS
+2. **NEVER invent new colors.** If a design needs a color not listed above, raise it for review
+3. **NEVER use Cloudscape tokens** (`awsui.$*`). They are being removed from the project
+4. **Disabled states:** background `#F0F0F0`, text `#707070`
+5. **Focus indicators:** always `#0088FF` on light backgrounds, `#B2DBFF` on dark backgrounds
+6. **Utility colors are semantic** -- never use Success Green decoratively, only for success states
+
+```tsx
+// Bad
+<button style={{ backgroundColor: "#14558F" }}>Submit</button>
+
+// Good (CSS class)
+<button className="btn-primary">Submit</button>
+
+// Good (CSS variable in stylesheet)
+.btn-primary { background-color: var(--mds-color-primary); }
+
+// Good (JS import)
+import { colors } from "@/components/ui/styles";
+<button style={{ backgroundColor: colors.primary }}>Submit</button>
+```

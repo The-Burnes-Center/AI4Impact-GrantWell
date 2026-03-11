@@ -1,0 +1,286 @@
+@import "./tokens.css";
+@import "./utilities.css";
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --app-color-scheme: light;
+  color-scheme: var(--app-color-scheme);
+}
+
+html,
+body,
+#root,
+div[data-amplify-authenticator],
+div[data-amplify-theme] {
+  height: 100%;
+}
+
+body {
+  background-color: #ffffff;
+  overflow-y: auto;
+  font-family: "Noto Sans", sans-serif;
+}
+
+/* Utility classes (.visually-hidden, .sr-only, etc.) are in utilities.css */
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility: Visible focus indicators */
+*:focus-visible {
+  outline: 3px solid #0088FF;
+  outline-offset: 2px;
+}
+
+/* Ensure buttons, links, and interactive elements have visible focus */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="menuitem"]:focus-visible,
+[role="option"]:focus-visible {
+  outline: 3px solid #0088FF;
+  outline-offset: 2px;
+}
+
+/* Hide focus outline on main element - it's only for screen reader navigation */
+main#main-content:focus,
+main#main-content:focus-visible {
+  outline: none;
+  outline-offset: 0;
+}
+
+.header-container {
+  display: flex;
+  grid-template-columns: 1fr auto;
+  justify-content: space-between;
+  align-items: center; /* Ensures vertical alignment if needed */
+}
+
+.matrix-table {
+  border: 1px solid #d6d6d6;
+  border-radius: 2px;
+  border-collapse: collapse;
+  font-size: 1.1rem;
+
+  th {
+    border: 1px solid #d6d6d6;
+  }
+
+  td {
+    border: 1px solid #d6d6d6;
+    padding: 10px;
+  }
+}
+
+/* Custom scrollbar styling for chat message area */
+.chat-message-area {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.chat-message-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-message-area::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 4px;
+}
+
+.chat-message-area::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.chat-message-area::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Ensure MDS header utility bar appears right after brand banner */
+.ma__header_slim {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ma__header_slim__utility {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  order: 1 !important;
+}
+
+.ma__header_slim__header {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  order: 2 !important;
+}
+
+
+
+.new-session-button {
+ margin-left: auto; 
+}
+
+new-chat-button[data-alignment = "right"] {
+ align-items: center;
+}
+
+.new-session-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.jsonContainer {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1em;
+  background-color: #0e1b2ac3;
+}
+
+.internal-use-only{
+  color: red;
+}
+
+.jsonStrings {
+  color: rgb(74, 234, 167);
+  
+}
+
+.jsonNumbers {
+  color: rgb(255, 223, 60);
+}
+
+.jsonBool {
+  color: rgb(252, 178, 250);
+  font-weight: 600;
+}
+
+.jsonNull {
+  color:rgb(74, 205, 234);
+  font-weight: 600;
+}
+
+
+/* Focus visible styles - WCAG 2.2 AA Compliance */
+*:focus-visible {
+  outline: 2px solid #0088FF;
+  outline-offset: 2px;
+}
+
+button:focus-visible {
+  outline: 2px solid #0088FF;
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #0088FF;
+  outline-offset: 2px;
+}
+
+/* Respect prefers-reduced-motion for accessibility - WCAG 2.2 AA */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ensure hidden navigation elements are excluded from keyboard navigation */
+/* Brand banner expansion content when collapsed - prevent pointer events */
+.ma__brand-banner button[aria-expanded="false"] ~ .ma__brand-banner-expansion,
+.ma__brand-banner button[aria-expanded="false"] ~ ul[role="region"] {
+  /* Already visually hidden by Mayflower library, but ensure interaction exclusion */
+  pointer-events: none;
+}
+
+.ma__brand-banner button[aria-expanded="false"] ~ .ma__brand-banner-expansion *,
+.ma__brand-banner button[aria-expanded="false"] ~ ul[role="region"] * {
+  /* Prevent interaction with hidden elements */
+  pointer-events: none;
+}
+
+/* Ensure elements with aria-hidden="true" are excluded from interaction */
+[aria-hidden="true"] {
+  /* Elements with aria-hidden should not receive focus or pointer events */
+  pointer-events: none;
+}
+
+[aria-hidden="true"] * {
+  /* All children of hidden elements should also be excluded from interaction */
+  pointer-events: none;
+}
+
+/* Placeholder text contrast - WCAG 2.1 AA Compliance (4.5:1 contrast ratio) */
+input::placeholder,
+textarea::placeholder {
+  color: #757575 !important; /* Darker color meets 4.5:1 contrast ratio with white background */
+  opacity: 1 !important;
+}
+
+/* Browser-specific placeholder styles */
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #757575 !important;
+  opacity: 1 !important;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: #757575 !important;
+  opacity: 1 !important;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #757575 !important;
+  opacity: 1 !important;
+}
+
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+  color: #757575 !important;
+  opacity: 1 !important;
+}
+
+
+.ma__footer-new a {
+  color: #0056b3 !important;
+}
+
+.ma__footer-new a:hover,
+.ma__footer-new a:focus {
+  color: #004085 !important;
+  text-decoration: underline;
+}
+
+.ma__footer-new a:visited {
+  color: #0056b3 !important;
+}

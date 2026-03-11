@@ -1,0 +1,208 @@
+/* MDS design tokens (replaces Cloudscape) */
+
+.chat_container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.session_link {
+  color: black;
+  text-decoration: none;
+}
+
+.session_link_selected {
+  color: #14558F;
+  text-decoration: none;
+}
+
+@media (min-width: 466px) {
+  .chat_container {
+    min-height: calc(100vh - 104px);
+  }
+}
+
+.new-session-button {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.new-session-button:hover {
+  background-color: #5045a0; /* Darker blue on hover */
+}
+
+@media (min-width: 689px) {
+  .chat_container {
+    min-height: calc(100vh - 60px);
+  }
+}
+
+@media (min-width: 913px) {
+  .chat_container {
+    min-height: calc(100vh - 68px);
+  }
+}
+
+.welcome_text {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.input_container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  padding: 20px;
+  border-top: 1px solid #eaeded;
+  z-index: 100;
+}
+
+.input_textarea_container {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 4px;
+}
+
+.input_textarea {
+  resize: none;
+  border: none;
+  padding: 12px 12px 12px 4px;
+  background-color: transparent;
+  outline: none;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+}
+
+.input_controls {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: minmax(300px, 800px) minmax(180px, auto);
+  gap: 4px;
+  align-items: center;
+
+  .input_controls_selects_2 {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .input_controls_selects_1 {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .input_controls_right {
+    justify-self: end;
+  }
+}
+
+.btn_chabot_message_copy {
+  float: right;
+}
+
+.btn_chabot_metadata_copy {
+  float: right;
+  margin-top: 1em;
+}
+
+.img_chabot_message {
+  max-width: 30%;
+  border-radius: 8px;
+}
+
+@media (max-width: 689px) {
+  .input_controls {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@container (max-width: 689px) {
+  .input_controls {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+.codeMarkdown {
+  background-color: #e8e8e8;
+  text-overflow: ellipsis;
+  overflow: scroll;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.markdownTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.markdownTable th,
+.markdownTable td {
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  text-align: left;
+}
+
+.markdownTable th {
+  background-color: #f2f8fd;
+}
+
+.markdownTable tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.thumbsContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.thumbsIcon {
+  cursor: pointer;
+  margin-right: 10px;
+  opacity: 0.5;
+}
+
+/* Styles for thumbs up icon. Should be compatible with dark theme */
+.thumbsUp {
+  color: #539fe5;
+}
+
+/* Styles for thumbs down icon. Should be compatible with dark theme */
+.thumbsDown {
+  color: #539fe5;
+}
+
+/* Style for clicked state */
+.clicked {
+  opacity: 0.5;
+  pointer-events: none; /* Disable pointer events for a clicked icon */
+}
+
+/* Styles for selected icon */
+.thumbsIcon.selected {
+  opacity: 1 !important;
+  pointer-events: none; /* Disable pointer events for the selected icon */
+}

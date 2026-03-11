@@ -1,0 +1,544 @@
+/**
+ * This file defines the main construct for the ChatBot API using AWS CDK.
+ * It sets up the WebSocket and REST APIs, integrates various Lambda functions,
+ * and configures DynamoDB tables and S3 buckets for storing chat history, user feedback, and NOFO data.
+ */
+
+import * as cdk from "aws-cdk-lib";
+import { AuthorizationStack } from "../authorization";
+import { WebsocketBackendAPI } from "./gateway/websocket-api";
+import { RestBackendAPI } from "./gateway/rest-api";
+import { LambdaFunctionStack } from "./functions/functions";
+import { TableStack } from "./tables/tables";
+import { S3BucketStack } from "./buckets/buckets";
+import {
+  WebSocketLambdaIntegration,
+  HttpLambdaIntegration,
+} from "aws-cdk-lib/aws-apigatewayv2-integrations";
+import {
+  WebSocketLambdaAuthorizer,
+  HttpJwtAuthorizer,
+} from "aws-cdk-lib/aws-apigatewayv2-authorizers";
+import { aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import { OpenSearchStack } from "./opensearch/opensearch";
+import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as iam from "aws-cdk-lib/aws-iam";
+import * as path from "path";
+
+export interface ChatbotAPIProps {
+  readonly authentication: AuthorizationStack;
+  readonly grantsGovApiKey: string;
+}
+
+export class ChatBotApi extends Construct {
+  public readonly httpAPI: RestBackendAPI;
+  public readonly wsAPI: WebsocketBackendAPI;
+
+  constructor(scope: Construct, id: string, props: ChatbotAPIProps) {
+    super(scope, id);
+
+    const tables = new TableStack(this, "TableStack");
+    const buckets = new S3BucketStack(this, "BucketStack");
+    const openSearch = new OpenSearchStack(this, "OpenSearchStack", {});
+    const knowledgeBase = new KnowledgeBaseStack(this, "KnowledgeBaseStack", {
+      openSearch: openSearch,
+      s3bucket: buckets.ffioNofosBucket,
+      userDocumentsBucket: buckets.userDocumentsBucket,
+    });
+
+    const restBackend = new RestBackendAPI(this, "RestBackend", {});
+    this.httpAPI = restBackend;
+    const websocketBackend = new WebsocketBackendAPI(
+      this,
+      "WebsocketBackend",
+      {}
+    );
+    this.wsAPI = websocketBackend;
+
+    const lambdaFunctions = new LambdaFunctionStack(this, "LambdaFunctions", {
+      wsApiEndpoint: websocketBackend.wsAPIStage.url,
+      sessionTable: tables.historyTable,
+      feedbackTable: tables.feedbackTable,
+      draftTable: tables.draftTable,
+      nofoMetadataTable: tables.nofoMetadataTable,
+      draftGenerationJobsTable: tables.draftGenerationJobsTable,
+      featureRolloutTable: tables.featureRolloutTable,
+      feedbackBucket: buckets.feedbackBucket,
+      knowledgeBase: knowledgeBase.knowledgeBase,
+      knowledgeBaseSource: knowledgeBase.dataSource,
+      userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
+      ffioNofosBucket: buckets.ffioNofosBucket,
+      userDocumentsBucket: buckets.userDocumentsBucket,
+      grantsGovApiKey: props.grantsGovApiKey,
+      openSearchCollection: openSearch.openSearchCollection,
+    });
+
+    const wsAuthorizer = new WebSocketLambdaAuthorizer(
+      "WebSocketAuthorizer",
+      props.authentication.lambdaAuthorizer,
+      {
+        identitySource: ["route.request.querystring.Authorization"],
+      }
+    );
+
+    websocketBackend.wsAPI.addRoute("getChatbotResponse", {
+      integration: new WebSocketLambdaIntegration(
+        "chatbotResponseIntegration",
+        lambdaFunctions.chatFunction
+      ),
+    });
+
+    websocketBackend.wsAPI.addRoute("$connect", {
+      integration: new WebSocketLambdaIntegration(
+        "chatbotConnectionIntegration",
+        lambdaFunctions.chatFunction
+      ),
+      authorizer: wsAuthorizer,
+    });
+    websocketBackend.wsAPI.addRoute("$default", {
+      integration: new WebSocketLambdaIntegration(
+        "chatbotConnectionIntegration",
+        lambdaFunctions.chatFunction
+      ),
+    });
+    websocketBackend.wsAPI.addRoute("$disconnect", {
+      integration: new WebSocketLambdaIntegration(
+        "chatbotDisconnectionIntegration",
+        lambdaFunctions.chatFunction
+      ),
+    });
+
+    websocketBackend.wsAPI.grantManageConnections(lambdaFunctions.chatFunction);
+
+    const httpAuthorizer = new HttpJwtAuthorizer(
+      "HTTPAuthorizer",
+      props.authentication.userPool.userPoolProviderUrl,
+      {
+        jwtAudience: [props.authentication.userPoolClient.userPoolClientId],
+      }
+    );
+
+    const sessionAPIIntegration = new HttpLambdaIntegration(
+      "SessionAPIIntegration",
+      lambdaFunctions.sessionFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-session",
+      methods: [
+        apigwv2.HttpMethod.GET,
+        apigwv2.HttpMethod.POST,
+        apigwv2.HttpMethod.DELETE,
+      ],
+      integration: sessionAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add draft editor Lambda integration
+    const draftAPIIntegration = new HttpLambdaIntegration(
+      "DraftAPIIntegration",
+      lambdaFunctions.draftFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-draft",
+      methods: [
+        apigwv2.HttpMethod.GET,
+        apigwv2.HttpMethod.POST,
+        apigwv2.HttpMethod.DELETE,
+      ],
+      integration: draftAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    lambdaFunctions.chatFunction.addEnvironment(
+      "SESSION_HANDLER",
+      lambdaFunctions.sessionFunction.functionName
+    );
+
+    const feedbackAPIIntegration = new HttpLambdaIntegration(
+      "FeedbackAPIIntegration",
+      lambdaFunctions.feedbackFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-feedback",
+      methods: [
+        apigwv2.HttpMethod.GET,
+        apigwv2.HttpMethod.POST,
+        apigwv2.HttpMethod.DELETE,
+      ],
+      integration: feedbackAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const feedbackAPIDownloadIntegration = new HttpLambdaIntegration(
+      "FeedbackDownloadAPIIntegration",
+      lambdaFunctions.feedbackFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-feedback/download-feedback",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: feedbackAPIDownloadIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const s3GetAPIIntegration = new HttpLambdaIntegration(
+      "S3GetAPIIntegration",
+      lambdaFunctions.getS3Function
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-documents/list",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: s3GetAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const s3GetNofosAPIIntegration = new HttpLambdaIntegration(
+      "S3GetNofosAPIIntegration",
+      lambdaFunctions.getNOFOsList
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-bucket-data",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: s3GetNofosAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const s3GetNofoSummaryAPIIntegration = new HttpLambdaIntegration(
+      "S3GetNofoSummaryAPIIntegration",
+      lambdaFunctions.getNOFOSummary
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-summary",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: s3GetNofoSummaryAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const s3DeleteAPIIntegration = new HttpLambdaIntegration(
+      "S3DeleteAPIIntegration",
+      lambdaFunctions.deleteS3Function
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-documents/delete",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: s3DeleteAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const s3UploadAPIIntegration = new HttpLambdaIntegration(
+      "S3UploadAPIIntegration",
+      lambdaFunctions.uploadS3Function
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-documents/upload-url",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: s3UploadAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const s3DownloadAPIIntegration = new HttpLambdaIntegration(
+      "S3DownloadAPIIntegration",
+      lambdaFunctions.downloadS3Function
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-documents/download-url",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: s3DownloadAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const s3UploadNOFOAPIIntegration = new HttpLambdaIntegration(
+      "nofoUploadS3APIHandlerFunction",
+      lambdaFunctions.uploadNOFOS3Function
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/test-url",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: s3UploadNOFOAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const kbSyncProgressAPIIntegration = new HttpLambdaIntegration(
+      "KBSyncAPIIntegration",
+      lambdaFunctions.syncKBFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/kb-sync/still-syncing",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: kbSyncProgressAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const kbLastSyncAPIIntegration = new HttpLambdaIntegration(
+      "KBLastSyncAPIIntegration",
+      lambdaFunctions.syncKBFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/kb-sync/get-last-sync",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: kbLastSyncAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for AI grant search (hybrid BM25 + semantic)
+    const aiGrantSearchAPIIntegration = new HttpLambdaIntegration(
+      "AIGrantSearchAPIIntegration",
+      lambdaFunctions.aiGrantSearchFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/ai-grant-search",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: aiGrantSearchAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for NOFO status updates
+    const nofoStatusAPIIntegration = new HttpLambdaIntegration(
+      "NofoStatusAPIIntegration",
+      lambdaFunctions.nofoStatusFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-status",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoStatusAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for NOFO questions
+    const nofoQuestionsAPIIntegration = new HttpLambdaIntegration(
+      "NofoQuestionsAPIIntegration",
+      lambdaFunctions.getNOFOQuestions
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-questions",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: nofoQuestionsAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoRenameAPIIntegration = new HttpLambdaIntegration(
+      "NofoRenameAPIIntegration",
+      lambdaFunctions.nofoRenameFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-rename",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoRenameAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoDeleteAPIIntegration = new HttpLambdaIntegration(
+      "NofoDeleteAPIIntegration",
+      lambdaFunctions.nofoDeleteFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-delete",
+      methods: [apigwv2.HttpMethod.DELETE],
+      integration: nofoDeleteAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for draft generation
+    // Create a dedicated API function that starts jobs asynchronously
+    const draftGeneratorAPIFunction = new lambda.Function(this, "DraftGeneratorAPIFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "gateway/api-routes/draft-generation")
+      ),
+      handler: "index.handler",
+      environment: {
+        DRAFT_GENERATOR_FUNCTION: lambdaFunctions.draftGeneratorFunction.functionName,
+        DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
+    });
+    
+    // Grant permission to invoke draft generator function
+    draftGeneratorAPIFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [lambdaFunctions.draftGeneratorFunction.functionArn],
+      })
+    );
+    
+    // Grant DynamoDB write permissions for creating job status
+    tables.draftGenerationJobsTable.grantWriteData(draftGeneratorAPIFunction);
+    
+    const draftGeneratorAPIIntegration = new HttpLambdaIntegration(
+      "DraftGeneratorAPIIntegration",
+      draftGeneratorAPIFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/draft-generation",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: draftGeneratorAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for draft generation job status polling
+    const draftJobStatusFunction = new lambda.Function(this, "DraftJobStatusFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "gateway/api-routes/draft-job-status")
+      ),
+      handler: "index.handler",
+      environment: {
+        DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(10),
+    });
+    tables.draftGenerationJobsTable.grantReadData(draftJobStatusFunction);
+    
+    const draftJobStatusAPIIntegration = new HttpLambdaIntegration(
+      "DraftJobStatusAPIIntegration",
+      draftJobStatusFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/draft-generation-jobs/{jobId}",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: draftJobStatusAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const inviteUserFunction = new lambda.Function(this, "InviteUserFunction", {
+      runtime: lambda.Runtime.NODEJS_18_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "functions/user-management/invite-user")
+      ),
+      handler: "index.handler",
+      environment: {
+        USER_POOL_ID: props.authentication.userPool.userPoolId,
+      },
+      timeout: cdk.Duration.seconds(30),
+    });
+
+    props.authentication.userPool.grant(
+      inviteUserFunction,
+      "cognito-idp:AdminCreateUser"
+    );
+
+    const inviteUserIntegration = new HttpLambdaIntegration(
+      "InviteUserIntegration",
+      inviteUserFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-management/invite-user",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: inviteUserIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const manageUsersFunction = new lambda.Function(this, "ManageUsersFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "functions/user-management/users")
+      ),
+      handler: "index.handler",
+      environment: {
+        USER_POOL_ID: props.authentication.userPool.userPoolId,
+      },
+      timeout: cdk.Duration.seconds(30),
+    });
+
+    props.authentication.userPool.grant(
+      manageUsersFunction,
+      "cognito-idp:ListUsers",
+      "cognito-idp:AdminUpdateUserAttributes"
+    );
+
+    const manageUsersIntegration = new HttpLambdaIntegration(
+      "ManageUsersIntegration",
+      manageUsersFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-management/users",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: manageUsersIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/user-management/users/{username}/roles",
+      methods: [apigwv2.HttpMethod.PATCH],
+      integration: manageUsersIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const featureRolloutFunction = new lambda.Function(this, "FeatureRolloutFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "functions/user-management/feature-rollouts")
+      ),
+      handler: "index.handler",
+      environment: {
+        FEATURE_ROLLOUT_TABLE_NAME: tables.featureRolloutTable.tableName,
+        USER_POOL_ID: props.authentication.userPool.userPoolId,
+      },
+      timeout: cdk.Duration.seconds(30),
+    });
+
+    tables.featureRolloutTable.grantReadWriteData(featureRolloutFunction);
+    props.authentication.userPool.grant(featureRolloutFunction, "cognito-idp:ListUsers");
+
+    const featureRolloutIntegration = new HttpLambdaIntegration(
+      "FeatureRolloutIntegration",
+      featureRolloutFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/feature-rollouts/me",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: featureRolloutIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/feature-rollouts/{featureKey}",
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH],
+      integration: featureRolloutIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/feature-rollouts/{featureKey}/users",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: featureRolloutIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/feature-rollouts/{featureKey}/users/{email}",
+      methods: [apigwv2.HttpMethod.PUT, apigwv2.HttpMethod.DELETE],
+      integration: featureRolloutIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for automated NOFO scraper
+    const automatedNofoScraperAPIIntegration = new HttpLambdaIntegration(
+      "AutomatedNofoScraperAPIIntegration",
+      lambdaFunctions.automatedNofoScraperFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/automated-nofo-scraper",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: automatedNofoScraperAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for application PDF generation
+    const applicationPdfGeneratorAPIIntegration = new HttpLambdaIntegration(
+      "ApplicationPdfGeneratorAPIIntegration",
+      lambdaFunctions.applicationPdfGeneratorFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/generate-pdf",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: applicationPdfGeneratorAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    new cdk.CfnOutput(this, "WS-API - apiEndpoint", {
+      value: websocketBackend.wsAPI.apiEndpoint || "",
+    });
+    new cdk.CfnOutput(this, "HTTP-API - apiEndpoint", {
+      value: restBackend.restAPI.apiEndpoint || "",
+    });
+  }
+}

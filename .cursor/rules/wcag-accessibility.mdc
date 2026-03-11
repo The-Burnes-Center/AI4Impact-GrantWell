@@ -1,0 +1,93 @@
+---
+description: WCAG 2.1 AA accessibility compliance rules for all GrantWell frontend code
+alwaysApply: true
+---
+
+# WCAG 2.1 AA Accessibility Standards
+
+All UI code must meet WCAG 2.1 Level AA. Violations are treated as bugs.
+
+## Color & Contrast (1.4.3, 1.4.11)
+
+- Normal text (<18px or <14px bold): minimum **4.5:1** contrast ratio against background
+- Large text (>=18px or >=14px bold): minimum **3:1** contrast ratio
+- UI components and graphical objects: minimum **3:1** contrast ratio
+- Never convey information by color alone -- always pair with text, icons, or patterns
+
+## Focus Indicators (2.4.7)
+
+- All interactive elements must have a **visible** focus indicator
+- Use `outline: 2px solid #0088FF; outline-offset: 2px;` (MDS Focus color)
+- Prefer CSS `:focus-visible` over JS `onFocus`/`onBlur` handlers
+- Never use `outline: none` without providing an alternative focus style
+
+```css
+/* Good */
+.interactive:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light);
+  outline-offset: 2px;
+}
+
+/* Bad */
+button:focus { outline: none; }
+```
+
+## Keyboard Navigation (2.1.1, 2.1.2)
+
+- All interactive elements must be reachable via Tab key
+- All actions must be triggerable via Enter and/or Space
+- No keyboard traps -- users must be able to navigate away from any element
+- Modals are the only exception (focus trap until closed via Escape)
+
+## Touch Targets (2.5.8)
+
+- Minimum interactive target size: **44x44px**
+- Use `min-height: 44px; min-width: 44px;` on buttons and interactive elements
+
+## Images & Media (1.1.1)
+
+- Informative images: meaningful `alt` text describing the content
+- Decorative images: `alt=""` and `aria-hidden="true"`
+- Complex images (charts, diagrams): provide text alternative nearby
+
+## Forms (1.3.1, 3.3.2)
+
+- Every input must have an associated `<label>` element with `htmlFor`
+- Do not rely solely on `aria-label` -- visible labels are preferred
+- Required fields must be indicated with text (not just `*` or color)
+- Error messages must be associated with the field via `aria-describedby`
+- Group related controls with `<fieldset>` and `<legend>`
+
+## Headings (1.3.1, 2.4.6)
+
+- Heading hierarchy must be sequential: h1 -> h2 -> h3 (never skip levels)
+- Each page must have exactly one `<h1>`
+- Headings must be descriptive of the section content
+
+## Modals & Dialogs (2.4.3)
+
+- Use `role="dialog"` and `aria-modal="true"`
+- Set `aria-labelledby` pointing to the modal title
+- Trap focus inside the modal while open
+- Close on Escape key press
+- Restore focus to the triggering element on close
+- Prevent background content from being tabbable
+
+## Dynamic Content (4.1.3)
+
+- Use `aria-live="polite"` for non-urgent status updates
+- Use `aria-live="assertive"` only for errors or critical alerts
+- Loading states must be announced: `role="status"` with `aria-busy="true"`
+
+## Skip Navigation (2.4.1)
+
+- Provide a "Skip to main content" link as the first focusable element
+- The link should be visually hidden until focused
+
+## Tabs Pattern (WAI-ARIA)
+
+- Container: `role="tablist"` with `aria-label`
+- Each tab: `role="tab"`, `aria-selected`, `aria-controls`
+- Active tab: `tabIndex={0}`, inactive tabs: `tabIndex={-1}`
+- Arrow keys to switch between tabs, Home/End for first/last
+- Tab panel: `role="tabpanel"`, `aria-labelledby`, `tabIndex={0}`
