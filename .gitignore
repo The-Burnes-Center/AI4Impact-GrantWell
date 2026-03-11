@@ -10,3 +10,9 @@ node_modules
 cdk.out
 .cursor/*
 !.cursor/rules/
+
+# Environment variables
+.env
+.env.local
+.env.production
+aws-exports.json
