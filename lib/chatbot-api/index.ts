@@ -1,7 +1,7 @@
 /**
  * This file defines the main construct for the ChatBot API using AWS CDK.
  * It sets up the WebSocket and REST APIs, integrates various Lambda functions,
- * and configures DynamoDB tables and S3 buckets for storing chat history, user feedback, and NOFO data.
+ * and configures DynamoDB tables and S3 buckets for storing chat history and NOFO data.
  */
 
 import * as cdk from "aws-cdk-lib";
@@ -60,12 +60,10 @@ export class ChatBotApi extends Construct {
     const lambdaFunctions = new LambdaFunctionStack(this, "LambdaFunctions", {
       wsApiEndpoint: websocketBackend.wsAPIStage.url,
       sessionTable: tables.historyTable,
-      feedbackTable: tables.feedbackTable,
       draftTable: tables.draftTable,
       nofoMetadataTable: tables.nofoMetadataTable,
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
       featureRolloutTable: tables.featureRolloutTable,
-      feedbackBucket: buckets.feedbackBucket,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
@@ -155,32 +153,6 @@ export class ChatBotApi extends Construct {
       "SESSION_HANDLER",
       lambdaFunctions.sessionFunction.functionName
     );
-
-    const feedbackAPIIntegration = new HttpLambdaIntegration(
-      "FeedbackAPIIntegration",
-      lambdaFunctions.feedbackFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/user-feedback",
-      methods: [
-        apigwv2.HttpMethod.GET,
-        apigwv2.HttpMethod.POST,
-        apigwv2.HttpMethod.DELETE,
-      ],
-      integration: feedbackAPIIntegration,
-      authorizer: httpAuthorizer,
-    });
-
-    const feedbackAPIDownloadIntegration = new HttpLambdaIntegration(
-      "FeedbackDownloadAPIIntegration",
-      lambdaFunctions.feedbackFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/user-feedback/download-feedback",
-      methods: [apigwv2.HttpMethod.POST],
-      integration: feedbackAPIDownloadIntegration,
-      authorizer: httpAuthorizer,
-    });
 
     const s3GetAPIIntegration = new HttpLambdaIntegration(
       "S3GetAPIIntegration",

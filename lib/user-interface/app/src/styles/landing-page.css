@@ -417,38 +417,47 @@
 
 /* Feedback Form */
 .feedback-form-container {
-  border: 1px solid var(--mds-color-border);
-  border-radius: var(--mds-radius-sm);
+  border: 1px solid #ddd;
   background-color: var(--mds-color-white);
-  padding: 24px;
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
-.feedback-success {
-  padding: 20px;
-  background-color: var(--mds-color-primary-light);
-  border: 1px solid var(--mds-color-primary);
-  border-radius: var(--mds-radius-sm);
-  color: var(--mds-color-primary);
-  font-size: 16px;
-  font-weight: 400;
-  text-align: center;
+.feedback-heading {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--mds-color-heading);
+  margin: 0;
+  padding: 20px 24px;
+}
+
+.feedback-divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 0;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.feedback-fieldset {
+  border: none;
+  padding: 24px 24px 20px;
+  margin: 0;
 }
 
 .feedback-legend {
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--mds-color-text);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   padding: 0;
   width: 100%;
 }
 
 .feedback-radio-group {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  gap: 32px;
 }
 
 .feedback-radio {
@@ -458,10 +467,16 @@
 
 .feedback-radio input[type="radio"] {
   margin-right: 8px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   flex-shrink: 0;
+  accent-color: var(--mds-color-primary);
+}
+
+.feedback-radio input[type="radio"]:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light);
+  outline-offset: 2px;
 }
 
 .feedback-radio label {
@@ -472,36 +487,210 @@
   margin: 0;
 }
 
-.feedback-submit {
-  display: block;
-  background-color: var(--mds-color-primary);
-  color: var(--mds-color-white);
-  border: none;
-  border-radius: var(--mds-radius-sm);
-  padding: 12px 24px;
-  font-size: 16px;
+.feedback-expanded {
+  padding: 0 24px 24px;
+}
+
+.feedback-prompt {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--mds-color-text);
+  margin: 20px 0 8px;
+}
+
+.feedback-required {
+  color: var(--mds-color-danger);
   font-weight: 700;
-  text-transform: uppercase;
+}
+
+.feedback-notice {
+  font-size: 14px;
+  color: var(--mds-color-text-secondary);
+  margin: 0 0 4px;
+}
+
+.feedback-no-response {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 16px;
+}
+
+.feedback-no-response__text {
+  font-size: 14px;
+  color: var(--mds-color-text-secondary);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.feedback-info-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.feedback-info-button {
+  background: none;
+  border: none;
+  padding: 2px;
+  margin: 0;
+  font-size: 16px;
+  color: var(--mds-color-text-secondary);
   cursor: pointer;
-  box-shadow: var(--mds-shadow-md);
-  transition: background-color 0.2s;
+  line-height: 1;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.feedback-submit:hover {
-  background-color: var(--mds-color-primary-hover);
+.feedback-info-button:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light);
+  outline-offset: 2px;
 }
 
-.feedback-submit:disabled {
-  background-color: var(--mds-color-disabled-bg);
-  cursor: not-allowed;
-  opacity: 0.7;
+.feedback-info-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background-color: var(--mds-color-white);
+  border: 1px solid #ccc;
+  padding: 12px 36px 12px 16px;
+  z-index: 10;
+  min-width: 320px;
+  max-width: 460px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: flex-start;
+}
+
+.feedback-info-tooltip__text {
+  font-size: 14px;
+  color: var(--mds-color-text);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.feedback-info-tooltip__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--mds-color-text-secondary);
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedback-info-tooltip__close:hover {
+  color: var(--mds-color-text);
+}
+
+.feedback-info-tooltip__close:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light);
+  outline-offset: 2px;
+}
+
+.feedback-textarea-wrapper {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.feedback-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 2px solid var(--mds-color-text);
+  border-radius: 0;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--mds-color-text);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.feedback-textarea:focus {
+  outline: 2px solid var(--mds-color-focus-light);
+  outline-offset: 2px;
+  border-color: var(--mds-color-primary);
+}
+
+.feedback-char-count {
+  display: block;
+  text-align: right;
+  font-size: 14px;
+  color: var(--mds-color-text-secondary);
+  margin-top: 4px;
+}
+
+.feedback-attribution {
+  font-size: 14px;
+  color: var(--mds-color-text-secondary);
+  margin: 8px 0 20px;
+  padding-left: 12px;
+  border-left: 3px solid #ddd;
+}
+
+.feedback-error-container {
+  margin-bottom: 12px;
 }
 
 .feedback-error {
   font-size: 16px;
   font-weight: bold;
   color: var(--mds-color-danger);
-  margin: 0 0 16px 0;
+  margin: 0;
+}
+
+.feedback-submit {
+  display: inline-block;
+  background-color: var(--mds-color-primary-active);
+  color: var(--mds-color-white);
+  border: none;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.feedback-submit:hover {
+  background-color: var(--mds-color-primary);
+}
+
+.feedback-submit:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light);
+  outline-offset: 2px;
+}
+
+.feedback-submit:disabled {
+  background-color: var(--mds-color-disabled-bg);
+  color: #707070;
+  cursor: not-allowed;
+}
+
+.feedback-success {
+  padding: 24px;
+  background-color: var(--mds-color-primary-light);
+  border: 1px solid var(--mds-color-primary);
+  color: var(--mds-color-primary);
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
 }
 
 /* Affiliations Footer */

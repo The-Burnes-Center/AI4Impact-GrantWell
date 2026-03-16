@@ -49,7 +49,8 @@ jobs:
 
       - name: Deploy CDK stacks to staging
         run: |
-          cdk deploy ${{ env.STACK_NAME }} --require-approval never
+          cdk deploy "${STACK_NAME}/ChatbotAPI/TableStack" --require-approval never
+          cdk deploy ${{ env.STACK_NAME }} --exclusively --require-approval never
 
       - name: Fetch CloudFormation Outputs
         run: |

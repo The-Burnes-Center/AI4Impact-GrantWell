@@ -14,7 +14,6 @@ import * as path from 'path';
 export interface RoutesProps {
   httpApi: apigwv2.HttpApi;
   sessionFunction: lambda.Function;
-  feedbackFunction: lambda.Function;
   uploadS3Function: lambda.Function;
   deleteS3Function: lambda.Function;
   getS3Function: lambda.Function;
@@ -42,18 +41,6 @@ export class Routes extends Construct {
       path: '/sessions',
       methods: [apigwv2.HttpMethod.POST],
       integration: sessionIntegration,
-    });
-
-    // Feedback Lambda Integration
-    const feedbackIntegration = new HttpLambdaIntegration(
-      'FeedbackIntegration',
-      props.feedbackFunction
-    );
-
-    props.httpApi.addRoutes({
-      path: '/feedback',
-      methods: [apigwv2.HttpMethod.POST],
-      integration: feedbackIntegration,
     });
 
     // Delete S3 Files Lambda Integration

@@ -1,6 +1,6 @@
 /**
  * This file defines the LambdaFunctionStack class, which sets up various Lambda functions for the Gen AI MVP application using AWS CDK.
- * These Lambda functions handle session management, feedback processing, S3 operations, and knowledge base synchronization.
+ * These Lambda functions handle session management, S3 operations, and knowledge base synchronization.
  */
 
 import * as cdk from "aws-cdk-lib";
@@ -25,12 +25,10 @@ import { knowledgeBaseIndexName } from "../../constants";
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
   readonly sessionTable: Table;
-  readonly feedbackTable: Table;
   readonly draftTable: Table;
   readonly nofoMetadataTable: Table;
   readonly draftGenerationJobsTable: Table;
   readonly featureRolloutTable: Table;
-  readonly feedbackBucket: s3.Bucket;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -43,7 +41,6 @@ interface LambdaFunctionStackProps {
 export class LambdaFunctionStack extends cdk.Stack {
   public readonly chatFunction: lambda.Function;
   public readonly sessionFunction: lambda.Function;
-  public readonly feedbackFunction: lambda.Function;
   public readonly deleteS3Function: lambda.Function;
   public readonly getS3Function: lambda.Function;
   public readonly uploadS3Function: lambda.Function;
@@ -215,53 +212,6 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.chatFunction = websocketAPIFunction;
-
-    const feedbackAPIHandlerFunction = new lambda.Function(
-      scope,
-      "FeedbackHandlerFunction",
-      {
-        runtime: lambda.Runtime.PYTHON_3_12,
-        code: lambda.Code.fromAsset(path.join(__dirname, "feedback-handler")),
-        handler: "lambda_function.lambda_handler",
-        layers: [pythonSharedLayer],
-        environment: {
-          FEEDBACK_TABLE: props.feedbackTable.tableName,
-          FEEDBACK_S3_DOWNLOAD: props.feedbackBucket.bucketName,
-        },
-        timeout: cdk.Duration.seconds(30),
-      }
-    );
-
-    feedbackAPIHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "dynamodb:GetItem",
-          "dynamodb:PutItem",
-          "dynamodb:UpdateItem",
-          "dynamodb:DeleteItem",
-          "dynamodb:Query",
-          "dynamodb:Scan",
-        ],
-        resources: [
-          props.feedbackTable.tableArn,
-          props.feedbackTable.tableArn + "/index/*",
-        ],
-      })
-    );
-
-    feedbackAPIHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:*"],
-        resources: [
-          props.feedbackBucket.bucketArn,
-          props.feedbackBucket.bucketArn + "/*",
-        ],
-      })
-    );
-
-    this.feedbackFunction = feedbackAPIHandlerFunction;
 
     const kbSyncAPIHandlerFunction = new lambda.Function(
       scope,

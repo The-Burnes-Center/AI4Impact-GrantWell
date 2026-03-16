@@ -117,59 +117,6 @@ class SessionItem(BaseModel):
     chat_history: List[Dict[str, Any]] = Field(default_factory=list)
 
 
-class FeedbackData(BaseModel):
-    """Model for feedback data submitted by users."""
-    sessionId: str = Field(..., min_length=1, description="Session identifier")
-    prompt: str = Field(..., min_length=1, description="User prompt")
-    completion: str = Field(..., description="Chatbot completion")
-    feedback: int = Field(..., ge=0, le=1, description="Feedback value (0 or 1)")
-    comment: Optional[str] = Field(None, description="Feedback comment")
-    topic: Optional[str] = Field(None, description="Feedback topic")
-    problem: Optional[str] = Field(None, description="Problem description")
-    sources: Optional[List[str]] = Field(default_factory=list, description="Source references")
-
-
-class PostFeedbackRequest(BaseModel):
-    """Request model for posting feedback."""
-    feedbackData: FeedbackData
-
-
-class DownloadFeedbackRequest(BaseModel):
-    """Request model for downloading feedback."""
-    startTime: str = Field(..., description="Start time for feedback query")
-    endTime: str = Field(..., description="End time for feedback query")
-    topic: Optional[str] = Field(None, description="Filter by topic")
-
-
-class FeedbackItem(BaseModel):
-    """Model for a feedback item stored in DynamoDB."""
-    FeedbackID: str
-    SessionID: str
-    UserPrompt: str
-    FeedbackComments: str
-    Topic: str
-    Problem: str
-    Feedback: int
-    ChatbotMessage: str
-    Sources: List[str]
-    CreatedAt: str
-    Any: str = "YES"
-
-
-class FeedbackQueryParams(BaseModel):
-    """Query parameters for getting feedback."""
-    startTime: str = Field(..., description="Start time for feedback query")
-    endTime: str = Field(..., description="End time for feedback query")
-    topic: Optional[str] = Field(None, description="Filter by topic")
-    nextPageToken: Optional[str] = Field(None, description="Pagination token")
-
-
-class FeedbackDeleteParams(BaseModel):
-    """Query parameters for deleting feedback."""
-    topic: str = Field(..., description="Topic of feedback to delete")
-    createdAt: str = Field(..., description="Created timestamp of feedback to delete")
-
-
 class DeleteS3Request(BaseModel):
     """Request model for deleting S3 objects."""
     KEY: str = Field(..., min_length=1, description="S3 object key")

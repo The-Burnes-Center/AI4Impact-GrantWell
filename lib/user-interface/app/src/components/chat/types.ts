@@ -32,15 +32,3 @@ export interface ChatBotHistoryItem {
     | Array<{ title: string; uri: string }>
   >;
 }
-
-export interface FeedbackData {
-  sessionId: string;
-  feedback: number;
-  prompt: string;
-  completion: string;
-  topic: string;
-  problem: string;
-  comment: string;
-  sources: string;
-  documentIdentifier: string;
-}
