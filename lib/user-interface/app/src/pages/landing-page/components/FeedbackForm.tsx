@@ -1,41 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useApiClient } from "../../../hooks/use-api-client";
 
 const MAX_CHARS = 500;
-const MASS_GOV_FEEDBACK_URL = "https://forms.mass.gov/eoanf/form/62/";
-
-interface GravityFormTokens {
-  state: string;
-  currency: string;
-}
-
-async function fetchGravityFormTokens(): Promise<GravityFormTokens | null> {
-  try {
-    const response = await fetch(MASS_GOV_FEEDBACK_URL, {
-      credentials: "include",
-    });
-    if (!response.ok) return null;
-
-    const html = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-
-    const stateInput = doc.querySelector<HTMLInputElement>(
-      'input[name="state_62"]'
-    );
-    const currencyInput = doc.querySelector<HTMLInputElement>(
-      'input[name="gform_currency"]'
-    );
-
-    if (!stateInput?.value) return null;
-
-    return {
-      state: stateInput.value,
-      currency: currencyInput?.value ?? "",
-    };
-  } catch {
-    return null;
-  }
-}
 
 const FeedbackForm = React.memo(function FeedbackForm() {
   const [selectedOption, setSelectedOption] = useState<"yes" | "no" | null>(
@@ -46,14 +12,9 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
-  const [formTokens, setFormTokens] = useState<GravityFormTokens | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const expandedSectionRef = useRef<HTMLDivElement>(null);
   const infoButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    fetchGravityFormTokens().then(setFormTokens);
-  }, []);
+  const apiClient = useApiClient();
 
   useEffect(() => {
     if (selectedOption && textareaRef.current) {
@@ -77,6 +38,8 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!selectedOption) return;
+
     if (selectedOption === "no" && feedbackText.trim().length === 0) {
       setFeedbackError("Please tell us how we can improve the page.");
       return;
@@ -85,59 +48,19 @@ const FeedbackForm = React.memo(function FeedbackForm() {
     setIsSubmitting(true);
     setFeedbackError(null);
 
-    let tokens = formTokens;
-    if (!tokens) {
-      tokens = await fetchGravityFormTokens();
-      if (tokens) setFormTokens(tokens);
-    }
-
-    if (!tokens) {
-      window.open(MASS_GOV_FEEDBACK_URL, "_blank", "noopener,noreferrer");
-      setIsSubmitting(false);
-      return;
-    }
-
-    const form = e.currentTarget;
-
-    const stateField = form.querySelector<HTMLInputElement>(
-      'input[name="state_62"]'
-    );
-    const currencyField = form.querySelector<HTMLInputElement>(
-      'input[name="gform_currency"]'
-    );
-    if (stateField) stateField.value = tokens.state;
-    if (currencyField) currencyField.value = tokens.currency;
-
-    const iframe = document.createElement("iframe");
-    iframe.name = `feedback_iframe_${Date.now()}`;
-    iframe.style.display = "none";
-    document.body.appendChild(iframe);
-
-    form.target = iframe.name;
-
-    iframe.onload = () => {
-      setIsSubmitting(false);
+    try {
+      await apiClient.landingPage.submitFeedback(
+        selectedOption === "yes" ? "Yes" : "No",
+        feedbackText
+      );
       setFeedbackSubmitted(true);
-      form.reset();
-      setTimeout(() => {
-        if (iframe.parentNode) {
-          iframe.parentNode.removeChild(iframe);
-        }
-      }, 1000);
-    };
-
-    setTimeout(() => {
-      if (iframe.parentNode) {
-        setIsSubmitting(false);
-        setFeedbackSubmitted(true);
-        form.reset();
-        iframe.parentNode.removeChild(iframe);
-      }
-    }, 5000);
-
-    form.submit();
-
-    fetchGravityFormTokens().then(setFormTokens);
+    } catch {
+      setFeedbackError(
+        "There was a problem submitting your feedback. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const charsRemaining = MAX_CHARS - feedbackText.length;
@@ -158,32 +81,9 @@ const FeedbackForm = React.memo(function FeedbackForm() {
       ) : (
         <form
           noValidate
-          id="gform_62"
-          method="post"
-          action={MASS_GOV_FEEDBACK_URL}
-          encType="multipart/form-data"
-          data-formid="62"
           style={{ margin: 0 }}
           onSubmit={handleSubmit}
         >
-          {/* Gravity Forms required hidden fields */}
-          <input type="hidden" name="is_submit_62" value="1" />
-          <input type="hidden" name="gform_submit" value="62" />
-          <input type="hidden" name="gform_unique_id" value="" />
-          <input type="hidden" name="gform_target_page_number_62" value="0" />
-          <input type="hidden" name="gform_source_page_number_62" value="1" />
-          <input type="hidden" name="gform_field_values" value="" />
-          <input
-            type="hidden"
-            name="state_62"
-            value={formTokens?.state ?? ""}
-          />
-          <input
-            type="hidden"
-            name="gform_currency"
-            value={formTokens?.currency ?? ""}
-          />
-
           <h2 className="feedback-heading">Help Us Improve Mass.gov</h2>
 
           <div className="feedback-divider" />
@@ -195,32 +95,31 @@ const FeedbackForm = React.memo(function FeedbackForm() {
             <div className="feedback-radio-group">
               <span className="feedback-radio">
                 <input
-                  id="choice_62_1_0"
-                  name="input_1"
+                  id="feedback-found-yes"
+                  name="found_what_looking_for"
                   type="radio"
                   value="Yes"
                   checked={selectedOption === "yes"}
                   onChange={() => handleOptionChange("yes")}
                 />
-                <label htmlFor="choice_62_1_0">Yes</label>
+                <label htmlFor="feedback-found-yes">Yes</label>
               </span>
               <span className="feedback-radio">
                 <input
-                  id="choice_62_1_1"
-                  name="input_1"
+                  id="feedback-found-no"
+                  name="found_what_looking_for"
                   type="radio"
                   value="No"
                   checked={selectedOption === "no"}
                   onChange={() => handleOptionChange("no")}
                 />
-                <label htmlFor="choice_62_1_1">No</label>
+                <label htmlFor="feedback-found-no">No</label>
               </span>
             </div>
           </fieldset>
 
           {selectedOption && (
             <div
-              ref={expandedSectionRef}
               className="feedback-expanded"
               role="region"
               aria-live="polite"
@@ -290,15 +189,14 @@ const FeedbackForm = React.memo(function FeedbackForm() {
               </div>
 
               <div className="feedback-textarea-wrapper">
-                <label htmlFor="input_62_3" className="visually-hidden">
+                <label htmlFor="feedback-text" className="visually-hidden">
                   {selectedOption === "yes"
                     ? "Suggestions for the website"
                     : "How can we improve the page"}
                 </label>
                 <textarea
                   ref={textareaRef}
-                  id="input_62_3"
-                  name="input_3"
+                  id="feedback-text"
                   className="feedback-textarea"
                   maxLength={MAX_CHARS}
                   value={feedbackText}

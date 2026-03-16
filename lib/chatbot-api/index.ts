@@ -506,6 +506,17 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    const feedbackProxyAPIIntegration = new HttpLambdaIntegration(
+      "FeedbackProxyAPIIntegration",
+      lambdaFunctions.feedbackProxyFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/submit-feedback",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: feedbackProxyAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     new cdk.CfnOutput(this, "WS-API - apiEndpoint", {
       value: websocketBackend.wsAPI.apiEndpoint || "",
     });

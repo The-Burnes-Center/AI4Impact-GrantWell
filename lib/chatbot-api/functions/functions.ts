@@ -63,6 +63,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
+  public readonly feedbackProxyFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -1242,5 +1243,21 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.aiGrantSearchFunction = aiGrantSearchFunction;
+
+    // Feedback proxy Lambda — forwards user feedback to Mass.gov Gravity Forms
+    const feedbackProxyFunction = new lambda.Function(
+      scope,
+      "FeedbackProxyFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "feedback-proxy")
+        ),
+        handler: "index.handler",
+        timeout: cdk.Duration.seconds(15),
+      }
+    );
+
+    this.feedbackProxyFunction = feedbackProxyFunction;
   }
 }
