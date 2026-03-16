@@ -6,6 +6,10 @@ on:
       - staging
   workflow_dispatch:
 
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -35,6 +39,16 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            lib/user-interface/app/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install backend dependencies
         run: npm install
 
@@ -49,18 +63,4 @@ jobs:
 
       - name: Deploy CDK stacks to staging
         run: |
-          cdk deploy ${{ env.STACK_NAME }} --exclusively --require-approval never
-          cdk deploy "${STACK_NAME}/ChatbotAPI/TableStack" --require-approval never
-
-      - name: Fetch CloudFormation Outputs
-        run: |
-          aws cloudformation describe-stacks \
-            --stack-name ${{ env.STACK_NAME }} \
-            --query "Stacks[0].Outputs" > stack-outputs-staging.json
-          cat stack-outputs-staging.json
-
-      - name: Upload Outputs as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: stack-outputs-staging
-          path: stack-outputs-staging.json
+          cdk deploy ${{ env.STACK_NAME }} --require-approval never
