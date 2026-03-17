@@ -505,7 +505,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const metadataTableReadWritePolicy = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:Query", "dynamodb:Scan"],
+      actions: ["dynamodb:GetItem", "dynamodb:BatchGetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:Query", "dynamodb:Scan"],
       resources: [
         props.nofoMetadataTable.tableArn,
         props.nofoMetadataTable.tableArn + "/index/*",
