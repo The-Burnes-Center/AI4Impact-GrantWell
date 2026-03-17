@@ -530,10 +530,10 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    // Add REST API route for automated NOFO scraper
+    // Add REST API route for automated NOFO scraper (coordinator)
     const automatedNofoScraperAPIIntegration = new HttpLambdaIntegration(
       "AutomatedNofoScraperAPIIntegration",
-      lambdaFunctions.automatedNofoScraperFunction
+      lambdaFunctions.scraperCoordinatorFunction
     );
     restBackend.restAPI.addRoutes({
       path: "/automated-nofo-scraper",

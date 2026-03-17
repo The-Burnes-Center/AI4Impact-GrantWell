@@ -194,11 +194,18 @@ const Dashboard: React.FC = () => {
       setIsScraping(true);
       addNotification("info", "Starting automated NOFO scraping...");
       const response = await apiClient.landingPage.triggerAutomatedScraper();
-      if (response.result && response.result.processed > 0) {
-        addNotification("success", `Successfully processed ${response.result.processed} new NOFOs!`);
+      const result = response.result ?? response;
+      const newCount = result.newQueued ?? result.processed ?? 0;
+      const updatedCount = result.updatedQueued ?? 0;
+      const total = newCount + updatedCount;
+      if (total > 0) {
+        const parts = [];
+        if (newCount > 0) parts.push(`${newCount} new`);
+        if (updatedCount > 0) parts.push(`${updatedCount} updated`);
+        addNotification("success", `Queued ${parts.join(" and ")} grant${total === 1 ? "" : "s"} for processing!`);
         await fetchNofos();
       } else {
-        addNotification("info", "No new NOFOs found to process.");
+        addNotification("info", "No new or updated NOFOs found.");
       }
     } catch {
       addNotification("error", "Failed to run automated NOFO scraper. Please try again.");
