@@ -14,6 +14,7 @@ export class TableStack extends Stack {
   public readonly nofoMetadataTable: Table;
   public readonly draftGenerationJobsTable: Table;
   public readonly featureRolloutTable: Table;
+  public readonly nofoProcessingReviewTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -107,5 +108,19 @@ export class TableStack extends Stack {
     });
 
     this.featureRolloutTable = featureRolloutTable;
+
+    const nofoProcessingReviewTable = new Table(this, 'NOFOProcessingReviewTable', {
+      partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
+      sortKey: { name: 'review_id', type: AttributeType.STRING },
+    });
+
+    nofoProcessingReviewTable.addGlobalSecondaryIndex({
+      indexName: 'StatusIndex',
+      partitionKey: { name: 'status', type: AttributeType.STRING },
+      sortKey: { name: 'created_at', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    this.nofoProcessingReviewTable = nofoProcessingReviewTable;
   }
 }

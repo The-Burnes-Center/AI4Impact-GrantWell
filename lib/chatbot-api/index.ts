@@ -62,6 +62,7 @@ export class ChatBotApi extends Construct {
       sessionTable: tables.historyTable,
       draftTable: tables.draftTable,
       nofoMetadataTable: tables.nofoMetadataTable,
+      nofoProcessingReviewTable: tables.nofoProcessingReviewTable,
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
       featureRolloutTable: tables.featureRolloutTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
@@ -479,6 +480,53 @@ export class ChatBotApi extends Construct {
       path: "/feature-rollouts/{featureKey}/users/{email}",
       methods: [apigwv2.HttpMethod.PUT, apigwv2.HttpMethod.DELETE],
       integration: featureRolloutIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Admin API routes for NOFO processing review
+    const nofoAdminAPIIntegration = new HttpLambdaIntegration(
+      "NofoAdminAPIIntegration",
+      lambdaFunctions.nofoAdminFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews/{nofoName}",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews/{nofoName}/approve",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews/{nofoName}/reject",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-metrics",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoReprocessAPIIntegration = new HttpLambdaIntegration(
+      "NofoReprocessAPIIntegration",
+      lambdaFunctions.nofoReprocessFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/admin/reprocess-nofo",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoReprocessAPIIntegration,
       authorizer: httpAuthorizer,
     });
 

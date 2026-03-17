@@ -1,5 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
+import type { ReviewItem, ReviewDetail, ProcessingMetrics } from "../types/processing-review";
 
 export class LandingPageClient {
   private readonly baseUrl: string;
@@ -249,6 +250,121 @@ export class LandingPageClient {
       return data;
     } catch (error) {
       console.error("Error submitting feedback:", error);
+      throw error;
+    }
+  }
+
+  async getProcessingReviews(status?: string): Promise<ReviewItem[]> {
+    try {
+      const token = await Utils.authenticate();
+      const url = new URL(`${this.API}/admin/processing-reviews`);
+      if (status) url.searchParams.append("status", status);
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        headers: { "Content-Type": "application/json", Authorization: token },
+      });
+
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      const data = await response.json();
+      return data.reviews || [];
+    } catch (error) {
+      console.error("Error fetching processing reviews:", error);
+      throw error;
+    }
+  }
+
+  async getReviewDetail(nofoName: string): Promise<ReviewDetail> {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(
+        `${this.API}/admin/processing-reviews/${encodeURIComponent(nofoName)}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json", Authorization: token },
+        }
+      );
+
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      const data = await response.json();
+      return data.review;
+    } catch (error) {
+      console.error("Error fetching review detail:", error);
+      throw error;
+    }
+  }
+
+  async approveReview(
+    nofoName: string,
+    corrections?: Record<string, unknown>,
+    notes?: string
+  ): Promise<void> {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(
+        `${this.API}/admin/processing-reviews/${encodeURIComponent(nofoName)}/approve`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: token },
+          body: JSON.stringify({ corrections, notes }),
+        }
+      );
+
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+    } catch (error) {
+      console.error("Error approving review:", error);
+      throw error;
+    }
+  }
+
+  async rejectReview(nofoName: string, reason: string): Promise<void> {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(
+        `${this.API}/admin/processing-reviews/${encodeURIComponent(nofoName)}/reject`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: token },
+          body: JSON.stringify({ reason }),
+        }
+      );
+
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+    } catch (error) {
+      console.error("Error rejecting review:", error);
+      throw error;
+    }
+  }
+
+  async reprocessNofo(nofoName: string): Promise<void> {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(`${this.API}/admin/reprocess-nofo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: token },
+        body: JSON.stringify({ nofoName }),
+      });
+
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+    } catch (error) {
+      console.error("Error reprocessing NOFO:", error);
+      throw error;
+    }
+  }
+
+  async getProcessingMetrics(): Promise<ProcessingMetrics> {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(`${this.API}/admin/processing-metrics`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", Authorization: token },
+      });
+
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      const data = await response.json();
+      return data.metrics;
+    } catch (error) {
+      console.error("Error fetching processing metrics:", error);
       throw error;
     }
   }

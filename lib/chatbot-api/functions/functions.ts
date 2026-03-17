@@ -19,14 +19,17 @@ import * as bedrock from "aws-cdk-lib/aws-bedrock";
 import { S3EventSource, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
+import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
 import { knowledgeBaseIndexName } from "../../constants";
+import { NofoProcessingStateMachine } from "../step-functions/nofo-processing";
 
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
   readonly sessionTable: Table;
   readonly draftTable: Table;
   readonly nofoMetadataTable: Table;
+  readonly nofoProcessingReviewTable: Table;
   readonly draftGenerationJobsTable: Table;
   readonly featureRolloutTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
@@ -51,7 +54,9 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly getNOFOsList: lambda.Function;
   public readonly getNOFOSummary: lambda.Function;
   public readonly getNOFOQuestions: lambda.Function;
-  public readonly processAndSummarizeNOFO: lambda.Function;
+  public readonly nofoProcessingStateMachine: sfn.StateMachine;
+  public readonly nofoAdminFunction: lambda.Function;
+  public readonly nofoReprocessFunction: lambda.Function;
   public readonly nofoStatusFunction: lambda.Function;
   public readonly nofoRenameFunction: lambda.Function;
   public readonly nofoDeleteFunction: lambda.Function;
@@ -449,75 +454,130 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Create SQS Queue for NOFO processing
     const nofoProcessingQueue = new sqs.Queue(scope, "NOFOProcessingQueue", {
-      visibilityTimeout: cdk.Duration.minutes(15), // Matches Lambda timeout
-      receiveMessageWaitTime: cdk.Duration.seconds(20), // Long polling
+      visibilityTimeout: cdk.Duration.minutes(15),
+      receiveMessageWaitTime: cdk.Duration.seconds(20),
       deadLetterQueue: {
         queue: nofoProcessingDLQ,
-        maxReceiveCount: 3, // Retry 3 times before DLQ
+        maxReceiveCount: 3,
       },
     });
 
-    const processNOFOAPIHandlerFunction = new lambda.Function(
-      scope,
-      "ProcessNOFOAPIHandlerFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/processAndSummarizeNOFO")
-        ),
-        handler: "index.handler",
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          ENABLE_DYNAMODB_CACHE: "true",
-        },
-        timeout: cdk.Duration.minutes(9),
-      }
-    );
-    // processNOFOAPIHandlerFunction.addToRolePolicy(new iam.PolicyStatement({
-    //   effect: iam.Effect.ALLOW,
-    //   actions: [
-    //     's3:*',
-    //     'bedrock:*',
-    //     'textract:*'
-    //   ],
-    //   resources: [props.ffioNofosBucket.bucketArn,props.ffioNofosBucket.bucketArn+"/*",'arn:aws:bedrock:us-east-1::foundation-model/us.anthropic.claude-sonnet-4-20250514-v1:0']
-    // }));
-    // S3 permissions
-    processNOFOAPIHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
-      })
-    );
+    // Common IAM helpers
+    const s3ReadWritePolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+      resources: [
+        props.ffioNofosBucket.bucketArn,
+        `${props.ffioNofosBucket.bucketArn}/*`,
+      ],
+    });
 
-    // Textract permissions
-    processNOFOAPIHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "textract:StartDocumentTextDetection",
-          "textract:GetDocumentTextDetection",
-        ],
-        resources: ["*"],
-      })
-    );
+    const bedrockInvokePolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["bedrock:InvokeModel"],
+      resources: ["*"],
+    });
 
-    // Bedrock permissions
-    processNOFOAPIHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:InvokeModel"],
-        resources: ["*"],
-      })
-    );
+    const textractPolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        "textract:StartDocumentTextDetection",
+        "textract:GetDocumentTextDetection",
+      ],
+      resources: ["*"],
+    });
 
-    processNOFOAPIHandlerFunction.addToRolePolicy(
+    const metadataTableReadWritePolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:Query"],
+      resources: [
+        props.nofoMetadataTable.tableArn,
+        props.nofoMetadataTable.tableArn + "/index/*",
+      ],
+    });
+
+    const reviewTableReadWritePolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        "dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem",
+        "dynamodb:Query", "dynamodb:Scan",
+      ],
+      resources: [
+        props.nofoProcessingReviewTable.tableArn,
+        props.nofoProcessingReviewTable.tableArn + "/index/*",
+      ],
+    });
+
+    // --- Pipeline Lambda Functions ---
+
+    const extractTextFunction = new lambda.Function(scope, "ExtractTextFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/extract-text")),
+      handler: "index.handler",
+      timeout: cdk.Duration.minutes(5),
+      memorySize: 512,
+    });
+    extractTextFunction.addToRolePolicy(s3ReadWritePolicy);
+    extractTextFunction.addToRolePolicy(textractPolicy);
+
+    const detectSectionsFunction = new lambda.Function(scope, "DetectSectionsFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/detect-sections")),
+      handler: "index.handler",
+      timeout: cdk.Duration.minutes(2),
+      memorySize: 256,
+    });
+    detectSectionsFunction.addToRolePolicy(s3ReadWritePolicy);
+    detectSectionsFunction.addToRolePolicy(bedrockInvokePolicy);
+
+    const analyzeSectionFunction = new lambda.Function(scope, "AnalyzeSectionFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/analyze-section")),
+      handler: "index.handler",
+      timeout: cdk.Duration.minutes(3),
+      memorySize: 512,
+    });
+    analyzeSectionFunction.addToRolePolicy(bedrockInvokePolicy);
+
+    const synthesizeFunction = new lambda.Function(scope, "SynthesizeFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/synthesize")),
+      handler: "index.handler",
+      environment: {
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+      },
+      timeout: cdk.Duration.minutes(5),
+      memorySize: 512,
+    });
+    synthesizeFunction.addToRolePolicy(s3ReadWritePolicy);
+    synthesizeFunction.addToRolePolicy(bedrockInvokePolicy);
+    synthesizeFunction.addToRolePolicy(metadataTableReadWritePolicy);
+
+    const validateFunction = new lambda.Function(scope, "ValidateFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/validate")),
+      handler: "index.handler",
+      timeout: cdk.Duration.minutes(3),
+      memorySize: 512,
+    });
+    validateFunction.addToRolePolicy(s3ReadWritePolicy);
+    validateFunction.addToRolePolicy(bedrockInvokePolicy);
+
+    const publishFunction = new lambda.Function(scope, "PublishFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/publish")),
+      handler: "index.handler",
+      environment: {
+        BUCKET: props.ffioNofosBucket.bucketName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+      },
+      timeout: cdk.Duration.minutes(2),
+      memorySize: 256,
+    });
+    publishFunction.addToRolePolicy(s3ReadWritePolicy);
+    publishFunction.addToRolePolicy(metadataTableReadWritePolicy);
+    publishFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["lambda:InvokeFunction"],
@@ -525,63 +585,153 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    // SQS permissions for Lambda
-    processNOFOAPIHandlerFunction.addToRolePolicy(
+    const quarantineFunction = new lambda.Function(scope, "QuarantineFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/quarantine")),
+      handler: "index.handler",
+      environment: {
+        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+      },
+      timeout: cdk.Duration.minutes(1),
+      memorySize: 256,
+    });
+    quarantineFunction.addToRolePolicy(s3ReadWritePolicy);
+    quarantineFunction.addToRolePolicy(reviewTableReadWritePolicy);
+
+    // --- Step Functions State Machine ---
+
+    const nofoProcessing = new NofoProcessingStateMachine(
+      scope,
+      "NofoProcessingPipeline",
+      {
+        extractTextFunction,
+        detectSectionsFunction,
+        analyzeSectionFunction,
+        synthesizeFunction,
+        validateFunction,
+        publishFunction,
+        quarantineFunction,
+      }
+    );
+
+    this.nofoProcessingStateMachine = nofoProcessing.stateMachine;
+
+    // --- Dispatcher Lambda (SQS -> Step Functions) ---
+
+    const dispatcherFunction = new lambda.Function(scope, "PipelineDispatcherFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/dispatcher")),
+      handler: "index.handler",
+      environment: {
+        STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
+      },
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 256,
+    });
+
+    nofoProcessing.stateMachine.grantStartExecution(dispatcherFunction);
+    nofoProcessing.stateMachine.grantStartSyncExecution(dispatcherFunction);
+
+    dispatcherFunction.addEventSource(
+      new SqsEventSource(nofoProcessingQueue, {
+        batchSize: 1,
+        maxConcurrency: 10,
+        reportBatchItemFailures: true,
+      })
+    );
+
+    // S3 → SQS notifications (same as before)
+    props.ffioNofosBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.SqsDestination(nofoProcessingQueue),
+      { prefix: "", suffix: "NOFO-File-PDF" }
+    );
+    props.ffioNofosBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.SqsDestination(nofoProcessingQueue),
+      { prefix: "", suffix: "NOFO-File-TXT" }
+    );
+
+    // --- DLQ Processor Lambda (EventBridge schedule) ---
+
+    const dlqProcessorFunction = new lambda.Function(scope, "DLQProcessorFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/dlq-processor")),
+      handler: "index.handler",
+      environment: {
+        DLQ_URL: nofoProcessingDLQ.queueUrl,
+        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+      },
+      timeout: cdk.Duration.minutes(5),
+      memorySize: 256,
+    });
+    dlqProcessorFunction.addToRolePolicy(reviewTableReadWritePolicy);
+    dlqProcessorFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: [
-          "sqs:ReceiveMessage",
-          "sqs:DeleteMessage",
-          "sqs:GetQueueAttributes",
-        ],
+        actions: ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"],
+        resources: [nofoProcessingDLQ.queueArn],
+      })
+    );
+
+    const dlqProcessorRule = new events.Rule(scope, "DLQProcessorSchedule", {
+      schedule: events.Schedule.rate(cdk.Duration.minutes(15)),
+      description: "Process DLQ items into review table every 15 minutes",
+    });
+    dlqProcessorRule.addTarget(new targets.LambdaFunction(dlqProcessorFunction));
+
+    // --- Admin API Lambda ---
+
+    const nofoAdminFunction = new lambda.Function(scope, "NofoAdminFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/admin")),
+      handler: "index.handler",
+      environment: {
+        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        BUCKET: props.ffioNofosBucket.bucketName,
+        PUBLISH_FUNCTION_NAME: publishFunction.functionName,
+      },
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 256,
+    });
+    nofoAdminFunction.addToRolePolicy(reviewTableReadWritePolicy);
+    nofoAdminFunction.addToRolePolicy(metadataTableReadWritePolicy);
+    nofoAdminFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [publishFunction.functionArn],
+      })
+    );
+
+    this.nofoAdminFunction = nofoAdminFunction;
+
+    // --- Reprocess Lambda ---
+
+    const nofoReprocessFunction = new lambda.Function(scope, "NofoReprocessFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/reprocess")),
+      handler: "index.handler",
+      environment: {
+        BUCKET: props.ffioNofosBucket.bucketName,
+        QUEUE_URL: nofoProcessingQueue.queueUrl,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 256,
+    });
+    nofoReprocessFunction.addToRolePolicy(s3ReadWritePolicy);
+    nofoReprocessFunction.addToRolePolicy(metadataTableReadWritePolicy);
+    nofoReprocessFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["sqs:SendMessage"],
         resources: [nofoProcessingQueue.queueArn],
       })
     );
 
-    // Grant DynamoDB write permissions
-    processNOFOAPIHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "dynamodb:PutItem",
-          "dynamodb:UpdateItem",
-          "dynamodb:GetItem",
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          props.nofoMetadataTable.tableArn + "/index/*",
-        ],
-      })
-    );
-
-    this.processAndSummarizeNOFO = processNOFOAPIHandlerFunction;
-    
-    // Remove S3EventSource and add SqsEventSource instead
-    processNOFOAPIHandlerFunction.addEventSource(
-      new SqsEventSource(nofoProcessingQueue, {
-        batchSize: 1, // Process one file at a time
-        maxConcurrency: 5, // Rate limiting: max 5 concurrent executions
-        reportBatchItemFailures: true, // Enable partial batch failure handling
-      })
-    );
-
-    // Add S3 → SQS notification
-    props.ffioNofosBucket.addEventNotification(
-      s3.EventType.OBJECT_CREATED,
-      new s3n.SqsDestination(nofoProcessingQueue),
-      {
-        prefix: "",
-        suffix: "NOFO-File-PDF",
-      }
-    );
-    props.ffioNofosBucket.addEventNotification(
-      s3.EventType.OBJECT_CREATED,
-      new s3n.SqsDestination(nofoProcessingQueue),
-      {
-        prefix: "",
-        suffix: "NOFO-File-TXT",
-      }
-    );
+    this.nofoReprocessFunction = nofoReprocessFunction;
 
     const RequirementsForNOFOs = new lambda.Function(
       scope,
