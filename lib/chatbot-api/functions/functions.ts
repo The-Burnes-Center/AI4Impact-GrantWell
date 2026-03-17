@@ -455,11 +455,11 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Create SQS Queue for NOFO processing
     const nofoProcessingQueue = new sqs.Queue(scope, "NOFOProcessingQueue", {
-      visibilityTimeout: cdk.Duration.minutes(15),
+      visibilityTimeout: cdk.Duration.minutes(20),
       receiveMessageWaitTime: cdk.Duration.seconds(20),
       deadLetterQueue: {
         queue: nofoProcessingDLQ,
-        maxReceiveCount: 3,
+        maxReceiveCount: 5,
       },
     });
 
@@ -470,7 +470,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // SQS queue for individual opportunity downloads
     const scraperDownloadQueue = new sqs.Queue(scope, "ScraperDownloadQueue", {
-      visibilityTimeout: cdk.Duration.minutes(3),
+      visibilityTimeout: cdk.Duration.minutes(12),
       retentionPeriod: cdk.Duration.days(4),
       deadLetterQueue: {
         queue: scraperDownloadDLQ,
@@ -656,18 +656,24 @@ export class LambdaFunctionStack extends cdk.Stack {
         STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
-      timeout: cdk.Duration.seconds(30),
+      timeout: cdk.Duration.minutes(15),
       memorySize: 256,
     });
 
     dispatcherFunction.addToRolePolicy(metadataTableReadWritePolicy);
     nofoProcessing.stateMachine.grantStartExecution(dispatcherFunction);
-    nofoProcessing.stateMachine.grantStartSyncExecution(dispatcherFunction);
+    dispatcherFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["states:DescribeExecution"],
+        resources: ["*"],
+      })
+    );
 
     dispatcherFunction.addEventSource(
       new SqsEventSource(nofoProcessingQueue, {
         batchSize: 1,
-        maxConcurrency: 10,
+        maxConcurrency: 5,
         reportBatchItemFailures: true,
       })
     );
@@ -1137,7 +1143,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           SCRAPER_DOWNLOAD_QUEUE_URL: scraperDownloadQueue.queueUrl,
         },
-        timeout: cdk.Duration.minutes(5),
+        timeout: cdk.Duration.minutes(15),
         memorySize: 256,
       }
     );

@@ -32,6 +32,12 @@ export class NofoProcessingStateMachine extends Construct {
       retryOnServiceExceptions: true,
     });
     extractText.addRetry({
+      errors: ["ProvisionedThroughputExceededException"],
+      interval: cdk.Duration.seconds(30),
+      maxAttempts: 4,
+      backoffRate: 2,
+    });
+    extractText.addRetry({
       errors: ["States.TaskFailed"],
       interval: cdk.Duration.seconds(10),
       maxAttempts: 2,
@@ -102,7 +108,7 @@ export class NofoProcessingStateMachine extends Construct {
     });
 
     const analyzeSections = new sfn.Map(this, "AnalyzeSections", {
-      maxConcurrency: 10,
+      maxConcurrency: 5,
       itemsPath: "$.sections",
       resultPath: "$.sectionResults",
       parameters: {
@@ -231,7 +237,7 @@ export class NofoProcessingStateMachine extends Construct {
 
     this.stateMachine = new sfn.StateMachine(this, "NofoProcessingSFN", {
       definitionBody: sfn.DefinitionBody.fromChainable(definition),
-      stateMachineType: sfn.StateMachineType.EXPRESS,
+      stateMachineType: sfn.StateMachineType.STANDARD,
       timeout: cdk.Duration.minutes(30),
       logs: {
         destination: logGroup,

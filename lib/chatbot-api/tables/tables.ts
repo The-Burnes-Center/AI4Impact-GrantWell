@@ -90,6 +90,12 @@ export class TableStack extends Stack {
     //   projectionType: ProjectionType.ALL,
     // });
 
+    nofoMetadataTable.addGlobalSecondaryIndex({
+      indexName: 'ContentHashIndex',
+      partitionKey: { name: 'content_hash', type: AttributeType.STRING },
+      projectionType: ProjectionType.KEYS_ONLY,
+    });
+
     this.nofoMetadataTable = nofoMetadataTable;
 
     // Define the Draft Generation Jobs Table for async draft generation
