@@ -194,12 +194,11 @@ export class NofoProcessingStateMachine extends Construct {
       )
       .otherwise(quarantine);
 
-    // Error handler: quarantine on unrecoverable errors
-    const handleError = new sfn.Pass(this, "HandleError", {
+    // Error handler: quarantine on unrecoverable errors.
+       const handleError = new sfn.Pass(this, "HandleError", {
       parameters: {
         "nofoName.$": "$.nofoName",
         "s3Bucket.$": "$.s3Bucket",
-        "rawTextKey.$": "$.rawTextKey",
         "documentKey.$": "$.documentKey",
         "errorMessage.$": "$.error.Cause",
         "source": "pipeline",
