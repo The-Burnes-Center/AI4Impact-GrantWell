@@ -91,6 +91,12 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     setExpandedNofo((prev) => (prev === nofoName ? null : nofoName));
   };
 
+  const SOURCE_LABELS: Record<string, string> = {
+    dlq: "DLQ failure",
+    duplicate: "Duplicate detected",
+    quality: "Quality check failed",
+  };
+
   const getIssuesSummary = (review: ReviewItem) => {
     const { critical, warning } = review.issueCount;
     const parts: React.ReactNode[] = [];
@@ -113,9 +119,26 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     }
 
     if (parts.length === 0) {
+      const sourceLabel = SOURCE_LABELS[review.source];
+      if (sourceLabel) {
+        return (
+          <span className="review-issue-count review-issue-count--critical">
+            <LuCircleAlert size={12} aria-hidden="true" />
+            {sourceLabel}
+          </span>
+        );
+      }
+      if (review.errorMessage) {
+        return (
+          <span className="review-issue-count review-issue-count--warning">
+            <LuTriangleAlert size={12} aria-hidden="true" />
+            Processing error
+          </span>
+        );
+      }
       return (
         <span style={{ fontSize: "12px", color: "var(--mds-color-text-secondary)" }}>
-          {review.source === "dlq" ? "DLQ failure" : "No issues"}
+          No issues
         </span>
       );
     }

@@ -31,7 +31,7 @@ export interface ReviewItem {
   created_at: string;
   qualityScore: number;
   retryCount: number;
-  source: "pipeline" | "dlq";
+  source: "pipeline" | "dlq" | "duplicate" | "quality";
   errorMessage: string | null;
   issueCount: IssueCount;
 }

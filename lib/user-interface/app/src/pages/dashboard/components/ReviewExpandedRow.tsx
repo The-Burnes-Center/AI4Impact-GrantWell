@@ -63,14 +63,17 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     }
   };
 
-  const handleApplyFix = (issue: ValidationIssue) => {
-    if (!editedSummary) return;
+  const applySingleFix = (
+    summary: Record<string, unknown>,
+    issue: ValidationIssue
+  ): { updated: Record<string, unknown>; applied: boolean } => {
+    if (!issue.suggestedFix) return { updated: summary, applied: false };
 
     const fieldMatch = issue.field.match(/^(\w+)\[(\d+)\]$/);
     if (fieldMatch) {
       const [, arrayName, indexStr] = fieldMatch;
       const index = parseInt(indexStr, 10);
-      const arr = editedSummary[arrayName] as SummaryField[] | undefined;
+      const arr = summary[arrayName] as SummaryField[] | undefined;
       if (arr && Array.isArray(arr) && arr[index]) {
         if (
           issue.category === "hallucination" ||
@@ -78,25 +81,54 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
         ) {
           const updated = [...arr];
           updated[index] = { ...updated[index], removed: true };
-          setEditedSummary({ ...editedSummary, [arrayName]: updated });
+          return { updated: { ...summary, [arrayName]: updated }, applied: true };
         }
       }
     } else if (issue.field === "GrantName" && issue.suggestedFix) {
       const nameMatch = issue.suggestedFix.match(/"([^"]+)"/);
       if (nameMatch) {
-        setEditedSummary({ ...editedSummary, GrantName: nameMatch[1] });
+        return { updated: { ...summary, GrantName: nameMatch[1] }, applied: true };
       }
     }
 
-    addNotification("info", `Applied suggested fix for ${issue.field}`);
+    return { updated: summary, applied: false };
+  };
+
+  const handleApplyFix = (issue: ValidationIssue) => {
+    if (!editedSummary) return;
+    const { updated, applied } = applySingleFix(editedSummary, issue);
+    if (applied) {
+      setEditedSummary(updated);
+      addNotification("info", `Applied suggested fix for ${issue.field}`);
+    } else {
+      addNotification("warning", `No automatic fix available for ${issue.field}`);
+    }
   };
 
   const handleApplyAllFixes = () => {
-    if (!detail?.validationResult?.issues) return;
-    for (const issue of detail.validationResult.issues) {
-      handleApplyFix(issue);
+    if (!editedSummary || !detail?.validationResult?.issues) return;
+    const fixableIssues = detail.validationResult.issues.filter((i) => i.suggestedFix);
+    if (fixableIssues.length === 0) {
+      addNotification("info", "No automatic fixes available");
+      return;
     }
-    addNotification("info", "All suggested fixes applied");
+
+    let current = editedSummary;
+    let appliedCount = 0;
+    for (const issue of fixableIssues) {
+      const { updated, applied } = applySingleFix(current, issue);
+      if (applied) {
+        current = updated;
+        appliedCount++;
+      }
+    }
+
+    if (appliedCount > 0) {
+      setEditedSummary(current);
+      addNotification("info", `Applied ${appliedCount} of ${fixableIssues.length} suggested fixes`);
+    } else {
+      addNotification("info", "No fixes could be applied automatically");
+    }
   };
 
   const getCorrections = (): Record<string, unknown> | undefined => {
@@ -241,9 +273,12 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             </button>
           )}
         </div>
-      ) : review.source === "dlq" ? (
+      ) : (detail.errorMessage || review.source !== "pipeline") ? (
         <div className="review-dlq-alert" role="alert">
-          This NOFO failed processing and was moved to the Dead Letter Queue.
+          {review.source === "dlq" && "This NOFO failed processing and was moved to the Dead Letter Queue."}
+          {review.source === "duplicate" && "This NOFO was flagged as a duplicate of an existing document."}
+          {review.source === "quality" && "This NOFO failed the source document quality check."}
+          {review.source === "pipeline" && detail.errorMessage && "This NOFO encountered an error during processing."}
           {detail.errorMessage && (
             <div style={{ marginTop: "8px", fontFamily: "monospace", fontSize: "12px", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
               {detail.errorMessage}
