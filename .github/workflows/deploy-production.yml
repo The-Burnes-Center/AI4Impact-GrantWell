@@ -65,4 +65,5 @@ jobs:
 
       - name: Deploy CDK stacks to production
         run: |
-          cdk deploy ${{ env.STACK_NAME }} --require-approval never
+          cdk deploy ${{ env.STACK_NAME }} --exclusively --require-approval never
+          cdk deploy "${STACK_NAME}/ChatbotAPI/TableStack" --require-approval never
