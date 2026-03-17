@@ -7,8 +7,7 @@ import * as logs from "aws-cdk-lib/aws-logs";
 
 export interface NofoProcessingStateMachineProps {
   extractTextFunction: lambda.Function;
-  detectSectionsFunction: lambda.Function;
-  analyzeSectionFunction: lambda.Function;
+  extractAndAnalyzeFunction: lambda.Function;
   synthesizeFunction: lambda.Function;
   validateFunction: lambda.Function;
   publishFunction: lambda.Function;
@@ -44,14 +43,13 @@ export class NofoProcessingStateMachine extends Construct {
       backoffRate: 2,
     });
 
-    // Quarantine (needs review) - defined early so duplicate/quality paths can reference it
+    // Quarantine (needs review)
     const quarantine = new tasks.LambdaInvoke(this, "Quarantine", {
       lambdaFunction: props.quarantineFunction,
       outputPath: "$.Payload",
       retryOnServiceExceptions: true,
     });
 
-    // Route duplicates to quarantine (skip LLM stages)
     const quarantineDuplicate = new sfn.Pass(this, "QuarantineDuplicate", {
       parameters: {
         "nofoName.$": "$.nofoName",
@@ -64,7 +62,6 @@ export class NofoProcessingStateMachine extends Construct {
     });
     quarantineDuplicate.next(quarantine);
 
-    // Route quality-failed documents to quarantine (skip LLM stages)
     const quarantineQualityFailed = new sfn.Pass(this, "QuarantineQualityFailed", {
       parameters: {
         "nofoName.$": "$.nofoName",
@@ -77,52 +74,21 @@ export class NofoProcessingStateMachine extends Construct {
     });
     quarantineQualityFailed.next(quarantine);
 
-    // Step 2: Detect document sections
-    const detectSections = new tasks.LambdaInvoke(this, "DetectSections", {
-      lambdaFunction: props.detectSectionsFunction,
+    // Step 2: Single-pass extraction and analysis
+    const extractAndAnalyze = new tasks.LambdaInvoke(this, "ExtractAndAnalyze", {
+      lambdaFunction: props.extractAndAnalyzeFunction,
       outputPath: "$.Payload",
       retryOnServiceExceptions: true,
     });
-    detectSections.addRetry({
-      errors: ["States.TaskFailed"],
-      interval: cdk.Duration.seconds(5),
-      maxAttempts: 2,
-      backoffRate: 2,
-    });
-
-    // Step 3: Analyze sections in parallel (Map state)
-    const analyzeSectionTask = new tasks.LambdaInvoke(
-      this,
-      "AnalyzeSingleSection",
-      {
-        lambdaFunction: props.analyzeSectionFunction,
-        outputPath: "$.Payload",
-        retryOnServiceExceptions: true,
-      }
-    );
-    analyzeSectionTask.addRetry({
+    extractAndAnalyze.addRetry({
       errors: ["ThrottlingException", "TooManyRequestsException"],
-      interval: cdk.Duration.seconds(15),
-      maxAttempts: 4,
+      interval: cdk.Duration.seconds(30),
+      maxAttempts: 6,
       backoffRate: 2,
+      jitterStrategy: sfn.JitterType.FULL,
     });
 
-    const analyzeSections = new sfn.Map(this, "AnalyzeSections", {
-      maxConcurrency: 5,
-      itemsPath: "$.sections",
-      resultPath: "$.sectionResults",
-      parameters: {
-        "title.$": "$$.Map.Item.Value.title",
-        "category.$": "$$.Map.Item.Value.category",
-        "text.$": "$$.Map.Item.Value.text",
-        "nofoName.$": "$.nofoName",
-        "s3Bucket.$": "$$.Map.Item.Value.s3Bucket",
-        "validationFeedback.$": "$.validationFeedback",
-      },
-    });
-    analyzeSections.itemProcessor(analyzeSectionTask);
-
-    // Step 4: Synthesize (merge, generate questions, extract deadline)
+    // Step 3: Synthesize (generate questions, extract deadline)
     const synthesize = new tasks.LambdaInvoke(this, "Synthesize", {
       lambdaFunction: props.synthesizeFunction,
       outputPath: "$.Payload",
@@ -130,12 +96,13 @@ export class NofoProcessingStateMachine extends Construct {
     });
     synthesize.addRetry({
       errors: ["ThrottlingException", "TooManyRequestsException"],
-      interval: cdk.Duration.seconds(10),
-      maxAttempts: 3,
+      interval: cdk.Duration.seconds(20),
+      maxAttempts: 5,
       backoffRate: 2,
+      jitterStrategy: sfn.JitterType.FULL,
     });
 
-    // Step 5: Validate
+    // Step 4: Validate
     const validate = new tasks.LambdaInvoke(this, "Validate", {
       lambdaFunction: props.validateFunction,
       outputPath: "$.Payload",
@@ -143,19 +110,20 @@ export class NofoProcessingStateMachine extends Construct {
     });
     validate.addRetry({
       errors: ["ThrottlingException", "TooManyRequestsException"],
-      interval: cdk.Duration.seconds(10),
-      maxAttempts: 3,
+      interval: cdk.Duration.seconds(20),
+      maxAttempts: 5,
       backoffRate: 2,
+      jitterStrategy: sfn.JitterType.FULL,
     });
 
-    // Step 6a: Publish (auto-approved)
+    // Step 5: Publish (auto-approved)
     const publish = new tasks.LambdaInvoke(this, "Publish", {
       lambdaFunction: props.publishFunction,
       outputPath: "$.Payload",
       retryOnServiceExceptions: true,
     });
 
-    // Increment retry counter for the feedback loop
+    // Retry loop: increment counter and re-run extraction with validation feedback
     const incrementRetry = new sfn.Pass(this, "IncrementRetry", {
       parameters: {
         "s3Bucket.$": "$.s3Bucket",
@@ -163,22 +131,17 @@ export class NofoProcessingStateMachine extends Construct {
         "nofoName.$": "$.nofoName",
         "rawTextKey.$": "$.rawTextKey",
         "documentLength.$": "$.documentLength",
-        "sections.$": "$.sections",
-        "retryCount.$":
-          "States.MathAdd($.retryCount, 1)",
-        "validationFeedback.$":
-          "States.JsonToString($.validationResult.issues)",
+        "retryCount.$": "States.MathAdd($.retryCount, 1)",
+        "validationFeedback.$": "States.JsonToString($.validationResult.issues)",
       },
     });
 
-    // Decision: route based on validation result
+    // Route based on validation verdict
     const evaluateValidation = new sfn.Choice(this, "EvaluateValidation")
       .when(
-        sfn.Condition.and(
-          sfn.Condition.stringEquals(
-            "$.validationResult.overallVerdict",
-            "PASS"
-          )
+        sfn.Condition.stringEquals(
+          "$.validationResult.overallVerdict",
+          "PASS"
         ),
         publish
       )
@@ -190,7 +153,7 @@ export class NofoProcessingStateMachine extends Construct {
           ),
           sfn.Condition.numberLessThan("$.retryCount", 2)
         ),
-        incrementRetry.next(analyzeSections)
+        incrementRetry.next(extractAndAnalyze)
       )
       .otherwise(quarantine);
 
@@ -208,27 +171,24 @@ export class NofoProcessingStateMachine extends Construct {
     });
     handleError.next(quarantine);
 
-    // Choice after ExtractText: route duplicates or quality-failed to quarantine
+    // After text extraction: route duplicates/quality-failed to quarantine, otherwise extract
     const afterExtractText = new sfn.Choice(this, "AfterExtractText")
       .when(sfn.Condition.isPresent("$.duplicateOf"), quarantineDuplicate)
       .when(sfn.Condition.isPresent("$.sourceQualityFailed"), quarantineQualityFailed)
-      .otherwise(detectSections);
+      .otherwise(extractAndAnalyze);
 
     extractText.next(afterExtractText);
 
-    // Build detectSections -> analyzeSections -> synthesize -> validate -> evaluateValidation
-    detectSections.next(analyzeSections).next(synthesize).next(validate).next(evaluateValidation);
+    // Main chain: extract -> synthesize -> validate -> evaluate
+    extractAndAnalyze.next(synthesize).next(validate).next(evaluateValidation);
 
-    // Start with extractText (flows to Choice, then detectSections or quarantine)
     const definition = extractText;
 
-    // Add catch to each critical step
     extractText.addCatch(handleError, { resultPath: "$.error" });
-    detectSections.addCatch(handleError, { resultPath: "$.error" });
+    extractAndAnalyze.addCatch(handleError, { resultPath: "$.error" });
     synthesize.addCatch(handleError, { resultPath: "$.error" });
     validate.addCatch(handleError, { resultPath: "$.error" });
 
-    // Log group for Express workflow
     const logGroup = new logs.LogGroup(this, "NofoProcessingLogs", {
       retention: logs.RetentionDays.ONE_MONTH,
       removalPolicy: cdk.RemovalPolicy.DESTROY,

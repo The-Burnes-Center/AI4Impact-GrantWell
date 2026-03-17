@@ -540,28 +540,19 @@ export class LambdaFunctionStack extends cdk.Stack {
     extractTextFunction.addToRolePolicy(textractPolicy);
     extractTextFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
-    const detectSectionsFunction = new lambda.Function(scope, "DetectSectionsFunction", {
+    const extractAndAnalyzeFunction = new lambda.Function(scope, "ExtractAndAnalyzeFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "detect-sections/index.handler",
+      handler: "extract-and-analyze/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
-      timeout: cdk.Duration.minutes(2),
-      memorySize: 256,
-    });
-    detectSectionsFunction.addToRolePolicy(s3ReadWritePolicy);
-    detectSectionsFunction.addToRolePolicy(bedrockInvokePolicy);
-    detectSectionsFunction.addToRolePolicy(metadataTableReadWritePolicy);
-
-    const analyzeSectionFunction = new lambda.Function(scope, "AnalyzeSectionFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "analyze-section/index.handler",
-      timeout: cdk.Duration.minutes(3),
+      timeout: cdk.Duration.minutes(5),
       memorySize: 512,
     });
-    analyzeSectionFunction.addToRolePolicy(bedrockInvokePolicy);
+    extractAndAnalyzeFunction.addToRolePolicy(s3ReadWritePolicy);
+    extractAndAnalyzeFunction.addToRolePolicy(bedrockInvokePolicy);
+    extractAndAnalyzeFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const synthesizeFunction = new lambda.Function(scope, "SynthesizeFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
@@ -635,8 +626,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       "NofoProcessingPipeline",
       {
         extractTextFunction,
-        detectSectionsFunction,
-        analyzeSectionFunction,
+        extractAndAnalyzeFunction,
         synthesizeFunction,
         validateFunction,
         publishFunction,
