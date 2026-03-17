@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LuWrench, LuChevronUp } from "react-icons/lu";
+import { LuWrench, LuChevronUp, LuTriangleAlert } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import type {
   ReviewItem,
@@ -8,7 +8,9 @@ import type {
 } from "../../../common/types/processing-review";
 import ValidationIssueCard from "./ValidationIssueCard";
 import SummaryEditor from "./SummaryEditor";
+import SummaryDiff from "./SummaryDiff";
 import ReviewActions from "./ReviewActions";
+import { Modal } from "../../../components/common/Modal";
 
 interface ReviewExpandedRowProps {
   review: ReviewItem;
@@ -35,7 +37,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [detail, setDetail] = useState<ReviewDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [adminNotes, setAdminNotes] = useState("");
+  const [notesError, setNotesError] = useState(false);
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [editedSummary, setEditedSummary] = useState<Record<string, unknown> | null>(null);
+  const [showDiff, setShowDiff] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
 
   useEffect(() => {
@@ -133,11 +138,18 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     }
   };
 
-  const handleReject = async () => {
+  const handleRejectClick = () => {
     if (!adminNotes.trim()) {
+      setNotesError(true);
       addNotification("error", "Please provide a reason for rejection");
       return;
     }
+    setNotesError(false);
+    setRejectModalOpen(true);
+  };
+
+  const confirmReject = async () => {
+    setRejectModalOpen(false);
     setActionInProgress("reject");
     try {
       await apiClient.landingPage.rejectReview(review.nofo_name, adminNotes);
@@ -241,10 +253,30 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       ) : null}
 
       {editedSummary && (
-        <SummaryEditor
-          editedSummary={editedSummary}
-          onSummaryChange={setEditedSummary}
-        />
+        <>
+          {getCorrections() !== undefined && (
+            <button
+              type="button"
+              className="review-btn review-btn--apply-all"
+              onClick={() => setShowDiff(!showDiff)}
+              aria-pressed={showDiff}
+              aria-label={showDiff ? "Show editor" : "Review changes"}
+            >
+              {showDiff ? "Show Editor" : "Review Changes"}
+            </button>
+          )}
+          {showDiff && getCorrections() !== undefined ? (
+            <SummaryDiff
+              original={detail.extractedSummary as Record<string, unknown>}
+              edited={editedSummary}
+            />
+          ) : (
+            <SummaryEditor
+              editedSummary={editedSummary}
+              onSummaryChange={setEditedSummary}
+            />
+          )}
+        </>
       )}
 
       {detail.documentTextPreview && (
@@ -262,23 +294,91 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           className="summary-field__label"
         >
           Admin Notes
+          <span className="review-field-required">(Required for rejection)</span>
         </label>
         <textarea
           id={`admin-notes-${review.review_id}`}
-          className="review-admin-notes"
+          className={`review-admin-notes ${notesError ? "review-admin-notes--error" : ""}`}
           value={adminNotes}
-          onChange={(e) => setAdminNotes(e.target.value)}
+          onChange={(e) => {
+            setAdminNotes(e.target.value);
+            if (notesError) setNotesError(false);
+          }}
           placeholder="Add notes about this review..."
           rows={2}
+          aria-required="true"
+          aria-describedby={notesError ? `admin-notes-error-${review.review_id}` : undefined}
+          aria-invalid={notesError}
         />
+        {notesError && (
+          <p
+            id={`admin-notes-error-${review.review_id}`}
+            className="review-field-error"
+            role="alert"
+          >
+            Please provide a reason for rejection.
+          </p>
+        )}
       </div>
+
+      <Modal
+        isOpen={rejectModalOpen}
+        onClose={() => setRejectModalOpen(false)}
+        title="Confirm Reject"
+      >
+        <div className="modal-form">
+          <div className="delete-confirmation">
+            <LuTriangleAlert size={32} className="warning-icon dashboard-info-icon" />
+            <p>
+              Are you sure you want to reject <strong>{review.nofo_name}</strong>?
+            </p>
+          </div>
+          <p className="warning-text">
+            This will permanently delete the NOFO file and all processed data. This action cannot be
+            undone.
+          </p>
+          {adminNotes && (
+            <div className="form-group" style={{ marginTop: "16px" }}>
+              <label className="summary-field__label">Rejection reason:</label>
+              <div
+                style={{
+                  padding: "12px",
+                  backgroundColor: "var(--mds-color-background)",
+                  borderRadius: "6px",
+                  fontSize: "13px",
+                  color: "var(--mds-color-text)",
+                }}
+              >
+                {adminNotes}
+              </div>
+            </div>
+          )}
+          <div className="modal-actions">
+            <button
+              className="modal-button secondary"
+              onClick={() => setRejectModalOpen(false)}
+              aria-label="Cancel reject"
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-button danger"
+              onClick={confirmReject}
+              aria-label="Reject and delete this NOFO"
+            >
+              Reject and Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       <ReviewActions
         actionInProgress={actionInProgress}
         hasCorrections={getCorrections() !== undefined}
         onApprove={handleApprove}
-        onReject={handleReject}
+        onReject={handleRejectClick}
         onReprocess={handleReprocess}
+        rejectDisabled={!adminNotes.trim()}
       />
     </div>
   );

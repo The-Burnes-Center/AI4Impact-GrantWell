@@ -935,6 +935,46 @@ body {
   color: #333;
 }
 
+.processing-status-pill {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mds-color-primary);
+  background-color: var(--mds-color-primary-light);
+  border: 1px solid var(--mds-color-primary);
+  border-radius: 4px;
+  animation: processing-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes processing-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Summary diff view */
+.diff-removed {
+  color: var(--mds-color-danger);
+  text-decoration: line-through;
+}
+.diff-added {
+  color: var(--mds-color-success);
+  font-weight: 600;
+}
+.diff-unchanged {
+  color: var(--mds-color-text-secondary);
+}
+.diff-field {
+  margin-bottom: 12px;
+  padding: 8px;
+  border-left: 3px solid var(--mds-color-border);
+}
+.diff-field--changed {
+  border-left-color: var(--mds-color-warning);
+}
+
 /* Expiry date styling */
 .expiry-date {
   font-size: 14px;
@@ -2199,6 +2239,23 @@ select.form-input {
 .review-admin-notes:focus-visible {
   outline: 2px solid var(--mds-color-focus-light);
   outline-offset: 2px;
+}
+
+.review-admin-notes--error {
+  border-color: var(--mds-color-danger);
+}
+
+.review-field-required {
+  font-size: 12px;
+  color: var(--mds-color-text-secondary);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.review-field-error {
+  font-size: 12px;
+  color: var(--mds-color-danger);
+  margin-top: 4px;
 }
 
 .review-text-input {

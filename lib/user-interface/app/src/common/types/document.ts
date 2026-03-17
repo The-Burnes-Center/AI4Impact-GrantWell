@@ -57,6 +57,7 @@ export interface RawDraftRecord {
 export interface RawNOFOData {
   name: string;
   status: string;
+  processing_status?: string | null;
   isPinned?: boolean;
   expiration_date?: string | null;
   grant_type?: string | null;

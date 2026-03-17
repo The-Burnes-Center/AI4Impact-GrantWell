@@ -10,6 +10,15 @@ import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
 
+const PROCESSING_LABELS: Record<string, string> = {
+  uploading: "Uploading...",
+  extracting_text: "Extracting text...",
+  detecting_sections: "Detecting sections...",
+  synthesizing: "Synthesizing...",
+  validating: "Validating...",
+  quarantined: "Quarantined",
+};
+
 interface NOFOsTabProps {
   nofos: NOFO[];
   searchQuery: string;
@@ -238,6 +247,11 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 <span className="nofo-name">{nofo.name}</span>
                 {nofo.isPinned && (
                   <span className="pinned-badge"><LuPin size={14} /><span>Pinned</span></span>
+                )}
+                {nofo.processingStatus && (
+                  <span className="processing-status-pill" aria-live="polite">
+                    {PROCESSING_LABELS[nofo.processingStatus] ?? nofo.processingStatus}
+                  </span>
                 )}
               </div>
               <div className="row-cell">

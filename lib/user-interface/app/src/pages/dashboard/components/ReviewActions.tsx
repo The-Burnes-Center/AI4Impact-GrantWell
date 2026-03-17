@@ -7,6 +7,7 @@ interface ReviewActionsProps {
   onApprove: () => void;
   onReject: () => void;
   onReprocess: () => void;
+  rejectDisabled?: boolean;
 }
 
 const ReviewActions: React.FC<ReviewActionsProps> = ({
@@ -15,6 +16,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   onApprove,
   onReject,
   onReprocess,
+  rejectDisabled = false,
 }) => {
   return (
     <div className="review-expanded-row__actions">
@@ -35,8 +37,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       <button
         className="review-btn review-btn--reject"
         onClick={onReject}
-        disabled={actionInProgress !== null}
-        aria-label="Reject this NOFO"
+        disabled={actionInProgress !== null || rejectDisabled}
+        aria-label={rejectDisabled ? "Reject this NOFO (admin notes required)" : "Reject this NOFO"}
       >
         <LuX size={14} aria-hidden="true" />
         {actionInProgress === "reject" ? "Rejecting..." : "Reject"}

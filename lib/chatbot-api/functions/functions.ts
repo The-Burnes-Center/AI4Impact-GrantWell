@@ -489,7 +489,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const metadataTableReadWritePolicy = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:Query"],
+      actions: ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:Query", "dynamodb:Scan"],
       resources: [
         props.nofoMetadataTable.tableArn,
         props.nofoMetadataTable.tableArn + "/index/*",
@@ -514,21 +514,29 @@ export class LambdaFunctionStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/extract-text")),
       handler: "index.handler",
+      environment: {
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+      },
       timeout: cdk.Duration.minutes(5),
       memorySize: 512,
     });
     extractTextFunction.addToRolePolicy(s3ReadWritePolicy);
     extractTextFunction.addToRolePolicy(textractPolicy);
+    extractTextFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const detectSectionsFunction = new lambda.Function(scope, "DetectSectionsFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/detect-sections")),
       handler: "index.handler",
+      environment: {
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+      },
       timeout: cdk.Duration.minutes(2),
       memorySize: 256,
     });
     detectSectionsFunction.addToRolePolicy(s3ReadWritePolicy);
     detectSectionsFunction.addToRolePolicy(bedrockInvokePolicy);
+    detectSectionsFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const analyzeSectionFunction = new lambda.Function(scope, "AnalyzeSectionFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
@@ -557,11 +565,15 @@ export class LambdaFunctionStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/validate")),
       handler: "index.handler",
+      environment: {
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+      },
       timeout: cdk.Duration.minutes(3),
       memorySize: 512,
     });
     validateFunction.addToRolePolicy(s3ReadWritePolicy);
     validateFunction.addToRolePolicy(bedrockInvokePolicy);
+    validateFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const publishFunction = new lambda.Function(scope, "PublishFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
@@ -591,12 +603,14 @@ export class LambdaFunctionStack extends cdk.Stack {
       handler: "index.handler",
       environment: {
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
       timeout: cdk.Duration.minutes(1),
       memorySize: 256,
     });
     quarantineFunction.addToRolePolicy(s3ReadWritePolicy);
     quarantineFunction.addToRolePolicy(reviewTableReadWritePolicy);
+    quarantineFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     // --- Step Functions State Machine ---
 
@@ -624,11 +638,13 @@ export class LambdaFunctionStack extends cdk.Stack {
       handler: "index.handler",
       environment: {
         STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
     });
 
+    dispatcherFunction.addToRolePolicy(metadataTableReadWritePolicy);
     nofoProcessing.stateMachine.grantStartExecution(dispatcherFunction);
     nofoProcessing.stateMachine.grantStartSyncExecution(dispatcherFunction);
 
@@ -702,6 +718,23 @@ export class LambdaFunctionStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         actions: ["lambda:InvokeFunction"],
         resources: [publishFunction.functionArn],
+      })
+    );
+    nofoAdminFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket", "s3:DeleteObject"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+    nofoAdminFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:DeleteItem"],
+        resources: [props.nofoMetadataTable.tableArn],
       })
     );
 

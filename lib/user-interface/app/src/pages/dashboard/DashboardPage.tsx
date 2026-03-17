@@ -74,6 +74,7 @@ const Dashboard: React.FC = () => {
           grantType: nofo.grant_type || null,
           agency: nofo.agency || null,
           category: nofo.category || null,
+          processingStatus: nofo.processing_status ?? null,
         })));
       } else {
         setNofos((nofoResult.folders || []).map((nofo: string, index: number): NOFO => ({
@@ -109,6 +110,15 @@ const Dashboard: React.FC = () => {
       setLoading(false)
     );
   }, [isAdmin, fetchNofos, fetchPendingReviewCount]);
+
+  // Poll for processing status when any NOFO is in progress
+  const hasProcessingNofos = nofos.some((n) => n.processingStatus);
+
+  useEffect(() => {
+    if (!isAdmin || !hasProcessingNofos) return;
+    const interval = setInterval(() => fetchNofos(), 10000);
+    return () => clearInterval(interval);
+  }, [isAdmin, hasProcessingNofos, fetchNofos]);
 
   useEffect(() => {
     if (!roleLoading && !isAdmin) {
@@ -217,7 +227,11 @@ const Dashboard: React.FC = () => {
       nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     if (statusFilter !== "all") {
-      filtered = filtered.filter((nofo) => (nofo.status || "active") === statusFilter);
+      filtered = filtered.filter((nofo) => {
+        const s = nofo.status || "active";
+        if (statusFilter === "active") return s === "active" || s === "processing";
+        return s === statusFilter;
+      });
     }
     if (grantTypeFilter !== "all") {
       filtered = filtered.filter((nofo) => nofo.grantType === grantTypeFilter);

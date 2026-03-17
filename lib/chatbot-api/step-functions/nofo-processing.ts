@@ -38,6 +38,39 @@ export class NofoProcessingStateMachine extends Construct {
       backoffRate: 2,
     });
 
+    // Quarantine (needs review) - defined early so duplicate/quality paths can reference it
+    const quarantine = new tasks.LambdaInvoke(this, "Quarantine", {
+      lambdaFunction: props.quarantineFunction,
+      outputPath: "$.Payload",
+      retryOnServiceExceptions: true,
+    });
+
+    // Route duplicates to quarantine (skip LLM stages)
+    const quarantineDuplicate = new sfn.Pass(this, "QuarantineDuplicate", {
+      parameters: {
+        "nofoName.$": "$.nofoName",
+        "s3Bucket.$": "$.s3Bucket",
+        "rawTextKey.$": "$.rawTextKey",
+        "documentKey.$": "$.documentKey",
+        "source": "duplicate",
+        "errorMessage.$": "States.Format('Duplicate of {}', $.duplicateOf)",
+      },
+    });
+    quarantineDuplicate.next(quarantine);
+
+    // Route quality-failed documents to quarantine (skip LLM stages)
+    const quarantineQualityFailed = new sfn.Pass(this, "QuarantineQualityFailed", {
+      parameters: {
+        "nofoName.$": "$.nofoName",
+        "s3Bucket.$": "$.s3Bucket",
+        "rawTextKey.$": "$.rawTextKey",
+        "documentKey.$": "$.documentKey",
+        "source": "quality",
+        "errorMessage.$": "States.JsonToString($.qualityIssues)",
+      },
+    });
+    quarantineQualityFailed.next(quarantine);
+
     // Step 2: Detect document sections
     const detectSections = new tasks.LambdaInvoke(this, "DetectSections", {
       lambdaFunction: props.detectSectionsFunction,
@@ -116,13 +149,6 @@ export class NofoProcessingStateMachine extends Construct {
       retryOnServiceExceptions: true,
     });
 
-    // Step 6b: Quarantine (needs review)
-    const quarantine = new tasks.LambdaInvoke(this, "Quarantine", {
-      lambdaFunction: props.quarantineFunction,
-      outputPath: "$.Payload",
-      retryOnServiceExceptions: true,
-    });
-
     // Increment retry counter for the feedback loop
     const incrementRetry = new sfn.Pass(this, "IncrementRetry", {
       parameters: {
@@ -177,9 +203,16 @@ export class NofoProcessingStateMachine extends Construct {
     });
     handleError.next(quarantine);
 
-    // Chain the pipeline
-    const definition = extractText
-      .next(detectSections)
+    // Choice after ExtractText: route duplicates or quality-failed to quarantine
+    const afterExtractText = new sfn.Choice(this, "AfterExtractText")
+      .when(sfn.Condition.isPresent("$.duplicateOf"), quarantineDuplicate)
+      .when(sfn.Condition.booleanEquals("$.sourceQualityFailed", true), quarantineQualityFailed)
+      .otherwise(detectSections);
+
+    extractText.next(afterExtractText);
+
+    // Chain the pipeline (detectSections -> analyzeSections -> ...)
+    const definition = detectSections
       .next(analyzeSections)
       .next(synthesize)
       .next(validate)
