@@ -528,8 +528,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const extractTextFunction = new lambda.Function(scope, "ExtractTextFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/extract-text")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "extract-text/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
@@ -542,8 +542,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const detectSectionsFunction = new lambda.Function(scope, "DetectSectionsFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/detect-sections")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "detect-sections/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
@@ -556,8 +556,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const analyzeSectionFunction = new lambda.Function(scope, "AnalyzeSectionFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/analyze-section")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "analyze-section/index.handler",
       timeout: cdk.Duration.minutes(3),
       memorySize: 512,
     });
@@ -565,8 +565,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const synthesizeFunction = new lambda.Function(scope, "SynthesizeFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/synthesize")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "synthesize/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
@@ -579,8 +579,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const validateFunction = new lambda.Function(scope, "ValidateFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/validate")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "validate/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
@@ -593,8 +593,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const publishFunction = new lambda.Function(scope, "PublishFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/publish")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "publish/index.handler",
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -615,8 +615,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const quarantineFunction = new lambda.Function(scope, "QuarantineFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/quarantine")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "quarantine/index.handler",
       environment: {
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -650,8 +650,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const dispatcherFunction = new lambda.Function(scope, "PipelineDispatcherFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/dispatcher")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "dispatcher/index.handler",
       environment: {
         STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -688,8 +688,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const dlqProcessorFunction = new lambda.Function(scope, "DLQProcessorFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/dlq-processor")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "dlq-processor/index.handler",
       environment: {
         DLQ_URL: nofoProcessingDLQ.queueUrl,
         SCRAPER_DLQ_URL: scraperDownloadDLQ.queueUrl,
@@ -717,8 +717,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const nofoAdminFunction = new lambda.Function(scope, "NofoAdminFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/admin")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "admin/index.handler",
       environment: {
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -761,8 +761,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const nofoReprocessFunction = new lambda.Function(scope, "NofoReprocessFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline/reprocess")),
-      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "reprocess/index.handler",
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
         QUEUE_URL: nofoProcessingQueue.queueUrl,
