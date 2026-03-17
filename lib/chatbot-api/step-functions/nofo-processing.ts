@@ -212,7 +212,7 @@ export class NofoProcessingStateMachine extends Construct {
     // Choice after ExtractText: route duplicates or quality-failed to quarantine
     const afterExtractText = new sfn.Choice(this, "AfterExtractText")
       .when(sfn.Condition.isPresent("$.duplicateOf"), quarantineDuplicate)
-      .when(sfn.Condition.booleanEquals("$.sourceQualityFailed", true), quarantineQualityFailed)
+      .when(sfn.Condition.isPresent("$.sourceQualityFailed"), quarantineQualityFailed)
       .otherwise(detectSections);
 
     extractText.next(afterExtractText);
