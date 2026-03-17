@@ -229,7 +229,7 @@ const Dashboard: React.FC = () => {
     if (statusFilter !== "all") {
       filtered = filtered.filter((nofo) => {
         const s = nofo.status || "active";
-        if (statusFilter === "active") return s === "active" || s === "processing";
+        if (statusFilter === "active") return s === "active";
         return s === statusFilter;
       });
     }

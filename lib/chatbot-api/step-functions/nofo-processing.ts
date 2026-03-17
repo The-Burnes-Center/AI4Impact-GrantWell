@@ -211,12 +211,11 @@ export class NofoProcessingStateMachine extends Construct {
 
     extractText.next(afterExtractText);
 
-    // Chain the pipeline (detectSections -> analyzeSections -> ...)
-    const definition = detectSections
-      .next(analyzeSections)
-      .next(synthesize)
-      .next(validate)
-      .next(evaluateValidation);
+    // Build detectSections -> analyzeSections -> synthesize -> validate -> evaluateValidation
+    detectSections.next(analyzeSections).next(synthesize).next(validate).next(evaluateValidation);
+
+    // Start with extractText (flows to Choice, then detectSections or quarantine)
+    const definition = extractText;
 
     // Add catch to each critical step
     extractText.addCatch(handleError, { resultPath: "$.error" });

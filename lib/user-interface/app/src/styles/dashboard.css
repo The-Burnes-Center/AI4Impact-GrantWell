@@ -978,25 +978,12 @@ body {
 /* Expiry date styling */
 .expiry-date {
   font-size: 14px;
-  color: #333;
+  color: var(--mds-color-text);
   font-weight: 400;
 }
 
 .expiry-date.no-date {
-  color: #767676;
-  font-style: italic;
-  font-weight: 400;
-}
-
-/* Expiry date styling */
-.expiry-date {
-  font-size: 14px;
-  color: #333;
-  font-weight: 400;
-}
-
-.expiry-date.no-date {
-  color: #767676;
+  color: var(--mds-color-text-secondary);
   font-style: italic;
   font-weight: 400;
 }

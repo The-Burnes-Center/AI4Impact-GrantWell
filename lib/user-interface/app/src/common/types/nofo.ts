@@ -10,7 +10,7 @@ export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic" | "unk
 export interface NOFO {
   id: number;
   name: string;
-  status: "active" | "archived" | "processing";
+  status: "active" | "archived";
   isPinned?: boolean;
   expirationDate?: string | null;
   grantType?: GrantTypeId | null;
