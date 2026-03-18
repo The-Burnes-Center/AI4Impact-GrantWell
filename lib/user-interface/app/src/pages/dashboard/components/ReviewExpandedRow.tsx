@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { LuWrench, LuChevronUp, LuTriangleAlert } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import type {
@@ -42,6 +42,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [editedSummary, setEditedSummary] = useState<Record<string, unknown> | null>(null);
   const [showDiff, setShowDiff] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
+  const [appliedFixes, setAppliedFixes] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadDetail();
@@ -63,31 +64,150 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     }
   };
 
+  const getIssueKey = useCallback(
+    (issue: ValidationIssue) => `${issue.severity}|${issue.field}|${issue.category}|${issue.description}`,
+    []
+  );
+
+  const extractQuotedText = (text: string): string | null => {
+    const doubleQuote = text.match(/"([^"]+)"/);
+    if (doubleQuote) return doubleQuote[1];
+    const singleQuote = text.match(/'([^']+)'/);
+    if (singleQuote) return singleQuote[1];
+    return null;
+  };
+
+  const extractListedItems = (text: string): string[] => {
+    const listPrefixes = /(?:such as|including|like|e\.g\.?|namely)\s+/i;
+    const match = text.match(listPrefixes);
+    if (!match || match.index === undefined) return [];
+    const listPart = text.slice(match.index + match[0].length);
+    return listPart
+      .split(/,\s*(?:and\s+)?|,?\s+and\s+/)
+      .map((s) => s.replace(/\.+$/, "").trim())
+      .filter(Boolean);
+  };
+
+  const deriveItemName = (suggestedFix: string, description: string): string => {
+    const colonMatch = suggestedFix.match(/^[^:]+:\s+([A-Z][^.]+)/);
+    if (colonMatch) {
+      const name = colonMatch[1].replace(/\s*\(.*\)\s*$/, "").trim();
+      if (name.length > 5 && name.length < 80) return name;
+    }
+
+    const addMatch = suggestedFix.match(
+      /^(?:add|include|insert)\s+(?:deadline\s+for\s+|the\s+|missing\s+)?(.+?)(?:\s+(?:given|since|because|due to|as stated|which|from|per)\b.*)?$/i
+    );
+    if (addMatch) {
+      const name = addMatch[1].replace(/\s*\(.*\)\s*$/, "").trim();
+      if (name.length > 2) return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    const missingMatch = description.match(
+      /^Missing\s+(?:the\s+|a\s+)?(.+?)(?:\s+(?:which|that|mentioned|stated|guidance|requirement|from)\b.*)?$/i
+    );
+    if (missingMatch) {
+      const name = missingMatch[1].replace(/\s*\(.*\)\s*$/, "").trim();
+      if (name.length > 2) return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    const words = description.split(/\s+/).slice(0, 6).join(" ");
+    return words.length < description.length ? `${words}...` : description;
+  };
+
+  const ARRAY_FIELDS = [
+    "EligibilityCriteria",
+    "RequiredDocuments",
+    "ProjectNarrativeSections",
+    "KeyDeadlines",
+  ];
+
   const applySingleFix = (
     summary: Record<string, unknown>,
     issue: ValidationIssue
   ): { updated: Record<string, unknown>; applied: boolean } => {
     if (!issue.suggestedFix) return { updated: summary, applied: false };
 
+    const fixLower = issue.suggestedFix.toLowerCase();
     const fieldMatch = issue.field.match(/^(\w+)\[(\d+)\]$/);
+
     if (fieldMatch) {
       const [, arrayName, indexStr] = fieldMatch;
       const index = parseInt(indexStr, 10);
       const arr = summary[arrayName] as SummaryField[] | undefined;
-      if (arr && Array.isArray(arr) && arr[index]) {
-        if (
-          issue.category === "hallucination" ||
-          issue.suggestedFix.toLowerCase().includes("remove")
-        ) {
-          const updated = [...arr];
-          updated[index] = { ...updated[index], removed: true };
-          return { updated: { ...summary, [arrayName]: updated }, applied: true };
-        }
+      if (!arr || !Array.isArray(arr) || !arr[index]) {
+        return { updated: summary, applied: false };
       }
-    } else if (issue.field === "GrantName" && issue.suggestedFix) {
-      const nameMatch = issue.suggestedFix.match(/"([^"]+)"/);
-      if (nameMatch) {
-        return { updated: { ...summary, GrantName: nameMatch[1] }, applied: true };
+
+      if (issue.category === "hallucination" || fixLower.includes("remove")) {
+        const updated = [...arr];
+        updated[index] = { ...updated[index], removed: true };
+        return { updated: { ...summary, [arrayName]: updated }, applied: true };
+      }
+
+      if (issue.category === "inaccuracy" || issue.category === "incomplete") {
+        const quoted = extractQuotedText(issue.suggestedFix);
+        const updated = [...arr];
+        updated[index] = {
+          ...updated[index],
+          description: quoted || issue.suggestedFix,
+        };
+        return { updated: { ...summary, [arrayName]: updated }, applied: true };
+      }
+    }
+
+    if (issue.field === "GrantName") {
+      const quoted = extractQuotedText(issue.suggestedFix);
+      if (quoted) {
+        return { updated: { ...summary, GrantName: quoted }, applied: true };
+      }
+    }
+
+    if (!fieldMatch) {
+      const targetField = ARRAY_FIELDS.find(
+        (f) => issue.field === f || issue.field.startsWith(f)
+      );
+
+      if (targetField) {
+        const arr = (summary[targetField] as SummaryField[]) || [];
+        const quoted = extractQuotedText(issue.suggestedFix);
+
+        if (quoted) {
+          const newItem: SummaryField = { item: quoted, description: issue.description };
+          return {
+            updated: { ...summary, [targetField]: [...arr, newItem] },
+            applied: true,
+          };
+        }
+
+        const listedItems = extractListedItems(issue.description);
+        if (listedItems.length > 0) {
+          const newItems = listedItems.map((name) => ({
+            item: name,
+            description: `Added from validation: ${issue.description}`,
+          }));
+          return {
+            updated: { ...summary, [targetField]: [...arr, ...newItems] },
+            applied: true,
+          };
+        }
+
+        const itemName = deriveItemName(issue.suggestedFix, issue.description);
+        const newItem: SummaryField = {
+          item: itemName,
+          description: issue.description,
+        };
+        return {
+          updated: { ...summary, [targetField]: [...arr, newItem] },
+          applied: true,
+        };
+      }
+
+      if (typeof summary[issue.field] === "string") {
+        const quoted = extractQuotedText(issue.suggestedFix);
+        if (quoted) {
+          return { updated: { ...summary, [issue.field]: quoted }, applied: true };
+        }
       }
     }
 
@@ -96,18 +216,27 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
   const handleApplyFix = (issue: ValidationIssue) => {
     if (!editedSummary) return;
+    const key = getIssueKey(issue);
+    if (appliedFixes.has(key)) return;
+
     const { updated, applied } = applySingleFix(editedSummary, issue);
     if (applied) {
       setEditedSummary(updated);
+      setAppliedFixes((prev) => new Set(prev).add(key));
       addNotification("info", `Applied suggested fix for ${issue.field}`);
     } else {
-      addNotification("warning", `No automatic fix available for ${issue.field}`);
+      addNotification(
+        "warning",
+        `Could not auto-apply fix for ${issue.field}. Please edit the summary manually below.`
+      );
     }
   };
 
   const handleApplyAllFixes = () => {
     if (!editedSummary || !detail?.validationResult?.issues) return;
-    const fixableIssues = detail.validationResult.issues.filter((i) => i.suggestedFix);
+    const fixableIssues = detail.validationResult.issues.filter(
+      (i) => i.suggestedFix && !appliedFixes.has(getIssueKey(i))
+    );
     if (fixableIssues.length === 0) {
       addNotification("info", "No automatic fixes available");
       return;
@@ -115,16 +244,19 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
     let current = editedSummary;
     let appliedCount = 0;
+    const newApplied = new Set(appliedFixes);
     for (const issue of fixableIssues) {
       const { updated, applied } = applySingleFix(current, issue);
       if (applied) {
         current = updated;
+        newApplied.add(getIssueKey(issue));
         appliedCount++;
       }
     }
 
     if (appliedCount > 0) {
       setEditedSummary(current);
+      setAppliedFixes(newApplied);
       addNotification("info", `Applied ${appliedCount} of ${fixableIssues.length} suggested fixes`);
     } else {
       addNotification("info", "No fixes could be applied automatically");
@@ -238,9 +370,16 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       aria-label={`Review details for ${review.nofo_name}`}
     >
       <div className="review-expanded-row__header">
-        <h3 style={{ margin: 0, fontSize: "15px", color: "var(--mds-color-heading)" }}>
-          Validation Issues ({issues.length})
-        </h3>
+        <div>
+          <h3 style={{ margin: 0, fontSize: "15px", color: "var(--mds-color-heading)" }}>
+            Validation Issues ({issues.length})
+          </h3>
+          {appliedFixes.size > 0 && issues.length > 0 && (
+            <p className="review-fix-progress" role="status" aria-live="polite">
+              {appliedFixes.size} of {issues.length} issue{issues.length !== 1 ? "s" : ""} fixed
+            </p>
+          )}
+        </div>
         <button
           className="review-btn review-btn--collapse"
           onClick={onCollapse}
@@ -254,24 +393,29 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       {issues.length > 0 ? (
         <div style={{ marginBottom: "16px" }}>
           {criticalIssues.map((issue, i) => (
-            <ValidationIssueCard key={`crit-${i}`} issue={issue} onApplyFix={handleApplyFix} />
+            <ValidationIssueCard key={`crit-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue))} />
           ))}
           {warningIssues.map((issue, i) => (
-            <ValidationIssueCard key={`warn-${i}`} issue={issue} onApplyFix={handleApplyFix} />
+            <ValidationIssueCard key={`warn-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue))} />
           ))}
           {infoIssues.map((issue, i) => (
-            <ValidationIssueCard key={`info-${i}`} issue={issue} onApplyFix={handleApplyFix} />
+            <ValidationIssueCard key={`info-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue))} />
           ))}
-          {issues.length > 1 && (
-            <button
-              className="review-btn review-btn--apply-all"
-              onClick={handleApplyAllFixes}
-              aria-label="Apply all suggested fixes"
-            >
-              <LuWrench size={14} aria-hidden="true" />
-              Apply All Fixes
-            </button>
-          )}
+          {issues.length > 1 && (() => {
+            const fixableIssues = issues.filter((i) => i.suggestedFix);
+            const allFixesApplied = fixableIssues.length > 0 && fixableIssues.every((i) => appliedFixes.has(getIssueKey(i)));
+            return (
+              <button
+                className="review-btn review-btn--apply-all"
+                onClick={handleApplyAllFixes}
+                disabled={allFixesApplied || fixableIssues.length === 0}
+                aria-label={allFixesApplied ? "All fixes applied" : "Apply all suggested fixes"}
+              >
+                <LuWrench size={14} aria-hidden="true" />
+                {allFixesApplied ? "All Fixes Applied" : "Apply All Fixes"}
+              </button>
+            );
+          })()}
         </div>
       ) : (detail.errorMessage || review.source !== "pipeline") ? (
         <div className="review-dlq-alert" role="alert">

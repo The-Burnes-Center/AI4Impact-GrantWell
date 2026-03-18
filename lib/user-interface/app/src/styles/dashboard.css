@@ -2115,8 +2115,15 @@ select.form-input {
   min-width: 44px;
 }
 
-.review-btn--apply-all:hover {
+.review-btn--apply-all:hover:not(:disabled) {
   background-color: var(--mds-color-primary-light);
+}
+
+.review-btn--apply-all:disabled {
+  color: var(--mds-color-success);
+  background-color: color-mix(in srgb, var(--mds-color-success) 8%, var(--mds-color-white));
+  border-color: color-mix(in srgb, var(--mds-color-success) 30%, transparent);
+  cursor: default;
 }
 
 .review-btn--reprocess {
@@ -2195,6 +2202,13 @@ select.form-input {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+}
+
+.review-fix-progress {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mds-color-success);
 }
 
 .review-expanded-row__actions {
@@ -2413,6 +2427,34 @@ select.form-input {
   font-size: 12px;
   color: var(--mds-color-text-secondary);
   font-style: italic;
+}
+
+.validation-issue-card--fixed {
+  border: 1px solid color-mix(in srgb, var(--mds-color-success) 30%, transparent);
+  border-left: 4px solid var(--mds-color-success);
+  background-color: color-mix(in srgb, var(--mds-color-success) 5%, var(--mds-color-white));
+  opacity: 0.8;
+}
+
+.validation-issue-card--fixed .validation-issue-card__description {
+  text-decoration: line-through;
+  color: var(--mds-color-text-secondary);
+}
+
+.validation-issue-card__fixed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mds-color-success);
+  background-color: color-mix(in srgb, var(--mds-color-success) 10%, var(--mds-color-white));
+  border: 1px solid color-mix(in srgb, var(--mds-color-success) 30%, transparent);
+  border-radius: 4px;
+  white-space: nowrap;
+  min-height: 44px;
+  min-width: 44px;
 }
 
 /* Status badges */
