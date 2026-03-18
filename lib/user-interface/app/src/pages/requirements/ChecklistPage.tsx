@@ -15,7 +15,6 @@ const GRANT_TYPES: Record<string, { label: string; color: string }> = {
   state: { label: "State", color: "#2e8540" },
   quasi: { label: "Quasi", color: "#8168b3" },
   philanthropic: { label: "Philanthropic", color: "#e66f0e" },
-  unknown: { label: "Unknown", color: "#6b7280" },
 };
 
 interface LlmData {

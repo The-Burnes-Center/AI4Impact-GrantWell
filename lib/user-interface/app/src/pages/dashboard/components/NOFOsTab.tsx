@@ -330,10 +330,9 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 <option value="state">State</option>
                 <option value="quasi">Quasi</option>
                 <option value="philanthropic">Philanthropic</option>
-                <option value="unknown">Unknown</option>
               </select>
             </div>
-            <div className="field-note">Federal, State, Quasi-governmental, Philanthropic, or Unknown.</div>
+            <div className="field-note">Federal, State, Quasi-governmental, or Philanthropic.</div>
           </div>
           <div className="modal-actions">
             <button className="modal-button secondary" onClick={() => setEditModalOpen(false)}>Cancel</button>
@@ -382,7 +381,6 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     <option value="state">State</option>
                     <option value="quasi">Quasi</option>
                     <option value="philanthropic">Philanthropic</option>
-                    <option value="unknown">Unknown</option>
                   </select>
                 </div>
                 <div className="field-note">Optional. Can be auto-detected or set later after upload.</div>

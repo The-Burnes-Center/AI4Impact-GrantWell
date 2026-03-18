@@ -159,12 +159,6 @@
   white-space: nowrap;
 }
 
-.landing-grant-type-badge--unknown {
-  background-color: var(--mds-color-background);
-  color: var(--mds-color-text-secondary);
-  border-color: var(--mds-color-border);
-}
-
 .landing-grant-type-badge.unset {
   background-color: #f5f5f5;
   color: #888;

@@ -199,7 +199,7 @@ export class LandingPageClient {
     status?: "active" | "archived", 
     isPinned?: boolean, 
     expirationDate?: string | null,
-    grantType?: "federal" | "state" | "quasi" | "philanthropic" | "unknown",
+    grantType?: "federal" | "state" | "quasi" | "philanthropic",
     category?: string
   ) {
     try {

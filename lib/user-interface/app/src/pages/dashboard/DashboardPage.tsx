@@ -460,7 +460,7 @@ const Dashboard: React.FC = () => {
                           ))}
                           <div className="filter-menu-divider" />
                           <div className="filter-menu-header">Filter by Grant Type</div>
-                          {(["all", "federal", "state", "quasi", "philanthropic", "unknown"] as const).map((type) => (
+                          {(["all", "federal", "state", "quasi", "philanthropic"] as const).map((type) => (
                             <button key={type} onClick={() => setGrantTypeFilter(type)}
                               className={`filter-option ${grantTypeFilter === type ? "selected" : ""}`}
                               role="menuitemradio" aria-checked={grantTypeFilter === type}>

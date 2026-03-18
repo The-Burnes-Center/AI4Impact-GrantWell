@@ -5,7 +5,7 @@
  * the dashboard, landing page, and grants table.
  */
 
-export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic" | "unknown";
+export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic";
 
 export interface NOFO {
   id: number;
@@ -24,7 +24,6 @@ export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> 
   state: { label: "State", color: "#2e8540" },
   quasi: { label: "Quasi", color: "#8168b3" },
   philanthropic: { label: "Philanthropic", color: "#e66f0e" },
-  unknown: { label: "Unknown", color: "#6b7280" },
 };
 
 export const GRANT_CATEGORIES = [
