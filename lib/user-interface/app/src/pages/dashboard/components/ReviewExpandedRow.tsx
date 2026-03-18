@@ -43,6 +43,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [showDiff, setShowDiff] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   const [appliedFixes, setAppliedFixes] = useState<Set<string>>(new Set());
+  const [acknowledgedFixes, setAcknowledgedFixes] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadDetail();
@@ -194,7 +195,13 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       );
 
       if (targetField) {
+        const arr = (summary[targetField] as SummaryField[]) || [];
+
         if (issue.category !== "missing_field") {
+          if (/\bremove\b/i.test(fixLower) && arr.length > 0) {
+            const updated = arr.map((item) => ({ ...item, removed: true }));
+            return { updated: { ...summary, [targetField]: updated }, applied: true };
+          }
           return { updated: summary, applied: false };
         }
 
@@ -202,7 +209,6 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           return { updated: summary, applied: false };
         }
 
-        const arr = (summary[targetField] as SummaryField[]) || [];
         const quoted = extractQuotedText(issue.suggestedFix);
         const desc = cleanDescription(issue.description);
 
@@ -243,6 +249,29 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           return { updated: { ...summary, [issue.field]: quoted }, applied: true };
         }
       }
+
+      if (issue.field === "Category" && /\bchange\b.*\bcategory\b/i.test(issue.suggestedFix)) {
+        const CATEGORIES = [
+          "Recovery Act", "Agriculture", "Arts", "Business and Commerce",
+          "Community Development", "Consumer Protection", "Disaster Prevention and Relief",
+          "Education", "Employment, Labor, and Training", "Energy",
+          "Energy Infrastructure and Critical Mineral and Materials (EICMM)",
+          "Environment", "Food and Nutrition", "Health", "Housing", "Humanities",
+          "Information and Statistics", "Infrastructure Investment and Jobs Act",
+          "Income Security and Social Services", "Law, Justice, and Legal Services",
+          "Natural Resources", "Opportunity Zone Benefits", "Regional Development",
+          "Science, Technology, and Other Research and Development", "Transportation",
+          "Affordable Care Act",
+        ];
+        const fixWords = fixLower.split(/\W+/);
+        const match = CATEGORIES.find((cat) => {
+          const catWords = cat.toLowerCase().split(/\W+/);
+          return catWords.some((w) => w.length > 3 && fixWords.includes(w));
+        });
+        if (match && match !== summary.Category) {
+          return { updated: { ...summary, Category: match }, applied: true };
+        }
+      }
     }
 
     return { updated: summary, applied: false };
@@ -259,9 +288,11 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       setAppliedFixes((prev) => new Set(prev).add(key));
       addNotification("info", `Applied suggested fix for ${issue.field}`);
     } else {
+      setAppliedFixes((prev) => new Set(prev).add(key));
+      setAcknowledgedFixes((prev) => new Set(prev).add(key));
       addNotification(
-        "warning",
-        `Could not auto-apply fix for ${issue.field}. Please edit the summary manually below.`
+        "info",
+        `Acknowledged: "${issue.field}" requires manual review. Edit the summary below if needed.`
       );
     }
   };
@@ -325,7 +356,8 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       await apiClient.landingPage.approveReview(
         review.nofo_name,
         corrections,
-        adminNotes || undefined
+        adminNotes || undefined,
+        review.review_id
       );
       addNotification("success", `"${review.nofo_name}" approved and published`);
       onActionComplete();
@@ -350,7 +382,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     setRejectModalOpen(false);
     setActionInProgress("reject");
     try {
-      await apiClient.landingPage.rejectReview(review.nofo_name, adminNotes);
+      await apiClient.landingPage.rejectReview(review.nofo_name, adminNotes, review.review_id);
       addNotification("info", `"${review.nofo_name}" rejected`);
       onActionComplete();
     } catch {
@@ -427,13 +459,13 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       {issues.length > 0 ? (
         <div style={{ marginBottom: "16px" }}>
           {criticalIssues.map((issue, i) => (
-            <ValidationIssueCard key={`crit-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue))} />
+            <ValidationIssueCard key={`crit-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue)) && !acknowledgedFixes.has(getIssueKey(issue))} isAcknowledged={acknowledgedFixes.has(getIssueKey(issue))} />
           ))}
           {warningIssues.map((issue, i) => (
-            <ValidationIssueCard key={`warn-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue))} />
+            <ValidationIssueCard key={`warn-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue)) && !acknowledgedFixes.has(getIssueKey(issue))} isAcknowledged={acknowledgedFixes.has(getIssueKey(issue))} />
           ))}
           {infoIssues.map((issue, i) => (
-            <ValidationIssueCard key={`info-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue))} />
+            <ValidationIssueCard key={`info-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue)) && !acknowledgedFixes.has(getIssueKey(issue))} isAcknowledged={acknowledgedFixes.has(getIssueKey(issue))} />
           ))}
           {issues.length > 1 && (() => {
             const fixableIssues = issues.filter((i) => i.suggestedFix);
@@ -453,10 +485,63 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
         </div>
       ) : (detail.errorMessage || review.source !== "pipeline") ? (
         <div className="review-dlq-alert" role="alert">
-          {review.source === "dlq" && "This NOFO failed processing and was moved to the Dead Letter Queue."}
-          {review.source === "duplicate" && "This NOFO was flagged as a duplicate of an existing document."}
-          {review.source === "quality" && "This NOFO failed the source document quality check."}
-          {review.source === "pipeline" && detail.errorMessage && "This NOFO encountered an error during processing."}
+          {review.source === "dlq" && (
+            <>
+              <strong>Processing Failed (Dead Letter Queue)</strong>
+              <p style={{ margin: "8px 0 0" }}>This NOFO failed processing and was moved to the Dead Letter Queue.</p>
+              <div className="review-dlq-guidance">
+                <strong>What to do:</strong>
+                <ol>
+                  <li>Check the error details below to identify the failure reason.</li>
+                  <li>Reject this entry to clean up the failed attempt.</li>
+                  <li>Re-upload the NOFO document using the same grant name in the dashboard.</li>
+                </ol>
+              </div>
+            </>
+          )}
+          {review.source === "duplicate" && (
+            <>
+              <strong>Duplicate Document Detected</strong>
+              <p style={{ margin: "8px 0 0" }}>This NOFO was flagged as a duplicate of an existing document already in the system.</p>
+              <div className="review-dlq-guidance">
+                <strong>What to do:</strong>
+                <ol>
+                  <li>Check if the existing version is already published and up to date.</li>
+                  <li>If this is an updated version, reject this entry, then delete the old grant and re-upload the new document.</li>
+                  <li>If this is truly a duplicate, reject this entry to remove it.</li>
+                </ol>
+              </div>
+            </>
+          )}
+          {review.source === "quality" && (
+            <>
+              <strong>Source Document Quality Check Failed</strong>
+              <p style={{ margin: "8px 0 0" }}>The uploaded file did not pass the quality check. This usually means the document is not a valid grant/NOFO, is corrupted, or contains mostly non-text content (e.g., scanned images without OCR).</p>
+              <div className="review-dlq-guidance">
+                <strong>What to do:</strong>
+                <ol>
+                  <li>Go to the original source (e.g., Grants.gov or the agency website) and download a clean copy of the NOFO document.</li>
+                  <li>Make sure the file is a text-based PDF (not a scanned image). If the PDF is image-based, use an OCR tool to convert it first.</li>
+                  <li>Reject this entry to clean it up.</li>
+                  <li>Re-upload the corrected document using the <strong>exact same grant name</strong> so it replaces this failed attempt.</li>
+                </ol>
+              </div>
+            </>
+          )}
+          {review.source === "pipeline" && detail.errorMessage && (
+            <>
+              <strong>Processing Error</strong>
+              <p style={{ margin: "8px 0 0" }}>This NOFO encountered an error during pipeline processing.</p>
+              <div className="review-dlq-guidance">
+                <strong>What to do:</strong>
+                <ol>
+                  <li>Check the error details below to understand what went wrong.</li>
+                  <li>If the error is transient (e.g., timeout, throttling), reject and re-upload the document to retry.</li>
+                  <li>If the document itself is problematic, download a clean copy from the source and re-upload using the same grant name.</li>
+                </ol>
+              </div>
+            </>
+          )}
           {detail.errorMessage && (
             <div style={{ marginTop: "8px", fontFamily: "monospace", fontSize: "12px", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
               {detail.errorMessage}

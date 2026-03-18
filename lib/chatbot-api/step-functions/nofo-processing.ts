@@ -116,7 +116,7 @@ export class NofoProcessingStateMachine extends Construct {
       jitterStrategy: sfn.JitterType.FULL,
     });
 
-    // Step 5: Publish (auto-approved)
+    // Step 5: Publish (for auto-approved PASS results)
     const publish = new tasks.LambdaInvoke(this, "Publish", {
       lambdaFunction: props.publishFunction,
       outputPath: "$.Payload",
@@ -136,7 +136,10 @@ export class NofoProcessingStateMachine extends Construct {
       },
     });
 
-    // Route based on validation verdict
+    // Route based on validation verdict:
+    //   PASS          → auto-publish (no admin review needed)
+    //   FAIL + retry  → re-run extraction with feedback
+    //   NEEDS_REVIEW  → quarantine for admin approval before publishing
     const evaluateValidation = new sfn.Choice(this, "EvaluateValidation")
       .when(
         sfn.Condition.stringEquals(

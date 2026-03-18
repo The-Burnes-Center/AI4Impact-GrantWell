@@ -1,4 +1,5 @@
 import React from "react";
+import { GRANT_CATEGORIES } from "../../../common/types/nofo";
 
 interface SummaryField {
   item: string;
@@ -78,6 +79,41 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
             onSummaryChange({ ...editedSummary, GrantName: e.target.value })
           }
         />
+      </div>
+
+      <div style={{ display: "flex", gap: "16px", marginBottom: "12px" }}>
+        <div style={{ flex: 1 }}>
+          <label htmlFor="review-agency" className="summary-field__label">
+            Agency
+          </label>
+          <input
+            id="review-agency"
+            type="text"
+            className="review-text-input"
+            value={(editedSummary.Agency as string) || ""}
+            onChange={(e) =>
+              onSummaryChange({ ...editedSummary, Agency: e.target.value })
+            }
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <label htmlFor="review-category" className="summary-field__label">
+            Category
+          </label>
+          <select
+            id="review-category"
+            className="review-text-input"
+            value={(editedSummary.Category as string) || ""}
+            onChange={(e) =>
+              onSummaryChange({ ...editedSummary, Category: e.target.value })
+            }
+          >
+            <option value="">Select category...</option>
+            {GRANT_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {renderField("Eligibility Criteria", "EligibilityCriteria")}

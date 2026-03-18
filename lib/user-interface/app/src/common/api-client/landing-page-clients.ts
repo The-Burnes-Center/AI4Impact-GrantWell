@@ -297,7 +297,8 @@ export class LandingPageClient {
   async approveReview(
     nofoName: string,
     corrections?: Record<string, unknown>,
-    notes?: string
+    notes?: string,
+    reviewId?: string
   ): Promise<void> {
     try {
       const token = await Utils.authenticate();
@@ -306,7 +307,7 @@ export class LandingPageClient {
         {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: token },
-          body: JSON.stringify({ corrections, notes }),
+          body: JSON.stringify({ corrections, notes, reviewId }),
         }
       );
 
@@ -317,7 +318,7 @@ export class LandingPageClient {
     }
   }
 
-  async rejectReview(nofoName: string, reason: string): Promise<void> {
+  async rejectReview(nofoName: string, reason: string, reviewId?: string): Promise<void> {
     try {
       const token = await Utils.authenticate();
       const response = await fetch(
@@ -325,7 +326,7 @@ export class LandingPageClient {
         {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: token },
-          body: JSON.stringify({ reason }),
+          body: JSON.stringify({ reason, reviewId }),
         }
       );
 

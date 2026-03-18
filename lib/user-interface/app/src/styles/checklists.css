@@ -63,6 +63,21 @@ body {
   color: #14558F;
 }
 
+.custom-markdown a {
+  color: var(--mds-color-primary, #14558F);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.custom-markdown a:hover {
+  color: var(--mds-color-primary-hover, #104472);
+}
+
+.custom-markdown a:focus-visible {
+  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline-offset: 2px;
+}
+
 /* WCAG 1.4.10 Reflow: Responsive breakpoints */
 /* Base mobile styles (applies to narrow viewports) */
 @media screen and (max-width: 320px) {

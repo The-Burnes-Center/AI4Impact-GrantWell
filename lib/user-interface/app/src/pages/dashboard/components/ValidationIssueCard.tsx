@@ -6,6 +6,7 @@ interface ValidationIssueCardProps {
   issue: ValidationIssue;
   onApplyFix: (issue: ValidationIssue) => void;
   isFixed?: boolean;
+  isAcknowledged?: boolean;
 }
 
 const SEVERITY_CONFIG = {
@@ -30,31 +31,36 @@ const ValidationIssueCard: React.FC<ValidationIssueCardProps> = ({
   issue,
   onApplyFix,
   isFixed = false,
+  isAcknowledged = false,
 }) => {
   const config = SEVERITY_CONFIG[issue.severity];
-  const Icon = isFixed ? LuCircleCheck : config.icon;
+  const resolved = isFixed || isAcknowledged;
+  const Icon = resolved ? LuCircleCheck : config.icon;
 
   const cardClassName = [
     "validation-issue-card",
-    isFixed ? "validation-issue-card--fixed" : "",
+    resolved ? "validation-issue-card--fixed" : "",
   ].filter(Boolean).join(" ");
+
+  const statusLabel = isFixed ? "Fixed" : isAcknowledged ? "Acknowledged" : config.label;
+  const statusColor = resolved ? "var(--mds-color-success)" : config.bgColor;
 
   return (
     <div
       className={cardClassName}
-      style={isFixed ? undefined : {
+      style={resolved ? undefined : {
         border: `1px solid ${config.bgColor}40`,
         borderLeft: `4px solid ${config.bgColor}`,
         backgroundColor: `${config.bgColor}08`,
       }}
       role="alert"
-      aria-label={`${config.label} issue: ${issue.description}${isFixed ? " (fixed)" : ""}`}
+      aria-label={`${config.label} issue: ${issue.description}${resolved ? ` (${statusLabel.toLowerCase()})` : ""}`}
     >
       <div className="validation-issue-card__body">
         <Icon
           size={18}
           style={{
-            color: isFixed ? "var(--mds-color-success)" : config.bgColor,
+            color: statusColor,
             marginTop: "2px",
             flexShrink: 0,
           }}
@@ -64,9 +70,9 @@ const ValidationIssueCard: React.FC<ValidationIssueCardProps> = ({
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
             <span
               className="validation-issue-card__severity"
-              style={{ color: isFixed ? "var(--mds-color-success)" : config.bgColor }}
+              style={{ color: statusColor }}
             >
-              {isFixed ? "Fixed" : config.label}
+              {statusLabel}
             </span>
             <span className="validation-issue-card__field">
               {issue.field}
@@ -78,12 +84,12 @@ const ValidationIssueCard: React.FC<ValidationIssueCardProps> = ({
           {issue.suggestedFix && (
             <div className="validation-issue-card__fix-row">
               <span className="validation-issue-card__suggestion">
-                {isFixed ? "Applied: " : "Suggested: "}{issue.suggestedFix}
+                {isFixed ? "Applied: " : isAcknowledged ? "Noted: " : "Suggested: "}{issue.suggestedFix}
               </span>
-              {isFixed ? (
-                <span className="validation-issue-card__fixed-badge" aria-label="Fix applied">
+              {resolved ? (
+                <span className="validation-issue-card__fixed-badge" aria-label={`Fix ${statusLabel.toLowerCase()}`}>
                   <LuCircleCheck size={12} aria-hidden="true" />
-                  Applied
+                  {statusLabel}
                 </span>
               ) : (
                 <button
