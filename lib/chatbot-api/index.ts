@@ -188,6 +188,17 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    const nofoSummaryUpdateAPIIntegration = new HttpLambdaIntegration(
+      "NofoSummaryUpdateAPIIntegration",
+      lambdaFunctions.nofoSummaryUpdateFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-summary-update",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoSummaryUpdateAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     const s3DeleteAPIIntegration = new HttpLambdaIntegration(
       "S3DeleteAPIIntegration",
       lambdaFunctions.deleteS3Function

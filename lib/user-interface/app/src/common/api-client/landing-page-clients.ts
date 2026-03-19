@@ -226,6 +226,31 @@ export class LandingPageClient {
     }
   }
 
+  async updateNOFOSummary(nofoName: string, summary: Record<string, unknown>) {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(`${this.baseUrl}/s3-nofo-summary-update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ nofoName, summary }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `Error: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error updating NOFO summary:", error);
+      throw error;
+    }
+  }
+
   async submitFeedback(foundWhatLookingFor: "Yes" | "No", feedbackText: string) {
     try {
       const token = await Utils.authenticate();

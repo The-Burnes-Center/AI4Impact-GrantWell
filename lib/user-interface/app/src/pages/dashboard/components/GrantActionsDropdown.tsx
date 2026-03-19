@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck } from "react-icons/lu";
+import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFileEdit } from "react-icons/lu";
 import type { NOFO } from "../../../common/types/nofo";
 
 interface GrantActionsDropdownProps {
   nofo: NOFO;
   onToggleStatus: () => void;
   onEdit: () => void;
+  onEditSummary: () => void;
   onDelete: () => void;
 }
 
@@ -13,6 +14,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
   nofo,
   onToggleStatus,
   onEdit,
+  onEditSummary,
   onDelete,
 }: GrantActionsDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +78,14 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
           >
             <LuPencil size={16} className="menu-icon" />
             <span>Edit</span>
+          </button>
+          <button
+            onClick={() => { onEditSummary(); setIsOpen(false); }}
+            className="dropdown-menu-item"
+            role="menuitem"
+          >
+            <LuFileEdit size={16} className="menu-icon" />
+            <span>Edit Summary</span>
           </button>
           <button
             onClick={() => { onDelete(); setIsOpen(false); }}

@@ -70,6 +70,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
   public readonly feedbackProxyFunction: lambda.Function;
+  public readonly nofoSummaryUpdateFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -911,6 +912,57 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.nofoStatusFunction = nofoStatusHandlerFunction;
+
+    // NOFO summary content update function
+    const nofoSummaryUpdateFunction = new lambda.Function(
+      scope,
+      "NofoSummaryUpdateFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "landing-page/nofo-summary-update")
+        ),
+        handler: "index.handler",
+        environment: {
+          BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+        },
+        timeout: cdk.Duration.seconds(30),
+      }
+    );
+
+    nofoSummaryUpdateFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:PutObject"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+
+    nofoSummaryUpdateFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:GetItem", "dynamodb:UpdateItem"],
+        resources: [
+          props.nofoMetadataTable.tableArn,
+        ],
+      })
+    );
+
+    nofoSummaryUpdateFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
+      })
+    );
+
+    this.nofoSummaryUpdateFunction = nofoSummaryUpdateFunction;
 
     // Add the NOFO rename function
     const nofoRenameHandlerFunction = new lambda.Function(

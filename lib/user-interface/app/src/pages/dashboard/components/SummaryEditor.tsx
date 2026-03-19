@@ -69,30 +69,26 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               }}
               aria-label={`${item.removed ? "Include" : "Exclude"} ${item.item}`}
             />
-            {!item.item && !item.description ? (
-              <span className="summary-field__text" style={{ display: "flex", gap: "8px", flex: 1 }}>
-                <input
-                  type="text"
-                  className="review-text-input"
-                  placeholder="Item name"
-                  value={item.item}
-                  onChange={(e) => handleItemEdit(fieldName, idx, "item", e.target.value)}
-                  style={{ flex: "0 0 30%", fontSize: "12px", padding: "4px 6px" }}
-                />
-                <input
-                  type="text"
-                  className="review-text-input"
-                  placeholder="Description"
-                  value={item.description}
-                  onChange={(e) => handleItemEdit(fieldName, idx, "description", e.target.value)}
-                  style={{ flex: 1, fontSize: "12px", padding: "4px 6px" }}
-                />
-              </span>
-            ) : (
-              <span className="summary-field__text">
-                <strong>{item.item}</strong>: {item.description}
-              </span>
-            )}
+            <span className="summary-field__text" style={{ display: "flex", gap: "8px", flex: 1 }}>
+              <input
+                type="text"
+                className="review-text-input"
+                placeholder="Item name"
+                value={item.item}
+                onChange={(e) => handleItemEdit(fieldName, idx, "item", e.target.value)}
+                style={{ flex: "0 0 30%", fontSize: "12px", padding: "4px 6px" }}
+                aria-label={`${label} item ${idx + 1} name`}
+              />
+              <input
+                type="text"
+                className="review-text-input"
+                placeholder="Description"
+                value={item.description}
+                onChange={(e) => handleItemEdit(fieldName, idx, "description", e.target.value)}
+                style={{ flex: 1, fontSize: "12px", padding: "4px 6px" }}
+                aria-label={`${label} item ${idx + 1} description`}
+              />
+            </span>
           </div>
         ))}
         {items.length === 0 && (

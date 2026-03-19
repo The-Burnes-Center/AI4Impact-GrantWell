@@ -1930,6 +1930,10 @@ select.form-input {
   animation: spin 1s linear infinite;
 }
 
+.spin-animation {
+  animation: spin 1s linear infinite;
+}
+
 /* Grant Actions Dropdown Styles */
 .grant-actions-dropdown {
   position: relative;
