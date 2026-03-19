@@ -97,6 +97,8 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
         Summary Changes
       </h4>
       {renderScalarDiff("Grant Name", "GrantName")}
+      {renderScalarDiff("Agency", "Agency")}
+      {renderScalarDiff("Category", "Category")}
       {ARRAY_FIELDS.map(({ key, label }) => renderArrayDiff(label, key))}
     </div>
   );

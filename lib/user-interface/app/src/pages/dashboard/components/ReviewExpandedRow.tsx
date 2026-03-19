@@ -45,11 +45,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [appliedFixes, setAppliedFixes] = useState<Set<string>>(new Set());
   const [acknowledgedFixes, setAcknowledgedFixes] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    loadDetail();
-  }, [review.nofo_name]);
-
-  const loadDetail = async () => {
+  const loadDetail = useCallback(async () => {
     try {
       setLoading(true);
       const result = await apiClient.landingPage.getReviewDetail(review.nofo_name);
@@ -63,7 +59,11 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiClient, review.nofo_name, addNotification]);
+
+  useEffect(() => {
+    loadDetail();
+  }, [loadDetail]);
 
   const getIssueKey = useCallback(
     (issue: ValidationIssue) => `${issue.severity}|${issue.field}|${issue.category}|${issue.description}`,
@@ -421,6 +421,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const criticalIssues = issues.filter((i) => i.severity === "critical");
   const warningIssues = issues.filter((i) => i.severity === "warning");
   const infoIssues = issues.filter((i) => i.severity === "info");
+  const isResolved = review.status === "approved" || review.status === "rejected";
 
   return (
     <div
@@ -448,6 +449,32 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           Collapse
         </button>
       </div>
+
+      {detail.adminGuidance && (
+        <div
+          className="review-dlq-alert"
+          role="alert"
+          style={{
+            borderLeft: `4px solid ${detail.adminGuidance.severity === "critical" ? "var(--mds-color-danger)" : "var(--mds-color-warning)"}`,
+          }}
+        >
+          <strong>{detail.adminGuidance.title}</strong>
+          <p style={{ margin: "8px 0 0" }}>{detail.adminGuidance.message}</p>
+          <div className="review-dlq-guidance">
+            <strong>Recommended actions:</strong>
+            <ol>
+              {detail.adminGuidance.actions.map((action, i) => (
+                <li key={i}>{action}</li>
+              ))}
+            </ol>
+          </div>
+          {detail.adminGuidance.missingCategories.length > 0 && (
+            <p style={{ margin: "8px 0 0", fontSize: "12px", color: "var(--mds-color-text-secondary)" }}>
+              Missing categories: {detail.adminGuidance.missingCategories.join(", ")}
+            </p>
+          )}
+        </div>
+      )}
 
       {issues.length > 0 ? (
         <div style={{ marginBottom: "16px" }}>
@@ -579,98 +606,131 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
         </details>
       )}
 
-      <div style={{ marginBottom: "16px" }}>
-        <label
-          htmlFor={`admin-notes-${review.review_id}`}
-          className="summary-field__label"
-        >
-          Admin Notes
-          <span className="review-field-required">(Required for rejection)</span>
-        </label>
-        <textarea
-          id={`admin-notes-${review.review_id}`}
-          className={`review-admin-notes ${notesError ? "review-admin-notes--error" : ""}`}
-          value={adminNotes}
-          onChange={(e) => {
-            setAdminNotes(e.target.value);
-            if (notesError) setNotesError(false);
-          }}
-          placeholder="Add notes about this review..."
-          rows={2}
-          aria-required="true"
-          aria-describedby={notesError ? `admin-notes-error-${review.review_id}` : undefined}
-          aria-invalid={notesError}
-        />
-        {notesError && (
-          <p
-            id={`admin-notes-error-${review.review_id}`}
-            className="review-field-error"
-            role="alert"
-          >
-            Please provide a reason for rejection.
-          </p>
-        )}
-      </div>
-
-      <Modal
-        isOpen={rejectModalOpen}
-        onClose={() => setRejectModalOpen(false)}
-        title="Confirm Reject"
-      >
-        <div className="modal-form">
-          <div className="delete-confirmation">
-            <LuTriangleAlert size={32} className="warning-icon dashboard-info-icon" />
-            <p>
-              Are you sure you want to reject <strong>{review.nofo_name}</strong>?
+      {isResolved ? (
+        <div style={{ marginBottom: "16px" }}>
+          <label className="summary-field__label">
+            Admin Notes
+          </label>
+          {adminNotes ? (
+            <div
+              style={{
+                padding: "12px",
+                backgroundColor: "var(--mds-color-background)",
+                borderRadius: "6px",
+                fontSize: "13px",
+                color: "var(--mds-color-text)",
+              }}
+            >
+              {adminNotes}
+            </div>
+          ) : (
+            <p style={{ fontSize: "13px", color: "var(--mds-color-text-secondary)", margin: 0 }}>
+              No admin notes recorded.
             </p>
-          </div>
-          <p className="warning-text">
-            This will permanently delete the NOFO file and all processed data. This action cannot be
-            undone.
-          </p>
-          {adminNotes && (
-            <div className="form-group" style={{ marginTop: "16px" }}>
-              <label className="summary-field__label">Rejection reason:</label>
-              <div
-                style={{
-                  padding: "12px",
-                  backgroundColor: "var(--mds-color-background)",
-                  borderRadius: "6px",
-                  fontSize: "13px",
-                  color: "var(--mds-color-text)",
-                }}
+          )}
+          {detail.reviewed_at && (
+            <p style={{ fontSize: "12px", color: "var(--mds-color-text-secondary)", marginTop: "8px" }}>
+              {review.status === "approved" ? "Approved" : "Rejected"} on{" "}
+              {new Date(detail.reviewed_at).toLocaleString()}
+            </p>
+          )}
+        </div>
+      ) : (
+        <>
+          <div style={{ marginBottom: "16px" }}>
+            <label
+              htmlFor={`admin-notes-${review.review_id}`}
+              className="summary-field__label"
+            >
+              Admin Notes
+              <span className="review-field-required">(Required for rejection)</span>
+            </label>
+            <textarea
+              id={`admin-notes-${review.review_id}`}
+              className={`review-admin-notes ${notesError ? "review-admin-notes--error" : ""}`}
+              value={adminNotes}
+              onChange={(e) => {
+                setAdminNotes(e.target.value);
+                if (notesError) setNotesError(false);
+              }}
+              placeholder="Add notes about this review..."
+              rows={2}
+              aria-required="true"
+              aria-describedby={notesError ? `admin-notes-error-${review.review_id}` : undefined}
+              aria-invalid={notesError}
+            />
+            {notesError && (
+              <p
+                id={`admin-notes-error-${review.review_id}`}
+                className="review-field-error"
+                role="alert"
               >
-                {adminNotes}
+                Please provide a reason for rejection.
+              </p>
+            )}
+          </div>
+
+          <Modal
+            isOpen={rejectModalOpen}
+            onClose={() => setRejectModalOpen(false)}
+            title="Confirm Reject"
+          >
+            <div className="modal-form">
+              <div className="delete-confirmation">
+                <LuTriangleAlert size={32} className="warning-icon dashboard-info-icon" />
+                <p>
+                  Are you sure you want to reject <strong>{review.nofo_name}</strong>?
+                </p>
+              </div>
+              <p className="warning-text">
+                This will permanently delete the NOFO file and all processed data. This action cannot be
+                undone.
+              </p>
+              {adminNotes && (
+                <div className="form-group" style={{ marginTop: "16px" }}>
+                  <label className="summary-field__label">Rejection reason:</label>
+                  <div
+                    style={{
+                      padding: "12px",
+                      backgroundColor: "var(--mds-color-background)",
+                      borderRadius: "6px",
+                      fontSize: "13px",
+                      color: "var(--mds-color-text)",
+                    }}
+                  >
+                    {adminNotes}
+                  </div>
+                </div>
+              )}
+              <div className="modal-actions">
+                <button
+                  className="modal-button secondary"
+                  onClick={() => setRejectModalOpen(false)}
+                  aria-label="Cancel reject"
+                >
+                  Cancel
+                </button>
+                <button
+                  className="modal-button danger"
+                  onClick={confirmReject}
+                  aria-label="Reject and delete this NOFO"
+                >
+                  Reject and Delete
+                </button>
               </div>
             </div>
-          )}
-          <div className="modal-actions">
-            <button
-              className="modal-button secondary"
-              onClick={() => setRejectModalOpen(false)}
-              aria-label="Cancel reject"
-            >
-              Cancel
-            </button>
-            <button
-              className="modal-button danger"
-              onClick={confirmReject}
-              aria-label="Reject and delete this NOFO"
-            >
-              Reject and Delete
-            </button>
-          </div>
-        </div>
-      </Modal>
+          </Modal>
 
-      <ReviewActions
-        actionInProgress={actionInProgress}
-        hasCorrections={getCorrections() !== undefined}
-        onApprove={handleApprove}
-        onReject={handleRejectClick}
-        onReprocess={handleReprocess}
-        rejectDisabled={!adminNotes.trim()}
-      />
+          <ReviewActions
+            actionInProgress={actionInProgress}
+            hasCorrections={getCorrections() !== undefined}
+            onApprove={handleApprove}
+            onReject={handleRejectClick}
+            onReprocess={handleReprocess}
+            rejectDisabled={!adminNotes.trim()}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -72,14 +72,15 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     }
   }, [apiClient]);
 
+  // so this single effect handles both initial load and filter changes.
   useEffect(() => {
     fetchData();
-    fetchMetrics();
-  }, [fetchData, fetchMetrics]);
+  }, [fetchData]);
 
+  // Metrics only need to load once on mount
   useEffect(() => {
-    fetchData();
-  }, [statusFilter, fetchData]);
+    fetchMetrics();
+  }, [fetchMetrics]);
 
   const handleActionComplete = () => {
     setExpandedNofo(null);

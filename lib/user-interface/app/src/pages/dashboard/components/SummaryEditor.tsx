@@ -17,14 +17,41 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
   editedSummary,
   onSummaryChange,
 }) => {
+  const handleAddItem = (fieldName: string) => {
+    const items = (editedSummary[fieldName] as SummaryField[] | undefined) || [];
+    const newItem: SummaryField = { item: "", description: "", confidence: "medium" };
+    onSummaryChange({ ...editedSummary, [fieldName]: [...items, newItem] });
+  };
+
+  const handleItemEdit = (fieldName: string, idx: number, field: "item" | "description", value: string) => {
+    const items = [...((editedSummary[fieldName] as SummaryField[]) || [])];
+    items[idx] = { ...items[idx], [field]: value };
+    onSummaryChange({ ...editedSummary, [fieldName]: items });
+  };
+
   const renderField = (label: string, fieldName: string) => {
-    const items = editedSummary[fieldName] as SummaryField[] | undefined;
-    if (!items || !Array.isArray(items)) return null;
+    const items = (editedSummary[fieldName] as SummaryField[] | undefined) || [];
 
     return (
       <div className="summary-field">
-        <div className="summary-field__label">
-          {label} ({items.filter((i) => !i.removed).length})
+        <div className="summary-field__label" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>{label} ({items.filter((i) => !i.removed).length})</span>
+          <button
+            type="button"
+            className="review-add-item-btn"
+            onClick={() => handleAddItem(fieldName)}
+            style={{
+              fontSize: "12px",
+              padding: "2px 8px",
+              cursor: "pointer",
+              border: "1px solid var(--mds-color-border)",
+              borderRadius: "4px",
+              background: "var(--mds-color-surface)",
+              color: "var(--mds-color-text-primary)",
+            }}
+          >
+            + Add Item
+          </button>
         </div>
         {items.map((item, idx) => (
           <div
@@ -42,11 +69,37 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               }}
               aria-label={`${item.removed ? "Include" : "Exclude"} ${item.item}`}
             />
-            <span className="summary-field__text">
-              <strong>{item.item}</strong>: {item.description}
-            </span>
+            {!item.item && !item.description ? (
+              <span className="summary-field__text" style={{ display: "flex", gap: "8px", flex: 1 }}>
+                <input
+                  type="text"
+                  className="review-text-input"
+                  placeholder="Item name"
+                  value={item.item}
+                  onChange={(e) => handleItemEdit(fieldName, idx, "item", e.target.value)}
+                  style={{ flex: "0 0 30%", fontSize: "12px", padding: "4px 6px" }}
+                />
+                <input
+                  type="text"
+                  className="review-text-input"
+                  placeholder="Description"
+                  value={item.description}
+                  onChange={(e) => handleItemEdit(fieldName, idx, "description", e.target.value)}
+                  style={{ flex: 1, fontSize: "12px", padding: "4px 6px" }}
+                />
+              </span>
+            ) : (
+              <span className="summary-field__text">
+                <strong>{item.item}</strong>: {item.description}
+              </span>
+            )}
           </div>
         ))}
+        {items.length === 0 && (
+          <div style={{ fontSize: "12px", color: "var(--mds-color-text-secondary)", padding: "8px 0 0 28px" }}>
+            No items extracted. Click &quot;+ Add Item&quot; to add manually.
+          </div>
+        )}
       </div>
     );
   };

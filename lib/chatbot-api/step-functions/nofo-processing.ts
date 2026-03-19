@@ -131,6 +131,7 @@ export class NofoProcessingStateMachine extends Construct {
         "nofoName.$": "$.nofoName",
         "rawTextKey.$": "$.rawTextKey",
         "documentLength.$": "$.documentLength",
+        "contentHash.$": "$.contentHash",
         "retryCount.$": "States.MathAdd($.retryCount, 1)",
         "validationFeedback.$": "States.JsonToString($.validationResult.issues)",
       },
@@ -160,6 +161,7 @@ export class NofoProcessingStateMachine extends Construct {
       )
       .otherwise(quarantine);
 
+    // Error handler for failures AFTER extract-text (rawTextKey is available)
     const handleError = new sfn.Pass(this, "HandleError", {
       parameters: {
         "nofoName.$": "$.nofoName",
@@ -174,6 +176,21 @@ export class NofoProcessingStateMachine extends Construct {
     });
     handleError.next(quarantine);
 
+    // Error handler for failures DURING extract-text (rawTextKey doesn't exist yet)
+    const handleExtractTextError = new sfn.Pass(this, "HandleExtractTextError", {
+      parameters: {
+        "nofoName.$": "$.nofoName",
+        "s3Bucket.$": "$.s3Bucket",
+        "documentKey.$": "$.documentKey",
+        "rawTextKey": "",
+        "errorMessage.$": "$.error.Cause",
+        "source": "pipeline",
+        "retryCount": 0,
+        "qualityScore": 0,
+      },
+    });
+    handleExtractTextError.next(quarantine);
+
     // After text extraction: route duplicates/quality-failed to quarantine, otherwise extract
     const afterExtractText = new sfn.Choice(this, "AfterExtractText")
       .when(sfn.Condition.isPresent("$.duplicateOf"), quarantineDuplicate)
@@ -187,7 +204,7 @@ export class NofoProcessingStateMachine extends Construct {
 
     const definition = extractText;
 
-    extractText.addCatch(handleError, { resultPath: "$.error" });
+    extractText.addCatch(handleExtractTextError, { resultPath: "$.error" });
     extractAndAnalyze.addCatch(handleError, { resultPath: "$.error" });
     synthesize.addCatch(handleError, { resultPath: "$.error" });
     validate.addCatch(handleError, { resultPath: "$.error" });

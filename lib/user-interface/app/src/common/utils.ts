@@ -170,38 +170,35 @@ export class Utils {
   }
 
   /**
-   * Format expiration date for display
+   * Format expiration date for display using the user's browser locale/timezone.
    * Supports both formats:
    * - "YYYY-MM-DD" (new format)
    * - ISO date string (old format, e.g., "2026-03-13T23:59:59Z")
    * @param dateString Date string in YYYY-MM-DD or ISO format (or null)
-   * @returns Formatted date string, or null
+   * @returns Formatted date string in user's locale, or null
    */
   static formatExpirationDate(dateString: string | null | undefined): string | null {
     if (!dateString) return null;
-    
-    // Check if it's already in YYYY-MM-DD format (new format)
+
+    const formatOpts: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    };
+
+    // YYYY-MM-DD: construct as local date (no timezone shift)
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-      // Parse YYYY-MM-DD format
       const [year, month, day] = dateString.split('-');
       const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
+      return date.toLocaleDateString(undefined, formatOpts);
     }
-    
-    // Otherwise, treat as ISO string (old format)
+
+    // ISO string: let the browser convert to local timezone
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
       console.warn(`Invalid date format: ${dateString}`);
       return null;
     }
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    return date.toLocaleDateString(undefined, formatOpts);
   }
 }

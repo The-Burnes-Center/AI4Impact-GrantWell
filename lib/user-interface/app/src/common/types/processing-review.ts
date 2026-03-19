@@ -36,6 +36,15 @@ export interface ReviewItem {
   issueCount: IssueCount;
 }
 
+export interface AdminGuidance {
+  reason: string;
+  severity: "critical" | "warning";
+  title: string;
+  message: string;
+  actions: string[];
+  missingCategories: string[];
+}
+
 export interface ReviewDetail extends ReviewItem {
   extractedSummary: Record<string, unknown> | null;
   extractedQuestions: Record<string, unknown> | null;
@@ -47,6 +56,7 @@ export interface ReviewDetail extends ReviewItem {
   reviewed_at: string | null;
   admin_notes: string | null;
   corrections: Record<string, unknown> | null;
+  adminGuidance: AdminGuidance | null;
 }
 
 export interface ProcessingMetrics {
