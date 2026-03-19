@@ -182,13 +182,6 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       }
     }
 
-    if (issue.field === "GrantName") {
-      const quoted = extractQuotedText(issue.suggestedFix);
-      if (quoted) {
-        return { updated: { ...summary, GrantName: quoted }, applied: true };
-      }
-    }
-
     if (!fieldMatch) {
       const targetField = ARRAY_FIELDS.find(
         (f) => issue.field === f || issue.field.startsWith(f)

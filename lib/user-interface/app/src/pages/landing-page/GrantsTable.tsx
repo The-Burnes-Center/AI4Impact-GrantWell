@@ -129,6 +129,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       label: nofo.name,
       value: nofo.name + "/",
     });
+    onSearchTermChange?.(nofo.name);
 
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "smooth" });
