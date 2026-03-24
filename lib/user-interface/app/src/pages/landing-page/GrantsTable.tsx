@@ -85,7 +85,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
-        const matchesSearch = tokens.some((token) => searchableText.includes(token));
+        const matchesSearch = tokens.every((token) => searchableText.includes(token));
         if (!matchesSearch) return false;
       }
 
