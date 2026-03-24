@@ -18,6 +18,14 @@ const AboutPanel = React.memo(function AboutPanel() {
       to empower historically underfunded and understaffed communities by
       reducing the complexity and time required for grant applications.
     </p>
+    <div className="about-panel__video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/Lsup892o2yg"
+        title="GrantWell Demo Video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    </div>
   </div>
   );
 });
