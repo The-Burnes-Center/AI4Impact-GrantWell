@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFileEdit } from "react-icons/lu";
+import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen } from "react-icons/lu";
 import type { NOFO } from "../../../common/types/nofo";
 
 interface GrantActionsDropdownProps {
@@ -84,7 +84,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
             className="dropdown-menu-item"
             role="menuitem"
           >
-            <LuFileEdit size={16} className="menu-icon" />
+            <LuFilePen size={16} className="menu-icon" />
             <span>Edit Summary</span>
           </button>
           <button
