@@ -62,6 +62,7 @@ export class ChatBotApi extends Construct {
       sessionTable: tables.historyTable,
       draftTable: tables.draftTable,
       nofoMetadataTable: tables.nofoMetadataTable,
+      nofoProcessingReviewTable: tables.nofoProcessingReviewTable,
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
       featureRolloutTable: tables.featureRolloutTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
@@ -184,6 +185,17 @@ export class ChatBotApi extends Construct {
       path: "/s3-nofo-summary",
       methods: [apigwv2.HttpMethod.GET],
       integration: s3GetNofoSummaryAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoSummaryUpdateAPIIntegration = new HttpLambdaIntegration(
+      "NofoSummaryUpdateAPIIntegration",
+      lambdaFunctions.nofoSummaryUpdateFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/s3-nofo-summary-update",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoSummaryUpdateAPIIntegration,
       authorizer: httpAuthorizer,
     });
 
@@ -482,10 +494,57 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    // Add REST API route for automated NOFO scraper
+    // Admin API routes for NOFO processing review
+    const nofoAdminAPIIntegration = new HttpLambdaIntegration(
+      "NofoAdminAPIIntegration",
+      lambdaFunctions.nofoAdminFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews/{nofoName}",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews/{nofoName}/approve",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews/{nofoName}/reject",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/processing-metrics",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoReprocessAPIIntegration = new HttpLambdaIntegration(
+      "NofoReprocessAPIIntegration",
+      lambdaFunctions.nofoReprocessFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/admin/reprocess-nofo",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoReprocessAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Add REST API route for automated NOFO scraper (coordinator)
     const automatedNofoScraperAPIIntegration = new HttpLambdaIntegration(
       "AutomatedNofoScraperAPIIntegration",
-      lambdaFunctions.automatedNofoScraperFunction
+      lambdaFunctions.scraperCoordinatorFunction
     );
     restBackend.restAPI.addRoutes({
       path: "/automated-nofo-scraper",

@@ -30,15 +30,9 @@ export const GRANT_TYPES = {
     color: '#e66f0e',
     description: 'Private foundation and charitable organization grants'
   },
-  UNKNOWN: { 
-    id: 'unknown', 
-    label: 'Unknown', 
-    color: '#6b7280',
-    description: 'Grant type not yet determined'
-  },
 } as const;
 
-export type GrantTypeId = 'federal' | 'state' | 'quasi' | 'philanthropic' | 'unknown';
+export type GrantTypeId = 'federal' | 'state' | 'quasi' | 'philanthropic';
 
 export interface GrantType {
   id: GrantTypeId;
@@ -65,5 +59,5 @@ export const getAllGrantTypes = (): GrantType[] => {
  * Validate if a string is a valid grant type ID
  */
 export const isValidGrantType = (id: string): id is GrantTypeId => {
-  return ['federal', 'state', 'quasi', 'philanthropic', 'unknown'].includes(id);
+  return ['federal', 'state', 'quasi', 'philanthropic'].includes(id);
 };

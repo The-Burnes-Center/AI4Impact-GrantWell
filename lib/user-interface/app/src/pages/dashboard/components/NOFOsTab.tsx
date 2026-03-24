@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
-  LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile,
+  LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader,
 } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import { Modal } from "../../../components/common/Modal";
 import { DeleteConfirmationModal } from "../../../components/common/DeleteConfirmationModal";
 import GrantActionsDropdown from "./GrantActionsDropdown";
+import SummaryEditor from "./SummaryEditor";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
+
+const PROCESSING_LABELS: Record<string, string> = {
+  uploading: "Uploading...",
+  extracting_text: "Extracting text...",
+  detecting_sections: "Detecting sections...",
+  synthesizing: "Synthesizing...",
+  validating: "Validating...",
+  quarantined: "Quarantined",
+};
 
 interface NOFOsTabProps {
   nofos: NOFO[];
@@ -39,10 +49,66 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [editedNofoExpirationDate, setEditedNofoExpirationDate] = useState<string>("");
   const [editedNofoGrantType, setEditedNofoGrantType] = useState<GrantTypeId | "">("");
 
+  const [summaryModalOpen, setSummaryModalOpen] = useState(false);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summarySaving, setSummarySaving] = useState(false);
+  const [originalSummary, setOriginalSummary] = useState<Record<string, unknown> | null>(null);
+  const [editedSummary, setEditedSummary] = useState<Record<string, unknown>>({});
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
   const [uploadGrantType, setUploadGrantType] = useState<GrantTypeId | "">("");
   const [uploadCategory, setUploadCategory] = useState<string>("");
+
+  const handleEditSummary = useCallback(async (nofo: NOFO) => {
+    setSelectedNofo(nofo);
+    setSummaryModalOpen(true);
+    setSummaryLoading(true);
+    try {
+      const result = await apiClient.landingPage.getNOFOSummary(nofo.name);
+      const data = result.data || {};
+      setOriginalSummary(JSON.parse(JSON.stringify(data)));
+      setEditedSummary(data);
+    } catch {
+      addNotification("error", "Failed to load grant summary. Please try again.");
+      setSummaryModalOpen(false);
+    } finally {
+      setSummaryLoading(false);
+    }
+  }, [apiClient, addNotification]);
+
+  const handleSummaryChange = useCallback((updated: Record<string, unknown>) => {
+    setEditedSummary(updated);
+  }, []);
+
+  const isSummaryChanged = useCallback(() => {
+    if (!originalSummary) return false;
+    return JSON.stringify(editedSummary) !== JSON.stringify(originalSummary);
+  }, [editedSummary, originalSummary]);
+
+  const confirmSaveSummary = useCallback(async () => {
+    if (!selectedNofo || !isSummaryChanged()) return;
+    setSummarySaving(true);
+    try {
+      await apiClient.landingPage.updateNOFOSummary(selectedNofo.name, editedSummary);
+      addNotification("success", `Summary for "${selectedNofo.name}" updated successfully`);
+      setSummaryModalOpen(false);
+      setSelectedNofo(null);
+      setOriginalSummary(null);
+      setEditedSummary({});
+    } catch {
+      addNotification("error", "Failed to save summary changes. Please try again.");
+    } finally {
+      setSummarySaving(false);
+    }
+  }, [selectedNofo, editedSummary, isSummaryChanged, apiClient, addNotification]);
+
+  const closeSummaryModal = useCallback(() => {
+    setSummaryModalOpen(false);
+    setSelectedNofo(null);
+    setOriginalSummary(null);
+    setEditedSummary({});
+  }, []);
 
   const handlePinGrant = async (nofo: NOFO, event?: React.MouseEvent) => {
     event?.stopPropagation();
@@ -239,6 +305,11 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 {nofo.isPinned && (
                   <span className="pinned-badge"><LuPin size={14} /><span>Pinned</span></span>
                 )}
+                {nofo.processingStatus && (
+                  <span className="processing-status-pill" aria-live="polite">
+                    {PROCESSING_LABELS[nofo.processingStatus] ?? nofo.processingStatus}
+                  </span>
+                )}
               </div>
               <div className="row-cell">
                 {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
@@ -277,6 +348,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   nofo={nofo}
                   onToggleStatus={() => toggleNofoStatus(nofo)}
                   onEdit={() => handleEditNofo(nofo)}
+                  onEditSummary={() => handleEditSummary(nofo)}
                   onDelete={() => handleDeleteNofo(nofo)}
                 />
               </div>
@@ -316,10 +388,9 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 <option value="state">State</option>
                 <option value="quasi">Quasi</option>
                 <option value="philanthropic">Philanthropic</option>
-                <option value="unknown">Unknown</option>
               </select>
             </div>
-            <div className="field-note">Federal, State, Quasi-governmental, Philanthropic, or Unknown.</div>
+            <div className="field-note">Federal, State, Quasi-governmental, or Philanthropic.</div>
           </div>
           <div className="modal-actions">
             <button className="modal-button secondary" onClick={() => setEditModalOpen(false)}>Cancel</button>
@@ -329,6 +400,44 @@ const NOFOsTab = React.memo(function NOFOsTab({
       </Modal>
 
       <DeleteConfirmationModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} onConfirm={confirmDeleteNofo} title="Delete Grant" itemName={selectedNofo?.name} itemLabel="grant" />
+
+      {/* Edit Summary Modal */}
+      <Modal
+        isOpen={summaryModalOpen}
+        onClose={closeSummaryModal}
+        title={`Edit Summary — ${selectedNofo?.name || ""}`}
+      >
+        <div className="modal-form" style={{ maxHeight: "70vh", overflowY: "auto" }}>
+          {summaryLoading ? (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--mds-color-text-secondary)" }}>
+              <LuLoader size={20} className="spin-animation" aria-hidden="true" />
+              <span role="status">Loading summary...</span>
+            </div>
+          ) : (
+            <>
+              <p className="modal-description" style={{ marginBottom: "16px" }}>
+                Review and correct the extracted grant summary below. Changes will take effect immediately for all users.
+              </p>
+              <SummaryEditor
+                editedSummary={editedSummary}
+                onSummaryChange={handleSummaryChange}
+              />
+              <div className="modal-actions" style={{ marginTop: "16px" }}>
+                <button className="modal-button secondary" onClick={closeSummaryModal}>
+                  Cancel
+                </button>
+                <button
+                  className="modal-button primary"
+                  onClick={confirmSaveSummary}
+                  disabled={!isSummaryChanged() || summarySaving}
+                >
+                  {summarySaving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </Modal>
 
       {/* Upload NOFO Modal */}
       <Modal
@@ -368,7 +477,6 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     <option value="state">State</option>
                     <option value="quasi">Quasi</option>
                     <option value="philanthropic">Philanthropic</option>
-                    <option value="unknown">Unknown</option>
                   </select>
                 </div>
                 <div className="field-note">Optional. Can be auto-detected or set later after upload.</div>

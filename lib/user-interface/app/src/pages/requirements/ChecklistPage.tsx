@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useHeaderOffset } from "../../hooks/use-header-offset";
@@ -15,7 +16,6 @@ const GRANT_TYPES: Record<string, { label: string; color: string }> = {
   state: { label: "State", color: "#2e8540" },
   quasi: { label: "Quasi", color: "#8168b3" },
   philanthropic: { label: "Philanthropic", color: "#e66f0e" },
-  unknown: { label: "Unknown", color: "#6b7280" },
 };
 
 interface LlmData {
@@ -236,7 +236,19 @@ const Checklists: React.FC = () => {
                   >
                     <p className="checklist-content__description">{tabContents[tabId].title}</p>
                     <div className="checklist-tabs__markdown">
-                      <ReactMarkdown className="custom-markdown">
+                      <ReactMarkdown
+                        className="custom-markdown"
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          a({ href, children, ...rest }) {
+                            return (
+                              <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>
+                                {children}
+                              </a>
+                            );
+                          },
+                        }}
+                      >
                         {tabContents[tabId].content}
                       </ReactMarkdown>
 

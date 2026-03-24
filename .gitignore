@@ -8,8 +8,8 @@ node_modules
 # CDK asset staging directory
 .cdk.staging
 cdk.out
-.cursor/*
-!.cursor/rules/
+.cursor/
+.claude/
 
 # Environment variables
 .env

@@ -14,6 +14,7 @@ export class TableStack extends Stack {
   public readonly nofoMetadataTable: Table;
   public readonly draftGenerationJobsTable: Table;
   public readonly featureRolloutTable: Table;
+  public readonly nofoProcessingReviewTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -89,6 +90,12 @@ export class TableStack extends Stack {
     //   projectionType: ProjectionType.ALL,
     // });
 
+    nofoMetadataTable.addGlobalSecondaryIndex({
+      indexName: 'ContentHashIndex',
+      partitionKey: { name: 'content_hash', type: AttributeType.STRING },
+      projectionType: ProjectionType.KEYS_ONLY,
+    });
+
     this.nofoMetadataTable = nofoMetadataTable;
 
     // Define the Draft Generation Jobs Table for async draft generation
@@ -107,5 +114,20 @@ export class TableStack extends Stack {
     });
 
     this.featureRolloutTable = featureRolloutTable;
+
+    const nofoProcessingReviewTable = new Table(this, 'NOFOProcessingReviewTable', {
+      partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
+      sortKey: { name: 'review_id', type: AttributeType.STRING },
+      timeToLiveAttribute: 'ttl',
+    });
+
+    nofoProcessingReviewTable.addGlobalSecondaryIndex({
+      indexName: 'StatusIndex',
+      partitionKey: { name: 'status', type: AttributeType.STRING },
+      sortKey: { name: 'created_at', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    this.nofoProcessingReviewTable = nofoProcessingReviewTable;
   }
 }

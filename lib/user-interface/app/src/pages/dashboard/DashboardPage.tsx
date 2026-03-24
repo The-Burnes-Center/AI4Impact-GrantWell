@@ -8,6 +8,7 @@ import NOFOsTab from "./components/NOFOsTab";
 import PaginationControls from "./components/PaginationControls";
 import FeatureRolloutsTab from "./components/FeatureRolloutsTab";
 import UserManagementTab from "./components/UserManagementTab";
+import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import {
   LuSearch, LuFilter, LuMail, LuUpload, LuCheck, LuX,
   LuRefreshCw, LuDownload, LuInfo,
@@ -18,7 +19,8 @@ import type { RawNOFOData } from "../../common/types/document";
 import "../../styles/dashboard.css";
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "feature-rollouts" | "user-management">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "processing-review" | "feature-rollouts" | "user-management">("grants");
+  const [pendingReviewCount, setPendingReviewCount] = useState(0);
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
@@ -44,6 +46,7 @@ const Dashboard: React.FC = () => {
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
   const grantsTabRef = useRef<HTMLButtonElement>(null);
+  const processingReviewTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
 
@@ -71,6 +74,7 @@ const Dashboard: React.FC = () => {
           grantType: nofo.grant_type || null,
           agency: nofo.agency || null,
           category: nofo.category || null,
+          processingStatus: nofo.processing_status ?? null,
         })));
       } else {
         setNofos((nofoResult.folders || []).map((nofo: string, index: number): NOFO => ({
@@ -91,10 +95,30 @@ const Dashboard: React.FC = () => {
     }
   }, [apiClient, addNotification]);
 
+  const fetchPendingReviewCount = useCallback(async () => {
+    try {
+      const m = await apiClient.landingPage.getProcessingMetrics();
+      setPendingReviewCount(m.pendingCount + m.failedCount);
+    } catch {
+      // Non-critical
+    }
+  }, [apiClient]);
+
   useEffect(() => {
     if (!isAdmin) return;
-    fetchNofos().then(() => setLoading(false));
-  }, [isAdmin, fetchNofos]);
+    Promise.all([fetchNofos(), fetchPendingReviewCount()]).then(() =>
+      setLoading(false)
+    );
+  }, [isAdmin, fetchNofos, fetchPendingReviewCount]);
+
+  // Poll for processing status when any NOFO is in progress
+  const hasProcessingNofos = nofos.some((n) => n.processingStatus);
+
+  useEffect(() => {
+    if (!isAdmin || !hasProcessingNofos) return;
+    const interval = setInterval(() => fetchNofos(), 10000);
+    return () => clearInterval(interval);
+  }, [isAdmin, hasProcessingNofos, fetchNofos]);
 
   useEffect(() => {
     if (!roleLoading && !isAdmin) {
@@ -108,6 +132,9 @@ const Dashboard: React.FC = () => {
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
       const tabs = [
         { key: "grants" as const, ref: grantsTabRef },
+        ...(isAdmin
+          ? [{ key: "processing-review" as const, ref: processingReviewTabRef }]
+          : []),
         ...(isDeveloper
           ? [{ key: "feature-rollouts" as const, ref: rolloutsTabRef }]
           : []),
@@ -167,11 +194,18 @@ const Dashboard: React.FC = () => {
       setIsScraping(true);
       addNotification("info", "Starting automated NOFO scraping...");
       const response = await apiClient.landingPage.triggerAutomatedScraper();
-      if (response.result && response.result.processed > 0) {
-        addNotification("success", `Successfully processed ${response.result.processed} new NOFOs!`);
+      const result = response.result ?? response;
+      const newCount = result.newQueued ?? result.processed ?? 0;
+      const updatedCount = result.updatedQueued ?? 0;
+      const total = newCount + updatedCount;
+      if (total > 0) {
+        const parts = [];
+        if (newCount > 0) parts.push(`${newCount} new`);
+        if (updatedCount > 0) parts.push(`${updatedCount} updated`);
+        addNotification("success", `Queued ${parts.join(" and ")} grant${total === 1 ? "" : "s"} for processing!`);
         await fetchNofos();
       } else {
-        addNotification("info", "No new NOFOs found to process.");
+        addNotification("info", "No new or updated NOFOs found.");
       }
     } catch {
       addNotification("error", "Failed to run automated NOFO scraper. Please try again.");
@@ -200,7 +234,11 @@ const Dashboard: React.FC = () => {
       nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     if (statusFilter !== "all") {
-      filtered = filtered.filter((nofo) => (nofo.status || "active") === statusFilter);
+      filtered = filtered.filter((nofo) => {
+        const s = nofo.status || "active";
+        if (statusFilter === "active") return s === "active";
+        return s === statusFilter;
+      });
     }
     if (grantTypeFilter !== "all") {
       filtered = filtered.filter((nofo) => nofo.grantType === grantTypeFilter);
@@ -249,9 +287,11 @@ const Dashboard: React.FC = () => {
   const filterCount = getActiveFilterCount();
   const activeTabAnnouncement = activeTab === "grants"
     ? "Grants tab selected"
-    : activeTab === "feature-rollouts"
-      ? "Developer rollouts tab selected"
-      : "Developer user management tab selected";
+    : activeTab === "processing-review"
+      ? "Processing review tab selected"
+      : activeTab === "feature-rollouts"
+        ? "Developer rollouts tab selected"
+        : "Developer user management tab selected";
 
   return (
     <div className="dashboard-shell">
@@ -311,6 +351,45 @@ const Dashboard: React.FC = () => {
             >
               Grants
             </button>
+            {isAdmin && (
+              <button
+                id="dashboard-tab-processing-review"
+                ref={processingReviewTabRef}
+                className={`tab-button ${activeTab === "processing-review" ? "active" : ""}`}
+                onClick={() => setActiveTab("processing-review")}
+                onKeyDown={handleTabKeyDown}
+                role="tab"
+                aria-selected={activeTab === "processing-review"}
+                aria-controls="dashboard-panel-processing-review"
+                tabIndex={activeTab === "processing-review" ? 0 : -1}
+                style={{ position: "relative" }}
+              >
+                Processing Review
+                {pendingReviewCount > 0 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "4px",
+                      right: "4px",
+                      backgroundColor: "var(--mds-color-danger)",
+                      color: "var(--mds-color-white)",
+                      borderRadius: "50%",
+                      width: "20px",
+                      height: "20px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      lineHeight: 1,
+                    }}
+                    aria-label={`${pendingReviewCount} items need review`}
+                  >
+                    {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
+                  </span>
+                )}
+              </button>
+            )}
             {isDeveloper && (
               <button
                 id="dashboard-tab-rollouts"
@@ -381,7 +460,7 @@ const Dashboard: React.FC = () => {
                           ))}
                           <div className="filter-menu-divider" />
                           <div className="filter-menu-header">Filter by Grant Type</div>
-                          {(["all", "federal", "state", "quasi", "philanthropic", "unknown"] as const).map((type) => (
+                          {(["all", "federal", "state", "quasi", "philanthropic"] as const).map((type) => (
                             <button key={type} onClick={() => setGrantTypeFilter(type)}
                               className={`filter-option ${grantTypeFilter === type ? "selected" : ""}`}
                               role="menuitemradio" aria-checked={grantTypeFilter === type}>
@@ -441,6 +520,18 @@ const Dashboard: React.FC = () => {
                   itemsPerPage={itemsPerPage}
                   onPageChange={setCurrentPage}
                   onItemsPerPageChange={(e) => { setItemsPerPage(parseInt(e.target.value)); setCurrentPage(1); }}
+                />
+              </div>
+            ) : activeTab === "processing-review" ? (
+              <div
+                id="dashboard-panel-processing-review"
+                role="tabpanel"
+                aria-labelledby="dashboard-tab-processing-review"
+                tabIndex={0}
+              >
+                <ProcessingReviewTab
+                  apiClient={apiClient}
+                  addNotification={addNotification}
                 />
               </div>
             ) : activeTab === "feature-rollouts" ? (

@@ -129,6 +129,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       label: nofo.name,
       value: nofo.name + "/",
     });
+    onSearchTermChange?.(nofo.name);
 
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -143,10 +144,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     );
   }
 
-  const getGrantTypeBadgeClassName = (grantType: GrantTypeId) =>
-    grantType === "unknown"
-      ? "landing-grant-type-badge landing-grant-type-badge--unknown"
-      : "landing-grant-type-badge";
+  const getGrantTypeBadgeClassName = () => "landing-grant-type-badge";
 
   return (
     <div className="landing-grants-table-container">
@@ -311,20 +309,11 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                 <div className="landing-row-cell">
                   {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
                     <span
-                      className={getGrantTypeBadgeClassName(nofo.grantType)}
+                      className={getGrantTypeBadgeClassName()}
                       style={{
-                        backgroundColor:
-                          nofo.grantType === "unknown"
-                            ? undefined
-                            : `${GRANT_TYPES[nofo.grantType].color}15`,
-                        color:
-                          nofo.grantType === "unknown"
-                            ? undefined
-                            : GRANT_TYPES[nofo.grantType].color,
-                        borderColor:
-                          nofo.grantType === "unknown"
-                            ? undefined
-                            : `${GRANT_TYPES[nofo.grantType].color}40`,
+                        backgroundColor: `${GRANT_TYPES[nofo.grantType].color}15`,
+                        color: GRANT_TYPES[nofo.grantType].color,
+                        borderColor: `${GRANT_TYPES[nofo.grantType].color}40`,
                         opacity: isArchived ? 0.6 : 1,
                       }}
                     >

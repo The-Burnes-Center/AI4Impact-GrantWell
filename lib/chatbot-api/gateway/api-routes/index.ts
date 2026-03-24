@@ -22,7 +22,6 @@ export interface RoutesProps {
   getNOFOSummaryFunction: lambda.Function;
   kbSyncFunction: lambda.Function;
   draftGeneratorFunction: lambda.Function;
-  automatedNofoScraperFunction: lambda.Function;
   applicationPdfGeneratorFunction: lambda.Function;
   draftGenerationJobsTableName: string;
 }
@@ -201,40 +200,6 @@ export class Routes extends Construct {
       path: '/draft-generation-jobs/{jobId}',
       methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.OPTIONS],
       integration: draftJobStatusIntegration,
-    });
-
-    // Automated NOFO Scraper Lambda Integration
-    // Create a new dedicated Lambda function for the REST API endpoint
-    const automatedNofoScraperAPIFunction = new lambda.Function(this, 'AutomatedNofoScraperAPIFunction', {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, 'automated-nofo-scraper-api')),
-      handler: 'index.handler',
-      environment: {
-        AUTOMATED_NOFO_SCRAPER_FUNCTION: props.automatedNofoScraperFunction.functionName,
-      },
-      timeout: Duration.seconds(30),
-    });
-
-    // Grant the API function permission to invoke the Automated NOFO Scraper function
-    automatedNofoScraperAPIFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ['lambda:InvokeFunction'],
-        resources: [props.automatedNofoScraperFunction.functionArn],
-      })
-    );
-
-    // Create the API integration
-    const automatedNofoScraperIntegration = new HttpLambdaIntegration(
-      'AutomatedNofoScraperIntegration',
-      automatedNofoScraperAPIFunction
-    );
-
-    // Add the route to the HTTP API
-    props.httpApi.addRoutes({
-      path: '/automated-nofo-scraper',
-      methods: [apigwv2.HttpMethod.POST, apigwv2.HttpMethod.OPTIONS],
-      integration: automatedNofoScraperIntegration,
     });
 
     // Application PDF Generator Lambda Integration
