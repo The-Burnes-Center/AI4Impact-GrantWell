@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { LuWrench, LuChevronUp, LuTriangleAlert } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import type {
@@ -44,6 +44,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   const [appliedFixes, setAppliedFixes] = useState<Set<string>>(new Set());
   const [acknowledgedFixes, setAcknowledgedFixes] = useState<Set<string>>(new Set());
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadDetail = useCallback(async () => {
     try {
@@ -398,6 +399,44 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     }
   };
 
+  const handleReuploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["application/pdf", "text/plain"];
+    if (!allowedTypes.includes(file.type)) {
+      addNotification("error", "Only PDF or TXT files are supported");
+      return;
+    }
+
+    setActionInProgress("reupload");
+    try {
+      const { signedUrl } = await apiClient.landingPage.getReuploadUrl(review.nofo_name, file.type);
+
+      const uploadResponse = await fetch(signedUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type },
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed: ${uploadResponse.status}`);
+      }
+
+      addNotification("success", `New document uploaded for "${review.nofo_name}". The pipeline will reprocess it shortly.`);
+      onActionComplete();
+    } catch {
+      addNotification("error", "Failed to upload replacement document");
+    } finally {
+      setActionInProgress(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   if (loading) {
     return (
       <div
@@ -721,12 +760,22 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             </div>
           </Modal>
 
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.txt"
+            style={{ display: "none" }}
+            onChange={handleFileSelected}
+            aria-label="Select replacement NOFO file"
+          />
           <ReviewActions
             actionInProgress={actionInProgress}
             hasCorrections={getCorrections() !== undefined}
+            canApprove={detail.adminGuidance?.canApprove !== false}
             onApprove={handleApprove}
             onReject={handleRejectClick}
             onReprocess={handleReprocess}
+            onReupload={handleReuploadClick}
             rejectDisabled={!adminNotes.trim()}
           />
         </>

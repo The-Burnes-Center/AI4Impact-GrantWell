@@ -43,6 +43,7 @@ export interface AdminGuidance {
   message: string;
   actions: string[];
   missingCategories: string[];
+  canApprove: boolean;
 }
 
 export interface ReviewDetail extends ReviewItem {

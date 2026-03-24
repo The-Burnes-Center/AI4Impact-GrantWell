@@ -362,6 +362,23 @@ export class LandingPageClient {
     }
   }
 
+  async getReuploadUrl(nofoName: string, fileType: string): Promise<{ signedUrl: string; objectKey: string }> {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(`${this.API}/admin/reupload-nofo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: token },
+        body: JSON.stringify({ nofoName, fileType }),
+      });
+
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error("Error getting re-upload URL:", error);
+      throw error;
+    }
+  }
+
   async reprocessNofo(nofoName: string): Promise<void> {
     try {
       const token = await Utils.authenticate();
