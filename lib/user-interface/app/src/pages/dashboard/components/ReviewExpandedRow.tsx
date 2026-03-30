@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { LuWrench, LuChevronUp, LuTriangleAlert } from "react-icons/lu";
+import { LuChevronUp, LuTriangleAlert } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import type {
   ReviewItem,
   ReviewDetail,
-  ValidationIssue,
 } from "../../../common/types/processing-review";
-import ValidationIssueCard from "./ValidationIssueCard";
 import SummaryEditor from "./SummaryEditor";
 import SummaryDiff from "./SummaryDiff";
 import ReviewActions from "./ReviewActions";
@@ -18,13 +16,6 @@ interface ReviewExpandedRowProps {
   onActionComplete: () => void;
   addNotification: (type: string, message: string) => void;
   onCollapse: () => void;
-}
-
-interface SummaryField {
-  item: string;
-  description: string;
-  confidence?: string;
-  removed?: boolean;
 }
 
 const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
@@ -42,8 +33,6 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [editedSummary, setEditedSummary] = useState<Record<string, unknown> | null>(null);
   const [showDiff, setShowDiff] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
-  const [appliedFixes, setAppliedFixes] = useState<Set<string>>(new Set());
-  const [acknowledgedFixes, setAcknowledgedFixes] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadDetail = useCallback(async () => {
@@ -66,262 +55,6 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     loadDetail();
   }, [loadDetail]);
 
-  const getIssueKey = useCallback(
-    (issue: ValidationIssue) => `${issue.severity}|${issue.field}|${issue.category}|${issue.description}`,
-    []
-  );
-
-  const extractQuotedText = (text: string): string | null => {
-    const doubleQuote = text.match(/"([^"]+)"/);
-    if (doubleQuote) return doubleQuote[1];
-    const singleQuote = text.match(/'((?:[^']|'(?=[a-z]))+)'/);
-    if (singleQuote) return singleQuote[1];
-    return null;
-  };
-
-  const extractListedItems = (text: string): string[] => {
-    const listPrefixes = /(?:such as|including|like|e\.g\.?|namely)\s+/i;
-    const match = text.match(listPrefixes);
-    if (!match || match.index === undefined) return [];
-    const listPart = text.slice(match.index + match[0].length);
-    return listPart
-      .split(/,\s*(?:and\s+)?|,?\s+and\s+/)
-      .map((s) => s.replace(/\.+$/, "").trim())
-      .filter(Boolean);
-  };
-
-  const CATEGORY_PREFIXES =
-    /^(?:(?:eligibility|eligible)\s+(?:criterion|criteria|requirement)\s+(?:about|for|regarding|related to|on)\s+|(?:required?\s+)?document\s+(?:for|about|regarding)\s+|(?:narrative\s+)?section\s+(?:for|about|on|regarding)\s+|(?:key\s+)?deadline\s+(?:for|about|regarding)\s+|requirement\s+(?:for|about|regarding|that|to)\s+)/i;
-
-  const cleanItemName = (raw: string): string => {
-    let name = raw.replace(CATEGORY_PREFIXES, "").trim();
-    name = name.replace(/\s*\(.*\)\s*$/, "").trim();
-    if (name.length > 2) return name.charAt(0).toUpperCase() + name.slice(1);
-    return raw.charAt(0).toUpperCase() + raw.slice(1);
-  };
-
-  const cleanDescription = (description: string): string => {
-    const cleaned = description
-      .replace(/^Missing\s+(?:the\s+)?(?:critical\s+)?(?:requirement\s+)?(?:that\s+)?/i, "")
-      .replace(/^Added from validation:\s*/i, "")
-      .trim();
-    if (cleaned.length > 10) return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-    return description;
-  };
-
-  const INSTRUCTIONAL_PATTERN =
-    /^(?:clarify|move|consider|review|ensure|verify|check|note|the extraction|this (?:item|entry|section)|update the|rephrase|reword|reorganize)/i;
-
-  const deriveItemName = (suggestedFix: string, description: string): string => {
-    const colonMatch = suggestedFix.match(/^[^:]+:\s+([A-Z][^.]+)/);
-    if (colonMatch) {
-      const name = cleanItemName(colonMatch[1]);
-      if (name.length > 5 && name.length < 80) return name;
-    }
-
-    const addMatch = suggestedFix.match(
-      /^(?:add|include|insert)\s+(?:the\s+|missing\s+|a\s+)?(.+?)(?:\s+(?:given|since|because|due to|as stated|which|from|per)\b.*)?$/i
-    );
-    if (addMatch) {
-      return cleanItemName(addMatch[1]);
-    }
-
-    const missingMatch = description.match(
-      /^Missing\s+(?:the\s+|a\s+)?(?:critical\s+)?(.+?)(?:\s+(?:which|that|mentioned|stated|guidance|from)\b.*)?$/i
-    );
-    if (missingMatch) {
-      return cleanItemName(missingMatch[1]);
-    }
-
-    const words = description.split(/\s+/).slice(0, 6).join(" ");
-    return words.length < description.length ? `${words}...` : description;
-  };
-
-  const ARRAY_FIELDS = [
-    "EligibilityCriteria",
-    "RequiredDocuments",
-    "ProjectNarrativeSections",
-    "KeyDeadlines",
-  ];
-
-  const applySingleFix = (
-    summary: Record<string, unknown>,
-    issue: ValidationIssue
-  ): { updated: Record<string, unknown>; applied: boolean } => {
-    if (!issue.suggestedFix) return { updated: summary, applied: false };
-
-    const fixLower = issue.suggestedFix.toLowerCase();
-    const fieldMatch = issue.field.match(/^(\w+)\[(\d+)\]$/);
-
-    if (fieldMatch) {
-      const [, arrayName, indexStr] = fieldMatch;
-      const index = parseInt(indexStr, 10);
-      const arr = summary[arrayName] as SummaryField[] | undefined;
-      if (!arr || !Array.isArray(arr) || !arr[index]) {
-        return { updated: summary, applied: false };
-      }
-
-      if (issue.category === "hallucination" || fixLower.includes("remove")) {
-        const updated = [...arr];
-        updated[index] = { ...updated[index], removed: true };
-        return { updated: { ...summary, [arrayName]: updated }, applied: true };
-      }
-
-      if (issue.category === "inaccuracy" || issue.category === "incomplete") {
-        const quoted = extractQuotedText(issue.suggestedFix);
-        if (quoted) {
-          const updated = [...arr];
-          updated[index] = { ...updated[index], description: quoted };
-          return { updated: { ...summary, [arrayName]: updated }, applied: true };
-        }
-        if (INSTRUCTIONAL_PATTERN.test(issue.suggestedFix)) {
-          return { updated: summary, applied: false };
-        }
-        const updated = [...arr];
-        updated[index] = { ...updated[index], description: issue.suggestedFix };
-        return { updated: { ...summary, [arrayName]: updated }, applied: true };
-      }
-    }
-
-    if (!fieldMatch) {
-      const targetField = ARRAY_FIELDS.find(
-        (f) => issue.field === f || issue.field.startsWith(f)
-      );
-
-      if (targetField) {
-        const arr = (summary[targetField] as SummaryField[]) || [];
-
-        if (issue.category !== "missing_field") {
-          if (/\bremove\b/i.test(fixLower) && arr.length > 0) {
-            const updated = arr.map((item) => ({ ...item, removed: true }));
-            return { updated: { ...summary, [targetField]: updated }, applied: true };
-          }
-          return { updated: summary, applied: false };
-        }
-
-        if (INSTRUCTIONAL_PATTERN.test(issue.suggestedFix)) {
-          return { updated: summary, applied: false };
-        }
-
-        const quoted = extractQuotedText(issue.suggestedFix);
-        const desc = cleanDescription(issue.description);
-
-        if (quoted) {
-          const newItem: SummaryField = { item: quoted, description: desc };
-          return {
-            updated: { ...summary, [targetField]: [...arr, newItem] },
-            applied: true,
-          };
-        }
-
-        const listedItems = extractListedItems(issue.description);
-        if (listedItems.length > 0) {
-          const newItems = listedItems.map((name) => ({
-            item: name,
-            description: desc,
-          }));
-          return {
-            updated: { ...summary, [targetField]: [...arr, ...newItems] },
-            applied: true,
-          };
-        }
-
-        const itemName = deriveItemName(issue.suggestedFix, issue.description);
-        const newItem: SummaryField = {
-          item: itemName,
-          description: desc,
-        };
-        return {
-          updated: { ...summary, [targetField]: [...arr, newItem] },
-          applied: true,
-        };
-      }
-
-      if (typeof summary[issue.field] === "string") {
-        const quoted = extractQuotedText(issue.suggestedFix);
-        if (quoted) {
-          return { updated: { ...summary, [issue.field]: quoted }, applied: true };
-        }
-      }
-
-      if (issue.field === "Category" && /\bchange\b.*\bcategory\b/i.test(issue.suggestedFix)) {
-        const CATEGORIES = [
-          "Recovery Act", "Agriculture", "Arts", "Business and Commerce",
-          "Community Development", "Consumer Protection", "Disaster Prevention and Relief",
-          "Education", "Employment, Labor, and Training", "Energy",
-          "Energy Infrastructure and Critical Mineral and Materials (EICMM)",
-          "Environment", "Food and Nutrition", "Health", "Housing", "Humanities",
-          "Information and Statistics", "Infrastructure Investment and Jobs Act",
-          "Income Security and Social Services", "Law, Justice, and Legal Services",
-          "Natural Resources", "Opportunity Zone Benefits", "Regional Development",
-          "Science, Technology, and Other Research and Development", "Transportation",
-          "Affordable Care Act",
-        ];
-        const fixWords = fixLower.split(/\W+/);
-        const match = CATEGORIES.find((cat) => {
-          const catWords = cat.toLowerCase().split(/\W+/);
-          return catWords.some((w) => w.length > 3 && fixWords.includes(w));
-        });
-        if (match && match !== summary.Category) {
-          return { updated: { ...summary, Category: match }, applied: true };
-        }
-      }
-    }
-
-    return { updated: summary, applied: false };
-  };
-
-  const handleApplyFix = (issue: ValidationIssue) => {
-    if (!editedSummary) return;
-    const key = getIssueKey(issue);
-    if (appliedFixes.has(key)) return;
-
-    const { updated, applied } = applySingleFix(editedSummary, issue);
-    if (applied) {
-      setEditedSummary(updated);
-      setAppliedFixes((prev) => new Set(prev).add(key));
-      addNotification("info", `Applied suggested fix for ${issue.field}`);
-    } else {
-      setAppliedFixes((prev) => new Set(prev).add(key));
-      setAcknowledgedFixes((prev) => new Set(prev).add(key));
-      addNotification(
-        "info",
-        `Acknowledged: "${issue.field}" requires manual review. Edit the summary below if needed.`
-      );
-    }
-  };
-
-  const handleApplyAllFixes = () => {
-    if (!editedSummary || !detail?.validationResult?.issues) return;
-    const fixableIssues = detail.validationResult.issues.filter(
-      (i) => i.suggestedFix && !appliedFixes.has(getIssueKey(i))
-    );
-    if (fixableIssues.length === 0) {
-      addNotification("info", "No automatic fixes available");
-      return;
-    }
-
-    let current = editedSummary;
-    let appliedCount = 0;
-    const newApplied = new Set(appliedFixes);
-    for (const issue of fixableIssues) {
-      const { updated, applied } = applySingleFix(current, issue);
-      if (applied) {
-        current = updated;
-        newApplied.add(getIssueKey(issue));
-        appliedCount++;
-      }
-    }
-
-    if (appliedCount > 0) {
-      setEditedSummary(current);
-      setAppliedFixes(newApplied);
-      addNotification("info", `Applied ${appliedCount} of ${fixableIssues.length} suggested fixes`);
-    } else {
-      addNotification("info", "No fixes could be applied automatically");
-    }
-  };
-
   const getCorrections = (): Record<string, unknown> | undefined => {
     if (!editedSummary || !detail?.extractedSummary) return undefined;
     if (JSON.stringify(editedSummary) === JSON.stringify(detail.extractedSummary)) {
@@ -332,6 +65,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     for (const key of Object.keys(editedSummary)) {
       const edited = editedSummary[key];
       if (Array.isArray(edited)) {
+        type SummaryField = { removed?: boolean; [key: string]: unknown };
         const filtered = (edited as SummaryField[]).filter((item) => !item.removed);
         if (JSON.stringify(filtered) !== JSON.stringify(detail.extractedSummary[key])) {
           corrections[key] = filtered;
@@ -456,10 +190,6 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     );
   }
 
-  const issues = detail.validationResult?.issues || [];
-  const criticalIssues = issues.filter((i) => i.severity === "critical");
-  const warningIssues = issues.filter((i) => i.severity === "warning");
-  const infoIssues = issues.filter((i) => i.severity === "info");
   const isResolved = review.status === "approved" || review.status === "rejected";
 
   return (
@@ -471,13 +201,8 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       <div className="review-expanded-row__header">
         <div>
           <h3 style={{ margin: 0, fontSize: "15px", color: "var(--mds-color-heading)" }}>
-            Validation Issues ({issues.length})
+            Review Details
           </h3>
-          {appliedFixes.size > 0 && issues.length > 0 && (
-            <p className="review-fix-progress" role="status" aria-live="polite">
-              {appliedFixes.size} of {issues.length} issue{issues.length !== 1 ? "s" : ""} fixed
-            </p>
-          )}
         </div>
         <button
           className="review-btn review-btn--collapse"
@@ -515,34 +240,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
         </div>
       )}
 
-      {issues.length > 0 ? (
-        <div style={{ marginBottom: "16px" }}>
-          {criticalIssues.map((issue, i) => (
-            <ValidationIssueCard key={`crit-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue)) && !acknowledgedFixes.has(getIssueKey(issue))} isAcknowledged={acknowledgedFixes.has(getIssueKey(issue))} />
-          ))}
-          {warningIssues.map((issue, i) => (
-            <ValidationIssueCard key={`warn-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue)) && !acknowledgedFixes.has(getIssueKey(issue))} isAcknowledged={acknowledgedFixes.has(getIssueKey(issue))} />
-          ))}
-          {infoIssues.map((issue, i) => (
-            <ValidationIssueCard key={`info-${i}`} issue={issue} onApplyFix={handleApplyFix} isFixed={appliedFixes.has(getIssueKey(issue)) && !acknowledgedFixes.has(getIssueKey(issue))} isAcknowledged={acknowledgedFixes.has(getIssueKey(issue))} />
-          ))}
-          {issues.length > 1 && (() => {
-            const fixableIssues = issues.filter((i) => i.suggestedFix);
-            const allFixesApplied = fixableIssues.length > 0 && fixableIssues.every((i) => appliedFixes.has(getIssueKey(i)));
-            return (
-              <button
-                className="review-btn review-btn--apply-all"
-                onClick={handleApplyAllFixes}
-                disabled={allFixesApplied || fixableIssues.length === 0}
-                aria-label={allFixesApplied ? "All fixes applied" : "Apply all suggested fixes"}
-              >
-                <LuWrench size={14} aria-hidden="true" />
-                {allFixesApplied ? "All Fixes Applied" : "Apply All Fixes"}
-              </button>
-            );
-          })()}
-        </div>
-      ) : (detail.errorMessage || review.source !== "pipeline") ? (
+      {(detail.errorMessage || review.source !== "pipeline") && !detail.adminGuidance && (
         <div className="review-dlq-alert" role="alert">
           {review.source === "dlq" && (
             <>
@@ -607,7 +305,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             </div>
           )}
         </div>
-      ) : null}
+      )}
 
       {editedSummary && (
         <>

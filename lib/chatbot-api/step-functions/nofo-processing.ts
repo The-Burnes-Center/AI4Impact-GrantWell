@@ -102,18 +102,11 @@ export class NofoProcessingStateMachine extends Construct {
       jitterStrategy: sfn.JitterType.FULL,
     });
 
-    // Step 4: Validate
-    const validate = new tasks.LambdaInvoke(this, "Validate", {
+    // Step 4: Content check (programmatic — no LLM calls)
+    const validate = new tasks.LambdaInvoke(this, "ContentCheck", {
       lambdaFunction: props.validateFunction,
       outputPath: "$.Payload",
       retryOnServiceExceptions: true,
-    });
-    validate.addRetry({
-      errors: ["ThrottlingException", "TooManyRequestsException"],
-      interval: cdk.Duration.seconds(20),
-      maxAttempts: 5,
-      backoffRate: 2,
-      jitterStrategy: sfn.JitterType.FULL,
     });
 
     // Step 5: Publish (for auto-approved PASS results)
@@ -123,24 +116,9 @@ export class NofoProcessingStateMachine extends Construct {
       retryOnServiceExceptions: true,
     });
 
-    // Retry loop: increment counter and re-run extraction with validation feedback
-    const incrementRetry = new sfn.Pass(this, "IncrementRetry", {
-      parameters: {
-        "s3Bucket.$": "$.s3Bucket",
-        "documentKey.$": "$.documentKey",
-        "nofoName.$": "$.nofoName",
-        "rawTextKey.$": "$.rawTextKey",
-        "documentLength.$": "$.documentLength",
-        "contentHash.$": "$.contentHash",
-        "retryCount.$": "States.MathAdd($.retryCount, 1)",
-        "validationFeedback.$": "States.JsonToString($.validationResult.issues)",
-      },
-    });
-
-    // Route based on validation verdict:
-    //   PASS          → auto-publish (no admin review needed)
-    //   FAIL + retry  → re-run extraction with feedback
-    //   NEEDS_REVIEW  → quarantine for admin approval before publishing
+    // Route based on content check verdict:
+    //   PASS → auto-publish
+    //   Otherwise → quarantine for admin review
     const evaluateValidation = new sfn.Choice(this, "EvaluateValidation")
       .when(
         sfn.Condition.stringEquals(
@@ -148,16 +126,6 @@ export class NofoProcessingStateMachine extends Construct {
           "PASS"
         ),
         publish
-      )
-      .when(
-        sfn.Condition.and(
-          sfn.Condition.stringEquals(
-            "$.validationResult.overallVerdict",
-            "FAIL"
-          ),
-          sfn.Condition.numberLessThan("$.retryCount", 2)
-        ),
-        incrementRetry.next(extractAndAnalyze)
       )
       .otherwise(quarantine);
 

@@ -579,8 +579,6 @@ export class LambdaFunctionStack extends cdk.Stack {
       timeout: cdk.Duration.minutes(3),
       memorySize: 512,
     });
-    validateFunction.addToRolePolicy(s3ReadWritePolicy);
-    validateFunction.addToRolePolicy(bedrockInvokePolicy);
     validateFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const publishFunction = new lambda.Function(scope, "PublishFunction", {

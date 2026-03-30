@@ -30,10 +30,10 @@ const STATUS_CLASS_MAP: Record<string, string> = {
   failed: "review-status-badge--failed",
 };
 
-const getQualityClass = (score: number): string => {
-  if (score >= 80) return "review-quality-score--high";
-  if (score >= 50) return "review-quality-score--medium";
-  return "review-quality-score--low";
+const SOURCE_LABELS: Record<string, string> = {
+  dlq: "DLQ failure",
+  duplicate: "Duplicate detected",
+  quality: "Quality check failed",
 };
 
 const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
@@ -92,59 +92,40 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     setExpandedNofo((prev) => (prev === nofoName ? null : nofoName));
   };
 
-  const SOURCE_LABELS: Record<string, string> = {
-    dlq: "DLQ failure",
-    duplicate: "Duplicate detected",
-    quality: "Quality check failed",
-  };
-
-  const getIssuesSummary = (review: ReviewItem) => {
-    const { critical, warning } = review.issueCount;
-    const parts: React.ReactNode[] = [];
-
-    if (critical > 0) {
-      parts.push(
-        <span key="crit" className="review-issue-count review-issue-count--critical">
-          <LuCircleAlert size={12} aria-hidden="true" />
-          {critical} critical
-        </span>
-      );
-    }
-    if (warning > 0) {
-      parts.push(
-        <span key="warn" className="review-issue-count review-issue-count--warning">
-          <LuTriangleAlert size={12} aria-hidden="true" />
-          {warning} warning{warning !== 1 ? "s" : ""}
-        </span>
-      );
-    }
-
-    if (parts.length === 0) {
-      const sourceLabel = SOURCE_LABELS[review.source];
-      if (sourceLabel) {
-        return (
-          <span className="review-issue-count review-issue-count--critical">
-            <LuCircleAlert size={12} aria-hidden="true" />
-            {sourceLabel}
-          </span>
-        );
-      }
-      if (review.errorMessage) {
-        return (
-          <span className="review-issue-count review-issue-count--warning">
-            <LuTriangleAlert size={12} aria-hidden="true" />
-            Processing error
-          </span>
-        );
-      }
+  const getReasonSummary = (review: ReviewItem) => {
+    if (review.missingSections && review.missingSections.length > 0) {
       return (
-        <span style={{ fontSize: "12px", color: "var(--mds-color-text-secondary)" }}>
-          No issues
+        <span className="review-issue-count review-issue-count--warning">
+          <LuTriangleAlert size={12} aria-hidden="true" />
+          Missing: {review.missingSections.join(", ")}
         </span>
       );
     }
 
-    return <span className="review-issue-summary">{parts}</span>;
+    const sourceLabel = SOURCE_LABELS[review.source];
+    if (sourceLabel) {
+      return (
+        <span className="review-issue-count review-issue-count--critical">
+          <LuCircleAlert size={12} aria-hidden="true" />
+          {sourceLabel}
+        </span>
+      );
+    }
+
+    if (review.errorMessage) {
+      return (
+        <span className="review-issue-count review-issue-count--warning">
+          <LuTriangleAlert size={12} aria-hidden="true" />
+          Processing error
+        </span>
+      );
+    }
+
+    return (
+      <span style={{ fontSize: "12px", color: "var(--mds-color-text-secondary)" }}>
+        No issues
+      </span>
+    );
   };
 
   return (
@@ -174,10 +155,9 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
       </div>
 
       <div className="table-container">
-        <div className="table-header" style={{ gridTemplateColumns: "1fr 80px 160px 120px 80px" }}>
+        <div className="table-header" style={{ gridTemplateColumns: "1fr 200px 120px 80px" }}>
           <div className="header-cell">NOFO Name</div>
-          <div className="header-cell">Score</div>
-          <div className="header-cell">Issues</div>
+          <div className="header-cell">Reason</div>
           <div className="header-cell">Status</div>
           <div className="header-cell">Actions</div>
         </div>
@@ -200,7 +180,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               <div key={`${review.nofo_name}-${review.review_id}`} role="listitem">
                 <div
                   className={`table-row review-table-row ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""}`}
-                  style={{ gridTemplateColumns: "1fr 80px 160px 120px 80px" }}
+                  style={{ gridTemplateColumns: "1fr 200px 120px 80px" }}
                   onClick={() => toggleExpand(review.nofo_name)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
@@ -211,19 +191,14 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                   tabIndex={0}
                   role="button"
                   aria-expanded={expandedNofo === review.nofo_name}
-                  aria-label={`Review for ${review.nofo_name}, score ${review.qualityScore}`}
+                  aria-label={`Review for ${review.nofo_name}`}
                 >
                   <div className="row-cell">
                     <span className="nofo-name" style={{ fontSize: "13px" }}>
                       {review.nofo_name}
                     </span>
                   </div>
-                  <div className="row-cell">
-                    <span className={`review-quality-score ${getQualityClass(review.qualityScore)}`}>
-                      {review.qualityScore}/100
-                    </span>
-                  </div>
-                  <div className="row-cell">{getIssuesSummary(review)}</div>
+                  <div className="row-cell">{getReasonSummary(review)}</div>
                   <div className="row-cell">
                     <span className={`review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
                       {STATUS_LABELS[review.status] || review.status}

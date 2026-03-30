@@ -19,7 +19,7 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
   if (loading || !metrics) {
     return (
       <div className="metrics-grid" aria-busy="true" aria-label="Loading processing metrics">
-        {[1, 2, 3, 4, 5].map((i) => (
+        {[1, 2, 3, 4].map((i) => (
           <div key={i} className="metric-card metric-card--skeleton" />
         ))}
       </div>
@@ -37,10 +37,6 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
           {metrics.successRate}%
         </div>
         <div className="metric-card__label">Success Rate</div>
-      </div>
-      <div className="metric-card" role="status" aria-label={`Avg Quality: ${metrics.avgQualityScore}/100`}>
-        <div className="metric-card__value">{metrics.avgQualityScore}/100</div>
-        <div className="metric-card__label">Avg Quality</div>
       </div>
       <div className="metric-card" role="status" aria-label={`Pending Review: ${metrics.pendingCount}`}>
         <div className={`metric-card__value ${metrics.pendingCount > 0 ? "review-quality-score--medium" : ""}`}>
