@@ -35,7 +35,7 @@ The application features multiple interactive interfaces including a landing pag
 
 ## Architecture
 
-<img src="https://raw.githubusercontent.com/Anuttan/Grantwell-MVP/main/lib/user-interface/app/public/images/architecture.png" alt="System Architecture" width="500">
+<img src="lib/user-interface/app/public/images/architecture.png" alt="System Architecture" width="500">
 
 For more information about the architecture, visit the [AWS GenAI LLM Chatbot](https://aws-samples.github.io/aws-genai-llm-chatbot/).
 
@@ -54,8 +54,8 @@ For more information about the architecture, visit the [AWS GenAI LLM Chatbot](h
 
 ```bash
 # Clone the repo
-git clone https://github.com/Anuttan/GrantWell-MVP.git
-cd GrantWell-MVP
+git clone https://github.com/The-Burnes-Center/AI4Impact-GrantWell.git
+cd AI4Impact-GrantWell
 
 # Install dependencies
 npm install
@@ -102,17 +102,9 @@ npm run dev
 - Encrypted data transmission
 - PDFs are preferred for file uploads (ZIP files not supported)
 
-## Roadmap
-
-- [ ] Enhanced grant matching algorithms
-- [ ] Collaborative editing features
-- [ ] Advanced document version control
-- [ ] Expanded analytics and reporting
-
 ## Contributing
 
 This is an internal tool for Massachusetts Federal Funds and Infrastructure (FFIO) staff. Please contact the administrators for access and contribution guidelines.
-
 
 ## License
 
@@ -135,7 +127,3 @@ MIT License – see `LICENSE.md` for details.
 - Ensure you upload your supplementary data before starting a conversation with the chatbot.
 - NOFO documents must be properly named before uploading to GrantWell.
 - Always fact-check any information provided by GrantWell that you are uncertain about.
-
-## Feedback
-
-Help us make GrantWell better by sharing your thoughts and suggestions through our [feedback form](https://forms.gle/M2PHgWTVVRrRubpc7).
