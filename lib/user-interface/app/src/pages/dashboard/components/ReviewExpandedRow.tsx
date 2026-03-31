@@ -219,7 +219,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     >
       <div className="review-expanded-row__header">
         <div>
-          <h3 style={{ margin: 0, fontSize: "15px", color: "var(--mds-color-heading)" }}>
+          <h3 className="review-expanded-row__title">
             Review Details
           </h3>
         </div>

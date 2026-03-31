@@ -29,7 +29,7 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
     );
   }
 
-  const maintenanceActive = access?.features.maintenanceMode.canUse === true;
+  const maintenanceActive = access?.features?.maintenanceMode?.canUse === true;
 
   if (maintenanceActive && !isDeveloper) {
     return <MaintenancePage />;

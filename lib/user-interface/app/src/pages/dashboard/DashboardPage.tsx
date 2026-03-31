@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useNotifications } from "../../components/notifications/NotificationManager";
@@ -282,7 +282,7 @@ const Dashboard: React.FC = () => {
   }, [filterMenuOpen]);
 
   if (loading || roleLoading) return <div className="loading">Loading Dashboard...</div>;
-  if (!isAdmin) return null;
+  if (!isAdmin) return <Navigate to="/home" replace />;
 
   const filterCount = getActiveFilterCount();
   const activeTabAnnouncement = activeTab === "grants"
@@ -362,27 +362,11 @@ const Dashboard: React.FC = () => {
                 aria-selected={activeTab === "processing-review"}
                 aria-controls="dashboard-panel-processing-review"
                 tabIndex={activeTab === "processing-review" ? 0 : -1}
-                style={{ position: "relative" }}
               >
                 Processing Review
                 {pendingReviewCount > 0 && (
                   <span
-                    style={{
-                      position: "absolute",
-                      top: "4px",
-                      right: "4px",
-                      backgroundColor: "var(--mds-color-danger)",
-                      color: "var(--mds-color-white)",
-                      borderRadius: "50%",
-                      width: "20px",
-                      height: "20px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "11px",
-                      fontWeight: 700,
-                      lineHeight: 1,
-                    }}
+                    className="tab-badge"
                     aria-label={`${pendingReviewCount} items need review`}
                   >
                     {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
