@@ -762,12 +762,14 @@ export class LambdaFunctionStack extends cdk.Stack {
         BUCKET: props.ffioNofosBucket.bucketName,
         QUEUE_URL: nofoProcessingQueue.queueUrl,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
     });
     nofoReprocessFunction.addToRolePolicy(s3ReadWritePolicy);
     nofoReprocessFunction.addToRolePolicy(metadataTableReadWritePolicy);
+    nofoReprocessFunction.addToRolePolicy(reviewTableReadWritePolicy);
     nofoReprocessFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
