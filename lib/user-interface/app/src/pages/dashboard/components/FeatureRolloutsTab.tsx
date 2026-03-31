@@ -8,6 +8,7 @@ import FeatureRolloutOverview from "./FeatureRolloutOverview";
 import FeatureRolloutPanel from "./FeatureRolloutPanel";
 
 const FEATURE_KEY = "ai-grant-search";
+const MAINTENANCE_KEY = "maintenance-mode";
 
 interface FeatureRolloutsTabProps {
   apiClient: ApiClient;
@@ -22,14 +23,25 @@ const emptyConfig: FeatureRolloutConfig = {
   users: [],
 };
 
+const emptyMaintenanceConfig: FeatureRolloutConfig = {
+  featureKey: MAINTENANCE_KEY,
+  mode: "disabled",
+  updatedAt: null,
+  updatedBy: null,
+  users: [],
+};
+
 const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
   apiClient,
   addNotification,
 }) => {
   const [config, setConfig] = useState<FeatureRolloutConfig>(emptyConfig);
+  const [maintenanceConfig, setMaintenanceConfig] = useState<FeatureRolloutConfig>(emptyMaintenanceConfig);
   const [loading, setLoading] = useState(true);
   const [savingToggle, setSavingToggle] = useState(false);
+  const [savingMaintenance, setSavingMaintenance] = useState(false);
   const [draftMode, setDraftMode] = useState<FeatureRolloutMode>(emptyConfig.mode);
+  const [maintenanceDraftMode, setMaintenanceDraftMode] = useState<FeatureRolloutMode>(emptyMaintenanceConfig.mode);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchingUsers, setSearchingUsers] = useState(false);
   const [searchResults, setSearchResults] = useState<FeatureRolloutSearchUser[]>([]);
@@ -39,11 +51,15 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
   const loadConfig = useCallback(async () => {
     try {
       setLoading(true);
-      const nextConfig = await apiClient.userManagement.getFeatureRollout(FEATURE_KEY);
+      const [nextConfig, nextMaintenanceConfig] = await Promise.all([
+        apiClient.userManagement.getFeatureRollout(FEATURE_KEY),
+        apiClient.userManagement.getFeatureRollout(MAINTENANCE_KEY),
+      ]);
       setConfig(nextConfig);
+      setMaintenanceConfig(nextMaintenanceConfig);
     } catch (error) {
       console.error("Error loading feature rollout config:", error);
-      addNotification("error", "Failed to load AI search rollout settings");
+      addNotification("error", "Failed to load feature rollout settings");
     } finally {
       setLoading(false);
     }
@@ -56,6 +72,10 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
   useEffect(() => {
     setDraftMode(config.mode);
   }, [config.mode]);
+
+  useEffect(() => {
+    setMaintenanceDraftMode(maintenanceConfig.mode);
+  }, [maintenanceConfig.mode]);
 
   const handleModeChange = useCallback(async (mode: FeatureRolloutMode) => {
     try {
@@ -75,6 +95,25 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
       addNotification("error", "Failed to update AI search beta mode");
     } finally {
       setSavingToggle(false);
+    }
+  }, [apiClient, addNotification, loadConfig]);
+
+  const handleMaintenanceModeChange = useCallback(async (mode: FeatureRolloutMode) => {
+    try {
+      setSavingMaintenance(true);
+      await apiClient.userManagement.updateFeatureRollout(MAINTENANCE_KEY, mode);
+      await loadConfig();
+      addNotification(
+        "success",
+        mode === "all"
+          ? "Maintenance mode enabled — all non-developer users will see the maintenance page"
+          : "Maintenance mode disabled — site is live for all users"
+      );
+    } catch (error) {
+      console.error("Error updating maintenance mode:", error);
+      addNotification("error", "Failed to update maintenance mode");
+    } finally {
+      setSavingMaintenance(false);
     }
   }, [apiClient, addNotification, loadConfig]);
 
@@ -154,6 +193,9 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
   const updatedAtLabel = config.updatedAt ? Utils.formatTimestamp(config.updatedAt) : "never";
   const hasPendingModeChange = draftMode !== config.mode;
 
+  const maintenanceUpdatedAtLabel = maintenanceConfig.updatedAt ? Utils.formatTimestamp(maintenanceConfig.updatedAt) : "never";
+  const hasMaintenancePendingChange = maintenanceDraftMode !== maintenanceConfig.mode;
+
   if (loading) {
     return (
       <div className="feature-rollouts-panel" role="status" aria-busy="true">
@@ -164,6 +206,89 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
 
   return (
     <div className="feature-rollouts-panel">
+      <FeatureRolloutPanel
+        eyebrow="Developer Controls"
+        title="Maintenance Mode"
+        description="Take the site offline for all users and admins. Developers bypass the maintenance page automatically."
+        overview={
+          <section className="feature-rollouts-overview" aria-label="Maintenance mode summary">
+            <article className="feature-rollouts-overview-card">
+              <span className={`feature-rollouts-badge ${maintenanceConfig.mode === "all" ? "feature-rollouts-badge--danger" : "feature-rollouts-badge--success"}`}>
+                Current state
+              </span>
+              <h3>{maintenanceConfig.mode === "all" ? "Site is offline" : "Site is live"}</h3>
+              <p>
+                {maintenanceConfig.mode === "all"
+                  ? "All users and admins see the maintenance page. Developers can still access the site."
+                  : "The site is operating normally for all users."}
+              </p>
+            </article>
+            <article className="feature-rollouts-overview-card">
+              <span className="feature-rollouts-badge feature-rollouts-badge--neutral">Audit</span>
+              <h3>Last updated {maintenanceUpdatedAtLabel}</h3>
+              <p>{maintenanceConfig.updatedBy ? `Changed by ${maintenanceConfig.updatedBy}.` : "No changes recorded yet."}</p>
+            </article>
+          </section>
+        }
+        controls={
+          <div className="feature-rollouts-controls">
+            <fieldset className="feature-rollouts-mode-group">
+              <legend className="feature-rollouts-mode-legend">Maintenance status</legend>
+              <div className="feature-rollouts-mode-options">
+                <div className={`feature-rollouts-mode-option ${maintenanceDraftMode === "all" ? "feature-rollouts-mode-option--selected" : ""}`}>
+                  <label className="feature-rollouts-mode-option-label">
+                    <input
+                      type="radio"
+                      name="maintenance-mode"
+                      value="all"
+                      checked={maintenanceDraftMode === "all"}
+                      onChange={() => setMaintenanceDraftMode("all")}
+                      disabled={savingMaintenance}
+                    />
+                    <span className="feature-rollouts-mode-copy">
+                      <span className="feature-rollouts-mode-label">Enable maintenance mode</span>
+                      <span className="feature-rollouts-mode-description">
+                        Show the maintenance page to all users and admins. Developers are not affected.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+                <div className={`feature-rollouts-mode-option ${maintenanceDraftMode === "disabled" ? "feature-rollouts-mode-option--selected" : ""}`}>
+                  <label className="feature-rollouts-mode-option-label">
+                    <input
+                      type="radio"
+                      name="maintenance-mode"
+                      value="disabled"
+                      checked={maintenanceDraftMode === "disabled"}
+                      onChange={() => setMaintenanceDraftMode("disabled")}
+                      disabled={savingMaintenance}
+                    />
+                    <span className="feature-rollouts-mode-copy">
+                      <span className="feature-rollouts-mode-label">Disable maintenance mode</span>
+                      <span className="feature-rollouts-mode-description">
+                        The site operates normally for everyone.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+            <div className="feature-rollouts-actions">
+              <button
+                className="feature-rollouts-primary-button"
+                onClick={() => void handleMaintenanceModeChange(maintenanceDraftMode)}
+                disabled={!hasMaintenancePendingChange || savingMaintenance}
+                type="button"
+              >
+                {savingMaintenance ? "Saving..." : "Save changes"}
+              </button>
+            </div>
+          </div>
+        }
+      />
+
+      <div style={{ marginTop: "2rem" }} />
+
       <FeatureRolloutPanel
         eyebrow="Developer Controls"
         title="AI Search Beta"

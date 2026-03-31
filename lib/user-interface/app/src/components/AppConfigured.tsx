@@ -12,6 +12,7 @@ import { AppContext } from "../common/app-context";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import AuthPage from "../pages/auth/AuthPage";
+import MaintenanceGate from "./MaintenanceGate";
 import BrandBanner from "./mds/BrandBanner";
 import FooterComponent from "./mds/MdsFooter";
 import MDSHeader from "./mds/MdsHeader";
@@ -206,7 +207,9 @@ function AppLayoutContent({
       <MDSHeader showSignOut={authenticated === true} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {authenticated ? (
-          <App />
+          <MaintenanceGate>
+            <App />
+          </MaintenanceGate>
         ) : configured ? (
           <AuthPage onAuthenticated={onAuthenticated} />
         ) : (

@@ -1,0 +1,61 @@
+.maintenance-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 2rem;
+  min-height: 60vh;
+  background-color: #f2f2f2;
+}
+
+.maintenance-container {
+  max-width: 560px;
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.maintenance-icon {
+  margin-bottom: 1.5rem;
+}
+
+.maintenance-title {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #14558f;
+  margin: 0 0 1rem;
+  line-height: 1.3;
+}
+
+.maintenance-message {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.05rem;
+  color: #333;
+  margin: 0 0 1rem;
+  line-height: 1.6;
+}
+
+.maintenance-submessage {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .maintenance-container {
+    padding: 2rem 1.25rem;
+  }
+
+  .maintenance-title {
+    font-size: 1.4rem;
+  }
+
+  .maintenance-message {
+    font-size: 0.95rem;
+  }
+}

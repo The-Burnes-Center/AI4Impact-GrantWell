@@ -270,6 +270,11 @@ body {
   color: var(--mds-color-primary);
 }
 
+.feature-rollouts-badge--danger {
+  background: color-mix(in srgb, var(--mds-color-danger, #cd0d0d) 14%, var(--mds-color-white));
+  color: var(--mds-color-danger, #cd0d0d);
+}
+
 .feature-rollouts-mode-group {
   margin: 20px 0 0;
   padding: 0;

@@ -12,6 +12,7 @@ export interface CurrentFeatureRolloutAccess {
   canManageFeatureRollouts: boolean;
   features: {
     aiGrantSearch: FeatureAccessState;
+    maintenanceMode: FeatureAccessState;
   };
 }
 
