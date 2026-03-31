@@ -133,6 +133,25 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     }
   };
 
+  const handleNeedsReupload = async () => {
+    if (!adminNotes.trim()) {
+      setNotesError(true);
+      addNotification("error", "Please provide notes explaining why re-upload is needed");
+      return;
+    }
+    setNotesError(false);
+    setActionInProgress("needs_reupload");
+    try {
+      await apiClient.landingPage.markNeedsReupload(review.nofo_name, adminNotes, review.review_id);
+      addNotification("info", `"${review.nofo_name}" marked as needs re-upload`);
+      onActionComplete();
+    } catch {
+      addNotification("error", "Failed to mark review as needs re-upload");
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
   const handleReuploadClick = () => {
     fileInputRef.current?.click();
   };
@@ -190,7 +209,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     );
   }
 
-  const isResolved = review.status === "approved" || review.status === "rejected";
+  const isResolved = review.status === "approved" || review.status === "rejected" || review.status === "superseded";
 
   return (
     <div
@@ -237,6 +256,15 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               Missing categories: {detail.adminGuidance.missingCategories.join(", ")}
             </p>
           )}
+        </div>
+      )}
+
+      {review.status === "needs_reupload" && (
+        <div className="review-dlq-alert" role="status" style={{ borderLeft: "4px solid var(--mds-color-warning)" }}>
+          <strong>Awaiting Document Re-upload</strong>
+          <p style={{ margin: "8px 0 0" }}>
+            This NOFO has been marked as needing a new document upload. Upload a corrected document to trigger reprocessing.
+          </p>
         </div>
       )}
 
@@ -470,10 +498,12 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             actionInProgress={actionInProgress}
             hasCorrections={getCorrections() !== undefined}
             canApprove={detail.adminGuidance?.canApprove !== false}
+            status={review.status}
             onApprove={handleApprove}
             onReject={handleRejectClick}
             onReprocess={handleReprocess}
             onReupload={handleReuploadClick}
+            onNeedsReupload={handleNeedsReupload}
             rejectDisabled={!adminNotes.trim()}
           />
         </>

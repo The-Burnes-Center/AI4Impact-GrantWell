@@ -362,6 +362,24 @@ export class LandingPageClient {
     }
   }
 
+  async markNeedsReupload(nofoName: string, notes: string, reviewId?: string): Promise<void> {
+    try {
+      const token = await Utils.authenticate();
+      const response = await fetch(
+        `${this.API}/admin/processing-reviews/${encodeURIComponent(nofoName)}/needs-reupload`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: token },
+          body: JSON.stringify({ notes, reviewId }),
+        }
+      );
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+    } catch (error) {
+      console.error("Error marking review as needs re-upload:", error);
+      throw error;
+    }
+  }
+
   async getReuploadUrl(nofoName: string, fileType: string): Promise<{ signedUrl: string; objectKey: string }> {
     try {
       const token = await Utils.authenticate();

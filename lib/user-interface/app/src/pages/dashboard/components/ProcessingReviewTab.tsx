@@ -13,14 +13,16 @@ interface ProcessingReviewTabProps {
   addNotification: (type: string, message: string) => void;
 }
 
-type StatusFilter = "all" | "pending_review" | "approved" | "rejected" | "failed";
+type StatusFilter = "all" | "pending_review" | "approved" | "rejected" | "failed" | "needs_reupload" | "superseded";
 
 const STATUS_LABELS: Record<string, string> = {
   all: "All Statuses",
   pending_review: "Pending Review",
+  needs_reupload: "Needs Re-upload",
   approved: "Approved",
   rejected: "Rejected",
   failed: "Failed",
+  superseded: "Superseded",
 };
 
 const STATUS_CLASS_MAP: Record<string, string> = {
@@ -28,6 +30,8 @@ const STATUS_CLASS_MAP: Record<string, string> = {
   approved: "review-status-badge--approved",
   rejected: "review-status-badge--rejected",
   failed: "review-status-badge--failed",
+  needs_reupload: "review-status-badge--needs-reupload",
+  superseded: "review-status-badge--superseded",
 };
 
 const SOURCE_LABELS: Record<string, string> = {

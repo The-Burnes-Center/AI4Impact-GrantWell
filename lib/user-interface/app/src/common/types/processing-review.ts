@@ -1,7 +1,7 @@
 export interface ReviewItem {
   nofo_name: string;
   review_id: string;
-  status: "pending_review" | "approved" | "rejected" | "failed" | "reprocessing";
+  status: "pending_review" | "approved" | "rejected" | "failed" | "reprocessing" | "needs_reupload" | "superseded";
   created_at: string;
   retryCount: number;
   source: "pipeline" | "dlq" | "duplicate" | "quality";
@@ -42,4 +42,6 @@ export interface ProcessingMetrics {
   failedCount: number;
   approvedCount: number;
   rejectedCount: number;
+  needsReuploadCount: number;
+  supersededCount: number;
 }

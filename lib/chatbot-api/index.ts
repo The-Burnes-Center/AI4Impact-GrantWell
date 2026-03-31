@@ -524,6 +524,18 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
     restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews/{nofoName}/needs-reupload",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/admin/reupload-nofo",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
       path: "/admin/processing-metrics",
       methods: [apigwv2.HttpMethod.GET],
       integration: nofoAdminAPIIntegration,

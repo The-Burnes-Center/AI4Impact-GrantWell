@@ -2162,6 +2162,21 @@ select.form-input {
   background-color: color-mix(in srgb, var(--mds-color-danger) 8%, var(--mds-color-white));
 }
 
+.review-btn--needs-reupload {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #c0651a;
+  background-color: var(--mds-color-white);
+  border: 1px solid color-mix(in srgb, #e67e22 30%, var(--mds-color-white));
+  border-radius: 6px;
+  min-height: 44px;
+}
+
+.review-btn--needs-reupload:hover:not(:disabled) {
+  background-color: color-mix(in srgb, #e67e22 8%, var(--mds-color-white));
+}
+
 .review-btn--approve {
   padding: 8px 16px;
   font-size: 13px;
@@ -2520,6 +2535,18 @@ select.form-input {
   background-color: color-mix(in srgb, var(--mds-color-danger) 10%, var(--mds-color-white));
   color: var(--mds-color-danger);
   border: 1px solid color-mix(in srgb, var(--mds-color-danger) 25%, var(--mds-color-white));
+}
+
+.review-status-badge--needs-reupload {
+  background-color: color-mix(in srgb, #e67e22 10%, var(--mds-color-white));
+  color: #c0651a;
+  border: 1px solid color-mix(in srgb, #e67e22 25%, var(--mds-color-white));
+}
+
+.review-status-badge--superseded {
+  background-color: color-mix(in srgb, var(--mds-color-text-secondary) 6%, var(--mds-color-white));
+  color: color-mix(in srgb, var(--mds-color-text-secondary) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mds-color-text-secondary) 15%, var(--mds-color-white));
 }
 
 /* Issue summary inline */
