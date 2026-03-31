@@ -654,7 +654,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     dispatcherFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["states:DescribeExecution"],
+        actions: ["states:DescribeExecution", "states:ListExecutions"],
         resources: ["*"],
       })
     );
