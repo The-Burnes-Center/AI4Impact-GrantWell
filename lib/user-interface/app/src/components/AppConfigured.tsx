@@ -44,6 +44,7 @@ export default function AppConfigured() {
         }
 
         const awsExports = (await result.json()) as AppConfig;
+        awsExports.httpEndpoint = awsExports.httpEndpoint.replace(/\/+$/, "");
         Amplify.configure(awsExports);
 
         const isAuthenticated = await getInitialAuthState();

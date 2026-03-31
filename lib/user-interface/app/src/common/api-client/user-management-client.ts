@@ -12,7 +12,7 @@ export class UserManagementClient {
   private readonly baseUrl: string;
 
   constructor(appConfig: AppConfig) {
-    this.baseUrl = appConfig.httpEndpoint.replace(/\/+$/, "");
+    this.baseUrl = appConfig.httpEndpoint;
   }
 
   private async getAuthHeaders() {

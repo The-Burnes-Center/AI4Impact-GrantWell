@@ -5,7 +5,7 @@ export class UserDocumentsClient {
   private readonly API: string;
 
   constructor(protected _appConfig: AppConfig) {
-    this.API = _appConfig.httpEndpoint.slice(0, -1);
+    this.API = _appConfig.httpEndpoint;
   }
 
   async getUploadURL(

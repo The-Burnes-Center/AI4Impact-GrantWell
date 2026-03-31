@@ -72,17 +72,14 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
       try {
         const session = await Auth.currentSession();
         const idToken = session.getIdToken().getJwtToken();
-        const restEndpoint = appContext.httpEndpoint;
-        const endpoint = restEndpoint.endsWith("/")
-          ? restEndpoint
-          : `${restEndpoint}/`;
+        const endpoint = appContext.httpEndpoint;
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
 
         let response: Response;
         try {
-          response = await fetch(`${endpoint}ai-grant-search`, {
+          response = await fetch(`${endpoint}/ai-grant-search`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

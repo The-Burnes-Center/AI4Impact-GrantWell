@@ -435,7 +435,7 @@ export class LandingPageClient {
     try {
       const token = await Utils.authenticate();
       
-      const url = `${this.baseUrl}automated-nofo-scraper`;
+      const url = `${this.baseUrl}/automated-nofo-scraper`;
       
       const response = await fetch(url, {
         method: 'POST',

@@ -23,7 +23,7 @@ export class SessionsClient {
   private readonly API: string;
 
   constructor(config: AppConfig) {
-    this.API = config.httpEndpoint.slice(0, -1);
+    this.API = config.httpEndpoint;
   }
 
   // Creates a new chat session

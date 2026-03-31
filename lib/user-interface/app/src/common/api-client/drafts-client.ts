@@ -37,8 +37,7 @@ export class DraftsClient {
   private readonly API: string;
 
   constructor(config: AppConfig) {
-    // Ensure the endpoint ends with a slash
-    this.API = config.httpEndpoint.endsWith('/') ? config.httpEndpoint.slice(0, -1) : config.httpEndpoint;
+    this.API = config.httpEndpoint;
   }
 
   // Creates a new document draft

@@ -8,7 +8,7 @@ export class KnowledgeManagementClient {
 
   private readonly API;
   constructor(protected _appConfig: AppConfig) {
-    this.API = _appConfig.httpEndpoint.slice(0,-1);
+    this.API = _appConfig.httpEndpoint;
   }
   
   // Helper to extract NOFO name from documentIdentifier
