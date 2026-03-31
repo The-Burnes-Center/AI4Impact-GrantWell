@@ -11,6 +11,9 @@ cdk.out
 .cursor/
 .claude/
 
+# OS files
+.DS_Store
+
 # Environment variables
 .env
 .env.local
