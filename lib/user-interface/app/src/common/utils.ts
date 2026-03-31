@@ -157,7 +157,7 @@ export class Utils {
    * @returns Formatted date string
    */
   static formatTimestamp(timestamp: string): string {
-    return DateTime.fromISO(timestamp).toLocaleString(DateTime.DATETIME_SHORT);
+    return DateTime.fromISO(timestamp).setZone("America/New_York").toLocaleString(DateTime.DATETIME_SHORT);
   }
 
   /**
@@ -184,21 +184,21 @@ export class Utils {
       year: "numeric",
       month: "short",
       day: "numeric",
+      timeZone: "America/New_York",
     };
 
-    // YYYY-MM-DD: construct as local date (no timezone shift)
+    // YYYY-MM-DD: construct as UTC midday to avoid date boundary issues
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-      const [year, month, day] = dateString.split('-');
-      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-      return date.toLocaleDateString(undefined, formatOpts);
+      const date = new Date(dateString + "T12:00:00Z");
+      return date.toLocaleDateString("en-US", formatOpts);
     }
 
-    // ISO string: let the browser convert to local timezone
+    // ISO string: display in EST
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
       console.warn(`Invalid date format: ${dateString}`);
       return null;
     }
-    return date.toLocaleDateString(undefined, formatOpts);
+    return date.toLocaleDateString("en-US", formatOpts);
   }
 }

@@ -396,7 +396,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           {detail.reviewed_at && (
             <p style={{ fontSize: "12px", color: "var(--mds-color-text-secondary)", marginTop: "8px" }}>
               {review.status === "approved" ? "Approved" : "Rejected"} on{" "}
-              {new Date(detail.reviewed_at).toLocaleString()}
+              {new Date(detail.reviewed_at).toLocaleString("en-US", { timeZone: "America/New_York" })}
             </p>
           )}
         </div>

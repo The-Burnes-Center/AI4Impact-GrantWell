@@ -352,7 +352,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                   </div>
                   <div className="row-cell">
                     <span className="review-date">
-                      {new Date(review.created_at).toLocaleDateString()}
+                      {new Date(review.created_at).toLocaleDateString("en-US", { timeZone: "America/New_York" })}
                     </span>
                   </div>
                   <div className="row-cell actions">

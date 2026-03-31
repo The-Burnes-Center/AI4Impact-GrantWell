@@ -520,7 +520,8 @@ export default function DocumentManager({
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+    const opts: Intl.DateTimeFormatOptions = { timeZone: "America/New_York" };
+    return date.toLocaleDateString("en-US", opts) + " " + date.toLocaleTimeString("en-US", opts);
   };
 
   const renderFileStatusIndicator = (fileName: string) => {

@@ -17,7 +17,7 @@ const MAX_RECENTLY_VIEWED = 5;
 export const addToRecentlyViewed = (nofo: { label: string; value: string }): RecentlyViewedNOFO[] => {
   const nofoWithTimestamp: RecentlyViewedNOFO = {
     ...nofo,
-    lastViewed: new Date().toLocaleString()
+    lastViewed: new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
   };
   
   // Get current history from localStorage
