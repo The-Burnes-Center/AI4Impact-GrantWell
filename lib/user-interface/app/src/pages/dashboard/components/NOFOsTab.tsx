@@ -241,6 +241,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       let newFilePath: string;
       if (selectedFile.type === "text/plain") newFilePath = `${folderName}/NOFO-File-TXT`;
       else if (selectedFile.type === "application/pdf") newFilePath = `${folderName}/NOFO-File-PDF`;
+      else if (selectedFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") newFilePath = `${folderName}/NOFO-File-DOCX`;
       else newFilePath = `${folderName}/NOFO-File`;
 
       const signedUrl = await apiClient.landingPage.getUploadURL(newFilePath, selectedFile.type);
@@ -446,7 +447,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
         title="Upload Grant"
       >
         <div className="modal-form">
-          <p className="modal-description">Upload a new grant file in PDF or TXT format.</p>
+          <p className="modal-description">Upload a new grant file in PDF, TXT, or DOCX format.</p>
           <div className="info-box">
             <LuInfo size={18} className="info-icon" />
             <span>Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it&#39;ll be ready for your review!</span>
@@ -454,7 +455,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
           <div className="form-group">
             <label htmlFor="file-upload">Select File</label>
             <div className="file-upload-container">
-              <input id="file-upload" type="file" accept=".pdf,.txt" onChange={handleFileSelect} className="file-input" />
+              <input id="file-upload" type="file" accept=".pdf,.txt,.docx" onChange={handleFileSelect} className="file-input" />
               <div className="file-upload-button"><LuUpload size={16} className="button-icon" /><span>Choose File</span></div>
             </div>
             {selectedFile && (

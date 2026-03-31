@@ -577,6 +577,18 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    // Add REST API route for application DOCX generation
+    const applicationDocxGeneratorAPIIntegration = new HttpLambdaIntegration(
+      "ApplicationDocxGeneratorAPIIntegration",
+      lambdaFunctions.applicationDocxGeneratorFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/generate-docx",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: applicationDocxGeneratorAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     const feedbackProxyAPIIntegration = new HttpLambdaIntegration(
       "FeedbackProxyAPIIntegration",
       lambdaFunctions.feedbackProxyFunction

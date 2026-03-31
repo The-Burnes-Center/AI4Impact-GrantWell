@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import {
@@ -9,6 +9,7 @@ import {
   Info,
   CheckCircle,
   AlertTriangle,
+  ChevronDown,
 } from "lucide-react";
 import "../../styles/document-editor.css";
 
@@ -34,6 +35,10 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [sectionAnswers, setSectionAnswers] = useState<Record<string, string>>({});
   const [completenessPassed, setCompletenessPassed] = useState(false);
   const [stats, setStats] = useState({ wordCount: 0, pageCount: 0, complete: 0 });
+  const [isExportingPDF, setIsExportingPDF] = useState(false);
+  const [isExportingDOCX, setIsExportingDOCX] = useState(false);
+  const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
+  const exportDropdownRef = useRef<HTMLDivElement>(null);
   const apiClient = useApiClient();
 
   useEffect(() => {
@@ -96,33 +101,33 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     onNavigate("sections");
   };
 
-  const handleExportPDF = async () => {
-    let draftData = null;
-    let grantName = null;
-    if (selectedNofo) {
-      try {
-        const username = (await Auth.currentAuthenticatedUser()).username;
-        draftData = await apiClient.drafts.getDraft({
-          sessionId: sessionId,
-          userId: username,
-        });
-
-        const nofoSummary =
-          await apiClient.landingPage.getNOFOSummary(selectedNofo);
-        if (nofoSummary?.data?.GrantName) {
-          grantName = nofoSummary.data.GrantName;
-        }
-      } catch (error) {
-        console.error("Error fetching draft for PDF export:", error);
-        return;
+  // Close export dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (exportDropdownRef.current && !exportDropdownRef.current.contains(e.target as Node)) {
+        setExportDropdownOpen(false);
       }
-    }
-    if (!draftData) {
-      console.error("No draft data available for export.");
-      return;
-    }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
+  const fetchDraftForExport = async () => {
+    if (!selectedNofo) return { draftData: null, grantName: null };
+    const username = (await Auth.currentAuthenticatedUser()).username;
+    const draftData = await apiClient.drafts.getDraft({ sessionId, userId: username });
+    const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo);
+    const grantName = nofoSummary?.data?.GrantName || null;
+    return { draftData, grantName };
+  };
+
+  const handleExportPDF = async () => {
+    setExportDropdownOpen(false);
+    setIsExportingPDF(true);
     try {
+      const { draftData, grantName } = await fetchDraftForExport();
+      if (!draftData) { console.error("No draft data available for export."); return; }
+
       const pdfBlob = await apiClient.drafts.generatePDF({
         title: draftData.title,
         grantName: grantName || undefined,
@@ -140,6 +145,37 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error generating PDF:", error);
+    } finally {
+      setIsExportingPDF(false);
+    }
+  };
+
+  const handleExportDOCX = async () => {
+    setExportDropdownOpen(false);
+    setIsExportingDOCX(true);
+    try {
+      const { draftData, grantName } = await fetchDraftForExport();
+      if (!draftData) { console.error("No draft data available for export."); return; }
+
+      const docxBlob = await apiClient.drafts.generateDOCX({
+        title: draftData.title,
+        grantName: grantName || undefined,
+        projectBasics: draftData.projectBasics,
+        sections: draftData.sections,
+      });
+
+      const url = window.URL.createObjectURL(docxBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "grant-application.docx";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error generating DOCX:", error);
+    } finally {
+      setIsExportingDOCX(false);
     }
   };
 
@@ -275,14 +311,47 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           Back to Editing
         </button>
 
-        <button
-          onClick={handleExportPDF}
-          disabled={!completenessPassed}
-          className="ra-export-pdf-btn"
-        >
-          <Download className="ra-export-pdf-btn__icon" aria-hidden="true" />
-          Export Application as PDF
-        </button>
+        {/* Export As dropdown */}
+        <div className="ra-export-dropdown" ref={exportDropdownRef}>
+          <button
+            onClick={() => setExportDropdownOpen((o) => !o)}
+            disabled={!completenessPassed}
+            className="ra-export-pdf-btn"
+            aria-haspopup="true"
+            aria-expanded={exportDropdownOpen}
+          >
+            <Download className="ra-export-pdf-btn__icon" aria-hidden="true" />
+            Export As
+            <ChevronDown
+              size={16}
+              style={{ marginLeft: "6px" }}
+              aria-hidden="true"
+            />
+          </button>
+
+          {exportDropdownOpen && (
+            <div className="ra-export-dropdown__menu" role="menu">
+              <button
+                className="ra-export-dropdown__item"
+                role="menuitem"
+                onClick={handleExportPDF}
+                disabled={isExportingPDF}
+              >
+                <Download size={14} aria-hidden="true" />
+                {isExportingPDF ? "Generating PDF…" : "PDF (.pdf)"}
+              </button>
+              <button
+                className="ra-export-dropdown__item"
+                role="menuitem"
+                onClick={handleExportDOCX}
+                disabled={isExportingDOCX}
+              >
+                <FileText size={14} aria-hidden="true" />
+                {isExportingDOCX ? "Generating DOCX…" : "Word Document (.docx)"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

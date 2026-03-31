@@ -439,6 +439,51 @@ export class DraftsClient {
     throw new Error('Draft generation timed out. Please try again.');
   }
 
+  // Generates a Word (.docx) document from draft data
+  async generateDOCX(draftData: {
+    title?: string;
+    grantName?: string;
+    projectBasics?: ProjectBasicsData;
+    sections?: Record<string, string>;
+  }): Promise<Blob> {
+    const auth = await Utils.authenticate();
+    console.log('Calling /generate-docx with:', draftData);
+
+    const response = await fetch(this.API + '/generate-docx', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify({
+        draftData: {
+          title: draftData.title || 'Grant Application',
+          grantName: draftData.grantName,
+          projectBasics: draftData.projectBasics || {},
+          sections: draftData.sections || {},
+        },
+      }),
+    });
+
+    console.log('DOCX generation response status:', response.status);
+
+    if (response.status !== 200) {
+      let errorMessage;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorData.message || 'Failed to generate DOCX';
+      } catch (e) {
+        errorMessage = await response.text() || `Failed to generate DOCX: HTTP ${response.status}`;
+      }
+      console.error('DOCX generation error:', errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    const blob = await response.blob();
+    console.log('DOCX blob created, size:', blob.size, 'bytes');
+    return blob;
+  }
+
   // Generates a tagged PDF from draft data
   async generatePDF(draftData: {
     title?: string;

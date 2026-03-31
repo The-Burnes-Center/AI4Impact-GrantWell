@@ -66,6 +66,8 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly opportunityProcessorFunction: lambda.Function;
   public readonly htmlToPdfConverterFunction: lambda.Function;
   public readonly applicationPdfGeneratorFunction: lambda.Function;
+  public readonly docxToTextConverterFunction: lambda.Function;
+  public readonly applicationDocxGeneratorFunction: lambda.Function;
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
@@ -1375,6 +1377,87 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.applicationPdfGeneratorFunction = applicationPdfGeneratorFunction;
+
+    // --- DOCX Support ---
+
+    // Lambda Layer: mammoth (DOCX text extraction, pure JS)
+    const mammothLayer = new lambda.LayerVersion(scope, "MammothLayer", {
+      layerVersionName: "MammothLayer",
+      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "layers/mammoth-layer.zip")
+      ),
+      description: "mammoth library for DOCX text extraction",
+    });
+
+    // Lambda Layer: html-to-docx (HTML → DOCX conversion)
+    const htmlToDocxLayer = new lambda.LayerVersion(scope, "HtmlToDocxLayer", {
+      layerVersionName: "HtmlToDocxLayer",
+      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "layers/html-to-docx-layer.zip")
+      ),
+      description: "html-to-docx library for generating Word documents",
+    });
+
+    // DOCX to Text Converter — triggered by S3 NOFO-File-DOCX uploads
+    const docxToTextConverterFunction = new lambda.Function(
+      scope,
+      "DocxToTextConverterFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "nofo-pipeline/docx-to-text-converter")
+        ),
+        handler: "index.handler",
+        layers: [mammothLayer],
+        timeout: cdk.Duration.minutes(2),
+        memorySize: 512,
+      }
+    );
+
+    // S3 permissions for DOCX converter
+    docxToTextConverterFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket"],
+        resources: [props.ffioNofosBucket.bucketArn],
+      })
+    );
+    docxToTextConverterFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+        resources: [`${props.ffioNofosBucket.bucketArn}/*`],
+      })
+    );
+
+    // S3 event: NOFO-File-DOCX upload → docx-to-text-converter Lambda
+    props.ffioNofosBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.LambdaDestination(docxToTextConverterFunction),
+      { suffix: "NOFO-File-DOCX" }
+    );
+
+    this.docxToTextConverterFunction = docxToTextConverterFunction;
+
+    // Application DOCX Generator — REST API endpoint for draft export
+    const applicationDocxGeneratorFunction = new lambda.Function(
+      scope,
+      "ApplicationDocxGeneratorFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "application-docx-generator")
+        ),
+        handler: "index.handler",
+        layers: [htmlToDocxLayer],
+        timeout: cdk.Duration.minutes(2),
+        memorySize: 512,
+      }
+    );
+
+    this.applicationDocxGeneratorFunction = applicationDocxGeneratorFunction;
 
     // Auto-Archive Expired NOFOs Lambda Function
     const autoArchiveExpiredNofosFunction = new lambda.Function(

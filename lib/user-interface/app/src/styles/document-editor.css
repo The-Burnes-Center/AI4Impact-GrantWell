@@ -686,11 +686,54 @@
   margin-right: 8px;
 }
 
+/* Export As dropdown */
+.ra-export-dropdown {
+  position: relative;
+}
+
+.ra-export-dropdown__menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  min-width: 210px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.ra-export-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: #1f2937;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ra-export-dropdown__item:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.ra-export-dropdown__item:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
 /* Focus indicators (WCAG 2.4.7) */
 .ra-edit-btn:focus-visible,
 .ra-preview-btn:focus-visible,
 .ra-back-btn:focus-visible,
-.ra-export-pdf-btn:focus-visible {
+.ra-export-pdf-btn:focus-visible,
+.ra-export-dropdown__item:focus-visible {
   outline: 2px solid var(--mds-color-focus-light, #0088FF);
   outline-offset: 2px;
 }
