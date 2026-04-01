@@ -87,8 +87,6 @@ export default function AppConfigured() {
         case "signIn_failure":
           setAuthenticated(false);
           break;
-        default:
-          break;
       }
     });
 

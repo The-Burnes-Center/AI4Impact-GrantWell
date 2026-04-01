@@ -231,6 +231,7 @@ const Dashboard: React.FC = () => {
 
   const filteredNofos = useMemo(() => {
     let filtered = nofos.filter((nofo) =>
+      !nofo.processingStatus &&
       nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     if (statusFilter !== "all") {

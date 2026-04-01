@@ -195,8 +195,6 @@ export function mapAuthError(error: unknown, context: AuthErrorContext) {
         return "Your email is already verified. Sign in to continue.";
       }
       return "The information entered is not valid. Check your details and try again.";
-    default:
-      break;
   }
 
   switch (context) {
