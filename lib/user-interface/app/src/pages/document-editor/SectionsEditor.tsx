@@ -535,34 +535,49 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
           {/* Generating banner */}
           {generating && (
-            <div
-              role="status"
-              aria-live="polite"
-              style={{
-                background: '#EFF6FF',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                marginBottom: '16px',
+            <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div
+                role="status"
+                aria-live="polite"
+                style={{
+                  background: '#EFF6FF',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  fontSize: '14px',
+                  color: '#1D4ED8',
+                }}
+              >
+                <div
+                  aria-hidden
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    border: '2px solid #3B82F6',
+                    borderTopColor: 'transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite',
+                    flexShrink: 0,
+                  }}
+                />
+                Generating sections ({completedSectionCount}/{sections.length})... You can edit completed sections while others are being written.
+              </div>
+              <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
-                fontSize: '14px',
-                color: '#1D4ED8',
-              }}
-            >
-              <div
-                aria-hidden
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  border: '2px solid #3B82F6',
-                  borderTopColor: 'transparent',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite',
-                  flexShrink: 0,
-                }}
-              />
-              Generating sections... They will appear as they complete. You can start editing completed sections.
+                gap: '8px',
+                padding: '10px 16px',
+                background: '#f0fdf4',
+                border: '1px solid #bbf7d0',
+                borderRadius: '8px',
+                fontSize: '13px',
+                color: '#065f46',
+              }}>
+                <span style={{ fontSize: '15px', flexShrink: 0 }}>&#10003;</span>
+                Your progress is automatically saved. You can leave and come back anytime.
+              </div>
             </div>
           )}
 
@@ -593,16 +608,35 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 <List size={20} />
               </button>
             </div>
-            <textarea
-              value={editorContent}
-              onChange={handleEditorChange}
-              className="se-textarea"
-              placeholder={
-                generating && !sectionAnswers[sections[activeSection]?.name]
-                  ? `Generating ${sections[activeSection]?.name}...`
-                  : `Start writing your ${sections[activeSection]?.name} here...`
-              }
-            />
+            {generating && !sectionAnswers[sections[activeSection]?.name] ? (
+              <div
+                className="se-skeleton-container"
+                role="status"
+                aria-label={`Generating ${sections[activeSection]?.name}...`}
+              >
+                <div className="se-skeleton-label">
+                  <div className="se-skeleton-spinner" />
+                  Generating {sections[activeSection]?.name}...
+                </div>
+                <div className="se-skeleton-lines">
+                  <div className="se-skeleton-line" style={{ width: '92%' }} />
+                  <div className="se-skeleton-line" style={{ width: '100%' }} />
+                  <div className="se-skeleton-line" style={{ width: '85%' }} />
+                  <div className="se-skeleton-line" style={{ width: '96%' }} />
+                  <div className="se-skeleton-line" style={{ width: '78%' }} />
+                  <div className="se-skeleton-line" style={{ width: '100%' }} />
+                  <div className="se-skeleton-line" style={{ width: '88%' }} />
+                  <div className="se-skeleton-line" style={{ width: '45%' }} />
+                </div>
+              </div>
+            ) : (
+              <textarea
+                value={editorContent}
+                onChange={handleEditorChange}
+                className="se-textarea"
+                placeholder={`Start writing your ${sections[activeSection]?.name} here...`}
+              />
+            )}
           </div>
 
           {/* Regenerate Content with AI button - DISABLED */}

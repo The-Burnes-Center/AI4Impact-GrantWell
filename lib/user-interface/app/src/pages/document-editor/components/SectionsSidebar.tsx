@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircle, Circle, AlertCircle, Loader } from "lucide-react";
+import { CheckCircle, AlertCircle, Loader, Lock } from "lucide-react";
 
 interface Section {
   name: string;
@@ -25,6 +25,10 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
   completedSectionCount = 0,
   failedSections = [],
 }: SectionsSidebarProps) {
+  const isSectionReady = (section: Section) => {
+    return !!sectionAnswers[section.name] || failedSections.includes(section.name);
+  };
+
   const getStatusIcon = (section: Section, idx: number) => {
     // Section has content — completed
     if (sectionAnswers[section.name]) {
@@ -38,8 +42,6 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
 
     // Currently generating — show spinner for sections in the active concurrency window
     if (generating) {
-      // Estimate which sections are actively generating:
-      // sections at indices [completedSectionCount .. completedSectionCount + 5) are in-flight
       const isActivelyGenerating = idx >= completedSectionCount && idx < completedSectionCount + 5;
       if (isActivelyGenerating) {
         return (
@@ -51,8 +53,8 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
           />
         );
       }
-      // Pending — not yet started
-      return <Circle size={16} style={{ color: '#D1D5DB' }} aria-label={`${section.name}: pending`} />;
+      // Pending — locked
+      return <Lock size={14} style={{ color: '#9CA3AF' }} aria-label={`${section.name}: pending`} />;
     }
 
     return null;
@@ -69,18 +71,24 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
         )}
       </h3>
       <div className="se-sidebar__list">
-        {sections.map((section, idx) => (
-          <button
-            key={idx}
-            onClick={() => setActiveSection(idx)}
-            className={`se-sidebar__btn${activeSection === idx ? " se-sidebar__btn--active" : ""}`}
-            aria-label={`Section ${idx + 1} of ${sections.length}: ${section.name}`}
-          >
-            <div className="se-sidebar__number">{idx + 1}</div>
-            <span className="se-sidebar__name">{section.name}</span>
-            {getStatusIcon(section, idx)}
-          </button>
-        ))}
+        {sections.map((section, idx) => {
+          const locked = generating && !isSectionReady(section);
+          return (
+            <button
+              key={idx}
+              onClick={() => { if (!locked) setActiveSection(idx); }}
+              className={`se-sidebar__btn${activeSection === idx ? " se-sidebar__btn--active" : ""}${locked ? " se-sidebar__btn--locked" : ""}`}
+              aria-label={`Section ${idx + 1} of ${sections.length}: ${section.name}${locked ? " (generating, not yet available)" : ""}`}
+              aria-disabled={locked}
+              title={locked ? "This section is still being generated" : undefined}
+              style={locked ? { cursor: "not-allowed", opacity: 0.55 } : undefined}
+            >
+              <div className="se-sidebar__number">{idx + 1}</div>
+              <span className="se-sidebar__name">{section.name}</span>
+              {getStatusIcon(section, idx)}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

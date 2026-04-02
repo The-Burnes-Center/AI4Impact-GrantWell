@@ -4,7 +4,6 @@ import { Auth } from "aws-amplify";
 import { FileUploader } from "../../common/file-uploader";
 import Card from "../../components/ui/Card";
 import NavigationButtons from "../../components/ui/NavigationButtons";
-import { Modal } from "../../components/common/Modal";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import type { DocumentData } from "../../common/types/document";
 
@@ -217,6 +216,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     return "\u{1F4CE}";
   };
 
+  const [generationPhase, setGenerationPhase] = useState<string>("preparing");
+  const [totalSections, setTotalSections] = useState(0);
+
   const handleSubmit = async () => {
     if (!selectedNofo) return;
 
@@ -247,11 +249,14 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       });
 
       setGeneratingDraft(true);
-      setDraftProgress("Preparing your draft...");
+      setGenerationPhase("preparing");
+      setDraftProgress("Analyzing your NOFO and preparing sections...");
       setDraftProgressPercent(0);
       setSectionNames([]);
       setCompletedSections([]);
       setCompletedSectionCount(0);
+      setTotalSections(0);
+      setIsLoading(false);
 
       // Start the generation job — returns jobId immediately
       const jobId = await apiClient.drafts.startDraftGeneration({
@@ -262,11 +267,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         sessionId,
       });
       console.log('Draft generation job started:', jobId);
+      setGenerationPhase("planning");
+      setDraftProgress("Retrieving NOFO requirements and planning sections...");
 
-      // Brief polling to populate the section checklist in the modal,
-      // then navigate to SectionEditor which takes over polling
+      // Poll until at least one section has content, then navigate
       let pollCount = 0;
-      const maxPolls = 15; // Poll for up to ~30s to get section names
+      const maxPolls = 90; // Up to ~3 minutes
       let navigated = false;
 
       while (pollCount < maxPolls && !navigated) {
@@ -276,22 +282,31 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         try {
           const jobStatus = await apiClient.drafts.pollDraftJob(jobId);
 
-          // Update checklist UI
+          // Update section names and phase
           if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0) {
             setSectionNames(jobStatus.sectionNames);
-            setDraftProgress("Generating sections...");
+            setTotalSections(jobStatus.totalSections || jobStatus.sectionNames.length);
+
+            if (generationPhase === "planning" || generationPhase === "preparing") {
+              setGenerationPhase("generating");
+            }
           }
+
+          // Update real progress from Step Functions
           if (typeof jobStatus.completedSectionCount === 'number') {
+            const total = jobStatus.totalSections || jobStatus.sectionNames?.length || 1;
             setCompletedSectionCount(jobStatus.completedSectionCount);
-            setDraftProgressPercent(Math.min(90, (jobStatus.completedSectionCount / (jobStatus.totalSections || 1)) * 100));
+            setTotalSections(total);
+            setDraftProgressPercent(Math.round((jobStatus.completedSectionCount / total) * 100));
           }
+
           if (jobStatus.sections) {
             const completed = Object.keys(jobStatus.sections).filter(k => jobStatus.sections![k]);
             setCompletedSections(completed);
           }
 
-          // Navigate once section names are known (after at least 2 polls for brief display)
-          if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0 && pollCount >= 2) {
+          // Navigate only when at least 1 section has actual content
+          if (jobStatus.completedSectionCount && jobStatus.completedSectionCount > 0) {
             navigated = true;
           }
 
@@ -301,13 +316,11 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           }
         } catch (err) {
           console.warn('Error polling job status:', err);
-          setDraftProgressPercent(Math.min(90, (pollCount / maxPolls) * 100));
         }
       }
 
       // Navigate to SectionEditor — it takes over live polling
       setGeneratingDraft(false);
-      setIsLoading(false);
       if (onNavigateToEditor) {
         onNavigateToEditor(jobId);
       }
@@ -332,6 +345,171 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     minHeight: "44px",
   };
 
+  // ── Full-page generation view ──────────────────────────────────────
+  if (generatingDraft) {
+    const phaseLabel =
+      generationPhase === "preparing"
+        ? "Analyzing your NOFO..."
+        : generationPhase === "planning"
+          ? "Retrieving requirements & planning sections..."
+          : sectionNames.length > 0
+            ? `Generating sections (${completedSectionCount}/${totalSections})...`
+            : "Starting generation...";
+
+    return (
+      <div style={{ maxWidth: "680px", margin: "0 auto", padding: "48px 16px", fontFamily: typography.fontFamily }}>
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+          <div
+            aria-hidden
+            style={{
+              width: "64px",
+              height: "64px",
+              margin: "0 auto 20px",
+              border: `3px solid ${colors.primary}`,
+              borderTopColor: "transparent",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+            }}
+          />
+          <h2 style={{ fontSize: typography.fontSize["2xl"], fontWeight: typography.fontWeight.bold, color: colors.heading, margin: "0 0 8px" }}>
+            {phaseLabel}
+          </h2>
+          <p style={{ fontSize: typography.fontSize.base, color: colors.textSecondary, margin: 0 }}>
+            {draftProgress}
+          </p>
+        </div>
+
+        {/* Progress bar with percentage */}
+        <div style={{ marginBottom: "32px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+            <span style={{ fontSize: typography.fontSize.sm, fontWeight: typography.fontWeight.medium, color: colors.text }}>
+              Progress
+            </span>
+            <span style={{ fontSize: typography.fontSize.sm, fontWeight: typography.fontWeight.semibold, color: colors.primary }}>
+              {draftProgressPercent}%
+            </span>
+          </div>
+          <div
+            role="progressbar"
+            aria-valuenow={draftProgressPercent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Draft generation progress"
+            aria-valuetext={`${draftProgressPercent}% complete`}
+            style={{
+              width: "100%",
+              height: "12px",
+              backgroundColor: colors.border,
+              borderRadius: borderRadius.full,
+              overflow: "hidden",
+            }}
+          >
+            <div style={{
+              width: `${draftProgressPercent}%`,
+              height: "100%",
+              background: `linear-gradient(90deg, ${colors.primary}, ${colors.accent})`,
+              borderRadius: borderRadius.full,
+              transition: "width 0.5s ease",
+            }} />
+          </div>
+        </div>
+
+        {/* Section checklist */}
+        {sectionNames.length > 0 && (
+          <div style={{
+            background: colors.white,
+            border: `1px solid ${colors.border}`,
+            borderRadius: borderRadius.lg,
+            padding: "20px 24px",
+            marginBottom: "24px",
+          }}>
+            <h3 style={{ fontSize: typography.fontSize.base, fontWeight: typography.fontWeight.semibold, color: colors.text, margin: "0 0 16px" }}>
+              Sections
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {sectionNames.map((name, idx) => {
+                const isCompleted = completedSections.includes(name);
+                const isActive = !isCompleted && idx >= completedSectionCount && idx < completedSectionCount + 5;
+                return (
+                  <div
+                    key={name}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      padding: "10px 14px",
+                      borderRadius: borderRadius.md,
+                      backgroundColor: isCompleted ? "#f0fdf4" : isActive ? colors.primaryLight : colors.background,
+                      border: `1px solid ${isCompleted ? "#bbf7d0" : isActive ? "#bfdbfe" : colors.borderLight}`,
+                      transition: "all 0.3s ease",
+                    }}
+                    aria-label={`Section ${idx + 1}: ${name} — ${isCompleted ? "completed" : isActive ? "generating" : "pending"}`}
+                  >
+                    {isCompleted ? (
+                      <div style={{
+                        width: "22px", height: "22px", borderRadius: "50%",
+                        backgroundColor: "#10B981", display: "flex", alignItems: "center",
+                        justifyContent: "center", flexShrink: 0, color: "#fff", fontSize: "13px", fontWeight: 700,
+                      }}>
+                        &#10003;
+                      </div>
+                    ) : isActive ? (
+                      <div style={{
+                        width: "22px", height: "22px", border: `2.5px solid ${colors.primary}`,
+                        borderTopColor: "transparent", borderRadius: "50%",
+                        animation: "spin 1s linear infinite", flexShrink: 0,
+                      }} />
+                    ) : (
+                      <div style={{
+                        width: "22px", height: "22px", borderRadius: "50%",
+                        border: "2px solid #D1D5DB", flexShrink: 0,
+                      }} />
+                    )}
+                    <span style={{
+                      fontSize: typography.fontSize.sm,
+                      fontWeight: isCompleted || isActive ? typography.fontWeight.medium : typography.fontWeight.normal,
+                      color: isCompleted ? "#065f46" : isActive ? colors.primary : colors.textSecondary,
+                    }}>
+                      {name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Persistence messaging */}
+        <div
+          role="status"
+          aria-live="polite"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "14px 18px",
+            background: "#f0fdf4",
+            border: "1px solid #bbf7d0",
+            borderRadius: borderRadius.lg,
+            fontSize: typography.fontSize.sm,
+            color: "#065f46",
+          }}
+        >
+          <span style={{ fontSize: "18px", flexShrink: 0 }}>&#10003;</span>
+          <span>
+            Your progress is automatically saved. You can close this page and come back anytime — your draft will be here.
+          </span>
+        </div>
+
+        <style>{`
+          @keyframes spin { to { transform: rotate(360deg); } }
+        `}</style>
+      </div>
+    );
+  }
+
+  // ── Normal upload form ─────────────────────────────────────────────
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
       <Card header="Upload & Additional Info">
@@ -616,116 +794,6 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         )}
       </Card>
 
-      <Modal
-        isOpen={generatingDraft}
-        onClose={() => {}}
-        title={sectionNames.length > 0
-          ? `Generating ${completedSectionCount}/${sectionNames.length} sections...`
-          : "Preparing your draft"}
-        hideCloseButton
-      >
-        <div
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: spacing.lg,
-            fontFamily: typography.fontFamily,
-          }}
-        >
-          {/* Progress bar */}
-          <div
-            role="progressbar"
-            aria-valuenow={draftProgressPercent}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label="Draft generation progress"
-            aria-valuetext={`${Math.round(draftProgressPercent)}% complete`}
-            style={{
-              width: "100%",
-              height: "12px",
-              backgroundColor: colors.border,
-              borderRadius: borderRadius.full,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${draftProgressPercent}%`,
-                height: "100%",
-                backgroundColor: colors.primary,
-                borderRadius: borderRadius.full,
-                transition: "width 0.3s ease",
-              }}
-            />
-          </div>
-
-          {/* Section checklist */}
-          {sectionNames.length > 0 ? (
-            <div style={{ maxHeight: "300px", overflowY: "auto" }}>
-              {sectionNames.map((name, idx) => {
-                const isCompleted = completedSections.includes(name);
-                const isActive = !isCompleted && idx >= completedSectionCount && idx < completedSectionCount + 5;
-                return (
-                  <div
-                    key={name}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: spacing.md,
-                      padding: `${spacing.sm} 0`,
-                      fontSize: typography.fontSize.sm,
-                      color: isCompleted ? '#10B981' : isActive ? colors.primary : colors.textSecondary,
-                    }}
-                    aria-label={`Section ${idx + 1} of ${sectionNames.length}: ${name} — ${isCompleted ? 'completed' : isActive ? 'generating' : 'pending'}`}
-                  >
-                    {isCompleted ? (
-                      <span style={{ color: '#10B981', fontSize: '16px' }}>&#10003;</span>
-                    ) : isActive ? (
-                      <div
-                        aria-hidden
-                        style={{
-                          width: "14px",
-                          height: "14px",
-                          border: `2px solid ${colors.primary}`,
-                          borderTopColor: "transparent",
-                          borderRadius: "50%",
-                          animation: "spin 1s linear infinite",
-                          flexShrink: 0,
-                        }}
-                      />
-                    ) : (
-                      <span style={{ color: '#D1D5DB', fontSize: '16px' }}>&#9675;</span>
-                    )}
-                    <span>{name}</span>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: spacing.md }}>
-              <div
-                aria-hidden
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  border: `2px solid ${colors.primary}`,
-                  borderTopColor: "transparent",
-                  borderRadius: "50%",
-                  animation: "spin 1s linear infinite",
-                  flexShrink: 0,
-                }}
-              />
-              <span style={{ fontSize: typography.fontSize.sm, color: colors.textSecondary }}>
-                {draftProgress}
-              </span>
-            </div>
-          )}
-        </div>
-      </Modal>
-
       <div style={{
         display: "flex",
         justifyContent: "space-between",
@@ -769,16 +837,14 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             showBack={false}
             onContinue={handleSubmit}
             continueLabel={
-              generatingDraft
-                ? "Generating Draft..."
-                : isLoading
-                  ? "Processing..."
-                  : hasExistingDraft
-                    ? "Generate Again"
-                    : "Create Draft"
+              isLoading
+                ? "Processing..."
+                : hasExistingDraft
+                  ? "Generate Again"
+                  : "Create Draft"
             }
-            continueDisabled={isLoading || generatingDraft}
-            continueLoading={isLoading || generatingDraft}
+            continueDisabled={isLoading}
+            continueLoading={isLoading}
             justify="flex-end"
           />
         </div>
