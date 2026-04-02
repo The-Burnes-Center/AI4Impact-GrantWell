@@ -62,7 +62,6 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoRenameFunction: lambda.Function;
   public readonly nofoDeleteFunction: lambda.Function;
   public readonly draftFunction: lambda.Function;
-  public readonly draftGeneratorFunction: lambda.Function;
   public readonly draftGenerationStateMachine: sfn.StateMachine;
   public readonly scraperCoordinatorFunction: lambda.Function;
   public readonly opportunityProcessorFunction: lambda.Function;
@@ -1119,66 +1118,6 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
     this.downloadS3Function = downloadS3APIHandlerFunction;
-
-    // Add draft generator function
-    const draftGeneratorFunction = new lambda.Function(
-      scope,
-      "DraftGeneratorFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/draft-generator")
-        ),
-        handler: "index.handler",
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
-          DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
-          SONNET_MODEL_ID,
-        },
-        timeout: cdk.Duration.minutes(2),
-      }
-    );
-
-    // S3 permissions for draft generator
-    draftGeneratorFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:ListBucket"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
-      })
-    );
-
-    // Bedrock permissions for draft generator
-    draftGeneratorFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "bedrock:InvokeModel",
-          "bedrock:Retrieve",
-          "bedrock-agent:Retrieve",
-        ],
-        resources: ["*"],
-      })
-    );
-
-    // DynamoDB permissions for draft generator
-    draftGeneratorFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "dynamodb:PutItem",
-          "dynamodb:UpdateItem",
-          "dynamodb:GetItem",
-        ],
-        resources: [props.draftGenerationJobsTable.tableArn],
-      })
-    );
-
-    this.draftGeneratorFunction = draftGeneratorFunction;
 
     // --- Draft Generation Step Functions Pipeline ---
 
