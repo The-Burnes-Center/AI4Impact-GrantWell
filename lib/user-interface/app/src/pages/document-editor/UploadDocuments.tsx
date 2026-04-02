@@ -281,8 +281,6 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       const maxPolls = 90; // Up to ~3 minutes
       let navigated = false;
       let hasSectionNames = false;
-      let firstSectionCompletedAt = 0; // poll count when first section completed
-
       while (pollCount < maxPolls && !navigated) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         pollCount++;
@@ -322,14 +320,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             setCompletedSections(completed);
           }
 
-          // Track when first section completes
-          if (jobStatus.completedSectionCount && jobStatus.completedSectionCount > 0 && firstSectionCompletedAt === 0) {
-            firstSectionCompletedAt = pollCount;
-          }
-
-          // Navigate after first section is ready + 3 more polls (~6s)
-          // so the user can see progress bar moving before transition
-          if (firstSectionCompletedAt > 0 && pollCount >= firstSectionCompletedAt + 3) {
+          // Navigate as soon as the first section is ready
+          if (jobStatus.completedSectionCount && jobStatus.completedSectionCount > 0) {
             navigated = true;
           }
 
