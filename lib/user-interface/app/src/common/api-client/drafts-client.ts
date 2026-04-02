@@ -357,6 +357,39 @@ export class DraftsClient {
     }
   }
 
+  // Starts a draft generation job and returns the jobId immediately (no polling)
+  async startDraftGeneration(params: {
+    query: string;
+    documentIdentifier: string;
+    projectBasics?: ProjectBasicsData;
+    questionnaire?: Record<string, string>;
+    sessionId: string;
+  }): Promise<string> {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + '/draft-generation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify({
+        query: params.query,
+        documentIdentifier: params.documentIdentifier,
+        projectBasics: params.projectBasics || {},
+        questionnaire: params.questionnaire || {},
+        sessionId: params.sessionId,
+      }),
+    });
+
+    if (response.status !== 200) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to start draft generation');
+    }
+
+    const data = await response.json();
+    return data.jobId;
+  }
+
   // Generates draft sections based on project basics and questionnaire
   // Uses async polling pattern with Step Functions fan-out
   async generateDraft(params: {

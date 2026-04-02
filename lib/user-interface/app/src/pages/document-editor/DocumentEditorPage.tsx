@@ -9,7 +9,6 @@ import { stepToStatus, statusToStep, EDITOR_STEPS, stepToIndex } from "../../com
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import ProjectBasics from "./ProjectBasics";
 import QuickQuestionnaire from "./QuickQuestionnaire";
-import DraftView from "./DraftView";
 import SectionEditor from "./SectionsEditor";
 import ReviewApplication from "./ReviewApplication";
 import UploadDocuments from "./UploadDocuments";
@@ -157,8 +156,10 @@ const DocumentEditor: React.FC = () => {
   const navigateToSectionEditor = useCallback((jobId: string) => {
     setActiveJobId(jobId);
     setIsGeneratingDraft(true);
-    navigateToStep("sectionEditor");
-  }, []);
+    setCurrentStep("sectionEditor");
+    const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : "";
+    navigate(`/document-editor/${sessionId}?step=sectionEditor${nofoParam}`);
+  }, [selectedNofo, sessionId, navigate]);
 
   const navigateToStep = useCallback(async (step: string) => {
     if (!documentData) {
@@ -217,9 +218,7 @@ const DocumentEditor: React.FC = () => {
       case "questionnaire":
         return <QuickQuestionnaire onContinue={() => navigateToStep("uploadDocuments")} selectedNofo={selectedNofo} onNavigate={navigateToStep} documentData={documentData} onUpdateData={handleUpdateData} />;
       case "uploadDocuments":
-        return <UploadDocuments onContinue={() => navigateToStep("draftCreated")} selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} />;
-      case "draftCreated":
-        return <div style={{ minHeight: "60vh", background: "#f7fafc" }}><DraftView onStartEditing={() => navigateToStep("sectionEditor")} selectedNofo={selectedNofo} sessionId={sessionId || ""} /></div>;
+        return <UploadDocuments onContinue={() => navigateToSectionEditor("")} selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} />;
       case "sectionEditor":
         return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} activeJobId={activeJobId} isGenerating={isGeneratingDraft} />;
       case "reviewApplication":

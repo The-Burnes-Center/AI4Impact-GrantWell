@@ -7,7 +7,6 @@ import NavigationButtons from "../../components/ui/NavigationButtons";
 import { Modal } from "../../components/common/Modal";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import type { DocumentData } from "../../common/types/document";
-import type { DraftJobStatus } from "../../common/api-client/drafts-client";
 
 const MIME_TYPES: Record<string, string> = {
   ".pdf": "application/pdf",
@@ -236,6 +235,17 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         throw new Error("Draft not found. Please start a new document first.");
       }
 
+      // Save additional info before starting generation
+      const uploadedFileInfo = files.map((f) => ({
+        name: f.name, size: f.size, type: f.type, lastModified: f.lastModified,
+      }));
+      await apiClient.drafts.updateDraft({
+        ...draftToUse,
+        status: "generating_draft",
+        additionalInfo,
+        uploadedFiles: uploadedFileInfo,
+      });
+
       setGeneratingDraft(true);
       setDraftProgress("Preparing your draft...");
       setDraftProgressPercent(0);
@@ -243,94 +253,67 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setCompletedSections([]);
       setCompletedSectionCount(0);
 
-      // Track whether we've already navigated to avoid double-navigation
-      let hasNavigated = false;
-
-      const result = await apiClient.drafts.generateDraft({
+      // Start the generation job — returns jobId immediately
+      const jobId = await apiClient.drafts.startDraftGeneration({
         query: "Generate all sections for the grant application",
         documentIdentifier: selectedNofo,
         projectBasics: draftToUse.projectBasics || {},
         questionnaire: draftToUse.questionnaire || {},
         sessionId,
-        onProgress: (status: string, pollCount?: number, maxPolls?: number) => {
-          if (status === "completed" || status === "partial") {
-            setDraftProgressPercent(100);
-            setDraftProgress("Complete!");
-          } else if (typeof pollCount === "number" && typeof maxPolls === "number" && maxPolls > 0) {
-            setDraftProgressPercent(Math.min(90, (pollCount / maxPolls) * 100));
-          }
-        },
-        onJobUpdate: (jobStatus: DraftJobStatus) => {
-          // Update section checklist as Prepare step completes
+      });
+      console.log('Draft generation job started:', jobId);
+
+      // Brief polling to populate the section checklist in the modal,
+      // then navigate to SectionEditor which takes over polling
+      let pollCount = 0;
+      const maxPolls = 15; // Poll for up to ~30s to get section names
+      let navigated = false;
+
+      while (pollCount < maxPolls && !navigated) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        pollCount++;
+
+        try {
+          const jobStatus = await apiClient.drafts.pollDraftJob(jobId);
+
+          // Update checklist UI
           if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0) {
             setSectionNames(jobStatus.sectionNames);
-            setDraftProgress(`Generating sections...`);
+            setDraftProgress("Generating sections...");
           }
-
-          // Track completed sections from DDB
           if (typeof jobStatus.completedSectionCount === 'number') {
             setCompletedSectionCount(jobStatus.completedSectionCount);
+            setDraftProgressPercent(Math.min(90, (jobStatus.completedSectionCount / (jobStatus.totalSections || 1)) * 100));
           }
-
-          // Build completed sections list from actual section data
           if (jobStatus.sections) {
             const completed = Object.keys(jobStatus.sections).filter(k => jobStatus.sections![k]);
             setCompletedSections(completed);
           }
 
-          // Auto-navigate to SectionEditor after section names are known (~5s after start)
-          if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0 && !hasNavigated) {
-            hasNavigated = true;
-            // Brief delay to let user see the section checklist
-            setTimeout(() => {
-              if (onNavigateToEditor) {
-                // Save additional info before navigating
-                const uploadedFileInfo = files.map((f) => ({
-                  name: f.name, size: f.size, type: f.type, lastModified: f.lastModified,
-                }));
-                apiClient.drafts.updateDraft({
-                  ...draftToUse,
-                  status: "generating_draft",
-                  additionalInfo,
-                  uploadedFiles: uploadedFileInfo,
-                }).catch(err => console.error("Error saving draft before navigate:", err));
-
-                setGeneratingDraft(false);
-                setIsLoading(false);
-                onNavigateToEditor(jobStatus.jobId);
-              }
-            }, 3000);
+          // Navigate once section names are known (after at least 2 polls for brief display)
+          if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0 && pollCount >= 2) {
+            navigated = true;
           }
-        },
-      });
 
-      // Fallback: if we haven't navigated yet (e.g. onNavigateToEditor not provided),
-      // use the old flow
-      if (!hasNavigated) {
-        if (!result.sections || Object.keys(result.sections).length === 0) {
-          throw new Error("Failed to generate sections");
+          // Also navigate if job already completed/errored
+          if (jobStatus.status === 'completed' || jobStatus.status === 'partial' || jobStatus.status === 'error') {
+            navigated = true;
+          }
+        } catch (err) {
+          console.warn('Error polling job status:', err);
+          setDraftProgressPercent(Math.min(90, (pollCount / maxPolls) * 100));
         }
+      }
 
-        setDraftProgressPercent(100);
-        setDraftProgress("Complete!");
-
-        const uploadedFileInfo = files.map((f) => ({
-          name: f.name, size: f.size, type: f.type, lastModified: f.lastModified,
-        }));
-        await apiClient.drafts.updateDraft({
-          ...draftToUse,
-          sections: { ...draftToUse.sections, ...result.sections },
-          status: "editing_sections",
-          additionalInfo,
-          uploadedFiles: uploadedFileInfo,
-        });
-
-        onNavigate("sectionEditor");
+      // Navigate to SectionEditor — it takes over live polling
+      setGeneratingDraft(false);
+      setIsLoading(false);
+      if (onNavigateToEditor) {
+        onNavigateToEditor(jobId);
       }
     } catch (error) {
       console.error("Error creating draft:", error);
       setUploadError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
-    } finally {
       setIsLoading(false);
       setGeneratingDraft(false);
       setDraftProgress("");
