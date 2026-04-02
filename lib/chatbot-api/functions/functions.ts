@@ -77,6 +77,10 @@ export class LambdaFunctionStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
 
+    // Centralized Bedrock model IDs — update here to change everywhere
+    const SONNET_MODEL_ID = "global.anthropic.claude-sonnet-4-6";
+    const HAIKU_MODEL_ID = "us.anthropic.claude-3-5-haiku-20241022-v1:0";
+
     // Create Python shared models Lambda Layer
     const pythonSharedLayer = new lambda.LayerVersion(scope, "PythonSharedLayer", {
       layerVersionName: `${stackName}-python-shared-layer`,
@@ -179,6 +183,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SESSION_HANDLER: this.sessionFunction.functionName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+          SONNET_MODEL_ID,
         },
         timeout: cdk.Duration.seconds(300),
       }
@@ -549,6 +554,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       handler: "extract-and-analyze/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        SONNET_MODEL_ID,
       },
       timeout: cdk.Duration.minutes(5),
       memorySize: 512,
@@ -563,6 +569,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       handler: "synthesize/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        HAIKU_MODEL_ID,
       },
       timeout: cdk.Duration.minutes(5),
       memorySize: 512,
@@ -1125,6 +1132,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
+          SONNET_MODEL_ID,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -1215,6 +1223,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           GRANTS_GOV_API_KEY: props.grantsGovApiKey,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          HAIKU_MODEL_ID,
         },
         timeout: cdk.Duration.minutes(2),
         memorySize: 256,
