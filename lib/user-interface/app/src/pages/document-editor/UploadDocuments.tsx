@@ -7,6 +7,7 @@ import NavigationButtons from "../../components/ui/NavigationButtons";
 import { Modal } from "../../components/common/Modal";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import type { DocumentData } from "../../common/types/document";
+import type { DraftJobStatus } from "../../common/api-client/drafts-client";
 
 const MIME_TYPES: Record<string, string> = {
   ".pdf": "application/pdf",
@@ -36,6 +37,7 @@ interface UploadDocumentsProps {
   onContinue: () => void;
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
+  onNavigateToEditor?: (jobId: string) => void;
   sessionId: string;
   documentData?: DocumentData | null;
 }
@@ -44,6 +46,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   onContinue,
   selectedNofo,
   onNavigate,
+  onNavigateToEditor,
   sessionId,
   documentData,
 }) => {
@@ -61,6 +64,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [draftProgressPercent, setDraftProgressPercent] = useState(0);
   const [hasExistingDraft, setHasExistingDraft] = useState(false);
   const [kbIndexing, setKbIndexing] = useState(false);
+  const [sectionNames, setSectionNames] = useState<string[]>([]);
+  const [completedSections, setCompletedSections] = useState<string[]>([]);
+  const [completedSectionCount, setCompletedSectionCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -231,8 +237,14 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
 
       setGeneratingDraft(true);
-      setDraftProgress("Checking status…");
+      setDraftProgress("Preparing your draft...");
       setDraftProgressPercent(0);
+      setSectionNames([]);
+      setCompletedSections([]);
+      setCompletedSectionCount(0);
+
+      // Track whether we've already navigated to avoid double-navigation
+      let hasNavigated = false;
 
       const result = await apiClient.drafts.generateDraft({
         query: "Generate all sections for the grant application",
@@ -241,38 +253,80 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         questionnaire: draftToUse.questionnaire || {},
         sessionId,
         onProgress: (status: string, pollCount?: number, maxPolls?: number) => {
-          if (status === "completed") {
+          if (status === "completed" || status === "partial") {
             setDraftProgressPercent(100);
             setDraftProgress("Complete!");
           } else if (typeof pollCount === "number" && typeof maxPolls === "number" && maxPolls > 0) {
             setDraftProgressPercent(Math.min(90, (pollCount / maxPolls) * 100));
-            setDraftProgress("Checking status…");
+          }
+        },
+        onJobUpdate: (jobStatus: DraftJobStatus) => {
+          // Update section checklist as Prepare step completes
+          if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0) {
+            setSectionNames(jobStatus.sectionNames);
+            setDraftProgress(`Generating sections...`);
+          }
+
+          // Track completed sections from DDB
+          if (typeof jobStatus.completedSectionCount === 'number') {
+            setCompletedSectionCount(jobStatus.completedSectionCount);
+          }
+
+          // Build completed sections list from actual section data
+          if (jobStatus.sections) {
+            const completed = Object.keys(jobStatus.sections).filter(k => jobStatus.sections![k]);
+            setCompletedSections(completed);
+          }
+
+          // Auto-navigate to SectionEditor after section names are known (~5s after start)
+          if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0 && !hasNavigated) {
+            hasNavigated = true;
+            // Brief delay to let user see the section checklist
+            setTimeout(() => {
+              if (onNavigateToEditor) {
+                // Save additional info before navigating
+                const uploadedFileInfo = files.map((f) => ({
+                  name: f.name, size: f.size, type: f.type, lastModified: f.lastModified,
+                }));
+                apiClient.drafts.updateDraft({
+                  ...draftToUse,
+                  status: "generating_draft",
+                  additionalInfo,
+                  uploadedFiles: uploadedFileInfo,
+                }).catch(err => console.error("Error saving draft before navigate:", err));
+
+                setGeneratingDraft(false);
+                setIsLoading(false);
+                onNavigateToEditor(jobStatus.jobId);
+              }
+            }, 3000);
           }
         },
       });
 
-      if (!result || Object.keys(result).length === 0) {
-        throw new Error("Failed to generate sections");
+      // Fallback: if we haven't navigated yet (e.g. onNavigateToEditor not provided),
+      // use the old flow
+      if (!hasNavigated) {
+        if (!result.sections || Object.keys(result.sections).length === 0) {
+          throw new Error("Failed to generate sections");
+        }
+
+        setDraftProgressPercent(100);
+        setDraftProgress("Complete!");
+
+        const uploadedFileInfo = files.map((f) => ({
+          name: f.name, size: f.size, type: f.type, lastModified: f.lastModified,
+        }));
+        await apiClient.drafts.updateDraft({
+          ...draftToUse,
+          sections: { ...draftToUse.sections, ...result.sections },
+          status: "editing_sections",
+          additionalInfo,
+          uploadedFiles: uploadedFileInfo,
+        });
+
+        onNavigate("sectionEditor");
       }
-
-      setDraftProgressPercent(100);
-      setDraftProgress("Complete!");
-
-      const uploadedFileInfo = files.map((f) => ({
-        name: f.name,
-        size: f.size,
-        type: f.type,
-        lastModified: f.lastModified,
-      }));
-      await apiClient.drafts.updateDraft({
-        ...draftToUse,
-        sections: { ...draftToUse.sections, ...result },
-        status: "editing_sections",
-        additionalInfo,
-        uploadedFiles: uploadedFileInfo,
-      });
-
-      onNavigate("sectionEditor");
     } catch (error) {
       console.error("Error creating draft:", error);
       setUploadError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
@@ -582,7 +636,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       <Modal
         isOpen={generatingDraft}
         onClose={() => {}}
-        title="Generating your draft"
+        title={sectionNames.length > 0
+          ? `Generating ${completedSectionCount}/${sectionNames.length} sections...`
+          : "Preparing your draft"}
         hideCloseButton
       >
         <div
@@ -596,6 +652,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             fontFamily: typography.fontFamily,
           }}
         >
+          {/* Progress bar */}
           <div
             role="progressbar"
             aria-valuenow={draftProgressPercent}
@@ -621,23 +678,68 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               }}
             />
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: spacing.md }}>
-            <div
-              aria-hidden
-              style={{
-                width: "24px",
-                height: "24px",
-                border: `2px solid ${colors.primary}`,
-                borderTopColor: "transparent",
-                borderRadius: "50%",
-                animation: "spin 1s linear infinite",
-                flexShrink: 0,
-              }}
-            />
-            <span style={{ fontSize: typography.fontSize.sm, color: colors.textSecondary }}>
-              {draftProgress}
-            </span>
-          </div>
+
+          {/* Section checklist */}
+          {sectionNames.length > 0 ? (
+            <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+              {sectionNames.map((name, idx) => {
+                const isCompleted = completedSections.includes(name);
+                const isActive = !isCompleted && idx >= completedSectionCount && idx < completedSectionCount + 5;
+                return (
+                  <div
+                    key={name}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: spacing.md,
+                      padding: `${spacing.sm} 0`,
+                      fontSize: typography.fontSize.sm,
+                      color: isCompleted ? '#10B981' : isActive ? colors.primary : colors.textSecondary,
+                    }}
+                    aria-label={`Section ${idx + 1} of ${sectionNames.length}: ${name} — ${isCompleted ? 'completed' : isActive ? 'generating' : 'pending'}`}
+                  >
+                    {isCompleted ? (
+                      <span style={{ color: '#10B981', fontSize: '16px' }}>&#10003;</span>
+                    ) : isActive ? (
+                      <div
+                        aria-hidden
+                        style={{
+                          width: "14px",
+                          height: "14px",
+                          border: `2px solid ${colors.primary}`,
+                          borderTopColor: "transparent",
+                          borderRadius: "50%",
+                          animation: "spin 1s linear infinite",
+                          flexShrink: 0,
+                        }}
+                      />
+                    ) : (
+                      <span style={{ color: '#D1D5DB', fontSize: '16px' }}>&#9675;</span>
+                    )}
+                    <span>{name}</span>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: spacing.md }}>
+              <div
+                aria-hidden
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  border: `2px solid ${colors.primary}`,
+                  borderTopColor: "transparent",
+                  borderRadius: "50%",
+                  animation: "spin 1s linear infinite",
+                  flexShrink: 0,
+                }}
+              />
+              <span style={{ fontSize: typography.fontSize.sm, color: colors.textSecondary }}>
+                {draftProgress}
+              </span>
+            </div>
+          )}
         </div>
       </Modal>
 
