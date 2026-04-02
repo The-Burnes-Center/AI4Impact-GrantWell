@@ -31,7 +31,11 @@ class DraftOperationRequest(BaseModel):
     status: Optional[Literal[
         'project_basics',
         'questionnaire',
-        'editing_sections'
+        'uploading_documents',
+        'generating_draft',
+        'editing_sections',
+        'reviewing',
+        'submitted'
     ]] = Field(None, description="Draft status")
 
     @field_validator('session_id')
@@ -55,7 +59,15 @@ class DraftItem(BaseModel):
     project_basics: Dict[str, Any] = Field(default_factory=dict)
     questionnaire: Dict[str, Any] = Field(default_factory=dict)
     last_modified: str
-    status: Literal['project_basics', 'questionnaire', 'editing_sections'] = 'project_basics'
+    status: Literal[
+        'project_basics',
+        'questionnaire',
+        'uploading_documents',
+        'generating_draft',
+        'editing_sections',
+        'reviewing',
+        'submitted'
+    ] = 'project_basics'
 
 
 class DraftResponse(BaseModel):
