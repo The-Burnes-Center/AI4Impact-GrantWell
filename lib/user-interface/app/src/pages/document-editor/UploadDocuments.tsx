@@ -251,7 +251,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setGeneratingDraft(true);
       setGenerationPhase("preparing");
       setDraftProgress("Analyzing your NOFO and preparing sections...");
-      setDraftProgressPercent(0);
+      setDraftProgressPercent(5);
       setSectionNames([]);
       setCompletedSections([]);
       setCompletedSectionCount(0);
@@ -269,11 +269,19 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       console.log('Draft generation job started:', jobId);
       setGenerationPhase("planning");
       setDraftProgress("Retrieving NOFO requirements and planning sections...");
+      setDraftProgressPercent(10);
 
-      // Poll until at least one section has content, then navigate
+      // Progress phases:
+      //   Prepare (0-15%): synthetic ticks while waiting for sectionNames
+      //   Generation (15-100%): real progress from completedSectionCount / totalSections
+      const PREPARE_MAX = 15;
+      const GENERATION_RANGE = 85; // 15% to 100%
+
       let pollCount = 0;
       const maxPolls = 90; // Up to ~3 minutes
       let navigated = false;
+      let hasSectionNames = false;
+      let firstSectionCompletedAt = 0; // poll count when first section completed
 
       while (pollCount < maxPolls && !navigated) {
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -282,22 +290,31 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         try {
           const jobStatus = await apiClient.drafts.pollDraftJob(jobId);
 
-          // Update section names and phase
+          // Phase: section names received → switch to generation phase
           if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0) {
+            if (!hasSectionNames) {
+              hasSectionNames = true;
+              setGenerationPhase("generating");
+              setDraftProgress("Generating sections...");
+              setDraftProgressPercent(PREPARE_MAX);
+            }
             setSectionNames(jobStatus.sectionNames);
             setTotalSections(jobStatus.totalSections || jobStatus.sectionNames.length);
-
-            if (generationPhase === "planning" || generationPhase === "preparing") {
-              setGenerationPhase("generating");
-            }
           }
 
-          // Update real progress from Step Functions
-          if (typeof jobStatus.completedSectionCount === 'number') {
+          // Real progress from Step Functions
+          if (typeof jobStatus.completedSectionCount === 'number' && hasSectionNames) {
             const total = jobStatus.totalSections || jobStatus.sectionNames?.length || 1;
             setCompletedSectionCount(jobStatus.completedSectionCount);
             setTotalSections(total);
-            setDraftProgressPercent(Math.round((jobStatus.completedSectionCount / total) * 100));
+
+            // Map completedSectionCount into the 15-100% range
+            const genPercent = Math.round((jobStatus.completedSectionCount / total) * GENERATION_RANGE);
+            setDraftProgressPercent(PREPARE_MAX + genPercent);
+          } else if (!hasSectionNames) {
+            // Synthetic progress ticks during Prepare phase (5% → 15%)
+            const syntheticProgress = Math.min(PREPARE_MAX, 5 + pollCount * 2);
+            setDraftProgressPercent(syntheticProgress);
           }
 
           if (jobStatus.sections) {
@@ -305,17 +322,28 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             setCompletedSections(completed);
           }
 
-          // Navigate only when at least 1 section has actual content
-          if (jobStatus.completedSectionCount && jobStatus.completedSectionCount > 0) {
+          // Track when first section completes
+          if (jobStatus.completedSectionCount && jobStatus.completedSectionCount > 0 && firstSectionCompletedAt === 0) {
+            firstSectionCompletedAt = pollCount;
+          }
+
+          // Navigate after first section is ready + 3 more polls (~6s)
+          // so the user can see progress bar moving before transition
+          if (firstSectionCompletedAt > 0 && pollCount >= firstSectionCompletedAt + 3) {
             navigated = true;
           }
 
-          // Also navigate if job already completed/errored
+          // Navigate immediately if job already fully completed/errored
           if (jobStatus.status === 'completed' || jobStatus.status === 'partial' || jobStatus.status === 'error') {
             navigated = true;
           }
         } catch (err) {
           console.warn('Error polling job status:', err);
+          // Synthetic tick even on error so bar doesn't freeze
+          if (!hasSectionNames) {
+            const syntheticProgress = Math.min(PREPARE_MAX, 5 + pollCount * 2);
+            setDraftProgressPercent(syntheticProgress);
+          }
         }
       }
 
