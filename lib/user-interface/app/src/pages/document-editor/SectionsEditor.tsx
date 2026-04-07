@@ -155,9 +155,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           });
         }
 
-        // Track completed count for sidebar progress
         if (typeof jobStatus.completedSectionCount === 'number') {
-          setCompletedSectionCount(jobStatus.completedSectionCount);
+          setCompletedSectionCount(prev => Math.max(prev, jobStatus.completedSectionCount!));
         }
 
         // Update editor if active section just completed and editor is empty
