@@ -16,6 +16,7 @@ interface AISearchResponse {
 }
 
 const CACHE_MAX_SIZE = 5;
+const CACHE_TTL_MS = 5 * 60 * 1000;
 const SEARCH_TIMEOUT_MS = 15_000;
 
 interface CacheEntry {
@@ -57,12 +58,15 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
       const trimmed = query.trim().toLowerCase();
 
       const cached = cacheRef.current.get(trimmed);
-      if (cached) {
+      if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
         setResults(cached.results);
         setSearchTimeMs(cached.searchTimeMs);
         setSearchQuery(query.trim());
         setError(null);
         return;
+      }
+      if (cached) {
+        cacheRef.current.delete(trimmed);
       }
 
       setIsSearching(true);

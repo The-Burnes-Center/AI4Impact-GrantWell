@@ -75,7 +75,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
       if (hasRankedResults) {
         if (!scoreMap.has(normalizedName)) return false;
-      } else if (searchLower !== "" && !awaitingAIResults && !preferAISearch) {
+      } else if (searchLower !== "" && !awaitingAIResults) {
         const tokens = searchLower.split(/\s+/).filter(Boolean);
         const searchableText = [
           nofo.name,
@@ -119,6 +119,15 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedNofos = filteredNofos.slice(startIndex, endIndex);
+
+  // Reset dropdown filters when AI search returns results to avoid confusing empty states
+  useEffect(() => {
+    if (searchResults && searchResults.length > 0) {
+      setStatusFilter("all");
+      setCategoryFilter("all");
+      setGrantTypeFilter("all");
+    }
+  }, [searchResults]);
 
   useEffect(() => {
     setCurrentPage(1);
