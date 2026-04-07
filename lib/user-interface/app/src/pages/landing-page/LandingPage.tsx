@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";
@@ -99,7 +99,11 @@ export default function Welcome() {
         const folders = result.folders || [];
 
         if (result.nofoData) {
-          const sortedNofos = [...result.nofoData].sort(
+          const readyNofos = result.nofoData.filter(
+            (nofo: RawNOFOData) => !nofo.processing_status
+          );
+
+          const sortedNofos = [...readyNofos].sort(
             (a: RawNOFOData, b: RawNOFOData) => {
               if (a.status === "active" && b.status !== "active") return -1;
               if (a.status !== "active" && b.status === "active") return 1;

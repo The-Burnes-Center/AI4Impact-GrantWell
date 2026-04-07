@@ -18,6 +18,7 @@ const PROCESSING_LABELS: Record<string, string> = {
   synthesizing: "Synthesizing...",
   validating: "Validating...",
   quarantined: "Quarantined",
+  incomplete: "Incomplete",
 };
 
 interface NOFOsTabProps {
