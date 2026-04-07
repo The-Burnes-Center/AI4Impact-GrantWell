@@ -43,6 +43,7 @@ export default function Welcome() {
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
   const prevSelectedDocRef = useRef<SelectableDocument | null>(null);
   const firstCTAButtonRef = useRef<HTMLButtonElement>(null);
+  const suppressSearchRef = useRef(false);
 
   const apiClient = useApiClient();
   const { isAdmin } = useAdminCheck();
@@ -196,7 +197,12 @@ export default function Welcome() {
   }, [selectedDocument]);
 
   const handleSelectDocument = useCallback(
-    (doc: SelectableDocument | null) => setSelectedDocument(doc),
+    (doc: SelectableDocument | null) => {
+      setSelectedDocument(doc);
+      if (doc) {
+        suppressSearchRef.current = true;
+      }
+    },
     []
   );
 
@@ -310,6 +316,7 @@ export default function Welcome() {
           onSearchPendingChange={canUseAIGrantSearch ? setIsSearchPending : undefined}
           searchPlaceholder={searchPlaceholder}
           searchAriaLabel={searchAriaLabel}
+          suppressSearchRef={canUseAIGrantSearch ? suppressSearchRef : undefined}
         />
 
         {/* Screen reader announcement */}

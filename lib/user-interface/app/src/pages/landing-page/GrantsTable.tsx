@@ -37,7 +37,9 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [showAllAIResults, setShowAllAIResults] = useState(false);
   const itemsPerPage = 10;
+  const AI_INITIAL_LIMIT = 10;
 
   const uniqueCategories = Array.from(
     new Set(nofos.map((nofo) => nofo.category).filter((category): category is string => !!category))
@@ -115,17 +117,25 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
   const filteredNofos = getFilteredNofos();
 
+  const hasRankedResults = scoreMap !== null && scoreMap.size > 0;
+
   const totalPages = Math.ceil(filteredNofos.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedNofos = filteredNofos.slice(startIndex, endIndex);
 
-  // Reset dropdown filters when AI search returns results to avoid confusing empty states
+  // For AI results: show top 10 initially, expand on "Show More".
+  // For normal browsing: use existing pagination.
+  const visibleNofos = hasRankedResults
+    ? (showAllAIResults ? filteredNofos : filteredNofos.slice(0, AI_INITIAL_LIMIT))
+    : filteredNofos.slice(startIndex, endIndex);
+
+  // Reset dropdown filters and "show more" state when AI search returns results
   useEffect(() => {
     if (searchResults && searchResults.length > 0) {
       setStatusFilter("all");
       setCategoryFilter("all");
       setGrantTypeFilter("all");
+      setShowAllAIResults(false);
     }
   }, [searchResults]);
 
@@ -139,6 +149,12 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       value: nofo.name + "/",
     });
     onSearchTermChange?.(nofo.name);
+
+    // Clear AI results so the table returns to normal browsing
+    // (suppressSearchRef in IntegratedSearchBar prevents re-triggering)
+    if (preferAISearch && searchResults) {
+      onClearSearch?.();
+    }
 
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -232,11 +248,13 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         <div className="search-status-banner" aria-live="polite">
           <span>
             Found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
-            your search
+            your search{!showAllAIResults && filteredNofos.length > AI_INITIAL_LIMIT
+              ? ` (showing top ${AI_INITIAL_LIMIT})`
+              : ""}
           </span>
           {onClearSearch && (
             <button className="search-clear-button" onClick={onClearSearch} aria-label="Show all grants">
-              Show all
+              Show all grants
             </button>
           )}
         </div>
@@ -281,7 +299,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
               </p>
             </div>
           ) : null}
-          {!awaitingAIResults && paginatedNofos.map((nofo) => {
+          {!awaitingAIResults && visibleNofos.map((nofo) => {
             const isArchived = nofo.status === "archived";
             return (
               <div
@@ -347,8 +365,30 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
       </div>
 
-      {/* Pagination */}
-      {!awaitingAIResults && filteredNofos.length > 0 && totalPages > 1 && (
+      {/* Show More / Show Less for AI results */}
+      {!awaitingAIResults && hasRankedResults && filteredNofos.length > AI_INITIAL_LIMIT && (
+        <div className="landing-table-pagination">
+          <div className="landing-pagination-info">
+            {showAllAIResults
+              ? `Showing all ${filteredNofos.length} results`
+              : `Showing top ${AI_INITIAL_LIMIT} of ${filteredNofos.length} results`}
+          </div>
+          <button
+            className="landing-pagination-button"
+            onClick={() => setShowAllAIResults((prev) => !prev)}
+            aria-label={showAllAIResults
+              ? `Show top ${AI_INITIAL_LIMIT} results`
+              : `Show all ${filteredNofos.length} results`}
+          >
+            {showAllAIResults
+              ? "Show less"
+              : `Show more (${filteredNofos.length - AI_INITIAL_LIMIT} more)`}
+          </button>
+        </div>
+      )}
+
+      {/* Pagination for normal browsing */}
+      {!awaitingAIResults && !hasRankedResults && filteredNofos.length > 0 && totalPages > 1 && (
         <div className="landing-table-pagination">
           <div className="landing-pagination-info">
             Showing {startIndex + 1}-{Math.min(endIndex, filteredNofos.length)} of {filteredNofos.length} grants
