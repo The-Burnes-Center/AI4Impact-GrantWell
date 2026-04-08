@@ -243,7 +243,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
       )}
 
-      {/* Results summary with Show All */}
+      {/* Results summary */}
       {searchResults && !isSearching && !searchError && (
         <div className="search-status-banner" aria-live="polite">
           <span>
@@ -252,11 +252,6 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
               ? ` (showing top ${AI_INITIAL_LIMIT})`
               : ""}
           </span>
-          {onClearSearch && (
-            <button className="search-clear-button" onClick={onClearSearch} aria-label="Show all grants">
-              Show all grants
-            </button>
-          )}
         </div>
       )}
 
@@ -367,14 +362,9 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
       {/* Show More / Show Less for AI results */}
       {!awaitingAIResults && hasRankedResults && filteredNofos.length > AI_INITIAL_LIMIT && (
-        <div className="landing-table-pagination">
-          <div className="landing-pagination-info">
-            {showAllAIResults
-              ? `Showing all ${filteredNofos.length} results`
-              : `Showing top ${AI_INITIAL_LIMIT} of ${filteredNofos.length} results`}
-          </div>
+        <div className="landing-table-pagination" style={{ justifyContent: "center" }}>
           <button
-            className="landing-pagination-button"
+            className="landing-show-more-button"
             onClick={() => setShowAllAIResults((prev) => !prev)}
             aria-label={showAllAIResults
               ? `Show top ${AI_INITIAL_LIMIT} results`
