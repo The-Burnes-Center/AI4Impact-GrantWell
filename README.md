@@ -35,7 +35,7 @@ The application features multiple interactive interfaces including a landing pag
 
 ## Architecture
 
-<img src="lib/user-interface/app/public/images/architecture.png" alt="System Architecture" width="500">
+[![GrantWell Architecture Diagram](https://drive.google.com/thumbnail?id=1_bfNqxH3opOZFXm4___pQd5Y1hLC-ryQ&sz=w1600)](https://drive.google.com/file/d/1_bfNqxH3opOZFXm4___pQd5Y1hLC-ryQ/view?usp=sharing)
 
 For more information about the architecture, visit the [AWS GenAI LLM Chatbot](https://aws-samples.github.io/aws-genai-llm-chatbot/).
 
