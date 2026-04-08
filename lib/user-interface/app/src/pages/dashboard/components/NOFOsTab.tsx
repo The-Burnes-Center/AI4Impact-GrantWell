@@ -60,6 +60,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [customGrantName, setCustomGrantName] = useState("");
   const [uploadGrantType, setUploadGrantType] = useState<GrantTypeId | "">("");
   const [uploadCategory, setUploadCategory] = useState<string>("");
+  const [uploadAgency, setUploadAgency] = useState<string>("");
 
   const handleEditSummary = useCallback(async (nofo: NOFO) => {
     setSelectedNofo(nofo);
@@ -250,7 +251,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
       await apiClient.landingPage.updateNOFOStatus(
         folderName, "active", undefined, undefined,
         uploadGrantType ? (uploadGrantType as GrantTypeId) : "federal",
-        uploadCategory
+        uploadCategory,
+        uploadAgency || undefined
       );
 
       if (showGrantSuccessBanner) {
@@ -263,6 +265,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       setCustomGrantName("");
       setUploadGrantType("");
       setUploadCategory("");
+      setUploadAgency("");
       setUploadNofoModalOpen(false);
     } catch {
       addNotification("error", "Failed to upload the grant file.");
@@ -444,7 +447,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       {/* Upload NOFO Modal */}
       <Modal
         isOpen={uploadNofoModalOpen}
-        onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadCategory(""); }}
+        onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadCategory(""); setUploadAgency(""); }}
         title="Upload Grant"
       >
         <div className="modal-form">
@@ -495,10 +498,15 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 </div>
                 <div className="field-note">Required. Select the funding category for this grant.</div>
               </div>
+              <div className="form-group">
+                <label htmlFor="upload-agency">Agency</label>
+                <input type="text" id="upload-agency" value={uploadAgency} onChange={(e) => setUploadAgency(e.target.value)} className="form-input" placeholder="e.g. Department of Health and Human Services" />
+                <div className="field-note">Optional. The government agency issuing this grant.</div>
+              </div>
             </>
           )}
           <div className="modal-actions">
-            <button className="modal-button secondary" onClick={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadCategory(""); }}>Cancel</button>
+            <button className="modal-button secondary" onClick={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadCategory(""); setUploadAgency(""); }}>Cancel</button>
             <button className="modal-button primary" onClick={uploadNOFO} disabled={!selectedFile || !customGrantName.trim() || !uploadCategory}>
               <LuUpload size={16} className="button-icon" /><span>Upload Grant</span>
             </button>

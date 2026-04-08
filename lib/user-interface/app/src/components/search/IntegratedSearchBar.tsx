@@ -6,6 +6,18 @@ import { searchContainerStyle } from "./styles/searchStyles";
 
 const SEARCH_DEBOUNCE_MS = 400;
 const MIN_QUERY_LENGTH = 3;
+const TIP_ROTATE_MS = 5000;
+
+const SEARCH_TIPS = [
+  "grants for youth mental health services",
+  "funding for affordable housing in rural communities",
+  "grants to support STEM education for underserved students",
+  "funding for community health worker training programs",
+  "grants for small business disaster recovery assistance",
+  "funding for clean energy projects in low-income areas",
+  "grants for workforce development and job training",
+  "funding for food security and nutrition programs",
+];
 
 const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   onSelectDocument,
@@ -21,6 +33,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   suppressSearchRef,
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
+  const [tipIndex, setTipIndex] = useState(0);
   const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
   const setSearchTerm = onSearchTermChange || setInternalSearchTerm;
 
@@ -120,6 +133,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const queryWordCount = trimmedTerm.split(/\s+/).filter(Boolean).length;
   const showSuggestion = onSearch && trimmedTerm.length > 0 && queryWordCount <= 3;
 
+  useEffect(() => {
+    if (!showSuggestion) return;
+    const interval = setInterval(() => {
+      setTipIndex((prev) => (prev + 1) % SEARCH_TIPS.length);
+    }, TIP_ROTATE_MS);
+    return () => clearInterval(interval);
+  }, [showSuggestion]);
+
   return (
     <div style={searchContainerStyle} ref={searchRef}>
       <SearchInput
@@ -140,7 +161,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       {showSuggestion && (
         <p className="search-tip" role="status">
           Tip: Try a full sentence for more precise results, e.g.,{" "}
-          <em>&ldquo;grants for youth mental health services&rdquo;</em>
+          <em key={tipIndex}>&ldquo;{SEARCH_TIPS[tipIndex]}&rdquo;</em>
         </p>
       )}
     </div>
