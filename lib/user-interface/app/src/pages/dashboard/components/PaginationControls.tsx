@@ -44,8 +44,10 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
 
   if (totalItems === 0) return null;
 
-  const startItem = isTokenMode ? 1 : (currentPage - 1) * itemsPerPage + 1;
-  const endItem = isTokenMode ? totalItems : Math.min(currentPage * itemsPerPage, totalItems);
+  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const endItem = isTokenMode
+    ? (currentPage - 1) * itemsPerPage + totalItems
+    : Math.min(currentPage * itemsPerPage, totalItems);
 
   const pageButtons: React.ReactNode[] = [];
 
