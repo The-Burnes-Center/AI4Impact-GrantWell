@@ -38,7 +38,7 @@ export const searchIconStyle: React.CSSProperties = {
 
 export const getInputStyle = (isLoading: boolean): React.CSSProperties => ({
   width: "100%",
-  padding: "14px 20px 14px 45px",
+  padding: "14px 40px 14px 45px",
   fontSize: "16px",
   borderRadius: "25px",
   border: "1px solid #e0e0e0",
