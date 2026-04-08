@@ -18,6 +18,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   onSearchPendingChange,
   searchPlaceholder,
   searchAriaLabel,
+  suppressSearchRef,
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
   const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
@@ -36,12 +37,14 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     if (!isSearching && queuedQueryRef.current !== null) {
       const queued = queuedQueryRef.current;
       queuedQueryRef.current = null;
+      // Don't fire queued search if the search term was cleared (e.g. NOFO selected)
+      if (searchTerm.trim().length < MIN_QUERY_LENGTH) return;
       if (onSearch && queued !== lastSubmittedQuery.current) {
         lastSubmittedQuery.current = queued;
         onSearch(queued);
       }
     }
-  }, [isSearching, onSearch]);
+  }, [isSearching, onSearch, searchTerm]);
 
   useEffect(() => {
     const trimmed = searchTerm.trim();
@@ -49,6 +52,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       lastSubmittedQuery.current = "";
       queuedQueryRef.current = null;
       onSearchPendingChange?.(false);
+      return;
+    }
+    // Suppress: term was set programmatically (e.g. row click) — show it but don't search
+    if (suppressSearchRef?.current) {
+      suppressSearchRef.current = false;
+      lastSubmittedQuery.current = trimmed;
+      queuedQueryRef.current = null;
+      onSearchPendingChange?.(false);
+      if (debounceRef.current) clearTimeout(debounceRef.current);
       return;
     }
     if (trimmed === lastSubmittedQuery.current) {
@@ -74,7 +86,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [searchTerm, onSearch, onSearchPendingChange]);
+  }, [searchTerm, onSearch, onSearchPendingChange, suppressSearchRef]);
 
   const handleClear = useCallback(() => {
     setSearchTerm("");
@@ -104,6 +116,10 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     [onSearch, searchTerm, isSearching]
   );
 
+  const trimmedTerm = searchTerm.trim();
+  const queryWordCount = trimmedTerm.split(/\s+/).filter(Boolean).length;
+  const showSuggestion = onSearch && trimmedTerm.length > 0 && queryWordCount <= 3;
+
   return (
     <div style={searchContainerStyle} ref={searchRef}>
       <SearchInput
@@ -121,6 +137,12 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         onKeyDown={handleKeyDown}
         onClear={handleClear}
       />
+      {showSuggestion && (
+        <p className="search-tip" role="status">
+          Tip: Try a full sentence for more precise results, e.g.,{" "}
+          <em>&ldquo;grants for youth mental health services&rdquo;</em>
+        </p>
+      )}
     </div>
   );
 };

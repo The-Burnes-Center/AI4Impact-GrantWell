@@ -1107,6 +1107,10 @@
   background: #f3f4f6;
 }
 
+.se-sidebar__btn--locked:hover {
+  background: transparent;
+}
+
 .se-sidebar__btn--active {
   background: var(--mds-color-primary, #14558F);
   color: var(--mds-color-white, #ffffff);
@@ -1152,6 +1156,51 @@
 
 .se-sidebar__btn--active .se-sidebar__check {
   color: var(--mds-color-white, #ffffff);
+}
+
+/* Skeleton loader for generating sections */
+.se-skeleton-container {
+  padding: 20px 16px;
+  min-height: 320px;
+}
+
+.se-skeleton-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #3B82F6;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.se-skeleton-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #3B82F6;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.se-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.se-skeleton-line {
+  height: 14px;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* Section editor responsive */

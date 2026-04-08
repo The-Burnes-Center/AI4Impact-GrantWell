@@ -332,20 +332,14 @@ export class ChatBotApi extends Construct {
       ),
       handler: "index.handler",
       environment: {
-        DRAFT_GENERATOR_FUNCTION: lambdaFunctions.draftGeneratorFunction.functionName,
+        DRAFT_GENERATION_STATE_MACHINE_ARN: lambdaFunctions.draftGenerationStateMachine.stateMachineArn,
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
       },
       timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
     });
-    
-    // Grant permission to invoke draft generator function
-    draftGeneratorAPIFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [lambdaFunctions.draftGeneratorFunction.functionArn],
-      })
-    );
+
+    // Grant permission to start Step Functions execution
+    lambdaFunctions.draftGenerationStateMachine.grantStartExecution(draftGeneratorAPIFunction);
     
     // Grant DynamoDB write permissions for creating job status
     tables.draftGenerationJobsTable.grantWriteData(draftGeneratorAPIFunction);

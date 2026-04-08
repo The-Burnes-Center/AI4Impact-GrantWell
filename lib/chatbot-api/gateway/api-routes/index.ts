@@ -21,7 +21,6 @@ export interface RoutesProps {
   getNOFOsFunction: lambda.Function;
   getNOFOSummaryFunction: lambda.Function;
   kbSyncFunction: lambda.Function;
-  draftGeneratorFunction: lambda.Function;
   applicationPdfGeneratorFunction: lambda.Function;
   draftGenerationJobsTableName: string;
 }
@@ -133,20 +132,10 @@ export class Routes extends Construct {
       code: lambda.Code.fromAsset(path.join(__dirname, 'draft-generation')),
       handler: 'index.handler',
       environment: {
-        DRAFT_GENERATOR_FUNCTION: props.draftGeneratorFunction.functionName,
         DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTableName,
       },
       timeout: Duration.seconds(30), // Max allowed by API Gateway HTTP API
     });
-
-    // Grant the API function permission to invoke the Draft Generator function
-    draftGeneratorAPIFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ['lambda:InvokeFunction'],
-        resources: [props.draftGeneratorFunction.functionArn],
-      })
-    );
 
     // Grant DynamoDB write permissions for creating job status
     draftGeneratorAPIFunction.addToRolePolicy(

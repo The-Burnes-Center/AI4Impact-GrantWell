@@ -365,6 +365,19 @@
   color: #fff;
 }
 
+/* Search Tip */
+.search-tip {
+  margin: 8px 4px 0;
+  font-size: 13px;
+  color: #5a6a7a;
+  line-height: 1.4;
+}
+
+.search-tip em {
+  color: #14558F;
+  font-style: italic;
+}
+
 /* Search Loading State */
 .landing-search-loading {
   padding: 0;

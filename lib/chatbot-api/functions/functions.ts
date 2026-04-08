@@ -23,6 +23,7 @@ import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
 import { knowledgeBaseIndexName } from "../../constants";
 import { NofoProcessingStateMachine } from "../step-functions/nofo-processing";
+import { DraftGenerationStateMachine } from "../step-functions/draft-generation";
 
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
@@ -61,7 +62,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoRenameFunction: lambda.Function;
   public readonly nofoDeleteFunction: lambda.Function;
   public readonly draftFunction: lambda.Function;
-  public readonly draftGeneratorFunction: lambda.Function;
+  public readonly draftGenerationStateMachine: sfn.StateMachine;
   public readonly scraperCoordinatorFunction: lambda.Function;
   public readonly opportunityProcessorFunction: lambda.Function;
   public readonly htmlToPdfConverterFunction: lambda.Function;
@@ -1118,28 +1119,28 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     this.downloadS3Function = downloadS3APIHandlerFunction;
 
-    // Add draft generator function
-    const draftGeneratorFunction = new lambda.Function(
+    // --- Draft Generation Step Functions Pipeline ---
+
+    const draftPrepareFunction = new lambda.Function(
       scope,
-      "DraftGeneratorFunction",
+      "DraftPrepareFunction",
       {
         runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/draft-generator")
+          path.join(__dirname, "draft-pipeline/prepare")
         ),
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
-          SONNET_MODEL_ID,
         },
-        timeout: cdk.Duration.minutes(2),
+        timeout: cdk.Duration.seconds(60),
+        memorySize: 256,
       }
     );
 
-    // S3 permissions for draft generator
-    draftGeneratorFunction.addToRolePolicy(
+    draftPrepareFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["s3:GetObject", "s3:ListBucket"],
@@ -1149,34 +1150,90 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
-
-    // Bedrock permissions for draft generator
-    draftGeneratorFunction.addToRolePolicy(
+    draftPrepareFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: [
-          "bedrock:InvokeModel",
-          "bedrock:Retrieve",
-          "bedrock-agent:Retrieve",
-        ],
+        actions: ["bedrock:Retrieve", "bedrock-agent:Retrieve"],
         resources: ["*"],
       })
     );
-
-    // DynamoDB permissions for draft generator
-    draftGeneratorFunction.addToRolePolicy(
+    draftPrepareFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: [
-          "dynamodb:PutItem",
-          "dynamodb:UpdateItem",
-          "dynamodb:GetItem",
-        ],
+        actions: ["dynamodb:UpdateItem"],
         resources: [props.draftGenerationJobsTable.tableArn],
       })
     );
 
-    this.draftGeneratorFunction = draftGeneratorFunction;
+    const draftGenerateSectionFunction = new lambda.Function(
+      scope,
+      "DraftGenerateSectionFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "draft-pipeline/generate-section")
+        ),
+        handler: "index.handler",
+        environment: {
+          SONNET_MODEL_ID,
+          DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
+        },
+        timeout: cdk.Duration.minutes(3),
+        memorySize: 256,
+      }
+    );
+
+    draftGenerateSectionFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:InvokeModel"],
+        resources: ["*"],
+      })
+    );
+    draftGenerateSectionFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:UpdateItem"],
+        resources: [props.draftGenerationJobsTable.tableArn],
+      })
+    );
+
+    const draftAssembleFunction = new lambda.Function(
+      scope,
+      "DraftAssembleFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "draft-pipeline/assemble")
+        ),
+        handler: "index.handler",
+        environment: {
+          DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
+        },
+        timeout: cdk.Duration.seconds(30),
+        memorySize: 128,
+      }
+    );
+
+    draftAssembleFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:UpdateItem", "dynamodb:GetItem"],
+        resources: [props.draftGenerationJobsTable.tableArn],
+      })
+    );
+
+    const draftGenerationPipeline = new DraftGenerationStateMachine(
+      scope,
+      "DraftGenerationPipeline",
+      {
+        prepareFunction: draftPrepareFunction,
+        generateSectionFunction: draftGenerateSectionFunction,
+        assembleFunction: draftAssembleFunction,
+      }
+    );
+
+    this.draftGenerationStateMachine = draftGenerationPipeline.stateMachine;
 
     // --- Scraper Fan-Out Architecture ---
 

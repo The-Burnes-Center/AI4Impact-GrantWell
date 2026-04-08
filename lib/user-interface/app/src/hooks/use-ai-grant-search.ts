@@ -2,6 +2,11 @@ import { useCallback, useState, useContext, useRef } from "react";
 import { Auth } from "aws-amplify";
 import { AppContext } from "../common/app-context";
 
+/**
+ * Flag to distinguish intentional cancellation (e.g. user selected a NOFO)
+ * from an AbortError caused by the timeout.
+ */
+
 export interface AISearchResult {
   name: string;
   score: number;
@@ -16,6 +21,7 @@ interface AISearchResponse {
 }
 
 const CACHE_MAX_SIZE = 5;
+const CACHE_TTL_MS = 5 * 60 * 1000;
 const SEARCH_TIMEOUT_MS = 15_000;
 
 interface CacheEntry {
@@ -42,6 +48,8 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [searchTimeMs, setSearchTimeMs] = useState<number | null>(null);
   const cacheRef = useRef<Map<string, CacheEntry>>(new Map());
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const cancelledRef = useRef(false);
 
   const search = useCallback(
     async (query: string) => {
@@ -57,13 +65,20 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
       const trimmed = query.trim().toLowerCase();
 
       const cached = cacheRef.current.get(trimmed);
-      if (cached) {
+      if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
         setResults(cached.results);
         setSearchTimeMs(cached.searchTimeMs);
         setSearchQuery(query.trim());
         setError(null);
         return;
       }
+      if (cached) {
+        cacheRef.current.delete(trimmed);
+      }
+
+      // Abort any previous in-flight request
+      abortControllerRef.current?.abort();
+      cancelledRef.current = false;
 
       setIsSearching(true);
       setError(null);
@@ -75,6 +90,7 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         const endpoint = appContext.httpEndpoint;
 
         const controller = new AbortController();
+        abortControllerRef.current = controller;
         const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
 
         let response: Response;
@@ -91,6 +107,8 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         } finally {
           clearTimeout(timeoutId);
         }
+
+        if (cancelledRef.current) return;
 
         if (!response.ok) {
           throw new Error(`Search failed (${response.status})`);
@@ -113,6 +131,7 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
           timestamp: Date.now(),
         });
       } catch (err) {
+        if (cancelledRef.current) return;
         let message: string;
         if (err instanceof DOMException && err.name === "AbortError") {
           message = "Search timed out. Try a more specific query or full sentence.";
@@ -124,13 +143,21 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         setError(message);
         setResults([]);
       } finally {
-        setIsSearching(false);
+        if (!cancelledRef.current) {
+          abortControllerRef.current = null;
+          setIsSearching(false);
+        }
       }
     },
     [appContext]
   );
 
   const clearResults = useCallback(() => {
+    // Abort any in-flight search request
+    cancelledRef.current = true;
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
+    setIsSearching(false);
     setResults(null);
     setSearchQuery(null);
     setSearchTimeMs(null);

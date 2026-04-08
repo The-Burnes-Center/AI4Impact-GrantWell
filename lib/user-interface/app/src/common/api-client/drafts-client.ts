@@ -33,6 +33,17 @@ export interface DocumentDraft {
   lastModified?: string;
 }
 
+export interface DraftJobStatus {
+  jobId: string;
+  status: 'in_progress' | 'completed' | 'partial' | 'error';
+  sectionNames?: string[];
+  totalSections?: number;
+  completedSectionCount?: number;
+  sections?: Record<string, string>;
+  failedSections?: string[];
+  error?: string;
+}
+
 export class DraftsClient {
   private readonly API: string;
 
@@ -80,7 +91,7 @@ export class DraftsClient {
     const auth = await Utils.authenticate();
     let output;
     let pollCount = 0;
-    const maxPolls = 60; // Max 60 polls (2 minutes with 2s interval) - same as draft generation timeout
+    const maxPolls = 150; // Max 150 polls (5 minutes with 2s interval) - accounts for Step Functions fan-out
     const pollInterval = 2000; // 2 seconds
 
     while (pollCount < maxPolls) {
@@ -346,8 +357,41 @@ export class DraftsClient {
     }
   }
 
+  // Starts a draft generation job and returns the jobId immediately (no polling)
+  async startDraftGeneration(params: {
+    query: string;
+    documentIdentifier: string;
+    projectBasics?: ProjectBasicsData;
+    questionnaire?: Record<string, string>;
+    sessionId: string;
+  }): Promise<string> {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + '/draft-generation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify({
+        query: params.query,
+        documentIdentifier: params.documentIdentifier,
+        projectBasics: params.projectBasics || {},
+        questionnaire: params.questionnaire || {},
+        sessionId: params.sessionId,
+      }),
+    });
+
+    if (response.status !== 200) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to start draft generation');
+    }
+
+    const data = await response.json();
+    return data.jobId;
+  }
+
   // Generates draft sections based on project basics and questionnaire
-  // Uses async polling pattern to handle long-running operations
+  // Uses async polling pattern with Step Functions fan-out
   async generateDraft(params: {
     query: string;
     documentIdentifier: string;
@@ -355,10 +399,11 @@ export class DraftsClient {
     questionnaire?: Record<string, string>;
     sessionId: string;
     onProgress?: (status: string, pollCount?: number, maxPolls?: number) => void;
-  }): Promise<Record<string, string>> {
+    onJobUpdate?: (jobStatus: DraftJobStatus) => void;
+  }): Promise<{ jobId: string; sections: Record<string, string> }> {
     const auth = await Utils.authenticate();
     console.log('Calling /draft-generation with:', params);
-    
+
     // Start the draft generation job
     const startResponse = await fetch(this.API + '/draft-generation', {
       method: 'POST',
@@ -388,19 +433,19 @@ export class DraftsClient {
 
     // Poll for job status
     let pollCount = 0;
-    const maxPolls = 60; // Max 60 polls (about 2 minutes with 2s interval)
+    const maxPolls = 150; // Max 150 polls (~5 minutes with 2s interval)
     const pollInterval = 2000; // 2 seconds
 
     if (params.onProgress) {
       params.onProgress('in_progress', 0, maxPolls);
     }
-    
+
     while (pollCount < maxPolls) {
       await new Promise(resolve => setTimeout(resolve, pollInterval));
       pollCount++;
-      
+
       console.log(`[Polling] Checking draft generation job ${jobId} status (attempt ${pollCount}/${maxPolls})`);
-      
+
       try {
         const statusResponse = await fetch(this.API + `/draft-generation-jobs/${jobId}`, {
           method: 'GET',
@@ -408,35 +453,53 @@ export class DraftsClient {
             'Authorization': 'Bearer ' + auth,
           },
         });
-        
+
         if (!statusResponse.ok) {
           console.warn(`[Polling] Job status check failed: ${statusResponse.status}`);
           if (params.onProgress) params.onProgress('in_progress', pollCount, maxPolls);
           continue;
         }
-        
+
         const statusData = await statusResponse.json();
         console.log(`[Polling] Job ${jobId} status: ${statusData.status}`);
-        
-        if (statusData.status === 'completed') {
-          console.log('Draft generation completed:', statusData.sections);
-          if (params.onProgress) params.onProgress('completed', pollCount, maxPolls);
-          return statusData.sections || {};
+
+        // Forward full job status for live section-level UI updates
+        if (params.onJobUpdate) {
+          params.onJobUpdate(statusData as DraftJobStatus);
+        }
+
+        if (statusData.status === 'completed' || statusData.status === 'partial') {
+          console.log('Draft generation completed:', statusData.status);
+          if (params.onProgress) params.onProgress(statusData.status, pollCount, maxPolls);
+          return { jobId, sections: statusData.sections || {} };
         } else if (statusData.status === 'error') {
           throw new Error(statusData.error || 'Draft generation failed');
         }
-        
+
         if (params.onProgress) params.onProgress('in_progress', pollCount, maxPolls);
-        // Continue polling if still in progress
       } catch (err) {
         console.error('[Polling] Error checking job status:', err);
         if (params.onProgress) params.onProgress('in_progress', pollCount, maxPolls);
-        // Continue polling on error
       }
     }
-    
+
     // If we've exhausted polls, throw an error
     throw new Error('Draft generation timed out. Please try again.');
+  }
+
+  // Polls a draft generation job for live status updates (used by SectionEditor)
+  async pollDraftJob(jobId: string): Promise<DraftJobStatus> {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + `/draft-generation-jobs/${jobId}`, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + auth },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Job status check failed: ${response.status}`);
+    }
+
+    return await response.json() as DraftJobStatus;
   }
 
   // Generates a Word (.docx) document from draft data

@@ -8,7 +8,6 @@ export const stepToStatus = (step: string): DraftStatus => {
     projectBasics: "project_basics",
     questionnaire: "questionnaire",
     uploadDocuments: "questionnaire",
-    draftCreated: "editing_sections",
     sectionEditor: "editing_sections",
     reviewApplication: "editing_sections",
   };
@@ -23,7 +22,7 @@ export const statusToStep = (status: string): string => {
     project_basics: "projectBasics",
     questionnaire: "questionnaire",
     uploading_documents: "uploadDocuments",
-    generating_draft: "draftCreated",
+    generating_draft: "sectionEditor",
     editing_sections: "sectionEditor",
     reviewing: "reviewApplication",
     submitted: "reviewApplication",

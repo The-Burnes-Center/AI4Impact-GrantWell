@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import {
@@ -13,6 +13,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import SectionsSidebar from "./components/SectionsSidebar";
+import type { DraftJobStatus } from "../../common/api-client/drafts-client";
 import "../../styles/document-editor.css";
 
 interface SectionEditorProps {
@@ -20,6 +21,8 @@ interface SectionEditorProps {
   selectedNofo: string | null;
   sessionId: string;
   onNavigate: (step: string) => void;
+  activeJobId?: string;
+  isGenerating?: boolean;
 }
 
 interface Section {
@@ -32,6 +35,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   selectedNofo,
   sessionId,
   onNavigate,
+  activeJobId,
+  isGenerating: initialIsGenerating,
 }) => {
   const [activeSection, setActiveSection] = useState(0);
   const [editorContent, setEditorContent] = useState("");
@@ -42,6 +47,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [loading, setLoading] = useState(true);
   const [regenerating, setRegenerating] = useState(false);
   const [regenerateProgress, setRegenerateProgress] = useState<string>("");
+  const [generating, setGenerating] = useState(!!activeJobId && !!initialIsGenerating);
+  const [failedSections, setFailedSections] = useState<string[]>([]);
+  const [completedSectionCount, setCompletedSectionCount] = useState(0);
   const apiClient = useApiClient();
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -68,15 +76,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
               setSections(formattedSections);
             } else {
-              // Fallback to default sections if none found in API
               setDefaultSections();
             }
           } else {
-            // Fallback to default sections if API doesn't return narrative sections
             setDefaultSections();
           }
         } else {
-          // Fallback to default sections if no NOFO
           setDefaultSections();
         }
       } catch (error) {
@@ -87,37 +92,20 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       }
     };
 
-    // Helper to set default sections when API data is unavailable
     const setDefaultSections = () => {
       const defaultSections = [
-        {
-          name: "Project Summary",
-          description: "A brief summary of your project.",
-        },
-        {
-          name: "Statement of Need",
-          description: "Explain the problem your project will solve.",
-        },
-        {
-          name: "Goals & Objectives",
-          description: "List the goals and objectives of your project.",
-        },
-        {
-          name: "Project Activities",
-          description: "Describe the main activities you will complete.",
-        },
-        {
-          name: "Evaluation Plan",
-          description: "How will you measure success?",
-        },
+        { name: "Project Summary", description: "A brief summary of your project." },
+        { name: "Statement of Need", description: "Explain the problem your project will solve." },
+        { name: "Goals & Objectives", description: "List the goals and objectives of your project." },
+        { name: "Project Activities", description: "Describe the main activities you will complete." },
+        { name: "Evaluation Plan", description: "How will you measure success?" },
       ];
-
       setSections(defaultSections);
     };
 
     fetchSections();
 
-    // Fetch draft from API and initialize sectionAnswers
+    // Fetch draft from API and initialize sectionAnswers (only if not actively generating)
     const fetchDraftSections = async () => {
       try {
         if (sessionId) {
@@ -139,26 +127,89 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       }
     };
 
-    fetchDraftSections();
+    if (!generating) {
+      fetchDraftSections();
+    }
 
-    // Cleanup auto-save timeout on unmount
     return () => {
       if (autoSaveTimeoutRef.current) {
         clearTimeout(autoSaveTimeoutRef.current);
       }
     };
-  }, [selectedNofo, apiClient, sessionId]);
+  }, [selectedNofo, apiClient, sessionId, generating]);
+
+  // ── Live polling when generation is in progress ───────────────────
+  useEffect(() => {
+    if (!activeJobId || !generating) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const jobStatus: DraftJobStatus = await apiClient.drafts.pollDraftJob(activeJobId);
+
+        // Update sections as they arrive
+        if (jobStatus.sections) {
+          setSectionAnswers(prev => {
+            const merged = { ...prev, ...jobStatus.sections };
+            localStorage.setItem("sectionAnswers", JSON.stringify(merged));
+            return merged;
+          });
+        }
+
+        if (typeof jobStatus.completedSectionCount === 'number') {
+          setCompletedSectionCount(prev => Math.max(prev, jobStatus.completedSectionCount!));
+        }
+
+        // Update editor if active section just completed and editor is empty
+        if (sections[activeSection]) {
+          const activeName = sections[activeSection].name;
+          if (jobStatus.sections?.[activeName] && !sectionAnswers[activeName]) {
+            setEditorContent(jobStatus.sections[activeName]);
+          }
+        }
+
+        // Check for completion
+        if (jobStatus.status === 'completed' || jobStatus.status === 'partial') {
+          setGenerating(false);
+          clearInterval(interval);
+          if (jobStatus.failedSections?.length) {
+            setFailedSections(jobStatus.failedSections);
+          }
+          // Save full draft to DraftTable
+          try {
+            const username = (await Auth.currentAuthenticatedUser()).username;
+            const currentDraft = await apiClient.drafts.getDraft({ sessionId, userId: username });
+            if (currentDraft) {
+              await apiClient.drafts.updateDraft({
+                ...currentDraft,
+                sections: { ...currentDraft.sections, ...jobStatus.sections },
+                status: 'editing_sections',
+                lastModified: new Date().toISOString(),
+              });
+            }
+          } catch (err) {
+            console.error('Error saving completed draft:', err);
+          }
+        }
+
+        if (jobStatus.status === 'error') {
+          setGenerating(false);
+          clearInterval(interval);
+        }
+      } catch (err) {
+        console.error('Error polling draft job:', err);
+        // Continue polling on transient errors
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [activeJobId, generating, apiClient, sections, activeSection, sectionAnswers, sessionId]);
 
   // Update editor content when active section changes
   useEffect(() => {
     if (sections[activeSection]) {
       const sectionKey = sections[activeSection].name;
       const savedContent = sectionAnswers[sectionKey] || "";
-      if (savedContent) {
-        setEditorContent(savedContent);
-      } else {
-        setEditorContent("");
-      }
+      setEditorContent(savedContent);
     }
   }, [activeSection, sections, sectionAnswers]);
 
@@ -166,14 +217,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     const value = e.target.value;
     setEditorContent(value);
 
-    // Save answer to localStorage immediately
     if (sections[activeSection]) {
       const sectionKey = sections[activeSection].name;
       setSectionAnswers((prev) => {
         const updated = { ...prev, [sectionKey]: value };
         localStorage.setItem("sectionAnswers", JSON.stringify(updated));
 
-        // Auto-save to database after 2 seconds of inactivity
         if (autoSaveTimeoutRef.current) {
           clearTimeout(autoSaveTimeoutRef.current);
         }
@@ -182,8 +231,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           if (selectedNofo) {
             try {
               const username = (await Auth.currentAuthenticatedUser()).username;
-              
-              // Get current draft to preserve other fields
               const currentDraft = await apiClient.drafts.getDraft({
                 sessionId: sessionId,
                 userId: username
@@ -201,7 +248,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   lastModified: new Date().toISOString()
                 });
               } else {
-                // Create new draft if it doesn't exist
                 await apiClient.drafts.updateDraft({
                   sessionId: sessionId,
                   userId: username,
@@ -215,10 +261,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               }
             } catch (error) {
               console.error("Error auto-saving to database:", error);
-              // Silently fail - user can manually save if needed
             }
           }
-        }, 2000); // Auto-save after 2 seconds of no typing
+        }, 2000);
 
         return updated;
       });
@@ -226,7 +271,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   };
 
   const handleSaveProgress = async () => {
-    // Save the current section content
     if (sections[activeSection] && selectedNofo) {
       const sectionKey = sections[activeSection].name;
       const updated = { ...sectionAnswers, [sectionKey]: editorContent };
@@ -234,10 +278,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       localStorage.setItem("sectionAnswers", JSON.stringify(updated));
 
       try {
-        // Save to database
         const username = (await Auth.currentAuthenticatedUser()).username;
-        
-        // Get current draft to preserve other fields
         const currentDraft = await apiClient.drafts.getDraft({
           sessionId: sessionId,
           userId: username
@@ -252,11 +293,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             sections: updated,
             projectBasics: currentDraft.projectBasics,
             questionnaire: currentDraft.questionnaire,
-                  status: 'editing_sections', // Save unified status
+            status: 'editing_sections',
             lastModified: new Date().toISOString()
           });
         } else {
-          // Create new draft if it doesn't exist
           await apiClient.drafts.updateDraft({
             sessionId: sessionId,
             userId: username,
@@ -265,12 +305,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             sections: updated,
             projectBasics: {},
             questionnaire: {},
-                  status: 'editing_sections', // Save unified status
+            status: 'editing_sections',
             lastModified: new Date().toISOString()
           });
         }
 
-        // Visual feedback for save
         const saveButton = document.getElementById("save-button");
         if (saveButton) {
           const originalText = saveButton.innerText;
@@ -281,7 +320,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         }
       } catch (error) {
         console.error("Error saving progress to database:", error);
-        // Still show saved feedback even if DB save fails (localStorage is saved)
         const saveButton = document.getElementById("save-button");
         if (saveButton) {
           const originalText = saveButton.innerText;
@@ -295,19 +333,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   };
 
   const handleSaveAndContinue = async () => {
-    // Save the current section content
     if (sections[activeSection]) {
       const sectionKey = sections[activeSection].name;
       const updated = { ...sectionAnswers, [sectionKey]: editorContent };
       setSectionAnswers(updated);
       localStorage.setItem("sectionAnswers", JSON.stringify(updated));
 
-      // Save to database before continuing
       if (selectedNofo) {
         try {
           const username = (await Auth.currentAuthenticatedUser()).username;
-          
-          // Get current draft to preserve other fields
           const currentDraft = await apiClient.drafts.getDraft({
             sessionId: sessionId,
             userId: username
@@ -322,11 +356,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               sections: updated,
               projectBasics: currentDraft.projectBasics,
               questionnaire: currentDraft.questionnaire,
-                  status: 'editing_sections', // Save unified status
+              status: 'editing_sections',
               lastModified: new Date().toISOString()
             });
           } else {
-            // Create new draft if it doesn't exist
             await apiClient.drafts.updateDraft({
               sessionId: sessionId,
               userId: username,
@@ -335,18 +368,16 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               sections: updated,
               projectBasics: {},
               questionnaire: {},
-                  status: 'editing_sections', // Save unified status
+              status: 'editing_sections',
               lastModified: new Date().toISOString()
             });
           }
         } catch (error) {
           console.error("Error saving before continue:", error);
-          // Continue anyway - localStorage is saved
         }
       }
     }
 
-    // Move to the next section or continue to review
     if (activeSection < sections.length - 1) {
       setActiveSection(activeSection + 1);
     } else {
@@ -361,10 +392,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     try {
       setRegenerating(true);
       setRegenerateProgress('Generating content...');
-      
+
       const username = (await Auth.currentAuthenticatedUser()).username;
-      
-      // Get the current draft from the database
       const currentDraft = await apiClient.drafts.getDraft({
         sessionId: sessionId,
         userId: username
@@ -374,8 +403,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         throw new Error('No draft found');
       }
 
-      // Generate draft sections using data from the database
-      // This uses async polling internally
       const result = await apiClient.drafts.generateDraft({
         query: `Generate content for the ${section.name} section. ${section.description}`,
         documentIdentifier: selectedNofo,
@@ -387,39 +414,27 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         }
       });
 
-      // Result is sections directly (Record<string, any>), not wrapped
-      if (result && result[section.name]) {
-        // Update the editor content with the generated section
-        setEditorContent(result[section.name]);
-
-        // Update the section answers state
-        const updated = { ...sectionAnswers, [section.name]: result[section.name] };
+      if (result.sections && result.sections[section.name]) {
+        setEditorContent(result.sections[section.name]);
+        const updated = { ...sectionAnswers, [section.name]: result.sections[section.name] };
         setSectionAnswers(updated);
-
-        // Save to localStorage
         localStorage.setItem("sectionAnswers", JSON.stringify(updated));
 
-        // Update the draft in the database with the new section
-        const updatedDraft = await apiClient.drafts.updateDraft({
+        await apiClient.drafts.updateDraft({
           sessionId: sessionId,
           userId: username,
           title: currentDraft.title,
           documentIdentifier: selectedNofo,
           sections: {
             ...currentDraft.sections,
-            [section.name]: result[section.name]
+            [section.name]: result.sections[section.name]
           },
           projectBasics: currentDraft.projectBasics,
           questionnaire: currentDraft.questionnaire,
-                  status: 'editing_sections', // Save unified status
+          status: 'editing_sections',
           lastModified: new Date().toISOString()
         });
 
-        // Verify the update was successful
-        if (!updatedDraft.sections || !updatedDraft.sections[section.name]) {
-          throw new Error('Failed to save section to database');
-        }
-        
         setRegenerateProgress('Content generated successfully!');
       } else {
         throw new Error('No content generated for this section');
@@ -433,11 +448,138 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }
   };
 
+  const handleRetryFailedSections = useCallback(async () => {
+    if (!selectedNofo || failedSections.length === 0) return;
+
+    try {
+      setGenerating(true);
+      setFailedSections([]);
+
+      const username = (await Auth.currentAuthenticatedUser()).username;
+      const currentDraft = await apiClient.drafts.getDraft({ sessionId, userId: username });
+      if (!currentDraft) throw new Error('No draft found');
+
+      const result = await apiClient.drafts.generateDraft({
+        query: 'Generate all sections for the grant application',
+        documentIdentifier: selectedNofo,
+        projectBasics: currentDraft.projectBasics || {},
+        questionnaire: currentDraft.questionnaire || {},
+        sessionId,
+        onJobUpdate: (jobStatus: DraftJobStatus) => {
+          if (jobStatus.sections) {
+            setSectionAnswers(prev => ({ ...prev, ...jobStatus.sections }));
+          }
+          if (typeof jobStatus.completedSectionCount === 'number') {
+            setCompletedSectionCount(jobStatus.completedSectionCount);
+          }
+        },
+      });
+
+      if (result.sections) {
+        setSectionAnswers(prev => ({ ...prev, ...result.sections }));
+        await apiClient.drafts.updateDraft({
+          ...currentDraft,
+          sections: { ...currentDraft.sections, ...result.sections },
+          status: 'editing_sections',
+          lastModified: new Date().toISOString(),
+        });
+      }
+    } catch (error) {
+      console.error('Error retrying failed sections:', error);
+    } finally {
+      setGenerating(false);
+    }
+  }, [selectedNofo, failedSections, sessionId, apiClient]);
+
   return (
     <div className="se-container">
       {/* Editor area - now on the left */}
       <div className="se-editor-area">
         <div className="se-editor-inner">
+          {/* Partial failure banner */}
+          {failedSections.length > 0 && (
+            <div
+              role="alert"
+              style={{
+                background: '#FEF3C7',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                flexWrap: 'wrap',
+                fontSize: '14px',
+              }}
+            >
+              <strong>{failedSections.length} section(s) failed to generate:</strong>
+              <span>{failedSections.join(", ")}</span>
+              <button
+                onClick={handleRetryFailedSections}
+                style={{
+                  padding: '4px 12px',
+                  borderRadius: '6px',
+                  border: '1px solid #D97706',
+                  background: '#FFF',
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                }}
+              >
+                Retry Failed Sections
+              </button>
+              <span style={{ color: '#6B7280' }}>or write them manually below.</span>
+            </div>
+          )}
+
+          {/* Generating banner */}
+          {generating && (
+            <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div
+                role="status"
+                aria-live="polite"
+                style={{
+                  background: '#EFF6FF',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  fontSize: '14px',
+                  color: '#1D4ED8',
+                }}
+              >
+                <div
+                  aria-hidden
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    border: '2px solid #3B82F6',
+                    borderTopColor: 'transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite',
+                    flexShrink: 0,
+                  }}
+                />
+                Generating sections ({completedSectionCount}/{sections.length})... You can edit completed sections while others are being written.
+              </div>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 16px',
+                background: '#f0fdf4',
+                border: '1px solid #bbf7d0',
+                borderRadius: '8px',
+                fontSize: '13px',
+                color: '#065f46',
+              }}>
+                <span style={{ fontSize: '15px', flexShrink: 0 }}>&#10003;</span>
+                Your progress is automatically saved. You can leave and come back anytime.
+              </div>
+            </div>
+          )}
+
           <h2 className="se-section-title">
             {sections[activeSection]?.name || "Section Editor"}
           </h2>
@@ -465,12 +607,35 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 <List size={20} />
               </button>
             </div>
-            <textarea
-              value={editorContent}
-              onChange={handleEditorChange}
-              className="se-textarea"
-              placeholder={`Start writing your ${sections[activeSection]?.name} here...`}
-            />
+            {generating && !sectionAnswers[sections[activeSection]?.name] ? (
+              <div
+                className="se-skeleton-container"
+                role="status"
+                aria-label={`Generating ${sections[activeSection]?.name}...`}
+              >
+                <div className="se-skeleton-label">
+                  <div className="se-skeleton-spinner" />
+                  Generating {sections[activeSection]?.name}...
+                </div>
+                <div className="se-skeleton-lines">
+                  <div className="se-skeleton-line" style={{ width: '92%' }} />
+                  <div className="se-skeleton-line" style={{ width: '100%' }} />
+                  <div className="se-skeleton-line" style={{ width: '85%' }} />
+                  <div className="se-skeleton-line" style={{ width: '96%' }} />
+                  <div className="se-skeleton-line" style={{ width: '78%' }} />
+                  <div className="se-skeleton-line" style={{ width: '100%' }} />
+                  <div className="se-skeleton-line" style={{ width: '88%' }} />
+                  <div className="se-skeleton-line" style={{ width: '45%' }} />
+                </div>
+              </div>
+            ) : (
+              <textarea
+                value={editorContent}
+                onChange={handleEditorChange}
+                className="se-textarea"
+                placeholder={`Start writing your ${sections[activeSection]?.name} here...`}
+              />
+            )}
           </div>
 
           {/* Regenerate Content with AI button - DISABLED */}
@@ -591,6 +756,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         activeSection={activeSection}
         setActiveSection={setActiveSection}
         sectionAnswers={sectionAnswers}
+        generating={generating}
+        completedSectionCount={completedSectionCount}
+        failedSections={failedSections}
       />
     </div>
   );

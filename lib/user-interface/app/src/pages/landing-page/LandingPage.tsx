@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";
@@ -43,6 +43,7 @@ export default function Welcome() {
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
   const prevSelectedDocRef = useRef<SelectableDocument | null>(null);
   const firstCTAButtonRef = useRef<HTMLButtonElement>(null);
+  const suppressSearchRef = useRef(false);
 
   const apiClient = useApiClient();
   const { isAdmin } = useAdminCheck();
@@ -99,7 +100,11 @@ export default function Welcome() {
         const folders = result.folders || [];
 
         if (result.nofoData) {
-          const sortedNofos = [...result.nofoData].sort(
+          const readyNofos = result.nofoData.filter(
+            (nofo: RawNOFOData) => !nofo.processing_status
+          );
+
+          const sortedNofos = [...readyNofos].sort(
             (a: RawNOFOData, b: RawNOFOData) => {
               if (a.status === "active" && b.status !== "active") return -1;
               if (a.status !== "active" && b.status === "active") return 1;
@@ -192,7 +197,12 @@ export default function Welcome() {
   }, [selectedDocument]);
 
   const handleSelectDocument = useCallback(
-    (doc: SelectableDocument | null) => setSelectedDocument(doc),
+    (doc: SelectableDocument | null) => {
+      setSelectedDocument(doc);
+      if (doc) {
+        suppressSearchRef.current = true;
+      }
+    },
     []
   );
 
@@ -306,6 +316,7 @@ export default function Welcome() {
           onSearchPendingChange={canUseAIGrantSearch ? setIsSearchPending : undefined}
           searchPlaceholder={searchPlaceholder}
           searchAriaLabel={searchAriaLabel}
+          suppressSearchRef={canUseAIGrantSearch ? suppressSearchRef : undefined}
         />
 
         {/* Screen reader announcement */}
