@@ -773,7 +773,7 @@
 }
 
 .affiliations__tagline {
-  color: #ffffff;
+  color: var(--mds-color-white);
   font-family: 'DM Serif Display', serif;
   font-size: 18px;
   line-height: 1.4;
@@ -784,8 +784,14 @@
   text-decoration: none;
 }
 
-.affiliations__tagline:hover {
+.affiliations__tagline:hover,
+.affiliations__tagline:focus-visible {
   color: rgba(255, 255, 255, 0.8);
+}
+
+.affiliations__tagline:focus-visible {
+  outline: 2px solid var(--mds-color-focus-dark);
+  outline-offset: 2px;
 }
 
 /* Fixed Feedback Tab */
