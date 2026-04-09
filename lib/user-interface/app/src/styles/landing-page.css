@@ -748,7 +748,7 @@
   display: flex;
   align-items: center;
   gap: 50px;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
 }
 
 .affiliations__link {
@@ -770,6 +770,22 @@
 .affiliations__logo {
   width: 200px;
   height: auto;
+}
+
+.affiliations__tagline {
+  color: #ffffff;
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  line-height: 1.4;
+  margin: 0;
+  letter-spacing: 0.3px;
+  flex: 1 1 auto;
+  text-align: center;
+  text-decoration: none;
+}
+
+.affiliations__tagline:hover {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Fixed Feedback Tab */
