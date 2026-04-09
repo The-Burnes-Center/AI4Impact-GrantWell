@@ -112,9 +112,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   const handleInputChange = useCallback(
     (value: string) => {
+      if (value === "") {
+        handleClear();
+        return;
+      }
       setSearchTerm(value);
     },
-    [setSearchTerm]
+    [setSearchTerm, handleClear]
   );
 
   const handleKeyDown = useCallback(
