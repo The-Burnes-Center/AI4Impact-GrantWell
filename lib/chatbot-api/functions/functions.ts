@@ -1638,9 +1638,10 @@ export class LambdaFunctionStack extends cdk.Stack {
     aiGrantSearchFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:GetItem", "dynamodb:Scan"],
+        actions: ["dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan"],
         resources: [
           props.nofoMetadataTable.tableArn,
+          `${props.nofoMetadataTable.tableArn}/index/*`,
           props.featureRolloutTable.tableArn,
         ],
       })
