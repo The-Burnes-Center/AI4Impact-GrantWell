@@ -70,6 +70,7 @@ const Dashboard: React.FC = () => {
           name: nofo.name,
           status: nofo.status || "active",
           isPinned: nofo.isPinned || false,
+          isRolling: nofo.is_rolling || false,
           expirationDate: nofo.expiration_date || null,
           grantType: nofo.grant_type || null,
           agency: nofo.agency || null,
@@ -78,7 +79,7 @@ const Dashboard: React.FC = () => {
         })));
       } else {
         setNofos((nofoResult.folders || []).map((nofo: string, index: number): NOFO => ({
-          id: index, name: nofo, status: "active", isPinned: false,
+          id: index, name: nofo, status: "active", isPinned: false, isRolling: false,
           expirationDate: null, grantType: null, agency: null, category: null,
         })));
       }

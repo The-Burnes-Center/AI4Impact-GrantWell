@@ -340,10 +340,12 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 )}
               </div>
               <div className="row-cell">
-                {nofo.isRolling || !nofo.expirationDate ? (
+                {nofo.isRolling ? (
                   <span className="expiry-date rolling">Rolling</span>
-                ) : (
+                ) : nofo.expirationDate ? (
                   <span className="expiry-date">{Utils.formatExpirationDate(nofo.expirationDate!)}</span>
+                ) : (
+                  <span className="expiry-date no-date">N/A</span>
                 )}
               </div>
               <div className="row-cell actions">
