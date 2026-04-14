@@ -126,6 +126,7 @@ export default function Welcome() {
               name: nofo.name,
               status: nofo.status as "active" | "archived",
               isPinned: nofo.isPinned || false,
+              isRolling: nofo.is_rolling || false,
               expirationDate: nofo.expiration_date || null,
               grantType: (nofo.grant_type as NOFO["grantType"]) || null,
               agency: nofo.agency || null,

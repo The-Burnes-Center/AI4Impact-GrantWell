@@ -49,6 +49,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [editedNofoStatus, setEditedNofoStatus] = useState<"active" | "archived">("active");
   const [editedNofoExpirationDate, setEditedNofoExpirationDate] = useState<string>("");
   const [editedNofoGrantType, setEditedNofoGrantType] = useState<GrantTypeId | "">("");
+  const [editedNofoIsRolling, setEditedNofoIsRolling] = useState<boolean>(false);
 
   const [summaryModalOpen, setSummaryModalOpen] = useState(false);
   const [summaryLoading, setSummaryLoading] = useState(false);
@@ -143,6 +144,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     setEditedNofoName(nofo.name);
     setEditedNofoStatus(nofo.status || "active");
     setEditedNofoGrantType(nofo.grantType || "");
+    setEditedNofoIsRolling(nofo.isRolling || false);
     if (nofo.expirationDate) {
       if (/^\d{4}-\d{2}-\d{2}$/.test(nofo.expirationDate)) {
         setEditedNofoExpirationDate(nofo.expirationDate);
@@ -181,10 +183,13 @@ const NOFOsTab = React.memo(function NOFOsTab({
       if (newGrantType !== (selectedNofo.grantType || null)) {
         await apiClient.landingPage.updateNOFOStatus(editedNofoName.trim(), undefined, undefined, undefined, newGrantType as GrantTypeId);
       }
+      if (editedNofoIsRolling !== (selectedNofo.isRolling || false)) {
+        await apiClient.landingPage.updateNOFOStatus(editedNofoName.trim(), undefined, undefined, undefined, undefined, undefined, undefined, editedNofoIsRolling);
+      }
       updateNofos((allNofos) =>
         allNofos.map((nofo) =>
           nofo.id === selectedNofo.id
-            ? { ...nofo, name: editedNofoName.trim(), status: editedNofoStatus, expirationDate: newExpirationDate, grantType: newGrantType as GrantTypeId | null }
+            ? { ...nofo, name: editedNofoName.trim(), status: editedNofoStatus, expirationDate: newExpirationDate, grantType: newGrantType as GrantTypeId | null, isRolling: editedNofoIsRolling }
             : nofo
         )
       );
@@ -194,6 +199,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       setEditedNofoName("");
       setEditedNofoExpirationDate("");
       setEditedNofoGrantType("");
+      setEditedNofoIsRolling(false);
     } catch {
       addNotification("error", "Failed to update grant. Please try again.");
     }
@@ -283,7 +289,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
       editedNofoName !== selectedNofo.name ||
       editedNofoStatus !== selectedNofo.status ||
       editedNofoExpirationDate !== normalizedOldExp ||
-      editedNofoGrantType !== (selectedNofo.grantType || "")
+      editedNofoGrantType !== (selectedNofo.grantType || "") ||
+      editedNofoIsRolling !== (selectedNofo.isRolling || false)
     );
   };
 
@@ -293,7 +300,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
         <div className="table-header">
           <div className="header-cell">Name</div>
           <div className="header-cell">Type</div>
-          <div className="header-cell">Expiry Date</div>
+          <div className="header-cell">Deadline</div>
           <div className="header-cell">Actions</div>
         </div>
         <div className="table-body">
@@ -333,10 +340,10 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 )}
               </div>
               <div className="row-cell">
-                {nofo.expirationDate ? (
-                  <span className="expiry-date">{Utils.formatExpirationDate(nofo.expirationDate)}</span>
+                {nofo.isRolling || !nofo.expirationDate ? (
+                  <span className="expiry-date rolling">Rolling</span>
                 ) : (
-                  <span className="expiry-date no-date">N/A</span>
+                  <span className="expiry-date">{Utils.formatExpirationDate(nofo.expirationDate!)}</span>
                 )}
               </div>
               <div className="row-cell actions">
@@ -380,8 +387,19 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <div className="field-note">Active grants are visible to users. Archived grants are hidden.</div>
           </div>
           <div className="form-group">
-            <label htmlFor="nofo-expiration-date">Expiry Date</label>
-            <input type="date" id="nofo-expiration-date" value={editedNofoExpirationDate} onChange={(e) => setEditedNofoExpirationDate(e.target.value)} className="form-input" />
+            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={editedNofoIsRolling}
+                onChange={(e) => setEditedNofoIsRolling(e.target.checked)}
+              />
+              Rolling grant (no fixed deadline)
+            </label>
+            <div className="field-note">Rolling grants show "Rolling" instead of a deadline date.</div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="nofo-expiration-date">Deadline</label>
+            <input type="date" id="nofo-expiration-date" value={editedNofoExpirationDate} onChange={(e) => setEditedNofoExpirationDate(e.target.value)} className="form-input" disabled={editedNofoIsRolling} />
             <div className="field-note">Leave empty if no expiration date. Grants will be auto-archived after this date.</div>
           </div>
           <div className="form-group">

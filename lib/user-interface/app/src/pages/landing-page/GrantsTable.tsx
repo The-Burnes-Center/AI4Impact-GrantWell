@@ -289,7 +289,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           <div className="landing-header-cell">Agency</div>
           <div className="landing-header-cell">Category</div>
           <div className="landing-header-cell">Type</div>
-          <div className="landing-header-cell">Expiry Date</div>
+          <div className="landing-header-cell">Deadline</div>
         </div>
 
         <div className="landing-table-body">
@@ -373,12 +373,12 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                   )}
                 </div>
                 <div className="landing-row-cell" style={{ color: isArchived ? "#888" : undefined }}>
-                  {nofo.expirationDate ? (
+                  {nofo.isRolling || !nofo.expirationDate ? (
+                    <span className="landing-expiry-date rolling">Rolling</span>
+                  ) : (
                     <span className="landing-expiry-date">
                       {Utils.formatExpirationDate(nofo.expirationDate)}
                     </span>
-                  ) : (
-                    <span className="landing-expiry-date no-date">N/A</span>
                   )}
                 </div>
               </div>

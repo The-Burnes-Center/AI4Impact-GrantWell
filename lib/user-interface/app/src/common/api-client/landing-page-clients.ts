@@ -201,7 +201,8 @@ export class LandingPageClient {
     expirationDate?: string | null,
     grantType?: "federal" | "state" | "quasi" | "philanthropic",
     category?: string,
-    agency?: string
+    agency?: string,
+    isRolling?: boolean
   ) {
     try {
       const token = await Utils.authenticate();
@@ -211,7 +212,7 @@ export class LandingPageClient {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({ nofoName, status, isPinned, expirationDate, grantType, category, agency }),
+        body: JSON.stringify({ nofoName, status, isPinned, expirationDate, grantType, category, agency, isRolling }),
       });
 
       const data = await response.json();
