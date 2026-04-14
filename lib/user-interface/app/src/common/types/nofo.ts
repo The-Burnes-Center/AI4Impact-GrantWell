@@ -12,6 +12,7 @@ export interface NOFO {
   name: string;
   status: "active" | "archived";
   isPinned?: boolean;
+  isRolling?: boolean;
   expirationDate?: string | null;
   grantType?: GrantTypeId | null;
   agency?: string | null;

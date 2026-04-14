@@ -46,15 +46,33 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   ).sort();
 
   const getCategoryCount = (category: string) => {
-    return nofos.filter((nofo) => nofo.category === category).length;
+    return nofos.filter((nofo) => {
+      return (
+        nofo.category === category &&
+        (statusFilter === "all" || nofo.status === statusFilter) &&
+        (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
+      );
+    }).length;
   };
 
   const getStatusCount = (status: "active" | "archived") => {
-    return nofos.filter((nofo) => nofo.status === status).length;
+    return nofos.filter((nofo) => {
+      return (
+        nofo.status === status &&
+        (categoryFilter === "all" || nofo.category === categoryFilter) &&
+        (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
+      );
+    }).length;
   };
 
   const getGrantTypeCount = (grantType: GrantTypeId) => {
-    return nofos.filter((nofo) => nofo.grantType === grantType).length;
+    return nofos.filter((nofo) => {
+      return (
+        nofo.grantType === grantType &&
+        (statusFilter === "all" || nofo.status === statusFilter) &&
+        (categoryFilter === "all" || nofo.category === categoryFilter)
+      );
+    }).length;
   };
 
   const scoreMap = useMemo(() => {
@@ -183,7 +201,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "archived")}
           >
-            <option value="all">All Grants ({nofos.length})</option>
+            <option value="all">All Grants ({nofos.filter((nofo) =>
+              (categoryFilter === "all" || nofo.category === categoryFilter) &&
+              (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
+            ).length})</option>
             <option value="active">Active ({getStatusCount("active")})</option>
             <option value="archived">Archived ({getStatusCount("archived")})</option>
           </select>
@@ -197,7 +218,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
-            <option value="all">All Categories</option>
+            <option value="all">All Categories ({nofos.filter((nofo) =>
+              (statusFilter === "all" || nofo.status === statusFilter) &&
+              (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
+            ).length})</option>
             {uniqueCategories.map((category) => {
               const count = getCategoryCount(category);
               return (
@@ -217,7 +241,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             value={grantTypeFilter}
             onChange={(e) => setGrantTypeFilter(e.target.value as GrantTypeId | "all")}
           >
-            <option value="all">All Grant Types</option>
+            <option value="all">All Grant Types ({nofos.filter((nofo) =>
+              (statusFilter === "all" || nofo.status === statusFilter) &&
+              (categoryFilter === "all" || nofo.category === categoryFilter)
+            ).length})</option>
             {Object.keys(GRANT_TYPES).map((type) => {
               const grantType = type as GrantTypeId;
               const count = getGrantTypeCount(grantType);
@@ -262,7 +289,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           <div className="landing-header-cell">Agency</div>
           <div className="landing-header-cell">Category</div>
           <div className="landing-header-cell">Type</div>
-          <div className="landing-header-cell">Expiry Date</div>
+          <div className="landing-header-cell">Deadline</div>
         </div>
 
         <div className="landing-table-body">
@@ -346,12 +373,12 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                   )}
                 </div>
                 <div className="landing-row-cell" style={{ color: isArchived ? "#888" : undefined }}>
-                  {nofo.expirationDate ? (
+                  {nofo.isRolling || !nofo.expirationDate ? (
+                    <span className="landing-expiry-date rolling">Rolling</span>
+                  ) : (
                     <span className="landing-expiry-date">
                       {Utils.formatExpirationDate(nofo.expirationDate)}
                     </span>
-                  ) : (
-                    <span className="landing-expiry-date no-date">N/A</span>
                   )}
                 </div>
               </div>

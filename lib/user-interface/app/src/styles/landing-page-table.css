@@ -177,6 +177,19 @@
   font-weight: 400;
 }
 
+.landing-expiry-date.rolling {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 12px;
+  border: 1px solid #0d6ecc40;
+  background-color: #e8f1fb;
+  color: #0d6ecc;
+  white-space: nowrap;
+}
+
 .landing-no-data {
   padding: 40px;
   text-align: center;

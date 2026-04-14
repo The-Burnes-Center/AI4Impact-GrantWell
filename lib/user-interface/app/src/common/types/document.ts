@@ -59,6 +59,7 @@ export interface RawNOFOData {
   status: string;
   processing_status?: string | null;
   isPinned?: boolean;
+  is_rolling?: boolean;
   expiration_date?: string | null;
   grant_type?: string | null;
   agency?: string | null;
