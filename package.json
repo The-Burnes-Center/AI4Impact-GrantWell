@@ -1,6 +1,7 @@
 {
   "name": "gen-ai-mvp",
   "version": "0.1.0",
+  "projectId": "apck1608",
   "bin": {
     "gen-ai-mvp": "bin/gen-ai-mvp.js"
   },
