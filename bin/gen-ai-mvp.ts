@@ -5,6 +5,11 @@ import { GenAiMvpStack } from '../lib/gen-ai-mvp-stack';
 import { stackName } from "../lib/constants"
 
 const app = new cdk.App();
+
+const environmentTag = process.env.ENVIRONMENT === 'production' ? 'PROD' : 'DEV';
+cdk.Tags.of(app).add('Environment', environmentTag);
+cdk.Tags.of(app).add('Project', 'GrantWell');
+
 new GenAiMvpStack(app, stackName, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
