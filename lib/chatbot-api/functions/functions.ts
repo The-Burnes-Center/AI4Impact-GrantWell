@@ -654,12 +654,14 @@ export class LambdaFunctionStack extends cdk.Stack {
       environment: {
         STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
       },
       timeout: cdk.Duration.minutes(15),
       memorySize: 256,
     });
 
     dispatcherFunction.addToRolePolicy(metadataTableReadWritePolicy);
+    dispatcherFunction.addToRolePolicy(reviewTableReadWritePolicy);
     nofoProcessing.stateMachine.grantStartExecution(dispatcherFunction);
     dispatcherFunction.addToRolePolicy(
       new iam.PolicyStatement({
