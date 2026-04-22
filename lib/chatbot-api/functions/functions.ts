@@ -557,7 +557,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SONNET_MODEL_ID,
       },
-      timeout: cdk.Duration.minutes(5),
+      timeout: cdk.Duration.minutes(15),
       memorySize: 512,
     });
     extractAndAnalyzeFunction.addToRolePolicy(s3ReadWritePolicy);
