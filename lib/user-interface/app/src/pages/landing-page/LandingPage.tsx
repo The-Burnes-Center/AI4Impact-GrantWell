@@ -242,7 +242,6 @@ export default function Welcome() {
         {/* Header */}
         <div className="landing-header">
           <div className="landing-header__logo-row">
-            <img src="/images/stateseal-color.png" alt="State Seal" className="landing-header__logo" />
             <h1 className="landing-header__title">GrantWell</h1>
           </div>
           <p className="landing-header__subtitle">

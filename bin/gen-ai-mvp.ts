@@ -8,9 +8,8 @@ const app = new cdk.App();
 
 const environmentTag = process.env.ENVIRONMENT === 'production' ? 'PROD' : 'DEV';
 
-const TAG_EXCLUDED_RESOURCE_TYPES = ['AWS::OpenSearchServerless::Collection'];
-cdk.Tags.of(app).add('Environment', environmentTag, { excludeResourceTypes: TAG_EXCLUDED_RESOURCE_TYPES });
-cdk.Tags.of(app).add('Project', 'GrantWell', { excludeResourceTypes: TAG_EXCLUDED_RESOURCE_TYPES });
+cdk.Tags.of(app).add('Environment', environmentTag);
+cdk.Tags.of(app).add('Project', 'GrantWell');
 
 new GenAiMvpStack(app, stackName, {
   /* If you don't specify 'env', this stack will be environment-agnostic.

@@ -10,13 +10,15 @@ const ENVIRONMENT = process.env.ENVIRONMENT;
 // Must be unique globally or the deployment will fail
 // Environment-specific domain names for branch-based deployment
 const getCognitoDomainName = () => {
-  
+
   if (ENVIRONMENT === 'production') {
     return 'gw-auth-prod';
   } else if (ENVIRONMENT === 'staging') {
     return 'gw-auth-staging';
+  } else if (ENVIRONMENT === 'grantwell-staging') {
+    return 'gw-auth-grantwell-staging';
   }
-  
+
   // Fallback for local development
   return 'gw-auth-dev';
 };
@@ -35,8 +37,10 @@ const getStackName = () => {
     return 'gw-stack-prod';
   } else if (ENVIRONMENT === 'staging') {
     return 'gw-stack-staging';
+  } else if (ENVIRONMENT === 'grantwell-staging') {
+    return 'grantwell-staging';
   }
-  
+
   // Fallback for local development
   return 'gw-stack-dev';
 };
@@ -49,8 +53,10 @@ const getKnowledgeBaseIndexName = () => {
     return 'knowledge-base-index-prod';
   } else if (ENVIRONMENT === 'staging') {
     return 'knowledge-base-index-staging';
+  } else if (ENVIRONMENT === 'grantwell-staging') {
+    return 'knowledge-base-index-grantwell-staging';
   }
-  
+
   // Fallback for local development
   return 'knowledge-base-index-dev';
 };

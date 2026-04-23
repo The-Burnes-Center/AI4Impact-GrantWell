@@ -1,6 +1,6 @@
 # GrantWell
 
-An AI-powered grant-writing assistant designed to streamline the process of applying for federal funding, specifically for Massachusetts communities pursuing federal funding opportunities.
+An AI-powered grant-writing assistant designed to streamline the process of applying for state and federal funding opportunities.
 
 ## Demo
 
@@ -104,7 +104,7 @@ npm run dev
 
 ## Contributing
 
-This is an internal tool for Massachusetts Federal Funds and Infrastructure (FFIO) staff. Please contact the administrators for access and contribution guidelines.
+Please contact the administrators for access and contribution guidelines.
 
 ## License
 

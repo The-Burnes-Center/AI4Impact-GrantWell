@@ -1,0 +1,56 @@
+name: Deploy to GrantWell Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-grantwell-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY_GRANTWELL_STAGING }}
+      ENVIRONMENT: grantwell-staging
+      STACK_NAME: grantwell-staging
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.SERVICE_ROLE_ARN_GRANTWELL_STAGING }}
+          role-session-name: ${{ github.actor }}-grantwell-staging
+          aws-region: us-east-1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        run: npm install
+
+      - name: Install frontend dependencies
+        run: |
+          cd lib/user-interface/app
+          npm install --legacy-peer-deps
+          npm install -g aws-cdk
+
+      - name: Bootstrap AWS environment
+        run: cdk bootstrap
+
+      - name: Deploy CDK stacks to GrantWell staging
+        run: |
+          cdk deploy ${{ env.STACK_NAME }} --require-approval never

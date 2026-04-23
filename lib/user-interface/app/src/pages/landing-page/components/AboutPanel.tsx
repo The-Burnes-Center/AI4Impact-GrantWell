@@ -6,11 +6,9 @@ const AboutPanel = React.memo(function AboutPanel() {
     <h2 className="about-panel__heading">About GrantWell</h2>
     <p className="about-panel__text">
       GrantWell is a free, AI-enabled tool designed to simplify the federal
-      grant application process for municipalities, community groups, and
-      underserved populations in Massachusetts. Developed through Northeastern
-      University&apos;s AI for Impact program in collaboration with the
-      Commonwealth of Massachusetts and the Federal Funds &amp; Infrastructure
-      Office (FFIO).
+      and state grant application process for municipalities, community
+      groups, and underserved populations. Developed through Northeastern
+      University&apos;s AI for Impact program at the Burnes Center.
     </p>
     <p className="about-panel__text">
       GrantWell removes barriers that often prevent smaller communities from

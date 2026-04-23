@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
+import { US_STATE_OPTIONS } from "../../../common/types/user-management";
 import PaginationControls from "./PaginationControls";
 
 interface UserManagementTabProps {
@@ -40,6 +41,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 }) => {
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [draftRoles, setDraftRoles] = useState<Record<string, UserRolePreset>>({});
+  const [draftStates, setDraftStates] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [savingUsername, setSavingUsername] = useState<string | null>(null);
   const [pageSize, setPageSize] = useState(25);
@@ -62,6 +64,11 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       setDraftRoles(
         Object.fromEntries(
           response.users.map((user) => [user.username, getRolePreset(user.roles)])
+        )
+      );
+      setDraftStates(
+        Object.fromEntries(
+          response.users.map((user) => [user.username, user.state || ""])
         )
       );
       setNextPaginationToken(response.nextPaginationToken);
@@ -110,29 +117,46 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const handleSave = useCallback(
     async (user: ManagedUser) => {
       const nextRole = draftRoles[user.username];
-      if (!nextRole || nextRole === getRolePreset(user.roles)) {
+      const nextState = draftStates[user.username] ?? "";
+      const currentRole = getRolePreset(user.roles);
+      const currentState = user.state || "";
+      const roleChanged = Boolean(nextRole) && nextRole !== currentRole;
+      const stateChanged = nextState !== currentState;
+
+      if (!roleChanged && !stateChanged) {
         return;
       }
 
       try {
         setSavingUsername(user.username);
-        const updated = await apiClient.userManagement.updateUserRole(user.username, nextRole);
+        let updatedRoles = user.roles;
+        let updatedState = currentState;
+
+        if (roleChanged) {
+          const updated = await apiClient.userManagement.updateUserRole(user.username, nextRole);
+          updatedRoles = updated.roles;
+        }
+        if (stateChanged) {
+          const updated = await apiClient.userManagement.updateUserState(user.username, nextState);
+          updatedState = typeof updated.state === "string" ? updated.state : nextState;
+        }
+
         setUsers((current) =>
           current.map((item) =>
             item.username === user.username
-              ? { ...item, roles: updated.roles }
+              ? { ...item, roles: updatedRoles, state: updatedState }
               : item
           )
         );
-        addNotification("success", `Updated role for ${user.email}`);
+        addNotification("success", `Updated ${user.email}`);
       } catch (error) {
-        console.error("Error updating user role:", error);
-        addNotification("error", `Failed to update role for ${user.email}`);
+        console.error("Error updating user:", error);
+        addNotification("error", `Failed to update ${user.email}`);
       } finally {
         setSavingUsername(null);
       }
     },
-    [apiClient, addNotification, draftRoles]
+    [apiClient, addNotification, draftRoles, draftStates]
   );
 
   if (loading) {
@@ -166,6 +190,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 <th scope="col">User</th>
                 <th scope="col">Status</th>
                 <th scope="col">Role</th>
+                <th scope="col">State</th>
                 <th scope="col" className="user-management-table__actions">Action</th>
               </tr>
             </thead>
@@ -173,8 +198,10 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               {users.map((user) => {
                 const currentRole = getRolePreset(user.roles);
                 const draftRole = draftRoles[user.username] || currentRole;
+                const currentState = user.state || "";
+                const draftState = draftStates[user.username] ?? currentState;
                 const isSaving = savingUsername === user.username;
-                const hasChanges = draftRole !== currentRole;
+                const hasChanges = draftRole !== currentRole || draftState !== currentState;
 
                 return (
                   <tr key={user.username}>
@@ -212,6 +239,30 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                             disabled={Boolean(option.requiresDeveloper && !canAssignDeveloper)}
                           >
                             {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <label className="visually-hidden" htmlFor={`state-select-${user.username}`}>
+                        State for {user.email}
+                      </label>
+                      <select
+                        id={`state-select-${user.username}`}
+                        className="user-management-role-select"
+                        value={draftState}
+                        onChange={(event) =>
+                          setDraftStates((current) => ({
+                            ...current,
+                            [user.username]: event.target.value,
+                          }))
+                        }
+                        disabled={isSaving}
+                      >
+                        <option value="">None</option>
+                        {US_STATE_OPTIONS.map((stateName) => (
+                          <option key={stateName} value={stateName}>
+                            {stateName}
                           </option>
                         ))}
                       </select>

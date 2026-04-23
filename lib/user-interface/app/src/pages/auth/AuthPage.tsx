@@ -478,20 +478,14 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
           <div className="auth-hero-column">
             <section className="auth-product-identity" aria-labelledby="product-title">
               <div className="auth-logo-row">
-                <img
-                  src="/images/stateseal-color.png"
-                  alt="Massachusetts State Seal"
-                  className="auth-state-seal"
-                />
                 <h1 id="product-title" className="auth-product-name">
                   GrantWell
                 </h1>
               </div>
               <p className="auth-tagline">Find and apply for state and federal grants</p>
               <p className="auth-product-description">
-                GrantWell helps Massachusetts municipalities discover, understand,
-                and draft applications for state and federal grants. This tool is
-                free to use for Massachusetts municipalities and their partners.
+                GrantWell helps public-sector organizations discover, understand,
+                and draft applications for state and federal grants.
               </p>
             </section>
           </div>
@@ -621,10 +615,6 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
           aria-label="Attribution and contact information"
         >
           <p className="auth-attribution-text">
-            Brought to you by the Federal Funds and Infrastructure Office of the
-            Commonwealth of Massachusetts.
-          </p>
-          <p className="auth-attribution-text">
             Developed by{" "}
             <a
               href="https://burnes.northeastern.edu/ai-for-impact-coop/"
@@ -635,15 +625,6 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
               AI for Impact
             </a>{" "}
             at the Burnes Center, Northeastern University.
-          </p>
-          <p className="auth-attribution-text">
-            Questions? Contact{" "}
-            <a
-              href="mailto:FedFundsInfra@mass.gov"
-              className="auth-attribution-link"
-            >
-              FedFundsInfra@mass.gov
-            </a>
           </p>
         </section>
       </div>

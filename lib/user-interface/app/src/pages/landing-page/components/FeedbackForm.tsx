@@ -84,7 +84,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
           style={{ margin: 0 }}
           onSubmit={handleSubmit}
         >
-          <h2 className="feedback-heading">Help Us Improve Mass.gov</h2>
+          <h2 className="feedback-heading">Help Us Improve GrantWell</h2>
 
           <div className="feedback-divider" />
 
@@ -215,8 +215,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
               </div>
 
               <p className="feedback-attribution">
-                Use the information on this page to Office of Federal Funds
-                &amp; Infrastructure.
+                Your feedback helps improve GrantWell.
               </p>
 
               {feedbackError && (

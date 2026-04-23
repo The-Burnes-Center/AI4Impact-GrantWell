@@ -2,7 +2,6 @@ declare module "*.css";
 declare module "*.module.css";
 declare module "*.module.scss";
 declare module "react-speech-recognition";
-declare module "@massds/mayflower-react";
 
 interface Window {
   dataLayer: Record<string, unknown>[];

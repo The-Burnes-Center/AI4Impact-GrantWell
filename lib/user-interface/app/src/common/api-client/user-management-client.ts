@@ -91,6 +91,25 @@ export class UserManagementClient {
     return data;
   }
 
+  async updateUserState(username: string, state: string) {
+    const headers = await this.getAuthHeaders();
+    const response = await fetch(
+      `${this.baseUrl}/user-management/users/${encodeURIComponent(username)}/roles`,
+      {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ state }),
+      }
+    );
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || `Error: ${response.status}`);
+    }
+
+    return data;
+  }
+
   async getCurrentFeatureAccess(): Promise<CurrentFeatureRolloutAccess> {
     const headers = await this.getAuthHeaders();
     const response = await fetch(`${this.baseUrl}/feature-rollouts/me`, {

@@ -13,7 +13,6 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import AuthPage from "../pages/auth/AuthPage";
 import MaintenanceGate from "./MaintenanceGate";
-import BrandBanner from "./mds/BrandBanner";
 import FooterComponent from "./mds/MdsFooter";
 import MDSHeader from "./mds/MdsHeader";
 
@@ -202,7 +201,6 @@ function AppLayoutContent({
 }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <BrandBanner />
       <MDSHeader showSignOut={authenticated === true} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {authenticated ? (
