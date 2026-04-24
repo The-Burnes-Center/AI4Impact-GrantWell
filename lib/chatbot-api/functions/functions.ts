@@ -24,6 +24,9 @@ import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
 import { knowledgeBaseIndexName } from "../../constants";
 import { NofoProcessingStateMachine } from "../step-functions/nofo-processing";
 import { DraftGenerationStateMachine } from "../step-functions/draft-generation";
+import { SUPPORTED_STATE_CODES } from "../../shared/states";
+
+const SUPPORTED_STATES_ENV = JSON.stringify(SUPPORTED_STATE_CODES);
 
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
@@ -859,6 +862,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler", // Points to the 'hello' file in the lambda directory
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.seconds(60),
       }

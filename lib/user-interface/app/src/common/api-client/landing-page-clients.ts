@@ -86,8 +86,15 @@ export class LandingPageClient {
     }
   }
 
-  // Fetches a signed upload URL from the backend Lambda for uploading a file to S3
-  async getUploadURL(fileName: string, fileType: string): Promise<string> {
+  // Fetches a signed upload URL from the backend Lambda for uploading a file to S3.
+  // The backend also writes the `<fileName>.metadata.json` sidecar for Bedrock KB
+  // filtering, so `scope` and (when scope === "state") `state` are required.
+  async getUploadURL(
+    fileName: string,
+    fileType: string,
+    scope: "federal" | "state",
+    state?: string
+  ): Promise<string> {
     if (!fileType) {
       alert("Must have a valid file type!");
       throw new Error("Invalid file type");
@@ -101,11 +108,23 @@ export class LandingPageClient {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({ fileName, fileType }),
+        body: JSON.stringify({
+          fileName,
+          fileType,
+          scope,
+          ...(scope === "state" && state ? { state } : {}),
+        }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get upload URL");
+        let message = "Failed to get upload URL";
+        try {
+          const data = await response.json();
+          if (data?.message) message = data.message;
+        } catch {
+          // ignore JSON parse errors
+        }
+        throw new Error(message);
       }
 
       const data = await response.json();

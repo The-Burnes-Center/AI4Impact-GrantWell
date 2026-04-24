@@ -10,6 +10,7 @@ import SummaryEditor from "./SummaryEditor";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
+import { SUPPORTED_STATES } from "../../../common/generated/states";
 
 const PROCESSING_LABELS: Record<string, string> = {
   uploading: "Uploading...",
@@ -60,6 +61,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
   const [uploadGrantType, setUploadGrantType] = useState<GrantTypeId | "">("");
+  const [uploadState, setUploadState] = useState<string>("");
   const [uploadCategory, setUploadCategory] = useState<string>("");
   const [uploadAgency, setUploadAgency] = useState<string>("");
 
@@ -242,6 +244,11 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const uploadNOFO = async () => {
     if (!selectedFile) { addNotification("error", "Please select a file first"); return; }
     if (!customGrantName.trim()) { addNotification("error", "Grant name cannot be empty"); return; }
+    if (!uploadGrantType) { addNotification("error", "Grant Type is required"); return; }
+    if (uploadGrantType === "state" && !uploadState) {
+      addNotification("error", "State is required for state grants");
+      return;
+    }
     if (!uploadCategory) { addNotification("error", "Category is required"); return; }
 
     try {
@@ -252,11 +259,17 @@ const NOFOsTab = React.memo(function NOFOsTab({
       else if (selectedFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") newFilePath = `${folderName}/NOFO-File-DOCX`;
       else newFilePath = `${folderName}/NOFO-File`;
 
-      const signedUrl = await apiClient.landingPage.getUploadURL(newFilePath, selectedFile.type);
+      const scope: "federal" | "state" = uploadGrantType === "state" ? "state" : "federal";
+      const signedUrl = await apiClient.landingPage.getUploadURL(
+        newFilePath,
+        selectedFile.type,
+        scope,
+        scope === "state" ? uploadState : undefined
+      );
       await apiClient.landingPage.uploadFileToS3(signedUrl, selectedFile);
       await apiClient.landingPage.updateNOFOStatus(
         folderName, "active", undefined, undefined,
-        uploadGrantType ? (uploadGrantType as GrantTypeId) : "federal",
+        uploadGrantType as GrantTypeId,
         uploadCategory,
         uploadAgency || undefined
       );
@@ -270,11 +283,13 @@ const NOFOsTab = React.memo(function NOFOsTab({
       setSelectedFile(null);
       setCustomGrantName("");
       setUploadGrantType("");
+      setUploadState("");
       setUploadCategory("");
       setUploadAgency("");
       setUploadNofoModalOpen(false);
-    } catch {
-      addNotification("error", "Failed to upload the grant file.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to upload the grant file.";
+      addNotification("error", message);
     }
   };
 
@@ -467,7 +482,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       {/* Upload NOFO Modal */}
       <Modal
         isOpen={uploadNofoModalOpen}
-        onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadCategory(""); setUploadAgency(""); }}
+        onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(""); setUploadCategory(""); setUploadAgency(""); }}
         title="Upload Grant"
       >
         <div className="modal-form">
@@ -494,18 +509,48 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 <div className="field-note">This name will be used to identify the grant in the system.</div>
               </div>
               <div className="form-group">
-                <label htmlFor="upload-grant-type">Grant Type</label>
+                <label htmlFor="upload-grant-type">Grant Type *</label>
                 <div className="select-wrapper">
-                  <select id="upload-grant-type" value={uploadGrantType} onChange={(e) => setUploadGrantType(e.target.value as GrantTypeId | "")} className="form-input">
-                    <option value="">Select type (optional)...</option>
+                  <select
+                    id="upload-grant-type"
+                    value={uploadGrantType}
+                    onChange={(e) => {
+                      const next = e.target.value as GrantTypeId | "";
+                      setUploadGrantType(next);
+                      if (next !== "state") setUploadState("");
+                    }}
+                    className="form-input"
+                    required
+                  >
+                    <option value="">Select type...</option>
                     <option value="federal">Federal</option>
                     <option value="state">State</option>
                     <option value="quasi">Quasi</option>
                     <option value="philanthropic">Philanthropic</option>
                   </select>
                 </div>
-                <div className="field-note">Optional. Can be auto-detected or set later after upload.</div>
+                <div className="field-note">Required. Determines who this grant is visible to.</div>
               </div>
+              {uploadGrantType === "state" && (
+                <div className="form-group">
+                  <label htmlFor="upload-state">State *</label>
+                  <div className="select-wrapper">
+                    <select
+                      id="upload-state"
+                      value={uploadState}
+                      onChange={(e) => setUploadState(e.target.value)}
+                      className="form-input"
+                      required
+                    >
+                      <option value="">Select state...</option>
+                      {SUPPORTED_STATES.map((s) => (
+                        <option key={s.code} value={s.code}>{s.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field-note">Required for state grants. Users from this state will see it in chat and grant writer.</div>
+                </div>
+              )}
               <div className="form-group">
                 <label htmlFor="upload-category">Category *</label>
                 <div className="select-wrapper">
@@ -526,8 +571,18 @@ const NOFOsTab = React.memo(function NOFOsTab({
             </>
           )}
           <div className="modal-actions">
-            <button className="modal-button secondary" onClick={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadCategory(""); setUploadAgency(""); }}>Cancel</button>
-            <button className="modal-button primary" onClick={uploadNOFO} disabled={!selectedFile || !customGrantName.trim() || !uploadCategory}>
+            <button className="modal-button secondary" onClick={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(""); setUploadCategory(""); setUploadAgency(""); }}>Cancel</button>
+            <button
+              className="modal-button primary"
+              onClick={uploadNOFO}
+              disabled={
+                !selectedFile ||
+                !customGrantName.trim() ||
+                !uploadGrantType ||
+                (uploadGrantType === "state" && !uploadState) ||
+                !uploadCategory
+              }
+            >
               <LuUpload size={16} className="button-icon" /><span>Upload Grant</span>
             </button>
           </div>

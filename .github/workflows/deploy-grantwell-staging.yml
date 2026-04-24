@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY_GRANTWELL_STAGING }}
+      GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
       ENVIRONMENT: grantwell-staging
       STACK_NAME: grantwell-staging
 

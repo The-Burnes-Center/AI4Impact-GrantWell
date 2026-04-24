@@ -51,5 +51,8 @@ public/manifest.json
 src/API.ts
 src/graphql/
 
+# Generated from lib/shared (see copy-shared script)
+src/common/generated/
+
 # Misc
 *.tgz

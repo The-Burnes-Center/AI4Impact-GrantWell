@@ -69,12 +69,30 @@ export class AuthorizationStack extends Construct {
       },
     });
 
+    // Expose custom:role and custom:state in the ID / access token claims so
+    // backend Lambdas can read them directly from the JWT authorizer context
+    // instead of calling cognito-idp:AdminGetUser per request.
+    // Self-signup writes custom:state at account creation (see SignUpStep.tsx);
+    // admin-API writes (AdminUpdateUserAttributes) bypass the writeAttributes
+    // restriction, so Developers/Regular admins can still reassign state
+    // post-signup via User Management.
+    const clientAttributes = new cognito.ClientAttributes()
+      .withStandardAttributes({
+        email: true,
+        emailVerified: true,
+      })
+      .withCustomAttributes('role', 'state');
+
     const userPoolClient = new UserPoolClient(this, 'UserPoolClient', {
       userPool,
       authFlows: {
         userPassword: true, // Enable username/password authentication
         userSrp: true,      // Enable SRP authentication (default)
       },
+      readAttributes: clientAttributes,
+      writeAttributes: new cognito.ClientAttributes()
+        .withStandardAttributes({ email: true })
+        .withCustomAttributes('state'),
     });
 
     this.userPoolClient = userPoolClient;

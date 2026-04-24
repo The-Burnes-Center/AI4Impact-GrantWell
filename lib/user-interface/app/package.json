@@ -4,6 +4,11 @@
   "version": "3.0.0",
   "type": "module",
   "scripts": {
+    "copy-shared": "mkdir -p src/common/generated && cp ../../shared/states.ts src/common/generated/states.ts",
+    "predev": "npm run copy-shared",
+    "prebuild": "npm run copy-shared",
+    "prebuild:dev": "npm run copy-shared",
+    "prepreview": "npm run copy-shared",
     "dev": "vite",
     "build": "tsc && vite build",
     "build:theme": "node src/style.js",

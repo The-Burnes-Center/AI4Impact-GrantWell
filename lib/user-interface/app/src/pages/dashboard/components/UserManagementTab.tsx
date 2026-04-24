@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
-import { US_STATE_OPTIONS } from "../../../common/types/user-management";
+import { SUPPORTED_STATES } from "../../../common/types/user-management";
 import PaginationControls from "./PaginationControls";
 
 interface UserManagementTabProps {
@@ -260,9 +260,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         disabled={isSaving}
                       >
                         <option value="">None</option>
-                        {US_STATE_OPTIONS.map((stateName) => (
-                          <option key={stateName} value={stateName}>
-                            {stateName}
+                        {SUPPORTED_STATES.map((s) => (
+                          <option key={s.code} value={s.code}>
+                            {s.name}
                           </option>
                         ))}
                       </select>

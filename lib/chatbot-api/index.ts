@@ -26,6 +26,9 @@ import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as path from "path";
+import { SUPPORTED_STATE_CODES } from "../shared/states";
+
+const SUPPORTED_STATES_ENV = JSON.stringify(SUPPORTED_STATE_CODES);
 
 export interface ChatbotAPIProps {
   readonly authentication: AuthorizationStack;
@@ -416,6 +419,7 @@ export class ChatBotApi extends Construct {
       handler: "index.handler",
       environment: {
         USER_POOL_ID: props.authentication.userPool.userPoolId,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       },
       timeout: cdk.Duration.seconds(30),
     });
