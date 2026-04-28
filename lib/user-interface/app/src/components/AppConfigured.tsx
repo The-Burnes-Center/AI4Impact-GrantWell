@@ -3,7 +3,7 @@ import {
   ThemeProvider,
   defaultDarkModeOverride,
 } from "@aws-amplify/ui-react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Amplify, Auth, Hub } from "aws-amplify";
 import { Alert, Spinner } from "react-bootstrap";
 import App from "../App";
@@ -11,10 +11,10 @@ import { AppConfig } from "../common/types/app";
 import { AppContext } from "../common/app-context";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
-import AuthPage from "../pages/auth/AuthPage";
 import MaintenanceGate from "./MaintenanceGate";
 import AppHeader from "./AppHeader";
 import MarketingLandingPage from "../pages/marketing/MarketingLandingPage";
+import LoginPage from "../pages/marketing/LoginPage";
 
 async function getInitialAuthState() {
   try {
@@ -199,8 +199,6 @@ function AppLayoutContent({
   configured: boolean;
   onAuthenticated: () => void;
 }) {
-  const [showAuth, setShowAuth] = useState(false);
-
   if (authenticated) {
     return (
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -231,9 +229,14 @@ function AppLayoutContent({
     );
   }
 
-  if (showAuth) {
-    return <AuthPage onAuthenticated={onAuthenticated} />;
-  }
-
-  return <MarketingLandingPage onGetStarted={() => setShowAuth(true)} />;
+  return (
+    <Routes>
+      <Route path="/" element={<MarketingLandingPage />} />
+      <Route
+        path="/login"
+        element={<LoginPage onAuthenticated={onAuthenticated} />}
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }

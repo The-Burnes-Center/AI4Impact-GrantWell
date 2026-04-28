@@ -1,48 +1,36 @@
+import { useNavigate } from "react-router-dom";
 import "../../styles/marketing-landing.css";
+import {
+  FeatureFind,
+  FeatureSummarize,
+  FeatureWrite,
+} from "./featureIllustrations";
+import {
+  MarketingFooter,
+  MarketingNavbar,
+  OmniHeader,
+} from "./marketingChrome";
 
-interface MarketingLandingPageProps {
-  onGetStarted: () => void;
-}
-
-const ArrowRight = () => (
+const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => (
   <svg
-    className="mk-btn__arrow"
+    className={className}
     aria-hidden="true"
-    viewBox="0 0 14 14"
+    viewBox="0 0 19.575 15.1425"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path
-      d="M1 7h12m0 0L7.5 1.5M13 7l-5.5 5.5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <g transform="translate(2.21625 -2.21625) rotate(-90 7.57125 9.7875)">
+      <path
+        d="M6.93 18.9375L7.5675 19.575L8.205 18.9375L14.505 12.6375L15.1425 12L13.8712 10.7288L13.2337 11.3663L8.47125 16.1288V0H6.67125V16.1288L1.90875 11.3663L1.27125 10.7288L0 12L0.6375 12.6375L6.9375 18.9375H6.93Z"
+        fill="currentColor"
+      />
+    </g>
   </svg>
 );
 
-const ArrowUpRight = () => (
-  <svg
-    className="mk-btn__arrow"
-    aria-hidden="true"
-    viewBox="0 0 14 14"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M3.5 10.5L10.5 3.5M10.5 3.5H4.5M10.5 3.5V9.5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-export default function MarketingLandingPage({
-  onGetStarted,
-}: MarketingLandingPageProps) {
+export default function MarketingLandingPage() {
+  const navigate = useNavigate();
+  const goToLogin = () => navigate("/login");
   const scrollToFeatures = () => {
     document
       .getElementById("features")
@@ -51,173 +39,109 @@ export default function MarketingLandingPage({
 
   return (
     <div className="marketing">
-      <div className="marketing__omni">
-        <div className="marketing__omni-left">
-          <span>An official website of the Commonwealth of Massachusetts</span>
-        </div>
-        <div className="marketing__omni-right">
-          <a href="https://www.mass.gov" target="_blank" rel="noreferrer">
-            Mass.gov
-          </a>
-        </div>
-      </div>
+      <OmniHeader />
 
       <section className="marketing__hero" aria-labelledby="hero-title">
         <div className="marketing__hero-bg" aria-hidden="true" />
-        <div className="marketing__hero-overlay" aria-hidden="true" />
-        <div className="marketing__hero-inner">
-          <img
-            className="marketing__hero-wordmark"
-            src="/images/marketing/grantwell-wordmark-dark.png"
-            alt="GrantWell"
-            id="hero-title"
-          />
-          <p className="marketing__hero-tagline">
-            AI-powered grant discovery and writing for Massachusetts
-            municipalities and community organizations.
-          </p>
-          <div className="marketing__hero-actions">
-            <button
-              type="button"
-              className="mk-btn mk-btn--primary"
-              onClick={onGetStarted}
-            >
-              Get Started
-              <ArrowRight />
-            </button>
-            <button
-              type="button"
-              className="mk-btn mk-btn--ghost"
-              onClick={scrollToFeatures}
-            >
-              Learn More
-            </button>
+        <MarketingNavbar />
+        <div className="marketing__hero-row">
+          <div className="marketing__hero-content">
+            <img
+              className="marketing__hero-wordmark"
+              src="/images/marketing/grantwell-wordmark-dark.svg"
+              alt="GrantWell"
+              id="hero-title"
+            />
+            <p className="marketing__hero-tagline">
+              A free AI tool for municipalities and community organizations
+              that want to go after federal grants without eating up weeks of
+              staff time.
+            </p>
+            <div className="marketing__hero-actions">
+              <button
+                type="button"
+                className="mk-btn mk-btn--primary"
+                onClick={goToLogin}
+              >
+                <span>Get Started</span>
+                <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
+              </button>
+              <button
+                type="button"
+                className="mk-btn mk-btn--outline"
+                onClick={scrollToFeatures}
+              >
+                <span>Learn More</span>
+                <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
+              </button>
+            </div>
           </div>
+          <div className="marketing__hero-spacer" aria-hidden="true" />
         </div>
       </section>
 
-      <section
-        id="features"
-        className="marketing__features"
-        aria-labelledby="features-title"
-      >
-        <div className="marketing__features-inner">
-          <p className="marketing__features-eyebrow">What GrantWell does</p>
-          <h2 className="marketing__features-title" id="features-title">
-            Find, summarize, and write grant applications — faster.
-          </h2>
-          <div className="marketing__features-grid">
-            <article className="marketing__feature">
-              <img
-                className="marketing__feature-img"
-                src="/images/marketing/feature-find.png"
-                alt=""
-              />
-              <h3 className="marketing__feature-title">Find</h3>
-              <p className="marketing__feature-body">
-                Browse and search a curated library of federal and state grant
-                opportunities relevant to your community.
-              </p>
-            </article>
-            <article className="marketing__feature">
-              <img
-                className="marketing__feature-img"
-                src="/images/marketing/feature-summarize.png"
-                alt=""
-              />
-              <h3 className="marketing__feature-title">Summarize</h3>
-              <p className="marketing__feature-body">
-                Get plain-language summaries of complex Notices of Funding
-                Opportunity, with eligibility and deadlines surfaced upfront.
-              </p>
-            </article>
-            <article className="marketing__feature">
-              <img
-                className="marketing__feature-img"
-                src="/images/marketing/feature-write.png"
-                alt=""
-              />
-              <h3 className="marketing__feature-title">Write</h3>
-              <p className="marketing__feature-body">
-                Draft narrative sections with an AI assistant trained on the
-                requirements of the grant you're applying to.
-              </p>
-            </article>
+      <section id="features" className="marketing__features">
+        <article className="marketing__feature">
+          <FeatureFind />
+          <div className="marketing__feature-text">
+            <h3 className="marketing__feature-title">Find the right grants</h3>
+            <p className="marketing__feature-body">
+              Search for relevant state and federal funding opportunities
+              aligned with your community needs.
+            </p>
           </div>
-        </div>
+        </article>
+        <article className="marketing__feature">
+          <FeatureSummarize />
+          <div className="marketing__feature-text">
+            <h3 className="marketing__feature-title">
+              Understand what's required
+            </h3>
+            <p className="marketing__feature-body">
+              Extract key grant information and use chat to ask questions
+              about eligibility and requirements.
+            </p>
+          </div>
+        </article>
+        <article className="marketing__feature">
+          <FeatureWrite />
+          <div className="marketing__feature-text">
+            <h3 className="marketing__feature-title">Draft your application</h3>
+            <p className="marketing__feature-body">
+              Get step-by-step guidance to help draft your grant applications
+              with AI-powered assistance.
+            </p>
+          </div>
+        </article>
       </section>
 
       <section className="marketing__band" aria-labelledby="band-title">
-        <div className="marketing__band-inner">
+        <div className="marketing__band-content">
           <h2 className="marketing__band-title" id="band-title">
-            Free and AI-powered for the Commonwealth.
+            Free and AI-Powered
           </h2>
           <p className="marketing__band-body">
-            GrantWell is a public-interest project built with the
-            Massachusetts Digital Service. Use it as much as you'd like —
-            no sign-up fees, no usage caps.
+            GrantWell uses AI as a support tool, not a decision-maker. AI
+            responses are grounded in official Notice of Funding Opportunity
+            documents. The system is designed not to invent requirements or
+            facts. All drafts require human review before submission. Users
+            retain full control and professional judgment.
           </p>
           <button
             type="button"
             className="mk-btn mk-btn--light"
-            onClick={onGetStarted}
+            onClick={goToLogin}
           >
-            Get Started
-            <ArrowUpRight />
+            <span>Get Started</span>
+            <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
           </button>
         </div>
+        <div className="marketing__band-spacer" aria-hidden="true" />
       </section>
 
-      <footer className="marketing__footer">
-        <div className="marketing__footer-inner">
-          <div className="marketing__footer-top">
-            <div className="marketing__footer-brand">
-              <img
-                className="marketing__footer-wordmark"
-                src="/images/marketing/grantwell-wordmark-light.png"
-                alt="GrantWell"
-              />
-              <p className="marketing__footer-tagline">
-                A collaboration between the Commonwealth of Massachusetts and
-                academic, civic, and research partners.
-              </p>
-            </div>
-            <div
-              className="marketing__partners"
-              aria-label="Partner organizations"
-            >
-              <img
-                className="marketing__partner"
-                src="/images/marketing/partner-burnes.png"
-                alt="Burnes Center"
-              />
-              <img
-                className="marketing__partner"
-                src="/images/marketing/partner-innovateus.png"
-                alt="InnovateUS"
-              />
-              <img
-                className="marketing__partner"
-                src="/images/marketing/partner-reboot.png"
-                alt="Reboot Democracy"
-              />
-              <img
-                className="marketing__partner"
-                src="/images/marketing/partner-govlab.png"
-                alt="The GovLab"
-              />
-            </div>
-          </div>
-          <div className="marketing__footer-bottom">
-            <span>© {new Date().getFullYear()} GrantWell</span>
-            <span className="marketing__heart">
-              Made with
-              <img src="/images/marketing/heart.png" alt="love" />
-              in Massachusetts
-            </span>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
+
+      <OmniHeader />
     </div>
   );
 }
