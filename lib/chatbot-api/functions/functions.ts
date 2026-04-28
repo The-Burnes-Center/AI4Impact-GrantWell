@@ -863,6 +863,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -878,6 +879,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+
+    props.nofoMetadataTable.grantWriteData(nofoUploadS3APIHandlerFunction);
     this.uploadNOFOS3Function = nofoUploadS3APIHandlerFunction;
 
     // Add the NOFO status update function
