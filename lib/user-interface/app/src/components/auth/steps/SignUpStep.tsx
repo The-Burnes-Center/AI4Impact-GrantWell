@@ -2,18 +2,21 @@ import type { FormEvent } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import PasswordRequirementsList from "../PasswordRequirementsList";
 import { PasswordRequirements } from "../auth-types";
+import { SUPPORTED_STATES } from "../../../common/generated/states";
 
 interface SignUpStepProps {
   email: string;
   password: string;
   confirmPassword: string;
   showPassword: boolean;
+  stateCode: string;
   loading: boolean;
   passwordRequirements: PasswordRequirements;
   onEmailChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
   onConfirmPasswordChange: (value: string) => void;
   onShowPasswordChange: (checked: boolean) => void;
+  onStateChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onSwitchToSignIn: () => void;
 }
@@ -23,12 +26,14 @@ export default function SignUpStep({
   password,
   confirmPassword,
   showPassword,
+  stateCode,
   loading,
   passwordRequirements,
   onEmailChange,
   onPasswordChange,
   onConfirmPasswordChange,
   onShowPasswordChange,
+  onStateChange,
   onSubmit,
   onSwitchToSignIn,
 }: SignUpStepProps) {
@@ -90,6 +95,27 @@ export default function SignUpStep({
             className="form-input"
             aria-required="true"
           />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label className="form-label" htmlFor="signup-state-select">
+            State <span className="text-muted">(optional)</span>
+          </Form.Label>
+          <Form.Select
+            id="signup-state-select"
+            value={stateCode}
+            onChange={(event) => onStateChange(event.target.value)}
+            disabled={loading}
+            className="form-input"
+            aria-describedby="signup-state-help"
+          >
+            <option value="">None / Other</option>
+            {SUPPORTED_STATES.map((s) => (
+              <option key={s.code} value={s.code}>{s.name}</option>
+            ))}
+          </Form.Select>
+          <Form.Text id="signup-state-help" muted>
+            Pick your state to see federal grants plus state-specific grants for that state.
+          </Form.Text>
         </Form.Group>
         <div className="login-form-options">
           <Form.Check

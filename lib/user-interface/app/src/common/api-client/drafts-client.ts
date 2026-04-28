@@ -424,6 +424,14 @@ export class DraftsClient {
     if (startResponse.status !== 200) {
       const errorMessage = await startResponse.json();
       console.error('Draft generation error:', errorMessage);
+      if (
+        startResponse.status === 403 &&
+        errorMessage?.error === "ACCESS_DENIED_STATE"
+      ) {
+        window.dispatchEvent(
+          new CustomEvent("grantwell:access-denied", { detail: errorMessage })
+        );
+      }
       throw new Error(errorMessage.error || 'Failed to start draft generation');
     }
 

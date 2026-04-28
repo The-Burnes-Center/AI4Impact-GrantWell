@@ -96,6 +96,7 @@ export class DraftGenerationStateMachine extends Construct {
         "questionnaire.$": "$.questionnaire",
         "sessionId.$": "$.sessionId",
         "userId.$": "$.userId",
+        "userState.$": "$.userState",
         "grantInfos.$": "$.grantInfos",
         "totalSections.$": "$.totalSections",
       },

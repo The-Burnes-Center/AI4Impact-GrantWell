@@ -53,7 +53,8 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const apiClient = useApiClient();
-  const { isAdmin, isDeveloper, loading: roleLoading } = useAdminCheck();
+  const { isAdmin, isDeveloper, isStateAdmin, userState, loading: roleLoading } = useAdminCheck();
+  const canManageUsers = isAdmin && !isStateAdmin;
   const { addNotification } = useNotifications();
 
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
@@ -139,7 +140,7 @@ const Dashboard: React.FC = () => {
         ...(isDeveloper
           ? [{ key: "feature-rollouts" as const, ref: rolloutsTabRef }]
           : []),
-        ...(isAdmin
+        ...(canManageUsers
           ? [{ key: "user-management" as const, ref: userManagementTabRef }]
           : []),
       ];
@@ -391,7 +392,7 @@ const Dashboard: React.FC = () => {
                 Feature Rollouts
               </button>
             )}
-            {isAdmin && (
+            {canManageUsers && (
               <button
                 id="dashboard-tab-user-management"
                 ref={userManagementTabRef}

@@ -50,6 +50,22 @@ export class LandingPageClient {
       });
 
       if (!response.ok) {
+        if (response.status === 403) {
+          let body: unknown = null;
+          try { body = await response.json(); } catch { /* ignore */ }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const parsed = body as any;
+          if (parsed?.error === "ACCESS_DENIED_STATE") {
+            window.dispatchEvent(
+              new CustomEvent("grantwell:access-denied", { detail: parsed })
+            );
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err: any = new Error("ACCESS_DENIED_STATE");
+            err.status = 403;
+            err.body = parsed;
+            throw err;
+          }
+        }
         throw new Error(`Error: ${response.status}`);
       }
 
@@ -86,9 +102,6 @@ export class LandingPageClient {
     }
   }
 
-  // Fetches a signed upload URL from the backend Lambda for uploading a file to S3.
-  // The backend also writes the `<fileName>.metadata.json` sidecar for Bedrock KB
-  // filtering, so `scope` and (when scope === "state") `state` are required.
   async getUploadURL(
     fileName: string,
     fileType: string,

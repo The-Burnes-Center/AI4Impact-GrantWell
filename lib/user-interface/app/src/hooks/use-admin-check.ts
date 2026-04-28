@@ -2,22 +2,20 @@ import { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
 import { hasRole, parseRoleClaim } from "../common/helpers/auth-roles";
 
-/**
- * Checks whether the current authenticated user can access admin features.
- *
- * Reads `custom:role` from the Cognito ID token.
- *
- * @returns `{ isAdmin, isDeveloper, roles, loading }` — `loading` is `true` while the
- * check is in progress.
- */
 export function useAdminCheck(): {
   isAdmin: boolean;
   isDeveloper: boolean;
+  isStateAdmin: boolean;
+  isRegularAdmin: boolean;
+  userState: string;
   roles: string[];
   loading: boolean;
 } {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDeveloper, setIsDeveloper] = useState(false);
+  const [isStateAdmin, setIsStateAdmin] = useState(false);
+  const [isRegularAdmin, setIsRegularAdmin] = useState(false);
+  const [userState, setUserState] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,19 +25,26 @@ export function useAdminCheck(): {
     const checkAdmin = async () => {
       try {
         const result = await Auth.currentAuthenticatedUser();
-        const parsedRoles = parseRoleClaim(
-          result?.signInUserSession?.idToken?.payload["custom:role"]
-        );
+        const payload = result?.signInUserSession?.idToken?.payload || {};
+        const parsedRoles = parseRoleClaim(payload["custom:role"]);
+        const stateClaim = String(payload["custom:state"] || "").trim().toUpperCase();
         const hasDeveloperRole = hasRole(parsedRoles, "Developer");
+        const hasAdminRole = hasRole(parsedRoles, "Admin");
         if (!cancelled) {
           setRoles(parsedRoles);
-          setIsAdmin(hasRole(parsedRoles, "Admin") || hasDeveloperRole);
+          setUserState(stateClaim);
+          setIsAdmin(hasAdminRole || hasDeveloperRole);
           setIsDeveloper(hasDeveloperRole);
+          setIsStateAdmin(hasAdminRole && !hasDeveloperRole && !!stateClaim);
+          setIsRegularAdmin(hasAdminRole && !hasDeveloperRole && !stateClaim);
         }
       } catch {
         if (!cancelled) {
           setIsAdmin(false);
           setIsDeveloper(false);
+          setIsStateAdmin(false);
+          setIsRegularAdmin(false);
+          setUserState("");
           setRoles([]);
         }
       } finally {
@@ -56,7 +61,7 @@ export function useAdminCheck(): {
     };
   }, []);
 
-  return { isAdmin, isDeveloper, roles, loading };
+  return { isAdmin, isDeveloper, isStateAdmin, isRegularAdmin, userState, roles, loading };
 }
 
 export default useAdminCheck;

@@ -4,6 +4,7 @@ import { Container, Row, Col, Offcanvas } from "react-bootstrap";
 import { SessionRefreshContext } from "../common/session-refresh-context";
 import { NotificationProvider } from "../components/notifications/NotificationManager";
 import NotificationBar from "../components/notifications/NotificationBar";
+import { AccessDeniedProvider } from "../components/access-denied/AccessDeniedManager";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 interface BaseAppLayoutProps {
@@ -32,6 +33,7 @@ export default function BaseAppLayout({
   return (
     <SessionRefreshContext.Provider value={{ needsRefresh, setNeedsRefresh }}>
       <NotificationProvider>
+        <AccessDeniedProvider>
         <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
           {/* Main content area */}
           <div style={{ flex: 1, overflow: "auto", minWidth: 0 }}>
@@ -72,6 +74,7 @@ export default function BaseAppLayout({
             </Container>
           </div>
         </div>
+        </AccessDeniedProvider>
       </NotificationProvider>
     </SessionRefreshContext.Provider>
   );

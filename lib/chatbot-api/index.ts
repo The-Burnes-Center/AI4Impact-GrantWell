@@ -28,7 +28,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as path from "path";
 import { SUPPORTED_STATE_CODES } from "../shared/states";
 
-const SUPPORTED_STATES_ENV = JSON.stringify(SUPPORTED_STATE_CODES);
+const SUPPORTED_STATES_ENV: string = JSON.stringify(SUPPORTED_STATE_CODES);
 
 export interface ChatbotAPIProps {
   readonly authentication: AuthorizationStack;
@@ -338,15 +338,20 @@ export class ChatBotApi extends Construct {
       environment: {
         DRAFT_GENERATION_STATE_MACHINE_ARN: lambdaFunctions.draftGenerationStateMachine.stateMachineArn,
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
+        NOFO_METADATA_TABLE_NAME: tables.nofoMetadataTable.tableName,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       },
       timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
     });
 
     // Grant permission to start Step Functions execution
     lambdaFunctions.draftGenerationStateMachine.grantStartExecution(draftGeneratorAPIFunction);
-    
+
     // Grant DynamoDB write permissions for creating job status
     tables.draftGenerationJobsTable.grantWriteData(draftGeneratorAPIFunction);
+
+    // Read access to NOFOMetadataTable for the per-NOFO state gate.
+    tables.nofoMetadataTable.grantReadData(draftGeneratorAPIFunction);
     
     const draftGeneratorAPIIntegration = new HttpLambdaIntegration(
       "DraftGeneratorAPIIntegration",

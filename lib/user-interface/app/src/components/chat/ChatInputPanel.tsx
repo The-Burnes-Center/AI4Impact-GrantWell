@@ -25,6 +25,7 @@ import { assembleHistory } from "./utils";
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
 import { useNotifications } from "../notifications/NotificationManager";
+import { useAccessDenied } from "../access-denied/AccessDeniedManager";
 import { Mic, MicOff, Send, Loader, AlertCircle } from "lucide-react";
 
 // Styles for the components
@@ -147,6 +148,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   const [micPermissionDenied, setMicPermissionDenied] = useState(false);
   const [micListeningTimeout, setMicListeningTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
   const { notifications, addNotification } = useNotifications();
+  const { showAccessDenied } = useAccessDenied();
   
   // Ref for chat input to enable auto-focus
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -419,6 +421,22 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener("message", async function incoming(data) {
+        if (typeof data.data === "string" && data.data.startsWith("<!ACCESS_DENIED!>")) {
+          try {
+            const json = JSON.parse(data.data.slice("<!ACCESS_DENIED!>".length));
+            showAccessDenied({
+              message: json.message,
+              userState: json.userState,
+              nofoState: json.nofoState,
+              cta: json.cta,
+            });
+          } catch (e) {
+            addNotification("error", "Access denied for this grant.");
+          }
+          props.setRunning(false);
+          ws.close();
+          return;
+        }
         /**This is a custom tag from the API that denotes that an error occured
          * and the next chunk will be an error message. */
         if (data.data.includes("<!ERROR!>:")) {

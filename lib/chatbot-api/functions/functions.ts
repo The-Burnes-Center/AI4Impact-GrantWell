@@ -191,18 +191,14 @@ export class LambdaFunctionStack extends cdk.Stack {
           SONNET_MODEL_ID,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
-          // Feature flag: gate the per-state KB filter so we can ship the
-          // code path inert and flip to "true" once existing NOFOs have
-          // sidecars and we've smoke-tested retrieval. Default off for safety.
+          // Flip to "true" once existing NOFOs are sidecar-tagged.
           NOFO_STATE_FILTER_ENABLED: "false",
         },
         timeout: cdk.Duration.seconds(300),
       }
     );
 
-    // Allow the chat Lambda to resolve the caller's custom:state from Cognito.
-    // WebSocket message events don't carry JWT claims (claims are at $connect
-    // time only), so the chat handler reads state per-message via AdminGetUser.
+    // WebSocket messages lack JWT claims, so resolve state via AdminGetUser per message.
     websocketAPIFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -210,6 +206,12 @@ export class LambdaFunctionStack extends cdk.Stack {
         resources: [props.userPool.userPoolArn],
       })
     );
+
+    websocketAPIFunction.addEnvironment(
+      "NOFO_METADATA_TABLE_NAME",
+      props.nofoMetadataTable.tableName
+    );
+    props.nofoMetadataTable.grantReadData(websocketAPIFunction);
 
     websocketAPIFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -824,6 +826,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -839,6 +843,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+    props.nofoMetadataTable.grantReadData(RequirementsForNOFOs);
     this.getNOFOSummary = RequirementsForNOFOs;
 
     const NOFOQuestionsForNOFOs = new lambda.Function(
@@ -915,6 +920,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -965,6 +971,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -1052,6 +1059,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -1068,11 +1076,11 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    // Grant DynamoDB delete permissions
     nofoDeleteHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: [
+          "dynamodb:GetItem",
           "dynamodb:DeleteItem",
         ],
         resources: [

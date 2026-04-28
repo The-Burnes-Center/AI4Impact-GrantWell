@@ -42,6 +42,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
   const [newPassword, setNewPassword] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [signupState, setSignupState] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -267,6 +268,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
         password,
         attributes: {
           email: normalizedEmail,
+          ...(signupState ? { "custom:state": signupState } : {}),
         },
       });
       setVerificationCode("");
@@ -387,12 +389,14 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
             password={password}
             confirmPassword={confirmPassword}
             showPassword={showPassword}
+            stateCode={signupState}
             loading={loading}
             passwordRequirements={passwordRequirements}
             onEmailChange={setEmail}
             onPasswordChange={setPassword}
             onConfirmPasswordChange={setConfirmPassword}
             onShowPasswordChange={setShowPassword}
+            onStateChange={setSignupState}
             onSubmit={handleSignUp}
             onSwitchToSignIn={() => switchToSignIn()}
           />
