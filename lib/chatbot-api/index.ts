@@ -75,6 +75,7 @@ export class ChatBotApi extends Construct {
       userDocumentsBucket: buckets.userDocumentsBucket,
       grantsGovApiKey: props.grantsGovApiKey,
       openSearchCollection: openSearch.openSearchCollection,
+      userPool: props.authentication.userPool,
     });
 
     const wsAuthorizer = new WebSocketLambdaAuthorizer(

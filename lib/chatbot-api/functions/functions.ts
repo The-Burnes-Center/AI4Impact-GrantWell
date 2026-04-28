@@ -43,6 +43,7 @@ interface LambdaFunctionStackProps {
   readonly userDocumentsDataSource?: bedrock.CfnDataSource;
   readonly grantsGovApiKey: string;
   readonly openSearchCollection: opensearchserverless.CfnCollection;
+  readonly userPool: cdk.aws_cognito.UserPool;
 }
 
 export class LambdaFunctionStack extends cdk.Stack {
@@ -188,9 +189,26 @@ export class LambdaFunctionStack extends cdk.Stack {
           SESSION_HANDLER: this.sessionFunction.functionName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SONNET_MODEL_ID,
+          USER_POOL_ID: props.userPool.userPoolId,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          // Feature flag: gate the per-state KB filter so we can ship the
+          // code path inert and flip to "true" once existing NOFOs have
+          // sidecars and we've smoke-tested retrieval. Default off for safety.
+          NOFO_STATE_FILTER_ENABLED: "false",
         },
         timeout: cdk.Duration.seconds(300),
       }
+    );
+
+    // Allow the chat Lambda to resolve the caller's custom:state from Cognito.
+    // WebSocket message events don't carry JWT claims (claims are at $connect
+    // time only), so the chat handler reads state per-message via AdminGetUser.
+    websocketAPIFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["cognito-idp:AdminGetUser"],
+        resources: [props.userPool.userPoolArn],
+      })
     );
 
     websocketAPIFunction.addToRolePolicy(

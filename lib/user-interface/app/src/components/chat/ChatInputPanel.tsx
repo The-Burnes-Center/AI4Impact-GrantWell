@@ -314,12 +314,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     ChatScrollState.userHasScrolled = false;
 
     let username: string | undefined;
-    let userState = "";
     await Auth.currentAuthenticatedUser().then(
       (value: any) => {
         username = value.username;
-        const claim = value?.signInUserSession?.idToken?.payload?.["custom:state"];
-        userState = typeof claim === "string" ? claim.trim() : "";
       }
     );
     if (!username) return;
@@ -413,7 +410,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
             ),
             projectId: "apck1608",
             user_id: username,
-            state: userState,
             session_id: props.session.id,
             documentIdentifier: props.documentIdentifier,
           },
