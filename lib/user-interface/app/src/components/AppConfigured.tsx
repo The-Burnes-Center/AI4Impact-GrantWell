@@ -13,8 +13,8 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import AuthPage from "../pages/auth/AuthPage";
 import MaintenanceGate from "./MaintenanceGate";
-import FooterComponent from "./mds/MdsFooter";
-import MDSHeader from "./mds/MdsHeader";
+import AppHeader from "./AppHeader";
+import MarketingLandingPage from "../pages/marketing/MarketingLandingPage";
 
 async function getInitialAuthState() {
   try {
@@ -199,24 +199,41 @@ function AppLayoutContent({
   configured: boolean;
   onAuthenticated: () => void;
 }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <MDSHeader showSignOut={authenticated === true} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {authenticated ? (
+  const [showAuth, setShowAuth] = useState(false);
+
+  if (authenticated) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+        <AppHeader />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <MaintenanceGate>
             <App />
           </MaintenanceGate>
-        ) : configured ? (
-          <AuthPage onAuthenticated={onAuthenticated} />
-        ) : (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Spinner animation="border" size="sm" />
-            <span>Loading</span>
-          </div>
-        )}
+        </div>
       </div>
-      <FooterComponent />
-    </div>
-  );
+    );
+  }
+
+  if (!configured) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+        }}
+      >
+        <Spinner animation="border" size="sm" />
+        <span>Loading</span>
+      </div>
+    );
+  }
+
+  if (showAuth) {
+    return <AuthPage onAuthenticated={onAuthenticated} />;
+  }
+
+  return <MarketingLandingPage onGetStarted={() => setShowAuth(true)} />;
 }
