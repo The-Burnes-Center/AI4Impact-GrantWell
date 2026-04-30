@@ -409,31 +409,6 @@ export default function HomePage() {
         </ContentBox>
       </div>
 
-      {/* Affiliations Footer */}
-      <footer>
-        <div className="affiliations">
-          <div className="affiliations__inner">
-            <h2 className="affiliations__heading">Our Affiliations</h2>
-            <a href="https://ai4impact.ai/" target="_blank" rel="noopener noreferrer" className="affiliations__tagline" aria-label="Made with love by AI for Impact (opens in new tab)">Made with ❤️ by<br />AI <em>for</em> Impact</a>
-            <div className="affiliations__logos">
-              <a
-                href="https://burnes.northeastern.edu/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="affiliations__link"
-                aria-label="Visit Burnes Center for Social Change at Northeastern University"
-              >
-                <img
-                  src="/images/burnesLogo.png"
-                  alt="Burnes Center for Social Change Logo"
-                  className="affiliations__logo"
-                />
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
-
       {/* Fixed Feedback Tab */}
       <a
         href="#feedback-form"

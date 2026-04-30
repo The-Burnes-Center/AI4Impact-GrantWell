@@ -12,9 +12,14 @@ import { AppContext } from "../common/app-context";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import MaintenanceGate from "./MaintenanceGate";
-import AppHeader from "./AppHeader";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
+import {
+  AppNavbar,
+  LandingFooter,
+  OmniHeader,
+} from "../pages/landing/chrome";
+import "../styles/marketing-landing.css";
 
 async function getInitialAuthState() {
   try {
@@ -201,13 +206,16 @@ function AppLayoutContent({
 }) {
   if (authenticated) {
     return (
-      <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-        <AppHeader />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <div className="marketing marketing__app-shell">
+        <OmniHeader />
+        <AppNavbar />
+        <div className="marketing__app-main">
           <MaintenanceGate>
             <App />
           </MaintenanceGate>
         </div>
+        <LandingFooter />
+        <OmniHeader position="bottom" />
       </div>
     );
   }

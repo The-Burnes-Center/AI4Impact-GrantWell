@@ -18,8 +18,8 @@ jobs:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
       ENVIRONMENT: grantwell-staging
       STACK_NAME: grantwell-staging
-      CLOUDFRONT_CERTIFICATE_ARN: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_STAGING }}
-      CLOUDFRONT_CUSTOM_DOMAIN: ${{ secrets.CLOUDFRONT_CUSTOM_DOMAIN_STAGING }}
+      # CLOUDFRONT_CERTIFICATE_ARN: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_STAGING }}
+      # CLOUDFRONT_CUSTOM_DOMAIN: ${{ secrets.CLOUDFRONT_CUSTOM_DOMAIN_STAGING }}
 
     permissions:
       id-token: write

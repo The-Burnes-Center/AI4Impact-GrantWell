@@ -10,6 +10,22 @@
 
 :root {
   /* ==============================
+   * GrantWell Brand Palette (marketing)
+   *
+   * These are the canonical brand colors used by the landing page chrome.
+   * Available globally so any page can adopt them without re-importing.
+   * ============================== */
+
+  --mk-blue: #376BD1;
+  --mk-green: #23776C;
+  --mk-green-dark: #195C53;
+  --mk-green-deepest: #244140;
+  --mk-green-light: #DFECE0;
+  --mk-off-white: #F8F6F1;
+  --mk-black: #282828;
+  --mk-white: #ffffff;
+
+  /* ==============================
    * Brand Colors
    * ============================== */
 
