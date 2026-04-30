@@ -2,17 +2,19 @@ import React from "react";
 
 interface ContentBoxProps {
   children: React.ReactNode;
-  backgroundColor?: string;
+  variant?: "card" | "band";
 }
 
 const ContentBox = React.memo(function ContentBox({
   children,
-  backgroundColor = "#f1f6f9",
+  variant = "card",
 }: ContentBoxProps) {
+  const className =
+    variant === "band" ? "content-box content-box--band" : "content-box";
   return (
-  <div className="content-box" style={{ backgroundColor }}>
-    <div className="content-box__inner">{children}</div>
-  </div>
+    <div className={className}>
+      <div className="content-box__inner">{children}</div>
+    </div>
   );
 });
 

@@ -1,17 +1,17 @@
 {
     "Auth": {
         "region": "us-east-1",
-        "userPoolId": "us-east-1_5tAC8J6Es",
-        "userPoolWebClientId": "6fek08iq3lkn8ptqnrhul7raq8",
+        "userPoolId": "us-east-1_yoHbWx321",
+        "userPoolWebClientId": "7ge8v8ul24iqj1bntep687i0ng",
         "oauth": {
-            "domain": "gw-auth-staging.auth.us-east-1.amazoncognito.com",
+            "domain": "gw-auth-grantwell-staging.auth.us-east-1.amazoncognito.com",
             "scope": ["aws.cognito.signin.user.admin", "email", "openid", "profile"],
-            "redirectSignIn": "http://localhost:3000/",
-            "redirectSignOut": "http://localhost:3000/",
+            "redirectSignIn": "http://localhost:3000",
+            "redirectSignOut": "http://localhost:3000",
             "responseType": "code"
         }
     },
-    "httpEndpoint": "https://czcmoef2o5.execute-api.us-east-1.amazonaws.com/",
-    "wsEndpoint": "wss://2q26zk8hac.execute-api.us-east-1.amazonaws.com/prod",
+    "httpEndpoint": "https://1keh8cekfg.execute-api.us-east-1.amazonaws.com/",
+    "wsEndpoint": "wss://p3pis52e2b.execute-api.us-east-1.amazonaws.com/prod",
     "federatedSignInProvider": ""
 }

@@ -449,7 +449,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       >
         <div className="modal-form" style={{ maxHeight: "70vh", overflowY: "auto" }}>
           {summaryLoading ? (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--mds-color-text-secondary)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--gw-color-text-secondary)" }}>
               <LuLoader size={20} className="spin-animation" aria-hidden="true" />
               <span role="status">Loading summary...</span>
             </div>

@@ -84,31 +84,43 @@
 .marketing__nav-link {
   display: inline-flex;
   align-items: center;
-  padding: 10px 18px;
+  gap: 10px;
+  padding: 10px 22px;
   border-radius: 50px;
+  background-color: transparent;
+  color: var(--mk-green);
+  border: 1px solid var(--mk-green);
   font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
   font-size: 14px;
+  line-height: 22px;
   font-weight: 600;
   letter-spacing: 1.4px;
   text-transform: uppercase;
-  color: var(--mk-green-deepest);
   text-decoration: none;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
 .marketing__nav-link:hover {
-  background-color: rgba(35, 119, 108, 0.08);
-  color: var(--mk-green-dark);
+  background-color: var(--mk-green);
+  color: #f9fbff;
+}
+
+.marketing__nav-link:active {
+  transform: translateY(1px);
 }
 
 .marketing__nav-link--active {
-  background-color: rgba(35, 119, 108, 0.08);
-  color: var(--mk-green-deepest);
+  background-color: var(--mk-green);
+  color: #f9fbff;
+  border-color: var(--mk-green);
 }
 
 .marketing__nav-link--active:hover {
-  background-color: rgba(35, 119, 108, 0.14);
-  color: var(--mk-green-dark);
+  background-color: var(--mk-green-dark);
+  border-color: var(--mk-green-dark);
+  color: #f9fbff;
 }
 
 .marketing__nav--app {
@@ -131,6 +143,9 @@
   display: block;
   height: 36px;
   width: auto;
+  aspect-ratio: 500 / 99;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
 .marketing__nav--app .marketing__nav-links {
@@ -584,12 +599,12 @@
   box-shadow: 0 0 0 3px rgba(35, 119, 108, 0.25);
 }
 
-.marketing__signin a,
+.marketing__signin a:not(.marketing__nav-link),
 .marketing__signin .btn-link {
   color: var(--mk-green-dark);
 }
 
-.marketing__signin a:hover,
+.marketing__signin a:not(.marketing__nav-link):hover,
 .marketing__signin .btn-link:hover {
   color: var(--mk-green-deepest);
 }
@@ -704,7 +719,7 @@
   .marketing__navbar { height: 60px; }
   .marketing__nav--app { height: auto; padding: 12px 16px; flex-wrap: wrap; gap: 12px; }
   .marketing__nav--app .marketing__nav-links { flex-basis: 100%; order: 3; justify-content: flex-start; }
-  .marketing__nav-wordmark { height: 28px; }
+  .marketing__nav-wordmark { height: 28px; width: auto; }
   .marketing__nav-signout { padding: 8px 14px; font-size: 12px; letter-spacing: 1.2px; }
   .marketing__hero-row { padding: 0 24px 40px; }
   .marketing__hero-spacer { display: none; }

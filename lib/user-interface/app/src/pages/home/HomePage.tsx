@@ -241,9 +241,11 @@ export default function HomePage() {
       <div className="landing-page">
         {/* Header */}
         <div className="landing-header">
-          <div className="landing-header__logo-row">
-            <h1 className="landing-header__title">GrantWell</h1>
-          </div>
+          <img
+            className="landing-header__wordmark"
+            src="/images/marketing/grantwell-wordmark-dark.svg"
+            alt="GrantWell"
+          />
           <p className="landing-header__subtitle">
             Free AI powered tool designed for finding and writing grants
           </p>
@@ -343,7 +345,7 @@ export default function HomePage() {
         )}
 
         {/* Grants Table */}
-        <ContentBox backgroundColor="#ffffff">
+        <ContentBox>
           <section aria-labelledby="grants-table-heading" className="grants-table-section">
             <h2 id="grants-table-heading" className="visually-hidden">
               Grants Table with Filters
@@ -366,7 +368,7 @@ export default function HomePage() {
 
         {/* Admin Dashboard */}
         {isAdmin && (
-          <ContentBox backgroundColor="#f0f8ff">
+          <ContentBox>
             <div className="admin-section">
               <div className="admin-section__content">
                 <h2 className="admin-section__heading">Admin Dashboard</h2>
@@ -386,12 +388,12 @@ export default function HomePage() {
         )}
 
         {/* About */}
-        <ContentBox backgroundColor="#ffffff">
+        <ContentBox variant="band">
           <AboutPanel />
         </ContentBox>
 
         {/* Recently Viewed */}
-        <ContentBox backgroundColor="#F6FCFF">
+        <ContentBox>
           <HistoryPanel
             recentlyViewedNOFOs={recentlyViewedNOFOs}
             onSelect={handleNOFOSelect}
@@ -404,7 +406,7 @@ export default function HomePage() {
         </ContentBox>
 
         {/* Feedback */}
-        <ContentBox backgroundColor="#ffffff">
+        <ContentBox>
           <FeedbackForm />
         </ContentBox>
       </div>

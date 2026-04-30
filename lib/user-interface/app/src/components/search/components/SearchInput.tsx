@@ -52,7 +52,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         </label>
         <div style={inputContainerStyle}>
           <div style={searchIconStyle}>
-            <SearchIcon color="#14558F" />
+            <SearchIcon color="#23776C" />
           </div>
           <input
             id="grant-search-input"
@@ -122,7 +122,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                 aria-label="Searching"
               />
               {isSearching && (
-                <span style={{ fontSize: "12px", color: "#14558F", whiteSpace: "nowrap" }}>
+                <span style={{ fontSize: "12px", color: "#23776C", whiteSpace: "nowrap" }}>
                   Searching...
                 </span>
               )}

@@ -193,7 +193,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   if (loading) {
     return (
       <div
-        style={{ padding: "20px", textAlign: "center", color: "var(--mds-color-text-secondary)" }}
+        style={{ padding: "20px", textAlign: "center", color: "var(--gw-color-text-secondary)" }}
         aria-busy="true"
       >
         Loading review details...
@@ -203,7 +203,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
   if (!detail) {
     return (
-      <div style={{ padding: "20px", textAlign: "center", color: "var(--mds-color-danger)" }}>
+      <div style={{ padding: "20px", textAlign: "center", color: "var(--gw-color-danger)" }}>
         Failed to load review details.
       </div>
     );
@@ -238,7 +238,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           className="review-dlq-alert"
           role="alert"
           style={{
-            borderLeft: `4px solid ${detail.adminGuidance.severity === "critical" ? "var(--mds-color-danger)" : "var(--mds-color-warning)"}`,
+            borderLeft: `4px solid ${detail.adminGuidance.severity === "critical" ? "var(--gw-color-danger)" : "var(--gw-color-warning)"}`,
           }}
         >
           <strong>{detail.adminGuidance.title}</strong>
@@ -252,7 +252,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             </ol>
           </div>
           {detail.adminGuidance.missingCategories.length > 0 && (
-            <p style={{ margin: "8px 0 0", fontSize: "12px", color: "var(--mds-color-text-secondary)" }}>
+            <p style={{ margin: "8px 0 0", fontSize: "12px", color: "var(--gw-color-text-secondary)" }}>
               Missing categories: {detail.adminGuidance.missingCategories.join(", ")}
             </p>
           )}
@@ -260,7 +260,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       )}
 
       {review.status === "needs_reupload" && (
-        <div className="review-dlq-alert" role="status" style={{ borderLeft: "4px solid var(--mds-color-warning)" }}>
+        <div className="review-dlq-alert" role="status" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
           <strong>Awaiting Document Re-upload</strong>
           <p style={{ margin: "8px 0 0" }}>
             This NOFO has been marked as needing a new document upload. Upload a corrected document to trigger reprocessing.
@@ -380,21 +380,21 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             <div
               style={{
                 padding: "12px",
-                backgroundColor: "var(--mds-color-background)",
+                backgroundColor: "var(--gw-color-background)",
                 borderRadius: "6px",
                 fontSize: "13px",
-                color: "var(--mds-color-text)",
+                color: "var(--gw-color-text)",
               }}
             >
               {adminNotes}
             </div>
           ) : (
-            <p style={{ fontSize: "13px", color: "var(--mds-color-text-secondary)", margin: 0 }}>
+            <p style={{ fontSize: "13px", color: "var(--gw-color-text-secondary)", margin: 0 }}>
               No admin notes recorded.
             </p>
           )}
           {detail.reviewed_at && (
-            <p style={{ fontSize: "12px", color: "var(--mds-color-text-secondary)", marginTop: "8px" }}>
+            <p style={{ fontSize: "12px", color: "var(--gw-color-text-secondary)", marginTop: "8px" }}>
               {review.status === "approved" ? "Approved" : "Rejected"} on{" "}
               {new Date(detail.reviewed_at).toLocaleString("en-US", { timeZone: "America/New_York" })}
             </p>
@@ -457,10 +457,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                   <div
                     style={{
                       padding: "12px",
-                      backgroundColor: "var(--mds-color-background)",
+                      backgroundColor: "var(--gw-color-background)",
                       borderRadius: "6px",
                       fontSize: "13px",
-                      color: "var(--mds-color-text)",
+                      color: "var(--gw-color-text)",
                     }}
                   >
                     {adminNotes}

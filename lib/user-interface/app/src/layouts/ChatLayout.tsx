@@ -123,7 +123,7 @@ const styles: Record<string, React.CSSProperties> = {
     textDecoration: "none",
   },
   navButtonActive: {
-    background: "#14558F",
+    background: "#23776C",
     color: "white",
   },
   navLinkText: {

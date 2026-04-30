@@ -86,7 +86,7 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: "100%",
     zIndex: 100,
     boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.1)",
-    borderTop: "3px solid #14558F",
+    borderTop: "3px solid #23776C",
     flexShrink: 0,
     display: "flex",
     justifyContent: "center",
@@ -96,7 +96,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: "absolute",
     bottom: "140px", // Increased from 100px to position it higher above the input container
     right: "20px",
-    backgroundColor: "#14558F",
+    backgroundColor: "#23776C",
     color: "white",
     border: "none",
     borderRadius: "50%",
@@ -321,12 +321,12 @@ export default function Chat(props: {
             ...styles.scrollToBottomButtonVisible,
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#104472";
+            e.currentTarget.style.backgroundColor = "#195C53";
             e.currentTarget.style.transform = "scale(1.05)";
             e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.25)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#14558F";
+            e.currentTarget.style.backgroundColor = "#23776C";
             e.currentTarget.style.transform = "scale(1)";
             e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
           }}
@@ -350,9 +350,9 @@ export default function Chat(props: {
             alignItems: "center",
             gap: "8px",
             padding: "10px 20px",
-            backgroundColor: "var(--mds-color-primary-light, #f2f8fd)",
-            borderTop: "1px solid var(--mds-color-border, #e2e8f0)",
-            color: "var(--mds-color-primary, #14558F)",
+            backgroundColor: "var(--gw-color-primary-light, #DFECE0)",
+            borderTop: "1px solid var(--gw-color-border, #e2e8f0)",
+            color: "var(--gw-color-primary, #23776C)",
             fontSize: "13px",
             fontWeight: 500,
             flexShrink: 0,

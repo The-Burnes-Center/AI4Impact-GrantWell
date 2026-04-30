@@ -52,21 +52,21 @@ body {
 
 .custom-markdown strong {
   font-weight: 600;
-  color: #14558F;
+  color: #23776C;
 }
 
 .custom-markdown a {
-  color: var(--mds-color-primary, #14558F);
+  color: var(--gw-color-primary, #23776C);
   text-decoration: underline;
   word-break: break-all;
 }
 
 .custom-markdown a:hover {
-  color: var(--mds-color-primary-hover, #104472);
+  color: var(--gw-color-primary-hover, #195C53);
 }
 
 .custom-markdown a:focus-visible {
-  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
   outline-offset: 2px;
 }
 
@@ -119,7 +119,7 @@ body {
 .loading-spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
-  border-top: 4px solid var(--mds-color-primary, #14558F);
+  border-top: 4px solid var(--gw-color-primary, #23776C);
   width: 50px;
   height: 50px;
   animation: spin 1s linear infinite;
@@ -140,7 +140,7 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--mds-color-primary, #14558F);
+  background-color: var(--gw-color-primary, #23776C);
 }
 
 .custom-markdown li {
@@ -200,7 +200,7 @@ body {
 .checklist-content__heading {
   font-family: 'Noto Sans', sans-serif;
   font-weight: 600;
-  color: #0a2e52;
+  color: #244140;
   letter-spacing: -0.01em;
   font-size: 32px;
   line-height: 1.4;
@@ -209,7 +209,7 @@ body {
 }
 
 .checklist-content__heading-accent {
-  color: var(--mds-color-primary, #14558F);
+  color: var(--gw-color-primary, #23776C);
 }
 
 .checklist-content__description {
@@ -237,7 +237,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background-color: var(--mds-color-primary, #14558F);
+  background-color: var(--gw-color-primary, #23776C);
   color: #ffffff;
   border: none;
   border-radius: 4px;
@@ -251,11 +251,11 @@ body {
 }
 
 .checklist-help-btn:hover {
-  background-color: var(--mds-color-primary-hover, #104472);
+  background-color: var(--gw-color-primary-hover, #195C53);
 }
 
 .checklist-help-btn:focus-visible {
-  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
   outline-offset: 2px;
 }
 
@@ -291,14 +291,14 @@ body {
 }
 
 .checklist-tab--active {
-  background-color: #f2f8fd;
+  background-color: #DFECE0;
   font-weight: 600;
-  color: #0a2e52;
-  border-bottom: 3px solid var(--mds-color-primary, #14558F);
+  color: #244140;
+  border-bottom: 3px solid var(--gw-color-primary, #23776C);
 }
 
 .checklist-tab:focus-visible {
-  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
   outline-offset: 2px;
 }
 
@@ -320,7 +320,7 @@ body {
   margin-left: 0;
   margin-right: auto;
   border-radius: 6px;
-  border: 1px solid var(--mds-color-primary, #14558F);
+  border: 1px solid var(--gw-color-primary, #23776C);
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -330,7 +330,7 @@ body {
   margin: 0 0 10px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #0a2e52;
+  color: #244140;
 }
 
 .checklist-info-box__text {
@@ -400,7 +400,7 @@ body {
 
 .checklist-loading__tip-text {
   font-size: 14px;
-  color: var(--mds-color-primary, #14558F);
+  color: var(--gw-color-primary, #23776C);
   margin: 0;
   line-height: 1.5;
 }
@@ -431,7 +431,7 @@ body {
 
 .checklist-error__btn {
   padding: 10px 24px;
-  background-color: var(--mds-color-primary, #14558F);
+  background-color: var(--gw-color-primary, #23776C);
   color: white;
   border: none;
   border-radius: 6px;
@@ -440,7 +440,7 @@ body {
 }
 
 .checklist-error__btn:hover {
-  background-color: var(--mds-color-primary-hover, #104472);
+  background-color: var(--gw-color-primary-hover, #195C53);
 }
 
 /* Help modal */
@@ -470,7 +470,7 @@ body {
 }
 
 .help-modal__header {
-  background-color: var(--mds-color-primary, #14558F);
+  background-color: var(--gw-color-primary, #23776C);
   padding: 20px 24px;
   display: flex;
   justify-content: space-between;
@@ -502,7 +502,7 @@ body {
 
 .help-modal__close:focus-visible {
   background: #ffffff;
-  color: var(--mds-color-primary, #14558F);
+  color: var(--gw-color-primary, #23776C);
   outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
@@ -521,7 +521,7 @@ body {
 }
 
 .help-modal__highlight {
-  border-left: 4px solid var(--mds-color-primary, #14558F);
+  border-left: 4px solid var(--gw-color-primary, #23776C);
   background-color: #F0F7FF;
   padding: 16px 20px;
   margin-bottom: 24px;
@@ -531,7 +531,7 @@ body {
 .help-modal__section-title {
   margin: 0 0 6px 0;
   font-size: 15px;
-  color: var(--mds-color-primary, #14558F);
+  color: var(--gw-color-primary, #23776C);
   font-weight: 600;
 }
 
@@ -554,7 +554,7 @@ body {
   cursor: pointer;
   width: 18px;
   height: 18px;
-  accent-color: var(--mds-color-primary, #14558F);
+  accent-color: var(--gw-color-primary, #23776C);
 }
 
 .help-modal__checkbox-label {
@@ -566,7 +566,7 @@ body {
 
 .help-modal__confirm-btn {
   padding: 14px 24px;
-  background-color: var(--mds-color-primary, #14558F);
+  background-color: var(--gw-color-primary, #23776C);
   color: #ffffff;
   border: none;
   border-radius: 6px;
@@ -578,10 +578,10 @@ body {
 }
 
 .help-modal__confirm-btn:hover {
-  background-color: var(--mds-color-primary-hover, #104472);
+  background-color: var(--gw-color-primary-hover, #195C53);
 }
 
 .help-modal__confirm-btn:focus-visible {
-  outline: 2px solid var(--mds-color-focus-light, #0088FF);
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
   outline-offset: 2px;
 }

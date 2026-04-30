@@ -11,7 +11,7 @@ export default function MaintenancePage() {
             height="64"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#14558F"
+            stroke="#23776C"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -44,10 +44,10 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               fontSize: "12px",
               padding: "2px 8px",
               cursor: "pointer",
-              border: "1px solid var(--mds-color-border)",
+              border: "1px solid var(--gw-color-border)",
               borderRadius: "4px",
-              background: "var(--mds-color-surface)",
-              color: "var(--mds-color-text-primary)",
+              background: "var(--gw-color-surface)",
+              color: "var(--gw-color-text-primary)",
             }}
           >
             + Add Item
@@ -92,7 +92,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
           </div>
         ))}
         {items.length === 0 && (
-          <div style={{ fontSize: "12px", color: "var(--mds-color-text-secondary)", padding: "8px 0 0 28px" }}>
+          <div style={{ fontSize: "12px", color: "var(--gw-color-text-secondary)", padding: "8px 0 0 28px" }}>
             No items extracted. Click &quot;+ Add Item&quot; to add manually.
           </div>
         )}
@@ -106,7 +106,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         style={{
           margin: "0 0 12px 0",
           fontSize: "14px",
-          color: "var(--mds-color-heading)",
+          color: "var(--gw-color-heading)",
         }}
       >
         Extracted Summary (Editable)

@@ -7,12 +7,6 @@ const RESOURCES = [
     description:
       "Find grants you are eligible for with Grants.gov Federal Grants Finder.",
   },
-  {
-    title: "Register for Federal Funds Partnership Meetings",
-    href: "https://us02web.zoom.us/meeting/register/tZUucuyhrzguHNJkkh-XlmZBlQQKxxG_Acjl",
-    description:
-      "Stay updated on current funding opportunities by joining our monthly informational sessions.",
-  },
 ];
 
 const ResourcesPanel = React.memo(function ResourcesPanel() {

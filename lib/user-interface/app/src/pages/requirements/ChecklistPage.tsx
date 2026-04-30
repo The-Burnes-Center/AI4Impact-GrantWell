@@ -254,7 +254,7 @@ const Checklists: React.FC = () => {
 
                       {tabId === "eligibility" && (
                         <div className="checklist-info-box">
-                          <LuInfo size={22} color="#14558F" />
+                          <LuInfo size={22} color="#23776C" />
                           <div>
                             <p className="checklist-info-box__title">Not sure if your organization qualifies?</p>
                             <p className="checklist-info-box__text">

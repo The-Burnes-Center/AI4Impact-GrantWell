@@ -93,7 +93,7 @@ export const resultItemStyle: React.CSSProperties = {
 export const selectedItemStyle: React.CSSProperties = {
   ...resultItemStyle,
   backgroundColor: "#f0f7ff",
-  borderLeft: "3px solid #14558F",
+  borderLeft: "3px solid #23776C",
 };
 
 export const pinnedItemStyle: React.CSSProperties = {
@@ -105,7 +105,7 @@ export const pinnedItemStyle: React.CSSProperties = {
 export const selectedPinnedItemStyle: React.CSSProperties = {
   ...pinnedItemStyle,
   backgroundColor: "#e0f7f7",
-  borderLeft: "3px solid #14558F",
+  borderLeft: "3px solid #23776C",
 };
 
 export const sectionHeaderStyle: React.CSSProperties = {
@@ -171,7 +171,7 @@ export const grantCardHeaderStyle: React.CSSProperties = {
 export const grantCardTitleStyle: React.CSSProperties = {
   fontSize: "16px",
   fontWeight: "bold",
-  color: "#14558F",
+  color: "#23776C",
 };
 
 export const aiSuggestionCardStyle: React.CSSProperties = {
@@ -185,7 +185,7 @@ export const aiSuggestionCardStyle: React.CSSProperties = {
 export const selectedAiSuggestionCardStyle: React.CSSProperties = {
   ...aiSuggestionCardStyle,
   backgroundColor: "#f0f7ff",
-  borderLeft: "3px solid #14558F",
+  borderLeft: "3px solid #23776C",
 };
 
 export const viewAllButtonStyle: React.CSSProperties = {
@@ -193,7 +193,7 @@ export const viewAllButtonStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   padding: "10px 20px",
-  backgroundColor: "#14558F",
+  backgroundColor: "#23776C",
   color: "white",
   borderRadius: "20px",
   fontSize: "14px",

@@ -485,7 +485,7 @@ export default function Sessions(props: SessionsProps) {
                       );
                     }}
                     style={{
-                      color: "#14558F",
+                      color: "#23776C",
                       background: "none",
                       border: "none",
                       padding: 0,

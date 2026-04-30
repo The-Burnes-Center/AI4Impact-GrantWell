@@ -61,7 +61,7 @@ function ChatMessage(props: ChatMessageProps) {
     fontWeight: "600",
     flexShrink: 0,
     backgroundColor:
-      props.message?.type === ChatBotMessageType.Human ? "#0A2B48" : "#14558F",
+      props.message?.type === ChatBotMessageType.Human ? "#244140" : "#23776C",
     color: "white",
   };
 
@@ -108,7 +108,7 @@ function ChatMessage(props: ChatMessageProps) {
         ? "18px 18px 4px 18px"
         : "18px 18px 18px 4px",
     backgroundColor:
-      props.message?.type === ChatBotMessageType.Human ? "#14558F" : "#e8eef1",
+      props.message?.type === ChatBotMessageType.Human ? "#23776C" : "#e8eef1",
     color:
       props.message?.type === ChatBotMessageType.Human ? "white" : "#2d3748",
     wordWrap: "break-word" as const,
@@ -145,7 +145,7 @@ function ChatMessage(props: ChatMessageProps) {
 
   const dropdownButtonStyle = {
     padding: "8px 12px",
-    backgroundColor: "#14558F",
+    backgroundColor: "#23776C",
     color: "white",
     border: "none",
     borderRadius: "4px",
@@ -210,7 +210,7 @@ function ChatMessage(props: ChatMessageProps) {
     height: "20px",
     border: "3px solid rgba(0, 0, 0, 0.1)",
     borderRadius: "50%",
-    borderTopColor: "#14558F",
+    borderTopColor: "#23776C",
     animation: "spin 1s linear infinite",
   };
 
@@ -553,7 +553,7 @@ function ChatMessage(props: ChatMessageProps) {
                     onMouseEnter={(e) => {
                       if (!copied) {
                         e.currentTarget.style.backgroundColor = "#f3f4f6";
-                        e.currentTarget.style.color = "#14558F";
+                        e.currentTarget.style.color = "#23776C";
                       }
                     }}
                     onMouseLeave={(e) => {
@@ -565,9 +565,9 @@ function ChatMessage(props: ChatMessageProps) {
                     onFocus={(e) => {
                       if (!copied) {
                         e.currentTarget.style.backgroundColor = "#f3f4f6";
-                        e.currentTarget.style.color = "#14558F";
+                        e.currentTarget.style.color = "#23776C";
                       }
-                      e.currentTarget.style.outline = "2px solid #0088FF";
+                      e.currentTarget.style.outline = "2px solid #23776C";
                       e.currentTarget.style.outlineOffset = "2px";
                     }}
                     onBlur={(e) => {

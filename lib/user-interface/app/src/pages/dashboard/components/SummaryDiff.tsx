@@ -91,7 +91,7 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
         style={{
           margin: "0 0 12px 0",
           fontSize: "14px",
-          color: "var(--mds-color-heading)",
+          color: "var(--gw-color-heading)",
         }}
       >
         Summary Changes

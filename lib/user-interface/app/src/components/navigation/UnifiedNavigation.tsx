@@ -158,7 +158,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             <button
               onClick={handleNofoRequiredModalClose}
               style={{
-                backgroundColor: "#14558F",
+                backgroundColor: "#23776C",
                 color: "white",
                 border: "none",
                 borderRadius: "6px",
@@ -169,10 +169,10 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 transition: "background-color 0.2s",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#104472";
+                e.currentTarget.style.backgroundColor = "#195C53";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#14558F";
+                e.currentTarget.style.backgroundColor = "#23776C";
               }}
             >
               Go to Homepage

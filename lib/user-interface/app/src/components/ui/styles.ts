@@ -3,19 +3,19 @@
  *
  * Centralized style constants for consistent theming across the application.
  * These values mirror the CSS custom properties in styles/tokens.css.
- * Use CSS variables (var(--mds-color-*)) in stylesheets; use these JS
+ * Use CSS variables (var(--gw-color-*)) in stylesheets; use these JS
  * exports only when inline styles are unavoidable (e.g., dynamic values).
  */
 
 // Brand colors
 export const colors = {
-  // Primary brand colors (Bay Blue)
-  primary: "#14558F",
-  primaryHover: "#104472",
-  primaryActive: "#0A2B48",
-  primaryLight: "#f2f8fd",
+  // Primary (GrantWell Green)
+  primary: "#23776C",
+  primaryHover: "#195C53",
+  primaryActive: "#244140",
+  primaryLight: "#DFECE0",
 
-  // Accent (Berkshires Green)
+  // Accent
   accent: "#388557",
   accentHover: "#32784E",
 
@@ -32,8 +32,8 @@ export const colors = {
   infoLight: "#d1ecf1",
 
   // Focus
-  focusLight: "#0088FF",
-  focusDark: "#B2DBFF",
+  focusLight: "#23776C",
+  focusDark: "#DFECE0",
 
   // Neutral colors
   white: "#ffffff",
@@ -44,7 +44,7 @@ export const colors = {
   text: "#333333",
   textSecondary: "#5a5a5a",
   textMuted: "#9ca3af",
-  heading: "#0a2e52",
+  heading: "#244140",
 
   // Disabled state
   disabledBg: "#F0F0F0",

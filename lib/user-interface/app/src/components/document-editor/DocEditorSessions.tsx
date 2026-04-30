@@ -430,7 +430,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                     }}
                     aria-label={`Open draft: ${item.title}`}
                     style={{
-                      color: "#14558F",
+                      color: "#23776C",
                       background: "none",
                       border: "none",
                       padding: 0,

@@ -45,7 +45,7 @@
  * ============================== */
 
 .focus-ring:focus-visible {
-  outline: 2px solid var(--mds-color-focus-light);
+  outline: 2px solid var(--gw-color-focus-light);
   outline-offset: 2px;
 }
 
@@ -62,11 +62,11 @@
   overflow: hidden;
   z-index: 9999;
   padding: 8px 16px;
-  background: var(--mds-color-primary);
-  color: var(--mds-color-white);
+  background: var(--gw-color-primary);
+  color: var(--gw-color-white);
   font-weight: 600;
   text-decoration: none;
-  border: 2px solid var(--mds-color-focus-light);
+  border: 2px solid var(--gw-color-focus-light);
 }
 
 .skip-to-main:focus {
@@ -85,8 +85,8 @@
 
 .container-fluid-padded {
   width: 100%;
-  padding-left: var(--mds-spacing-xl);
-  padding-right: var(--mds-spacing-xl);
+  padding-left: var(--gw-spacing-xl);
+  padding-right: var(--gw-spacing-xl);
 }
 
 .flex-center {
