@@ -108,7 +108,7 @@ export default function SignUpStep({
             className="form-input"
             aria-describedby="signup-state-help"
           >
-            <option value="">None / Other</option>
+            <option value="">Other</option>
             {SUPPORTED_STATES.map((s) => (
               <option key={s.code} value={s.code}>{s.name}</option>
             ))}

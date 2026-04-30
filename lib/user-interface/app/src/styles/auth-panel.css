@@ -1,23 +1,3 @@
-.auth-page-wrapper {
-  flex: 1;
-  background: linear-gradient(135deg, #14558f 0%, #0a3a5c 100%);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 48px 24px;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-.auth-page-container {
-  max-width: 1200px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  margin: 0 auto;
-}
-
 .auth-hero-row {
   display: flex;
   gap: 60px;
@@ -314,9 +294,9 @@
 
 .auth-login-card .form-input:focus,
 .auth-login-card .form-control.form-input:focus {
-  border-color: #14558f;
+  border-color: #23776C;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(20, 85, 143, 0.15);
+  box-shadow: 0 0 0 3px rgba(35, 119, 108, 0.15);
   background: #fff;
 }
 
@@ -368,14 +348,14 @@
   cursor: pointer;
   width: 20px;
   height: 20px;
-  accent-color: #14558f;
+  accent-color: #23776C;
   flex-shrink: 0;
 }
 
 .show-password-checkbox .form-check-input:focus-visible {
-  outline: 3px solid #14558f;
+  outline: 3px solid #23776C;
   outline-offset: 2px;
-  box-shadow: 0 0 0 3px rgba(20, 85, 143, 0.15);
+  box-shadow: 0 0 0 3px rgba(35, 119, 108, 0.15);
 }
 
 .show-password-checkbox .form-check-label {
@@ -394,7 +374,7 @@
   padding: 0;
   min-height: 24px;
   font-size: 14px;
-  color: #005ea2;
+  color: #195C53;
   text-decoration: none !important;
   border: 0;
   background: transparent;
@@ -422,7 +402,7 @@
 .create-account-link.btn-link:hover,
 .create-account-link.btn:active,
 .create-account-link.btn-link:active {
-  color: #0a4f86;
+  color: #244140;
   text-decoration: none !important;
   background: transparent !important;
   border-color: transparent !important;
@@ -438,7 +418,7 @@
 .create-account-link.btn:focus-visible,
 .create-account-link.btn-link:focus-visible,
 .login-submit-button:focus-visible {
-  outline: 3px solid #14558f;
+  outline: 3px solid #23776C;
   outline-offset: 2px;
   border-radius: 2px;
   box-shadow: none !important;
@@ -456,7 +436,7 @@
   padding: 16px 24px;
   font-size: 16px;
   font-weight: 600;
-  background: linear-gradient(135deg, #14558f 0%, #0d4a7a 100%);
+  background: linear-gradient(135deg, #23776C 0%, #195C53 100%);
   border: none;
   border-radius: 10px;
   color: #fff;
@@ -466,12 +446,12 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 4px 14px rgba(20, 85, 143, 0.4);
+  box-shadow: 0 4px 14px rgba(35, 119, 108, 0.4);
 }
 
 .login-submit-button:hover {
-  background: linear-gradient(135deg, #0d4a7a 0%, #0a3a5c 100%);
-  box-shadow: 0 6px 20px rgba(20, 85, 143, 0.5);
+  background: linear-gradient(135deg, #195C53 0%, #244140 100%);
+  box-shadow: 0 6px 20px rgba(35, 119, 108, 0.5);
   transform: translateY(-1px);
 }
 
@@ -510,7 +490,7 @@
   padding: 0;
   min-height: auto;
   font-size: 14px;
-  color: #005ea2;
+  color: #195C53;
   text-decoration: none !important;
   border: 0;
   background: transparent;
@@ -614,15 +594,6 @@
 }
 
 @media (max-width: 900px) {
-  .auth-page-wrapper {
-    padding: 24px 16px;
-    align-items: flex-start;
-  }
-
-  .auth-page-container {
-    gap: 32px;
-  }
-
   .auth-hero-row {
     flex-direction: column;
     gap: 24px;
@@ -701,10 +672,6 @@
 }
 
 @media (max-width: 480px) {
-  .auth-page-wrapper {
-    padding: 16px 12px;
-  }
-
   .auth-login-card {
     padding: 28px 20px;
     border-radius: 12px;

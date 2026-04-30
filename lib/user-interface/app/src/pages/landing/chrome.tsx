@@ -19,9 +19,16 @@ const ArrowUpRight = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export function OmniHeader() {
+export function OmniHeader({ position = "top" }: { position?: "top" | "bottom" }) {
   return (
-    <div className="marketing__omni">
+    <aside
+      className="marketing__omni"
+      aria-label={
+        position === "top"
+          ? "Partner organizations (top)"
+          : "Partner organizations (bottom)"
+      }
+    >
       <span className="marketing__omni-label">This is a tool by:</span>
       <a
         className="marketing__omni-link"
@@ -43,7 +50,7 @@ export function OmniHeader() {
       </a>
       <a
         className="marketing__omni-link"
-        href="https://aiforimpact.org"
+        href="https://ai4impact.ai/"
         target="_blank"
         rel="noreferrer"
       >
@@ -59,11 +66,11 @@ export function OmniHeader() {
         <ArrowUpRight className="marketing__omni-arrow" />
         <span>The Gov Lab</span>
       </a>
-    </div>
+    </aside>
   );
 }
 
-export function MarketingNavbar() {
+export function LandingNavbar() {
   return (
     <nav className="marketing__nav" aria-label="Primary">
       <div className="marketing__nav-links">
@@ -91,7 +98,7 @@ export function MarketingNavbar() {
   );
 }
 
-export function MarketingFooter() {
+export function LandingFooter() {
   return (
     <footer className="marketing__footer">
       <div className="marketing__footer-brand">
@@ -112,7 +119,7 @@ export function MarketingFooter() {
           </div>
           <a
             className="marketing__footer-ai4impact"
-            href="https://aiforimpact.org"
+            href="https://ai4impact.ai/"
             target="_blank"
             rel="noreferrer"
             aria-label="AI for Impact"

@@ -22,7 +22,7 @@ import {
   mapAuthError,
   normalizeEmail,
 } from "./auth-utils";
-import "../../styles/auth-page.css";
+import "../../styles/auth-panel.css";
 
 interface AuthPanelProps {
   onAuthenticated: () => void;
@@ -478,6 +478,11 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
   return (
     <div className="auth-login-card">
+      <img
+        className="auth-card-logo"
+        src="/images/marketing/grantwell-wordmark-dark.svg"
+        alt="GrantWell"
+      />
       {showTabs && (
         <div className="auth-tabs" role="tablist" aria-label="Authentication">
           <button
@@ -505,14 +510,14 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
         </div>
       )}
       <div className="auth-card-header">
-        <h2
+        <h1
           id="auth-card-title"
           className="auth-card-title"
           ref={titleRef}
           tabIndex={-1}
         >
           {cardCopy.title}
-        </h2>
+        </h1>
         <p className="auth-card-subtitle">{cardCopy.subtitle}</p>
       </div>
       <div className="auth-card-content">

@@ -102,13 +102,13 @@
 }
 
 .marketing__nav-link--active {
-  background-color: var(--mk-green);
-  color: #f9fbff;
+  background-color: rgba(35, 119, 108, 0.08);
+  color: var(--mk-green-deepest);
 }
 
 .marketing__nav-link--active:hover {
-  background-color: var(--mk-green-dark);
-  color: #f9fbff;
+  background-color: rgba(35, 119, 108, 0.14);
+  color: var(--mk-green-dark);
 }
 
 .marketing__hero {
@@ -143,7 +143,7 @@
   z-index: 2;
   flex: 1 0 0;
   min-width: 0;
-  max-width: 670px;
+  max-width: 760px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -159,10 +159,19 @@
   max-width: 670px;
 }
 
+.marketing__hero-title {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  align-self: stretch;
+}
+
 .marketing__hero-wordmark {
   display: block;
   width: 100%;
-  max-width: 500px;
+  max-width: 700px;
+  aspect-ratio: 500 / 99;
   height: auto;
 }
 
@@ -386,10 +395,19 @@
   border: none;
 }
 
+.marketing__signin .auth-card-logo {
+  display: block;
+  width: 320px;
+  max-width: 100%;
+  aspect-ratio: 500 / 99;
+  height: auto;
+  margin: 16px auto 36px;
+}
+
 .marketing__signin .auth-tabs {
   display: flex;
   gap: 0;
-  background-color: var(--mk-green-light);
+  background-color: rgba(35, 119, 108, 0.08);
   border-radius: 50px;
   padding: 4px;
   margin-bottom: 28px;
@@ -521,6 +539,7 @@
   display: block;
   width: 352px;
   max-width: 100%;
+  aspect-ratio: 352 / 70;
   height: auto;
 }
 

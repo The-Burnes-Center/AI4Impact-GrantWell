@@ -11,7 +11,7 @@ import "./styles/app.scss";
 
 const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
 const SessionPage = React.lazy(() => import("./pages/chat/sessions/SessionsPage"));
-const Welcome = React.lazy(() => import("./pages/landing-page/LandingPage"));
+const HomePage = React.lazy(() => import("./pages/home/HomePage"));
 const Checklists = React.lazy(() => import("./pages/requirements/ChecklistPage"));
 const DocumentEditor = React.lazy(() => import("./pages/document-editor/DocumentEditorPage"));
 const DocEditorSessionsPage = React.lazy(() => import("./pages/document-editor/DocEditorSessionsPage"));
@@ -102,7 +102,7 @@ function AppContent() {
               path="/"
               element={<Navigate to={`/home`} replace />}
             />
-            <Route path="/home" element={<Welcome />} />
+            <Route path="/home" element={<HomePage />} />
             <Route
               path="/requirements/:documentIdentifier"
               element={<Checklists />}

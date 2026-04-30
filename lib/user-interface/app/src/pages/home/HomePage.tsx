@@ -29,7 +29,7 @@ interface SelectableDocument {
   status?: "active" | "archived";
 }
 
-export default function Welcome() {
+export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<SelectableDocument | null>(null);
@@ -414,7 +414,7 @@ export default function Welcome() {
         <div className="affiliations">
           <div className="affiliations__inner">
             <h2 className="affiliations__heading">Our Affiliations</h2>
-            <a href="https://burnes.northeastern.edu/ai-for-impact-coop/" target="_blank" rel="noopener noreferrer" className="affiliations__tagline" aria-label="Made with love by AI for Impact (opens in new tab)">Made with ❤️ by<br />AI <em>for</em> Impact</a>
+            <a href="https://ai4impact.ai/" target="_blank" rel="noopener noreferrer" className="affiliations__tagline" aria-label="Made with love by AI for Impact (opens in new tab)">Made with ❤️ by<br />AI <em>for</em> Impact</a>
             <div className="affiliations__logos">
               <a
                 href="https://burnes.northeastern.edu/"

@@ -1,6 +1,7 @@
 export const SUPPORTED_STATES = [
   { code: "CA", name: "California" },
   { code: "CO", name: "Colorado" },
+  { code: "MA", name: "Massachusetts" },
   { code: "RI", name: "Rhode Island" },
 ] as const;
 

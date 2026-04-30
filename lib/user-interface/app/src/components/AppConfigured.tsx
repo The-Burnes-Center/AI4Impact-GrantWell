@@ -13,8 +13,8 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import MaintenanceGate from "./MaintenanceGate";
 import AppHeader from "./AppHeader";
-import MarketingLandingPage from "../pages/marketing/MarketingLandingPage";
-import LoginPage from "../pages/marketing/LoginPage";
+import LandingPage from "../pages/landing/LandingPage";
+import LoginPage from "../pages/landing/LoginPage";
 
 async function getInitialAuthState() {
   try {
@@ -231,7 +231,7 @@ function AppLayoutContent({
 
   return (
     <Routes>
-      <Route path="/" element={<MarketingLandingPage />} />
+      <Route path="/" element={<LandingPage />} />
       <Route
         path="/login"
         element={<LoginPage onAuthenticated={onAuthenticated} />}

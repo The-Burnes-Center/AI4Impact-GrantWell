@@ -1,10 +1,10 @@
 import "../../styles/marketing-landing.css";
 import AuthPanel from "../../components/auth/AuthPanel";
 import {
-  MarketingFooter,
-  MarketingNavbar,
+  LandingFooter,
+  LandingNavbar,
   OmniHeader,
-} from "./marketingChrome";
+} from "./chrome";
 
 interface LoginPageProps {
   onAuthenticated: () => void;
@@ -15,16 +15,16 @@ export default function LoginPage({ onAuthenticated }: LoginPageProps) {
     <div className="marketing">
       <OmniHeader />
 
-      <section className="marketing__signin" aria-labelledby="auth-card-title">
-        <MarketingNavbar />
+      <main className="marketing__signin" id="main-content">
+        <LandingNavbar />
         <div className="marketing__signin-inner">
           <AuthPanel onAuthenticated={onAuthenticated} />
         </div>
-      </section>
+      </main>
 
-      <MarketingFooter />
+      <LandingFooter />
 
-      <OmniHeader />
+      <OmniHeader position="bottom" />
     </div>
   );
 }

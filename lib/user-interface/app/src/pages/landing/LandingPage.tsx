@@ -6,10 +6,10 @@ import {
   FeatureWrite,
 } from "./featureIllustrations";
 import {
-  MarketingFooter,
-  MarketingNavbar,
+  LandingFooter,
+  LandingNavbar,
   OmniHeader,
-} from "./marketingChrome";
+} from "./chrome";
 
 const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => (
   <svg
@@ -28,7 +28,7 @@ const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => 
   </svg>
 );
 
-export default function MarketingLandingPage() {
+export default function LandingPage() {
   const navigate = useNavigate();
   const goToLogin = () => navigate("/login");
   const scrollToFeatures = () => {
@@ -41,17 +41,19 @@ export default function MarketingLandingPage() {
     <div className="marketing">
       <OmniHeader />
 
+      <main id="main-content">
       <section className="marketing__hero" aria-labelledby="hero-title">
         <div className="marketing__hero-bg" aria-hidden="true" />
-        <MarketingNavbar />
+        <LandingNavbar />
         <div className="marketing__hero-row">
           <div className="marketing__hero-content">
-            <img
-              className="marketing__hero-wordmark"
-              src="/images/marketing/grantwell-wordmark-dark.svg"
-              alt="GrantWell"
-              id="hero-title"
-            />
+            <h1 className="marketing__hero-title" id="hero-title">
+              <img
+                className="marketing__hero-wordmark"
+                src="/images/marketing/grantwell-wordmark-dark.svg"
+                alt="GrantWell"
+              />
+            </h1>
             <p className="marketing__hero-tagline">
               A free AI tool for municipalities and community organizations
               that want to go after federal grants without eating up weeks of
@@ -84,7 +86,7 @@ export default function MarketingLandingPage() {
         <article className="marketing__feature">
           <FeatureFind />
           <div className="marketing__feature-text">
-            <h3 className="marketing__feature-title">Find the right grants</h3>
+            <h2 className="marketing__feature-title">Find the right grants</h2>
             <p className="marketing__feature-body">
               Search for relevant state and federal funding opportunities
               aligned with your community needs.
@@ -94,9 +96,9 @@ export default function MarketingLandingPage() {
         <article className="marketing__feature">
           <FeatureSummarize />
           <div className="marketing__feature-text">
-            <h3 className="marketing__feature-title">
+            <h2 className="marketing__feature-title">
               Understand what's required
-            </h3>
+            </h2>
             <p className="marketing__feature-body">
               Extract key grant information and use chat to ask questions
               about eligibility and requirements.
@@ -106,7 +108,7 @@ export default function MarketingLandingPage() {
         <article className="marketing__feature">
           <FeatureWrite />
           <div className="marketing__feature-text">
-            <h3 className="marketing__feature-title">Draft your application</h3>
+            <h2 className="marketing__feature-title">Draft your application</h2>
             <p className="marketing__feature-body">
               Get step-by-step guidance to help draft your grant applications
               with AI-powered assistance.
@@ -138,10 +140,11 @@ export default function MarketingLandingPage() {
         </div>
         <div className="marketing__band-spacer" aria-hidden="true" />
       </section>
+      </main>
 
-      <MarketingFooter />
+      <LandingFooter />
 
-      <OmniHeader />
+      <OmniHeader position="bottom" />
     </div>
   );
 }
