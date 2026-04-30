@@ -2,24 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import UnifiedNavigation from "../components/navigation/UnifiedNavigation";
 
-// Function to get brand banner + MDS header height dynamically
-// Note: Headers are now static, so this is only used for minHeight calculations
 const getTopOffset = (): number => {
-  const bannerElement = document.querySelector(".ma__brand-banner");
-  const mdsHeaderElement = document.querySelector(".ma__header_slim");
-
-  let bannerHeight = 40; // Default fallback
-  let mdsHeaderHeight = 60; // Default fallback (typical MDS header height)
-
-  if (bannerElement) {
-    bannerHeight = bannerElement.getBoundingClientRect().height;
-  }
-
-  if (mdsHeaderElement) {
-    mdsHeaderHeight = mdsHeaderElement.getBoundingClientRect().height;
-  }
-
-  return bannerHeight + mdsHeaderHeight;
+  const headerElement = document.querySelector("header");
+  return headerElement ? headerElement.getBoundingClientRect().height : 60;
 };
 
 const useViewportWidth = () => {
@@ -158,43 +143,28 @@ export default function BaseAppLayout({
   modalOpen = false,
 }: BaseAppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [topOffset, setTopOffset] = useState<number>(100); // Default: 40px banner + 60px MDS header
+  const [topOffset, setTopOffset] = useState<number>(60);
   const viewportWidth = useViewportWidth();
   const isNarrowViewport = viewportWidth <= 320;
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
 
-  // Monitor brand banner + MDS header height changes (for minHeight calculations only)
   useEffect(() => {
     const updateTopOffset = () => {
       requestAnimationFrame(() => {
-        const offset = getTopOffset();
-        setTopOffset(offset);
+        setTopOffset(getTopOffset());
       });
     };
 
-    // Initial calculation with a small delay to ensure headers are rendered
     const initialTimer = setTimeout(updateTopOffset, 100);
     updateTopOffset();
 
-    // Watch for changes
     const observer = new MutationObserver(updateTopOffset);
-    const bannerElement = document.querySelector(".ma__brand-banner");
-    const mdsHeaderElement = document.querySelector(".ma__header_slim");
+    const headerElement = document.querySelector("header");
 
-    if (bannerElement) {
-      observer.observe(bannerElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    // Observe MDS header changes
-    if (mdsHeaderElement) {
-      observer.observe(mdsHeaderElement, {
+    if (headerElement) {
+      observer.observe(headerElement, {
         attributes: true,
         childList: true,
         subtree: true,
