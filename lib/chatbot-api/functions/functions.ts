@@ -84,7 +84,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Centralized Bedrock model IDs — update here to change everywhere
     const SONNET_MODEL_ID = "global.anthropic.claude-sonnet-4-6";
-    const HAIKU_MODEL_ID = "us.anthropic.claude-3-5-haiku-20241022-v1:0";
+    const HAIKU_MODEL_ID = "global.anthropic.claude-haiku-4-5-20251001-v1:0";
 
     // Create Python shared models Lambda Layer
     const pythonSharedLayer = new lambda.LayerVersion(scope, "PythonSharedLayer", {
