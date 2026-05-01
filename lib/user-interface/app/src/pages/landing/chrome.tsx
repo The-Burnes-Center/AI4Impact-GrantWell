@@ -68,6 +68,15 @@ export function OmniHeader({ position = "top" }: { position?: "top" | "bottom" }
         <ArrowUpRight className="marketing__omni-arrow" />
         <span>The Gov Lab</span>
       </a>
+      <a
+        className="marketing__omni-link"
+        href="https://communitycentered.ai/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <ArrowUpRight className="marketing__omni-arrow" />
+        <span>Community-Centered AI</span>
+      </a>
     </aside>
   );
 }
