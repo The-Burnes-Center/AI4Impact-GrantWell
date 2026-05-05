@@ -745,7 +745,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     nofoAdminFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:ListBucket", "s3:DeleteObject"],
+        actions: ["s3:ListBucket", "s3:DeleteObject", "s3:PutObject"],
         resources: [
           props.ffioNofosBucket.bucketArn,
           props.ffioNofosBucket.bucketArn + "/*",
