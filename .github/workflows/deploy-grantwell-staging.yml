@@ -3,7 +3,7 @@ name: Deploy to GrantWell Staging
 on:
   push:
     branches:
-      - staging
+      - generic-main
   workflow_dispatch:
 
 concurrency:
