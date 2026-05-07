@@ -161,8 +161,8 @@ export default function AppConfigured() {
           alignItems: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Spinner animation="border" size="sm" />
+        <div role="status" aria-live="polite" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <Spinner animation="border" size="sm" aria-hidden="true" />
           <span>Loading</span>
         </div>
       </div>
@@ -223,6 +223,8 @@ function AppLayoutContent({
   if (!configured) {
     return (
       <div
+        role="status"
+        aria-live="polite"
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -231,7 +233,7 @@ function AppLayoutContent({
           gap: "8px",
         }}
       >
-        <Spinner animation="border" size="sm" />
+        <Spinner animation="border" size="sm" aria-hidden="true" />
         <span>Loading</span>
       </div>
     );

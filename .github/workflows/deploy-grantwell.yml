@@ -1,4 +1,4 @@
-name: Deploy to GrantWell Staging
+name: Deploy to GrantWell
 
 on:
   push:

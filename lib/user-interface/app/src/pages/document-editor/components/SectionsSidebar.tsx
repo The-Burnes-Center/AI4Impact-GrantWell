@@ -48,7 +48,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
           <Loader
             size={16}
             className="se-sidebar__spinner"
-            style={{ color: '#3B82F6', animation: 'spin 1s linear infinite' }}
+            style={{ color: '#23776C', animation: 'spin 1s linear infinite' }}
             aria-label={`${section.name}: generating`}
           />
         );

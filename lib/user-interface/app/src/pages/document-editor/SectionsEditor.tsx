@@ -2,10 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import {
-  Bold,
-  Italic,
-  Underline,
-  List,
   Save,
   ChevronLeft,
   ChevronRight,
@@ -539,14 +535,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 role="status"
                 aria-live="polite"
                 style={{
-                  background: '#EFF6FF',
+                  background: '#DFECE0',
                   padding: '12px 16px',
                   borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
                   fontSize: '14px',
-                  color: '#1D4ED8',
+                  color: '#195C53',
                 }}
               >
                 <div
@@ -554,7 +550,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   style={{
                     width: '16px',
                     height: '16px',
-                    border: '2px solid #3B82F6',
+                    border: '2px solid #23776C',
                     borderTopColor: 'transparent',
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite',
@@ -580,7 +576,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             </div>
           )}
 
-          <h2 className="se-section-title">
+          <h2 className="se-section-title" id="se-section-title">
             {sections[activeSection]?.name || "Section Editor"}
           </h2>
 
@@ -592,21 +588,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
           {/* Editor */}
           <div className="se-editor-card">
-            <div className="se-toolbar">
-              <button aria-label="Bold" className="se-toolbar-btn">
-                <Bold size={18} />
-              </button>
-              <button aria-label="Italic" className="se-toolbar-btn">
-                <Italic size={18} />
-              </button>
-              <button aria-label="Underline" className="se-toolbar-btn">
-                <Underline size={18} />
-              </button>
-              <div className="se-toolbar-divider" />
-              <button aria-label="Bulleted list" className="se-toolbar-btn">
-                <List size={20} />
-              </button>
-            </div>
             {generating && !sectionAnswers[sections[activeSection]?.name] ? (
               <div
                 className="se-skeleton-container"
@@ -633,6 +614,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 value={editorContent}
                 onChange={handleEditorChange}
                 className="se-textarea"
+                aria-labelledby="se-section-title"
                 placeholder={`Start writing your ${sections[activeSection]?.name} here...`}
               />
             )}

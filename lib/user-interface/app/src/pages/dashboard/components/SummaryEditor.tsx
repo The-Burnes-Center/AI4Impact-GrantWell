@@ -102,7 +102,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
 
   return (
     <div className="review-summary-card">
-      <h4
+      <h3
         style={{
           margin: "0 0 12px 0",
           fontSize: "14px",
@@ -110,7 +110,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         }}
       >
         Extracted Summary (Editable)
-      </h4>
+      </h3>
 
       <div style={{ marginBottom: "12px" }}>
         <label

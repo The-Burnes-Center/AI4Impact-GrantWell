@@ -92,7 +92,7 @@ export const resultItemStyle: React.CSSProperties = {
 
 export const selectedItemStyle: React.CSSProperties = {
   ...resultItemStyle,
-  backgroundColor: "#f0f7ff",
+  backgroundColor: "#DFECE0",
   borderLeft: "3px solid #23776C",
 };
 
@@ -184,7 +184,7 @@ export const aiSuggestionCardStyle: React.CSSProperties = {
 
 export const selectedAiSuggestionCardStyle: React.CSSProperties = {
   ...aiSuggestionCardStyle,
-  backgroundColor: "#f0f7ff",
+  backgroundColor: "#DFECE0",
   borderLeft: "3px solid #23776C",
 };
 

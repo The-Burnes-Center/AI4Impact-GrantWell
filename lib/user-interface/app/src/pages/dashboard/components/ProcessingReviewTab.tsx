@@ -280,24 +280,26 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       )}
 
-      <div className="table-container">
-        <div className="table-header review-table-grid-select">
-          <div className="header-cell review-checkbox-cell">
-            <input
-              type="checkbox"
-              checked={reviews.length > 0 && selected.size === reviews.length}
-              onChange={toggleSelectAll}
-              aria-label="Select all reviews"
-              disabled={reviews.length === 0}
-            />
+      <div className="table-container" role="table" aria-label="Processing reviews">
+        <div className="table-header review-table-grid-select" role="rowgroup">
+          <div role="row" style={{ display: "contents" }}>
+            <div className="header-cell review-checkbox-cell" role="columnheader">
+              <input
+                type="checkbox"
+                checked={reviews.length > 0 && selected.size === reviews.length}
+                onChange={toggleSelectAll}
+                aria-label="Select all reviews"
+                disabled={reviews.length === 0}
+              />
+            </div>
+            <div className="header-cell" role="columnheader">NOFO Name</div>
+            <div className="header-cell" role="columnheader">Reason</div>
+            <div className="header-cell" role="columnheader">Status</div>
+            <div className="header-cell" role="columnheader">Date</div>
+            <div className="header-cell" role="columnheader">Details</div>
           </div>
-          <div className="header-cell">NOFO Name</div>
-          <div className="header-cell">Reason</div>
-          <div className="header-cell">Status</div>
-          <div className="header-cell">Date</div>
-          <div className="header-cell">Details</div>
         </div>
-        <div className="table-body" role="list" aria-label="Processing reviews">
+        <div className="table-body" role="rowgroup">
           {loading ? (
             <div className="review-loading" aria-busy="true">
               Loading reviews...
@@ -313,25 +315,12 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </div>
           ) : (
             reviews.map((review) => (
-              <div key={`${review.nofo_name}-${review.review_id}`} role="listitem">
+              <div key={`${review.nofo_name}-${review.review_id}`}>
                 <div
                   className={`table-row review-table-row review-table-grid-select ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""} ${selected.has(review.review_id) ? "review-table-row--selected" : ""}`}
-                  onClick={() => toggleExpand(review.nofo_name)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      toggleExpand(review.nofo_name);
-                    }
-                  }}
-                  tabIndex={0}
-                  role="button"
-                  aria-expanded={expandedNofo === review.nofo_name}
-                  aria-label={`Review for ${review.nofo_name}`}
+                  role="row"
                 >
-                  <div
-                    className="row-cell review-checkbox-cell"
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                  <div className="row-cell review-checkbox-cell" role="cell">
                     <input
                       type="checkbox"
                       checked={selected.has(review.review_id)}
@@ -339,31 +328,38 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                       aria-label={`Select ${review.nofo_name}`}
                     />
                   </div>
-                  <div className="row-cell">
+                  <div className="row-cell" role="cell">
                     <span className="review-nofo-name">
                       {review.nofo_name}
                     </span>
                   </div>
-                  <div className="row-cell">{getReasonSummary(review)}</div>
-                  <div className="row-cell">
+                  <div className="row-cell" role="cell">{getReasonSummary(review)}</div>
+                  <div className="row-cell" role="cell">
                     <span className={`review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
                       {STATUS_LABELS[review.status] || review.status}
                     </span>
                   </div>
-                  <div className="row-cell">
+                  <div className="row-cell" role="cell">
                     <span className="review-date">
                       {new Date(review.created_at).toLocaleDateString("en-US", { timeZone: "America/New_York" })}
                     </span>
                   </div>
-                  <div className="row-cell actions">
-                    <span className="review-expand-toggle">
+                  <div className="row-cell actions" role="cell">
+                    <button
+                      type="button"
+                      className="review-expand-toggle"
+                      onClick={() => toggleExpand(review.nofo_name)}
+                      aria-expanded={expandedNofo === review.nofo_name}
+                      aria-label={`${expandedNofo === review.nofo_name ? "Hide" : "View"} details for ${review.nofo_name}`}
+                      style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", padding: 0, font: "inherit", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                    >
                       {expandedNofo === review.nofo_name ? "Hide" : "View"}
                       <LuChevronDown
                         size={14}
                         className={`review-chevron ${expandedNofo === review.nofo_name ? "review-chevron--expanded" : ""}`}
                         aria-hidden="true"
                       />
-                    </span>
+                    </button>
                   </div>
                 </div>
 

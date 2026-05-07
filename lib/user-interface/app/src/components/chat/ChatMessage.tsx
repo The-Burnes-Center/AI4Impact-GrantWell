@@ -329,7 +329,7 @@ function ChatMessage(props: ChatMessageProps) {
         {props.message?.type === ChatBotMessageType.AI ? (
           <>
             {/* Avatar for AI */}
-            <div style={avatarStyle} aria-label="GrantWell assistant">
+            <div style={avatarStyle} role="img" aria-label="GrantWell assistant">
               G
             </div>
             {/* Wrapper for message and copy button */}
@@ -356,27 +356,27 @@ function ChatMessage(props: ChatMessageProps) {
                         components={{
                           h1(props) {
                             const { children, ...rest } = props;
-                            return <h2 {...rest}>{children}</h2>;
+                            return <h3 {...rest}>{children}</h3>;
                           },
                           h2(props) {
                             const { children, ...rest } = props;
-                            return <h2 {...rest}>{children}</h2>;
+                            return <h4 {...rest}>{children}</h4>;
                           },
                           h3(props) {
                             const { children, ...rest } = props;
-                            return <h2 {...rest}>{children}</h2>;
+                            return <h5 {...rest}>{children}</h5>;
                           },
                           h4(props) {
                             const { children, ...rest } = props;
-                            return <h2 {...rest}>{children}</h2>;
+                            return <h6 {...rest}>{children}</h6>;
                           },
                           h5(props) {
                             const { children, ...rest } = props;
-                            return <h2 {...rest}>{children}</h2>;
+                            return <h6 {...rest}>{children}</h6>;
                           },
                           h6(props) {
                             const { children, ...rest } = props;
-                            return <h2 {...rest}>{children}</h2>;
+                            return <h6 {...rest}>{children}</h6>;
                           },
                           pre(props) {
                             const { children, ...rest } = props;
@@ -398,6 +398,7 @@ function ChatMessage(props: ChatMessageProps) {
                             const { children, ...rest } = props;
                             return (
                               <th
+                                scope="col"
                                 {...rest}
                                 className={styles.markdownTableCell}
                               >
@@ -593,7 +594,7 @@ function ChatMessage(props: ChatMessageProps) {
         ) : (
           <>
             {/* Avatar for User */}
-            <div style={avatarStyle} aria-label="User">
+            <div style={avatarStyle} role="img" aria-label="User">
               U
             </div>
             <div style={messageBubbleStyle}>

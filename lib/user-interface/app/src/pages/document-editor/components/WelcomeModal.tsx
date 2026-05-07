@@ -39,17 +39,17 @@ const WelcomeModal = React.memo(function WelcomeModal({
       </p>
     </div>
 
-    <div className="welcome-modal-steps">
+    <ol className="welcome-modal-steps" style={{ listStyle: "none", padding: 0 }}>
       {WELCOME_STEPS.map((step) => (
-        <div key={step.num} className="welcome-modal-step">
-          <div className="welcome-modal-step__number">{step.num}</div>
+        <li key={step.num} className="welcome-modal-step">
+          <div className="welcome-modal-step__number" aria-hidden="true">{step.num}</div>
           <div>
-            <h4 className="welcome-modal-step__title">{step.title}</h4>
+            <h3 className="welcome-modal-step__title">{step.title}</h3>
             <p className="welcome-modal-step__text">{step.text}</p>
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ol>
 
     <div className="welcome-modal-actions">
       <button className="welcome-modal-btn welcome-modal-btn--primary" onClick={onGetStarted}>

@@ -194,6 +194,66 @@ export default function DocumentManager({
     }
   }, [duplicateFiles]);
 
+  useEffect(() => {
+    const trapTab = (dialogRef: React.RefObject<HTMLDivElement>) => (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (!dialogRef.current.contains(document.activeElement)) {
+        e.preventDefault();
+        first.focus();
+        return;
+      }
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    if (fileToDelete) {
+      const handler = trapTab(confirmDialogRef);
+      document.addEventListener("keydown", handler);
+      return () => document.removeEventListener("keydown", handler);
+    }
+  }, [fileToDelete]);
+
+  useEffect(() => {
+    const trapTab = (dialogRef: React.RefObject<HTMLDivElement>) => (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (!dialogRef.current.contains(document.activeElement)) {
+        e.preventDefault();
+        first.focus();
+        return;
+      }
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    if (duplicateFiles.length > 0) {
+      const handler = trapTab(duplicateDialogRef);
+      document.addEventListener("keydown", handler);
+      return () => document.removeEventListener("keydown", handler);
+    }
+  }, [duplicateFiles]);
+
   // Auto-dismiss toast
   useEffect(() => {
     if (toastMessage) {
@@ -539,7 +599,14 @@ export default function DocumentManager({
       case "uploading":
         return (
           <div className="dm-file-status">
-            <div className="dm-file-progress-bar">
+            <div
+              className="dm-file-progress-bar"
+              role="progressbar"
+              aria-valuenow={status.progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Upload progress"
+            >
               <div className="dm-file-progress-fill" style={{ width: `${status.progress}%` }} />
             </div>
             <span className="dm-file-status-text">{status.progress}%</span>
@@ -670,9 +737,16 @@ export default function DocumentManager({
         aria-labelledby="dm-title"
         style={{ position: "relative" }}
       >
-        {/* Toast notification */}
         {toastMessage && (
-          <div className="dm-toast-container" role="status" aria-live="polite">
+          <div
+            className="dm-toast-container"
+            role="status"
+            aria-live="polite"
+            onMouseEnter={() => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }}
+            onMouseLeave={() => { toastTimerRef.current = setTimeout(() => setToastMessage(null), 5000); }}
+            onFocus={() => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }}
+            onBlur={() => { toastTimerRef.current = setTimeout(() => setToastMessage(null), 5000); }}
+          >
             <div className="dm-toast">
               <Check size={16} className="dm-toast-icon" aria-hidden="true" />
               <span className="dm-toast-message">{toastMessage}</span>
@@ -681,7 +755,7 @@ export default function DocumentManager({
                 onClick={() => setToastMessage(null)}
                 aria-label="Dismiss notification"
               >
-                <X size={14} />
+                <X size={14} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -694,7 +768,33 @@ export default function DocumentManager({
           </button>
         </div>
 
-        <div className="dm-tab-container" role="tablist" aria-label="Document manager tabs">
+        <div
+          className="dm-tab-container"
+          role="tablist"
+          aria-label="Document manager tabs"
+          onKeyDown={(e) => {
+            const tabs = ["upload", "view"] as const;
+            const currentIdx = tabs.indexOf(activeTab as typeof tabs[number]);
+            if (e.key === "ArrowRight") {
+              e.preventDefault();
+              const next = tabs[(currentIdx + 1) % tabs.length];
+              setActiveTab(next);
+              if (next === "view") fetchExistingFiles();
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault();
+              const prev = tabs[(currentIdx - 1 + tabs.length) % tabs.length];
+              setActiveTab(prev);
+              if (prev === "view") fetchExistingFiles();
+            } else if (e.key === "Home") {
+              e.preventDefault();
+              setActiveTab(tabs[0]);
+            } else if (e.key === "End") {
+              e.preventDefault();
+              setActiveTab(tabs[tabs.length - 1]);
+              if (tabs[tabs.length - 1] === "view") fetchExistingFiles();
+            }
+          }}
+        >
           <button
             className="dm-tab"
             onClick={() => setActiveTab("upload")}

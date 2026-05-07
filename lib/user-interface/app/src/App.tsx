@@ -93,7 +93,7 @@ function AppContent() {
     <>
       <ScrollToTop />
       {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
-      <main id="main-content" role="main" tabIndex={-1}>
+      <main id="main-content" tabIndex={-1}>
         <ErrorBoundary>
           <Suspense fallback={<div className="lazy-loading-fallback" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>Loading...</div>}>
             <Routes>

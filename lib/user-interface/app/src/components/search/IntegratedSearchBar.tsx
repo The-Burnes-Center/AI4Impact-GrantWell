@@ -163,7 +163,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         onClear={handleClear}
       />
       {showSuggestion && (
-        <p className="search-tip" role="status">
+        <p className="search-tip">
           Tip: Try a full sentence for more precise results, e.g.,{" "}
           <em key={tipIndex}>&ldquo;{SEARCH_TIPS[tipIndex]}&rdquo;</em>
         </p>

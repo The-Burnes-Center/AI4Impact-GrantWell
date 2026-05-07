@@ -70,7 +70,7 @@ const DraftView: React.FC<DraftViewProps> = ({
         aria-busy="true"
         aria-label="Loading draft"
       >
-        <div className="dv-spinner" role="img" aria-label="Loading spinner" />
+        <div className="dv-spinner" aria-hidden="true" />
         <p className="dv-loading__message">{loadingMessage}</p>
         {loadingMessage.includes("generation") && (
           <p className="dv-loading__help">

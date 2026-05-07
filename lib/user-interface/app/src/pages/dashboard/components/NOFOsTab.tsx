@@ -311,14 +311,16 @@ const NOFOsTab = React.memo(function NOFOsTab({
 
   return (
     <div className="tab-content">
-      <div className="table-container">
-        <div className="table-header">
-          <div className="header-cell">Name</div>
-          <div className="header-cell">Type</div>
-          <div className="header-cell">Deadline</div>
-          <div className="header-cell">Actions</div>
+      <div className="table-container" role="table" aria-label="Grants">
+        <div className="table-header" role="rowgroup">
+          <div role="row" style={{ display: "contents" }}>
+            <div className="header-cell" role="columnheader">Name</div>
+            <div className="header-cell" role="columnheader">Type</div>
+            <div className="header-cell" role="columnheader">Deadline</div>
+            <div className="header-cell" role="columnheader">Actions</div>
+          </div>
         </div>
-        <div className="table-body">
+        <div className="table-body" role="rowgroup">
           {nofos.length === 0 && (
             <div className="no-data">
               <LuFileX size={24} className="no-data-icon" />
@@ -326,11 +328,11 @@ const NOFOsTab = React.memo(function NOFOsTab({
             </div>
           )}
           {nofos.map((nofo) => (
-            <div key={nofo.id} className="table-row">
-              <div className="row-cell">
+            <div key={nofo.id} className="table-row" role="row">
+              <div className="row-cell" role="cell">
                 <span className="nofo-name">{nofo.name}</span>
                 {nofo.isPinned && (
-                  <span className="pinned-badge"><LuPin size={14} /><span>Pinned</span></span>
+                  <span className="pinned-badge" aria-label="Pinned"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
                 )}
                 {nofo.processingStatus && (
                   <span className="processing-status-pill" aria-live="polite">
@@ -338,14 +340,14 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   </span>
                 )}
               </div>
-              <div className="row-cell">
+              <div className="row-cell" role="cell">
                 {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
                   <span
                     className="grant-type-badge"
                     style={{
                       backgroundColor: `${GRANT_TYPES[nofo.grantType].color}15`,
                       color: GRANT_TYPES[nofo.grantType].color,
-                      borderColor: `${GRANT_TYPES[nofo.grantType].color}40`,
+                      borderColor: `${GRANT_TYPES[nofo.grantType].color}99`,
                     }}
                   >
                     {GRANT_TYPES[nofo.grantType].label}
@@ -354,7 +356,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   <span className="grant-type-badge unset">Unset</span>
                 )}
               </div>
-              <div className="row-cell">
+              <div className="row-cell" role="cell">
                 {nofo.isRolling ? (
                   <span className="expiry-date rolling">Rolling</span>
                 ) : nofo.expirationDate ? (
@@ -363,14 +365,14 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   <span className="expiry-date no-date">N/A</span>
                 )}
               </div>
-              <div className="row-cell actions">
+              <div className="row-cell actions" role="cell">
                 {nofo.isPinned ? (
-                  <button className="action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} title="Unpin grant" aria-label="Unpin grant">
-                    <LuPinOff size={18} />
+                  <button className="action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`}>
+                    <LuPinOff size={18} aria-hidden="true" />
                   </button>
                 ) : (
-                  <button className="action-button pin" onClick={(e) => handlePinGrant(nofo, e)} title="Pin grant" aria-label="Pin grant">
-                    <LuPin size={18} />
+                  <button className="action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`}>
+                    <LuPin size={18} aria-hidden="true" />
                   </button>
                 )}
                 <GrantActionsDropdown

@@ -124,7 +124,7 @@ export default function Playground() {
                   onClick={() => setUploadModalOpen(true)}
                   aria-label={`Upload supporting documents${uploadedFileCount > 0 ? `. ${uploadedFileCount} files uploaded.` : ""}`}
                 >
-                  <Upload size={16} /> Upload Documents
+                  <Upload size={16} aria-hidden="true" /> Upload Documents
                   {uploadedFileCount > 0 && (
                     <span className="pg-upload-badge" aria-hidden="true">
                       <FileText size={11} aria-hidden="true" />
@@ -140,7 +140,7 @@ export default function Playground() {
                 aria-label={helpOpen ? "Close help dialog" : "Open help dialog"}
                 aria-expanded={helpOpen}
               >
-                <HelpCircle size={16} /> Help
+                <HelpCircle size={16} aria-hidden="true" /> Help
               </button>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function Playground() {
                 className="pg-modal-close-btn"
                 aria-label="Close help dialog"
               >
-                ×
+                <span aria-hidden="true">×</span>
               </button>
             </div>
 
@@ -199,7 +199,7 @@ export default function Playground() {
               </p>
 
               <div className="pg-highlight-box">
-                <p className="pg-highlight-title">You can ask GrantWell to:</p>
+                <h3 className="pg-highlight-title">You can ask GrantWell to:</h3>
                 <ul className="pg-highlight-list">
                   <li>
                     Explain specific grant requirements, eligibility criteria,
@@ -221,7 +221,7 @@ export default function Playground() {
               </div>
 
               <div className="pg-info-section">
-                <p className="pg-info-heading">Sources</p>
+                <h3 className="pg-info-heading">Sources</h3>
                 <p className="pg-info-text">
                   If the chatbot references any files from the knowledge base,
                   they will show up underneath the relevant message.
@@ -229,7 +229,7 @@ export default function Playground() {
               </div>
 
               <div className="pg-info-section">
-                <p className="pg-info-heading">Session History</p>
+                <h3 className="pg-info-heading">Session History</h3>
                 <p className="pg-info-text">
                   All conversations are saved and can be accessed later via the{" "}
                   <Link to="/chat/sessions" className="pg-info-link">
@@ -246,7 +246,6 @@ export default function Playground() {
                   checked={dontShowAgain}
                   onChange={(e) => setDontShowAgain(e.target.checked)}
                   className="pg-checkbox"
-                  aria-label="Do not show this again"
                 />
                 <label
                   htmlFor="dont-show-again-playground"
@@ -259,7 +258,6 @@ export default function Playground() {
               <button
                 onClick={handleCloseModal}
                 className="pg-got-it-btn"
-                aria-label="Close help dialog"
               >
                 Got it
               </button>

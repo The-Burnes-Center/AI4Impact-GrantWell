@@ -484,11 +484,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
         alt="GrantWell"
       />
       {showTabs && (
-        <div className="auth-tabs" role="tablist" aria-label="Authentication">
+        <div className="auth-tabs" role="group" aria-label="Authentication mode">
           <button
             type="button"
-            role="tab"
-            aria-selected={view === "sign-in"}
+            aria-pressed={view === "sign-in"}
             className={
               "auth-tab" + (view === "sign-in" ? " auth-tab--active" : "")
             }
@@ -498,8 +497,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
           </button>
           <button
             type="button"
-            role="tab"
-            aria-selected={view === "sign-up"}
+            aria-pressed={view === "sign-up"}
             className={
               "auth-tab" + (view === "sign-up" ? " auth-tab--active" : "")
             }

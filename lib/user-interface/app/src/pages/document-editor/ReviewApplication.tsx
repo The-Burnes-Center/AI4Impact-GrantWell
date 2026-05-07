@@ -101,16 +101,48 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     onNavigate("sections");
   };
 
-  // Close export dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (exportDropdownRef.current && !exportDropdownRef.current.contains(e.target as Node)) {
         setExportDropdownOpen(false);
       }
     };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && exportDropdownOpen) {
+        setExportDropdownOpen(false);
+        const trigger = exportDropdownRef.current?.querySelector<HTMLElement>('[aria-haspopup]');
+        trigger?.focus();
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener("keydown", handleEscape);
+    if (exportDropdownOpen) {
+      requestAnimationFrame(() => {
+        const firstItem = exportDropdownRef.current?.querySelector<HTMLElement>('[role="menuitem"]');
+        firstItem?.focus();
+      });
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [exportDropdownOpen]);
+
+  const handleExportMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const items = Array.from(
+      exportDropdownRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []
+    );
+    const currentIndex = items.indexOf(document.activeElement as HTMLElement);
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+      items[next]?.focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prev = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+      items[prev]?.focus();
+    }
+  };
 
   const fetchDraftForExport = async () => {
     if (!selectedNofo) return { draftData: null, grantName: null };
@@ -314,10 +346,11 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         {/* Export As dropdown */}
         <div className="ra-export-dropdown" ref={exportDropdownRef}>
           <button
+            id="ra-export-trigger"
             onClick={() => setExportDropdownOpen((o) => !o)}
             disabled={!completenessPassed}
             className="ra-export-pdf-btn"
-            aria-haspopup="true"
+            aria-haspopup="menu"
             aria-expanded={exportDropdownOpen}
           >
             <Download className="ra-export-pdf-btn__icon" aria-hidden="true" />
@@ -330,7 +363,12 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           </button>
 
           {exportDropdownOpen && (
-            <div className="ra-export-dropdown__menu" role="menu">
+            <div
+              className="ra-export-dropdown__menu"
+              role="menu"
+              aria-labelledby="ra-export-trigger"
+              onKeyDown={handleExportMenuKeyDown}
+            >
               <button
                 className="ra-export-dropdown__item"
                 role="menuitem"

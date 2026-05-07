@@ -65,11 +65,15 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
         <div className="summary-field__label">{label}</div>
         {removed.map((item, idx) => (
           <div key={`rem-${idx}`} className="diff-removed">
+            <span aria-hidden="true">−&nbsp;</span>
+            <span className="visually-hidden">Removed: </span>
             <strong>{item.item}</strong>: {item.description}
           </div>
         ))}
         {added.map((item, idx) => (
           <div key={`add-${idx}`} className="diff-added">
+            <span aria-hidden="true">+&nbsp;</span>
+            <span className="visually-hidden">Added: </span>
             <strong>{item.item}</strong>: {item.description}
           </div>
         ))}
@@ -87,7 +91,7 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
 
   return (
     <div className="review-summary-card">
-      <h4
+      <h3
         style={{
           margin: "0 0 12px 0",
           fontSize: "14px",
@@ -95,7 +99,7 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
         }}
       >
         Summary Changes
-      </h4>
+      </h3>
       {renderScalarDiff("Grant Name", "GrantName")}
       {renderScalarDiff("Agency", "Agency")}
       {renderScalarDiff("Category", "Category")}

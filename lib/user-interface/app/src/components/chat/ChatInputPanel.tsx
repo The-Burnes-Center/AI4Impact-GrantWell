@@ -36,7 +36,7 @@ const styles = {
     gap: "16px",
   },
   inputBorder: {
-    border: "2px solid #e5e7eb",
+    border: "2px solid #9ca3af",
     borderRadius: "16px",
     overflow: "hidden",
     backgroundColor: "white",
@@ -74,7 +74,7 @@ const styles = {
     backgroundColor: "rgba(239, 68, 68, 0.1)",
   },
   micDisabled: {
-    color: "#9ca3af",
+    color: "#6b7280",
     cursor: "not-allowed",
     display: "flex",
     alignItems: "center",
@@ -515,8 +515,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       });
     } catch (error) {
       console.error("Error sending message:", error);
-      alert(
-        "Sorry, something has gone horribly wrong! Please try again or refresh the page."
+      addNotification(
+        "error",
+        "Sorry, something went wrong sending your message. Please try again or refresh the page."
       );
       props.setRunning(false);
     }
@@ -574,9 +575,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         <span
           style={styles.micDisabled}
           title="Your browser doesn't support speech recognition"
-          aria-label="Speech recognition not supported"
+          aria-hidden="true"
         >
-          <MicOff size={20} aria-hidden="true" />
+          <MicOff size={20} />
         </span>
       )}
 
@@ -618,7 +619,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       <TextareaAutosize
         ref={inputRef}
         id="chat-input"
-        aria-label="Message the GrantWell assistant"
         aria-describedby="chat-input-help"
         style={{
           flex: 1,

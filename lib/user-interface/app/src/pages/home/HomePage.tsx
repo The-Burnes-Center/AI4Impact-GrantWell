@@ -239,12 +239,13 @@ export default function HomePage() {
   return (
     <>
       <div className="landing-page">
+        <h1 className="visually-hidden">GrantWell — Free AI powered tool for finding and writing grants</h1>
         {/* Header */}
         <div className="landing-header">
           <img
             className="landing-header__wordmark"
             src="/images/marketing/grantwell-wordmark-dark.svg"
-            alt="GrantWell"
+            alt=""
           />
           <p className="landing-header__subtitle">
             Free AI powered tool designed for finding and writing grants

@@ -49,6 +49,25 @@
   outline-offset: 2px;
 }
 
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="menuitem"]:focus-visible,
+[role="menuitemradio"]:focus-visible,
+[role="checkbox"]:focus-visible,
+[tabindex]:focus-visible:not([tabindex="-1"]) {
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline-offset: 2px;
+}
+
+.dark-bg button:focus-visible,
+[data-dark-bg="true"] button:focus-visible,
+.marketing__omni a:focus-visible,
+.marketing__footer a:focus-visible {
+  outline-color: var(--gw-color-focus-dark, #DFECE0);
+}
+
 /* ==============================
  * Skip navigation link
  * ============================== */

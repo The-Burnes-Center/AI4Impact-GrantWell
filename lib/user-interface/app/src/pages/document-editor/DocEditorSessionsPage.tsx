@@ -95,17 +95,19 @@ export default function DocEditorSessionsPage() {
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="breadcrumb">
-          <div className="breadcrumb-item">
-            <button
-              className="breadcrumb-link"
-              onClick={handleHomeClick}
-            >
-              Home
-            </button>
-          </div>
-          <div className="breadcrumb-item" aria-current="page">
-            Drafts
-          </div>
+          <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex" }}>
+            <li className="breadcrumb-item">
+              <button
+                className="breadcrumb-link"
+                onClick={handleHomeClick}
+              >
+                Home
+              </button>
+            </li>
+            <li className="breadcrumb-item" aria-current="page">
+              Drafts
+            </li>
+          </ol>
         </nav>
 
         <div className="dashboard-main-content">

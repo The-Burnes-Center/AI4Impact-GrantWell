@@ -14,8 +14,8 @@ import "../../styles/checklists.css";
 const GRANT_TYPES: Record<string, { label: string; color: string }> = {
   federal: { label: "Federal", color: "#1a4480" },
   state: { label: "State", color: "#2e8540" },
-  quasi: { label: "Quasi", color: "#8168b3" },
-  philanthropic: { label: "Philanthropic", color: "#e66f0e" },
+  quasi: { label: "Quasi", color: "#5b3f8a" },
+  philanthropic: { label: "Philanthropic", color: "#a04500" },
 };
 
 interface LlmData {
@@ -158,7 +158,7 @@ const Checklists: React.FC = () => {
               <h2 className="checklist-loading__title">Loading NOFO Data</h2>
               <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
               <div className="checklist-loading__tip">
-                <span style={{ fontSize: "24px" }}>💡</span>
+                <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
                 <p className="checklist-loading__tip-text">
                   Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.
                 </p>
@@ -199,7 +199,7 @@ const Checklists: React.FC = () => {
                   </p>
                 </div>
                 <button className="checklist-help-btn" onClick={() => setShowHelp(true)}>
-                  <LuInfo size={16} /> Help
+                  <LuInfo size={16} aria-hidden="true" /> Help
                 </button>
               </div>
 
@@ -233,6 +233,7 @@ const Checklists: React.FC = () => {
                     id={`tabpanel-${tabId}`}
                     aria-labelledby={`tab-${tabId}`}
                     hidden={tabId !== activeTabId}
+                    tabIndex={0}
                   >
                     <p className="checklist-content__description">{tabContents[tabId].title}</p>
                     <div className="checklist-tabs__markdown">

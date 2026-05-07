@@ -36,15 +36,49 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
         setIsOpen(false);
       }
     };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscape);
+      requestAnimationFrame(() => {
+        const firstItem = menuRef.current?.querySelector<HTMLElement>('[role="menuitem"]');
+        firstItem?.focus();
+      });
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen]);
+
+  const handleMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const items = Array.from(
+      menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []
+    );
+    const currentIndex = items.indexOf(document.activeElement as HTMLElement);
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+      items[next]?.focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prev = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+      items[prev]?.focus();
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      items[0]?.focus();
+    } else if (e.key === "End") {
+      e.preventDefault();
+      items[items.length - 1]?.focus();
+    }
+  };
 
   return (
     <div className={`grant-actions-dropdown ${isOpen ? "dropdown-open" : ""}`} ref={menuRef}>
@@ -56,10 +90,15 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
         aria-expanded={isOpen}
         aria-haspopup="menu"
       >
-        <LuMenu size={18} />
+        <LuMenu size={18} aria-hidden="true" />
       </button>
       {isOpen && (
-        <div className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`} role="menu">
+        <div
+          className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`}
+          role="menu"
+          aria-label={`Actions for ${nofo.name}`}
+          onKeyDown={handleMenuKeyDown}
+        >
           <button
             onClick={() => { onToggleStatus(); setIsOpen(false); }}
             className="dropdown-menu-item"

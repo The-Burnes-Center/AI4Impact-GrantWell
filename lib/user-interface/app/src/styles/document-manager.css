@@ -80,12 +80,16 @@
 }
 
 .dm-tab {
-  padding: var(--gw-spacing-md, 12px) var(--gw-spacing-lg, 16px);
+  padding: 12px 20px;
   cursor: pointer;
-  font-size: var(--gw-font-size-base, 16px);
+  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
   border-bottom: 2px solid transparent;
-  color: var(--gw-color-text-secondary, #5a5a5a);
-  transition: var(--gw-transition-normal, all 0.2s ease);
+  color: #5a5a5a;
+  transition: color 0.15s ease, border-color 0.15s ease;
   background: none;
   border-top: none;
   border-left: none;
@@ -93,7 +97,7 @@
 }
 
 .dm-tab:hover {
-  color: var(--gw-color-primary, #23776C);
+  color: #195C53;
 }
 
 .dm-tab:focus-visible {
@@ -102,9 +106,8 @@
 }
 
 .dm-tab[aria-selected="true"] {
-  border-bottom-color: var(--gw-color-primary, #23776C);
-  color: var(--gw-color-primary, #23776C);
-  font-weight: var(--gw-font-weight-medium, 500);
+  border-bottom-color: #23776C;
+  color: #23776C;
 }
 
 /* ── Body ── */
@@ -501,48 +504,53 @@
   gap: var(--gw-spacing-md, 12px);
 }
 
-.dm-confirm-cancel-btn {
-  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
-  border-radius: var(--gw-radius-md, 6px);
-  font-size: var(--gw-font-size-sm, 14px);
-  font-weight: var(--gw-font-weight-medium, 500);
+.dm-confirm-cancel-btn,
+.dm-confirm-delete-btn,
+.dm-confirm-replace-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
   cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   min-height: 44px;
-  background-color: var(--gw-color-white, #ffffff);
-  color: var(--gw-color-text, #333333);
-  border: 1px solid var(--gw-color-border, #e2e8f0);
-  transition: var(--gw-transition-normal, all 0.2s ease);
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.dm-confirm-cancel-btn {
+  background-color: transparent;
+  color: #195C53;
+  border-color: transparent;
+  letter-spacing: 1px;
 }
 
 .dm-confirm-cancel-btn:hover {
-  background-color: var(--gw-color-background, #f9fafb);
-}
-
-.dm-confirm-cancel-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
-  outline-offset: 2px;
+  color: #244140;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .dm-confirm-delete-btn {
-  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
-  border-radius: var(--gw-radius-md, 6px);
-  font-size: var(--gw-font-size-sm, 14px);
-  font-weight: var(--gw-font-weight-medium, 500);
-  cursor: pointer;
-  min-height: 44px;
-  background-color: var(--gw-color-danger, #CD0D0D);
-  color: var(--gw-color-white, #ffffff);
-  border: none;
-  transition: var(--gw-transition-normal, all 0.2s ease);
+  background-color: #CD0D0D;
+  color: #ffffff;
+  border-color: #CD0D0D;
 }
 
 .dm-confirm-delete-btn:hover {
-  background-color: #b00b0b;
+  background-color: #a30909;
+  border-color: #a30909;
 }
 
-.dm-confirm-delete-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
-  outline-offset: 2px;
+.dm-confirm-delete-btn:active {
+  transform: translateY(1px);
 }
 
 /* ── Per-file upload status ── */
@@ -729,25 +737,18 @@
 }
 
 .dm-confirm-replace-btn {
-  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
-  border-radius: var(--gw-radius-md, 6px);
-  font-size: var(--gw-font-size-sm, 14px);
-  font-weight: var(--gw-font-weight-medium, 500);
-  cursor: pointer;
-  min-height: 44px;
-  background-color: var(--gw-color-primary, #23776C);
-  color: var(--gw-color-white, #ffffff);
-  border: none;
-  transition: var(--gw-transition-normal, all 0.2s ease);
+  background-color: #23776C;
+  color: #ffffff;
+  border-color: #23776C;
 }
 
 .dm-confirm-replace-btn:hover {
-  background-color: var(--gw-color-primary-hover, #195C53);
+  background-color: #195C53;
+  border-color: #195C53;
 }
 
-.dm-confirm-replace-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
-  outline-offset: 2px;
+.dm-confirm-replace-btn:active {
+  transform: translateY(1px);
 }
 
 /* ── Toolbar (search, sort, bulk actions) ── */

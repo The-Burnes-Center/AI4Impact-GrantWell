@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import { colors, typography, spacing, borderRadius, transitions } from "./styles";
+import { colors, spacing } from "./styles";
 
 export interface NavigationButtonsProps {
   /** Handler for back button click */
@@ -69,46 +69,48 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     marginTop: spacing["2xl"],
   };
 
-  const backButtonStyle: React.CSSProperties = {
-    display: "flex",
+  const pillBase: React.CSSProperties = {
+    display: "inline-flex",
     alignItems: "center",
-    gap: spacing.sm,
-    padding: `${spacing.md} ${spacing.xl}`,
-    background: colors.white,
-    border: `1px solid ${colors.border}`,
-    borderRadius: borderRadius.md,
-    color: colors.text,
-    fontSize: typography.fontSize.base,
-    fontWeight: typography.fontWeight.medium,
-    fontFamily: typography.fontFamily,
+    gap: "8px",
+    padding: "10px 26px",
+    borderRadius: "50px",
+    fontFamily: "'Libre Franklin', 'Inter', system-ui, sans-serif",
+    fontSize: "13px",
+    lineHeight: "22px",
+    fontWeight: 600,
+    letterSpacing: "1.3px",
+    textTransform: "uppercase",
     cursor: "pointer",
-    transition: transitions.normal,
+    transition: "background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease",
+    minHeight: "44px",
+    whiteSpace: "nowrap",
+  };
+
+  const backButtonStyle: React.CSSProperties = {
+    ...pillBase,
+    background: "transparent",
+    border: `1px solid ${colors.primary}`,
+    color: colors.primary,
   };
 
   const continueButtonStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: spacing.sm,
-    padding: `${spacing.md} ${spacing["2xl"]}`,
-    background: continueDisabled ? colors.textMuted : colors.primary,
+    ...pillBase,
+    background: continueDisabled ? "#c8d8d4" : colors.primary,
     color: colors.white,
-    border: "none",
-    borderRadius: borderRadius.md,
-    fontSize: typography.fontSize.base,
-    fontWeight: typography.fontWeight.medium,
-    fontFamily: typography.fontFamily,
+    border: `1px solid ${continueDisabled ? "#c8d8d4" : colors.primary}`,
     cursor: continueDisabled ? "not-allowed" : "pointer",
-    transition: transitions.normal,
-    opacity: continueDisabled ? 0.6 : 1,
   };
 
   const handleBackHover = (e: React.MouseEvent<HTMLButtonElement>, isHover: boolean) => {
-    e.currentTarget.style.backgroundColor = isHover ? colors.background : colors.white;
+    e.currentTarget.style.backgroundColor = isHover ? colors.primary : "transparent";
+    e.currentTarget.style.color = isHover ? colors.white : colors.primary;
   };
 
   const handleContinueHover = (e: React.MouseEvent<HTMLButtonElement>, isHover: boolean) => {
     if (!continueDisabled) {
       e.currentTarget.style.backgroundColor = isHover ? colors.primaryHover : colors.primary;
+      e.currentTarget.style.borderColor = isHover ? colors.primaryHover : colors.primary;
     }
   };
 

@@ -50,19 +50,21 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         <label htmlFor="grant-search-input" style={labelStyle}>
           Search for grants
         </label>
+        <span id="search-help-text" className="visually-hidden">
+          Type a phrase to search grants by name, agency, or description.
+        </span>
         <div style={inputContainerStyle}>
-          <div style={searchIconStyle}>
+          <div style={searchIconStyle} aria-hidden="true">
             <SearchIcon color="#23776C" />
           </div>
           <input
             id="grant-search-input"
             ref={ref}
-            type="text"
+            type="search"
             placeholder={placeholder}
             aria-label={ariaLabel}
             aria-describedby="search-help-text"
             aria-busy={isLoading || isSearching}
-            role="searchbox"
             style={{
               ...inputStyle,
               cursor: disabled ? "not-allowed" : "text",
@@ -118,8 +120,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                 animation="border"
                 size="sm"
                 variant="primary"
-                role="status"
-                aria-label="Searching"
+                aria-hidden="true"
               />
               {isSearching && (
                 <span style={{ fontSize: "12px", color: "#23776C", whiteSpace: "nowrap" }}>

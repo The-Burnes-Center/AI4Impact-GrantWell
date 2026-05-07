@@ -278,7 +278,7 @@ const DocumentEditor: React.FC = () => {
                     <div className="loading-spinner" style={{ margin: "0 auto 16px" }} />
                     <p style={{ color: "#5a6169", fontSize: 16, marginBottom: 8 }}>{loadingMessage}</p>
                     {loadingMessage.includes("generation") && (
-                      <p style={{ color: "#9ca3af", fontSize: 14, marginTop: 8 }}>This may take 30-60 seconds. Please don&apos;t close this page.</p>
+                      <p style={{ color: "#6b7280", fontSize: 14, marginTop: 8 }}>This may take 30-60 seconds. Please don&apos;t close this page.</p>
                     )}
                   </div>
                 </div>

@@ -168,7 +168,6 @@ export const Modal = React.memo<ModalProps>(
           }}
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
-          role="document"
         >
           <div
             className="modal-header"

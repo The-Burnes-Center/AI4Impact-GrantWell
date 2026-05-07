@@ -50,10 +50,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
   // Get documentIdentifier from various sources
   const docId = documentIdentifier || params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo');
 
-  // Check if NOFO selection is required (when on dashboard and no docId)
-  const requiresNofoSelection = () => {
-    return isDashboard && !docId;
-  };
+  const requiresNofoSelection = () => !docId;
 
   // Handle NOFO required modal - show alert and redirect to homepage
   const handleNofoRequired = () => {
@@ -78,12 +75,8 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
     navigate(`/chat/${newSessionId}${queryParams}`);
   };
 
-  // Handle drafts navigation
+  // Handle drafts navigation — list view, NOFO not required
   const handleDraftsNavigation = () => {
-    if (requiresNofoSelection()) {
-      handleNofoRequired();
-      return;
-    }
     if (docId) {
       navigate(`/document-editor/drafts?nofo=${encodeURIComponent(docId)}`);
     } else {
@@ -123,12 +116,8 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
     }
   };
 
-  // Handle chat sessions navigation
+  // Handle chat sessions navigation — list view, NOFO not required
   const handleChatSessionsNavigation = () => {
-    if (requiresNofoSelection()) {
-      handleNofoRequired();
-      return;
-    }
     const queryParams = docId
       ? `?folder=${encodeURIComponent(docId)}`
       : "";
@@ -232,8 +221,9 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
       )}
 
       <div
+        data-dark-bg="true"
         style={{
-          width: isNarrowViewport 
+          width: isNarrowViewport
             ? (isOpen ? "100%" : "0")
             : (isOpen ? "240px" : "60px"),
           background: "#1a202c",
@@ -385,7 +375,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   padding: "12px 16px",
                   borderRadius: "8px",
                   marginBottom: "8px",
-                  background: isDashboard ? "#2563eb" : "none",
+                  background: isDashboard ? "#23776C" : "none",
                   color: isDashboard ? "white" : "#e2e8f0",
                   border: "none",
                   fontSize: "16px",
@@ -396,11 +386,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background =
-                    isDashboard ? "#2563eb" : "#2d3748")
+                    isDashboard ? "#23776C" : "#2d3748")
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.background =
-                    isDashboard ? "#2563eb" : "none")
+                    isDashboard ? "#23776C" : "none")
                 }
               >
                 <LayoutDashboard size={20} />
@@ -420,7 +410,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   padding: "12px 16px",
                   borderRadius: "8px",
                   marginBottom: "8px",
-                  background: isRequirements ? "#2563eb" : "none",
+                  background: isRequirements ? "#23776C" : "none",
                   color: isRequirements ? "white" : "#e2e8f0",
                   border: "none",
                   fontSize: "16px",
@@ -431,11 +421,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background =
-                    isRequirements ? "#2563eb" : "#2d3748")
+                    isRequirements ? "#23776C" : "#2d3748")
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.background =
-                    isRequirements ? "#2563eb" : "none")
+                    isRequirements ? "#23776C" : "none")
                 }
               >
                 <CheckSquare size={20} />
@@ -454,7 +444,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 padding: "12px 16px",
                 borderRadius: "8px",
                 marginBottom: "4px",
-                background: isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#2563eb" : "none",
+                background: isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#23776C" : "none",
                 color: isChat && !isDrafts && currentPath !== "/chat/sessions" ? "white" : "#e2e8f0",
                 border: "none",
                 fontSize: "16px",
@@ -465,11 +455,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background =
-                  isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#2563eb" : "#2d3748")
+                  isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#23776C" : "#2d3748")
               }
               onMouseLeave={(e) =>
                 (e.currentTarget.style.background =
-                  isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#2563eb" : "none")
+                  isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#23776C" : "none")
               }
             >
               <MessageSquare size={20} />
@@ -488,7 +478,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   padding: "8px 16px 8px 44px",
                   borderRadius: "8px",
                   marginBottom: "8px",
-                  background: currentPath === "/chat/sessions" ? "#2563eb" : "none",
+                  background: currentPath === "/chat/sessions" ? "#23776C" : "none",
                   color: currentPath === "/chat/sessions" ? "white" : "#e2e8f0",
                   border: "none",
                   fontSize: "15px",
@@ -499,11 +489,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background =
-                    currentPath === "/chat/sessions" ? "#2563eb" : "#2d3748")
+                    currentPath === "/chat/sessions" ? "#23776C" : "#2d3748")
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.background =
-                    currentPath === "/chat/sessions" ? "#2563eb" : "none")
+                    currentPath === "/chat/sessions" ? "#23776C" : "none")
                 }
               >
                 <svg
@@ -536,7 +526,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 borderRadius: "8px",
                 marginBottom: "4px",
                 marginTop: "8px",
-                background: isDocumentEditor ? "#2563eb" : "none",
+                background: isDocumentEditor ? "#23776C" : "none",
                 color: isDocumentEditor ? "white" : "#e2e8f0",
                 border: "none",
                 fontSize: "16px",
@@ -547,11 +537,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background =
-                  isDocumentEditor ? "#2563eb" : "#2d3748")
+                  isDocumentEditor ? "#23776C" : "#2d3748")
               }
               onMouseLeave={(e) =>
                 (e.currentTarget.style.background =
-                  isDocumentEditor ? "#2563eb" : "none")
+                  isDocumentEditor ? "#23776C" : "none")
               }
             >
               <Upload size={20} />
@@ -570,7 +560,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   padding: "8px 16px 8px 44px",
                   borderRadius: "8px",
                   marginBottom: "8px",
-                  background: isDrafts ? "#2563eb" : "none",
+                  background: isDrafts ? "#23776C" : "none",
                   color: isDrafts ? "white" : "#e2e8f0",
                   border: "none",
                   fontSize: "15px",
@@ -581,11 +571,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background =
-                    isDrafts ? "#2563eb" : "#2d3748")
+                    isDrafts ? "#23776C" : "#2d3748")
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.background =
-                    isDrafts ? "#2563eb" : "none")
+                    isDrafts ? "#23776C" : "none")
                 }
               >
                 <FileText size={18} />
@@ -623,7 +613,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   padding: "12px 16px",
                   borderRadius: "8px",
                   marginBottom: "8px",
-                  background: currentStep === "projectBasics" ? "#2563eb" : "none",
+                  background: currentStep === "projectBasics" ? "#23776C" : "none",
                   color: currentStep === "projectBasics" ? "white" : "#e2e8f0",
                   border: "none",
                   fontSize: "16px",
@@ -634,11 +624,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background =
-                    currentStep === "projectBasics" ? "#2563eb" : "#2d3748")
+                    currentStep === "projectBasics" ? "#23776C" : "#2d3748")
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.background =
-                    currentStep === "projectBasics" ? "#2563eb" : "none")
+                    currentStep === "projectBasics" ? "#23776C" : "none")
                 }
               >
                 <svg
@@ -670,7 +660,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                     padding: "12px 16px",
                     borderRadius: "8px",
                     marginBottom: "8px",
-                    background: currentStep === "questionnaire" ? "#2563eb" : "none",
+                    background: currentStep === "questionnaire" ? "#23776C" : "none",
                     color: currentStep === "questionnaire" ? "white" : "#e2e8f0",
                     border: "none",
                     fontSize: "16px",
@@ -681,11 +671,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   }}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.background =
-                      currentStep === "questionnaire" ? "#2563eb" : "#2d3748")
+                      currentStep === "questionnaire" ? "#23776C" : "#2d3748")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.background =
-                      currentStep === "questionnaire" ? "#2563eb" : "none")
+                      currentStep === "questionnaire" ? "#23776C" : "none")
                   }
                 >
                   <svg
@@ -718,7 +708,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                     padding: "12px 16px",
                     borderRadius: "8px",
                     marginBottom: "8px",
-                    background: currentStep === "uploadDocuments" ? "#2563eb" : "none",
+                    background: currentStep === "uploadDocuments" ? "#23776C" : "none",
                     color: currentStep === "uploadDocuments" ? "white" : "#cbd5e1",
                     border: "none",
                     fontSize: "16px",
@@ -729,11 +719,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   }}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.background =
-                      currentStep === "uploadDocuments" ? "#2563eb" : "#2d3748")
+                      currentStep === "uploadDocuments" ? "#23776C" : "#2d3748")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.background =
-                      currentStep === "uploadDocuments" ? "#2563eb" : "none")
+                      currentStep === "uploadDocuments" ? "#23776C" : "none")
                   }
                 >
                   <svg
@@ -768,7 +758,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                     padding: "12px 16px",
                     borderRadius: "8px",
                     marginBottom: "8px",
-                    background: currentStep === "sectionEditor" ? "#2563eb" : "none",
+                    background: currentStep === "sectionEditor" ? "#23776C" : "none",
                     color: currentStep === "sectionEditor" ? "white" : "#e2e8f0",
                     border: "none",
                     fontSize: "16px",
@@ -779,11 +769,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   }}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.background =
-                      currentStep === "sectionEditor" ? "#2563eb" : "#2d3748")
+                      currentStep === "sectionEditor" ? "#23776C" : "#2d3748")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.background =
-                      currentStep === "sectionEditor" ? "#2563eb" : "none")
+                      currentStep === "sectionEditor" ? "#23776C" : "none")
                   }
                 >
                   <svg
@@ -816,7 +806,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                     padding: "12px 16px",
                     borderRadius: "8px",
                     marginBottom: "8px",
-                    background: currentStep === "reviewApplication" ? "#2563eb" : "none",
+                    background: currentStep === "reviewApplication" ? "#23776C" : "none",
                     color: currentStep === "reviewApplication" ? "white" : "#cbd5e1",
                     border: "none",
                     fontSize: "16px",
@@ -827,11 +817,11 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   }}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.background =
-                      currentStep === "reviewApplication" ? "#2563eb" : "#2d3748")
+                      currentStep === "reviewApplication" ? "#23776C" : "#2d3748")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.background =
-                      currentStep === "reviewApplication" ? "#2563eb" : "none")
+                      currentStep === "reviewApplication" ? "#23776C" : "none")
                   }
                 >
                   <svg

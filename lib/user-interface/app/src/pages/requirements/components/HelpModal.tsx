@@ -81,7 +81,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
             { title: "Want a different grant?", text: "Use Recent Grants to access other recently viewed grants, or select Home to return to the main page." },
           ].map((section) => (
             <div key={section.title} style={{ marginBottom: 20 }}>
-              <p className="help-modal__section-title">{section.title}</p>
+              <h3 className="help-modal__section-title">{section.title}</h3>
               <p className="help-modal__section-text">{section.text}</p>
             </div>
           ))}
@@ -93,14 +93,13 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
               checked={dontShowAgain}
               onChange={(e) => setDontShowAgain(e.target.checked)}
               className="help-modal__checkbox"
-              aria-label="Do not show this again"
             />
             <label htmlFor="dont-show-again" className="help-modal__checkbox-label">
               Do not show this again
             </label>
           </div>
 
-          <button onClick={handleClose} className="help-modal__confirm-btn" aria-label="Close help dialog">
+          <button onClick={handleClose} className="help-modal__confirm-btn">
             Got it
           </button>
         </div>

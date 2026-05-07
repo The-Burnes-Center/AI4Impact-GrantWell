@@ -303,37 +303,45 @@ const Dashboard: React.FC = () => {
       </nav>
       <div className="dashboard-container dashboard-main-column">
         <nav aria-label="Breadcrumb" className="breadcrumb">
-          <div className="breadcrumb-item">
-            <button className="breadcrumb-link" onClick={() => navigate("/")}>
-              Home
-            </button>
-          </div>
-          <div className="breadcrumb-item" aria-current="page">Dashboard</div>
+          <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex" }}>
+            <li className="breadcrumb-item">
+              <button className="breadcrumb-link" onClick={() => navigate("/")}>
+                Home
+              </button>
+            </li>
+            <li className="breadcrumb-item" aria-current="page">Dashboard</li>
+          </ol>
         </nav>
 
         <div className="dashboard-main-content">
           <div className="dashboard-header">
             <h1>Admin Dashboard</h1>
-            <button className="action-button refresh-button" onClick={handleRefresh} disabled={isRefreshing}>
+            <button
+              className="action-button refresh-button"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              aria-label="Refresh dashboard"
+              aria-busy={isRefreshing}
+            >
               {isRefreshing ? (
                 <span className="refresh-loading">Refreshing...</span>
               ) : (
-                <><LuRefreshCw size={16} className="button-icon refresh-icon" /><span>Refresh</span></>
+                <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
               )}
             </button>
           </div>
 
           {showSuccessBanner && (
-            <div className="success-banner">
-              <div className="success-banner-content"><LuCheck size={20} className="success-icon" /><span>Success! An invitation has been sent to {invitedEmail}</span></div>
-              <button onClick={() => setShowSuccessBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} /></button>
+            <div className="success-banner" role="status" aria-live="polite">
+              <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! An invitation has been sent to {invitedEmail}</span></div>
+              <button onClick={() => setShowSuccessBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} aria-hidden="true" /></button>
             </div>
           )}
 
           {showGrantBanner && (
-            <div className="success-banner">
-              <div className="success-banner-content"><LuCheck size={20} className="success-icon" /><span>Success! Grant &quot;{addedGrantName}&quot; has been added</span></div>
-              <button onClick={() => setShowGrantBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} /></button>
+            <div className="success-banner" role="status" aria-live="polite">
+              <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! Grant &quot;{addedGrantName}&quot; has been added</span></div>
+              <button onClick={() => setShowGrantBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} aria-hidden="true" /></button>
             </div>
           )}
 
@@ -469,8 +477,8 @@ const Dashboard: React.FC = () => {
                     <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
                       <LuUpload size={16} className="button-icon" /><span>Add Grant</span>
                     </button>
-                    <button className="action-button scraper-button" onClick={() => setScrapeConfirmModalOpen(true)} disabled={isScraping} aria-label="Auto-scrape NOFOs from grants.gov">
-                      <LuDownload size={16} className="button-icon" /><span>{isScraping ? "Scraping..." : "Auto-Scrape NOFOs"}</span>
+                    <button className="action-button scraper-button" onClick={() => setScrapeConfirmModalOpen(true)} disabled={isScraping} aria-label="Auto-scrape NOFOs from grants.gov" aria-busy={isScraping}>
+                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape NOFOs"}</span>
                     </button>
                   </div>
                 </div>
@@ -555,7 +563,22 @@ const Dashboard: React.FC = () => {
             <p className="modal-description">Enter the email address of the user you want to invite. They will receive an email with instructions to set up their account.</p>
             <div className="form-group">
               <label htmlFor="invite-email">Email Address</label>
-              <input type="email" id="invite-email" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} className="form-input" placeholder="user@example.com" />
+              <input
+                type="email"
+                id="invite-email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                className="form-input"
+                placeholder="user@example.com"
+                required
+                aria-required="true"
+                autoComplete="email"
+                aria-invalid={inviteEmail.length > 0 && !/\S+@\S+\.\S+/.test(inviteEmail)}
+                aria-describedby="invite-email-help"
+              />
+              <span id="invite-email-help" className="visually-hidden">
+                Enter a valid email address. The user will receive an invitation.
+              </span>
             </div>
             <div className="modal-actions">
               <button className="modal-button secondary" onClick={() => setInviteUserModalOpen(false)}>Cancel</button>

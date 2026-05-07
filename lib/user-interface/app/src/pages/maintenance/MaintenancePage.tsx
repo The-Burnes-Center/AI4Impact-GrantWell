@@ -1,8 +1,13 @@
+import { useEffect } from "react";
 import "../../styles/maintenance.css";
 
 export default function MaintenancePage() {
+  useEffect(() => {
+    document.title = "Site under maintenance — GrantWell";
+  }, []);
+
   return (
-    <main id="main-content" role="main" tabIndex={-1} className="maintenance-page">
+    <main id="main-content" tabIndex={-1} className="maintenance-page">
       <div className="maintenance-container">
         <div className="maintenance-icon" aria-hidden="true">
           <svg

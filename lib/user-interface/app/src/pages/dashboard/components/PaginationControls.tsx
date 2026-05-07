@@ -130,7 +130,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
   );
 
   return (
-    <div className="pagination-container">
+    <nav className="pagination-container" aria-label="Pagination">
       <div className="pagination-info">
         {isTokenMode
           ? `Showing ${startItem} to ${endItem} ${itemLabel} on page ${currentPage}`
@@ -140,13 +140,12 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
         <div className="pagination-controls">{pageButtons}</div>
         <div className="items-per-page">
           <label htmlFor={selectId} style={{ marginRight: "8px" }}>
-            Show:
+            Items per page:
           </label>
           <select
             id={selectId}
             value={itemsPerPage}
             onChange={onItemsPerPageChange}
-            aria-label="Items per page"
             className="form-input"
           >
             {itemsPerPageOptions.map((option) => (
@@ -157,7 +156,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
           </select>
         </div>
       </div>
-    </div>
+    </nav>
   );
 });
 

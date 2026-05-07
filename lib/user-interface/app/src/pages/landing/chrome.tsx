@@ -36,54 +36,75 @@ export function OmniHeader({ position = "top" }: { position?: "top" | "bottom" }
         className="marketing__omni-link"
         href="https://burnes.northeastern.edu"
         target="_blank"
-        rel="noreferrer"
+        rel="noreferrer noopener"
       >
         <ArrowUpRight className="marketing__omni-arrow" />
         <span>The Burnes Center for Social Change</span>
+        <span className="visually-hidden"> (opens in new tab)</span>
       </a>
       <a
         className="marketing__omni-link"
         href="https://www.rebootdemocracy.ai"
         target="_blank"
-        rel="noreferrer"
+        rel="noreferrer noopener"
       >
         <ArrowUpRight className="marketing__omni-arrow" />
         <span>Reboot Democracy</span>
+        <span className="visually-hidden"> (opens in new tab)</span>
       </a>
       <a
         className="marketing__omni-link"
         href="https://ai4impact.ai/"
         target="_blank"
-        rel="noreferrer"
+        rel="noreferrer noopener"
       >
         <ArrowUpRight className="marketing__omni-arrow" />
         <span>AI for Impact</span>
+        <span className="visually-hidden"> (opens in new tab)</span>
       </a>
       <a
         className="marketing__omni-link"
         href="https://thegovlab.org"
         target="_blank"
-        rel="noreferrer"
+        rel="noreferrer noopener"
       >
         <ArrowUpRight className="marketing__omni-arrow" />
         <span>The Gov Lab</span>
+        <span className="visually-hidden"> (opens in new tab)</span>
       </a>
       <a
         className="marketing__omni-link"
         href="https://communitycentered.ai/"
         target="_blank"
-        rel="noreferrer"
+        rel="noreferrer noopener"
       >
         <ArrowUpRight className="marketing__omni-arrow" />
         <span>Community-Centered AI</span>
+        <span className="visually-hidden"> (opens in new tab)</span>
       </a>
     </aside>
   );
 }
 
 export function LandingNavbar() {
+  const handleSkipNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const mainContent = document.getElementById("main-content");
+    if (mainContent) {
+      mainContent.focus();
+      mainContent.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <nav className="marketing__nav" aria-label="Primary">
+      <a
+        href="#main-content"
+        onClick={handleSkipNavClick}
+        className="marketing__skip-nav"
+      >
+        Skip to main content
+      </a>
       <div className="marketing__nav-links">
         <NavLink
           to="/"
@@ -138,6 +159,9 @@ export function AppNavbar() {
   };
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
+      return;
+    }
     e.preventDefault();
     navigate("/home");
   };
@@ -161,13 +185,12 @@ export function AppNavbar() {
         onClick={handleSkipNavClick}
         className="marketing__skip-nav"
       >
-        skip to main content
+        Skip to main content
       </a>
       <a
         href="/home"
         onClick={handleLogoClick}
         className="marketing__nav-brand"
-        title="GrantWell home"
       >
         <img
           src="/images/marketing/grantwell-wordmark-dark.svg"
@@ -210,7 +233,7 @@ export function LandingFooter() {
         <img
           className="marketing__footer-wordmark"
           src="/images/marketing/grantwell-wordmark-footer.svg"
-          alt="GrantWell"
+          alt=""
         />
         <div className="marketing__footer-madeby">
           <div className="marketing__footer-madeby-line">
@@ -218,7 +241,7 @@ export function LandingFooter() {
             <img
               className="marketing__footer-heart"
               src="/images/marketing/footer-heart.svg"
-              alt="love"
+              alt=""
             />
             <span>by</span>
           </div>

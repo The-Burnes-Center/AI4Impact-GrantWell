@@ -408,41 +408,71 @@ export default function Sessions(props: SessionsProps) {
       </div>
 
       {/* Table section */}
-      <div className="table-container">
-        <div className="table-header" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
-          <div className="header-cell">
-            <input
-              type="checkbox"
-              checked={
-                paginatedItems.length > 0 &&
-                selectedItems.length === paginatedItems.length
-              }
-              onChange={handleSelectAll}
-              aria-label="Select all sessions"
-              style={{ cursor: "pointer" }}
-              disabled={isLoading || sortedSessions.length === 0}
-            />
-          </div>
-          <div
-            className="header-cell"
-            onClick={() => !isLoading && handleSort("title")}
-            style={{ cursor: isLoading ? "default" : "pointer" }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              Title {!isLoading && getSortIcon("title")}
+      <div className="table-container" role="table" aria-label="Chat sessions">
+        <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+          <div role="row" style={{ display: "contents" }}>
+            <div className="header-cell" role="columnheader">
+              <input
+                type="checkbox"
+                checked={
+                  paginatedItems.length > 0 &&
+                  selectedItems.length === paginatedItems.length
+                }
+                onChange={handleSelectAll}
+                aria-label="Select all sessions"
+                style={{ cursor: "pointer" }}
+                disabled={isLoading || sortedSessions.length === 0}
+              />
             </div>
-          </div>
-          <div
-            className="header-cell"
-            onClick={() => !isLoading && handleSort("time_stamp")}
-            style={{ cursor: isLoading ? "default" : "pointer" }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              Time {!isLoading && getSortIcon("time_stamp")}
+            <div
+              className="header-cell"
+              role="columnheader"
+              aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
+            >
+              <button
+                onClick={() => !isLoading && handleSort("title")}
+                disabled={isLoading}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "none",
+                  border: "none",
+                  cursor: isLoading ? "default" : "pointer",
+                  padding: 0,
+                  font: "inherit",
+                  color: "inherit",
+                }}
+              >
+                Title {!isLoading && getSortIcon("title")}
+              </button>
+            </div>
+            <div
+              className="header-cell"
+              role="columnheader"
+              aria-sort={sortField === "time_stamp" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
+            >
+              <button
+                onClick={() => !isLoading && handleSort("time_stamp")}
+                disabled={isLoading}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "none",
+                  border: "none",
+                  cursor: isLoading ? "default" : "pointer",
+                  padding: 0,
+                  font: "inherit",
+                  color: "inherit",
+                }}
+              >
+                Time {!isLoading && getSortIcon("time_stamp")}
+              </button>
             </div>
           </div>
         </div>
-        <div className="table-body">
+        <div className="table-body" role="rowgroup">
           {isLoading ? (
             <div className="table-loading">
               <div className="table-loading-spinner"></div>
@@ -455,8 +485,8 @@ export default function Sessions(props: SessionsProps) {
             </div>
           ) : (
             paginatedItems.map((item) => (
-              <div key={item.session_id} className="table-row" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
-                <div className="row-cell">
+              <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+                <div className="row-cell" role="cell">
                   <input
                     type="checkbox"
                     checked={selectedItems.some(
@@ -467,7 +497,7 @@ export default function Sessions(props: SessionsProps) {
                     style={{ cursor: "pointer" }}
                   />
                 </div>
-                <div className="row-cell">
+                <div className="row-cell" role="cell">
                   <button
                     onClick={() => {
                       if (props.onSessionSelect) {
@@ -485,20 +515,20 @@ export default function Sessions(props: SessionsProps) {
                       );
                     }}
                     style={{
-                      color: "#23776C",
+                      color: "#195C53",
                       background: "none",
                       border: "none",
                       padding: 0,
                       cursor: "pointer",
                       textAlign: "left",
                       fontSize: "inherit",
-                      textDecoration: "none",
+                      textDecoration: "underline",
                     }}
                   >
                     {item.title}
                   </button>
                 </div>
-                <div className="row-cell">
+                <div className="row-cell" role="cell">
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
                     <LuCalendar size={16} aria-hidden="true" />
                     <time dateTime={item.time_stamp}>

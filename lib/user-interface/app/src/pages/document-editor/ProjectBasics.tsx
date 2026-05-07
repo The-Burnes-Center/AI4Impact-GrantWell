@@ -65,6 +65,7 @@ interface InputFieldProps {
   maxLength?: number;
   placeholder?: string;
   prefix?: string;
+  autoComplete?: string;
   value: string;
   error?: string;
   touched: boolean;
@@ -72,14 +73,15 @@ interface InputFieldProps {
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
-const InputField: React.FC<InputFieldProps> = React.memo(({ 
-  name, 
-  label, 
-  helpText, 
-  type = "text", 
-  maxLength, 
-  placeholder, 
+const InputField: React.FC<InputFieldProps> = React.memo(({
+  name,
+  label,
+  helpText,
+  type = "text",
+  maxLength,
+  placeholder,
   prefix,
+  autoComplete,
   value,
   error,
   touched,
@@ -100,7 +102,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
           fontFamily: typography.fontFamily,
         }}
       >
-        {label} <span style={{ color: colors.error }} aria-label="required">*</span>
+        {label} <span style={{ color: colors.error }} aria-hidden="true">*</span>
       </label>
       <div style={{ position: "relative" }}>
         {prefix && (
@@ -127,6 +129,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
           onBlur={onBlur}
           required
           aria-required="true"
+          autoComplete={autoComplete}
           aria-invalid={hasError ? "true" : "false"}
           aria-describedby={hasError ? `${name}-help ${name}-error` : `${name}-help`}
           maxLength={maxLength}
@@ -457,6 +460,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             label="Organization Name"
             helpText={`Enter the name of your municipality, tribal nation, or community organization. (${formData.organizationName.length}/200 characters)`}
             maxLength={200}
+            autoComplete="organization"
             value={formData.organizationName}
             error={formErrors.organizationName}
             touched={touched.organizationName || false}
@@ -485,6 +489,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 helpText={`Enter the city and state (e.g., "Boston, MA"). (${formData.location.length}/100 characters)`}
                 maxLength={100}
                 placeholder="Boston, MA"
+                autoComplete="address-level2"
                 value={formData.location}
                 error={formErrors.location}
                 touched={touched.location || false}
@@ -499,6 +504,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 helpText="Enter the 5-digit ZIP code for the project location."
                 maxLength={5}
                 placeholder="02119"
+                autoComplete="postal-code"
                 value={formData.zipCode}
                 error={formErrors.zipCode}
                 touched={touched.zipCode || false}
@@ -513,6 +519,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             label="Primary Contact Name"
             helpText={`Enter the name of the primary person responsible for this grant application. (${formData.contactName.length}/100 characters)`}
             maxLength={100}
+            autoComplete="name"
             value={formData.contactName}
             error={formErrors.contactName}
             touched={touched.contactName || false}
@@ -527,6 +534,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             helpText="Enter a valid email address for project-related communications."
             maxLength={254}
             placeholder="name@example.com"
+            autoComplete="email"
             value={formData.contactEmail}
             error={formErrors.contactEmail}
             touched={touched.contactEmail || false}

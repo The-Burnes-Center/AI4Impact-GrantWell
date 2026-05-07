@@ -1,5 +1,4 @@
 .marketing {
-  --mk-blue: #376BD1;
   --mk-green: #23776C;
   --mk-green-dark: #195C53;
   --mk-green-deepest: #244140;
@@ -21,7 +20,7 @@
 }
 
 .marketing__omni {
-  background-color: var(--mk-blue);
+  background-color: var(--mk-green);
   color: var(--mk-white);
   width: 100%;
   height: 45px;

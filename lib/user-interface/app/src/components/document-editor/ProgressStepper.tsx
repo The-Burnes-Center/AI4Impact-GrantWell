@@ -82,12 +82,18 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             text-align: left;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             z-index: 1000;
-            pointer-events: none;
             opacity: 0;
+            visibility: hidden;
             transition: opacity 0.2s ease, transform 0.2s ease;
             max-width: 220px;
             min-width: 150px;
             line-height: 1.5;
+          }
+          .step-wrapper:hover .step-tooltip,
+          .step-wrapper:focus-within .step-tooltip,
+          .step-tooltip:hover {
+            opacity: 1;
+            visibility: visible;
           }
           
           .step-wrapper:first-child .step-tooltip {
@@ -191,7 +197,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               left: "16px",
               right: "16px",
               height: "2px",
-              backgroundColor: "#e5e7eb",
+              backgroundColor: "#9ca3af",
               zIndex: 0,
             }}
           >
@@ -228,17 +234,13 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               onMouseEnter={() => setHoveredStep(index)}
               onMouseLeave={() => setHoveredStep(null)}
             >
-              {/* Tooltip */}
-              {isHovered && (
-                <div
-                  id={`tooltip-${step.id}`}
-                  className="step-tooltip"
-                  role="tooltip"
-                  aria-hidden="true"
-                >
-                  {tooltipText}
-                </div>
-              )}
+              <div
+                id={`tooltip-${step.id}`}
+                className="step-tooltip"
+                role="tooltip"
+              >
+                {tooltipText}
+              </div>
 
               {/* Step Circle */}
               <button
@@ -246,11 +248,12 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                 disabled={!clickable}
                 aria-label={`Step ${index + 1}: ${step.label}${active ? " (current)" : ""}${completed ? " (completed)" : ""}`}
                 aria-current={active ? "step" : undefined}
+                aria-describedby={`tooltip-${step.id}`}
                 style={{
                   width: "32px",
                   height: "32px",
                   borderRadius: "50%",
-                  border: `2px solid ${completed || active ? "#23776C" : "#e5e7eb"}`,
+                  border: `2px solid ${completed || active ? "#23776C" : "#9ca3af"}`,
                   backgroundColor: completed || active ? "#23776C" : "#ffffff",
                   color: completed || active ? "#ffffff" : "#4b5563",
                   display: "flex",

@@ -54,7 +54,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: "500",
   },
   primaryButton: {
-    backgroundColor: "#2563eb",
+    backgroundColor: "#23776C",
     color: "white",
     border: "none",
   },
@@ -244,21 +244,21 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const getStatusColor = (status?: DraftStatus): string => {
     switch (status) {
       case 'project_basics':
-        return '#6b7280'; // gray - meets WCAG AA contrast
+        return '#4b5563';
       case 'questionnaire':
-        return '#2563eb'; // blue - meets WCAG AA contrast
+        return '#195C53';
       case 'uploading_documents':
-        return '#0891b2'; // cyan - meets WCAG AA contrast
+        return '#0e7490';
       case 'generating_draft':
-        return '#7c2d12'; // orange - meets WCAG AA contrast
+        return '#7c2d12';
       case 'editing_sections':
-        return '#059669'; // green - meets WCAG AA contrast
+        return '#047857';
       case 'reviewing':
-        return '#d97706'; // amber - meets WCAG AA contrast
+        return '#b45309';
       case 'submitted':
-        return '#7c3aed'; // purple - meets WCAG AA contrast
+        return '#6d28d9';
       default:
-        return '#6b7280';
+        return '#4b5563';
     }
   };
 
@@ -363,40 +363,50 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       </div>
 
       {/* Table section */}
-      <div className="table-container">
-        <div className="table-header" style={{ gridTemplateColumns: "48px 2fr 1.5fr 1.5fr 1fr" }}>
-          <div className="header-cell">
-            <input
-              type="checkbox"
-              checked={selectedItems.length === sessions.length && sessions.length > 0}
-              onChange={handleSelectAll}
-              aria-label="Select all drafts"
-              style={{ cursor: "pointer" }}
-              disabled={isLoading || sessions.length === 0}
-            />
-          </div>
-          <div
-            className="header-cell"
-            onClick={() => !isLoading && handleSort("title")}
-            style={{ cursor: isLoading ? "default" : "pointer" }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              Title {!isLoading && getSortIcon("title")}
+      <div className="table-container" role="table" aria-label="Drafts">
+        <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2fr 1.5fr 1.5fr 1fr" }}>
+          <div role="row" style={{ display: "contents" }}>
+            <div className="header-cell" role="columnheader">
+              <input
+                type="checkbox"
+                checked={selectedItems.length === sessions.length && sessions.length > 0}
+                onChange={handleSelectAll}
+                aria-label="Select all drafts"
+                style={{ cursor: "pointer" }}
+                disabled={isLoading || sessions.length === 0}
+              />
             </div>
-          </div>
-          <div
-            className="header-cell"
-            onClick={() => !isLoading && handleSort("last_modified")}
-            style={{ cursor: isLoading ? "default" : "pointer" }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              Last Modified {!isLoading && getSortIcon("last_modified")}
+            <div
+              className="header-cell"
+              role="columnheader"
+              aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
+            >
+              <button
+                onClick={() => !isLoading && handleSort("title")}
+                disabled={isLoading}
+                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit" }}
+              >
+                Title {!isLoading && getSortIcon("title")}
+              </button>
             </div>
+            <div
+              className="header-cell"
+              role="columnheader"
+              aria-sort={sortField === "last_modified" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
+            >
+              <button
+                onClick={() => !isLoading && handleSort("last_modified")}
+                disabled={isLoading}
+                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit" }}
+              >
+                Last Modified {!isLoading && getSortIcon("last_modified")}
+              </button>
+            </div>
+            <div className="header-cell" role="columnheader">NOFO</div>
+            <div className="header-cell" role="columnheader" style={{ textAlign: 'center' }}>Status</div>
           </div>
-          <div className="header-cell">NOFO</div>
-          <div className="header-cell" style={{ textAlign: 'center' }}>Status</div>
         </div>
-        <div className="table-body">
+        <div className="table-body" role="rowgroup">
           {isLoading ? (
             <div className="table-loading">
               <div className="table-loading-spinner"></div>
@@ -409,8 +419,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             </div>
           ) : (
             paginatedItems.map((item) => (
-              <div key={item.draft_id} className="table-row" style={{ gridTemplateColumns: "48px 2fr 1.5fr 1.5fr 1fr" }}>
-                <div className="row-cell">
+              <div key={item.draft_id} className="table-row" role="row" style={{ gridTemplateColumns: "48px 2fr 1.5fr 1.5fr 1fr" }}>
+                <div className="row-cell" role="cell">
                   <input
                     type="checkbox"
                     checked={selectedItems.some(
@@ -421,7 +431,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                     style={{ cursor: "pointer" }}
                   />
                 </div>
-                <div className="row-cell">
+                <div className="row-cell" role="cell">
                   <button
                     onClick={() => {
                       if (props.onSessionSelect) {
@@ -430,35 +440,34 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                     }}
                     aria-label={`Open draft: ${item.title}`}
                     style={{
-                      color: "#23776C",
+                      color: "#195C53",
                       background: "none",
                       border: "none",
                       padding: 0,
                       cursor: "pointer",
                       textAlign: "left",
                       fontSize: "14px",
-                      textDecoration: "none",
+                      textDecoration: "underline",
                     }}
                   >
                     {item.title}
                   </button>
                 </div>
-                <div className="row-cell">
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                <div className="row-cell" role="cell">
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#5a5a5a" }}>
                     <LuCalendar size={16} aria-hidden="true" />
                     <time dateTime={item.last_modified}>
                       {formatSessionTime(item.last_modified)}
                     </time>
                   </div>
                 </div>
-                <div className="row-cell">
+                <div className="row-cell" role="cell">
                   <span aria-label={`NOFO: ${item.document_identifier || 'Not specified'}`}>
                     {item.document_identifier || '—'}
                   </span>
                 </div>
-                <div className="row-cell" style={{ justifyContent: 'center' }}>
-                  <span 
-                    role="status"
+                <div className="row-cell" role="cell" style={{ justifyContent: 'center' }}>
+                  <span
                     aria-label={`Draft status: ${getStatusLabel(item.status)}`}
                     style={statusBadgeStyle(item.status)}
                   >

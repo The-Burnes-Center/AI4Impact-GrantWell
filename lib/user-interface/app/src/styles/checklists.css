@@ -231,27 +231,30 @@ body {
   font-style: italic;
 }
 
-/* Help button */
 .checklist-help-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  background-color: var(--gw-color-primary, #23776C);
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
+  padding: 8px 18px;
+  background-color: transparent;
+  color: #23776C;
+  border: 1px solid #23776C;
+  border-radius: 50px;
   cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   position: absolute;
   top: 32px;
   right: 32px;
 }
 
 .checklist-help-btn:hover {
-  background-color: var(--gw-color-primary-hover, #195C53);
+  background-color: #23776C;
+  color: #ffffff;
 }
 
 .checklist-help-btn:focus-visible {
@@ -392,7 +395,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #f0f7ff;
+  background-color: #DFECE0;
   padding: 16px 24px;
   border-radius: 8px;
   max-width: 600px;
@@ -430,17 +433,30 @@ body {
 }
 
 .checklist-error__btn {
-  padding: 10px 24px;
-  background-color: var(--gw-color-primary, #23776C);
-  color: white;
-  border: none;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 26px;
+  background-color: #23776C;
+  color: #f9fbff;
+  border: 1px solid #23776C;
+  border-radius: 50px;
   cursor: pointer;
-  font-weight: 500;
+  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
 .checklist-error__btn:hover {
-  background-color: var(--gw-color-primary-hover, #195C53);
+  background-color: #195C53;
+  border-color: #195C53;
+}
+
+.checklist-error__btn:active {
+  transform: translateY(1px);
 }
 
 /* Help modal */
@@ -522,7 +538,7 @@ body {
 
 .help-modal__highlight {
   border-left: 4px solid var(--gw-color-primary, #23776C);
-  background-color: #F0F7FF;
+  background-color: #DFECE0;
   padding: 16px 20px;
   margin-bottom: 24px;
   border-radius: 4px;
@@ -565,20 +581,33 @@ body {
 }
 
 .help-modal__confirm-btn {
-  padding: 14px 24px;
-  background-color: var(--gw-color-primary, #23776C);
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 30px;
+  background-color: #23776C;
+  color: #f9fbff;
+  border: 1px solid #23776C;
+  border-radius: 50px;
   cursor: pointer;
+  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 16px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
   width: 100%;
-  transition: background 0.2s;
+  min-height: 48px;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
 .help-modal__confirm-btn:hover {
-  background-color: var(--gw-color-primary-hover, #195C53);
+  background-color: #195C53;
+  border-color: #195C53;
+}
+
+.help-modal__confirm-btn:active {
+  transform: translateY(1px);
 }
 
 .help-modal__confirm-btn:focus-visible {

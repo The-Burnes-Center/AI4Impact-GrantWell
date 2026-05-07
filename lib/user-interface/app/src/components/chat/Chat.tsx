@@ -273,42 +273,40 @@ export default function Chat(props: {
 
   return (
     <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
-      {/* Chat content area */}
       <div
         ref={messageAreaRef}
         role="log"
-        aria-live="polite"
-        aria-relevant="additions"
-        aria-atomic="false"
         tabIndex={0}
         style={styles.messageArea}
       >
-        <div style={styles.messageList}>
+        <ul style={{ ...styles.messageList, listStyle: "none", padding: 0, margin: 0 }}>
           {messageHistory.length === 0 && !session?.loading && (
-            <div style={styles.infoAlert}>
+            <li style={styles.infoAlert}>
               <HelpCircle size={20} style={styles.infoIcon} />
               <span>
                 AI Models can make mistakes. Be mindful in validating important
                 information.
               </span>
-            </div>
+            </li>
           )}
 
           {messageHistory.map((message, idx) => (
-            <ChatMessage key={idx} message={message} documentIdentifier={props.documentIdentifier} />
+            <li key={idx}>
+              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} />
+            </li>
           ))}
 
           {messageHistory.length === 0 && !session?.loading && (
-            <div style={styles.welcomeText}>{CHATBOT_NAME}</div>
+            <li style={styles.welcomeText}>{CHATBOT_NAME}</li>
           )}
 
           {session?.loading && (
-            <div style={styles.loadingContainer}>
-              <div style={styles.spinner}></div>
+            <li style={styles.loadingContainer}>
+              <div style={styles.spinner} aria-hidden="true"></div>
               <span>Loading session</span>
-            </div>
+            </li>
           )}
-        </div>
+        </ul>
       </div>
 
       {/* Scroll to bottom button */}
@@ -335,9 +333,12 @@ export default function Chat(props: {
         </button>
       )}
 
-      {/* Loading state announcement for screen readers */}
-      <div role="status" aria-live="polite" className="sr-only">
-        {session?.loading ? "Loading chat session" : ""}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {session?.loading
+          ? "Loading chat session"
+          : running
+          ? "Assistant is replying"
+          : ""}
       </div>
 
       {/* KB indexing banner */}
