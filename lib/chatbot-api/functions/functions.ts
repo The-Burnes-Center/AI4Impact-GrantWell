@@ -100,6 +100,15 @@ export class LambdaFunctionStack extends cdk.Stack {
       description: "Shared Pydantic models and utilities for Python Lambda functions",
     });
 
+    const jsSharedLayer = new lambda.LayerVersion(scope, "JsSharedLayer", {
+      layerVersionName: `${stackName}-js-shared-layer`,
+      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "layers/js-shared-layer")
+      ),
+      description: "Shared Node.js auth and sanitization helpers",
+    });
+
     // Add draft editor Lambda function
     const draftAPIHandlerFunction = new lambda.Function(
       scope,
@@ -726,6 +735,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "admin/index.handler",
+      layers: [jsSharedLayer],
       environment: {
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -770,6 +780,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "reprocess/index.handler",
+      layers: [jsSharedLayer],
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
         QUEUE_URL: nofoProcessingQueue.queueUrl,
@@ -857,6 +868,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/upload-nofos")
         ), // Points to the lambda directory
         handler: "index.handler", // Points to the 'hello' file in the lambda directory
+        layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },
@@ -886,6 +898,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/nofo-status")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -935,6 +948,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/nofo-summary-update")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -986,6 +1000,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/nofo-rename")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
         },
@@ -1022,6 +1037,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/nofo-delete")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
@@ -1249,6 +1265,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "nofo-scraper")
         ),
         handler: "coordinator/index.handler",
+        layers: [jsSharedLayer],
         environment: {
           GRANTS_GOV_API_KEY: props.grantsGovApiKey,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -1438,7 +1455,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "application-pdf-generator")
         ),
         handler: "index.handler",
-        layers: [puppeteerCoreLayer],
+        layers: [puppeteerCoreLayer, jsSharedLayer],
         timeout: cdk.Duration.minutes(5),
         memorySize: 2048, // PDF conversion with Chromium can be memory-intensive
       }
@@ -1519,7 +1536,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "application-docx-generator")
         ),
         handler: "index.handler",
-        layers: [htmlToDocxLayer],
+        layers: [htmlToDocxLayer, jsSharedLayer],
         timeout: cdk.Duration.minutes(2),
         memorySize: 512,
       }
