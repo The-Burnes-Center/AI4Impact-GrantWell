@@ -54,7 +54,7 @@ export default function VerifySignUpStep({
           >
             {loading ? (
               <>
-                <Spinner animation="border" size="sm" aria-hidden="true" />
+                <Spinner animation="border" size="sm" aria-hidden="true" className="me-2" />
                 <span className="visually-hidden">Loading</span>
                 Verifying...
               </>
