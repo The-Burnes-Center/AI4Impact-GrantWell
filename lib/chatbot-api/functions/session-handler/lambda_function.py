@@ -304,12 +304,44 @@ def list_sessions_by_user_id(user_id, document_identifier=None, limit=15):
 # Main Lambda handler function
 def lambda_handler(event, context):
     try:
+        # When invoked through API Gateway, the caller is identified by the JWT
+        # claims attached by the authorizer — never trust user_id from the body.
+        # When invoked directly by another Lambda (e.g. the WebSocket chat handler,
+        # which has already authenticated the principal at $connect), no
+        # requestContext is present and we fall back to the body value.
+        request_context = event.get('requestContext') or {}
+        is_apigw_invocation = bool(request_context)
+        authenticated_user_id = None
+        if is_apigw_invocation:
+            try:
+                authenticated_user_id = (
+                    request_context['authorizer']['jwt']['claims']['sub']
+                )
+            except (KeyError, TypeError):
+                return {
+                    'statusCode': 401,
+                    'headers': {'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Unauthorized: missing JWT claims'})
+                }
+
+            # Inject the authenticated sub into the body so Pydantic validation
+            # sees a valid user_id even when the client omits or spoofs it.
+            if isinstance(event.get('body'), str):
+                try:
+                    body_data = json.loads(event['body'])
+                except json.JSONDecodeError:
+                    body_data = {}
+            else:
+                body_data = dict(event.get('body') or {})
+            body_data['user_id'] = authenticated_user_id
+            event = {**event, 'body': body_data}
+
         # Parse and validate request using Pydantic
         request = parse_lambda_event_body(event, SessionOperationRequest)
-        
+
         # Extract validated fields
         operation = request.operation
-        user_id = request.user_id
+        user_id = authenticated_user_id if is_apigw_invocation else request.user_id
         session_id = request.session_id
         chat_history = request.chat_history
         new_chat_entry = request.new_chat_entry

@@ -425,12 +425,37 @@ def list_drafts_by_user_id(user_id, document_identifier=None, limit=15):
 # Main Lambda handler function
 def lambda_handler(event, context):
     try:
+        request_context = event.get('requestContext') or {}
+        is_apigw_invocation = bool(request_context)
+        authenticated_user_id = None
+        if is_apigw_invocation:
+            try:
+                authenticated_user_id = (
+                    request_context['authorizer']['jwt']['claims']['sub']
+                )
+            except (KeyError, TypeError):
+                return {
+                    'statusCode': 401,
+                    'headers': {'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Unauthorized: missing JWT claims'})
+                }
+
+            if isinstance(event.get('body'), str):
+                try:
+                    body_data = json.loads(event['body'])
+                except json.JSONDecodeError:
+                    body_data = {}
+            else:
+                body_data = dict(event.get('body') or {})
+            body_data['user_id'] = authenticated_user_id
+            event = {**event, 'body': body_data}
+
         # Parse and validate request using Pydantic
         request = parse_lambda_event_body(event, DraftOperationRequest)
-        
+
         # Extract validated fields
         operation = request.operation
-        user_id = request.user_id
+        user_id = authenticated_user_id if is_apigw_invocation else request.user_id
         session_id = request.session_id
         sections = request.sections or {}
         title = request.title or f"Draft on {str(datetime.now())}"
