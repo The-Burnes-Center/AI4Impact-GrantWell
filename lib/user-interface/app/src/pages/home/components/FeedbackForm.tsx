@@ -1,7 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useApiClient } from "../../../hooks/use-api-client";
 
 const MAX_CHARS = 500;
+
+const GOOGLE_FORM_ACTION =
+  "https://docs.google.com/forms/d/e/1FAIpQLSd--dd1rQF1z9TDWcIJ5640CvgLLLGsl4tM6Cq8IbFbqi9Hhg/formResponse";
+const GOOGLE_FORM_FIELD_FOUND = "entry.1768889284";
+const GOOGLE_FORM_FIELD_COMMENT = "entry.1810624973";
 
 const FeedbackForm = React.memo(function FeedbackForm() {
   const [selectedOption, setSelectedOption] = useState<"yes" | "no" | null>(
@@ -14,7 +18,6 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const infoButtonRef = useRef<HTMLButtonElement>(null);
-  const apiClient = useApiClient();
 
   useEffect(() => {
     if (selectedOption && textareaRef.current) {
@@ -49,10 +52,15 @@ const FeedbackForm = React.memo(function FeedbackForm() {
     setFeedbackError(null);
 
     try {
-      await apiClient.landingPage.submitFeedback(
-        selectedOption === "yes" ? "Yes" : "No",
-        feedbackText
-      );
+      const data = new FormData();
+      data.append(GOOGLE_FORM_FIELD_FOUND, selectedOption === "yes" ? "Yes" : "No");
+      data.append(GOOGLE_FORM_FIELD_COMMENT, feedbackText);
+
+      await fetch(GOOGLE_FORM_ACTION, {
+        method: "POST",
+        mode: "no-cors",
+        body: data,
+      });
       setFeedbackSubmitted(true);
     } catch {
       setFeedbackError(
