@@ -3,6 +3,8 @@
 *.d.ts
 !global.d.ts
 node_modules
+!lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/
+!lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/**
 *.pyc
 
 # CDK asset staging directory
