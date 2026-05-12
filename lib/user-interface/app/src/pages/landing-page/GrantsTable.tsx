@@ -84,9 +84,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     return map;
   }, [searchResults]);
 
-  // Once results have arrived, trust them — don't keep showing the spinner if a
-  // pending flag drifts true (e.g. user kept typing while a search was in flight).
-  const awaitingAIResults = (isSearching || isSearchPending) && !searchResults;
+  const awaitingAIResults = isSearching || (isSearchPending && searchResults === null);
 
   const getFilteredNofos = () => {
     const searchLower = searchTerm.toLowerCase().trim();
