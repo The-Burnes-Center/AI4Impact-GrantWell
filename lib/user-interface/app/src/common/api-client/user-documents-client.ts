@@ -12,7 +12,8 @@ export class UserDocumentsClient {
     fileName: string,
     fileType: string,
     userId: string,
-    nofoName: string
+    nofoName: string,
+    fileSize: number
   ): Promise<string> {
     if (!fileType) {
       throw new Error("Must have valid file type");
@@ -27,11 +28,18 @@ export class UserDocumentsClient {
         "Content-Type": "application/json",
         Authorization: auth,
       },
-      body: JSON.stringify({ fileName: filePath, fileType }),
+      body: JSON.stringify({ fileName: filePath, fileType, fileSize }),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to get upload URL");
+      let message = "Failed to get upload URL";
+      try {
+        const body = await response.json();
+        if (body?.message) message = body.message;
+      } catch {
+        // response was not JSON; fall through to generic message
+      }
+      throw new Error(message);
     }
 
     const data = await response.json();
