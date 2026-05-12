@@ -25,7 +25,7 @@ import { assembleHistory } from "./utils";
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
 import { useNotifications } from "../notifications/NotificationManager";
-import { Mic, MicOff, Send, Loader, AlertCircle } from "lucide-react";
+import { Mic, MicOff, Send, AlertCircle, Square } from "lucide-react";
 
 // Styles for the components
 const styles = {
@@ -119,8 +119,20 @@ const styles = {
     color: "#9ca3af",
     cursor: "not-allowed",
   },
-  spinner: {
-    animation: "spin 1s linear infinite",
+  stopButton: {
+    padding: "12px",
+    background: "#dc2626",
+    border: "none",
+    cursor: "pointer",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    outline: "none",
+    borderRadius: "12px",
+    minWidth: "44px",
+    minHeight: "44px",
   },
 };
 
@@ -150,6 +162,10 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   
   // Ref for chat input to enable auto-focus
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Active WebSocket — kept in a ref so the Stop button can close it.
+  const wsRef = useRef<WebSocket | null>(null);
+  const stoppedRef = useRef(false);
 
   // Enhanced speech recognition config
   const {
@@ -300,6 +316,22 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [props.messageHistory, props.messageAreaRef]);
 
+  // Stop in-flight generation by closing the WebSocket.
+  // Backend may still finish computing, but the client stops accepting chunks
+  // and surfaces whatever was already streamed.
+  const handleStopGeneration = () => {
+    stoppedRef.current = true;
+    if (wsRef.current) {
+      try {
+        wsRef.current.close();
+      } catch (e) {
+        console.warn("Error closing WebSocket on stop:", e);
+      }
+      wsRef.current = null;
+    }
+    props.setRunning(false);
+  };
+
   /**Sends a message to the chat API */
   const handleSendMessage = async () => {
     if (!props.documentIdentifier) {
@@ -380,6 +412,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
 
       const wsUrl = TEST_URL + "?Authorization=" + TOKEN;
       const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
+      stoppedRef.current = false;
 
       let incomingMetadata: boolean = false;
       let sources: Record<string, Array<{ title: string; uri: string }>> = {};
@@ -417,6 +451,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener("message", async function incoming(data) {
+        if (stoppedRef.current) return;
         /**This is a custom tag from the API that denotes that an error occured
          * and the next chunk will be an error message. */
         if (data.data.includes("<!ERROR!>:")) {
@@ -473,6 +508,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Handle WebSocket closure
       ws.addEventListener("close", async function close() {
+        if (wsRef.current === ws) wsRef.current = null;
         // if this is a new session, the backend will update the session list, so
         // we need to refresh
         if (firstTime) {
@@ -634,44 +670,49 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         Press Enter to send, Shift+Enter for new line
       </span>
 
-      {/* Send button */}
-      <button
-        style={{
-          ...(readyState !== ReadyState.OPEN ||
-          props.running ||
-          state.value.trim().length === 0 ||
-          props.session.loading ||
-          props.kbSyncing
-            ? { ...styles.sendButton, ...styles.sendButtonDisabled }
-            : {
-                ...styles.sendButton,
-                ...(isHovered
-                  ? {
-                      transform: "scale(1.05)",
-                      boxShadow: "0 4px 12px rgba(0, 115, 187, 0.3)",
-                    }
-                  : {}),
-              }),
-        }}
-        disabled={
-          readyState !== ReadyState.OPEN ||
-          props.running ||
-          state.value.trim().length === 0 ||
-          props.session.loading ||
-          props.kbSyncing
-        }
-        onClick={handleSendMessage}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        aria-label="Send message"
-        title="Send message"
-      >
-        {props.running ? (
-          <Loader size={20} style={{ ...styles.spinner, color: "white" }} />
-        ) : (
+      {/* Send / Stop button */}
+      {props.running ? (
+        <button
+          style={styles.stopButton}
+          onClick={handleStopGeneration}
+          aria-label="Stop generating response"
+          title="Stop generating"
+        >
+          <Square size={16} fill="white" />
+        </button>
+      ) : (
+        <button
+          style={{
+            ...(readyState !== ReadyState.OPEN ||
+            state.value.trim().length === 0 ||
+            props.session.loading ||
+            props.kbSyncing
+              ? { ...styles.sendButton, ...styles.sendButtonDisabled }
+              : {
+                  ...styles.sendButton,
+                  ...(isHovered
+                    ? {
+                        transform: "scale(1.05)",
+                        boxShadow: "0 4px 12px rgba(0, 115, 187, 0.3)",
+                      }
+                    : {}),
+                }),
+          }}
+          disabled={
+            readyState !== ReadyState.OPEN ||
+            state.value.trim().length === 0 ||
+            props.session.loading ||
+            props.kbSyncing
+          }
+          onClick={handleSendMessage}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          aria-label="Send message"
+          title="Send message"
+        >
           <Send size={20} />
-        )}
-      </button>
+        </button>
+      )}
     </div>
   );
 }
