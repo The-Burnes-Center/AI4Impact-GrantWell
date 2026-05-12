@@ -31,6 +31,34 @@ const MIME_TYPES: Record<string, string> = {
 
 const SUPPORTED_ACCEPT = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.html,.json,.xml,.md,.rtf,.epub,.odt,.tsv,.eml,.msg";
 
+// Must match the server cap in generate-upload-url/index.mjs.
+const MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
+const MAX_FILE_SIZE_LABEL = "100 MB";
+
+const ALLOWED_EXTENSIONS = new Set(
+  SUPPORTED_ACCEPT.split(",").map((ext) => ext.replace(/^\./, "").toLowerCase()),
+);
+
+type FileValidationResult = { accepted: File[]; rejected: string[] };
+
+function validateFiles(incoming: File[]): FileValidationResult {
+  const accepted: File[] = [];
+  const rejected: string[] = [];
+  for (const file of incoming) {
+    const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+    if (!ALLOWED_EXTENSIONS.has(ext)) {
+      rejected.push(`${file.name}: unsupported file type (.${ext || "unknown"})`);
+      continue;
+    }
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      rejected.push(`${file.name}: exceeds ${MAX_FILE_SIZE_LABEL} limit`);
+      continue;
+    }
+    accepted.push(file);
+  }
+  return { accepted, rejected };
+}
+
 interface UploadDocumentsProps {
   onContinue: () => void;
   selectedNofo: string | null;
@@ -112,10 +140,23 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     };
   }, []);
 
+  const addFiles = (incoming: File[]) => {
+    const { accepted, rejected } = validateFiles(incoming);
+    if (accepted.length > 0) {
+      setFiles((prev) => [...prev, ...accepted]);
+    }
+    if (rejected.length > 0) {
+      setUploadError(rejected.join("\n"));
+    } else {
+      setUploadError(null);
+    }
+  };
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setFiles((prev) => [...prev, ...Array.from(event.target.files!)]);
-      setUploadError(null);
+      addFiles(Array.from(event.target.files));
+      // reset value so selecting the same file again re-triggers onChange
+      event.target.value = "";
     }
   };
 
@@ -133,8 +174,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     e.preventDefault();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setFiles((prev) => [...prev, ...Array.from(e.dataTransfer.files)]);
-      setUploadError(null);
+      addFiles(Array.from(e.dataTransfer.files));
     }
   };
 
@@ -159,7 +199,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
         try {
           const uploadUrl = await apiClient.userDocuments.getUploadURL(
-            file.name, fileType, userId, nofoName
+            file.name, fileType, userId, nofoName, file.size
           );
           await uploader.upload(file, uploadUrl, fileType, (uploaded: number) => {
             setUploadProgress(Math.round(((uploadedSize + uploaded) / totalSize) * 100));
@@ -575,7 +615,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               margin: 0,
               fontFamily: typography.fontFamily,
             }}>
-              Supported formats: PDF, DOC, DOCX, XLSX, PPTX, TXT, CSV, and more
+              Supported formats: PDF, DOC, DOCX, XLSX, PPTX, TXT, CSV, and more (max {MAX_FILE_SIZE_LABEL} per file)
             </p>
           </div>
 
@@ -791,6 +831,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               color: colors.danger,
               fontSize: typography.fontSize.sm,
               fontFamily: typography.fontFamily,
+              whiteSpace: "pre-line",
             }}
           >
             {uploadError}

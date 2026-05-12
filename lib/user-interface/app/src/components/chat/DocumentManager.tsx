@@ -392,7 +392,7 @@ export default function DocumentManager({
 
       try {
         const uploadUrl = await apiClient.userDocuments.getUploadURL(
-          file.name, fileType, userId, nofoName
+          file.name, fileType, userId, nofoName, file.size
         );
 
         await uploader.upload(file, uploadUrl, fileType, (uploaded: number) => {
