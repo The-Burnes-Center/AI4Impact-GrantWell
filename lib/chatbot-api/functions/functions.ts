@@ -85,6 +85,45 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Centralized Bedrock model IDs — update here to change everywhere
     const SONNET_MODEL_ID = "global.anthropic.claude-sonnet-4-6";
     const HAIKU_MODEL_ID = "global.anthropic.claude-haiku-4-5-20251001-v1:0";
+    const TITAN_MODEL_ID = "amazon.titan-embed-text-v2:0";
+
+    const region = cdk.Stack.of(this).region;
+    const account = cdk.Stack.of(this).account;
+
+    const makeInferenceProfile = (
+      id: string,
+      name: string,
+      copyFrom: string,
+      component: string,
+    ) =>
+      new bedrock.CfnApplicationInferenceProfile(scope, id, {
+        inferenceProfileName: `${stackName}-${name}`,
+        modelSource: { copyFrom },
+        tags: [{ key: "Component", value: component }],
+      });
+
+    const sonnetSystemProfileArn = `arn:aws:bedrock:${region}:${account}:inference-profile/${SONNET_MODEL_ID}`;
+    const haikuSystemProfileArn = `arn:aws:bedrock:${region}:${account}:inference-profile/${HAIKU_MODEL_ID}`;
+    const titanFoundationModelArn = `arn:aws:bedrock:${region}::foundation-model/${TITAN_MODEL_ID}`;
+
+    const sonnetChatProfile = makeInferenceProfile(
+      "SonnetChatInferenceProfile", "sonnet-chat", sonnetSystemProfileArn, "chat",
+    );
+    const sonnetNofoProfile = makeInferenceProfile(
+      "SonnetNofoInferenceProfile", "sonnet-nofo-pipeline", sonnetSystemProfileArn, "nofo-pipeline",
+    );
+    const sonnetDraftProfile = makeInferenceProfile(
+      "SonnetDraftInferenceProfile", "sonnet-draft-generation", sonnetSystemProfileArn, "draft-generation",
+    );
+    const haikuNofoProfile = makeInferenceProfile(
+      "HaikuNofoInferenceProfile", "haiku-nofo-pipeline", haikuSystemProfileArn, "nofo-pipeline",
+    );
+    const haikuScraperProfile = makeInferenceProfile(
+      "HaikuScraperInferenceProfile", "haiku-scraper", haikuSystemProfileArn, "nofo-scraper",
+    );
+    const titanSearchProfile = makeInferenceProfile(
+      "TitanSearchInferenceProfile", "titan-grant-search", titanFoundationModelArn, "grant-search",
+    );
 
     // Create Python shared models Lambda Layer
     const pythonSharedLayer = new lambda.LayerVersion(scope, "PythonSharedLayer", {
@@ -197,7 +236,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SESSION_HANDLER: this.sessionFunction.functionName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
-          SONNET_MODEL_ID,
+          SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           // Flip to "true" once existing NOFOs are sidecar-tagged.
@@ -587,7 +626,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       handler: "extract-and-analyze/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        SONNET_MODEL_ID,
+        SONNET_MODEL_ID: sonnetNofoProfile.attrInferenceProfileArn,
       },
       timeout: cdk.Duration.minutes(15),
       memorySize: 512,
@@ -602,7 +641,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       handler: "synthesize/index.handler",
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        HAIKU_MODEL_ID,
+        HAIKU_MODEL_ID: haikuNofoProfile.attrInferenceProfileArn,
       },
       timeout: cdk.Duration.minutes(5),
       memorySize: 512,
@@ -1226,7 +1265,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         ),
         handler: "index.handler",
         environment: {
-          SONNET_MODEL_ID,
+          SONNET_MODEL_ID: sonnetDraftProfile.attrInferenceProfileArn,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
         },
         timeout: cdk.Duration.minutes(3),
@@ -1332,7 +1371,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           GRANTS_GOV_API_KEY: props.grantsGovApiKey,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          HAIKU_MODEL_ID,
+          HAIKU_MODEL_ID: haikuScraperProfile.attrInferenceProfileArn,
         },
         timeout: cdk.Duration.minutes(2),
         memorySize: 256,
@@ -1661,6 +1700,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           OPENSEARCH_INDEX: knowledgeBaseIndexName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
+          TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 512,
@@ -1682,7 +1722,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         actions: ["bedrock:InvokeModel"],
         resources: [
-          `arn:aws:bedrock:${stack.region}::foundation-model/amazon.titan-embed-text-v2:0`,
+          `arn:aws:bedrock:${stack.region}::foundation-model/${TITAN_MODEL_ID}`,
+          titanSearchProfile.attrInferenceProfileArn,
         ],
       })
     );
