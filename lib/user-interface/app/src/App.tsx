@@ -72,7 +72,7 @@ function ScrollToTop(): null {
       const isProduction = environment === 'production';
       
       if (isProduction && typeof window !== "undefined" && window.gtag) {
-        window.gtag("config", "G-K27MB9Y26C", {
+        window.gtag("config", "G-DY905CMNJN", {
           page_title: baseTitle,
           page_path: fullPath,
           page_location: fullUrl,
