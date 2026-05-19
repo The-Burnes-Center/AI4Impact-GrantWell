@@ -1299,6 +1299,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
+          DRAFT_TABLE_NAME: props.draftTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 128,
@@ -1309,7 +1310,10 @@ export class LambdaFunctionStack extends cdk.Stack {
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["dynamodb:UpdateItem", "dynamodb:GetItem"],
-        resources: [props.draftGenerationJobsTable.tableArn],
+        resources: [
+          props.draftGenerationJobsTable.tableArn,
+          props.draftTable.tableArn,
+        ],
       })
     );
 
