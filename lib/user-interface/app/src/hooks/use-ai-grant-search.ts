@@ -76,9 +76,12 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         cacheRef.current.delete(trimmed);
       }
 
-      // Abort any previous in-flight request
       abortControllerRef.current?.abort();
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
       cancelledRef.current = false;
+      const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+      const isLatest = () => abortControllerRef.current === controller && !cancelledRef.current;
 
       setIsSearching(true);
       setError(null);
@@ -86,35 +89,28 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
 
       try {
         const session = await Auth.currentSession();
+        if (!isLatest()) return;
         const idToken = session.getIdToken().getJwtToken();
         const endpoint = appContext.httpEndpoint;
 
-        const controller = new AbortController();
-        abortControllerRef.current = controller;
-        const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+        const response = await fetch(`${endpoint}/ai-grant-search`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({ query: query.trim() }),
+          signal: controller.signal,
+        });
 
-        let response: Response;
-        try {
-          response = await fetch(`${endpoint}/ai-grant-search`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${idToken}`,
-            },
-            body: JSON.stringify({ query: query.trim() }),
-            signal: controller.signal,
-          });
-        } finally {
-          clearTimeout(timeoutId);
-        }
-
-        if (cancelledRef.current) return;
-
+        if (!isLatest()) return;
         if (!response.ok) {
           throw new Error(`Search failed (${response.status})`);
         }
 
         const data: AISearchResponse = await response.json();
+        if (!isLatest()) return;
+
         const newResults = data.results || [];
         setResults(newResults);
         setSearchTimeMs(data.searchTimeMs);
@@ -131,7 +127,7 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
           timestamp: Date.now(),
         });
       } catch (err) {
-        if (cancelledRef.current) return;
+        if (!isLatest()) return;
         let message: string;
         if (err instanceof DOMException && err.name === "AbortError") {
           message = "Search timed out. Try a more specific query or full sentence.";
@@ -143,9 +139,10 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         setError(message);
         setResults([]);
       } finally {
-        if (!cancelledRef.current) {
+        clearTimeout(timeoutId);
+        if (abortControllerRef.current === controller) {
           abortControllerRef.current = null;
-          setIsSearching(false);
+          if (!cancelledRef.current) setIsSearching(false);
         }
       }
     },
