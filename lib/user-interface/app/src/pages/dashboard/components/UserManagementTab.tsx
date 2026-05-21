@@ -21,7 +21,7 @@ const allRoleOptions: Array<{
 
 const ROLE_DEFINITIONS: Record<UserRolePreset, string> = {
   user: "Browse grants, view requirements, and draft applications. No admin access.",
-  admin: "Everything a User can do, plus the Admin Dashboard: manage grants, review processing, and invite users (User or Admin only).",
+  admin: "Everything a User can do, plus the Admin Dashboard: manage grants, review processing, and manage user roles (User or Admin only).",
   developer: "Everything an Admin can do, plus manage feature rollouts and assign any role, including Developer.",
 };
 

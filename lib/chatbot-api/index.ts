@@ -378,34 +378,6 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    const inviteUserFunction = new lambda.Function(this, "InviteUserFunction", {
-      runtime: lambda.Runtime.NODEJS_18_X,
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "functions/user-management/invite-user")
-      ),
-      handler: "index.handler",
-      environment: {
-        USER_POOL_ID: props.authentication.userPool.userPoolId,
-      },
-      timeout: cdk.Duration.seconds(30),
-    });
-
-    props.authentication.userPool.grant(
-      inviteUserFunction,
-      "cognito-idp:AdminCreateUser"
-    );
-
-    const inviteUserIntegration = new HttpLambdaIntegration(
-      "InviteUserIntegration",
-      inviteUserFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/user-management/invite-user",
-      methods: [apigwv2.HttpMethod.POST],
-      integration: inviteUserIntegration,
-      authorizer: httpAuthorizer,
-    });
-
     const manageUsersFunction = new lambda.Function(this, "ManageUsersFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset(
