@@ -86,6 +86,94 @@
   font-weight: 600;
 }
 
+.landing-header-cell--sortable {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.landing-header-cell--sortable:hover {
+  color: #14558F;
+  background-color: #eaf2fa;
+}
+
+.landing-header-cell--sortable:focus-visible {
+  outline: 2px solid #14558F;
+  outline-offset: -2px;
+}
+
+.landing-header-cell--active {
+  color: #14558F;
+}
+
+.landing-header-sort-icon {
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.landing-header-cell--active .landing-header-sort-icon,
+.landing-header-cell--sortable:hover .landing-header-sort-icon {
+  opacity: 1;
+}
+
+.landing-sort-reset-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #14558F;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.landing-sort-reset-link:hover {
+  color: #0d3d66;
+}
+
+.landing-sort-reset-link:focus-visible {
+  outline: 2px solid #14558F;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.landing-clear-filters-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  height: 42px;
+  border: 1px solid #c4d4e2;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #14558F;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.landing-clear-filters-button:hover {
+  background-color: #14558F;
+  border-color: #14558F;
+  color: #fff;
+}
+
+.landing-clear-filters-button:focus-visible {
+  outline: 2px solid #14558F;
+  outline-offset: 2px;
+}
+
 .landing-table-body {
   max-height: none;
   overflow-y: visible;
@@ -130,9 +218,28 @@
   color: #333;
 }
 
+.landing-pinned-icon {
+  color: #c89b14;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
 .landing-expired-badge {
   display: inline-block;
   background-color: #dc3545;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.landing-new-badge {
+  display: inline-block;
+  background-color: #1f8a4c;
   color: white;
   font-size: 10px;
   font-weight: 600;
