@@ -27,7 +27,7 @@ export default function SignInStep({
   onSwitchToSignUp,
 }: SignInStepProps) {
   return (
-    <div className="login-form">
+    <div className="login-form" role="region" aria-labelledby="auth-card-title">
       <Form onSubmit={onSubmit} aria-label="Sign in form" noValidate>
         <Form.Group className="mb-3">
           <Form.Label className="form-label" htmlFor="email-input">
