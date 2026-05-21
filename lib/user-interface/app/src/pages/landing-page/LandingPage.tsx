@@ -29,6 +29,39 @@ interface SelectableDocument {
   status?: "active" | "archived";
 }
 
+function AiForImpactWordmark() {
+  const ai = (name: string) => `/images/marketing/ai4impact/${name}.svg`;
+  const vectors: Array<[src: string, t: number, r: number, b: number, l: number]> = [
+    ["v0", 72.43, 96.64, 0.41, 0],
+    ["v1", 72.43, 72.47, 0.41, 8.58],
+    ["v2", 72.43, 53.63, 0.41, 32.75],
+    ["v3", 72.43, 35.5, 0.41, 46.69],
+    ["v4", 72.02, 16.97, 0, 66.1],
+    ["v5", 72.43, 0, 0.41, 85.41],
+    ["v6", 0, 81.97, 72.84, 0.22],
+    ["v7", 0, 74.76, 72.84, 21.88],
+    ["v8", 36.33, 87.3, 36.51, 0.23],
+    ["v9", 35.91, 66.88, 36.1, 14.77],
+    ["v10", 36.32, 48.99, 36.52, 36.68],
+  ];
+  return (
+    <div className="ai4impact-wordmark" style={{ position: "relative", width: 110, height: 78, flexShrink: 0 }}>
+      {vectors.map(([src, t, r, b, l], i) => (
+        <div
+          key={i}
+          style={{ position: "absolute", top: `${t}%`, right: `${r}%`, bottom: `${b}%`, left: `${l}%` }}
+        >
+          <img
+            src={ai(src)}
+            alt=""
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", maxWidth: "none" }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Welcome() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -131,6 +164,7 @@ export default function Welcome() {
               grantType: (nofo.grant_type as NOFO["grantType"]) || null,
               agency: nofo.agency || null,
               category: nofo.category || null,
+              createdAt: nofo.created_at || null,
             }))
           );
         } else {
@@ -415,7 +449,6 @@ export default function Welcome() {
         <div className="affiliations">
           <div className="affiliations__inner">
             <h2 className="affiliations__heading">Our Affiliations</h2>
-            <a href="https://burnes.northeastern.edu/ai-for-impact-coop/" target="_blank" rel="noopener noreferrer" className="affiliations__tagline" aria-label="Made with love by AI for Impact (opens in new tab)">Made with ❤️ by<br />AI <em>for</em> Impact</a>
             <div className="affiliations__logos">
               <a
                 href="https://burnes.northeastern.edu/"
@@ -431,6 +464,14 @@ export default function Welcome() {
                 />
               </a>
             </div>
+            <a href="https://ai4impact.ai/" target="_blank" rel="noopener noreferrer" className="affiliations__tagline" aria-label="Made with love by AI for Impact (opens in new tab)">
+              <span className="affiliations__madeby-line">
+                <span>Made with</span>
+                <img className="affiliations__heart" src="/images/marketing/footer-heart.svg" alt="" />
+                <span>by</span>
+              </span>
+              <AiForImpactWordmark />
+            </a>
           </div>
         </div>
       </footer>

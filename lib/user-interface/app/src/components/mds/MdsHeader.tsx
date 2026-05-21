@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { HeaderSlim, SiteLogo } from "@massds/mayflower-react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
+import { useAdminCheck } from "../../hooks/use-admin-check";
 
 interface MDSHeaderProps {
   showSignOut?: boolean;
@@ -10,6 +11,7 @@ interface MDSHeaderProps {
 export default function MDSHeader({ showSignOut = true }: MDSHeaderProps) {
   const navigate = useNavigate();
   const logoRef = useRef<HTMLDivElement>(null);
+  const { isAdmin } = useAdminCheck();
 
   const handleSignOut = async () => {
     try {
@@ -107,52 +109,113 @@ export default function MDSHeader({ showSignOut = true }: MDSHeaderProps) {
         }
         utilityNav={
           showSignOut ? (
-            <a
-              className="ma__header_slim__utility-link"
-              href="#main-content"
-              onClick={(e) => {
-                e.preventDefault();
-                handleSignOut();
-              }}
+            <div
               style={{
-                cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                fontFamily: "'Noto Sans', sans-serif",
-                fontSize: "16px",
-                fontWeight: "500",
-                letterSpacing: "0.01em",
-                textDecoration: "none",
-                color: "#ffffff",
-                padding: "8px 12px",
-                borderRadius: "4px",
-                transition: "background-color 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  "rgba(255, 255, 255, 0.1)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
+                justifyContent: "flex-end",
               }}
             >
-              <svg
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 20 16"
-                fill="#fff"
+              {isAdmin && (
+                <a
+                  className="ma__header_slim__utility-link"
+                  href="/admin/dashboard"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/admin/dashboard");
+                  }}
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontFamily: "'Noto Sans', sans-serif",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    letterSpacing: "0.01em",
+                    textDecoration: "none",
+                    color: "#ffffff",
+                    padding: "8px 12px",
+                    borderRadius: "4px",
+                    transition: "background-color 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255, 255, 255, 0.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                >
+                  <svg
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <rect x="3" y="3" width="7" height="9"></rect>
+                    <rect x="14" y="3" width="7" height="5"></rect>
+                    <rect x="14" y="12" width="7" height="9"></rect>
+                    <rect x="3" y="16" width="7" height="5"></rect>
+                  </svg>
+                  <span>Admin Dashboard</span>
+                </a>
+              )}
+              <a
+                className="ma__header_slim__utility-link"
+                href="#main-content"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSignOut();
+                }}
                 style={{
-                  flexShrink: 0,
-                  marginTop: "1px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontFamily: "'Noto Sans', sans-serif",
+                  fontSize: "16px",
+                  fontWeight: "500",
+                  letterSpacing: "0.01em",
+                  textDecoration: "none",
+                  color: "#ffffff",
+                  padding: "8px 12px",
+                  borderRadius: "4px",
+                  transition: "background-color 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
                 }}
               >
-                <path d="M6.67 5.6V2.4L13.33 8l-6.66 5.6v-3.2H0V5.6zM8.33 0v1.6h10v12.8h-10V16H20V0z"></path>
-              </svg>
-              <span>Sign out</span>
-            </a>
+                <svg
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 20 16"
+                  fill="#fff"
+                  style={{
+                    flexShrink: 0,
+                    marginTop: "1px",
+                  }}
+                >
+                  <path d="M6.67 5.6V2.4L13.33 8l-6.66 5.6v-3.2H0V5.6zM8.33 0v1.6h10v12.8h-10V16H20V0z"></path>
+                </svg>
+                <span>Sign out</span>
+              </a>
+            </div>
           ) : undefined
         }
       />

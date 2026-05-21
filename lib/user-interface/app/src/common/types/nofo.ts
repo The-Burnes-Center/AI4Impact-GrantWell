@@ -18,6 +18,7 @@ export interface NOFO {
   agency?: string | null;
   category?: string | null;
   processingStatus?: string | null;
+  createdAt?: string | null;
 }
 
 export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {

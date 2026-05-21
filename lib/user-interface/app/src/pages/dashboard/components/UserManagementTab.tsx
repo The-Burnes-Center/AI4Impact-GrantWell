@@ -19,6 +19,12 @@ const allRoleOptions: Array<{
   { value: "developer", label: "Developer", requiresDeveloper: true },
 ];
 
+const ROLE_DEFINITIONS: Record<UserRolePreset, string> = {
+  user: "Browse grants, view requirements, and draft applications. No admin access.",
+  admin: "Everything a User can do, plus the Admin Dashboard: manage grants, review processing, and invite users (User or Admin only).",
+  developer: "Everything an Admin can do, plus manage feature rollouts and assign any role, including Developer.",
+};
+
 function getRolePreset(roles: string[]): UserRolePreset {
   const normalizedRoles = roles.map((role) => role.toLowerCase());
   const isAdmin = normalizedRoles.includes("admin");
@@ -156,6 +162,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 ? " Developers can assign all roles."
                 : " Admins can assign User or Admin roles only."}
             </p>
+            <dl className="user-management-role-legend" aria-label="Role definitions">
+              {(Object.keys(ROLE_DEFINITIONS) as UserRolePreset[]).map((role) => (
+                <div key={role} className="user-management-role-legend__item">
+                  <dt>{allRoleOptions.find((opt) => opt.value === role)?.label ?? role}</dt>
+                  <dd>{ROLE_DEFINITIONS[role]}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
 
