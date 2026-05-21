@@ -4,20 +4,14 @@
  * This construct can be used to define WebSocket endpoints for real-time communication in the backend.
  */
 
-import * as cdk from "aws-cdk-lib";
 import { aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-
-// Define properties for the WebsocketBackendAPI construct
-interface WebsocketBackendAPIProps {
-  // Add any properties needed for the WebsocketBackendAPI construct here
-}
 
 export class WebsocketBackendAPI extends Construct {
   public readonly wsAPI: apigwv2.WebSocketApi;
   public readonly wsAPIStage: apigwv2.WebSocketStage;
 
-  constructor(scope: Construct, id: string, props: WebsocketBackendAPIProps) {
+  constructor(scope: Construct, id: string) {
     super(scope, id);
 
     // Create the WebSocket API

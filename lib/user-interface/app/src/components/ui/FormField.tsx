@@ -38,7 +38,7 @@
  */
 
 import React, { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
-import { colors, typography, spacing, borderRadius, inputStyles } from "./styles";
+import { colors, typography, spacing, inputStyles } from "./styles";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement>;
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;

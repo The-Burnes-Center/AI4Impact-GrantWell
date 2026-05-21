@@ -18,7 +18,7 @@
  */
 
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
-import { colors, buttonStyles, transitions } from "./styles";
+import { colors, buttonStyles } from "./styles";
 
 export type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
 export type ButtonSize = "sm" | "md" | "lg";

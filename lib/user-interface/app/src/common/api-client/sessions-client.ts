@@ -141,7 +141,7 @@ export class SessionsClient {
   async deleteSession(sessionId: string, userId: string) {
     try {
       const auth = await Utils.authenticate();
-      const response = await fetch(this.API + '/user-session', {
+      await fetch(this.API + '/user-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

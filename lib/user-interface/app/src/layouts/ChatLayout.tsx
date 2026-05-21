@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
 import UnifiedNavigation from "../components/navigation/UnifiedNavigation";
 
 // Function to get brand banner + MDS header height dynamically
@@ -157,13 +156,9 @@ export default function BaseAppLayout({
   sessionId,
   modalOpen = false,
 }: BaseAppLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [topOffset, setTopOffset] = useState<number>(100); // Default: 40px banner + 60px MDS header
   const viewportWidth = useViewportWidth();
   const isNarrowViewport = viewportWidth <= 320;
-  const location = useLocation();
-  const params = useParams();
-  const navigate = useNavigate();
 
   // Monitor brand banner + MDS header height changes (for minHeight calculations only)
   useEffect(() => {

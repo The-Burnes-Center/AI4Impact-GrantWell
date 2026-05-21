@@ -155,10 +155,10 @@ export abstract class ChatScrollState {
 
 function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
-  const { needsRefresh, setNeedsRefresh } = useContext(SessionRefreshContext);
+  const { setNeedsRefresh } = useContext(SessionRefreshContext);
   const [micPermissionDenied, setMicPermissionDenied] = useState(false);
   const [micListeningTimeout, setMicListeningTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
-  const { notifications, addNotification } = useNotifications();
+  const { addNotification } = useNotifications();
   
   // Ref for chat input to enable auto-focus
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -171,9 +171,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   const {
     transcript,
     listening,
-    resetTranscript,
     browserSupportsSpeechRecognition,
-    isMicrophoneAvailable,
   } = useSpeechRecognition({
     clearTranscriptOnListen: true,
     commands: [],
@@ -182,7 +180,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   const [state, setState] = useState<ChatInputState>({
     value: "",
   });
-  const [readyState, setReadyState] = useState<ReadyState>(ReadyState.OPEN);
+  const [readyState] = useState<ReadyState>(ReadyState.OPEN);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
   const [isHovered, setIsHovered] = useState(false);
   const [micHovered, setMicHovered] = useState(false);

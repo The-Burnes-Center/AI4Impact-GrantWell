@@ -5,7 +5,6 @@ import remarkGfm from "remark-gfm";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useHeaderOffset } from "../../hooks/use-header-offset";
-import { v4 as uuidv4 } from "uuid";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
 import type { GrantTypeId } from "../../common/types/nofo";
@@ -120,8 +119,6 @@ const Checklists: React.FC = () => {
       navigate("/");
     }
   }, [isLoading, folderParam, documentIdentifier, navigate]);
-
-  const linkUrl = `/chat/${uuidv4()}?folder=${encodeURIComponent(documentIdentifier || "")}`;
 
   const handleTabClick = useCallback((tabId: TabId) => {
     setActiveTabId(tabId);

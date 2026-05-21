@@ -12,7 +12,6 @@
  */
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
-import { useParams } from "react-router-dom";
 import Card from "../../components/ui/Card";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
@@ -53,7 +52,6 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   const isInitialLoad = useRef(true);
   const hasLoadedFromDocumentData = useRef(false);
   const apiClient = useApiClient();
-  const { sessionId } = useParams();
 
   // Auto-save debounce refs
   const autoSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);

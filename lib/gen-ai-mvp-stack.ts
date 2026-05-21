@@ -30,7 +30,7 @@ export class GenAiMvpStack extends cdk.Stack {
     });
 
     // Create the user interface and pass necessary properties
-    const userInterface = new UserInterface(this, "UserInterface", {
+    new UserInterface(this, "UserInterface", {
       userPoolId: authentication.userPool.userPoolId,
       userPoolClientId: authentication.userPoolClient.userPoolClientId,
       cognitoDomain: cognitoDomainName,
