@@ -256,7 +256,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     return "\u{1F4CE}";
   };
 
-  const [generationPhase, setGenerationPhase] = useState<string>("preparing");
+  const [, setGenerationPhase] = useState<string>("preparing");
   const [totalSections, setTotalSections] = useState(0);
 
   const handleSubmit = async () => {

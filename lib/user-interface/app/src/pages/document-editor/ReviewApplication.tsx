@@ -97,10 +97,6 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     }
   }, [sections, sectionAnswers]);
 
-  const goToSection = (idx: number) => {
-    onNavigate("sections");
-  };
-
   // Close export dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

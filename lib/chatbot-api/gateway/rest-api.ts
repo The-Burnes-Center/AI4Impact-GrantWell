@@ -7,14 +7,10 @@
 import { Construct } from "constructs";
 import { Duration, aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
 
-export interface RestBackendAPIProps {
-  // Define any properties needed for the RestBackendAPI construct here
-}
-
 export class RestBackendAPI extends Construct {
   public readonly restAPI: apigwv2.HttpApi;
 
-  constructor(scope: Construct, id: string, props: RestBackendAPIProps) {
+  constructor(scope: Construct, id: string) {
     super(scope, id);
 
     // Create an HTTP API with CORS configuration

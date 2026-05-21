@@ -46,8 +46,6 @@ export class UserInterface extends Construct {
     });
 
     // Deploy either Private (only accessible within VPC) or Public facing website
-    let apiEndpoint: string;
-    let websocketEndpoint: string;
     let distribution;
 
     const publicWebsite = new Website(this, "Website", { 

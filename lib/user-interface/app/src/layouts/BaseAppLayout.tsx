@@ -1,5 +1,4 @@
 import { ReactElement, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { Container, Row, Col, Offcanvas } from "react-bootstrap";
 import { SessionRefreshContext } from "../common/session-refresh-context";
 import { NotificationProvider } from "../components/notifications/NotificationManager";
@@ -27,7 +26,6 @@ export default function BaseAppLayout({
 }: BaseAppLayoutProps) {
   const [toolsOpen, setToolsOpen] = useState(false);
   const [needsRefresh, setNeedsRefresh] = useState(true);
-  const [searchParams] = useSearchParams();
 
   return (
     <SessionRefreshContext.Provider value={{ needsRefresh, setNeedsRefresh }}>

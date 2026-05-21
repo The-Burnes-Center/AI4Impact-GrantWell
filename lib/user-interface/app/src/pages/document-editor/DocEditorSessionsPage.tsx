@@ -13,7 +13,7 @@ export default function DocEditorSessionsPage() {
   const [searchParams] = useSearchParams();
   const params = useParams();
   const apiClient = useApiClient();
-  const [latestDraftId, setLatestDraftId] = useState<string | null>(null);
+  const [, setLatestDraftId] = useState<string | null>(null);
   const [showAllNOFOs, setShowAllNOFOs] = useState(false);
 
   // Get documentIdentifier from URL params or query params

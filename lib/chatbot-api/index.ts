@@ -24,7 +24,6 @@ import { Construct } from "constructs";
 import { OpenSearchStack } from "./opensearch/opensearch";
 import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as iam from "aws-cdk-lib/aws-iam";
 import * as path from "path";
 
 export interface ChatbotAPIProps {
@@ -48,12 +47,11 @@ export class ChatBotApi extends Construct {
       userDocumentsBucket: buckets.userDocumentsBucket,
     });
 
-    const restBackend = new RestBackendAPI(this, "RestBackend", {});
+    const restBackend = new RestBackendAPI(this, "RestBackend");
     this.httpAPI = restBackend;
     const websocketBackend = new WebsocketBackendAPI(
       this,
-      "WebsocketBackend",
-      {}
+      "WebsocketBackend"
     );
     this.wsAPI = websocketBackend;
 

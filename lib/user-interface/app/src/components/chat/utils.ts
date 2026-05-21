@@ -2,12 +2,6 @@ import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 
 type ChatMetadata = ChatBotHistoryItem["metadata"];
 
-function pairwise(arr: ChatBotHistoryItem[], func: (a: ChatBotHistoryItem, b: ChatBotHistoryItem) => void) {
-  for (let i = 0; i < arr.length - 1; i++) {
-    func(arr[i], arr[i + 1]);
-  }
-}
-
 /**
  * Assembles the chat history into a format expected by the API
  */

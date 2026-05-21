@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { AppContext } from "../../common/app-context";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
 import { useHeaderOffset } from "../../hooks/use-header-offset";
@@ -89,7 +88,6 @@ const DocumentEditor: React.FC = () => {
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
   const [activeJobId, setActiveJobId] = useState<string | undefined>(undefined);
   const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
-  const appContext = useContext(AppContext);
   const navigate = useNavigate();
   const { sessionId } = useParams();
   const [searchParams] = useSearchParams();

@@ -17,7 +17,7 @@ export class AuthorizationStack extends Construct {
   public readonly userPool: UserPool;
   public readonly userPoolClient: UserPoolClient;
 
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string) {
     super(scope, id);
 
     // Create the Cognito User Pool

@@ -11,12 +11,6 @@ export class KnowledgeManagementClient {
     this.API = _appConfig.httpEndpoint;
   }
   
-  // Helper to extract NOFO name from documentIdentifier
-  private extractNofoName(documentIdentifier: string): string {
-    // e.g., "grants/2024/transportation-grant-001" -> "transportation-grant-001"
-    return documentIdentifier.split("/").pop() || documentIdentifier;
-  }
-  
   // Returns a URL from the this.API that allows one file upload to S3
   // fileName: just the filename (e.g., "mission-statement.pdf")
   // userId: the authenticated user's ID
