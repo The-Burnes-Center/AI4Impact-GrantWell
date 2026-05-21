@@ -488,6 +488,117 @@
   to { transform: rotate(360deg); }
 }
 
+/* Sortable column headers */
+.landing-header-cell--sortable {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.landing-header-cell--sortable:hover {
+  color: var(--gw-color-primary, #23776C);
+  background-color: var(--gw-color-primary-light, #DFECE0);
+}
+
+.landing-header-cell--sortable:focus-visible {
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline-offset: -2px;
+}
+
+.landing-header-cell--active {
+  color: var(--gw-color-primary, #23776C);
+}
+
+.landing-header-sort-icon {
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.landing-header-cell--active .landing-header-sort-icon,
+.landing-header-cell--sortable:hover .landing-header-sort-icon {
+  opacity: 1;
+}
+
+.landing-sort-reset-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--gw-color-primary, #23776C);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.landing-sort-reset-link:hover {
+  color: var(--gw-color-primary-hover, #195C53);
+}
+
+.landing-sort-reset-link:focus-visible {
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Clear filters button */
+.landing-clear-filters-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  height: 42px;
+  border: 1px solid var(--gw-color-border, #c4d4e2);
+  border-radius: 6px;
+  background-color: var(--gw-color-white, #fff);
+  color: var(--gw-color-primary, #23776C);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.landing-clear-filters-button:hover {
+  background-color: var(--gw-color-primary, #23776C);
+  border-color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-white, #fff);
+}
+
+.landing-clear-filters-button:focus-visible {
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline-offset: 2px;
+}
+
+/* Pinned grant icon */
+.landing-pinned-icon {
+  color: var(--gw-color-highlight, #c89b14);
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+/* New grant badge */
+.landing-new-badge {
+  display: inline-block;
+  background-color: var(--gw-color-success, #1f8a4c);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
   .landing-table-header,

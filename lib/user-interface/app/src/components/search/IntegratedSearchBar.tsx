@@ -51,13 +51,17 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       const queued = queuedQueryRef.current;
       queuedQueryRef.current = null;
       // Don't fire queued search if the search term was cleared (e.g. NOFO selected)
-      if (searchTerm.trim().length < MIN_QUERY_LENGTH) return;
+      if (searchTerm.trim().length < MIN_QUERY_LENGTH) {
+        onSearchPendingChange?.(false);
+        return;
+      }
       if (onSearch && queued !== lastSubmittedQuery.current) {
         lastSubmittedQuery.current = queued;
         onSearch(queued);
       }
+      onSearchPendingChange?.(false);
     }
-  }, [isSearching, onSearch, searchTerm]);
+  }, [isSearching, onSearch, searchTerm, onSearchPendingChange]);
 
   useEffect(() => {
     const trimmed = searchTerm.trim();
@@ -87,6 +91,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       if (onSearch && trimmed !== lastSubmittedQuery.current) {
         if (isSearchingRef.current) {
           queuedQueryRef.current = trimmed;
+          onSearchPendingChange?.(false);
         } else {
           lastSubmittedQuery.current = trimmed;
           onSearch(trimmed);
@@ -163,7 +168,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         onClear={handleClear}
       />
       {showSuggestion && (
-        <p className="search-tip">
+        <p className="search-tip" role="status">
           Tip: Try a full sentence for more precise results, e.g.,{" "}
           <em key={tipIndex}>&ldquo;{SEARCH_TIPS[tipIndex]}&rdquo;</em>
         </p>

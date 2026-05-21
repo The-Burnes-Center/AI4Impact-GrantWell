@@ -131,6 +131,7 @@ export default function HomePage() {
               grantType: (nofo.grant_type as NOFO["grantType"]) || null,
               agency: nofo.agency || null,
               category: nofo.category || null,
+              createdAt: nofo.created_at || null,
             }))
           );
         } else {
