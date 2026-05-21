@@ -10,7 +10,7 @@ import FeatureRolloutsTab from "./components/FeatureRolloutsTab";
 import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import {
-  LuSearch, LuFilter, LuMail, LuUpload, LuCheck, LuX,
+  LuSearch, LuFilter, LuUpload, LuCheck, LuX,
   LuRefreshCw, LuDownload, LuInfo,
 } from "react-icons/lu";
 import { Modal } from "../../components/common/Modal";
@@ -31,15 +31,11 @@ const Dashboard: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const [loading, setLoading] = useState(true);
-  const [showSuccessBanner, setShowSuccessBanner] = useState(false);
-  const [invitedEmail, setInvitedEmail] = useState("");
   const [showGrantBanner, setShowGrantBanner] = useState(false);
   const [addedGrantName, setAddedGrantName] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const [uploadNofoModalOpen, setUploadNofoModalOpen] = useState(false);
-  const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState("");
   const [isScraping, setIsScraping] = useState(false);
   const [scrapeConfirmModalOpen, setScrapeConfirmModalOpen] = useState(false);
 
@@ -171,24 +167,6 @@ const Dashboard: React.FC = () => {
     },
     [activeTab, isAdmin, isDeveloper]
   );
-
-  const sendInvite = useCallback(async () => {
-    if (!inviteEmail.trim() || !/\S+@\S+\.\S+/.test(inviteEmail)) {
-      addNotification("error", "Please enter a valid email address");
-      return;
-    }
-    try {
-      await apiClient.userManagement.inviteUser(inviteEmail);
-      addNotification("success", `Invitation sent successfully to ${inviteEmail}`);
-      setInvitedEmail(inviteEmail);
-      setShowSuccessBanner(true);
-      setTimeout(() => setShowSuccessBanner(false), 5000);
-      setInviteEmail("");
-      setInviteUserModalOpen(false);
-    } catch {
-      addNotification("error", "Failed to send invitation. Please try again.");
-    }
-  }, [inviteEmail, apiClient, addNotification]);
 
   const confirmAutomatedScraper = useCallback(async () => {
     setScrapeConfirmModalOpen(false);
@@ -331,13 +309,6 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
 
-          {showSuccessBanner && (
-            <div className="success-banner" role="status" aria-live="polite">
-              <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! An invitation has been sent to {invitedEmail}</span></div>
-              <button onClick={() => setShowSuccessBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} aria-hidden="true" /></button>
-            </div>
-          )}
-
           {showGrantBanner && (
             <div className="success-banner" role="status" aria-live="polite">
               <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! Grant &quot;{addedGrantName}&quot; has been added</span></div>
@@ -471,9 +442,6 @@ const Dashboard: React.FC = () => {
                   </div>
 
                   <div className="action-buttons">
-                    <button className="action-button invite-button" onClick={() => setInviteUserModalOpen(true)}>
-                      <LuMail size={16} className="button-icon" /><span>Invite User</span>
-                    </button>
                     <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
                       <LuUpload size={16} className="button-icon" /><span>Add Grant</span>
                     </button>
@@ -558,34 +526,6 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <Modal isOpen={inviteUserModalOpen} onClose={() => setInviteUserModalOpen(false)} title="Invite New User">
-          <div className="modal-form">
-            <p className="modal-description">Enter the email address of the user you want to invite. They will receive an email with instructions to set up their account.</p>
-            <div className="form-group">
-              <label htmlFor="invite-email">Email Address</label>
-              <input
-                type="email"
-                id="invite-email"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                className="form-input"
-                placeholder="user@example.com"
-                required
-                aria-required="true"
-                autoComplete="email"
-                aria-invalid={inviteEmail.length > 0 && !/\S+@\S+\.\S+/.test(inviteEmail)}
-                aria-describedby="invite-email-help"
-              />
-              <span id="invite-email-help" className="visually-hidden">
-                Enter a valid email address. The user will receive an invitation.
-              </span>
-            </div>
-            <div className="modal-actions">
-              <button className="modal-button secondary" onClick={() => setInviteUserModalOpen(false)}>Cancel</button>
-              <button className="modal-button primary" onClick={sendInvite} disabled={!inviteEmail.trim() || !/\S+@\S+\.\S+/.test(inviteEmail)}>Send Invitation</button>
-            </div>
-          </div>
-        </Modal>
       </div>
     </div>
   );

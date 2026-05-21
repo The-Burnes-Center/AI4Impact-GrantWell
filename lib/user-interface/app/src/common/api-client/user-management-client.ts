@@ -23,29 +23,6 @@ export class UserManagementClient {
     };
   }
 
-  // Invites a new user to the application
-  async inviteUser(email: string) {
-    try {
-      const headers = await this.getAuthHeaders();
-      const response = await fetch(`${this.baseUrl}/user-management/invite-user`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ email })
-      });
-  
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || `Error: ${response.status}`);
-      }
-  
-      return data;
-    } catch (error) {
-      console.error('Error inviting user:', error);
-      throw error;
-    }
-  }
-
   async listUsers(options?: {
     limit?: number;
     paginationToken?: string | null;
