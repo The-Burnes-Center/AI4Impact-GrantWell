@@ -53,7 +53,7 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const apiClient = useApiClient();
-  const { isAdmin, isDeveloper, isStateAdmin, userState, loading: roleLoading } = useAdminCheck();
+  const { isAdmin, isDeveloper, isStateAdmin, loading: roleLoading } = useAdminCheck();
   const canManageUsers = isAdmin && !isStateAdmin;
   const { addNotification } = useNotifications();
 

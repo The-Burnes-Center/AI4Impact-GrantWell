@@ -15,7 +15,7 @@ const DraftView: React.FC<DraftViewProps> = ({
   selectedNofo,
   sessionId,
 }) => {
-  const [draftData, setDraftData] = useState<DocumentDraft | null>(null);
+  const [, setDraftData] = useState<DocumentDraft | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingMessage, setLoadingMessage] = useState<string>("Loading draft...");
   const apiClient = useApiClient();

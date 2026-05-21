@@ -2,72 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
-import { DateTime } from "luxon";
 import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { Utils } from "../../common/utils";
 import { DraftStatus } from "../../common/api-client/drafts-client";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import "../../styles/dashboard.css";
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    padding: "24px",
-    backgroundColor: "#f9fafb",
-    minHeight: "100vh",
-  },
-  header: {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-    marginBottom: "24px",
-  },
-  headerContainer: {
-    padding: "24px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: "24px",
-    fontWeight: "600",
-    margin: "0 0 8px 0",
-  },
-  headerDescription: {
-    color: "#5a6169",
-    margin: 0,
-  },
-  buttonContainer: {
-    display: "flex",
-    gap: "12px",
-  },
-  button: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    padding: "8px 16px",
-    borderRadius: "6px",
-    border: "1px solid #d1d5db",
-    backgroundColor: "white",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: "500",
-  },
-  primaryButton: {
-    backgroundColor: "#23776C",
-    color: "white",
-    border: "none",
-  },
-  dangerButton: {
-    backgroundColor: "#dc2626",
-    color: "white",
-    border: "none",
-  },
-  disabledButton: {
-    opacity: 0.5,
-    cursor: "not-allowed",
-  },
-};
 
 export interface DocEditorSessionsProps {
   readonly toolsOpen: boolean;

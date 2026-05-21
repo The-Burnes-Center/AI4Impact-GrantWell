@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
 import UnifiedNavigation from "../components/navigation/UnifiedNavigation";
 
 const getTopOffset = (): number => {
@@ -142,13 +141,9 @@ export default function BaseAppLayout({
   sessionId,
   modalOpen = false,
 }: BaseAppLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [topOffset, setTopOffset] = useState<number>(60);
   const viewportWidth = useViewportWidth();
   const isNarrowViewport = viewportWidth <= 320;
-  const location = useLocation();
-  const params = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const updateTopOffset = () => {

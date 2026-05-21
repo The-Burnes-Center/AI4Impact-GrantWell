@@ -18,8 +18,6 @@ import {
 
 import "react-json-view-lite/dist/index.css";
 import "../../styles/app.scss";
-import { useNotifications } from "../notifications/NotificationManager";
-import { Utils } from "../../common/utils";
 
 export interface ChatMessageProps {
   message: ChatBotHistoryItem;
@@ -27,8 +25,7 @@ export interface ChatMessageProps {
 }
 
 function ChatMessage(props: ChatMessageProps) {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { addNotification, removeNotification } = useNotifications();
+  const [loading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [grantName, setGrantName] = useState<string>("");
   const [sourcesExpanded, setSourcesExpanded] = useState<boolean>(false);
@@ -129,81 +126,6 @@ function ChatMessage(props: ChatMessageProps) {
       props.message?.type === ChatBotMessageType.AI ? "15px" : "inherit",
   };
 
-  const aiActionsStyle = {
-    display: "flex",
-    marginTop: "8px",
-    gap: "8px",
-    alignItems: "center",
-  };
-
-  const footerStyle = {
-    marginTop: "12px",
-    display: "flex",
-    justifyContent: "flex-start",
-    gap: "8px",
-  };
-
-  const dropdownButtonStyle = {
-    padding: "8px 12px",
-    backgroundColor: "#23776C",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: "14px",
-    minHeight: "44px",
-  };
-
-  const dropdownMenuStyle = {
-    position: "absolute" as const,
-    bottom: "40px",
-    left: "16px",
-    backgroundColor: "white",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    borderRadius: "4px",
-    zIndex: 100,
-    minWidth: "200px",
-    maxHeight: "300px",
-    overflowY: "auto" as const,
-  };
-
-  const dropdownItemStyle = {
-    padding: "8px 12px",
-    display: "block",
-    color: "#333",
-    textDecoration: "none",
-    fontSize: "14px",
-    cursor: "pointer",
-    width: "100%",
-    textAlign: "left" as const,
-    border: "none",
-    backgroundColor: "transparent",
-    borderBottom: "1px solid #eee",
-  };
-
-  const buttonStyle = {
-    padding: "8px 12px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontSize: "14px",
-  };
-
-  const iconButtonStyle = {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: "8px",
-    minWidth: "44px",
-    minHeight: "44px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
-
   const spinnerStyle = {
     display: "inline-block",
     width: "20px",
@@ -212,34 +134,6 @@ function ChatMessage(props: ChatMessageProps) {
     borderRadius: "50%",
     borderTopColor: "#23776C",
     animation: "spin 1s linear infinite",
-  };
-
-  const successIndicatorStyle = {
-    backgroundColor: "#eafbea",
-    color: "#067306",
-    padding: "6px 12px",
-    borderRadius: "4px",
-    fontSize: "14px",
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "6px",
-    whiteSpace: "nowrap" as const,
-    fontWeight: 500,
-  };
-
-  const popoverStyle = {
-    position: "absolute" as const,
-    right: "40px",
-    top: "0px",
-    zIndex: 100,
-  };
-
-  const popoverContentStyle = {
-    padding: "4px",
-    backgroundColor: "white",
-    borderRadius: "6px",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
-    border: "1px solid #e0e0e0",
   };
 
   // Keyframes for spinner animation

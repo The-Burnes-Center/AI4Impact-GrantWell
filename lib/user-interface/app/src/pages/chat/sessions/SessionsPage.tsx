@@ -12,7 +12,7 @@ export default function SessionPage() {
   const [searchParams] = useSearchParams();
   const documentIdentifier = searchParams.get("folder");
   const apiClient = useApiClient();
-  const [latestSessionId, setLatestSessionId] = useState<string | null>(null);
+  const [, setLatestSessionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch the latest session ID when the component mounts

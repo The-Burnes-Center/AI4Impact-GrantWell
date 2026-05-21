@@ -17,7 +17,7 @@ export default function Playground() {
   const apiClient = useApiClient();
   const [helpOpen, setHelpOpen] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const [nofoSelectionDialogOpen, setNofoSelectionDialogOpen] = useState(false);
+  const [, setNofoSelectionDialogOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [kbSyncing, setKbSyncing] = useState(false);
   const [uploadedFileCount, setUploadedFileCount] = useState(0);

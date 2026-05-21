@@ -133,7 +133,7 @@ export default function Chat(props: {
     loading: typeof props.sessionId !== "undefined",
   });
 
-  const { notifications, addNotification } = useNotifications();
+  const { addNotification } = useNotifications();
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );

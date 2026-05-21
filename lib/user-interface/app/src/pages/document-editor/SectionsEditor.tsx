@@ -40,7 +40,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [sectionAnswers, setSectionAnswers] = useState<{
     [key: string]: string;
   }>({});
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [regenerating, setRegenerating] = useState(false);
   const [regenerateProgress, setRegenerateProgress] = useState<string>("");
   const [generating, setGenerating] = useState(!!activeJobId && !!initialIsGenerating);

@@ -4,7 +4,6 @@ import React, {
   useContext,
   useCallback,
   useMemo,
-  useRef,
 } from "react";
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -14,178 +13,6 @@ import { useNavigate } from "react-router";
 import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import "../../styles/dashboard.css";
-
-// Styles for the sessions component
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column" as const,
-  },
-  header: {
-    padding: "20px",
-    borderBottom: "1px solid #e5e7eb",
-  },
-  headerContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "16px",
-  },
-  headerTitle: {
-    fontSize: "24px",
-    fontWeight: "600",
-    margin: 0,
-  },
-  headerDescription: {
-    fontSize: "14px",
-    color: "#5a6169",
-    marginTop: "4px",
-  },
-  buttonContainer: {
-    display: "flex",
-    gap: "12px",
-  },
-  button: {
-    padding: "8px 16px",
-    borderRadius: "6px",
-    border: "none",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: "14px",
-    fontWeight: "500",
-  },
-  primaryButton: {
-    backgroundColor: "#1a73e8",
-    color: "white",
-  },
-  dangerButton: {
-    backgroundColor: "#d32f2f",
-    color: "white",
-  },
-  disabledButton: {
-    backgroundColor: "#e5e7eb",
-    color: "#9ca3af",
-    cursor: "not-allowed",
-  },
-  tableContainer: {
-    flex: 1,
-    overflowX: "auto" as const,
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse" as const,
-  },
-  tableHeader: {
-    backgroundColor: "#f9fafb",
-    padding: "12px 16px",
-    textAlign: "left" as const,
-    fontWeight: "600",
-    color: "#4b5563",
-    borderBottom: "1px solid #e5e7eb",
-    cursor: "pointer",
-    userSelect: "none" as const,
-    fontSize: "14px",
-    textTransform: "uppercase" as const,
-    letterSpacing: "0.5px",
-  },
-  tableHeaderContent: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-  },
-  tableCell: {
-    padding: "12px 16px",
-    borderBottom: "1px solid #e5e7eb",
-    whiteSpace: "nowrap",
-  },
-  checkboxCell: {
-    width: "48px",
-    textAlign: "center" as const,
-  },
-  checkbox: {
-    cursor: "pointer",
-  },
-  link: {
-    color: "#1a73e8",
-    textDecoration: "none",
-  },
-  dateCell: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    color: "#5a6169",
-    fontSize: "14px",
-  },
-  calendarIcon: {
-    color: "#6e747f",
-  },
-  emptyState: {
-    display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "60px 20px",
-    color: "#5a6169",
-    textAlign: "center" as const,
-  },
-  emptyStateTitle: {
-    fontSize: "18px",
-    fontWeight: "500",
-    marginBottom: "8px",
-  },
-  loadingContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "200px",
-  },
-  spinner: {
-    border: "4px solid rgba(0, 0, 0, 0.1)",
-    borderLeftColor: "#1a73e8",
-    borderRadius: "50%",
-    width: "32px",
-    height: "32px",
-    animation: "spin 1s linear infinite",
-  },
-  pagination: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "12px 16px",
-    borderTop: "1px solid #e5e7eb",
-  },
-  pageInfo: {
-    fontSize: "14px",
-    color: "#5a6169",
-  },
-  pageSizeSelect: {
-    padding: "4px 8px",
-    border: "1px solid #d1d5db",
-    borderRadius: "4px",
-    marginLeft: "8px",
-    fontSize: "14px",
-  },
-  paginationButtons: {
-    display: "flex",
-    gap: "8px",
-  },
-  paginationButton: {
-    padding: "6px 12px",
-    border: "1px solid #d1d5db",
-    borderRadius: "4px",
-    backgroundColor: "white",
-    fontSize: "14px",
-    cursor: "pointer",
-  },
-  paginationButtonDisabled: {
-    backgroundColor: "#f3f4f6",
-    color: "#9ca3af",
-    cursor: "not-allowed",
-  },
-};
 
 export interface SessionsProps {
   readonly toolsOpen: boolean;
@@ -324,18 +151,6 @@ export default function Sessions(props: SessionsProps) {
     return DateTime.fromISO(new Date(timestamp).toISOString()).toLocaleString(
       DateTime.DATETIME_SHORT
     );
-  };
-
-  const handleSessionClick = (item: Session) => {
-    if (props.onSessionSelect) {
-      props.onSessionSelect(item.session_id);
-    }
-
-    const queryParam = item.document_identifier
-      ? `?folder=${encodeURIComponent(item.document_identifier)}`
-      : "";
-
-    navigate(`/chat/${item.session_id}${queryParam}`);
   };
 
   return (
