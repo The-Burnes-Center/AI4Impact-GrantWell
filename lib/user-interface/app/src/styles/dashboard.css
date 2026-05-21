@@ -600,6 +600,42 @@ body {
   outline-offset: 2px;
 }
 
+.user-management-role-legend {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  display: grid;
+  gap: 6px;
+  background-color: #f7f9fc;
+  border: 1px solid var(--mds-color-border, #e0e0e0);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.user-management-role-legend__item {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.user-management-role-legend dt {
+  font-weight: 600;
+  color: var(--mds-color-text, #222);
+}
+
+.user-management-role-legend dd {
+  margin: 0;
+  color: var(--mds-color-text-muted, #555);
+}
+
+@media screen and (max-width: 600px) {
+  .user-management-role-legend__item {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
 .user-management-table__actions {
   width: 1%;
   white-space: nowrap;

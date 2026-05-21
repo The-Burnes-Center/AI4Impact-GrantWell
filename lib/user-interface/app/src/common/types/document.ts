@@ -64,4 +64,5 @@ export interface RawNOFOData {
   grant_type?: string | null;
   agency?: string | null;
   category?: string | null;
+  created_at?: string | null;
 }

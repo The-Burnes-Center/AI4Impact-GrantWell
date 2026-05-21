@@ -1,10 +1,31 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { LuFileX, LuX } from "react-icons/lu";
+import { LuFileX, LuX, LuArrowUp, LuArrowDown, LuArrowUpDown, LuPin } from "react-icons/lu";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
 import { GRANT_TYPES } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
 import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
+
+type SortColumn = "name" | "agency" | "category" | "type" | "deadline";
+type SortDirection = "asc" | "desc";
+
+const SORT_COLUMN_LABELS: Record<SortColumn, string> = {
+  name: "Name",
+  agency: "Agency",
+  category: "Category",
+  type: "Type",
+  deadline: "Deadline",
+};
+
+const NEW_GRANT_WINDOW_DAYS = 3;
+
+const isRecentlyAdded = (createdAt?: string | null): boolean => {
+  if (!createdAt) return false;
+  const created = Date.parse(createdAt);
+  if (Number.isNaN(created)) return false;
+  const ageDays = (Date.now() - created) / (1000 * 60 * 60 * 24);
+  return ageDays >= 0 && ageDays <= NEW_GRANT_WINDOW_DAYS;
+};
 
 interface GrantsTableProps {
   nofos: NOFO[];
@@ -38,6 +59,8 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [showAllAIResults, setShowAllAIResults] = useState(false);
+  const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const itemsPerPage = 10;
   const AI_INITIAL_LIMIT = 10;
 
@@ -86,6 +109,71 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
   const awaitingAIResults = isSearching || (isSearchPending && searchResults === null);
 
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn !== column) {
+      setSortColumn(column);
+      setSortDirection("asc");
+    } else if (sortDirection === "asc") {
+      setSortDirection("desc");
+    } else {
+      setSortColumn(null);
+      setSortDirection("asc");
+    }
+  };
+
+  const resetSort = () => {
+    setSortColumn(null);
+    setSortDirection("asc");
+  };
+
+  const hasActiveFilters =
+    statusFilter !== "all" || categoryFilter !== "all" || grantTypeFilter !== "all";
+
+  const clearFilters = () => {
+    setStatusFilter("all");
+    setCategoryFilter("all");
+    setGrantTypeFilter("all");
+  };
+
+  const compareByColumn = (a: NOFO, b: NOFO, col: SortColumn, dir: SortDirection): number => {
+    const mul = dir === "asc" ? 1 : -1;
+    const stringCmp = (av: string | null | undefined, bv: string | null | undefined) => {
+      // Missing values always sort last, regardless of direction
+      const aEmpty = !av;
+      const bEmpty = !bv;
+      if (aEmpty && bEmpty) return 0;
+      if (aEmpty) return 1;
+      if (bEmpty) return -1;
+      return av!.localeCompare(bv!, undefined, { sensitivity: "base" }) * mul;
+    };
+
+    switch (col) {
+      case "name":
+        return a.name.localeCompare(b.name, undefined, { sensitivity: "base" }) * mul;
+      case "agency":
+        return stringCmp(a.agency, b.agency);
+      case "category":
+        return stringCmp(a.category, b.category);
+      case "type": {
+        const aLabel = a.grantType ? GRANT_TYPES[a.grantType]?.label : null;
+        const bLabel = b.grantType ? GRANT_TYPES[b.grantType]?.label : null;
+        return stringCmp(aLabel, bLabel);
+      }
+      case "deadline": {
+        // N/A always last; Rolling first when asc, last (before N/A) when desc
+        const aNA = !a.isRolling && !a.expirationDate;
+        const bNA = !b.isRolling && !b.expirationDate;
+        if (aNA && bNA) return 0;
+        if (aNA) return 1;
+        if (bNA) return -1;
+        if (a.isRolling && b.isRolling) return 0;
+        if (a.isRolling) return dir === "asc" ? -1 : 1;
+        if (b.isRolling) return dir === "asc" ? 1 : -1;
+        return (new Date(a.expirationDate!).getTime() - new Date(b.expirationDate!).getTime()) * mul;
+      }
+    }
+  };
+
   const getFilteredNofos = () => {
     const searchLower = searchTerm.toLowerCase().trim();
     const hasRankedResults = scoreMap !== null && scoreMap.size > 0;
@@ -116,7 +204,16 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       return matchesStatus && matchesCategory && matchesGrantType;
     });
 
-    if (hasRankedResults) {
+    if (sortColumn) {
+      filtered.sort((a, b) => {
+        // Keep pinned rows on top when browsing; AI-ranked mode ignores pinning
+        if (!hasRankedResults) {
+          if (a.isPinned && !b.isPinned) return -1;
+          if (!a.isPinned && b.isPinned) return 1;
+        }
+        return compareByColumn(a, b, sortColumn, sortDirection);
+      });
+    } else if (hasRankedResults) {
       filtered.sort((a, b) => {
         const scoreA = scoreMap.get(a.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
         const scoreB = scoreMap.get(b.name.toLowerCase().replace(/\/$/, ""))?.score ?? 0;
@@ -147,19 +244,21 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     ? (showAllAIResults ? filteredNofos : filteredNofos.slice(0, AI_INITIAL_LIMIT))
     : filteredNofos.slice(startIndex, endIndex);
 
-  // Reset dropdown filters and "show more" state when AI search returns results
+  // Reset dropdown filters, sort, and "show more" state when AI search returns results
   useEffect(() => {
     if (searchResults && searchResults.length > 0) {
       setStatusFilter("all");
       setCategoryFilter("all");
       setGrantTypeFilter("all");
       setShowAllAIResults(false);
+      setSortColumn(null);
+      setSortDirection("asc");
     }
   }, [searchResults]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm, searchResults, preferAISearch]);
+  }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm, searchResults, preferAISearch, sortColumn, sortDirection]);
 
   const handleRowClick = (nofo: NOFO) => {
     onSelectDocument({
@@ -256,6 +355,18 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             })}
           </select>
         </div>
+
+        {hasActiveFilters && (
+          <button
+            type="button"
+            className="landing-clear-filters-button"
+            onClick={clearFilters}
+            aria-label="Clear all filters"
+          >
+            <LuX size={14} aria-hidden="true" />
+            Clear filters
+          </button>
+        )}
       </div>
 
       {/* Error banner */}
@@ -278,18 +389,43 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             your search{!showAllAIResults && filteredNofos.length > AI_INITIAL_LIMIT
               ? ` (showing top ${AI_INITIAL_LIMIT})`
               : ""}
+            {sortColumn && (
+              <>
+                {" · "}Sorted by {SORT_COLUMN_LABELS[sortColumn]}{" "}
+                <button
+                  type="button"
+                  className="landing-sort-reset-link"
+                  onClick={resetSort}
+                >
+                  back to relevance
+                </button>
+              </>
+            )}
           </span>
         </div>
       )}
 
       {/* Table */}
       <div className="landing-table-container">
-        <div className="landing-table-header">
-          <div className="landing-header-cell">Name</div>
-          <div className="landing-header-cell">Agency</div>
-          <div className="landing-header-cell">Category</div>
-          <div className="landing-header-cell">Type</div>
-          <div className="landing-header-cell">Deadline</div>
+        <div className="landing-table-header" role="row">
+          {(Object.keys(SORT_COLUMN_LABELS) as SortColumn[]).map((col) => {
+            const isActive = sortColumn === col;
+            const ariaSort = isActive ? (sortDirection === "asc" ? "ascending" : "descending") : "none";
+            const Icon = isActive ? (sortDirection === "asc" ? LuArrowUp : LuArrowDown) : LuArrowUpDown;
+            return (
+              <button
+                key={col}
+                type="button"
+                role="columnheader"
+                aria-sort={ariaSort}
+                className={`landing-header-cell landing-header-cell--sortable${isActive ? " landing-header-cell--active" : ""}`}
+                onClick={() => handleSort(col)}
+              >
+                <span>{SORT_COLUMN_LABELS[col]}</span>
+                <Icon size={12} className="landing-header-sort-icon" aria-hidden="true" />
+              </button>
+            );
+          })}
         </div>
 
         <div className="landing-table-body">
@@ -337,9 +473,25 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                 aria-disabled={isArchived}
               >
                 <div className="landing-row-cell">
+                  {nofo.isPinned && (
+                    <LuPin
+                      size={14}
+                      className="landing-pinned-icon"
+                      aria-label="Pinned grant"
+                      title="Pinned — featured by an administrator"
+                    />
+                  )}
                   <span className="landing-nofo-name" style={{ color: isArchived ? "#888" : undefined }}>
                     {nofo.name}
                   </span>
+                  {!isArchived && isRecentlyAdded(nofo.createdAt) && (
+                    <span
+                      className="landing-new-badge"
+                      title={`Added within the last ${NEW_GRANT_WINDOW_DAYS} days`}
+                    >
+                      New
+                    </span>
+                  )}
                   {isArchived && (
                     <span
                       className="landing-expired-badge"
