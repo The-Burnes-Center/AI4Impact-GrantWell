@@ -6,7 +6,7 @@
 
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { AttributeType, Table, ProjectionType } from 'aws-cdk-lib/aws-dynamodb';
+import { AttributeType, Table, ProjectionType, BillingMode } from 'aws-cdk-lib/aws-dynamodb';
 
 export class TableStack extends Stack {
   public readonly historyTable: Table;
@@ -52,8 +52,10 @@ export class TableStack extends Stack {
     this.draftTable = draftTable;
 
     // Define the NOFO Metadata Table for caching NOFO information
+    // On-demand: landing-page reads scan StatusIndex on every load; provisioned 5 RCU throttled it.
     const nofoMetadataTable = new Table(this, 'NOFOMetadataTable', {
       partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
     });
 
     // Add GSI for filtering by status (active/archived)
