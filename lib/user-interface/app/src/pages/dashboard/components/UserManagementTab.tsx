@@ -1,14 +1,21 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
+import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "./PaginationControls";
 
 interface UserManagementTabProps {
   apiClient: ApiClient;
   addNotification: (type: "success" | "error" | "info" | "warning", message: string) => void;
   canAssignDeveloper: boolean;
+  isStateAdmin: boolean;
+  userState: string;
+  currentUsername: string;
 }
+
+const EMAIL_PATTERN = /\S+@\S+\.\S+/;
 
 const allRoleOptions: Array<{
   value: UserRolePreset;
@@ -44,6 +51,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   apiClient,
   addNotification,
   canAssignDeveloper,
+  isStateAdmin,
+  userState,
+  currentUsername,
 }) => {
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [draftRoles, setDraftRoles] = useState<Record<string, UserRolePreset>>({});
@@ -54,6 +64,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageTokens, setPageTokens] = useState<Array<string | null>>([null]);
   const [nextPaginationToken, setNextPaginationToken] = useState<string | null>(null);
+
+  const [addUserModalOpen, setAddUserModalOpen] = useState(false);
+  const [addEmail, setAddEmail] = useState("");
+  const [addState, setAddState] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const [deleteTarget, setDeleteTarget] = useState<ManagedUser | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const loadUsers = useCallback(async (
     page: number,
@@ -78,7 +96,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         )
       );
       setNextPaginationToken(response.nextPaginationToken);
-      setPageTokens((current) => {
+      setPageTokens(() => {
         const nextTokens = tokens.slice(0, page);
         if (response.nextPaginationToken) {
           nextTokens[page] = response.nextPaginationToken;
@@ -96,6 +114,10 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   useEffect(() => {
     void loadUsers(1, pageSize, [null]);
   }, [loadUsers, pageSize]);
+
+  const reloadCurrentPage = useCallback(() => {
+    void loadUsers(currentPage, pageSize, pageTokens);
+  }, [loadUsers, currentPage, pageSize, pageTokens]);
 
   const handlePageChange = useCallback((nextPage: number) => {
     if (nextPage < 1) {
@@ -157,13 +179,56 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         addNotification("success", `Updated ${user.email}`);
       } catch (error) {
         console.error("Error updating user:", error);
-        addNotification("error", `Failed to update ${user.email}`);
+        addNotification("error", error instanceof Error ? error.message : `Failed to update ${user.email}`);
       } finally {
         setSavingUsername(null);
       }
     },
     [apiClient, addNotification, draftRoles, draftStates]
   );
+
+  const handleCreateUser = useCallback(async () => {
+    const email = addEmail.trim();
+    if (!email || !EMAIL_PATTERN.test(email)) {
+      addNotification("error", "Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setIsCreating(true);
+      await apiClient.userManagement.createUser({
+        email,
+        state: isStateAdmin ? undefined : addState || undefined,
+      });
+      addNotification("success", `User ${email} created. An invitation email has been sent.`);
+      setAddUserModalOpen(false);
+      setAddEmail("");
+      setAddState("");
+      reloadCurrentPage();
+    } catch (error) {
+      addNotification("error", error instanceof Error ? error.message : "Failed to create user");
+    } finally {
+      setIsCreating(false);
+    }
+  }, [addEmail, addState, isStateAdmin, apiClient, addNotification, reloadCurrentPage]);
+
+  const handleDeleteUser = useCallback(async () => {
+    if (!deleteTarget) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      await apiClient.userManagement.deleteUser(deleteTarget.username);
+      addNotification("success", `Deleted ${deleteTarget.email}`);
+      setDeleteTarget(null);
+      reloadCurrentPage();
+    } catch (error) {
+      addNotification("error", error instanceof Error ? error.message : "Failed to delete user");
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [deleteTarget, apiClient, addNotification, reloadCurrentPage]);
 
   if (loading) {
     return (
@@ -173,18 +238,25 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
     );
   }
 
+  const addEmailValid = addEmail.trim().length > 0 && EMAIL_PATTERN.test(addEmail);
+
   return (
     <div className="user-management-panel">
       <div className="feature-rollouts-card">
         <div className="feature-rollouts-card__header">
           <div>
-            <span className="feature-rollouts-eyebrow">Developer Controls</span>
+            <span className="feature-rollouts-eyebrow">
+              {isStateAdmin ? "State Administration" : "Developer Controls"}
+            </span>
             <h2>User Management</h2>
             <p>
-              Edit user roles directly from the table below.
-              {canAssignDeveloper
-                ? " Developers can assign all roles."
-                : " Admins can assign User or Admin roles only."}
+              {isStateAdmin
+                ? `Manage users in ${userState}. You can add users, change roles between User and Admin, and remove users — all scoped to ${userState}.`
+                : `Edit user roles directly from the table below.${
+                    canAssignDeveloper
+                      ? " Developers can assign all roles."
+                      : " Admins can assign User or Admin roles only."
+                  }`}
             </p>
             <dl className="user-management-role-legend" aria-label="Role definitions">
               {(Object.keys(ROLE_DEFINITIONS) as UserRolePreset[]).map((role) => (
@@ -195,6 +267,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               ))}
             </dl>
           </div>
+          <button
+            type="button"
+            className="feature-rollouts-primary-button"
+            onClick={() => setAddUserModalOpen(true)}
+          >
+            <LuUserPlus size={16} aria-hidden="true" /> Add User
+          </button>
         </div>
 
         <div className="user-management-table-wrapper">
@@ -216,6 +295,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 const draftState = draftStates[user.username] ?? currentState;
                 const isSaving = savingUsername === user.username;
                 const hasChanges = draftRole !== currentRole || draftState !== currentState;
+                const isSelf = user.username === currentUsername;
 
                 return (
                   <tr key={user.username}>
@@ -271,7 +351,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                             [user.username]: event.target.value,
                           }))
                         }
-                        disabled={isSaving}
+                        disabled={isSaving || isStateAdmin}
                       >
                         <option value="">None</option>
                         {SUPPORTED_STATES.map((s) => (
@@ -282,14 +362,27 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                       </select>
                     </td>
                     <td className="user-management-table__actions">
-                      <button
-                        type="button"
-                        className="feature-rollouts-primary-button"
-                        onClick={() => void handleSave(user)}
-                        disabled={!hasChanges || isSaving}
-                      >
-                        {isSaving ? "Saving..." : "Save"}
-                      </button>
+                      <div className="user-management-actions-cell">
+                        <button
+                          type="button"
+                          className="feature-rollouts-primary-button"
+                          onClick={() => void handleSave(user)}
+                          disabled={!hasChanges || isSaving}
+                        >
+                          {isSaving ? "Saving..." : "Save"}
+                        </button>
+                        {!isSelf && (
+                          <button
+                            type="button"
+                            className="user-management-delete-button"
+                            onClick={() => setDeleteTarget(user)}
+                            disabled={isSaving}
+                            aria-label={`Delete ${user.email}`}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -310,6 +403,97 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           selectId="user-management-page-size"
         />
       </div>
+
+      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Add New User">
+        <div className="modal-form">
+          <p className="modal-description">
+            Enter the email address of the user to add. They will receive an email with instructions to set up their account.
+          </p>
+          <div className="form-group">
+            <label htmlFor="add-user-email">Email Address</label>
+            <input
+              type="email"
+              id="add-user-email"
+              value={addEmail}
+              onChange={(e) => setAddEmail(e.target.value)}
+              className="form-input"
+              placeholder="user@example.com"
+              autoComplete="email"
+              aria-invalid={addEmail.length > 0 && !EMAIL_PATTERN.test(addEmail)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="add-user-state">{isStateAdmin ? "State" : "State (optional)"}</label>
+            <select
+              id="add-user-state"
+              className="form-input"
+              value={isStateAdmin ? userState : addState}
+              onChange={(e) => setAddState(e.target.value)}
+              disabled={isStateAdmin}
+            >
+              {!isStateAdmin && <option value="">None</option>}
+              {SUPPORTED_STATES.map((s) => (
+                <option key={s.code} value={s.code}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+            {isStateAdmin && (
+              <p className="modal-description">
+                New users are added to your state ({userState}) and cannot be changed.
+              </p>
+            )}
+          </div>
+          <div className="modal-actions">
+            <button
+              className="modal-button secondary"
+              onClick={() => setAddUserModalOpen(false)}
+              disabled={isCreating}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-button primary"
+              onClick={() => void handleCreateUser()}
+              disabled={isCreating || !addEmailValid}
+            >
+              {isCreating ? "Adding..." : "Add User"}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => {
+          if (!isDeleting) {
+            setDeleteTarget(null);
+          }
+        }}
+        title="Delete User"
+      >
+        <div className="modal-form">
+          <p className="modal-description">
+            Permanently delete <strong>{deleteTarget?.email}</strong>? This removes their account and cannot be undone.
+          </p>
+          <div className="modal-actions">
+            <button
+              className="modal-button secondary"
+              onClick={() => setDeleteTarget(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-button danger"
+              onClick={() => void handleDeleteUser()}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete User"}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

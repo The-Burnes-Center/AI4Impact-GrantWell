@@ -49,6 +49,43 @@ export class UserManagementClient {
     return data;
   }
 
+  async createUser(options: { email: string; state?: string }) {
+    const headers = await this.getAuthHeaders();
+    const response = await fetch(`${this.baseUrl}/user-management/users`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        email: options.email,
+        ...(options.state ? { state: options.state } : {}),
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || `Error: ${response.status}`);
+    }
+
+    return data;
+  }
+
+  async deleteUser(username: string) {
+    const headers = await this.getAuthHeaders();
+    const response = await fetch(
+      `${this.baseUrl}/user-management/users/${encodeURIComponent(username)}`,
+      {
+        method: "DELETE",
+        headers,
+      }
+    );
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || `Error: ${response.status}`);
+    }
+
+    return data;
+  }
+
   async updateUserRole(username: string, rolePreset: UserRolePreset) {
     const headers = await this.getAuthHeaders();
     const response = await fetch(

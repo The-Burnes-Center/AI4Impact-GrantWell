@@ -403,7 +403,10 @@ export class ChatBotApi extends Construct {
     props.authentication.userPool.grant(
       manageUsersFunction,
       "cognito-idp:ListUsers",
-      "cognito-idp:AdminUpdateUserAttributes"
+      "cognito-idp:AdminGetUser",
+      "cognito-idp:AdminCreateUser",
+      "cognito-idp:AdminUpdateUserAttributes",
+      "cognito-idp:AdminDeleteUser"
     );
 
     const manageUsersIntegration = new HttpLambdaIntegration(
@@ -412,7 +415,13 @@ export class ChatBotApi extends Construct {
     );
     restBackend.restAPI.addRoutes({
       path: "/user-management/users",
-      methods: [apigwv2.HttpMethod.GET],
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],
+      integration: manageUsersIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/user-management/users/{username}",
+      methods: [apigwv2.HttpMethod.DELETE],
       integration: manageUsersIntegration,
       authorizer: httpAuthorizer,
     });

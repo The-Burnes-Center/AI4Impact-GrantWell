@@ -641,6 +641,36 @@ body {
   white-space: nowrap;
 }
 
+.user-management-actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.user-management-delete-button {
+  background: var(--gw-color-white);
+  border: 1px solid var(--gw-color-danger, #cd0d0d);
+  color: var(--gw-color-danger, #cd0d0d);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  cursor: pointer;
+  min-height: 44px;
+  font-family: inherit;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.user-management-delete-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--gw-color-danger, #cd0d0d) 10%, var(--gw-color-white));
+}
+
+.user-management-delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @media screen and (max-width: 900px) {
   .feature-rollouts-overview {
     grid-template-columns: 1fr;

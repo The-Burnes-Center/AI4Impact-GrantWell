@@ -49,8 +49,8 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const apiClient = useApiClient();
-  const { isAdmin, isDeveloper, isStateAdmin, loading: roleLoading } = useAdminCheck();
-  const canManageUsers = isAdmin && !isStateAdmin;
+  const { isAdmin, isDeveloper, isStateAdmin, userState, username, loading: roleLoading } = useAdminCheck();
+  const canManageUsers = isAdmin;
   const { addNotification } = useNotifications();
 
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
@@ -165,7 +165,7 @@ const Dashboard: React.FC = () => {
         focusTabAt(tabs.length - 1);
       }
     },
-    [activeTab, isAdmin, isDeveloper]
+    [activeTab, isAdmin, isDeveloper, canManageUsers]
   );
 
   const confirmAutomatedScraper = useCallback(async () => {
@@ -520,6 +520,9 @@ const Dashboard: React.FC = () => {
                   apiClient={apiClient}
                   addNotification={addNotification}
                   canAssignDeveloper={isDeveloper}
+                  isStateAdmin={isStateAdmin}
+                  userState={userState}
+                  currentUsername={username}
                 />
               </div>
             )}

@@ -8,6 +8,7 @@ export function useAdminCheck(): {
   isStateAdmin: boolean;
   isRegularAdmin: boolean;
   userState: string;
+  username: string;
   roles: string[];
   loading: boolean;
 } {
@@ -16,6 +17,7 @@ export function useAdminCheck(): {
   const [isStateAdmin, setIsStateAdmin] = useState(false);
   const [isRegularAdmin, setIsRegularAdmin] = useState(false);
   const [userState, setUserState] = useState("");
+  const [username, setUsername] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,11 +30,13 @@ export function useAdminCheck(): {
         const payload = result?.signInUserSession?.idToken?.payload || {};
         const parsedRoles = parseRoleClaim(payload["custom:role"]);
         const stateClaim = String(payload["custom:state"] || "").trim().toUpperCase();
+        const usernameClaim = String(payload["cognito:username"] || "").trim();
         const hasDeveloperRole = hasRole(parsedRoles, "Developer");
         const hasAdminRole = hasRole(parsedRoles, "Admin");
         if (!cancelled) {
           setRoles(parsedRoles);
           setUserState(stateClaim);
+          setUsername(usernameClaim);
           setIsAdmin(hasAdminRole || hasDeveloperRole);
           setIsDeveloper(hasDeveloperRole);
           setIsStateAdmin(hasAdminRole && !hasDeveloperRole && !!stateClaim);
@@ -45,6 +49,7 @@ export function useAdminCheck(): {
           setIsStateAdmin(false);
           setIsRegularAdmin(false);
           setUserState("");
+          setUsername("");
           setRoles([]);
         }
       } finally {
@@ -61,7 +66,7 @@ export function useAdminCheck(): {
     };
   }, []);
 
-  return { isAdmin, isDeveloper, isStateAdmin, isRegularAdmin, userState, roles, loading };
+  return { isAdmin, isDeveloper, isStateAdmin, isRegularAdmin, userState, username, roles, loading };
 }
 
 export default useAdminCheck;
