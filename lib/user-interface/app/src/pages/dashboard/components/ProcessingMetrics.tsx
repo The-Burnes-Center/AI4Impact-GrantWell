@@ -18,7 +18,7 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
 }) => {
   if (loading || !metrics) {
     return (
-      <div className="metrics-grid" aria-busy="true" aria-label="Loading processing metrics">
+      <div className="metrics-grid" role="status" aria-busy="true" aria-label="Loading processing metrics">
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="metric-card metric-card--skeleton" />
         ))}

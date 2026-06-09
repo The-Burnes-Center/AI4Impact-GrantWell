@@ -23,9 +23,9 @@ export interface NOFO {
 
 export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
   federal: { label: "Federal", color: "#1a4480" },
-  state: { label: "State", color: "#2e8540" },
-  quasi: { label: "Quasi", color: "#8168b3" },
-  philanthropic: { label: "Philanthropic", color: "#e66f0e" },
+  state: { label: "State", color: "#2b7d3c" },
+  quasi: { label: "Quasi", color: "#7962a8" },
+  philanthropic: { label: "Philanthropic", color: "#af540b" },
 };
 
 export const GRANT_CATEGORIES = [

@@ -12,7 +12,7 @@ import "../../styles/checklists.css";
 
 const GRANT_TYPES: Record<string, { label: string; color: string }> = {
   federal: { label: "Federal", color: "#1a4480" },
-  state: { label: "State", color: "#2e8540" },
+  state: { label: "State", color: "#2b7d3c" },
   quasi: { label: "Quasi", color: "#5b3f8a" },
   philanthropic: { label: "Philanthropic", color: "#a04500" },
 };

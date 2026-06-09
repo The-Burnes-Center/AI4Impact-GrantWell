@@ -346,7 +346,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             <div className="header-cell" role="columnheader" style={{ textAlign: 'center' }}>Status</div>
           </div>
         </div>
-        <div className="table-body" role="rowgroup">
+        <div className="table-body" role={isLoading || paginatedItems.length === 0 ? undefined : "rowgroup"}>
           {isLoading ? (
             <div className="table-loading">
               <div className="table-loading-spinner"></div>

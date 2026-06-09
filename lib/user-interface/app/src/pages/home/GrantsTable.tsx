@@ -406,29 +406,28 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       )}
 
       {/* Table */}
-      <div className="landing-table-container">
+      <div className="landing-table-container" role="table" aria-label="Grants">
         <div className="landing-table-header" role="row">
           {(Object.keys(SORT_COLUMN_LABELS) as SortColumn[]).map((col) => {
             const isActive = sortColumn === col;
             const ariaSort = isActive ? (sortDirection === "asc" ? "ascending" : "descending") : "none";
             const Icon = isActive ? (sortDirection === "asc" ? LuArrowUp : LuArrowDown) : LuArrowUpDown;
             return (
-              <button
-                key={col}
-                type="button"
-                role="columnheader"
-                aria-sort={ariaSort}
-                className={`landing-header-cell landing-header-cell--sortable${isActive ? " landing-header-cell--active" : ""}`}
-                onClick={() => handleSort(col)}
-              >
-                <span>{SORT_COLUMN_LABELS[col]}</span>
-                <Icon size={12} className="landing-header-sort-icon" aria-hidden="true" />
-              </button>
+              <div key={col} role="columnheader" aria-sort={ariaSort} className="landing-header-cell-wrapper">
+                <button
+                  type="button"
+                  className={`landing-header-cell landing-header-cell--sortable${isActive ? " landing-header-cell--active" : ""}`}
+                  onClick={() => handleSort(col)}
+                >
+                  <span>{SORT_COLUMN_LABELS[col]}</span>
+                  <Icon size={12} className="landing-header-sort-icon" aria-hidden="true" />
+                </button>
+              </div>
             );
           })}
         </div>
 
-        <div className="landing-table-body">
+        <div className="landing-table-body" role={awaitingAIResults || visibleNofos.length === 0 ? undefined : "rowgroup"}>
           {awaitingAIResults ? (
             <div className="landing-search-loading" role="status" aria-busy="true" aria-label="Searching grants with AI">
               <div className="skeleton-row-group">
@@ -462,6 +461,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             return (
               <div
                 key={nofo.name}
+                role="row"
                 className={`landing-table-row ${isArchived ? "archived" : ""}`}
                 onClick={() => !isArchived && handleRowClick(nofo)}
                 style={{
@@ -472,7 +472,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                 aria-label={isArchived ? `${nofo.name} (Expired - no longer accepting applications)` : `Select ${nofo.name}`}
                 aria-disabled={isArchived}
               >
-                <div className="landing-row-cell">
+                <div className="landing-row-cell" role="cell">
                   {nofo.isPinned && (
                     <LuPin
                       size={14}
@@ -501,13 +501,13 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     </span>
                   )}
                 </div>
-                <div className="landing-row-cell" style={{ color: isArchived ? "#888" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#888" : undefined }}>
                   {nofo.agency || <span className="landing-no-value">N/A</span>}
                 </div>
-                <div className="landing-row-cell" style={{ color: isArchived ? "#888" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#888" : undefined }}>
                   {nofo.category || <span className="landing-no-value">N/A</span>}
                 </div>
-                <div className="landing-row-cell">
+                <div className="landing-row-cell" role="cell">
                   {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
                     <span
                       className={getGrantTypeBadgeClassName()}
@@ -524,7 +524,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     <span className="landing-grant-type-badge unset" style={{ opacity: isArchived ? 0.6 : 1 }}>Unset</span>
                   )}
                 </div>
-                <div className="landing-row-cell" style={{ color: isArchived ? "#888" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#888" : undefined }}>
                   {nofo.isRolling ? (
                     <span className="landing-expiry-date rolling">Rolling</span>
                   ) : nofo.expirationDate ? (

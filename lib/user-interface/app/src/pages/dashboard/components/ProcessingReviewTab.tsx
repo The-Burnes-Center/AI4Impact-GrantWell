@@ -299,7 +299,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             <div className="header-cell" role="columnheader">Details</div>
           </div>
         </div>
-        <div className="table-body" role="rowgroup">
+        <div className="table-body" role={loading || reviews.length === 0 ? undefined : "rowgroup"}>
           {loading ? (
             <div className="review-loading" aria-busy="true">
               Loading reviews...
@@ -315,7 +315,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </div>
           ) : (
             reviews.map((review) => (
-              <div key={`${review.nofo_name}-${review.review_id}`}>
+              <div key={`${review.nofo_name}-${review.review_id}`} style={{ display: "contents" }}>
                 <div
                   className={`table-row review-table-row review-table-grid-select ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""} ${selected.has(review.review_id) ? "review-table-row--selected" : ""}`}
                   role="row"

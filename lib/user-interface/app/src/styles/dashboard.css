@@ -50,11 +50,8 @@
 /* Reset body styles */
 html,
 body {
-  height: 100%;
   margin: 0;
   padding: 0;
-  overflow-y: auto;
-  overflow-x: auto; /* Changed from hidden to allow scrolling */
 }
 
 /* Dashboard header styles */
@@ -188,7 +185,7 @@ body {
   padding: 6px 10px;
   border-radius: 999px;
   background: var(--gw-color-primary-light);
-  color: var(--gw-color-primary);
+  color: #1b5d54;
   font-size: var(--gw-font-size-sm);
   font-weight: var(--gw-font-weight-semibold);
   letter-spacing: 0.02em;
@@ -268,7 +265,7 @@ body {
 
 .feature-rollouts-badge--success {
   background: color-mix(in srgb, var(--gw-color-success) 14%, var(--gw-color-white));
-  color: var(--gw-color-success);
+  color: #1a7b3a;
 }
 
 .feature-rollouts-badge--warning {
@@ -283,12 +280,12 @@ body {
 
 .feature-rollouts-badge--info {
   background: var(--gw-color-primary-light);
-  color: var(--gw-color-primary);
+  color: #1b5d54;
 }
 
 .feature-rollouts-badge--danger {
   background: color-mix(in srgb, var(--gw-color-danger, #cd0d0d) 14%, var(--gw-color-white));
-  color: var(--gw-color-danger, #cd0d0d);
+  color: #c40c0c;
 }
 
 .feature-rollouts-mode-group {
@@ -575,7 +572,7 @@ body {
 
 .user-management-status-pill.is-enabled {
   background: color-mix(in srgb, var(--gw-color-success) 14%, var(--gw-color-white));
-  color: var(--gw-color-success);
+  color: #1a7b3a;
 }
 
 .user-management-status-pill.is-disabled {
@@ -830,7 +827,7 @@ body {
 .no-data {
   padding: 30px;
   text-align: center;
-  color: #777;
+  color: #707070;
   font-style: italic;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -895,7 +892,7 @@ body {
   align-items: center;
   font-size: 14px;
   background-color: #DFECE0;
-  color: #23776C;
+  color: #1b5d54;
   padding: 3px 8px;
   border-radius: 12px;
   margin-left: 8px;

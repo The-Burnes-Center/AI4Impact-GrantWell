@@ -14,20 +14,20 @@ export const GRANT_TYPES = {
   },
   STATE: { 
     id: 'state', 
-    label: 'State', 
-    color: '#2e8540',
+    label: 'State',
+    color: '#2b7d3c',
     description: 'State-level government grants'
   },
   QUASI: { 
     id: 'quasi', 
-    label: 'Quasi', 
-    color: '#8168b3',
+    label: 'Quasi',
+    color: '#7962a8',
     description: 'Quasi-governmental agency grants'
   },
   PHILANTHROPIC: { 
     id: 'philanthropic', 
-    label: 'Philanthropic', 
-    color: '#e66f0e',
+    label: 'Philanthropic',
+    color: '#af540b',
     description: 'Private foundation and charitable organization grants'
   },
 } as const;

@@ -489,6 +489,10 @@
 }
 
 /* Sortable column headers */
+.landing-header-cell-wrapper {
+  display: flex;
+}
+
 .landing-header-cell--sortable {
   display: inline-flex;
   align-items: center;
@@ -606,8 +610,8 @@
     grid-template-columns: 2fr 1.5fr 1fr;
   }
 
-  .landing-header-cell:nth-child(4),
-  .landing-header-cell:nth-child(5),
+  .landing-header-cell-wrapper:nth-child(4),
+  .landing-header-cell-wrapper:nth-child(5),
   .landing-row-cell:nth-child(4),
   .landing-row-cell:nth-child(5) {
     display: none;

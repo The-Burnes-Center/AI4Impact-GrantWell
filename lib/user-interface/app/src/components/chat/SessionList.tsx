@@ -287,7 +287,7 @@ export default function Sessions(props: SessionsProps) {
             </div>
           </div>
         </div>
-        <div className="table-body" role="rowgroup">
+        <div className="table-body" role={isLoading || sortedSessions.length === 0 ? undefined : "rowgroup"}>
           {isLoading ? (
             <div className="table-loading">
               <div className="table-loading-spinner"></div>

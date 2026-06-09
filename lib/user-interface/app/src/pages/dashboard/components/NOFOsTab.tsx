@@ -320,7 +320,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <div className="header-cell" role="columnheader">Actions</div>
           </div>
         </div>
-        <div className="table-body" role="rowgroup">
+        <div className="table-body" role={nofos.length === 0 ? undefined : "rowgroup"}>
           {nofos.length === 0 && (
             <div className="no-data">
               <LuFileX size={24} className="no-data-icon" />

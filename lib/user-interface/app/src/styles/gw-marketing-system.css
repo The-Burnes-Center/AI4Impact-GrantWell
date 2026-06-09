@@ -228,7 +228,6 @@
 .marketing .how-it-works__heading,
 .marketing .help-modal__section-title,
 .marketing .se-section-title,
-.marketing .pg-modal-title,
 .marketing .pg-highlight-title,
 .marketing .pg-info-heading,
 .marketing .se-suggestions-heading {
@@ -236,6 +235,13 @@
   font-weight: 400;
   color: var(--mk-green-deepest);
   letter-spacing: 0;
+}
+
+/* Modal title sits on the teal header, so keep the serif treatment but white text for contrast */
+.marketing .pg-modal-title {
+  font-family: 'PT Serif', Georgia, serif;
+  letter-spacing: 0;
+  color: var(--gw-color-white, #ffffff);
 }
 
 /* Slightly larger size for top-level panel headings */
