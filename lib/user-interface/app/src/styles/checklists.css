@@ -398,7 +398,7 @@
 
 .checklist-loading__tip-text {
   font-size: 14px;
-  color: var(--gw-color-primary, #23776C);
+  color: #1b5d54;
   margin: 0;
   line-height: 1.5;
 }

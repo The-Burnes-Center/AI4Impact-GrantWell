@@ -407,24 +407,26 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
       {/* Table */}
       <div className="landing-table-container" role="table" aria-label="Grants">
-        <div className="landing-table-header" role="row">
-          {(Object.keys(SORT_COLUMN_LABELS) as SortColumn[]).map((col) => {
-            const isActive = sortColumn === col;
-            const ariaSort = isActive ? (sortDirection === "asc" ? "ascending" : "descending") : "none";
-            const Icon = isActive ? (sortDirection === "asc" ? LuArrowUp : LuArrowDown) : LuArrowUpDown;
-            return (
-              <div key={col} role="columnheader" aria-sort={ariaSort} className="landing-header-cell-wrapper">
-                <button
-                  type="button"
-                  className={`landing-header-cell landing-header-cell--sortable${isActive ? " landing-header-cell--active" : ""}`}
-                  onClick={() => handleSort(col)}
-                >
-                  <span>{SORT_COLUMN_LABELS[col]}</span>
-                  <Icon size={12} className="landing-header-sort-icon" aria-hidden="true" />
-                </button>
-              </div>
-            );
-          })}
+        <div className="landing-table-header" role="rowgroup">
+          <div className="landing-table-header-row" role="row">
+            {(Object.keys(SORT_COLUMN_LABELS) as SortColumn[]).map((col) => {
+              const isActive = sortColumn === col;
+              const ariaSort = isActive ? (sortDirection === "asc" ? "ascending" : "descending") : "none";
+              const Icon = isActive ? (sortDirection === "asc" ? LuArrowUp : LuArrowDown) : LuArrowUpDown;
+              return (
+                <div key={col} role="columnheader" aria-sort={ariaSort} className="landing-header-cell-wrapper">
+                  <button
+                    type="button"
+                    className={`landing-header-cell landing-header-cell--sortable${isActive ? " landing-header-cell--active" : ""}`}
+                    onClick={() => handleSort(col)}
+                  >
+                    <span>{SORT_COLUMN_LABELS[col]}</span>
+                    <Icon size={12} className="landing-header-sort-icon" aria-hidden="true" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <div className="landing-table-body" role={awaitingAIResults || visibleNofos.length === 0 ? undefined : "rowgroup"}>

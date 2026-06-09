@@ -94,6 +94,15 @@ export default function SessionPage() {
           </div>
         </nav>
 
+        <div className="dashboard-header">
+          <div>
+            <h1>Sessions</h1>
+            <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+              Manage and access your previous chat conversations
+            </p>
+          </div>
+        </div>
+
         <div className="dashboard-main-content">
           {isLoading ? (
             <div style={{ display: "flex", justifyContent: "center", padding: "48px" }} role="status" aria-label="Loading sessions">
