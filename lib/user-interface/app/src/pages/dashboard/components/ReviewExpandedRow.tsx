@@ -497,7 +497,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           <ReviewActions
             actionInProgress={actionInProgress}
             hasCorrections={getCorrections() !== undefined}
-            canApprove={detail.adminGuidance?.canApprove !== false}
+            canApprove={
+              detail.adminGuidance?.canApprove !== false &&
+              detail.extractedSummary != null
+            }
             status={review.status}
             onApprove={handleApprove}
             onReject={handleRejectClick}
