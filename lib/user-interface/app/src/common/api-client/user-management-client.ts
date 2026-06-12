@@ -26,6 +26,7 @@ export class UserManagementClient {
   async listUsers(options?: {
     limit?: number;
     paginationToken?: string | null;
+    query?: string;
   }): Promise<ManagedUsersResponse> {
     const headers = await this.getAuthHeaders();
     const url = new URL(`${this.baseUrl}/user-management/users`);
@@ -34,6 +35,9 @@ export class UserManagementClient {
     }
     if (options?.paginationToken) {
       url.searchParams.set("paginationToken", options.paginationToken);
+    }
+    if (options?.query?.trim()) {
+      url.searchParams.set("query", options.query.trim());
     }
 
     const response = await fetch(url, {

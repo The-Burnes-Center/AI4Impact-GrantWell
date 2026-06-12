@@ -52,17 +52,21 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageTokens, setPageTokens] = useState<Array<string | null>>([null]);
   const [nextPaginationToken, setNextPaginationToken] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeSearchQuery, setActiveSearchQuery] = useState("");
 
   const loadUsers = useCallback(async (
     page: number,
     nextPageSize: number,
-    tokens: Array<string | null>
+    tokens: Array<string | null>,
+    query = ""
   ) => {
     try {
       setLoading(true);
       const response = await apiClient.userManagement.listUsers({
         limit: nextPageSize,
-        paginationToken: tokens[page - 1] ?? null,
+        paginationToken: query ? null : tokens[page - 1] ?? null,
+        query,
       });
       setUsers(response.users);
       setDraftRoles(
@@ -71,7 +75,11 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         )
       );
       setNextPaginationToken(response.nextPaginationToken);
-      setPageTokens((current) => {
+      setPageTokens(() => {
+        if (query) {
+          return [null];
+        }
+
         const nextTokens = tokens.slice(0, page);
         if (response.nextPaginationToken) {
           nextTokens[page] = response.nextPaginationToken;
@@ -87,10 +95,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   }, [apiClient, addNotification]);
 
   useEffect(() => {
-    void loadUsers(1, pageSize, [null]);
-  }, [loadUsers, pageSize]);
+    void loadUsers(1, pageSize, [null], activeSearchQuery);
+  }, [activeSearchQuery, loadUsers, pageSize]);
 
   const handlePageChange = useCallback((nextPage: number) => {
+    if (activeSearchQuery) {
+      return;
+    }
     if (nextPage < 1) {
       return;
     }
@@ -102,8 +113,8 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
     }
 
     setCurrentPage(nextPage);
-    void loadUsers(nextPage, pageSize, pageTokens);
-  }, [currentPage, loadUsers, nextPaginationToken, pageSize, pageTokens]);
+    void loadUsers(nextPage, pageSize, pageTokens, "");
+  }, [activeSearchQuery, currentPage, loadUsers, nextPaginationToken, pageSize, pageTokens]);
 
   const handlePageSizeChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const nextPageSize = Number.parseInt(event.target.value, 10);
@@ -141,6 +152,31 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
     [apiClient, addNotification, draftRoles]
   );
 
+  const handleSearchUsers = useCallback(() => {
+    setCurrentPage(1);
+    setPageTokens([null]);
+    setNextPaginationToken(null);
+    setActiveSearchQuery(searchQuery.trim());
+  }, [searchQuery]);
+
+  const handleClearSearch = useCallback(() => {
+    setSearchQuery("");
+    setCurrentPage(1);
+    setPageTokens([null]);
+    setNextPaginationToken(null);
+    setActiveSearchQuery("");
+  }, []);
+
+  const handleSearchKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearchUsers();
+    }
+  }, [handleSearchUsers]);
+
+  const hasActiveSearch = activeSearchQuery.length > 0;
+  const hasSearchInput = searchQuery.trim().length > 0;
+
   if (loading) {
     return (
       <div className="feature-rollouts-panel" role="status" aria-busy="true">
@@ -173,6 +209,49 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </div>
         </div>
 
+        <div className="feature-rollouts-search user-management-search">
+          <div className="feature-rollouts-search-field">
+            <label htmlFor="user-management-search" className="feature-rollouts-search-label">
+              Search users
+            </label>
+            <input
+              id="user-management-search"
+              type="text"
+              className="feature-rollouts-search-input"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              placeholder="Search by email or username"
+            />
+          </div>
+          <div className="feature-rollouts-search-actions">
+            <button
+              type="button"
+              className="feature-rollouts-primary-button"
+              onClick={handleSearchUsers}
+              disabled={loading}
+            >
+              Search
+            </button>
+            <button
+              type="button"
+              className="feature-rollouts-secondary-button"
+              onClick={handleClearSearch}
+              disabled={!hasActiveSearch && !hasSearchInput}
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+
+        {hasActiveSearch ? (
+          <p className="feature-rollouts-results-status" role="status" aria-live="polite">
+            {users.length === 0
+              ? `No users found for "${activeSearchQuery}".`
+              : `${users.length} user${users.length === 1 ? "" : "s"} found for "${activeSearchQuery}".`}
+          </p>
+        ) : null}
+
         <div className="user-management-table-wrapper">
           <table className="user-management-table">
             <thead>
@@ -184,6 +263,15 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               </tr>
             </thead>
             <tbody>
+              {users.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="user-management-table__empty">
+                    {hasActiveSearch
+                      ? "No matching users found."
+                      : "No users available."}
+                  </td>
+                </tr>
+              ) : null}
               {users.map((user) => {
                 const currentRole = getRolePreset(user.roles);
                 const draftRole = draftRoles[user.username] || currentRole;
@@ -246,18 +334,20 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             </tbody>
           </table>
         </div>
-        <PaginationControls
-          mode="token"
-          currentPage={currentPage}
-          pageItemCount={users.length}
-          hasNextPage={Boolean(nextPaginationToken)}
-          itemsPerPage={pageSize}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handlePageSizeChange}
-          itemsPerPageOptions={[25, 50, 60]}
-          itemLabel="users"
-          selectId="user-management-page-size"
-        />
+        {!hasActiveSearch ? (
+          <PaginationControls
+            mode="token"
+            currentPage={currentPage}
+            pageItemCount={users.length}
+            hasNextPage={Boolean(nextPaginationToken)}
+            itemsPerPage={pageSize}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handlePageSizeChange}
+            itemsPerPageOptions={[25, 50, 60]}
+            itemLabel="users"
+            selectId="user-management-page-size"
+          />
+        ) : null}
       </div>
     </div>
   );

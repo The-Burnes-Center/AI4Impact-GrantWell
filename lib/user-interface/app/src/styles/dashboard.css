@@ -521,6 +521,10 @@ body {
   gap: 20px;
 }
 
+.user-management-search {
+  margin: 0 0 16px;
+}
+
 .user-management-table-wrapper {
   overflow-x: auto;
 }
@@ -544,6 +548,11 @@ body {
   font-weight: var(--mds-font-weight-semibold);
   line-height: 1.4;
   background: var(--mds-color-white);
+}
+
+.user-management-table__empty {
+  color: var(--mds-color-text-secondary);
+  text-align: center;
 }
 
 .user-management-user-cell {
