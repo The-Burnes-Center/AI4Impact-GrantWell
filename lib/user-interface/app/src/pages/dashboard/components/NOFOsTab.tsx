@@ -21,6 +21,10 @@ const PROCESSING_LABELS: Record<string, string> = {
   incomplete: "Incomplete",
 };
 
+function getErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error && error.message ? error.message : fallback;
+}
+
 interface NOFOsTabProps {
   nofos: NOFO[];
   searchQuery: string;
@@ -200,8 +204,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
       setEditedNofoExpirationDate("");
       setEditedNofoGrantType("");
       setEditedNofoIsRolling(false);
-    } catch {
-      addNotification("error", "Failed to update grant. Please try again.");
+    } catch (error) {
+      addNotification("error", getErrorMessage(error, "Failed to update grant. Please try again."));
     }
   };
 
@@ -213,8 +217,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
         allNofos.map((item) => item.id === nofo.id ? { ...item, status: newStatus } : item)
       );
       addNotification("success", `Grant status changed to ${newStatus}`);
-    } catch {
-      addNotification("error", "Failed to update grant status. Please try again.");
+    } catch (error) {
+      addNotification("error", getErrorMessage(error, "Failed to update grant status. Please try again."));
     }
   };
 

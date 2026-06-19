@@ -363,7 +363,8 @@ export default function Chat(props: {
             aria-hidden="true"
             style={{ animation: "spin 1s linear infinite" }}
           />
-          Your documents are being indexed. Chat will be available once indexing completes.
+          Your documents are being indexed. Newly added documents will appear in
+          results once indexing completes — you can keep chatting in the meantime.
         </div>
       )}
 
@@ -377,7 +378,6 @@ export default function Chat(props: {
           setMessageHistory={(history) => setMessageHistory(history)}
           documentIdentifier={props.documentIdentifier}
           messageAreaRef={messageAreaRef}
-          kbSyncing={props.kbSyncing}
         />
       </div>
     </section>

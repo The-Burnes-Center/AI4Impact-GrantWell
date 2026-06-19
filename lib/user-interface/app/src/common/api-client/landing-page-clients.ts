@@ -218,7 +218,7 @@ export class LandingPageClient {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || `Error: ${response.status}`);
+        throw new Error(data.error || data.message || `Error: ${response.status}`);
       }
 
       return data;

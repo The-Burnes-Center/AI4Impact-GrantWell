@@ -109,6 +109,36 @@ export class SessionsClient {
     };
   }
 
+  async appendChatEntry(params: {
+    sessionId: string;
+    userId: string;
+    documentIdentifier: string;
+    entry: ChatHistoryEntry;
+  }) {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + '/user-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify({
+        operation: 'update_session',
+        session_id: params.sessionId,
+        user_id: params.userId,
+        document_identifier: params.documentIdentifier,
+        new_chat_entry: [params.entry],
+      }),
+    });
+
+    if (response.status !== 200) {
+      const errorMessage = await response.json();
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  }
+
   // Updates a chat session
   async updateSession(session: ChatSession) {
     const auth = await Utils.authenticate();
