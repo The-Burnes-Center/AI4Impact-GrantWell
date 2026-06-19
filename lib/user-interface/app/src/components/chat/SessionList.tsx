@@ -12,6 +12,7 @@ import { DateTime } from "luxon";
 import { useNavigate } from "react-router";
 import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
+import { v4 as uuidv4 } from "uuid";
 import "../../styles/dashboard.css";
 
 export interface SessionsProps {
@@ -177,10 +178,16 @@ export default function Sessions(props: SessionsProps) {
           <button
             className="action-button add-button"
             onClick={() => {
-              const queryParams = props.documentIdentifier
-                ? `?folder=${encodeURIComponent(props.documentIdentifier)}`
-                : "";
-              navigate(`/home${queryParams}`);
+              if (props.documentIdentifier) {
+                const newSessionId = uuidv4();
+                navigate(
+                  `/chat/${newSessionId}?folder=${encodeURIComponent(
+                    props.documentIdentifier
+                  )}`
+                );
+              } else {
+                navigate(`/home`);
+              }
             }}
           >
             <LuPlus size={16} className="button-icon" />
