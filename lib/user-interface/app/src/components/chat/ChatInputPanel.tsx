@@ -145,7 +145,6 @@ export interface ChatInputPanelProps {
   setMessageHistory: (history: ChatBotHistoryItem[]) => void;
   documentIdentifier: string;
   messageAreaRef?: React.RefObject<HTMLDivElement>;
-  kbSyncing?: boolean;
 }
 
 export abstract class ChatScrollState {
@@ -565,9 +564,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       }}
     >
       <label htmlFor="chat-input" className="sr-only">
-        {props.kbSyncing
-          ? "Chat is disabled while documents are being indexed"
-          : "Message the GrantWell assistant"}
+        Message the GrantWell assistant
       </label>
       {/* Microphone button with enhanced feedback */}
       {browserSupportsSpeechRecognition ? (
@@ -681,8 +678,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         onFocus={() => setIsInputFocused(true)}
         onBlur={() => setIsInputFocused(false)}
         value={state.value}
-        placeholder={props.kbSyncing ? "Waiting for document indexing..." : "Type your message..."}
-        disabled={props.kbSyncing}
+        placeholder="Type your message..."
       />
       <span id="chat-input-help" className="sr-only">
         Press Enter to send, Shift+Enter for new line
@@ -703,8 +699,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           style={{
             ...(readyState !== ReadyState.OPEN ||
             state.value.trim().length === 0 ||
-            props.session.loading ||
-            props.kbSyncing
+            props.session.loading
               ? { ...styles.sendButton, ...styles.sendButtonDisabled }
               : {
                   ...styles.sendButton,
@@ -719,8 +714,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           disabled={
             readyState !== ReadyState.OPEN ||
             state.value.trim().length === 0 ||
-            props.session.loading ||
-            props.kbSyncing
+            props.session.loading
           }
           onClick={handleSendMessage}
           onMouseEnter={() => setIsHovered(true)}
