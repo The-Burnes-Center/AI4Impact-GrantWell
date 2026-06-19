@@ -11,6 +11,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { Auth } from "aws-amplify";
+import { ApiClient } from "../../common/api-client/api-client";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 import { AppContext } from "../../common/app-context";
@@ -313,10 +314,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [props.messageHistory, props.messageAreaRef]);
 
-  // Stop in-flight generation by closing the WebSocket.
-  // Backend may still finish computing, but the client stops accepting chunks
-  // and surfaces whatever was already streamed.
-  const handleStopGeneration = () => {
+  const handleStopGeneration = async () => {
     stoppedRef.current = true;
     if (wsRef.current) {
       try {
@@ -327,6 +325,45 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       wsRef.current = null;
     }
     props.setRunning(false);
+
+    const history = messageHistoryRef.current;
+    const last = history[history.length - 1];
+    const prev = history[history.length - 2];
+
+    if (last?.type !== ChatBotMessageType.AI) return;
+
+    if (last.content.length === 0) {
+      messageHistoryRef.current = history.slice(0, -1);
+      props.setMessageHistory(messageHistoryRef.current);
+      return;
+    }
+
+    if (prev?.type !== ChatBotMessageType.Human) return;
+
+    const stoppedMetadata = { ...last.metadata, stopped: true };
+    messageHistoryRef.current = [
+      ...history.slice(0, -1),
+      { ...last, metadata: stoppedMetadata },
+    ];
+    props.setMessageHistory(messageHistoryRef.current);
+
+    try {
+      const username = (await Auth.currentAuthenticatedUser()).username;
+      if (!username) return;
+      const apiClient = new ApiClient(appContext);
+      await apiClient.sessions.appendChatEntry({
+        sessionId: props.session.id,
+        userId: username,
+        documentIdentifier: props.documentIdentifier,
+        entry: {
+          user: prev.content,
+          chatbot: last.content,
+          metadata: JSON.stringify(stoppedMetadata),
+        },
+      });
+    } catch (e) {
+      console.warn("Failed to persist stopped response:", e);
+    }
   };
 
   /**Sends a message to the chat API */
@@ -505,14 +542,14 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Handle WebSocket closure
       ws.addEventListener("close", async function close() {
-        if (wsRef.current === ws) wsRef.current = null;
-        // if this is a new session, the backend will update the session list, so
-        // we need to refresh
+        const isActiveSocket = wsRef.current === ws;
+        if (isActiveSocket) wsRef.current = null;
         if (firstTime) {
           Utils.delay(1500).then(() => setNeedsRefresh(true));
         }
+        if (!isActiveSocket) return;
         props.setRunning(false);
-        
+
         // Ensure final scroll to bottom after message is complete
         // Small delay to ensure DOM has updated with final content
         setTimeout(() => {

@@ -14,6 +14,7 @@ import {
   FaCheck,
   FaChevronDown,
   FaChevronRight,
+  FaRegStopCircle,
 } from "react-icons/fa";
 
 import "react-json-view-lite/dist/index.css";
@@ -166,6 +167,8 @@ function ChatMessage(props: ChatMessageProps) {
     Array.isArray(props.message.metadata?.Sources) &&
     props.message.metadata.Sources.length > 0;
 
+  const stopped = props.message.metadata?.stopped === true;
+
   // Fetch grant name if documentIdentifier is provided
   useEffect(() => {
     const fetchGrantName = async () => {
@@ -315,6 +318,23 @@ function ChatMessage(props: ChatMessageProps) {
                         {content}
                       </ReactMarkdown>
                     </div>
+
+                    {stopped && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          marginTop: "8px",
+                          fontSize: "12px",
+                          fontStyle: "italic",
+                          color: "#9ca3af",
+                        }}
+                      >
+                        <FaRegStopCircle size={12} />
+                        Response stopped
+                      </div>
+                    )}
 
                     {/* Collapsible sources section */}
                     {showSources && (
