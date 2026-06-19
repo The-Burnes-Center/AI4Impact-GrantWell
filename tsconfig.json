@@ -11,7 +11,6 @@
     "noImplicitAny": false,
     "strictNullChecks": true,
     "noImplicitThis": true,
-    "alwaysStrict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
@@ -22,8 +21,15 @@
     "strictPropertyInitialization": false,
     "typeRoots": [
       "./node_modules/@types"
+    ],
+    "types": [
+      "node"
     ]
   },
+  "include": [
+    "bin/**/*.ts",
+    "lib/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "cdk.out",

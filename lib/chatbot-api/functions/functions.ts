@@ -1394,9 +1394,10 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    // EventBridge rule to run the coordinator daily at 9 AM UTC (production only)
+    // EventBridge rule to run the coordinator daily at 9 AM UTC.
+    // The grantwell-staging environment powers the generic deployment.
     const environment = process.env.ENVIRONMENT;
-    if (environment === 'production') {
+    if (environment === 'production' || environment === 'grantwell-staging') {
       const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
         schedule: events.Schedule.cron({
           minute: '0',
