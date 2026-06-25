@@ -31,6 +31,8 @@ export class UserDocumentsClient {
       body: JSON.stringify({ fileName: filePath, fileType, fileSize }),
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (!response.ok) {
       let message = "Failed to get upload URL";
       try {
@@ -63,6 +65,8 @@ export class UserDocumentsClient {
       body: JSON.stringify({ fileName: filePath }),
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (!response.ok) {
       throw new Error("Failed to get download URL");
     }
@@ -93,6 +97,8 @@ export class UserDocumentsClient {
       }),
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (!response.ok) {
       throw new Error("Failed to get files");
     }
@@ -111,6 +117,8 @@ export class UserDocumentsClient {
       },
       body: JSON.stringify({ KEY: key }),
     });
+
+    await Utils.handleAuthResponse(response);
 
     if (!response.ok) {
       throw new Error("Failed to delete file");

@@ -17,6 +17,8 @@ export class KBSyncClient {
       },
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (!response.ok) {
       throw new Error("Failed to check sync status");
     }
@@ -31,6 +33,8 @@ export class KBSyncClient {
         Authorization: auth,
       },
     });
+
+    await Utils.handleAuthResponse(response);
 
     if (!response.ok) {
       throw new Error("Failed to check last sync");

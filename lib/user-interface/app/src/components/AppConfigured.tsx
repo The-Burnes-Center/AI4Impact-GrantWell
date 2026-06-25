@@ -19,7 +19,7 @@ import MDSHeader from "./mds/MdsHeader";
 
 async function getInitialAuthState() {
   try {
-    await Auth.currentAuthenticatedUser();
+    await Auth.currentSession();
     return true;
   } catch {
     return false;

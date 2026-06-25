@@ -1,7 +1,4 @@
-import {
-  Utils
-} from "../utils"
-
+import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 
 export class KnowledgeManagementClient {
@@ -34,6 +31,8 @@ export class KnowledgeManagementClient {
         },
         body: JSON.stringify({ fileName: filePath, fileType })
       });
+
+      await Utils.handleAuthResponse(response);
 
       if (!response.ok) {
         throw new Error('Failed to get upload URL');
@@ -68,6 +67,9 @@ export class KnowledgeManagementClient {
       }),
 
     });
+
+    await Utils.handleAuthResponse(response);
+
     if (!response.ok) {
       throw new Error('Failed to get files');
     }
@@ -94,6 +96,9 @@ export class KnowledgeManagementClient {
         KEY : key
       }),
     });
+
+    await Utils.handleAuthResponse(response);
+
     if (!response.ok) {
       throw new Error('Failed to delete file');
     }

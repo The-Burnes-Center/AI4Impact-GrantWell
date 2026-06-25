@@ -73,6 +73,8 @@ export class DraftsClient {
       }),
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (response.status !== 200) {
       const errorMessage = await response.json();
       throw new Error(errorMessage);
@@ -109,6 +111,8 @@ export class DraftsClient {
           user_id: params.userId
         }),
       });
+
+      await Utils.handleAuthResponse(response);
 
       // If 404, draft doesn't exist yet - wait and retry (might be generating)
       if (response.status === 404) {
@@ -239,6 +243,8 @@ export class DraftsClient {
       }),
     });
 
+    await Utils.handleAuthResponse(response);
+
     console.log('Update draft response status:', response.status);
     if (response.status !== 200) {
       const errorMessage = await response.json();
@@ -267,6 +273,8 @@ export class DraftsClient {
           user_id: userId
         })
       });
+
+      await Utils.handleAuthResponse(response);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -307,8 +315,10 @@ export class DraftsClient {
         })
       });
 
+      await Utils.handleAuthResponse(response);
+
       const data = await response.json();
-      
+
       if (response.status !== 200) {
         const errorMessage = data.error || data.body || 'Unknown error';
         console.error('Draft API Error:', {
@@ -381,6 +391,8 @@ export class DraftsClient {
       }),
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (response.status !== 200) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to start draft generation');
@@ -420,6 +432,8 @@ export class DraftsClient {
       }),
     });
 
+    await Utils.handleAuthResponse(startResponse);
+
     console.log('Draft generation start response status:', startResponse.status);
     if (startResponse.status !== 200) {
       const errorMessage = await startResponse.json();
@@ -453,6 +467,8 @@ export class DraftsClient {
             'Authorization': 'Bearer ' + auth,
           },
         });
+
+        await Utils.handleAuthResponse(statusResponse);
 
         if (!statusResponse.ok) {
           console.warn(`[Polling] Job status check failed: ${statusResponse.status}`);
@@ -495,6 +511,8 @@ export class DraftsClient {
       headers: { 'Authorization': 'Bearer ' + auth },
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (!response.ok) {
       throw new Error(`Job status check failed: ${response.status}`);
     }
@@ -527,6 +545,8 @@ export class DraftsClient {
         },
       }),
     });
+
+    await Utils.handleAuthResponse(response);
 
     console.log('DOCX generation response status:', response.status);
 
@@ -572,6 +592,8 @@ export class DraftsClient {
         },
       }),
     });
+
+    await Utils.handleAuthResponse(response);
 
     console.log('PDF generation response status:', response.status);
     console.log('PDF generation response headers:', Object.fromEntries(response.headers.entries()));

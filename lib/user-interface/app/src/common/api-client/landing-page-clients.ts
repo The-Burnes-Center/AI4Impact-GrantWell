@@ -51,6 +51,8 @@ export class LandingPageClient {
         },
       });
 
+      await Utils.handleAuthResponse(response);
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
@@ -76,6 +78,8 @@ export class LandingPageClient {
           Authorization: token,
         },
       });
+
+      await Utils.handleAuthResponse(response);
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -105,6 +109,8 @@ export class LandingPageClient {
         },
         body: JSON.stringify({ fileName, fileType }),
       });
+
+      await Utils.handleAuthResponse(response);
 
       if (!response.ok) {
         throw new Error("Failed to get upload URL");
@@ -156,6 +162,8 @@ export class LandingPageClient {
         }),
       });
 
+      await Utils.handleAuthResponse(response);
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -181,6 +189,8 @@ export class LandingPageClient {
         },
         body: JSON.stringify({ nofoName }),
       });
+
+      await Utils.handleAuthResponse(response);
 
       const data = await response.json();
 
@@ -217,6 +227,8 @@ export class LandingPageClient {
         body: JSON.stringify({ nofoName, status, isPinned, expirationDate, grantType, category, agency, isRolling }),
       });
 
+      await Utils.handleAuthResponse(response);
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -241,6 +253,8 @@ export class LandingPageClient {
         },
         body: JSON.stringify({ nofoName, summary }),
       });
+
+      await Utils.handleAuthResponse(response);
 
       const data = await response.json();
 
@@ -270,6 +284,8 @@ export class LandingPageClient {
         }),
       });
 
+      await Utils.handleAuthResponse(response);
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -294,6 +310,8 @@ export class LandingPageClient {
         headers: { "Content-Type": "application/json", Authorization: token },
       });
 
+      await Utils.handleAuthResponse(response);
+
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       const data = await response.json();
       return data.reviews || [];
@@ -313,6 +331,8 @@ export class LandingPageClient {
           headers: { "Content-Type": "application/json", Authorization: token },
         }
       );
+
+      await Utils.handleAuthResponse(response);
 
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       const data = await response.json();
@@ -340,6 +360,8 @@ export class LandingPageClient {
         }
       );
 
+      await Utils.handleAuthResponse(response);
+
       if (!response.ok) throw new Error(`Error: ${response.status}`);
     } catch (error) {
       console.error("Error approving review:", error);
@@ -359,6 +381,8 @@ export class LandingPageClient {
         }
       );
 
+      await Utils.handleAuthResponse(response);
+
       if (!response.ok) throw new Error(`Error: ${response.status}`);
     } catch (error) {
       console.error("Error rejecting review:", error);
@@ -377,6 +401,9 @@ export class LandingPageClient {
           body: JSON.stringify({ notes, reviewId }),
         }
       );
+
+      await Utils.handleAuthResponse(response);
+
       if (!response.ok) throw new Error(`Error: ${response.status}`);
     } catch (error) {
       console.error("Error marking review as needs re-upload:", error);
@@ -392,6 +419,8 @@ export class LandingPageClient {
         headers: { "Content-Type": "application/json", Authorization: token },
         body: JSON.stringify({ nofoName, fileType }),
       });
+
+      await Utils.handleAuthResponse(response);
 
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       return await response.json();
@@ -410,6 +439,8 @@ export class LandingPageClient {
         body: JSON.stringify({ nofoName }),
       });
 
+      await Utils.handleAuthResponse(response);
+
       if (!response.ok) throw new Error(`Error: ${response.status}`);
     } catch (error) {
       console.error("Error reprocessing NOFO:", error);
@@ -424,6 +455,8 @@ export class LandingPageClient {
         method: "GET",
         headers: { "Content-Type": "application/json", Authorization: token },
       });
+
+      await Utils.handleAuthResponse(response);
 
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       const data = await response.json();
@@ -448,6 +481,8 @@ export class LandingPageClient {
           Authorization: token,
         },
       });
+
+      await Utils.handleAuthResponse(response);
 
       const data = await response.json();
 

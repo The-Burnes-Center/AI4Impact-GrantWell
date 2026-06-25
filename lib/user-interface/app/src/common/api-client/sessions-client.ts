@@ -45,6 +45,8 @@ export class SessionsClient {
       }),
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (response.status !== 200) {
       const errorMessage = await response.json();
       throw new Error(errorMessage);
@@ -76,6 +78,8 @@ export class SessionsClient {
           user_id: params.userId
         }),
       });
+
+      await Utils.handleAuthResponse(response);
 
       if (response.status != 200) {
         validData = false;
@@ -131,6 +135,8 @@ export class SessionsClient {
       }),
     });
 
+    await Utils.handleAuthResponse(response);
+
     if (response.status !== 200) {
       const errorMessage = await response.json();
       throw new Error(errorMessage);
@@ -158,6 +164,8 @@ export class SessionsClient {
         last_modified: new Date().toISOString(),
       }),
     });
+
+    await Utils.handleAuthResponse(response);
 
     if (response.status !== 200) {
       const errorMessage = await response.json();
@@ -204,6 +212,8 @@ export class SessionsClient {
         document_identifier: documentIdentifier || undefined
       })
     });
+
+    await Utils.handleAuthResponse(response);
 
     if (response.status !== 200) {
       throw new Error('Failed to fetch sessions');

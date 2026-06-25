@@ -45,6 +45,8 @@ export class UserManagementClient {
       headers,
     });
 
+    await Utils.handleAuthResponse(response);
+
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || `Error: ${response.status}`);
@@ -64,6 +66,8 @@ export class UserManagementClient {
       }
     );
 
+    await Utils.handleAuthResponse(response);
+
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || `Error: ${response.status}`);
@@ -78,6 +82,8 @@ export class UserManagementClient {
       method: "GET",
       headers,
     });
+
+    await Utils.handleAuthResponse(response);
 
     const data = await response.json();
     if (!response.ok) {
@@ -94,6 +100,8 @@ export class UserManagementClient {
       headers,
     });
 
+    await Utils.handleAuthResponse(response);
+
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || `Error: ${response.status}`);
@@ -109,6 +117,8 @@ export class UserManagementClient {
       headers,
       body: JSON.stringify({ mode }),
     });
+
+    await Utils.handleAuthResponse(response);
 
     const data = await response.json();
     if (!response.ok) {
@@ -137,6 +147,8 @@ export class UserManagementClient {
       headers,
     });
 
+    await Utils.handleAuthResponse(response);
+
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || `Error: ${response.status}`);
@@ -155,6 +167,8 @@ export class UserManagementClient {
       }
     );
 
+    await Utils.handleAuthResponse(response);
+
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || `Error: ${response.status}`);
@@ -172,6 +186,8 @@ export class UserManagementClient {
         headers,
       }
     );
+
+    await Utils.handleAuthResponse(response);
 
     const data = await response.json();
     if (!response.ok) {
