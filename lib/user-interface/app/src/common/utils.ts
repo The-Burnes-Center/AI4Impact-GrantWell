@@ -134,14 +134,28 @@ export class Utils {
 
   static async authenticate(): Promise<string> {
     try {
-      let token = '';
-      const currentUser = await Auth.currentAuthenticatedUser()
-      token = currentUser.signInUserSession.idToken.jwtToken
-      return token
+      const session = await Auth.currentSession()
+      return session.getIdToken().getJwtToken()
     } catch (error) {
       console.error('Error getting current user session:', error);
+      await Utils.forceReauth();
       throw new Error('Authentication failed');
     }
+  }
+
+  static async forceReauth(): Promise<void> {
+    try {
+      await Auth.signOut();
+    } catch (signOutError) {
+      console.error('Error during forced sign-out:', signOutError);
+    }
+  }
+
+  static async handleAuthResponse(response: Response): Promise<Response> {
+    if (response.status === 401 || response.status === 403) {
+      await Utils.forceReauth();
+    }
+    return response;
   }
 
   /**

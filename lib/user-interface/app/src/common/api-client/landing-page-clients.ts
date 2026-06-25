@@ -23,6 +23,8 @@ export class LandingPageClient {
         },
       });
 
+      await Utils.handleAuthResponse(response);
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
