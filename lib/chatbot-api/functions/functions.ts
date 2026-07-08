@@ -490,6 +490,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.minutes(3),
       }
@@ -907,6 +908,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -922,6 +925,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+    props.nofoMetadataTable.grantReadData(NOFOQuestionsForNOFOs);
     this.getNOFOQuestions = NOFOQuestionsForNOFOs;
 
     const nofoUploadS3APIHandlerFunction = new lambda.Function(
