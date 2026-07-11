@@ -143,14 +143,14 @@ const Checklists: React.FC = () => {
 
   return (
     <div className="checklist-layout" style={{ minHeight: `calc(100vh - ${topOffset}px)` }}>
-      <nav aria-label="Requirements navigation" aria-hidden={showHelp} style={{ margin: 0, padding: 0, flexShrink: 0 }}>
+      <nav aria-label="Application navigation" aria-hidden={showHelp} style={{ margin: 0, padding: 0, flexShrink: 0 }}>
         <UnifiedNavigation documentIdentifier={folderParam} />
       </nav>
 
       <div className="checklist-main" aria-hidden={showHelp}>
         <div className="checklist-main-container">
           {isLoading ? (
-            <div className="checklist-loading">
+            <div className="checklist-loading" role="status" aria-live="polite">
               <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
               <h2 className="checklist-loading__title">Loading NOFO Data</h2>
               <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
@@ -162,7 +162,7 @@ const Checklists: React.FC = () => {
               </div>
             </div>
           ) : error ? (
-            <div className="checklist-error">
+            <div className="checklist-error" role="alert">
               <h2 className="checklist-error__title">Unable to Load Requirements</h2>
               <p className="checklist-error__text">{error}</p>
               <button className="checklist-error__btn" onClick={() => window.location.reload()}>

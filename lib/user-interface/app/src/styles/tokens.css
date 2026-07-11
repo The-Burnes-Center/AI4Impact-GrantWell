@@ -49,7 +49,7 @@
    * Utility / Status Colors
    * ============================== */
 
-  --gw-color-success: #24A850;
+  --gw-color-success: #047857;
   --gw-color-success-light: #d4edda;
   --gw-color-warning: #F6B622;
   --gw-color-warning-light: #fff3cd;
@@ -77,7 +77,7 @@
 
   --gw-color-text: #333333;
   --gw-color-text-secondary: #5a5a5a;
-  --gw-color-text-muted: #9ca3af;
+  --gw-color-text-muted: #6b7280;
   --gw-color-heading: #244140;
 
   /* Disabled state */

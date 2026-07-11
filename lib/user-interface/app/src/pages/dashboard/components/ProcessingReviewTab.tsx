@@ -301,7 +301,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
         <div className="table-body" role={loading || reviews.length === 0 ? undefined : "rowgroup"}>
           {loading ? (
-            <div className="review-loading" aria-busy="true">
+            <div className="review-loading" role="status" aria-live="polite" aria-busy="true">
               Loading reviews...
             </div>
           ) : reviews.length === 0 ? (

@@ -727,6 +727,7 @@ export default function DocumentManager({
       onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
       role="dialog"
       aria-modal="true"
+      aria-labelledby="dm-title"
     >
       <div
         ref={modalRef}
@@ -831,7 +832,18 @@ export default function DocumentManager({
                 role="region"
                 aria-label="File upload area with drag and drop"
               >
-                <label htmlFor="dm-file-input" className="dm-drop-label" tabIndex={0}>
+                <label
+                  htmlFor="dm-file-input"
+                  className="dm-drop-label"
+                  tabIndex={0}
+                  role="button"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      document.getElementById("dm-file-input")?.click();
+                    }
+                  }}
+                >
                   <Upload size={40} className="dm-upload-icon" aria-hidden="true" />
                   <p className="dm-drop-text">Drag and drop your files here</p>
                   <p className="dm-browse-text" id="upload-instructions">

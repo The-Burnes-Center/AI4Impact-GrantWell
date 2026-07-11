@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "../../styles/marketing-landing.css";
 import AuthPanel from "../../components/auth/AuthPanel";
 import {
@@ -11,6 +12,10 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ onAuthenticated }: LoginPageProps) {
+  useEffect(() => {
+    document.title = "Sign In - GrantWell";
+  }, []);
+
   return (
     <div className="marketing">
       <OmniHeader />

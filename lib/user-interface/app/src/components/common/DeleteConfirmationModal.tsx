@@ -67,7 +67,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
           <button
             className="modal-button danger"
             onClick={onConfirm}
-            aria-label={`Confirm delete ${itemCount ?? 1} ${itemLabel}${isPlural ? "s" : ""}`}
+            aria-label={`Delete Permanently — ${itemCount ?? 1} ${itemLabel}${isPlural ? "s" : ""}`}
           >
             Delete Permanently
           </button>

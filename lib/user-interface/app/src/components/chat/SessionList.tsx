@@ -256,7 +256,7 @@ export default function Sessions(props: SessionsProps) {
                   background: "none",
                   border: "none",
                   cursor: isLoading ? "default" : "pointer",
-                  padding: 0,
+                  padding: "4px 2px",
                   font: "inherit",
                   color: "inherit",
                 }}
@@ -279,7 +279,7 @@ export default function Sessions(props: SessionsProps) {
                   background: "none",
                   border: "none",
                   cursor: isLoading ? "default" : "pointer",
-                  padding: 0,
+                  padding: "4px 2px",
                   font: "inherit",
                   color: "inherit",
                 }}
@@ -291,8 +291,9 @@ export default function Sessions(props: SessionsProps) {
         </div>
         <div className="table-body" role={isLoading || sortedSessions.length === 0 ? undefined : "rowgroup"}>
           {isLoading ? (
-            <div className="table-loading">
-              <div className="table-loading-spinner"></div>
+            <div className="table-loading" role="status" aria-live="polite">
+              <div className="table-loading-spinner" aria-hidden="true"></div>
+              <span className="visually-hidden">Loading sessions</span>
             </div>
           ) : sortedSessions.length === 0 ? (
             <div className="no-data">
@@ -335,7 +336,7 @@ export default function Sessions(props: SessionsProps) {
                       color: "#195C53",
                       background: "none",
                       border: "none",
-                      padding: 0,
+                      padding: "4px 2px",
                       cursor: "pointer",
                       textAlign: "left",
                       fontSize: "inherit",

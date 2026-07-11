@@ -32,6 +32,7 @@ const Dashboard: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [showGrantBanner, setShowGrantBanner] = useState(false);
+  const [autoRefreshPaused, setAutoRefreshPaused] = useState(false);
   const [addedGrantName, setAddedGrantName] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -113,10 +114,10 @@ const Dashboard: React.FC = () => {
   const hasProcessingNofos = nofos.some((n) => n.processingStatus);
 
   useEffect(() => {
-    if (!isAdmin || !hasProcessingNofos) return;
+    if (!isAdmin || !hasProcessingNofos || autoRefreshPaused) return;
     const interval = setInterval(() => fetchNofos(), 10000);
     return () => clearInterval(interval);
-  }, [isAdmin, hasProcessingNofos, fetchNofos]);
+  }, [isAdmin, hasProcessingNofos, fetchNofos, autoRefreshPaused]);
 
   useEffect(() => {
     if (!roleLoading && !isAdmin) {
@@ -307,6 +308,15 @@ const Dashboard: React.FC = () => {
                 <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
               )}
             </button>
+            {hasProcessingNofos && (
+              <button
+                className="action-button refresh-button"
+                onClick={() => setAutoRefreshPaused((prev) => !prev)}
+                aria-pressed={autoRefreshPaused}
+              >
+                {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
+              </button>
+            )}
           </div>
 
           {showGrantBanner && (

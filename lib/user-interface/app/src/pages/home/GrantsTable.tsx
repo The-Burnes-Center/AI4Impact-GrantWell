@@ -466,6 +466,13 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                 role="row"
                 className={`landing-table-row ${isArchived ? "archived" : ""}`}
                 onClick={() => !isArchived && handleRowClick(nofo)}
+                tabIndex={isArchived ? -1 : 0}
+                onKeyDown={(e) => {
+                  if (!isArchived && (e.key === "Enter" || e.key === " ")) {
+                    e.preventDefault();
+                    handleRowClick(nofo);
+                  }
+                }}
                 style={{
                   cursor: isArchived ? "not-allowed" : "pointer",
                   opacity: isArchived ? 0.7 : 1,
@@ -483,7 +490,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                       title="Pinned — featured by an administrator"
                     />
                   )}
-                  <span className="landing-nofo-name" style={{ color: isArchived ? "#888" : undefined }}>
+                  <span className="landing-nofo-name" style={{ color: isArchived ? "#6b7280" : undefined }}>
                     {nofo.name}
                   </span>
                   {!isArchived && isRecentlyAdded(nofo.createdAt) && (
@@ -503,10 +510,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     </span>
                   )}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#888" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
                   {nofo.agency || <span className="landing-no-value">N/A</span>}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#888" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
                   {nofo.category || <span className="landing-no-value">N/A</span>}
                 </div>
                 <div className="landing-row-cell" role="cell">
@@ -526,7 +533,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     <span className="landing-grant-type-badge unset" style={{ opacity: isArchived ? 0.6 : 1 }}>Unset</span>
                   )}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#888" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
                   {nofo.isRolling ? (
                     <span className="landing-expiry-date rolling">Rolling</span>
                   ) : nofo.expirationDate ? (
@@ -550,8 +557,8 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             className="landing-show-more-button"
             onClick={() => setShowAllAIResults((prev) => !prev)}
             aria-label={showAllAIResults
-              ? `Show top ${AI_INITIAL_LIMIT} results`
-              : `Show all ${filteredNofos.length} results`}
+              ? `Show less — top ${AI_INITIAL_LIMIT} results only`
+              : `Show more — all ${filteredNofos.length} results`}
           >
             {showAllAIResults
               ? "Show less"

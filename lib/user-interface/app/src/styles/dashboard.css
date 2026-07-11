@@ -926,7 +926,7 @@ body {
 
 .action-button.unpin:hover {
   background-color: #fff0f0;
-  color: #e74c3c;
+  color: #CD0D0D;
   transform: translateY(-2px);
 }
 
@@ -1175,7 +1175,7 @@ body {
 }
 
 .warning-icon {
-  color: #e74c3c;
+  color: #CD0D0D;
   flex-shrink: 0;
 }
 
@@ -1282,10 +1282,15 @@ body {
   cursor: pointer;
   color: #666;
   transition: color 0.2s;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-close-button:hover {
-  color: #e74c3c;
+  color: #CD0D0D;
 }
 
 .modal-body {
@@ -1410,7 +1415,7 @@ select.form-input {
 }
 
 .warning-text {
-  color: #e74c3c;
+  color: #CD0D0D;
   font-size: 14px;
   margin-top: 10px;
   display: flex;
@@ -2439,8 +2444,8 @@ select.form-input {
 }
 
 .review-checkbox-cell input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   accent-color: var(--gw-color-primary, #23776C);
 }
@@ -2897,7 +2902,8 @@ select.form-input {
 }
 
 .review-quality-score--medium {
-  color: var(--gw-color-warning);
+  /* --gw-color-warning (#F6B622) is 1.81:1 as text on white; this amber passes 4.5:1 */
+  color: #B45309;
 }
 
 .review-quality-score--low {

@@ -194,6 +194,8 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     return (
       <div
         style={{ padding: "20px", textAlign: "center", color: "var(--gw-color-text-secondary)" }}
+        role="status"
+        aria-live="polite"
         aria-busy="true"
       >
         Loading review details...

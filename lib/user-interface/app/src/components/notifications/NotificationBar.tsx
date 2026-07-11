@@ -29,6 +29,7 @@ export default function NotificationBar() {
           dismissible={notif.dismissible}
           onClose={() => notif.onDismiss()}
           className="mb-2"
+          role={notif.type === "error" || notif.type === "warning" ? "alert" : "status"}
         >
           {notif.content}
         </Alert>

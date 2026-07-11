@@ -20,7 +20,7 @@ export const colors = {
   accentHover: "#32784E",
 
   // Status colors
-  success: "#24A850",
+  success: "#047857",
   successLight: "#d4edda",
   danger: "#CD0D0D",
   dangerLight: "#ffebee",
@@ -41,9 +41,10 @@ export const colors = {
   backgroundAlt: "#f8f9fa",
   border: "#e2e8f0",
   borderLight: "#f3f4f6",
+  inputBorder: "#767676",
   text: "#333333",
   textSecondary: "#5a5a5a",
-  textMuted: "#9ca3af",
+  textMuted: "#6b7280",
   heading: "#244140",
 
   // Disabled state
@@ -180,7 +181,7 @@ export const inputStyles = {
     padding: spacing.md,
     fontFamily: typography.fontFamily,
     fontSize: typography.fontSize.base,
-    border: `1px solid ${colors.border}`,
+    border: `1px solid ${colors.inputBorder}`,
     borderRadius: borderRadius.md,
     outline: "none",
     transition: transitions.fast,

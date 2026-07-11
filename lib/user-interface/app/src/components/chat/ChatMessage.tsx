@@ -30,6 +30,7 @@ function ChatMessage(props: ChatMessageProps) {
   const [copied, setCopied] = useState<boolean>(false);
   const [grantName, setGrantName] = useState<string>("");
   const [sourcesExpanded, setSourcesExpanded] = useState<boolean>(false);
+  const sourceListId = React.useId();
   const appContext = useContext(AppContext);
 
 
@@ -349,7 +350,7 @@ function ChatMessage(props: ChatMessageProps) {
                         <button
                           onClick={() => setSourcesExpanded(!sourcesExpanded)}
                           aria-expanded={sourcesExpanded}
-                          aria-controls="source-list"
+                          aria-controls={sourceListId}
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -374,8 +375,7 @@ function ChatMessage(props: ChatMessageProps) {
 
                         {sourcesExpanded && (
                           <div
-                            id="source-list"
-                            role="list"
+                            id={sourceListId}
                             style={{
                               display: "flex",
                               flexDirection: "column",
@@ -385,8 +385,8 @@ function ChatMessage(props: ChatMessageProps) {
                             }}
                           >
                             {grantSources.length > 0 && (
-                              <div role="listitem">
-                                <div style={{
+                              <div role="group" aria-label={grantName || "Grant Document"}>
+                                <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
                                   color: "#6b7280",
@@ -396,6 +396,7 @@ function ChatMessage(props: ChatMessageProps) {
                                 }}>
                                   {grantName || "Grant Document"}
                                 </div>
+                                <div role="list">
                                 {grantSources.map((source, idx) => (
                                   <div
                                     key={idx}
@@ -415,12 +416,13 @@ function ChatMessage(props: ChatMessageProps) {
                                     </span>
                                   </div>
                                 ))}
+                                </div>
                               </div>
                             )}
 
                             {uploadedFiles.length > 0 && (
-                              <div role="listitem" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
-                                <div style={{
+                              <div role="group" aria-label="Your Uploaded Documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
+                                <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
                                   color: "#6b7280",
@@ -430,6 +432,7 @@ function ChatMessage(props: ChatMessageProps) {
                                 }}>
                                   Your Uploaded Documents
                                 </div>
+                                <div role="list">
                                 {uploadedFiles.map((file, idx) => (
                                   <div
                                     key={idx}
@@ -449,6 +452,7 @@ function ChatMessage(props: ChatMessageProps) {
                                     </span>
                                   </div>
                                 ))}
+                                </div>
                               </div>
                             )}
                           </div>

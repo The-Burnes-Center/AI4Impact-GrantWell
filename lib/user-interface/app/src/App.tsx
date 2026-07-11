@@ -7,6 +7,9 @@ import {
   useLocation,
 } from "react-router-dom";
 import { ErrorBoundary } from "./components/common/ErrorBoundary";
+import { NotificationProvider } from "./components/notifications/NotificationManager";
+import NotificationBar from "./components/notifications/NotificationBar";
+import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
 import "./styles/app.scss";
 
 const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
@@ -90,10 +93,12 @@ function App() {
 
 function AppContent() {
   return (
-    <>
+    <NotificationProvider>
+      <AccessDeniedProvider>
       <ScrollToTop />
       {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
       <main id="main-content" tabIndex={-1}>
+        <NotificationBar />
         <ErrorBoundary>
           <Suspense fallback={<div className="lazy-loading-fallback" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>Loading...</div>}>
             <Routes>
@@ -129,7 +134,8 @@ function AppContent() {
           </Suspense>
         </ErrorBoundary>
       </main>
-    </>
+      </AccessDeniedProvider>
+    </NotificationProvider>
   );
 }
 

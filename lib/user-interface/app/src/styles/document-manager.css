@@ -570,7 +570,7 @@
 }
 
 .dm-file-status-text.dm-status-complete {
-  color: var(--gw-color-success, #24A850);
+  color: var(--gw-color-success, #047857);
   font-weight: var(--gw-font-weight-medium, 500);
 }
 
@@ -595,7 +595,7 @@
 }
 
 .dm-file-progress-fill.dm-progress-complete {
-  background-color: var(--gw-color-success, #24A850);
+  background-color: var(--gw-color-success, #047857);
 }
 
 .dm-file-progress-fill.dm-progress-failed {
@@ -608,7 +608,7 @@
 }
 
 .dm-file-status-icon.dm-icon-complete {
-  color: var(--gw-color-success, #24A850);
+  color: var(--gw-color-success, #047857);
 }
 
 .dm-file-status-icon.dm-icon-failed {
@@ -664,7 +664,7 @@
 
 .dm-toast {
   background-color: var(--gw-color-success-light, #d4edda);
-  border: 1px solid var(--gw-color-success, #24A850);
+  border: 1px solid var(--gw-color-success, #047857);
   border-radius: var(--gw-radius-md, 6px);
   padding: var(--gw-spacing-md, 12px) var(--gw-spacing-lg, 16px);
   display: flex;
@@ -681,7 +681,7 @@
 }
 
 .dm-toast-icon {
-  color: var(--gw-color-success, #24A850);
+  color: var(--gw-color-success, #047857);
   flex-shrink: 0;
 }
 
@@ -886,8 +886,8 @@
 }
 
 .dm-checkbox {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   accent-color: var(--gw-color-primary, #23776C);
   cursor: pointer;
   flex-shrink: 0;

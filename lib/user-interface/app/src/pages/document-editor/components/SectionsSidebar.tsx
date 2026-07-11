@@ -54,7 +54,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
         );
       }
       // Pending — locked
-      return <Lock size={14} style={{ color: '#9CA3AF' }} aria-label={`${section.name}: pending`} />;
+      return <Lock size={14} style={{ color: '#6b7280' }} aria-label={`${section.name}: pending`} />;
     }
 
     return null;
@@ -73,12 +73,20 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
       <div className="se-sidebar__list">
         {sections.map((section, idx) => {
           const locked = generating && !isSectionReady(section);
+          const status = sectionAnswers[section.name]
+            ? "completed"
+            : failedSections.includes(section.name)
+              ? "failed"
+              : generating
+                ? "generating"
+                : "";
           return (
             <button
               key={idx}
               onClick={() => { if (!locked) setActiveSection(idx); }}
               className={`se-sidebar__btn${activeSection === idx ? " se-sidebar__btn--active" : ""}${locked ? " se-sidebar__btn--locked" : ""}`}
-              aria-label={`Section ${idx + 1} of ${sections.length}: ${section.name}${locked ? " (generating, not yet available)" : ""}`}
+              aria-label={`Section ${idx + 1} of ${sections.length}: ${section.name}${status ? `, ${status}` : ""}${locked ? " (not yet available)" : ""}`}
+              aria-current={activeSection === idx ? "true" : undefined}
               aria-disabled={locked}
               title={locked ? "This section is still being generated" : undefined}
               style={locked ? { cursor: "not-allowed", opacity: 0.55 } : undefined}

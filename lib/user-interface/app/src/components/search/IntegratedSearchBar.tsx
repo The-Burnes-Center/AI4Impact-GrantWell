@@ -34,6 +34,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
   const [tipIndex, setTipIndex] = useState(0);
+  const [tipsPaused, setTipsPaused] = useState(false);
   const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
   const setSearchTerm = onSearchTermChange || setInternalSearchTerm;
 
@@ -144,14 +145,25 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   useEffect(() => {
     if (!showSuggestion) return;
+    // WCAG 2.2.2: don't auto-rotate for users who prefer reduced motion,
+    // and pause while the search area has focus or hover
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    if (tipsPaused) return;
     const interval = setInterval(() => {
       setTipIndex((prev) => (prev + 1) % SEARCH_TIPS.length);
     }, TIP_ROTATE_MS);
     return () => clearInterval(interval);
-  }, [showSuggestion]);
+  }, [showSuggestion, tipsPaused]);
 
   return (
-    <div style={searchContainerStyle} ref={searchRef}>
+    <div
+      style={searchContainerStyle}
+      ref={searchRef}
+      onMouseEnter={() => setTipsPaused(true)}
+      onMouseLeave={() => setTipsPaused(false)}
+      onFocus={() => setTipsPaused(true)}
+      onBlur={() => setTipsPaused(false)}
+    >
       <SearchInput
         ref={inputRef}
         searchTerm={searchTerm}
@@ -168,7 +180,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         onClear={handleClear}
       />
       {showSuggestion && (
-        <p className="search-tip" role="status">
+        <p className="search-tip">
           Tip: Try a full sentence for more precise results, e.g.,{" "}
           <em key={tipIndex}>&ldquo;{SEARCH_TIPS[tipIndex]}&rdquo;</em>
         </p>

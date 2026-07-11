@@ -70,7 +70,7 @@
   font-weight: 400;
   line-height: 1.2;
   color: #334155;
-  border: 1px solid #d7dee8;
+  border: 1px solid #767676;
   border-radius: 8px;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
   background: #f8fafc;
@@ -82,7 +82,7 @@
 
 .auth-login-card .form-input:hover,
 .auth-login-card .form-control.form-input:hover {
-  border-color: #cbd5e1;
+  border-color: #4b5563;
   background: #fff;
 }
 
@@ -332,7 +332,7 @@
 }
 
 .password-requirement.text-success {
-  color: #059669;
+  color: #047857;
 }
 
 .password-requirement.text-muted {

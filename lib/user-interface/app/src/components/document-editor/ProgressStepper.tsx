@@ -24,6 +24,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   isStepClickable: customIsStepClickable,
 }) => {
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
+  const [tooltipDismissed, setTooltipDismissed] = useState(false);
   const progressPercentage = ((activeStep + 1) / steps.length) * 100;
   const isStepCompleted = (index: number) => completedSteps.includes(index) || index < activeStep;
   const isStepActive = (index: number) => index === activeStep;
@@ -94,6 +95,12 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
           .step-tooltip:hover {
             opacity: 1;
             visibility: visible;
+          }
+
+          /* WCAG 1.4.13: tooltip is dismissible with Escape */
+          .step-tooltip--dismissed {
+            opacity: 0 !important;
+            visibility: hidden !important;
           }
           
           .step-wrapper:first-child .step-tooltip {
@@ -197,7 +204,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               left: "16px",
               right: "16px",
               height: "2px",
-              backgroundColor: "#9ca3af",
+              backgroundColor: "#6b7280",
               zIndex: 0,
             }}
           >
@@ -231,12 +238,13 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                 position: "relative",
                 zIndex: isHovered ? 10 : 1,
               }}
-              onMouseEnter={() => setHoveredStep(index)}
+              onMouseEnter={() => { setHoveredStep(index); setTooltipDismissed(false); }}
               onMouseLeave={() => setHoveredStep(null)}
+              onKeyDown={(e) => { if (e.key === "Escape") setTooltipDismissed(true); }}
             >
               <div
                 id={`tooltip-${step.id}`}
-                className="step-tooltip"
+                className={`step-tooltip${tooltipDismissed ? " step-tooltip--dismissed" : ""}`}
                 role="tooltip"
               >
                 {tooltipText}
@@ -253,7 +261,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                   width: "32px",
                   height: "32px",
                   borderRadius: "50%",
-                  border: `2px solid ${completed || active ? "#23776C" : "#9ca3af"}`,
+                  border: `2px solid ${completed || active ? "#23776C" : "#6b7280"}`,
                   backgroundColor: completed || active ? "#23776C" : "#ffffff",
                   color: completed || active ? "#ffffff" : "#4b5563",
                   display: "flex",
@@ -283,6 +291,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                 }}
                 onFocus={(e) => {
                   setHoveredStep(index);
+                  setTooltipDismissed(false);
                   if (clickable) {
                     e.currentTarget.style.outline = "2px solid #23776C";
                     e.currentTarget.style.outlineOffset = "2px";

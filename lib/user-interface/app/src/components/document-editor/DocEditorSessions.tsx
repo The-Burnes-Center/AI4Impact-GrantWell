@@ -259,7 +259,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             <button
               className="action-button invite-button"
               onClick={onToggleShowAllNOFOs}
-              aria-label={showAllNOFOs ? "Show only current NOFO drafts" : "Show all NOFO drafts"}
+              aria-label={showAllNOFOs ? "Show Current NOFO Only — hide drafts for other NOFOs" : "Show All NOFOs — include drafts for other NOFOs"}
             >
               {showAllNOFOs ? "Show Current NOFO Only" : "Show All NOFOs"}
             </button>

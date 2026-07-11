@@ -240,7 +240,7 @@ const DocumentEditor: React.FC = () => {
 
   return (
     <div className="document-editor-root" style={{ display: "flex", alignItems: "stretch", minHeight: `calc(100vh - ${topOffset}px)`, width: "100%", margin: 0, padding: 0 }}>
-      <nav aria-label="Document editor navigation" style={{ flexShrink: 0 }}>
+      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
         <UnifiedNavigation documentIdentifier={selectedNofo} currentStep={currentStep} onNavigate={navigateToStep} />
       </nav>
 

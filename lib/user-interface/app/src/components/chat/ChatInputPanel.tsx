@@ -111,7 +111,6 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    outline: "none",
     borderRadius: "12px",
     minWidth: "44px",
     minHeight: "44px",
@@ -131,7 +130,6 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    outline: "none",
     borderRadius: "12px",
     minWidth: "44px",
     minHeight: "44px",
@@ -158,7 +156,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
   const { setNeedsRefresh } = useContext(SessionRefreshContext);
   const [micPermissionDenied, setMicPermissionDenied] = useState(false);
-  const [micListeningTimeout, setMicListeningTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
   const { addNotification } = useNotifications();
   const { showAccessDenied } = useAccessDenied();
   
@@ -192,10 +189,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   const handleMicrophoneToggle = async () => {
     if (listening) {
       SpeechRecognition.stopListening();
-      if (micListeningTimeout) {
-        clearTimeout(micListeningTimeout);
-        setMicListeningTimeout(null);
-      }
       return;
     }
 
@@ -204,24 +197,13 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       stream.getTracks().forEach((track) => track.stop()); // Stop the tracks after permission check
 
-      // Start listening with enhanced settings
+      // Start listening with enhanced settings. No app-imposed time limit
+      // (WCAG 2.2.1): the user stops recording with the same toggle button.
       await SpeechRecognition.startListening({
         continuous: true,
         language: "en-US",
       });
 
-      // Set a timeout to automatically stop listening after 30 seconds
-      const timeout = setTimeout(() => {
-        if (listening) {
-          SpeechRecognition.stopListening();
-          addNotification(
-            "info",
-            "Speech recognition stopped after 30 seconds. Click the microphone button to start again."
-          );
-        }
-      }, 30000);
-
-      setMicListeningTimeout(timeout);
       setMicPermissionDenied(false);
     } catch (error) {
       console.error("Microphone permission error:", error);
@@ -254,17 +236,14 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [transcript]);
 
-  // Clear any permission errors and timeouts when component unmounts
+  // Stop listening when the component unmounts
   useEffect(() => {
     return () => {
       if (listening) {
         SpeechRecognition.stopListening();
       }
-      if (micListeningTimeout) {
-        clearTimeout(micListeningTimeout);
-      }
     };
-  }, [listening, micListeningTimeout]);
+  }, [listening]);
 
   useEffect(() => {
     const messageArea = props.messageAreaRef?.current;
@@ -466,6 +445,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
             content: "Response timed out!",
             metadata: {},
           });
+          props.setMessageHistory([...messageHistoryRef.current]);
+          props.setRunning(false);
         }
       }, 60000);
 

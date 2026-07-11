@@ -46,6 +46,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [generating, setGenerating] = useState(!!activeJobId && !!initialIsGenerating);
   const [failedSections, setFailedSections] = useState<string[]>([]);
   const [completedSectionCount, setCompletedSectionCount] = useState(0);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "failed">("idle");
   const apiClient = useApiClient();
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -306,24 +307,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           });
         }
 
-        const saveButton = document.getElementById("save-button");
-        if (saveButton) {
-          const originalText = saveButton.innerText;
-          saveButton.innerText = "Saved!";
-          setTimeout(() => {
-            saveButton.innerText = originalText;
-          }, 1500);
-        }
+        setSaveStatus("saved");
+        setTimeout(() => setSaveStatus("idle"), 3000);
       } catch (error) {
         console.error("Error saving progress to database:", error);
-        const saveButton = document.getElementById("save-button");
-        if (saveButton) {
-          const originalText = saveButton.innerText;
-          saveButton.innerText = "Save failed";
-          setTimeout(() => {
-            saveButton.innerText = originalText;
-          }, 2000);
-        }
+        setSaveStatus("failed");
+        setTimeout(() => setSaveStatus("idle"), 5000);
       }
     }
   };
@@ -696,8 +685,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               onClick={handleSaveProgress}
             >
               <Save size={18} className="se-icon--left" />
-              Save Progress
+              {saveStatus === "saved" ? "Saved!" : saveStatus === "failed" ? "Save failed" : "Save Progress"}
             </button>
+            <span role="status" aria-live="polite" className="visually-hidden">
+              {saveStatus === "saved" ? "Progress saved" : saveStatus === "failed" ? "Save failed. Your changes are stored locally; try saving again." : ""}
+            </span>
 
             <div className="se-nav-buttons">
               {activeSection > 0 && (
