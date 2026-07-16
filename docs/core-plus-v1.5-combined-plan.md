@@ -96,7 +96,13 @@ Do NOT mix into neutralization diffs. Each big decomposition is behavior-risk on
 and confirm no behavioral change before committing. Never bundle with a neutralization or feature change.
 
 ### Phase B — Freeze tooling + MA deliverable
-- B1: snapshot script → `grantwell-<state>/core/` + `config/` + `VERSION`; tag engine `v0.1.0`.
+- B1 ✅ (config seam + freeze tooling): build-time branding seam (`config/instances/<id>.ts`,
+  vite `@active-instance` alias per `GRANTWELL_INSTANCE`, default neutral); `genericBranding` moved
+  out of core into `config/instances/generic.ts`; residual identity (OmniHeader strip, AboutPanel
+  copy) routed through branding; `scripts/freeze.sh` snapshots engine@HEAD → `grantwell-<instance>/`
+  (`core/` + `config/` + `VERSION` + `docs/HANDOFF.md`). Verified: neutral bundle = 0 identity hits,
+  generic = all identity present; frozen core builds both ways green. **Still TODO in B1: tag engine
+  `v0.1.0`** (freeze currently stamps from `git describe`).
 - B2: build `grantwell-ma` (freeze core + MA `config/`: branding, Cognito, account).
 - B3: deploy MA deliverable to a **new** stack `grantwell-ma-staging` (distinct KB index) — never
   onto live stacks. Verify parity vs current staging-MA.
@@ -165,6 +171,13 @@ unchanged; env-shape change in A4 kept all 10 parsers working.
 and both `.py` `py_compile` pass. Still NO runtime/deploy verification (no Docker locally) — the
 backend changes (A4/A5) are merge-ready but unproven at runtime until deployed to a test stack.
 
-**Next:** Phase B (freeze tooling + MA deliverable) or Phase D (deploy Retain + validate engine on a
-throwaway stack) — both need a Docker/CI path. Or the QB backlog (API-client wrapper, auth helper,
-big decompositions) which is verifiable locally.
+**B1 DONE (config seam + freeze tooling)** — commit `0c0bfe8` (seam) + freeze-script follow-up. The
+core↔config boundary invariant is now *actually true* for the frontend: neutral bundle carries zero
+instance identity; identity comes only from `config/`. `scripts/freeze.sh` produces the frozen
+deliverable and was proven end-to-end (frozen core builds neutral clean + generic branded). Gaps
+still open in B1: (a) tag the engine `v0.1.0` so VERSION stamps a real release, not a describe;
+(b) backend/infra identity (Cognito, account, stack name) is not yet in `config/` — only branding is.
+
+**Next:** B2 needs an MA `config/` (branding + Cognito/account) — blocked on real MA values + the
+backend config split. B3/B4 need a Docker/CI deploy path. Locally-doable now: tag `v0.1.0`; extend
+the seam to backend identity; or the QB backlog.

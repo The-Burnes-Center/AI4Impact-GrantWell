@@ -61,6 +61,8 @@ git archive --format=tar HEAD | tar -x -C "$OUT_DIR/core"
 
 # The frozen core builds this instance by default — bake the selection into an .env the app reads,
 # so a state's build/deploy needs no extra flag. (vite honors GRANTWELL_INSTANCE; see vite.config.ts.)
+# The instance branding the build actually reads lives in core/.../config/instances/<instance>.ts;
+# config/instance.ts here is a top-level pointer/copy for the owner to find and edit easily.
 mkdir -p "$OUT_DIR/config"
 cp "$INSTANCE_FILE" "$OUT_DIR/config/instance.ts"
 printf 'GRANTWELL_INSTANCE=%s\n' "$INSTANCE" > "$OUT_DIR/config/instance.env"
@@ -85,8 +87,10 @@ This repo is a frozen, self-contained copy of GrantWell you own and run.
 - \`VERSION\` the core version this deliverable was cut from.
 
 ## Configure
-Edit \`config/instance.ts\` (branding: name, colors, logo, footer, analytics). To change AWS
-identity, edit \`core/lib/constants.ts\` / stack env as documented in \`core/README.md\`.
+Your branding is \`core/lib/user-interface/app/config/instances/${INSTANCE}.ts\` (name, colors, logo,
+footer, analytics); \`config/instance.ts\` at the top level is a copy of it for convenience — edit the
+one under \`core/\`, which the build reads. To change AWS identity, edit \`core/lib/constants.ts\` /
+stack env as documented in \`core/README.md\`.
 
 ## Build & deploy
 The engine builds this instance by default. From \`core/\`:
