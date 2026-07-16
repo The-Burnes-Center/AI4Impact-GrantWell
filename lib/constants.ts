@@ -96,7 +96,13 @@ const getEmailConfig = () => {
     };
   }
   
-  // Fallback to CloudFront domains if custom domain not configured
+  // Fallback to the deployment's CloudFront domain. Prefer DEPLOYMENT_URL from the environment
+  // (set at deploy time); the per-environment literals remain only as a last-resort default so
+  // existing MA/generic deploys are unchanged. A neutral core sets DEPLOYMENT_URL via config.
+  const deploymentUrl = process.env.DEPLOYMENT_URL;
+  if (deploymentUrl) {
+    return { deploymentUrl };
+  }
   if (ENVIRONMENT === 'production') {
     return {
       deploymentUrl: 'https://d1mu5xcqb0ac30.cloudfront.net/'

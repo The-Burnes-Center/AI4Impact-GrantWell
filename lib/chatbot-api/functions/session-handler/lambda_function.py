@@ -17,7 +17,7 @@ from shared.models import SessionOperationRequest, parse_lambda_event_body
 DDB_TABLE_NAME = os.environ["DDB_TABLE_NAME"]
 
 # Initialize a DynamoDB resource using boto3 with a specific AWS region
-dynamodb = boto3.resource("dynamodb", region_name='us-east-1')
+dynamodb = boto3.resource("dynamodb", region_name=os.environ.get("AWS_REGION", "us-east-1"))
 # Connect to the specified DynamoDB table
 table = dynamodb.Table(DDB_TABLE_NAME)
 
