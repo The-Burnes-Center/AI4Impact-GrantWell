@@ -17,8 +17,6 @@ jobs:
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
       ENVIRONMENT: grantwell-staging
-      # Frontend branding instance. ENVIRONMENT still drives infra names (stack/Cognito/KB);
-      # GRANTWELL_INSTANCE only selects branding — generic = the Burnes multi-state look.
       GRANTWELL_INSTANCE: generic
       STACK_NAME: grantwell-staging
       CLOUDFRONT_CERTIFICATE_ARN: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_STAGING }}
