@@ -24,7 +24,7 @@ const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
 function ScrollToTop(): null {
   const { pathname, search } = useLocation();
   const prevPathRef = useRef<string>("");
-  const { appName } = useBranding();
+  const { appName, analyticsId } = useBranding();
 
   useEffect(() => {
     const mainContent = document.getElementById("main-content");
@@ -80,15 +80,15 @@ function ScrollToTop(): null {
         : 'staging';
       const isProduction = environment === 'production';
       
-      if (isProduction && typeof window !== "undefined" && window.gtag) {
-        window.gtag("config", "G-K27MB9Y26C", {
+      if (isProduction && analyticsId && typeof window !== "undefined" && window.gtag) {
+        window.gtag("config", analyticsId, {
           page_title: baseTitle,
           page_path: fullPath,
           page_location: fullUrl,
         });
       }
     }
-  }, [pathname, search, appName]);
+  }, [pathname, search, appName, analyticsId]);
 
   return null;
 }

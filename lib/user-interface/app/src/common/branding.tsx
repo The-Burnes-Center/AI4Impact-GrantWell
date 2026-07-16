@@ -71,6 +71,7 @@ export const genericBranding: Branding = {
   colors: defaultBranding.colors,
   logo: "/images/marketing/grantwell-wordmark-dark.svg",
   favicon: "/images/marketing/favicon.svg",
+  analyticsId: "G-K27MB9Y26C",
   footer: {
     wordmark: "/images/marketing/grantwell-wordmark-footer.svg",
     madeBy: {
@@ -115,6 +116,26 @@ export function BrandingProvider({
       if (color) root.style.setProperty(COLOR_VARS[key], color);
     });
   }, [value]);
+
+  // Load Google Analytics from branding.analyticsId — only when configured, so neutral core
+  // (and any instance without an id) ships no analytics. Replaces the old static gtag script.
+  useLayoutEffect(() => {
+    const id = value.analyticsId;
+    if (!id || document.getElementById("ga-gtag")) return;
+    const s = document.createElement("script");
+    s.id = "ga-gtag";
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    // gtag pushes its raw arguments onto dataLayer; the typed window.gtag wrapper is used
+    // elsewhere for page-view config calls (see App.tsx).
+    const push = (...args: unknown[]) => window.dataLayer.push(args as unknown as Record<string, unknown>);
+    window.gtag = ((command: string, targetId: string, config?: unknown) =>
+      push(command, targetId, config)) as typeof window.gtag;
+    push("js", new Date());
+    push("config", id);
+  }, [value.analyticsId]);
 
   return (
     <BrandingContext.Provider value={value}>
