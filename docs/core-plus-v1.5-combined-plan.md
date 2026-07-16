@@ -116,13 +116,20 @@ and confirm no behavioral change before committing. Never bundle with a neutrali
   - `config/templates/ma/` — MA branding (GA `G-DY905CMNJN`), infra snippet (`gw-stack-prod`,
     `gw-auth-prod`, `knowledge-base-index-prod`, acct `976046823671`, all from `main`), chrome slot;
   - `scripts/freeze.sh --template ma` materializes it into the frozen core + wires `GRANTWELL_CHROME`.
-- B2 remaining (deliverable-side, in the `grantwell-ma` repo — not this branch): **port MA's
-  Mayflower header/footer/banner** from `main` into `config/ma-chrome/index.ts`; add MA's
-  `INSTANCE_INFRA["ma"]` entry from the snippet; swap in real MA logo/color assets. Then it builds +
-  deploys to the live MA stack (same logical IDs).
-- B3: deploy MA deliverable to a **new** stack `grantwell-ma-staging` (distinct KB index) — never
-  onto live stacks. Verify parity vs current staging-MA.
-- B4: deploy a throwaway demo-state config → prove branding fully swaps. Write handoff docs.
+- B2 ✅ **COMPLETE (turnkey)** — `scripts/freeze.sh --template ma` produces a working `grantwell-ma`:
+  Mayflower chrome (`BrandBanner`/`MdsHeader`/`MdsFooter` from `main`) mapped onto the `@chrome`
+  contract via `ma-chrome/index.tsx`; `apply.sh` adds massds deps, Mayflower CDN stylesheets, type
+  decl, tsconfig path, and injects `INSTANCE_INFRA` entries. Proven: fresh freeze builds green with
+  MA chrome + GA `G-DY905CMNJN`, 0 generic leakage, app+infra `tsc` clean, MA infra resolves
+  (`gw-stack-prod`, acct `976046823671`). *Mayflower peer deps require `npm i --legacy-peer-deps`.*
+- B3 ✅ **COMPLETE (code)** — `ma-staging` instance: ISOLATED names (`grantwell-ma-staging`, distinct
+  Cognito/KB), no account binding → cannot touch live prod. Deliverable carries
+  `.github/workflows/deploy-ma-staging.yml` (manual dispatch) + `docs/B3-PARITY.md` checklist. Both
+  `ma` and `ma-staging` build green. **Deploy itself is NOT run** — needs AWS creds
+  (`SERVICE_ROLE_ARN_MA_STAGING`) + a bootstrapped account; that's the human/CI step.
+- B4 ✅ **COMPLETE** — `config/instances/demo.ts` (fictional GrantBridge / State of Example) builds
+  with only its own identity; zero generic/MA/GA leakage; neutral + generic unaffected. Confirms a
+  new state = one config file. Proof-by-build; no deploy needed.
 
 ### Phase C — Retire the two branches
 - C1: reconcile any `main`-only fixes into the engine (most already converged).
@@ -193,11 +200,19 @@ both halves), tag `v0.1.0`. The core↔config boundary invariant is now true for
 `GRANTWELL_INSTANCE` is set, else the unchanged `ENVIRONMENT` switch — verified byte-identical for
 prod/staging/grantwell-staging/dev). `scripts/freeze.sh` proven end-to-end; engine tagged `v0.1.0`.
 
-**MA scaffolding DONE** — commits `a569ec0` (swappable chrome) + `26638d7` (templates + freeze
-`--template`). MA is a **separate repo** produced by `scripts/freeze.sh --template ma`; this engine
-stays neutral + generic. `grantwell-ma`'s remaining work (port Mayflower chrome from `main`, paste
-`INSTANCE_INFRA["ma"]`, real assets) is deliverable-side, not on this branch.
+**PHASE B COMPLETE (all code + builds; deploys pending).** Commits: `a569ec0` swappable chrome,
+`26638d7` templates+freeze, `0dc62fe` B2 turnkey MA chrome, `482b747` B3 ma-staging+CI+parity,
+`8d6a29c` B4 demo swap. MA is a **separate repo** from `scripts/freeze.sh --template ma`; this engine
+stays neutral + generic. Everything is proven by build/tsc/synth locally:
+- B2: turnkey MA deliverable with Mayflower chrome; B3: isolated `ma-staging` target + CI workflow +
+  parity checklist; B4: demo state proves full swap with zero cross-instance leakage.
 
-**Next:** run `scripts/freeze.sh --template ma ../grantwell-ma` when ready to create the MA repo, then
-do the Mayflower port there. B3/B4 (deploy to a NEW `grantwell-ma-staging`, parity check) still need
-a Docker/CI path. Two-branch retirement (Phase C) follows once MA is proven on the config seam.
+**What remains (needs AWS/CI — not local):**
+1. `scripts/freeze.sh --template ma ../grantwell-ma`, push it as its own repo (I don't touch remotes).
+2. Run `deploy-ma-staging.yml` → walk `docs/B3-PARITY.md`. Needs `SERVICE_ROLE_ARN_MA_STAGING` +
+   a bootstrapped account. *(This is the "prove on real AWS" step Phase A/B never had — no blocker
+   now beyond creds; GitHub runners handle Docker bundling.)*
+3. **Phase D** before any prod swap: deploy Cognito+S3 RETAIN (code at `ef8aa4b`), then deploy
+   `GRANTWELL_INSTANCE=ma` onto live `gw-stack-prod` (same logical IDs → in-place update). Change
+   window, not casual.
+4. **Phase C**: once MA is proven on the seam, reconcile any `main`-only fixes, retire `main`.
