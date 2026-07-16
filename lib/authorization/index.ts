@@ -1,9 +1,3 @@
-/**
- * This file defines a construct for creating and configuring an AWS Cognito User Pool for user authentication.
- * It includes the setup of a Cognito domain, a user pool client, and an optional Azure OIDC identity provider.
- * Additionally, it configures a Lambda function to act as a custom authorizer for the WebSocket API.
- */
-
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { cognitoDomainName, emailConfig } from '../constants';
@@ -20,7 +14,6 @@ export class AuthorizationStack extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    // Create the Cognito User Pool
     const userPool = new UserPool(this, 'UserPool', {
        removalPolicy: cdk.RemovalPolicy.RETAIN,
       selfSignUpEnabled: true,
@@ -34,7 +27,6 @@ export class AuthorizationStack extends Construct {
         'role': new cognito.StringAttribute({ minLen: 0, maxLen: 30, mutable: true }),
         'state': new cognito.StringAttribute({ minLen: 0, maxLen: 50, mutable: true })
       },
-      // Add custom invitation messages
       userInvitation: {
         emailSubject: 'Welcome to GrantWell!',
         emailBody:
@@ -69,13 +61,9 @@ export class AuthorizationStack extends Construct {
       },
     });
 
-    // Expose custom:role and custom:state in the ID / access token claims so
-    // backend Lambdas can read them directly from the JWT authorizer context
-    // instead of calling cognito-idp:AdminGetUser per request.
-    // Self-signup writes custom:state at account creation (see SignUpStep.tsx);
-    // admin-API writes (AdminUpdateUserAttributes) bypass the writeAttributes
-    // restriction, so Developers/Regular admins can still reassign state
-    // post-signup via User Management.
+    // Exposed as token claims so Lambdas read role/state from the JWT instead of an
+    // AdminGetUser per request. writeAttributes omits 'role' on purpose; admin-API
+    // AdminUpdateUserAttributes bypasses it, so reassignment still works via User Management.
     const clientAttributes = new cognito.ClientAttributes()
       .withStandardAttributes({
         email: true,
@@ -86,8 +74,8 @@ export class AuthorizationStack extends Construct {
     const userPoolClient = new UserPoolClient(this, 'UserPoolClient', {
       userPool,
       authFlows: {
-        userPassword: true, // Enable username/password authentication
-        userSrp: true,      // Enable SRP authentication (default)
+        userPassword: true,
+        userSrp: true,
       },
       readAttributes: clientAttributes,
       writeAttributes: new cognito.ClientAttributes()
@@ -98,9 +86,9 @@ export class AuthorizationStack extends Construct {
     this.userPoolClient = userPoolClient;
 
     const authorizerHandlerFunction = new lambda.Function(this, 'AuthorizationFunction', {
-      runtime: lambda.Runtime.PYTHON_3_12, // Choose any supported Node.js runtime
-      code: lambda.Code.fromAsset(path.join(__dirname, 'websocket-api-authorizer')), // Points to the lambda directory
-      handler: 'lambda_function.lambda_handler', // Points to the 'hello' file in the lambda directory
+      runtime: lambda.Runtime.PYTHON_3_12,
+      code: lambda.Code.fromAsset(path.join(__dirname, 'websocket-api-authorizer')),
+      handler: 'lambda_function.lambda_handler',
       environment: {
         "USER_POOL_ID" : userPool.userPoolId,
         "APP_CLIENT_ID" : userPoolClient.userPoolClientId

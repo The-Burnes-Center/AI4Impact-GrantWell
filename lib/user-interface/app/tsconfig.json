@@ -19,7 +19,8 @@
        type-checks against the neutral default (all instances share the Branding shape). */
     "baseUrl": ".",
     "paths": {
-      "@active-instance": ["config/instances/neutral.ts"]
+      "@active-instance": ["config/instances/neutral.ts"],
+      "@chrome": ["config/chrome.ts"]
     },
 
     /* Linting */

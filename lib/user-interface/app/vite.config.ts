@@ -10,6 +10,13 @@ const isDev = process.env.NODE_ENV === "staging";
 const instance = process.env.GRANTWELL_INSTANCE || "neutral";
 const activeInstancePath = path.resolve(__dirname, `config/instances/${instance}.ts`);
 
+// Page chrome (header/nav/footer) is swappable per deliverable via `@chrome`. Defaults to the
+// neutral core barrel; a deliverable with its own design system sets GRANTWELL_CHROME to its
+// chrome barrel path (must export the same OmniHeader/LandingNavbar/AppNavbar/LandingFooter).
+const chromePath = process.env.GRANTWELL_CHROME
+  ? path.resolve(__dirname, process.env.GRANTWELL_CHROME)
+  : path.resolve(__dirname, "config/chrome.ts");
+
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
@@ -22,6 +29,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@active-instance": activeInstancePath,
+      "@chrome": chromePath,
     },
   },
   plugins: [

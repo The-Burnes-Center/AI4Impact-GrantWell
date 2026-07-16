@@ -20,7 +20,7 @@ import {
   AppNavbar,
   LandingFooter,
   OmniHeader,
-} from "../pages/landing/chrome";
+} from "@chrome";
 import "../styles/marketing-landing.css";
 
 async function getInitialAuthState() {

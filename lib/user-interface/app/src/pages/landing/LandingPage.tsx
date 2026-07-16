@@ -10,7 +10,7 @@ import {
   LandingFooter,
   LandingNavbar,
   OmniHeader,
-} from "./chrome";
+} from "@chrome";
 
 const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => (
   <svg

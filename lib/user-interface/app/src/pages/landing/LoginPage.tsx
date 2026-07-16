@@ -6,7 +6,7 @@ import {
   LandingFooter,
   LandingNavbar,
   OmniHeader,
-} from "./chrome";
+} from "@chrome";
 
 interface LoginPageProps {
   onAuthenticated: () => void;
