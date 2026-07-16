@@ -128,7 +128,30 @@ and confirm no behavioral change before committing. Never bundle with a neutrali
 - **E (v1.5)** rides on the neutral engine so features are built once. E1 can pull forward once the
   engine is stable; E2 waits on the finalized user model.
 
-## Status
-- On `grantwell-core-neutralize` (off current `generic-main`). Working tree clean.
-- Done: A1 (config contract, `b9bf7e4`); D1 code edits (`ef8aa4b`, not deployed).
-- Next: A2 branding seam (start A2a name).
+## Status (updated 2026-07-16)
+Branch `grantwell-core-neutralize` (off current `generic-main`). All work committed, unpushed.
+
+**Model correction (important):** `generic` = the **Burnes-owned multi-state product** (any US state
+can use it; carries Burnes/InnovateUS/GovLab branding + partner footer). `main` = the **MA
+instance**. `grantwell-core` = neutral engine both sit on as config bundles. In code this is now:
+`defaultBranding` = neutral core; `genericBranding` = the Burnes instance preset; per-state configs
+(MA etc.) come later.
+
+**Done:**
+- A1 (`b9bf7e4`) — `InstanceConfig`/`BrandingConfig` contract (`lib/shared/config.ts`).
+- A2a (`09edf1d`) — `BrandingProvider` + `useBranding()`; app-name literals routed through branding.
+- A2b (`34f1282`) — brand palette drives `--gw-color-*` CSS vars (Q5 rider; 261 inline hexes left for a separate find-replace).
+- A2c (`b6fa086`) — neutral core default + `genericBranding` preset; logos + footer partner grid render from config.
+- A3 (`9e4312e`) — single branding-driven GA id; analytics loads at runtime; none in neutral core.
+- A4 (`e094a39`) — `SUPPORTED_STATES` now carries `[{code,name}]`; `getSupportedStateCodes()`/`stateNameFromCode()` in `grantwell-shared`; deleted 5 inline `STATE_NAMES` maps (Q1 rider). (Legacy `LEGACY_NAME_TO_CODE` in users left intentionally.)
+- D1 code edits (`ef8aa4b`) — Cognito + S3 `RETAIN`. **Not deployed** (needs Docker/CI).
+- Housekeeping — removed 36 gitignored `tsc` build artifacts (`.js`/`.d.ts`) from disk.
+
+**Verification so far:** frontend `tsc` + full vite build green on every A2/A3 step; root `tsc` + Node
+`--check` green on all 10 A4 handlers. No runtime/deploy verification yet (no Docker locally).
+
+**Behavior-preserving:** provider defaults to `genericBranding`, so the running app is visually
+unchanged; env-shape change in A4 kept all 10 parsers working.
+
+**Next:** A5 (region sweep + shared runtime-config + response/CORS helper — Q2/Q3 riders), then A6
+(un-track `aws-exports.json`). Both backend — unverifiable at runtime here; higher care.
