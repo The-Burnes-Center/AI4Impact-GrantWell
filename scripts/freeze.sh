@@ -8,34 +8,53 @@
 #
 # Usage:
 #   scripts/freeze.sh <instance> [output-dir]
+#   scripts/freeze.sh --template <name> [output-dir]
 #
-#   <instance>     an id present in lib/user-interface/app/config/instances/<instance>.ts
-#   [output-dir]   where to write the deliverable (default: ../grantwell-<instance>)
+#   <instance>       an id present in lib/user-interface/app/config/instances/<instance>.ts
+#   --template <name>  seed the deliverable from lib/user-interface/app/config/templates/<name>/
+#                      instead — for instances (e.g. ma) that are NOT committed to this engine
+#                      because they carry their own chrome/design system. The template supplies
+#                      config/instances/<name>.ts (+ chrome/, infra snippet) into the frozen core.
+#   [output-dir]     where to write the deliverable (default: ../grantwell-<instance>)
 #
 # Example:
 #   scripts/freeze.sh generic
-#   scripts/freeze.sh generic /tmp/grantwell-generic
+#   scripts/freeze.sh --template ma ../grantwell-ma
 #
 set -euo pipefail
 
-INSTANCE="${1:-}"
-if [[ -z "$INSTANCE" ]]; then
-  echo "usage: scripts/freeze.sh <instance> [output-dir]" >&2
-  exit 2
+TEMPLATE=""
+if [[ "${1:-}" == "--template" ]]; then
+  TEMPLATE="${2:-}"
+  INSTANCE="$TEMPLATE"
+  OUT_DIR="${3:-../grantwell-${INSTANCE}}"
+  [[ -z "$TEMPLATE" ]] && { echo "usage: scripts/freeze.sh --template <name> [output-dir]" >&2; exit 2; }
+else
+  INSTANCE="${1:-}"
+  OUT_DIR="${2:-../grantwell-${INSTANCE}}"
+  [[ -z "$INSTANCE" ]] && { echo "usage: scripts/freeze.sh <instance> [output-dir]" >&2; exit 2; }
 fi
 
 REPO_ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
-INSTANCE_FILE="lib/user-interface/app/config/instances/${INSTANCE}.ts"
-if [[ ! -f "$INSTANCE_FILE" ]]; then
+APP_CONFIG="lib/user-interface/app/config"
+INSTANCE_FILE="$APP_CONFIG/instances/${INSTANCE}.ts"
+TEMPLATE_DIR="$APP_CONFIG/templates/${TEMPLATE}"
+
+if [[ -n "$TEMPLATE" ]]; then
+  if [[ ! -d "$TEMPLATE_DIR" ]]; then
+    echo "error: no template '${TEMPLATE}' ($TEMPLATE_DIR not found)" >&2
+    ls -d "$APP_CONFIG"/templates/*/ 2>/dev/null | sed 's#.*/templates/##; s#/$##; s#^#  - #' >&2
+    exit 1
+  fi
+elif [[ ! -f "$INSTANCE_FILE" ]]; then
   echo "error: no config for instance '${INSTANCE}' ($INSTANCE_FILE not found)" >&2
   echo "known instances:" >&2
-  ls lib/user-interface/app/config/instances/*.ts 2>/dev/null | sed 's#.*/##; s#\.ts$##; s#^#  - #' >&2
+  ls "$APP_CONFIG"/instances/*.ts 2>/dev/null | sed 's#.*/##; s#\.ts$##; s#^#  - #' >&2
+  echo "or use --template <name> for an out-of-core instance (e.g. ma)" >&2
   exit 1
 fi
-
-OUT_DIR="${2:-../grantwell-${INSTANCE}}"
 
 # Version stamp: prefer an exact tag on HEAD, else describe, else short sha.
 if VERSION_TAG="$(git describe --tags --exact-match 2>/dev/null)"; then
@@ -59,13 +78,32 @@ mkdir -p "$OUT_DIR/core"
 # cruft (dist, node_modules, cdk.out, aws-exports.json are all already gitignored/untracked).
 git archive --format=tar HEAD | tar -x -C "$OUT_DIR/core"
 
+CORE_APP_CONFIG="$OUT_DIR/core/$APP_CONFIG"
+CHROME_ENV=""
+
+# A template-seeded instance (e.g. ma) isn't committed to the engine, so git archive didn't include
+# it — materialize it into the frozen core from the template: the branding instance file, its chrome
+# barrel (selected via GRANTWELL_CHROME), and the infra snippet for the owner to paste.
+if [[ -n "$TEMPLATE" ]]; then
+  cp "$TEMPLATE_DIR/instance.ts" "$CORE_APP_CONFIG/instances/${INSTANCE}.ts"
+  INSTANCE_FILE="$TEMPLATE_DIR/instance.ts"
+  if [[ -d "$TEMPLATE_DIR/chrome" ]]; then
+    cp -r "$TEMPLATE_DIR/chrome" "$CORE_APP_CONFIG/${INSTANCE}-chrome"
+    CHROME_ENV="GRANTWELL_CHROME=config/${INSTANCE}-chrome/index.ts "
+  fi
+fi
+
 # GRANTWELL_INSTANCE selects both halves of the config seam: frontend branding
 # (core/.../config/instances/<instance>.ts, read by vite) and backend/infra identity
 # (core/lib/shared/instance-infra.ts INSTANCE_INFRA registry, read by constants.ts + bin). The
 # top-level config/ here holds owner-facing copies/pointers; the files the build reads live in core/.
 mkdir -p "$OUT_DIR/config"
 cp "$INSTANCE_FILE" "$OUT_DIR/config/instance.ts"
-printf 'GRANTWELL_INSTANCE=%s\n' "$INSTANCE" > "$OUT_DIR/config/instance.env"
+{
+  echo "GRANTWELL_INSTANCE=${INSTANCE}"
+  [[ -n "$CHROME_ENV" ]] && echo "GRANTWELL_CHROME=config/${INSTANCE}-chrome/index.ts"
+} > "$OUT_DIR/config/instance.env"
+[[ -n "$TEMPLATE" && -f "$TEMPLATE_DIR/infra.snippet.ts" ]] && cp "$TEMPLATE_DIR/infra.snippet.ts" "$OUT_DIR/config/infra.snippet.ts"
 
 # Warn if this instance has no backend infra entry yet — its stack/cognito/kb names will fall back
 # to the ENVIRONMENT switch, which is NOT what a config-driven deliverable wants.
@@ -80,6 +118,16 @@ commit ${COMMIT}
 instance ${INSTANCE}
 EOF
 
+# Chrome-override lines, only rendered into the handoff when a template carried its own chrome.
+if [[ -n "$CHROME_ENV" ]]; then
+  CHROME_DOC="- **chrome** — \`config/${INSTANCE}-chrome/\` supplies this deployment's header/nav/footer
+             (its design system), selected via \`GRANTWELL_CHROME\`. Fill in its \`index.ts\`."
+  BUILD_ENV="GRANTWELL_INSTANCE=${INSTANCE} ${CHROME_ENV}"
+else
+  CHROME_DOC=""
+  BUILD_ENV="GRANTWELL_INSTANCE=${INSTANCE} "
+fi
+
 # Handoff docs live with the deliverable, not in the engine.
 mkdir -p "$OUT_DIR/docs"
 cat > "$OUT_DIR/docs/HANDOFF.md" <<EOF
@@ -93,6 +141,7 @@ This repo is a frozen, self-contained copy of GrantWell you own and run.
              (\`instance.env\`). Two halves, both read from \`core/\`:
              **branding** — \`core/lib/user-interface/app/config/instances/${INSTANCE}.ts\`
              **infra identity** — \`core/lib/shared/instance-infra.ts\` (stack/Cognito/KB names, AWS acct)
+${CHROME_DOC}
 - \`VERSION\` the core version this deliverable was cut from.
 
 ## Configure
@@ -109,7 +158,7 @@ Set \`GRANTWELL_INSTANCE\` for BOTH the frontend build and the cdk deploy so eac
 activates. From \`core/\`:
 
     npm install
-    (cd lib/user-interface/app && npm install && GRANTWELL_INSTANCE=${INSTANCE} npm run build)
+    (cd lib/user-interface/app && npm install && ${BUILD_ENV}npm run build)
     GRANTWELL_INSTANCE=${INSTANCE} npx cdk deploy
 
 ## Take a core update
