@@ -87,7 +87,9 @@ export class UserInterface extends Construct {
           "-c",
           [
             "npm --cache /tmp/.npm install --legacy-peer-deps",
-            `npm --cache /tmp/.npm run build`,
+            // Forward the instance selectors into the container so the Docker fallback brands the
+            // build like the local path does (the local tryBundle below already inherits them).
+            `GRANTWELL_INSTANCE="${process.env.GRANTWELL_INSTANCE ?? ""}" GRANTWELL_CHROME="${process.env.GRANTWELL_CHROME ?? ""}" npm --cache /tmp/.npm run build`,
             "cp -aur /asset-input/dist/* /asset-output/",
           ].join(" && "),
         ],
