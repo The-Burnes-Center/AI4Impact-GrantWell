@@ -83,13 +83,20 @@ CHROME_ENV=""
 
 # A template-seeded instance (e.g. ma) isn't committed to the engine, so git archive didn't include
 # it — materialize it into the frozen core from the template: the branding instance file, its chrome
-# barrel (selected via GRANTWELL_CHROME), and the infra snippet for the owner to paste.
+# barrel (selected via GRANTWELL_CHROME), and the infra snippet for the owner to paste. GRANTWELL_CHROME
+# points at the chrome DIR so vite/tsc resolve its index.tsx.
 if [[ -n "$TEMPLATE" ]]; then
   cp "$TEMPLATE_DIR/instance.ts" "$CORE_APP_CONFIG/instances/${INSTANCE}.ts"
   INSTANCE_FILE="$TEMPLATE_DIR/instance.ts"
   if [[ -d "$TEMPLATE_DIR/chrome" ]]; then
     cp -r "$TEMPLATE_DIR/chrome" "$CORE_APP_CONFIG/${INSTANCE}-chrome"
-    CHROME_ENV="GRANTWELL_CHROME=config/${INSTANCE}-chrome/index.ts "
+    CHROME_ENV="GRANTWELL_CHROME=config/${INSTANCE}-chrome "
+  fi
+  # A template may carry an apply.sh to patch the frozen core with its instance-specific needs
+  # (deps, index.html links, type decls, tsconfig @chrome path). Runs with CORE_APP dir as $1.
+  if [[ -f "$TEMPLATE_DIR/apply.sh" ]]; then
+    echo "  applying template patches (${TEMPLATE}/apply.sh)"
+    bash "$TEMPLATE_DIR/apply.sh" "$OUT_DIR/core/lib/user-interface/app" "$INSTANCE"
   fi
 fi
 
@@ -101,7 +108,7 @@ mkdir -p "$OUT_DIR/config"
 cp "$INSTANCE_FILE" "$OUT_DIR/config/instance.ts"
 {
   echo "GRANTWELL_INSTANCE=${INSTANCE}"
-  [[ -n "$CHROME_ENV" ]] && echo "GRANTWELL_CHROME=config/${INSTANCE}-chrome/index.ts"
+  [[ -n "$CHROME_ENV" ]] && echo "GRANTWELL_CHROME=config/${INSTANCE}-chrome"
 } > "$OUT_DIR/config/instance.env"
 [[ -n "$TEMPLATE" && -f "$TEMPLATE_DIR/infra.snippet.ts" ]] && cp "$TEMPLATE_DIR/infra.snippet.ts" "$OUT_DIR/config/infra.snippet.ts"
 
