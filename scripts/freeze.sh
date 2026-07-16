@@ -113,8 +113,10 @@ cp "$INSTANCE_FILE" "$OUT_DIR/config/instance.ts"
 [[ -n "$TEMPLATE" && -f "$TEMPLATE_DIR/infra.snippet.ts" ]] && cp "$TEMPLATE_DIR/infra.snippet.ts" "$OUT_DIR/config/infra.snippet.ts"
 
 # Warn if this instance has no backend infra entry yet — its stack/cognito/kb names will fall back
-# to the ENVIRONMENT switch, which is NOT what a config-driven deliverable wants.
-if ! grep -q "\"${INSTANCE}\"" core/lib/shared/instance-infra.ts 2>/dev/null; then
+# to the ENVIRONMENT switch, which is NOT what a config-driven deliverable wants. (A template's
+# apply.sh may have injected the entry; this checks the deliverable's actual file after that runs.)
+INFRA_FILE="$OUT_DIR/core/lib/shared/instance-infra.ts"
+if ! grep -Eq "(^|[^A-Za-z0-9_])\"?${INSTANCE}\"?:" "$INFRA_FILE" 2>/dev/null; then
   echo "  note: instance '${INSTANCE}' has no INSTANCE_INFRA entry — add one in" >&2
   echo "        core/lib/shared/instance-infra.ts before deploying (see docs/HANDOFF.md)." >&2
 fi
