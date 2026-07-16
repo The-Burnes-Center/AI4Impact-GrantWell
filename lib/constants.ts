@@ -3,13 +3,20 @@
  * These constants include configuration settings for authentication, Cognito domain name, OIDC integration name, and stack name.
  */
 
+import { resolveInstanceInfra } from "./shared/instance-infra";
+
 export const AUTHENTICATION = true;
 const ENVIRONMENT = process.env.ENVIRONMENT;
+
+// When GRANTWELL_INSTANCE names a config-driven instance, its infra config wins; otherwise the
+// ENVIRONMENT switch below runs unchanged (so MA/generic deploys are byte-identical).
+const instanceInfra = resolveInstanceInfra();
 
 // Change these as needed
 // Must be unique globally or the deployment will fail
 // Environment-specific domain names for branch-based deployment
 const getCognitoDomainName = () => {
+  if (instanceInfra) return instanceInfra.cognitoDomainName;
 
   if (ENVIRONMENT === 'production') {
     return 'gw-auth-prod';
@@ -33,6 +40,8 @@ export const OIDCIntegrationName = "";
 // This MUST be unique to your account and is case sensitive
 // Environment-specific stack names for branch-based deployment
 const getStackName = () => {
+  if (instanceInfra) return instanceInfra.stackName;
+
   if (ENVIRONMENT === 'production') {
     return 'gw-stack-prod';
   } else if (ENVIRONMENT === 'staging') {
@@ -49,6 +58,8 @@ export const stackName = getStackName();
 
 // Environment-specific OpenSearch index name for Knowledge Base
 const getKnowledgeBaseIndexName = () => {
+  if (instanceInfra) return instanceInfra.knowledgeBaseIndexName;
+
   if (ENVIRONMENT === 'production') {
     return 'knowledge-base-index-prod';
   } else if (ENVIRONMENT === 'staging') {
@@ -102,6 +113,9 @@ const getEmailConfig = () => {
   const deploymentUrl = process.env.DEPLOYMENT_URL;
   if (deploymentUrl) {
     return { deploymentUrl };
+  }
+  if (instanceInfra?.deploymentUrl) {
+    return { deploymentUrl: instanceInfra.deploymentUrl };
   }
   if (ENVIRONMENT === 'production') {
     return {
