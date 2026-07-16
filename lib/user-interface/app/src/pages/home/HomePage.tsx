@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useBranding } from "../../common/branding";
 import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
@@ -30,6 +31,7 @@ interface SelectableDocument {
 }
 
 export default function HomePage() {
+  const branding = useBranding();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<SelectableDocument | null>(null);
@@ -245,7 +247,7 @@ export default function HomePage() {
         <div className="landing-header">
           <img
             className="landing-header__wordmark"
-            src="/images/marketing/grantwell-wordmark-dark.svg"
+            src={branding.logo}
             alt=""
           />
           <p className="landing-header__subtitle">

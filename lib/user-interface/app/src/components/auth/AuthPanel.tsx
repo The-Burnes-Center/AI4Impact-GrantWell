@@ -1,6 +1,7 @@
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
+import { useBranding } from "../../common/branding";
 import { Auth } from "aws-amplify";
 import SignInStep from "./steps/SignInStep";
 import ForgotPasswordStep from "./steps/ForgotPasswordStep";
@@ -34,6 +35,7 @@ interface CardCopy {
 }
 
 export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
+  const branding = useBranding();
   const [view, setView] = useState<AuthView>("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -480,8 +482,8 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     <div className="auth-login-card">
       <img
         className="auth-card-logo"
-        src="/images/marketing/grantwell-wordmark-dark.svg"
-        alt="GrantWell"
+        src={branding.logo}
+        alt={branding.appName}
       />
       {showTabs && (
         <div className="auth-tabs" role="group" aria-label="Authentication mode">

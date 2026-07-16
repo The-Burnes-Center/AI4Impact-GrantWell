@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "../../styles/marketing-landing.css";
+import { useBranding } from "../../common/branding";
 import {
   FeatureFind,
   FeatureSummarize,
@@ -30,6 +31,7 @@ const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => 
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const branding = useBranding();
   const goToLogin = () => navigate("/login");
   const scrollToFeatures = () => {
     document
@@ -50,8 +52,8 @@ export default function LandingPage() {
             <h1 className="marketing__hero-title" id="hero-title">
               <img
                 className="marketing__hero-wordmark"
-                src="/images/marketing/grantwell-wordmark-dark.svg"
-                alt="GrantWell"
+                src={branding.logo}
+                alt={branding.appName}
               />
             </h1>
             <p className="marketing__hero-tagline">

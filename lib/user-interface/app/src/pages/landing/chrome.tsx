@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { AiForImpactWordmark } from "./featureIllustrations";
 import { useAdminCheck } from "../../hooks/use-admin-check";
+import { useBranding } from "../../common/branding";
 
 const ArrowUpRight = ({ className }: { className?: string }) => (
   <svg
@@ -147,6 +148,7 @@ const SignOutIcon = ({ className }: { className?: string }) => (
 export function AppNavbar() {
   const navigate = useNavigate();
   const { isAdmin } = useAdminCheck();
+  const branding = useBranding();
 
   const handleSignOut = async () => {
     try {
@@ -193,8 +195,8 @@ export function AppNavbar() {
         className="marketing__nav-brand"
       >
         <img
-          src="/images/marketing/grantwell-wordmark-dark.svg"
-          alt="GrantWell"
+          src={branding.logo}
+          alt={branding.appName}
           className="marketing__nav-wordmark"
         />
       </a>
@@ -227,65 +229,62 @@ export function AppNavbar() {
 }
 
 export function LandingFooter() {
+  const { footer, logo } = useBranding();
+  const { madeBy, partners } = footer;
+
   return (
     <footer className="marketing__footer">
       <div className="marketing__footer-brand">
         <img
           className="marketing__footer-wordmark"
-          src="/images/marketing/grantwell-wordmark-footer.svg"
+          src={footer.wordmark ?? logo}
           alt=""
         />
-        <div className="marketing__footer-madeby">
-          <div className="marketing__footer-madeby-line">
-            <span>Made with</span>
-            <img
-              className="marketing__footer-heart"
-              src="/images/marketing/footer-heart.svg"
-              alt=""
-            />
-            <span>by</span>
+        {madeBy && (
+          <div className="marketing__footer-madeby">
+            <div className="marketing__footer-madeby-line">
+              <span>Made with</span>
+              {madeBy.logo && (
+                <img
+                  className="marketing__footer-heart"
+                  src={madeBy.logo}
+                  alt=""
+                />
+              )}
+              <span>by</span>
+            </div>
+            <a
+              className="marketing__footer-ai4impact"
+              href={madeBy.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="AI for Impact"
+            >
+              <AiForImpactWordmark />
+            </a>
           </div>
-          <a
-            className="marketing__footer-ai4impact"
-            href="https://ai4impact.ai/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="AI for Impact"
+        )}
+      </div>
+      {partners.length > 0 && (
+        <div className="marketing__footer-partners">
+          <p className="marketing__footer-partners-label">
+            This is a partner project of:
+          </p>
+          <div
+            className="marketing__footer-partners-grid"
+            aria-label="Partner organizations"
           >
-            <AiForImpactWordmark />
-          </a>
+            {partners.map((p) => (
+              <img
+                key={p.href}
+                className={`marketing__partner ${p.className ?? ""}`.trim()}
+                src={p.logo}
+                alt={p.label}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="marketing__footer-partners">
-        <p className="marketing__footer-partners-label">
-          This is a partner project of:
-        </p>
-        <div
-          className="marketing__footer-partners-grid"
-          aria-label="Partner organizations"
-        >
-          <img
-            className="marketing__partner marketing__partner--innovateus"
-            src="/images/marketing/footer-innovateus.svg"
-            alt="InnovateUS"
-          />
-          <img
-            className="marketing__partner marketing__partner--burnes"
-            src="/images/marketing/footer-burnes.png"
-            alt="Burnes Center for Social Change, Northeastern University"
-          />
-          <img
-            className="marketing__partner marketing__partner--reboot"
-            src="/images/marketing/footer-reboot.svg"
-            alt="Reboot Democracy"
-          />
-          <img
-            className="marketing__partner marketing__partner--govlab"
-            src="/images/marketing/footer-govlab.png"
-            alt="The GovLab"
-          />
-        </div>
-      </div>
+      )}
     </footer>
   );
 }
