@@ -9,6 +9,7 @@ import { Alert, Spinner } from "react-bootstrap";
 import App from "../App";
 import { AppConfig } from "../common/types/app";
 import { AppContext } from "../common/app-context";
+import { BrandingProvider } from "../common/branding";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import MaintenanceGate from "./MaintenanceGate";
@@ -171,26 +172,28 @@ export default function AppConfigured() {
 
   return (
     <AppContext.Provider value={config}>
-      <ThemeProvider
-        theme={{
-          name: "default-theme",
-          overrides: [defaultDarkModeOverride],
-        }}
-        colorMode={theme === "dark" ? "dark" : "light"}
-      >
-        <BrowserRouter
-          future={{
-            v7_relativeSplatPath: true,
-            v7_startTransition: true,
+      <BrandingProvider>
+        <ThemeProvider
+          theme={{
+            name: "default-theme",
+            overrides: [defaultDarkModeOverride],
           }}
+          colorMode={theme === "dark" ? "dark" : "light"}
         >
-          <AppLayoutContent
-            authenticated={authenticated}
-            configured={configured}
-            onAuthenticated={() => setAuthenticated(true)}
-          />
-        </BrowserRouter>
-      </ThemeProvider>
+          <BrowserRouter
+            future={{
+              v7_relativeSplatPath: true,
+              v7_startTransition: true,
+            }}
+          >
+            <AppLayoutContent
+              authenticated={authenticated}
+              configured={configured}
+              onAuthenticated={() => setAuthenticated(true)}
+            />
+          </BrowserRouter>
+        </ThemeProvider>
+      </BrandingProvider>
     </AppContext.Provider>
   );
 }

@@ -27,4 +27,7 @@ export const languageList = [
   { value: "swedish", label: "Swedish" },
 ];
 
-export const CHATBOT_NAME = "GrantWell";
+import { defaultBranding } from "./branding";
+
+/** @deprecated read branding.appName via useBranding() instead. Kept for compatibility. */
+export const CHATBOT_NAME = defaultBranding.appName;

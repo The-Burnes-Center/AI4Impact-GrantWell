@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import "../../styles/marketing-landing.css";
 import AuthPanel from "../../components/auth/AuthPanel";
+import { useBranding } from "../../common/branding";
 import {
   LandingFooter,
   LandingNavbar,
@@ -12,9 +13,10 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ onAuthenticated }: LoginPageProps) {
+  const { appName } = useBranding();
   useEffect(() => {
-    document.title = "Sign In - GrantWell";
-  }, []);
+    document.title = `Sign In - ${appName}`;
+  }, [appName]);
 
   return (
     <div className="marketing">

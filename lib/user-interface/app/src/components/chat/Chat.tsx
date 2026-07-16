@@ -6,7 +6,7 @@ import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import ChatMessage from "./ChatMessage";
 import ChatInputPanel from "./ChatInputPanel";
-import { CHATBOT_NAME } from "../../common/constants";
+import { useBranding } from "../../common/branding";
 import { useNotifications } from "../notifications/NotificationManager";
 import { HelpCircle, ChevronDown, Loader } from "lucide-react";
 import { parseChatHistory } from "./utils";
@@ -127,6 +127,7 @@ export default function Chat(props: {
   kbSyncing?: boolean;
 }) {
   const appContext = useContext(AppContext);
+  const branding = useBranding();
   const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
@@ -297,7 +298,7 @@ export default function Chat(props: {
           ))}
 
           {messageHistory.length === 0 && !session?.loading && (
-            <li style={styles.welcomeText}>{CHATBOT_NAME}</li>
+            <li style={styles.welcomeText}>{branding.appName}</li>
           )}
 
           {session?.loading && (

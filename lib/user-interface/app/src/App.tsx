@@ -10,6 +10,7 @@ import { ErrorBoundary } from "./components/common/ErrorBoundary";
 import { NotificationProvider } from "./components/notifications/NotificationManager";
 import NotificationBar from "./components/notifications/NotificationBar";
 import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
+import { useBranding } from "./common/branding";
 import "./styles/app.scss";
 
 const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
@@ -23,6 +24,7 @@ const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
 function ScrollToTop(): null {
   const { pathname, search } = useLocation();
   const prevPathRef = useRef<string>("");
+  const { appName } = useBranding();
 
   useEffect(() => {
     const mainContent = document.getElementById("main-content");
@@ -30,37 +32,41 @@ function ScrollToTop(): null {
       mainContent.focus({ preventScroll: true });
     }
 
-    // Update page title based on route
-    const getPageTitle = (path: string): string => {
+    // Page label per route; the app name is appended from branding.
+    const getPageLabel = (path: string): string | null => {
       const exactMatches: { [key: string]: string } = {
-        "/": "GrantWell - Home",
-        "/home": "GrantWell - Home",
-        "/admin/dashboard": "Admin Dashboard - GrantWell",
-        "/chat/sessions": "Chat Sessions - GrantWell",
-        "/document-editor": "Document Editor - GrantWell",
-        "/document-editor/drafts": "Document Editor Drafts - GrantWell",
+        "/": "Home",
+        "/home": "Home",
+        "/admin/dashboard": "Admin Dashboard",
+        "/chat/sessions": "Chat Sessions",
+        "/document-editor": "Document Editor",
+        "/document-editor/drafts": "Document Editor Drafts",
       };
 
       if (exactMatches[path]) {
         return exactMatches[path];
       }
 
-      // Pattern matches for dynamic routes
       if (path.startsWith("/chat/") && path !== "/chat/sessions") {
-        return "Chatbot Playground - GrantWell";
+        return "Chatbot Playground";
       }
       if (path.startsWith("/document-editor/") && path !== "/document-editor/drafts") {
-        return "Document Editor Session - GrantWell";
+        return "Document Editor Session";
       }
       if (path.startsWith("/requirements/")) {
-        return "Requirements Checklist - GrantWell";
+        return "Requirements Checklist";
       }
 
-      // Default fallback
-      return "GrantWell";
+      return null;
     };
 
-    const baseTitle = getPageTitle(pathname);
+    const label = getPageLabel(pathname);
+    const home = pathname === "/" || pathname === "/home";
+    const baseTitle = !label
+      ? appName
+      : home
+      ? `${appName} - ${label}`
+      : `${label} - ${appName}`;
     document.title = baseTitle;
 
     const fullPath = pathname + search;
@@ -82,7 +88,7 @@ function ScrollToTop(): null {
         });
       }
     }
-  }, [pathname, search]);
+  }, [pathname, search, appName]);
 
   return null;
 }

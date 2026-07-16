@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import "../../styles/maintenance.css";
+import { useBranding } from "../../common/branding";
 
 export default function MaintenancePage() {
+  const { appName } = useBranding();
   useEffect(() => {
-    document.title = "Site under maintenance — GrantWell";
-  }, []);
+    document.title = `Site under maintenance — ${appName}`;
+  }, [appName]);
 
   return (
     <main id="main-content" tabIndex={-1} className="maintenance-page">
@@ -25,7 +27,7 @@ export default function MaintenancePage() {
           </svg>
         </div>
 
-        <h1 className="maintenance-title">GrantWell is Under Maintenance</h1>
+        <h1 className="maintenance-title">{appName} is Under Maintenance</h1>
 
         <p className="maintenance-message">
           We are currently performing scheduled maintenance to improve your
