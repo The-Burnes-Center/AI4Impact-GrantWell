@@ -1,0 +1,65 @@
+name: Deploy MA (staging parity)
+
+# B3: deploy the frozen MA deliverable to an ISOLATED grantwell-ma-staging stack (never live prod)
+# to validate the neutral engine + MA chrome before any prod swap. Manual trigger only.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ma-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # Both halves of the config seam select the ma-staging instance: isolated stack/Cognito/KB,
+    # MA branding + Mayflower chrome.
+    env:
+      GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
+      GRANTWELL_INSTANCE: ma-staging
+      GRANTWELL_CHROME: config/ma-chrome
+      STACK_NAME: grantwell-ma-staging
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.SERVICE_ROLE_ARN_MA_STAGING }}
+          role-session-name: ${{ github.actor }}-ma-staging
+          aws-region: us-east-1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        working-directory: core
+        run: npm install
+
+      - name: Install frontend dependencies
+        working-directory: core/lib/user-interface/app
+        # Mayflower's peer deps require --legacy-peer-deps (same as the MA branch).
+        run: |
+          npm install --legacy-peer-deps
+          npm install -g aws-cdk
+
+      - name: Build frontend (MA instance + Mayflower chrome)
+        working-directory: core/lib/user-interface/app
+        run: npm run build
+
+      - name: Bootstrap AWS environment
+        working-directory: core
+        run: cdk bootstrap
+
+      - name: Deploy MA staging stack
+        working-directory: core
+        run: cdk deploy ${{ env.STACK_NAME }} --require-approval never
