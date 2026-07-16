@@ -1,81 +1,134 @@
-# GrantWell Plan — Neutral Core (reorg-in-place) + v1.5
+# GrantWell — Neutral Core Roadmap (reorg-in-place → freeze) + v1.5
 
 ## Goal
-One engine we maintain, delivered to each state as a **frozen, self-contained repo they own**
-(`core/` + `config/`). New state = a config bundle, not a fork. We host the shared multi-state
-deployment from the same engine.
+Stop maintaining two divergent branches (`main` = MA, `generic-main` = generic). Produce **one
+engine** we maintain, from which each state is delivered a **frozen, self-contained repo they own**
+(`core/` + `config/`). `main` is retired: MA becomes a config bundle on the engine. New state = a
+config bundle, not a fork. The shared multi-state site is the same engine with `routing: "picker"`.
 
-## Approach
-Reorganize **this repo** into the neutral engine in place, then freeze per-state snapshots — not a
-from-scratch rebuild. Justification: the scan found no Mayflower/`@massds` dependency, state is
-already env-driven ([lib/shared/states.ts](../lib/shared/states.ts) → `SUPPORTED_STATES`), and a
-config foundation already exists (`ENVIRONMENT` switch + runtime `aws-exports.json`). Reorg keeps the
-same CDK logical IDs, which is what makes a later in-place backend swap safe.
-
-## Repo shapes
-- **Engine (`grantwell-core`)** = this repo, tag-versioned, with all identity behind a config seam
-  (`lib/shared/config.ts`) and no hardcoded state/branding/region.
-- **Deliverable (`grantwell-<state>`)** = frozen `core/` @ a tag + `config/` (branding, Cognito, AWS
-  account) + `VERSION`. The core↔instance boundary is exactly the `config/` dir.
+## Why reorg-in-place, not a rebuild
+Scan of `generic-main` found: no `@massds`/Mayflower dependency; state already env-driven
+([lib/shared/states.ts](../lib/shared/states.ts) → `SUPPORTED_STATES`); a config foundation already
+exists (`ENVIRONMENT` switch + runtime `aws-exports.json`). Coupling is concentrated and mechanical.
+Reorg keeps the same CDK logical IDs → a later backend swap onto the live stack is safe (a
+from-scratch repo would delete-and-recreate stateful resources). ~3–5 days vs ~2 weeks.
 
 ---
 
-## Live environment facts (audited 2026-07-16)
+## Target structure
+
+### Engine — this repo, neutralized (`grantwell-core`, tag-versioned)
+Same layout as today; the change is *inside files* + one config seam, minus hardcoded identity.
+```
+lib/shared/config.ts        ★ InstanceConfig / BrandingConfig — the ONLY core↔config surface (DONE)
+lib/shared/states.ts          unchanged — state source of truth
+lib/constants.ts              CloudFront URLs + names parameterized
+lib/authorization/index.ts    Cognito RETAIN
+lib/chatbot-api/**            state-name maps collapsed; region literals swept
+lib/user-interface/app/
+  src/common/branding.tsx     BrandingProvider + useBranding() + defaultBranding
+  src/**                      "GrantWell"/colors/logos/GA read from branding, not literals
+  aws-exports.json            REMOVED from git; generated at deploy
+```
+
+### Deliverable — the frozen repo a state owns (`grantwell-<state>`)
+```
+core/        frozen grantwell-core @ vX.Y.Z (auditable, editable)
+config/      instance.config.ts + branding/ (logo, colors, name, GA) + assets/
+docs/        handoff (configure / deploy / take a core update)
+VERSION      "core vX.Y.Z"
+```
+Boundary invariant: anything instance-specific lives in `config/`; nothing instance-specific is
+hardcoded in `core/`. That boundary IS `lib/shared/config.ts`.
+
+---
+
+## Environment facts (audited 2026-07-16)
 | Instance | Stack | Account | Cognito+S3 | DynamoDB |
 |---|---|---|---|---|
-| Generic | `grantwell-staging` | 530075910224 | **Delete (at risk)** | Retain (safe) |
-| MA prod | `gw-stack-prod` | 976046823671 | **Delete (at risk)** | Retain (safe) |
+| Generic | `grantwell-staging` | 530075910224 | Delete → **must RETAIN** | Retain |
+| MA prod | `gw-stack-prod` | 976046823671 | Delete → **must RETAIN** | Retain |
 
-- SES: production access GRANTED (acct 530075910224); `no-reply@grantwell.us` verified.
-- `generic-main` auto-deploys `grantwell-staging` on push — **keep neutralization off this branch.**
+SES: prod access GRANTED (530075910224); `no-reply@grantwell.us` verified.
+`generic-main` push auto-deploys `grantwell-staging` — neutralization stays on
+`grantwell-core-neutralize`.
+
+---
+
+## Phases
+
+### Phase A — Neutralize the engine  (branch `grantwell-core-neutralize`; one task at a time, build + click-through after each)
+| Task | What | Risk |
+|---|---|---|
+| A1 ✅ | `lib/shared/config.ts` — `InstanceConfig`/`BrandingConfig` contract | done, committed `b9bf7e4` |
+| A2 | Branding seam — `BrandingProvider` + `useBranding()` + `defaultBranding`; route the ~35 "GrantWell" name literals + colors ([styles.ts](../lib/user-interface/app/src/components/ui/styles.ts)) + chrome assets ([chrome.tsx](../lib/user-interface/app/src/pages/landing/chrome.tsx)) through it. Sub-split: **A2a name**, **A2b colors**, **A2c assets/footer links**. | visual, shallow |
+| A3 | GA IDs → config (`App.tsx` `G-K27MB9Y26C`, `index.html` `G-1CVKPYK2GD`) | trivial |
+| A4 | State-name maps — collapse 6 hardcoded `STATE_NAMES`/legacy maps onto `SUPPORTED_STATES` (carry `{code,name}`). Files: generate-section, websocket-chat, draft-generation route, retrieveNOFOQuestions, retrieveNOFOSummary, users | functional — verify labels |
+| A5 | Region sweep — ~24 hardcoded `us-east-1` → `process.env.AWS_REGION \|\| 'us-east-1'`; parameterize 2 CloudFront URLs in [constants.ts](../lib/constants.ts) | safe (fallback preserves behavior) |
+| A6 | `git rm --cached lib/user-interface/app/aws-exports.json`; ensure generated at deploy | one gotcha |
+
+**Exit:** repo builds; renders MA via config and a demo state via config with no leakage; grep
+confirms zero hardcoded identity.
+
+### Quality riders (fold INTO Phase A — same files, near-zero marginal cost)
+Audit verdict: this is not "AI slob" — types are disciplined (≈0 `any`), almost no dead code, few
+comments. The real debt is *shared helpers exist but are ignored* and *config-as-literals*. Five
+refactors ARE the neutralization work; do them in the same edits:
+| Rider | Folds into | What |
+|---|---|---|
+| Q1 | **A4** | Centralize `STATE_NAMES` code→name into `states.ts`; delete 5 inline copies |
+| Q2 | **A5** | Shared runtime-config module (region, bucket/table names); replaces ~30 `us-east-1` hardcodes + inconsistent DynamoDB client init |
+| Q3 | A5-adjacent | One shared backend response/CORS helper (promote `knowledge-management/shared/response.mjs`); migrate ~26 inline CORS blocks + 16 raw `500`s; CORS origin `'*'` → config |
+| Q4 | config | Status/role constant enums (`active`/`archived`/`draft`/`published`, `Admin`/`stateAdmin`, `custom:role`/`custom:state`); ~85 magic strings |
+| Q5 | **A2b** | Move 206 hardcoded hex colors → `tokens.css` vars; adopt design system in top inline-style offenders (`UploadDocuments` 52, `UnifiedNavigation` 46) |
+
+### Quality backlog (SEPARATE from neutralization — own commits, behavior-preserving, verify live before commit)
+Do NOT mix into neutralization diffs. Each big decomposition is behavior-risk on a live product.
+| # | Refactor | Effort / risk |
+|---|---|---|
+| QB1 | Frontend API-client base `request()` wrapper (auth + headers + `!ok` + 403) — collapses ~45 duplicated methods | low effort, low risk |
+| QB2 | Shared `extractClaims`/`extractUserId` auth helper across 13 handlers (promote `knowledge-management/shared/auth.mjs`) | low / low |
+| QB3 | Decompose `getUserResponse` in `websocket-chat/index.mjs` (~290-line fn, `:294-585`) into retrieval / prompt / stream units | med / **med — core chat path, verify** |
+| QB4 | Split `DocumentManager.tsx` (1173 lines, 38 hooks) → `useDocumentManager` + subcomponents | med / **med — verify** |
+| QB5 | Modularize `functions.ts` (1774 lines, 40 fns) — factor 38 repeated env/role/grant blocks; inject shared config once. Natural home for Q2/Q4 config plumbing | high / **high — infra, `cdk diff` must be clean** |
+
+**Rule for the backlog:** one refactor per commit; behavior-preserving only; run the app / `cdk diff`
+and confirm no behavioral change before committing. Never bundle with a neutralization or feature change.
+
+### Phase B — Freeze tooling + MA deliverable
+- B1: snapshot script → `grantwell-<state>/core/` + `config/` + `VERSION`; tag engine `v0.1.0`.
+- B2: build `grantwell-ma` (freeze core + MA `config/`: branding, Cognito, account).
+- B3: deploy MA deliverable to a **new** stack `grantwell-ma-staging` (distinct KB index) — never
+  onto live stacks. Verify parity vs current staging-MA.
+- B4: deploy a throwaway demo-state config → prove branding fully swaps. Write handoff docs.
+
+### Phase C — Retire the two branches
+- C1: reconcile any `main`-only fixes into the engine (most already converged).
+- C2: MA runs as an engine config; `main` archived/retired. **Two-branch pain ends here.**
+
+### Phase D — Protect live data + consequence-free swap
+- D1: apply Cognito+S3 `RETAIN` via `cdk deploy` (code committed `ef8aa4b`; needs Docker/CI) on
+  **both** accounts. Do NOT hand-patch live templates.
+- D2: once engine validated on `grantwell-ma-staging` and D1 done, deploy the neutralized engine
+  onto the live stacks — same logical IDs → same resources, no data loss.
+
+### Phase E — v1.5 in the neutral engine
+- E1: **Admin NOFO visibility (~4.5d)** — unified lifecycle view over existing endpoints; live
+  refresh; quarantine reason + retry; active/archived toggle. Mostly frontend, no new model.
+- E2: **Notifications (~9.5d)** — `user-notification-prefs` table + `/profile`/`/notifications` +
+  preferences page; real-time match on `status→active` (DynamoDB Stream) + state-scoped digest
+  (EventBridge cron); SES send (DKIM-verify `grantwell.us` + IAM + send Lambda + templates).
 
 ---
 
-## Next steps
-
-### Step 0 — Protect live data  *(urgent; do before anything deploys)*
-Retain code edits already committed (`ef8aa4b`): Cognito + both data buckets → `RemovalPolicy.RETAIN`,
-`autoDeleteObjects: false`. Apply via `cdk deploy` (needs Docker daemon running).
-- [ ] Confirm Docker daemon reachable from WSL (`docker info`).
-- [ ] `cdk diff` then `cdk deploy` on Generic (530075910224) — verify only DeletionPolicy flips, no replacement.
-- [ ] Same on MA prod (976046823671).
-- Do **not** hand-patch live templates.
-
-### Step 1 — Neutralize the engine  *(branch `grantwell-core-neutralize`; build + click-through after each task)*
-1. Collapse 6 hardcoded `STATE_NAMES` maps onto `SUPPORTED_STATES` (carry `{code,name}`). Files:
-   generate-section, websocket-chat, draft-generation route, retrieveNOFOQuestions,
-   retrieveNOFOSummary, users (legacy map). Verify full state names still render.
-2. Branding seam: extend `CHATBOT_NAME` into a `BrandingConfig`; route ~19 "GrantWell" literals,
-   colors ([components/ui/styles.ts](../lib/user-interface/app/src/components/ui/styles.ts)), and
-   chrome assets ([pages/landing/chrome.tsx](../lib/user-interface/app/src/pages/landing/chrome.tsx))
-   through it.
-3. Move 2 GA IDs (`App.tsx`, `index.html`) into config.
-4. Region sweep: ~24 hardcoded `us-east-1` → `process.env.AWS_REGION || 'us-east-1'`; parameterize
-   2 CloudFront URLs in [constants.ts](../lib/constants.ts).
-5. `git rm --cached lib/user-interface/app/aws-exports.json`; ensure it's generated at deploy.
-6. Add `lib/shared/config.ts`: `InstanceConfig` + `BrandingConfig` contract.
-
-### Step 2 — Freeze tooling + MA deliverable
-1. Snapshot script → `grantwell-<state>/core/` + `config/` + `VERSION`; tag engine `v0.1.0`.
-2. Build `grantwell-ma` (freeze core + MA config).
-3. Deploy to a **new** stack `grantwell-ma-staging` (distinct KB index) — never onto the live stacks.
-   Verify parity vs current staging-MA.
-4. Deploy a throwaway demo-state config to prove branding fully swaps.
-
-### Step 3 — v1.5 in the neutral engine
-- **Feature 1 — Admin NOFO visibility (~4.5d):** unified lifecycle view over existing endpoints,
-  live refresh, quarantine reason + retry, active/archived toggle. Mostly frontend, no new model.
-- **Feature 2 — Notifications (~9.5d):** `user-notification-prefs` table +
-  `/profile`/`/notifications` + preferences page; real-time match on `status→active` (DynamoDB
-  Stream) + state-scoped digest (EventBridge cron); SES send (DKIM-verify `grantwell.us` + send
-  Lambda + templates).
-
-### Step 4 — Consequence-free swap
-Once the engine is validated on `grantwell-ma-staging` and Step 0 is deployed on both accounts,
-deploy the neutralized engine onto the live stacks (same logical IDs → same resources, no data loss).
-
----
+## Sequencing notes
+- **A → B → C** is the critical path to killing the two-branch pain (the stated primary goal).
+- **D (data protection)** is independent and urgent; do D1 as soon as a Docker/CI path exists —
+  it does not block A/B.
+- **E (v1.5)** rides on the neutral engine so features are built once. E1 can pull forward once the
+  engine is stable; E2 waits on the finalized user model.
 
 ## Status
-- On `generic-main`, ahead of origin by 1 (unpushed): this plan + Retain edits.
-- Step 0 code done, **not deployed.** Steps 1–4 not started.
+- On `grantwell-core-neutralize` (off current `generic-main`). Working tree clean.
+- Done: A1 (config contract, `b9bf7e4`); D1 code edits (`ef8aa4b`, not deployed).
+- Next: A2 branding seam (start A2a name).
