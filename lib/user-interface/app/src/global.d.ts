@@ -3,6 +3,9 @@ declare module "*.module.css";
 declare module "*.module.scss";
 declare module "react-speech-recognition";
 
+// Build-time instance id, injected by vite `define` from the GRANTWELL_INSTANCE env var.
+declare const __GRANTWELL_INSTANCE__: string;
+
 interface Window {
   dataLayer: Record<string, unknown>[];
   gtag: (

@@ -10,6 +10,7 @@ import App from "../App";
 import { AppConfig } from "../common/types/app";
 import { AppContext } from "../common/app-context";
 import { BrandingProvider } from "../common/branding";
+import { activeBranding } from "../../config/active-instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import MaintenanceGate from "./MaintenanceGate";
@@ -172,7 +173,7 @@ export default function AppConfigured() {
 
   return (
     <AppContext.Provider value={config}>
-      <BrandingProvider>
+      <BrandingProvider value={activeBranding}>
         <ThemeProvider
           theme={{
             name: "default-theme",

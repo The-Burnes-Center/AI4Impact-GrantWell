@@ -1,14 +1,16 @@
 import React from "react";
+import { useBranding } from "../../../common/branding";
 
 const AboutPanel = React.memo(function AboutPanel() {
+  const { appName, orgName } = useBranding();
   return (
   <div className="about-panel">
-    <h2 className="about-panel__heading">About GrantWell</h2>
+    <h2 className="about-panel__heading">About {appName}</h2>
     <p className="about-panel__text">
-      GrantWell is a free, AI-enabled tool designed to simplify the federal
+      {appName} is a free, AI-enabled tool designed to simplify the federal
       and state grant application process for municipalities, community
-      groups, and underserved populations. Developed through Northeastern
-      University&apos;s AI for Impact program at the Burnes Center.
+      groups, and underserved populations.
+      {orgName ? ` Developed by ${orgName}.` : ""}
     </p>
     <p className="about-panel__text">
       GrantWell removes barriers that often prevent smaller communities from

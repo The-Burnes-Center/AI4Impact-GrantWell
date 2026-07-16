@@ -5,12 +5,24 @@ import react from "@vitejs/plugin-react";
 
 const isDev = process.env.NODE_ENV === "staging";
 
+// Build-time instance selection: `@active-instance` resolves to the one selected instance's
+// branding module, so no other instance's identity enters the bundle. Default: neutral core.
+const instance = process.env.GRANTWELL_INSTANCE || "neutral";
+const activeInstancePath = path.resolve(__dirname, `config/instances/${instance}.ts`);
+
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
     "process.env": {},
     // Inject ENVIRONMENT variable for use in client-side code
     "__ENVIRONMENT__": JSON.stringify(process.env.ENVIRONMENT),
+    // Build-time instance id — informational (the actual module is chosen by the resolve alias).
+    "__GRANTWELL_INSTANCE__": JSON.stringify(instance),
+  },
+  resolve: {
+    alias: {
+      "@active-instance": activeInstancePath,
+    },
   },
   plugins: [
     // Plugin to inject ENVIRONMENT variable into HTML

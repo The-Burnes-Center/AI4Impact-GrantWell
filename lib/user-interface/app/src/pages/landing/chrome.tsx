@@ -23,6 +23,10 @@ const ArrowUpRight = ({ className }: { className?: string }) => (
 );
 
 export function OmniHeader({ position = "top" }: { position?: "top" | "bottom" }) {
+  const { omniPartners } = useBranding();
+
+  if (omniPartners.length === 0) return null;
+
   return (
     <aside
       className="marketing__omni"
@@ -33,56 +37,19 @@ export function OmniHeader({ position = "top" }: { position?: "top" | "bottom" }
       }
     >
       <span className="marketing__omni-label">This is a tool by:</span>
-      <a
-        className="marketing__omni-link"
-        href="https://burnes.northeastern.edu"
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        <ArrowUpRight className="marketing__omni-arrow" />
-        <span>The Burnes Center for Social Change</span>
-        <span className="visually-hidden"> (opens in new tab)</span>
-      </a>
-      <a
-        className="marketing__omni-link"
-        href="https://www.rebootdemocracy.ai"
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        <ArrowUpRight className="marketing__omni-arrow" />
-        <span>Reboot Democracy</span>
-        <span className="visually-hidden"> (opens in new tab)</span>
-      </a>
-      <a
-        className="marketing__omni-link"
-        href="https://ai4impact.ai/"
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        <ArrowUpRight className="marketing__omni-arrow" />
-        <span>AI for Impact</span>
-        <span className="visually-hidden"> (opens in new tab)</span>
-      </a>
-      <a
-        className="marketing__omni-link"
-        href="https://thegovlab.org"
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        <ArrowUpRight className="marketing__omni-arrow" />
-        <span>The Gov Lab</span>
-        <span className="visually-hidden"> (opens in new tab)</span>
-      </a>
-      <a
-        className="marketing__omni-link"
-        href="https://communitycentered.ai/"
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        <ArrowUpRight className="marketing__omni-arrow" />
-        <span>Community-Centered AI</span>
-        <span className="visually-hidden"> (opens in new tab)</span>
-      </a>
+      {omniPartners.map((partner) => (
+        <a
+          key={partner.href}
+          className="marketing__omni-link"
+          href={partner.href}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          <ArrowUpRight className="marketing__omni-arrow" />
+          <span>{partner.label}</span>
+          <span className="visually-hidden"> (opens in new tab)</span>
+        </a>
+      ))}
     </aside>
   );
 }
