@@ -153,5 +153,18 @@ instance**. `grantwell-core` = neutral engine both sit on as config bundles. In 
 **Behavior-preserving:** provider defaults to `genericBranding`, so the running app is visually
 unchanged; env-shape change in A4 kept all 10 parsers working.
 
-**Next:** A5 (region sweep + shared runtime-config + response/CORS helper — Q2/Q3 riders), then A6
-(un-track `aws-exports.json`). Both backend — unverifiable at runtime here; higher care.
+- A5 (`f470841`) — region sweep: 33 pure-hardcoded `us-east-1` → `process.env.AWS_REGION || 'us-east-1'`
+  across 18 files (16 `.mjs` + 2 `.py`); CloudFront `deploymentUrl` now honors `DEPLOYMENT_URL` env
+  (per-env literals kept as last-resort fallback); exported shared `corsHeaders` + `jsonResponse`
+  from `grantwell-shared` (Q3 — *available* for adoption, NOT a blind mass-rewrite of the 26 inline
+  CORS blocks; those migrate incrementally per handler).
+- A6 (`f470841`+1) — un-tracked committed `aws-exports.json` (leaked staging pool/endpoints;
+  generated at deploy via `s3deploy.Source.jsonData` and at dev via the vite plugin, so removal is safe).
+
+**PHASE A COMPLETE.** Verified: infra `tsc` clean; full vite build green; all `.mjs` Node `--check`
+and both `.py` `py_compile` pass. Still NO runtime/deploy verification (no Docker locally) — the
+backend changes (A4/A5) are merge-ready but unproven at runtime until deployed to a test stack.
+
+**Next:** Phase B (freeze tooling + MA deliverable) or Phase D (deploy Retain + validate engine on a
+throwaway stack) — both need a Docker/CI path. Or the QB backlog (API-client wrapper, auth helper,
+big decompositions) which is verifiable locally.
