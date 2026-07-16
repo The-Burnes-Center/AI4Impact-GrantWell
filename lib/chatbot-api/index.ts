@@ -25,9 +25,12 @@ import { OpenSearchStack } from "./opensearch/opensearch";
 import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
-import { SUPPORTED_STATE_CODES } from "../shared/states";
+import { SUPPORTED_STATES } from "../shared/states";
 
-const SUPPORTED_STATES_ENV: string = JSON.stringify(SUPPORTED_STATE_CODES);
+// [{code,name}] so handlers get both membership checks and display names from one env var.
+const SUPPORTED_STATES_ENV: string = JSON.stringify(
+  SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
+);
 
 export interface ChatbotAPIProps {
   readonly authentication: AuthorizationStack;

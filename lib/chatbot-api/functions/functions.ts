@@ -24,9 +24,12 @@ import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
 import { knowledgeBaseIndexName } from "../../constants";
 import { NofoProcessingStateMachine } from "../step-functions/nofo-processing";
 import { DraftGenerationStateMachine } from "../step-functions/draft-generation";
-import { SUPPORTED_STATE_CODES } from "../../shared/states";
+import { SUPPORTED_STATES } from "../../shared/states";
 
-const SUPPORTED_STATES_ENV = JSON.stringify(SUPPORTED_STATE_CODES);
+// [{code,name}] so handlers get both membership checks and display names from one env var.
+const SUPPORTED_STATES_ENV = JSON.stringify(
+  SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
+);
 
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
@@ -1271,6 +1274,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           SONNET_MODEL_ID: sonnetDraftProfile.attrInferenceProfileArn,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.minutes(3),
         memorySize: 256,
