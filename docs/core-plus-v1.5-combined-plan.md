@@ -96,14 +96,23 @@ Do NOT mix into neutralization diffs. Each big decomposition is behavior-risk on
 and confirm no behavioral change before committing. Never bundle with a neutralization or feature change.
 
 ### Phase B — Freeze tooling + MA deliverable
-- B1 ✅ (config seam + freeze tooling): build-time branding seam (`config/instances/<id>.ts`,
-  vite `@active-instance` alias per `GRANTWELL_INSTANCE`, default neutral); `genericBranding` moved
-  out of core into `config/instances/generic.ts`; residual identity (OmniHeader strip, AboutPanel
-  copy) routed through branding; `scripts/freeze.sh` snapshots engine@HEAD → `grantwell-<instance>/`
-  (`core/` + `config/` + `VERSION` + `docs/HANDOFF.md`). Verified: neutral bundle = 0 identity hits,
-  generic = all identity present; frozen core builds both ways green. **Still TODO in B1: tag engine
-  `v0.1.0`** (freeze currently stamps from `git describe`).
-- B2: build `grantwell-ma` (freeze core + MA `config/`: branding, Cognito, account).
+- B1 ✅ **COMPLETE** — config seam (both halves) + freeze tooling + tag:
+  - **Frontend branding:** `config/instances/<id>.ts`, vite `@active-instance` alias per
+    `GRANTWELL_INSTANCE` (default neutral); `genericBranding` moved out of core; residual identity
+    (OmniHeader strip, AboutPanel copy) routed through branding.
+  - **Backend/infra identity:** `lib/shared/instance-infra.ts` (`InstanceInfra` + `INSTANCE_INFRA`
+    registry, keyed by `GRANTWELL_INSTANCE`); `constants.ts` getters + `bin` prefer it, else fall
+    back to the existing `ENVIRONMENT` switch **unchanged** (verified byte-identical across all 4
+    environments). Registry empty until B2 migrates MA/generic.
+  - **Freeze:** `scripts/freeze.sh` snapshots engine@tag → `grantwell-<instance>/` (`core/` +
+    `config/` + `VERSION` + `docs/HANDOFF.md`), warns on missing infra entry. Engine tagged
+    **`v0.1.0`**; `VERSION` stamps `core v0.1.0`.
+  - Verified: neutral bundle = 0 identity hits, generic = full identity; frozen core builds both
+    ways green; root + app `tsc` clean.
+- B2: build `grantwell-ma` — freeze core + MA config: add `generic.ts`→`ma.ts` branding under
+  `config/instances/`, add MA's `INSTANCE_INFRA` entry (real stack/Cognito/KB names + account), run
+  `scripts/freeze.sh ma`. **Needs real MA values** (branding assets, Cognito domain/pool, account
+  976046823671, prod stack `gw-stack-prod` / KB index names).
 - B3: deploy MA deliverable to a **new** stack `grantwell-ma-staging` (distinct KB index) — never
   onto live stacks. Verify parity vs current staging-MA.
 - B4: deploy a throwaway demo-state config → prove branding fully swaps. Write handoff docs.
@@ -171,13 +180,14 @@ unchanged; env-shape change in A4 kept all 10 parsers working.
 and both `.py` `py_compile` pass. Still NO runtime/deploy verification (no Docker locally) — the
 backend changes (A4/A5) are merge-ready but unproven at runtime until deployed to a test stack.
 
-**B1 DONE (config seam + freeze tooling)** — commit `0c0bfe8` (seam) + freeze-script follow-up. The
-core↔config boundary invariant is now *actually true* for the frontend: neutral bundle carries zero
-instance identity; identity comes only from `config/`. `scripts/freeze.sh` produces the frozen
-deliverable and was proven end-to-end (frozen core builds neutral clean + generic branded). Gaps
-still open in B1: (a) tag the engine `v0.1.0` so VERSION stamps a real release, not a describe;
-(b) backend/infra identity (Cognito, account, stack name) is not yet in `config/` — only branding is.
+**B1 COMPLETE** — commits `0c0bfe8` (frontend seam), `acdc6e9` (backend seam), `540a737` (freeze
+both halves), tag `v0.1.0`. The core↔config boundary invariant is now true for BOTH frontend
+(neutral bundle = zero instance identity) and backend (infra names come from `INSTANCE_INFRA` when
+`GRANTWELL_INSTANCE` is set, else the unchanged `ENVIRONMENT` switch — verified byte-identical for
+prod/staging/grantwell-staging/dev). `scripts/freeze.sh` proven end-to-end; engine tagged `v0.1.0`.
 
-**Next:** B2 needs an MA `config/` (branding + Cognito/account) — blocked on real MA values + the
-backend config split. B3/B4 need a Docker/CI deploy path. Locally-doable now: tag `v0.1.0`; extend
-the seam to backend identity; or the QB backlog.
+**Next:** B2 — assemble the MA deliverable. Needs real MA values: branding (`config/instances/ma.ts`
++ MA logo/color assets) and infra (`INSTANCE_INFRA["ma"]`: `gw-stack-prod`, MA Cognito domain/pool,
+KB index names, account `976046823671`). Then `scripts/freeze.sh ma`. B3/B4 (deploy to a NEW
+`grantwell-ma-staging`, parity check) still need a Docker/CI path. The migration of MA/generic onto
+the config seam is the last un-proven piece before the two-branch retirement (Phase C).
