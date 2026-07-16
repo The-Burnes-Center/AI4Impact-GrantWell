@@ -59,13 +59,20 @@ mkdir -p "$OUT_DIR/core"
 # cruft (dist, node_modules, cdk.out, aws-exports.json are all already gitignored/untracked).
 git archive --format=tar HEAD | tar -x -C "$OUT_DIR/core"
 
-# The frozen core builds this instance by default — bake the selection into an .env the app reads,
-# so a state's build/deploy needs no extra flag. (vite honors GRANTWELL_INSTANCE; see vite.config.ts.)
-# The instance branding the build actually reads lives in core/.../config/instances/<instance>.ts;
-# config/instance.ts here is a top-level pointer/copy for the owner to find and edit easily.
+# GRANTWELL_INSTANCE selects both halves of the config seam: frontend branding
+# (core/.../config/instances/<instance>.ts, read by vite) and backend/infra identity
+# (core/lib/shared/instance-infra.ts INSTANCE_INFRA registry, read by constants.ts + bin). The
+# top-level config/ here holds owner-facing copies/pointers; the files the build reads live in core/.
 mkdir -p "$OUT_DIR/config"
 cp "$INSTANCE_FILE" "$OUT_DIR/config/instance.ts"
 printf 'GRANTWELL_INSTANCE=%s\n' "$INSTANCE" > "$OUT_DIR/config/instance.env"
+
+# Warn if this instance has no backend infra entry yet — its stack/cognito/kb names will fall back
+# to the ENVIRONMENT switch, which is NOT what a config-driven deliverable wants.
+if ! grep -q "\"${INSTANCE}\"" core/lib/shared/instance-infra.ts 2>/dev/null; then
+  echo "  note: instance '${INSTANCE}' has no INSTANCE_INFRA entry — add one in" >&2
+  echo "        core/lib/shared/instance-infra.ts before deploying (see docs/HANDOFF.md)." >&2
+fi
 
 cat > "$OUT_DIR/VERSION" <<EOF
 core ${VERSION_TAG}
@@ -82,22 +89,28 @@ This repo is a frozen, self-contained copy of GrantWell you own and run.
 
 - \`core/\`   the neutral engine, frozen at \`${VERSION_TAG}\` (commit \`${COMMIT}\`). Auditable and
              editable — but edits make future core updates a merge instead of a folder swap.
-- \`config/\` everything specific to this deployment. \`instance.ts\` is your branding; the engine
-             reads it via the \`GRANTWELL_INSTANCE=${INSTANCE}\` selection in \`instance.env\`.
+- \`config/\` everything specific to this deployment, selected by \`GRANTWELL_INSTANCE=${INSTANCE}\`
+             (\`instance.env\`). Two halves, both read from \`core/\`:
+             **branding** — \`core/lib/user-interface/app/config/instances/${INSTANCE}.ts\`
+             **infra identity** — \`core/lib/shared/instance-infra.ts\` (stack/Cognito/KB names, AWS acct)
 - \`VERSION\` the core version this deliverable was cut from.
 
 ## Configure
-Your branding is \`core/lib/user-interface/app/config/instances/${INSTANCE}.ts\` (name, colors, logo,
-footer, analytics); \`config/instance.ts\` at the top level is a copy of it for convenience — edit the
-one under \`core/\`, which the build reads. To change AWS identity, edit \`core/lib/constants.ts\` /
-stack env as documented in \`core/README.md\`.
+1. **Branding:** edit \`core/lib/user-interface/app/config/instances/${INSTANCE}.ts\` (name, colors,
+   logo, footer, analytics). \`config/instance.ts\` here is a convenience copy — the one under
+   \`core/\` is what the build reads.
+2. **Infra identity:** add your entry to \`INSTANCE_INFRA\` in \`core/lib/shared/instance-infra.ts\`
+   keyed \`"${INSTANCE}"\` — \`stackName\`, \`cognitoDomainName\`, \`knowledgeBaseIndexName\`, optional
+   \`deploymentUrl\` and \`aws: { account, region }\`. Without it, names fall back to the engine's
+   ENVIRONMENT defaults, which you do not want.
 
 ## Build & deploy
-The engine builds this instance by default. From \`core/\`:
+Set \`GRANTWELL_INSTANCE\` for BOTH the frontend build and the cdk deploy so each half of the seam
+activates. From \`core/\`:
 
     npm install
     (cd lib/user-interface/app && npm install && GRANTWELL_INSTANCE=${INSTANCE} npm run build)
-    npx cdk deploy
+    GRANTWELL_INSTANCE=${INSTANCE} npx cdk deploy
 
 ## Take a core update
 Ask Burnes for a newer core version, then:
