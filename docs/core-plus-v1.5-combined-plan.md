@@ -109,10 +109,17 @@ and confirm no behavioral change before committing. Never bundle with a neutrali
     **`v0.1.0`**; `VERSION` stamps `core v0.1.0`.
   - Verified: neutral bundle = 0 identity hits, generic = full identity; frozen core builds both
     ways green; root + app `tsc` clean.
-- B2: build `grantwell-ma` — freeze core + MA config: add `generic.ts`→`ma.ts` branding under
-  `config/instances/`, add MA's `INSTANCE_INFRA` entry (real stack/Cognito/KB names + account), run
-  `scripts/freeze.sh ma`. **Needs real MA values** (branding assets, Cognito domain/pool, account
-  976046823671, prod stack `gw-stack-prod` / KB index names).
+- **MA model (decided):** this engine repo stays neutral + `generic` only — MA is NOT a committed
+  instance here. MA ships as a **separate repo** `grantwell-ma` (the frozen deliverable), which
+  carries its own **Mayflower chrome** as UI code (kept out of core). Enabling scaffolding is DONE:
+  - swappable chrome via `@chrome` alias (default neutral core barrel; `GRANTWELL_CHROME` overrides);
+  - `config/templates/ma/` — MA branding (GA `G-DY905CMNJN`), infra snippet (`gw-stack-prod`,
+    `gw-auth-prod`, `knowledge-base-index-prod`, acct `976046823671`, all from `main`), chrome slot;
+  - `scripts/freeze.sh --template ma` materializes it into the frozen core + wires `GRANTWELL_CHROME`.
+- B2 remaining (deliverable-side, in the `grantwell-ma` repo — not this branch): **port MA's
+  Mayflower header/footer/banner** from `main` into `config/ma-chrome/index.ts`; add MA's
+  `INSTANCE_INFRA["ma"]` entry from the snippet; swap in real MA logo/color assets. Then it builds +
+  deploys to the live MA stack (same logical IDs).
 - B3: deploy MA deliverable to a **new** stack `grantwell-ma-staging` (distinct KB index) — never
   onto live stacks. Verify parity vs current staging-MA.
 - B4: deploy a throwaway demo-state config → prove branding fully swaps. Write handoff docs.
@@ -186,8 +193,11 @@ both halves), tag `v0.1.0`. The core↔config boundary invariant is now true for
 `GRANTWELL_INSTANCE` is set, else the unchanged `ENVIRONMENT` switch — verified byte-identical for
 prod/staging/grantwell-staging/dev). `scripts/freeze.sh` proven end-to-end; engine tagged `v0.1.0`.
 
-**Next:** B2 — assemble the MA deliverable. Needs real MA values: branding (`config/instances/ma.ts`
-+ MA logo/color assets) and infra (`INSTANCE_INFRA["ma"]`: `gw-stack-prod`, MA Cognito domain/pool,
-KB index names, account `976046823671`). Then `scripts/freeze.sh ma`. B3/B4 (deploy to a NEW
-`grantwell-ma-staging`, parity check) still need a Docker/CI path. The migration of MA/generic onto
-the config seam is the last un-proven piece before the two-branch retirement (Phase C).
+**MA scaffolding DONE** — commits `a569ec0` (swappable chrome) + `26638d7` (templates + freeze
+`--template`). MA is a **separate repo** produced by `scripts/freeze.sh --template ma`; this engine
+stays neutral + generic. `grantwell-ma`'s remaining work (port Mayflower chrome from `main`, paste
+`INSTANCE_INFRA["ma"]`, real assets) is deliverable-side, not on this branch.
+
+**Next:** run `scripts/freeze.sh --template ma ../grantwell-ma` when ready to create the MA repo, then
+do the Mayflower port there. B3/B4 (deploy to a NEW `grantwell-ma-staging`, parity check) still need
+a Docker/CI path. Two-branch retirement (Phase C) follows once MA is proven on the config seam.
