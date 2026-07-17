@@ -5,7 +5,8 @@ export type DigestFrequency = "off" | "daily" | "weekly";
 
 export interface NotificationPrefs {
   frequency: DigestFrequency;
-  states: string[];
+  // Fixed to the user's assigned state; set server-side, not client-editable.
+  state: string;
   categories: string[];
   keywords: string[];
   last_sent: string | null;
@@ -31,7 +32,7 @@ export class NotificationsClient {
   }
 
   async updatePrefs(
-    prefs: Pick<NotificationPrefs, "frequency" | "states" | "categories" | "keywords">
+    prefs: Pick<NotificationPrefs, "frequency" | "categories" | "keywords">
   ): Promise<NotificationPrefs> {
     const token = await Utils.authenticate();
     const response = await fetch(`${this.API}/notification-prefs`, {
