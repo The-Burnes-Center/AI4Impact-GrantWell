@@ -5,9 +5,11 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
+import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import { stateNameFromCode } from "../../common/generated/states";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
+import "../../styles/dashboard.css";
 import "./profile.css";
 
 const FREQUENCIES: { value: DigestFrequency; label: string }[] = [
@@ -29,8 +31,38 @@ function sameSet(a: string[], b: string[]): boolean {
 export default function ProfilePage() {
   const apiClient = useApiClient();
   const navigate = useNavigate();
-  const { username, userState, roles, loading: identityLoading } = useAdminCheck();
+  const {
+    username,
+    userState,
+    roles,
+    isDeveloper,
+    loading: identityLoading,
+  } = useAdminCheck();
 
+  // Gated to Developers for now.
+  useEffect(() => {
+    if (!identityLoading && !isDeveloper) {
+      navigate("/home", { replace: true });
+    }
+  }, [identityLoading, isDeveloper, navigate]);
+
+  // useAdminCheck exposes cognito:username (a UUID here), not the email claim, so
+  // read the email attribute directly for display.
+  useEffect(() => {
+    let active = true;
+    Auth.currentAuthenticatedUser()
+      .then((user) => {
+        if (!active) return;
+        const payload = user?.signInUserSession?.idToken?.payload || {};
+        setEmail(String(payload.email || ""));
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -108,25 +140,46 @@ export default function ProfilePage() {
 
   const stateLabel = userState ? stateNameFromCode(userState) || userState : "—";
 
-  return (
-    <div className="profile-page">
-      <h1>Your profile</h1>
+  // Hold rendering until the role resolves; non-Developers are redirected above.
+  if (identityLoading || !isDeveloper) {
+    return <div className="loading">Loading...</div>;
+  }
 
-      <div className="profile-card-stack">
-        <Card header="Account">
-          {identityLoading ? (
-            <p>Loading…</p>
-          ) : (
-            <dl className="profile-identity">
-              <dt>Email</dt>
-              <dd>{username || "—"}</dd>
-              <dt>Role</dt>
-              <dd>{roles.length ? roles.join(", ") : "User"}</dd>
-              <dt>State</dt>
-              <dd>{stateLabel}</dd>
-            </dl>
-          )}
-        </Card>
+  return (
+    <div className="dashboard-shell">
+      <nav aria-label="Application navigation" className="dashboard-sidebar">
+        <UnifiedNavigation />
+      </nav>
+      <div className="dashboard-container dashboard-main-column">
+        <nav aria-label="Breadcrumb" className="breadcrumb">
+          <ol>
+            <li className="breadcrumb-item">
+              <button className="breadcrumb-link" onClick={() => navigate("/")}>
+                Home
+              </button>
+            </li>
+            <li className="breadcrumb-item" aria-current="page">
+              Profile
+            </li>
+          </ol>
+        </nav>
+
+        <div className="dashboard-main-content">
+          <div className="dashboard-header">
+            <h1>Your Profile</h1>
+          </div>
+
+          <div className="profile-card-stack">
+            <Card header="Account">
+              <dl className="profile-identity">
+                <dt>Email</dt>
+                <dd>{email || username || "—"}</dd>
+                <dt>Role</dt>
+                <dd>{roles.length ? roles.join(", ") : "User"}</dd>
+                <dt>State</dt>
+                <dd>{stateLabel}</dd>
+              </dl>
+            </Card>
 
         <Card header="Notification preferences">
           <p className="profile-hint">
@@ -214,7 +267,9 @@ export default function ProfilePage() {
           )}
         </Card>
 
-        <AccountActionsCard onSignedOut={() => navigate("/")} />
+            <AccountActionsCard onSignedOut={() => navigate("/")} />
+          </div>
+        </div>
       </div>
     </div>
   );

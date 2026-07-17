@@ -366,7 +366,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             {/* Admin Dashboard - only visible to admins */}
             {isAdmin && (
               <button
-                onClick={() => navigate("/admin/dashboard")}
+                onClick={() => navigate("/admin")}
                 aria-label="Admin Dashboard"
                 style={{
                   width: "100%",

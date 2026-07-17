@@ -114,7 +114,7 @@ const SignOutIcon = ({ className }: { className?: string }) => (
 
 export function AppNavbar() {
   const navigate = useNavigate();
-  const { isAdmin } = useAdminCheck();
+  const { isAdmin, isDeveloper } = useAdminCheck();
   const branding = useBranding();
 
   const handleSignOut = async () => {
@@ -177,11 +177,13 @@ export function AppNavbar() {
         <NavLink to="/chat/sessions" className={navLinkClass}>
           Chat Sessions
         </NavLink>
-        <NavLink to="/profile" className={navLinkClass}>
-          Profile
-        </NavLink>
+        {isDeveloper && (
+          <NavLink to="/profile" className={navLinkClass}>
+            Profile
+          </NavLink>
+        )}
         {isAdmin && (
-          <NavLink to="/admin/dashboard" className={navLinkClass}>
+          <NavLink to="/admin" className={navLinkClass}>
             Admin
           </NavLink>
         )}

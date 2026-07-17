@@ -1,6 +1,5 @@
 import React, { Suspense, useEffect, useRef } from "react";
 import {
-  Outlet,
   Route,
   Routes,
   Navigate,
@@ -38,7 +37,7 @@ function ScrollToTop(): null {
       const exactMatches: { [key: string]: string } = {
         "/": "Home",
         "/home": "Home",
-        "/admin/dashboard": "Admin Dashboard",
+        "/admin": "Admin Dashboard",
         "/profile": "Your Profile",
         "/chat/sessions": "Chat Sessions",
         "/document-editor": "Document Editor",
@@ -132,9 +131,11 @@ function AppContent() {
               element={<DocEditorSessionsPage />}
             />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/admin" element={<Outlet />}>
-              <Route path="dashboard" element={<Dashboard />} />
-            </Route>
+            <Route path="/admin" element={<Dashboard />} />
+            <Route
+              path="/admin/dashboard"
+              element={<Navigate to="/admin" replace />}
+            />
             <Route
               path="*"
               element={<Navigate to={`/home`} replace />}

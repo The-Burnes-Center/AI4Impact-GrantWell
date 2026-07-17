@@ -384,7 +384,7 @@ export default function HomePage() {
                   </span>
                 </p>
               </div>
-              <button className="admin-btn" onClick={() => navigate("/admin/dashboard")}>
+              <button className="admin-btn" onClick={() => navigate("/admin")}>
                 Go to Admin Dashboard
               </button>
             </div>
