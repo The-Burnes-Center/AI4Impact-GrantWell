@@ -9,6 +9,7 @@ import PaginationControls from "./components/PaginationControls";
 import FeatureRolloutsTab from "./components/FeatureRolloutsTab";
 import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
+import DigestPreviewTab from "./components/DigestPreviewTab";
 import {
   LuSearch, LuFilter, LuUpload, LuCheck, LuX,
   LuRefreshCw, LuDownload, LuInfo,
@@ -19,7 +20,7 @@ import type { RawNOFOData } from "../../common/types/document";
 import "../../styles/dashboard.css";
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "processing-review" | "feature-rollouts" | "user-management">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "processing-review" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
   const [pendingReviewCount, setPendingReviewCount] = useState(0);
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,6 +47,7 @@ const Dashboard: React.FC = () => {
   const processingReviewTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
+  const digestPreviewTabRef = useRef<HTMLButtonElement>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -139,6 +141,9 @@ const Dashboard: React.FC = () => {
           : []),
         ...(canManageUsers
           ? [{ key: "user-management" as const, ref: userManagementTabRef }]
+          : []),
+        ...(isDeveloper
+          ? [{ key: "digest-preview" as const, ref: digestPreviewTabRef }]
           : []),
       ];
       const currentIndex = tabs.findIndex((tab) => tab.key === activeTab);
@@ -403,6 +408,21 @@ const Dashboard: React.FC = () => {
                 User Management
               </button>
             )}
+            {isDeveloper && (
+              <button
+                id="dashboard-tab-digest-preview"
+                ref={digestPreviewTabRef}
+                className={`tab-button ${activeTab === "digest-preview" ? "active" : ""}`}
+                onClick={() => setActiveTab("digest-preview")}
+                onKeyDown={handleTabKeyDown}
+                role="tab"
+                aria-selected={activeTab === "digest-preview"}
+                aria-controls="dashboard-panel-digest-preview"
+                tabIndex={activeTab === "digest-preview" ? 0 : -1}
+              >
+                Digest Preview
+              </button>
+            )}
           </div>
 
           <div className="dashboard-content">
@@ -526,7 +546,7 @@ const Dashboard: React.FC = () => {
                   addNotification={addNotification}
                 />
               </div>
-            ) : (
+            ) : activeTab === "user-management" ? (
               <div
                 id="dashboard-panel-user-management"
                 role="tabpanel"
@@ -541,6 +561,15 @@ const Dashboard: React.FC = () => {
                   userState={userState}
                   currentUsername={username}
                 />
+              </div>
+            ) : (
+              <div
+                id="dashboard-panel-digest-preview"
+                role="tabpanel"
+                aria-labelledby="dashboard-tab-digest-preview"
+                tabIndex={0}
+              >
+                <DigestPreviewTab apiClient={apiClient} />
               </div>
             )}
           </div>

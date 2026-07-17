@@ -507,6 +507,20 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    // Developer-only: render the real digest template with sample data (no send).
+    // The function is defined in LambdaFunctionStack so it shares that stack's
+    // js-shared layer (avoids a cross-stack layer reference).
+    const notificationDigestPreviewIntegration = new HttpLambdaIntegration(
+      "NotificationDigestPreviewIntegration",
+      lambdaFunctions.notificationDigestPreviewFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/notification-digest/preview",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: notificationDigestPreviewIntegration,
+      authorizer: httpAuthorizer,
+    });
+
     // Admin API routes for NOFO processing review
     const nofoAdminAPIIntegration = new HttpLambdaIntegration(
       "NofoAdminAPIIntegration",

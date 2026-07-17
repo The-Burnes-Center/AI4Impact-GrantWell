@@ -81,6 +81,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
+  public readonly notificationDigestPreviewFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
   public readonly feedbackProxyFunction: lambda.Function;
   public readonly nofoSummaryUpdateFunction: lambda.Function;
@@ -1722,6 +1723,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         runtime: lambda.Runtime.NODEJS_20_X,
         code: lambda.Code.fromAsset(path.join(__dirname, "notifications/digest")),
         handler: "index.handler",
+        layers: [jsSharedLayer],
         environment: {
           USER_NOTIFICATION_PREFS_TABLE_NAME:
             props.userNotificationPrefsTable.tableName,
@@ -1751,6 +1753,26 @@ export class LambdaFunctionStack extends cdk.Stack {
     notificationDigestFunction.node.addDependency(notificationEmailIdentity);
 
     this.notificationDigestFunction = notificationDigestFunction;
+
+    // Developer-only digest preview: renders the real template (shared layer) with
+    // sample data, no send. Same stack as the layer to avoid a cross-stack reference.
+    const notificationDigestPreviewFunction = new lambda.Function(
+      scope,
+      "NotificationDigestPreviewFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "notifications/digest-preview")
+        ),
+        handler: "index.handler",
+        layers: [jsSharedLayer],
+        environment: {
+          DEPLOYMENT_URL: emailConfig.deploymentUrl,
+        },
+        timeout: cdk.Duration.seconds(15),
+      }
+    );
+    this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
 
     // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its
     // frequency so the same Lambda serves both cadences.

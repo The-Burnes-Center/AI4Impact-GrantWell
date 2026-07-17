@@ -45,4 +45,21 @@ export class NotificationsClient {
     }
     return response.json();
   }
+
+  // Developer-only: the real digest template rendered with sample data.
+  async getDigestPreview(
+    frequency: "daily" | "weekly"
+  ): Promise<{ subject: string; html: string; text: string }> {
+    const token = await Utils.authenticate();
+    const url = new URL(`${this.API}/notification-digest/preview`);
+    url.searchParams.append("frequency", frequency);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", Authorization: token },
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    return response.json();
+  }
 }
