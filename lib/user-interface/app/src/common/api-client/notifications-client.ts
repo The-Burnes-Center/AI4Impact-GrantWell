@@ -46,40 +46,17 @@ export class NotificationsClient {
     return response.json();
   }
 
+  // Developer-only: the real digest template rendered with sample data. Copy + branding come
+  // from the instance config (server-side), so this is a faithful, read-only preview.
   async getDigestPreview(
-    frequency: "daily" | "weekly",
-    overrides?: Partial<DigestConfig>
+    frequency: "daily" | "weekly"
   ): Promise<DigestPreviewResult> {
     const token = await Utils.authenticate();
     const url = new URL(`${this.API}/notification-digest/preview`);
     url.searchParams.append("frequency", frequency);
-    if (overrides) {
-      for (const [k, v] of Object.entries(overrides)) {
-        if (v) url.searchParams.append(k, v);
-      }
-    }
     const response = await fetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
-    });
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-    return response.json();
-  }
-
-  // Developer-only: persist the digest copy + branding the real emails use.
-  async saveDigestConfig(
-    frequency: "daily" | "weekly",
-    config: DigestConfig
-  ): Promise<DigestPreviewResult> {
-    const token = await Utils.authenticate();
-    const url = new URL(`${this.API}/notification-digest/preview`);
-    url.searchParams.append("frequency", frequency);
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", Authorization: token },
-      body: JSON.stringify(config),
     });
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
@@ -103,16 +80,6 @@ export class NotificationsClient {
   }
 }
 
-export interface DigestConfig {
-  subject: string;
-  intro: string;
-  footer: string;
-  appName: string;
-  brandColor: string;
-  logoUrl: string;
-}
-
 export interface DigestPreviewResult {
-  config: DigestConfig;
   rendered: { subject: string; html: string; text: string };
 }

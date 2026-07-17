@@ -1,22 +1,12 @@
 import { Branding } from "../../src/common/branding";
+import { genericBrandingData } from "./generic.branding";
 
 // The Burnes-owned multi-state product ("generic" instance). Moved out of core (branding.tsx)
 // so the core carries no instance identity. This IS the instance-specific value the picker
-// deployment ships with.
+// deployment ships with. Plain branding values come from generic.branding.ts (shared with the
+// backend digest at synth); the UI-only footer/omniPartners stay here.
 export const branding: Branding = {
-  appName: "GrantWell",
-  orgName: "Burnes Center for Social Change",
-  colors: {
-    primary: "#23776C",
-    primaryHover: "#195C53",
-    primaryActive: "#244140",
-    primaryLight: "#DFECE0",
-    accent: "#388557",
-    accentHover: "#32784E",
-  },
-  logo: "/images/marketing/grantwell-wordmark-dark.svg",
-  favicon: "/images/marketing/favicon.svg",
-  analyticsId: "G-K27MB9Y26C",
+  ...genericBrandingData,
   footer: {
     wordmark: "/images/marketing/grantwell-wordmark-footer.svg",
     madeBy: {

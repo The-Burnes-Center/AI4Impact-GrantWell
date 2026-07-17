@@ -7,6 +7,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
 import { stackName, emailConfig } from "../../constants";
+import { genericBrandingData } from "../../user-interface/app/config/instances/generic.branding";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -1716,6 +1717,16 @@ export class LambdaFunctionStack extends cdk.Stack {
       }
     );
 
+    // Digest branding is pulled from the same instance config the UI uses (single source),
+    // so the email matches the site. Logo is a relative asset path there; emails need an
+    // absolute URL, so resolve it against the deployment URL.
+    const digestBrandEnv = {
+      DIGEST_APP_NAME: genericBrandingData.appName,
+      DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
+      DIGEST_LOGO_URL: `${emailConfig.deploymentUrl}${genericBrandingData.logo}`,
+      DIGEST_ORG_NAME: genericBrandingData.orgName,
+    };
+
     const notificationDigestFunction = new lambda.Function(
       scope,
       "NotificationDigestFunction",
@@ -1728,10 +1739,10 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_NOTIFICATION_PREFS_TABLE_NAME:
             props.userNotificationPrefsTable.tableName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           USER_POOL_ID: props.userPool.userPoolId,
           NOTIFICATION_SENDER: notificationSender,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
+          ...digestBrandEnv,
         },
         timeout: cdk.Duration.minutes(15),
       }
@@ -1739,7 +1750,6 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     props.userNotificationPrefsTable.grantReadWriteData(notificationDigestFunction);
     props.nofoMetadataTable.grantReadData(notificationDigestFunction);
-    props.featureRolloutTable.grantReadData(notificationDigestFunction);
     props.userPool.grant(notificationDigestFunction, "cognito-idp:AdminGetUser");
     notificationDigestFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -1770,13 +1780,12 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [jsSharedLayer],
         environment: {
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
-          FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           NOTIFICATION_SENDER: notificationSender,
+          ...digestBrandEnv,
         },
         timeout: cdk.Duration.seconds(15),
       }
     );
-    props.featureRolloutTable.grantReadWriteData(notificationDigestPreviewFunction);
     // Test-send uses the same verified sender as the digest.
     notificationDigestPreviewFunction.addToRolePolicy(
       new iam.PolicyStatement({
