@@ -1,23 +1,20 @@
-.profile-page {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: var(--gw-space-lg, 24px) var(--gw-space-md, 16px);
-  display: flex;
-  flex-direction: column;
-  gap: var(--gw-space-lg, 24px);
-}
-
-.profile-page h1 {
-  font-size: var(--gw-font-size-3xl, 30px);
-  font-weight: var(--gw-font-weight-bold, 700);
-  color: var(--gw-color-text, #333);
-  margin: 0;
-}
-
 .profile-card-stack {
   display: flex;
   flex-direction: column;
   gap: var(--gw-space-lg, 24px);
+}
+
+/* The shared .table-container carries margin-bottom:80px for standalone list pages;
+   inside the profile stack the flex gap handles spacing, so cancel it to keep the
+   rhythm even between sections. */
+.profile-card-stack .table-container {
+  margin-bottom: 0;
+}
+
+/* Activity section header reuses .dashboard-header (space-between); with a single
+   title and no action buttons that leaves it left-aligned, which is what we want. */
+.profile-card-stack .dashboard-content .dashboard-header {
+  margin-top: 0;
 }
 
 /* Account identity list */
@@ -131,3 +128,4 @@
   flex-wrap: wrap;
   margin-top: var(--gw-space-md, 16px);
 }
+

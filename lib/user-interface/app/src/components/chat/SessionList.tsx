@@ -168,7 +168,12 @@ export default function Sessions(props: SessionsProps) {
 
       {/* Header section */}
       <div className="dashboard-header">
-        <div />
+        <div>
+          <h1>Sessions</h1>
+          <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+            Manage and access your previous chat conversations
+          </p>
+        </div>
         <div className="dashboard-actions">
           <button
             className="action-button add-button"

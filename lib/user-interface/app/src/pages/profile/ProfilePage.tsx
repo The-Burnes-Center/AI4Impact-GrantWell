@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
+import { LuCalendar } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import Card from "../../components/ui/Card";
@@ -9,8 +10,41 @@ import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import { stateNameFromCode } from "../../common/generated/states";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
+import type { DocumentDraft } from "../../common/api-client/drafts-client";
+import type { SessionListItem } from "../../common/api-client/sessions-client";
+import {
+  getRecentlyViewed,
+  type RecentlyViewedNOFO,
+} from "../../common/helpers/recently-viewed-nofos";
 import "../../styles/dashboard.css";
 import "./profile.css";
+
+const ACTIVITY_LIMIT = 5;
+
+// Matches the link-styled title button used in the Drafts/Sessions tables.
+const titleLinkStyle: React.CSSProperties = {
+  color: "#195C53",
+  background: "none",
+  border: "none",
+  padding: 0,
+  cursor: "pointer",
+  textAlign: "left",
+  fontSize: "14px",
+  textDecoration: "underline",
+};
+
+function formatWhen(value?: string): string {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return value;
+  return d.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 
 const FREQUENCIES: { value: DigestFrequency; label: string }[] = [
   { value: "off", label: "Off" },
@@ -62,11 +96,47 @@ export default function ProfilePage() {
     };
   }, []);
 
+  // Recently-viewed is localStorage-backed and synchronous.
+  useEffect(() => {
+    setRecentNofos(getRecentlyViewed());
+  }, []);
+
+  // Drafts + chat sessions are keyed by cognito:username (the UUID from useAdminCheck).
+  useEffect(() => {
+    if (!username) return;
+    let active = true;
+    (async () => {
+      try {
+        const [d, s] = await Promise.all([
+          apiClient.drafts.getDrafts(username, null, true),
+          apiClient.sessions.getSessions(username, null, true),
+        ]);
+        if (!active) return;
+        setDrafts(
+          [...d].sort((a, b) => (b.lastModified || "").localeCompare(a.lastModified || ""))
+        );
+        setSessions(
+          [...s].sort((a, b) => (b.time_stamp || "").localeCompare(a.time_stamp || ""))
+        );
+      } catch {
+        // Activity summaries are best-effort; leave them empty on failure.
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [apiClient, username]);
+
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+
+  // "My activity" — read-only summaries linking to each item's detail page.
+  const [drafts, setDrafts] = useState<DocumentDraft[]>([]);
+  const [sessions, setSessions] = useState<SessionListItem[]>([]);
+  const [recentNofos, setRecentNofos] = useState<RecentlyViewedNOFO[]>([]);
 
   // Baseline = last persisted prefs, so we can detect unsaved changes.
   const [baseline, setBaseline] = useState({
@@ -146,13 +216,13 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="dashboard-shell">
-      <nav aria-label="Application navigation" className="dashboard-sidebar">
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
         <UnifiedNavigation />
       </nav>
-      <div className="dashboard-container dashboard-main-column">
+      <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <nav aria-label="Breadcrumb" className="breadcrumb">
-          <ol>
+          <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex" }}>
             <li className="breadcrumb-item">
               <button className="breadcrumb-link" onClick={() => navigate("/")}>
                 Home
@@ -166,7 +236,12 @@ export default function ProfilePage() {
 
         <div className="dashboard-main-content">
           <div className="dashboard-header">
-            <h1>Your Profile</h1>
+            <div>
+              <h1>Your Profile</h1>
+              <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+                Your account, notifications, and recent activity
+              </p>
+            </div>
           </div>
 
           <div className="profile-card-stack">
@@ -267,11 +342,130 @@ export default function ProfilePage() {
           )}
         </Card>
 
+            <ActivityTable
+              title="My drafts"
+              emptyText="No drafts"
+              timeHeader="Last modified"
+              viewAll={drafts.length > ACTIVITY_LIMIT ? {
+                label: `View all ${drafts.length} drafts`,
+                onClick: () => navigate("/document-editor/drafts"),
+              } : undefined}
+              rows={drafts.slice(0, ACTIVITY_LIMIT).map((d) => ({
+                key: d.sessionId,
+                title: d.title || "Untitled draft",
+                when: d.lastModified,
+                onOpen: () =>
+                  navigate(
+                    `/document-editor/${d.sessionId}?nofo=${encodeURIComponent(
+                      d.documentIdentifier || ""
+                    )}`
+                  ),
+              }))}
+            />
+
+            <ActivityTable
+              title="My chat sessions"
+              emptyText="No sessions"
+              timeHeader="Last used"
+              viewAll={sessions.length > ACTIVITY_LIMIT ? {
+                label: `View all ${sessions.length} sessions`,
+                onClick: () => navigate("/chat/sessions"),
+              } : undefined}
+              rows={sessions.slice(0, ACTIVITY_LIMIT).map((s) => ({
+                key: s.session_id,
+                title: s.title || "Untitled session",
+                when: s.time_stamp,
+                onOpen: () => navigate(`/chat/${s.session_id}`),
+              }))}
+            />
+
+            <ActivityTable
+              title="Recently viewed grants"
+              emptyText="No recently viewed grants"
+              timeHeader="Viewed"
+              rows={recentNofos.slice(0, ACTIVITY_LIMIT).map((n) => ({
+                key: n.value,
+                title: n.label,
+                when: n.lastViewed,
+                onOpen: () =>
+                  navigate(`/requirements/${encodeURIComponent(n.value)}`),
+              }))}
+            />
+
             <AccountActionsCard onSignedOut={() => navigate("/")} />
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+interface ActivityRow {
+  key: string;
+  title: string;
+  when?: string;
+  onOpen: () => void;
+}
+
+function ActivityTable({
+  title,
+  emptyText,
+  timeHeader,
+  rows,
+  viewAll,
+}: {
+  title: string;
+  emptyText: string;
+  timeHeader: string;
+  rows: ActivityRow[];
+  viewAll?: { label: string; onClick: () => void };
+}) {
+  const gridCols = "2.5fr 1fr";
+  return (
+    <Card header={title}>
+      {rows.length === 0 ? (
+        <div className="no-data">
+          <div style={{ fontSize: "18px", fontWeight: 500, marginBottom: "8px" }}>
+            {emptyText}
+          </div>
+        </div>
+      ) : (
+        <div className="table-container" style={{ marginBottom: 0 }}>
+          <div className="table-header" style={{ gridTemplateColumns: gridCols }}>
+            <div className="header-cell">Title</div>
+            <div className="header-cell">{timeHeader}</div>
+          </div>
+          <div className="table-body">
+            {rows.map((r) => (
+              <div key={r.key} className="table-row" style={{ gridTemplateColumns: gridCols }}>
+                <div className="row-cell">
+                  <button type="button" onClick={r.onOpen} style={titleLinkStyle}>
+                    {r.title}
+                  </button>
+                </div>
+                <div className="row-cell" style={{ justifyContent: "flex-end" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                    <LuCalendar size={16} aria-hidden="true" />
+                    <time dateTime={r.when}>{formatWhen(r.when)}</time>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {viewAll && (
+        <button
+          type="button"
+          className="action-button refresh-button"
+          onClick={viewAll.onClick}
+          style={{ alignSelf: "flex-start", marginTop: rows.length ? "12px" : 0 }}
+        >
+          {viewAll.label}
+        </button>
+      )}
+    </Card>
   );
 }
 

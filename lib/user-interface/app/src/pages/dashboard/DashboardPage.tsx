@@ -276,11 +276,11 @@ const Dashboard: React.FC = () => {
         : "Developer user management tab selected";
 
   return (
-    <div className="dashboard-shell">
-      <nav aria-label="Application navigation" className="dashboard-sidebar">
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
         <UnifiedNavigation />
       </nav>
-      <div className="dashboard-container dashboard-main-column">
+      <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <nav aria-label="Breadcrumb" className="breadcrumb">
           <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex" }}>
             <li className="breadcrumb-item">
@@ -294,29 +294,36 @@ const Dashboard: React.FC = () => {
 
         <div className="dashboard-main-content">
           <div className="dashboard-header">
-            <h1>Admin Dashboard</h1>
-            <button
-              className="action-button refresh-button"
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              aria-label="Refresh dashboard"
-              aria-busy={isRefreshing}
-            >
-              {isRefreshing ? (
-                <span className="refresh-loading">Refreshing...</span>
-              ) : (
-                <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
-              )}
-            </button>
-            {hasProcessingNofos && (
+            <div>
+              <h1>Admin Dashboard</h1>
+              <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+                Manage grants, users, and processing across your instance
+              </p>
+            </div>
+            <div className="dashboard-actions">
               <button
                 className="action-button refresh-button"
-                onClick={() => setAutoRefreshPaused((prev) => !prev)}
-                aria-pressed={autoRefreshPaused}
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                aria-label="Refresh dashboard"
+                aria-busy={isRefreshing}
               >
-                {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
+                {isRefreshing ? (
+                  <span className="refresh-loading">Refreshing...</span>
+                ) : (
+                  <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
+                )}
               </button>
-            )}
+              {hasProcessingNofos && (
+                <button
+                  className="action-button refresh-button"
+                  onClick={() => setAutoRefreshPaused((prev) => !prev)}
+                  aria-pressed={autoRefreshPaused}
+                >
+                  {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
+                </button>
+              )}
+            </div>
           </div>
 
           {showGrantBanner && (
