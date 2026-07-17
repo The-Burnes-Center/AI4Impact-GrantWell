@@ -516,7 +516,7 @@ export class ChatBotApi extends Construct {
     );
     restBackend.restAPI.addRoutes({
       path: "/notification-digest/preview",
-      methods: [apigwv2.HttpMethod.GET],
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT, apigwv2.HttpMethod.POST],
       integration: notificationDigestPreviewIntegration,
       authorizer: httpAuthorizer,
     });

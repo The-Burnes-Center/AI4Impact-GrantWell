@@ -1728,6 +1728,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_NOTIFICATION_PREFS_TABLE_NAME:
             props.userNotificationPrefsTable.tableName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           USER_POOL_ID: props.userPool.userPoolId,
           NOTIFICATION_SENDER: notificationSender,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
@@ -1738,6 +1739,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     props.userNotificationPrefsTable.grantReadWriteData(notificationDigestFunction);
     props.nofoMetadataTable.grantReadData(notificationDigestFunction);
+    props.featureRolloutTable.grantReadData(notificationDigestFunction);
     props.userPool.grant(notificationDigestFunction, "cognito-idp:AdminGetUser");
     notificationDigestFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -1768,10 +1770,25 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [jsSharedLayer],
         environment: {
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
+          FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
+          NOTIFICATION_SENDER: notificationSender,
         },
         timeout: cdk.Duration.seconds(15),
       }
     );
+    props.featureRolloutTable.grantReadWriteData(notificationDigestPreviewFunction);
+    // Test-send uses the same verified sender as the digest.
+    notificationDigestPreviewFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["ses:SendEmail"],
+        resources: ["*"],
+        conditions: {
+          StringEquals: { "ses:FromAddress": notificationSender },
+        },
+      })
+    );
+    notificationDigestPreviewFunction.node.addDependency(notificationEmailIdentity);
     this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
 
     // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its

@@ -97,35 +97,25 @@ const getCustomDomainConfig = () => {
 
 export const customDomainConfig = getCustomDomainConfig();
 
-// Environment-specific email configuration for user invitations
 const getEmailConfig = () => {
+  const stripTrailingSlash = (url: string) => url.replace(/\/+$/, "");
+
   const customDomain = customDomainConfig.domain;
-  
   if (customDomain) {
-    return {
-      deploymentUrl: `https://${customDomain}/`
-    };
+    return { deploymentUrl: stripTrailingSlash(`https://${customDomain}`) };
   }
-  
-  // Fallback to the deployment's CloudFront domain. Prefer DEPLOYMENT_URL from the environment
-  // (set at deploy time); the per-environment literals remain only as a last-resort default so
-  // existing MA/generic deploys are unchanged. A neutral core sets DEPLOYMENT_URL via config.
+
   const deploymentUrl = process.env.DEPLOYMENT_URL;
   if (deploymentUrl) {
-    return { deploymentUrl };
+    return { deploymentUrl: stripTrailingSlash(deploymentUrl) };
   }
   if (instanceInfra?.deploymentUrl) {
-    return { deploymentUrl: instanceInfra.deploymentUrl };
+    return { deploymentUrl: stripTrailingSlash(instanceInfra.deploymentUrl) };
   }
   if (ENVIRONMENT === 'production') {
-    return {
-      deploymentUrl: 'https://d1mu5xcqb0ac30.cloudfront.net/'
-    };
-  } else {
-    return {
-      deploymentUrl: 'https://d2zwf0gxpj9c8c.cloudfront.net/'
-    };
+    return { deploymentUrl: 'https://d1mu5xcqb0ac30.cloudfront.net' };
   }
+  return { deploymentUrl: 'https://d2zwf0gxpj9c8c.cloudfront.net' };
 };
 
 export const emailConfig = getEmailConfig();

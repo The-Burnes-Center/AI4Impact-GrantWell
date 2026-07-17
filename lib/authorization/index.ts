@@ -34,7 +34,7 @@ export class AuthorizationStack extends Construct {
           'We\'re excited to share that the custom deployment link for the GrantWell tool is now live and ready for testing. All upcoming updates and improvements will be applied to this version moving forward.<br><br>' +
           'Please note that the tool is still under active development, so you may encounter occasional issues during use. Your feedback will be invaluable in helping us refine and enhance the overall experience.<br><br>' +
           '<strong>Access the Application:</strong><br>' +
-          '<a href="' + emailConfig.deploymentUrl + '">GrantWell Application</a><br><br>' +
+          '<a href="' + emailConfig.deploymentUrl + '/">GrantWell Application</a><br><br>' +
           '<strong>Login Credentials:</strong><br>' +
           'Username: {username}<br>' +
           'Temporary Password: {####}<br><br>' +

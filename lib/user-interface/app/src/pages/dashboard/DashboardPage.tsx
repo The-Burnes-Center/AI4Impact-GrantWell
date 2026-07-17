@@ -569,7 +569,7 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-digest-preview"
                 tabIndex={0}
               >
-                <DigestPreviewTab apiClient={apiClient} />
+                <DigestPreviewTab apiClient={apiClient} addNotification={addNotification} />
               </div>
             )}
           </div>
