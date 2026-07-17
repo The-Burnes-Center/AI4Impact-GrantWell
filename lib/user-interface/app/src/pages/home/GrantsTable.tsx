@@ -54,7 +54,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   onClearSearch,
   preferAISearch = false,
 }) => {
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("active");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -126,11 +126,12 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     setSortDirection("asc");
   };
 
+  // "active" is the default status, so it's not a user-applied filter for clear-button purposes.
   const hasActiveFilters =
-    statusFilter !== "all" || categoryFilter !== "all" || grantTypeFilter !== "all";
+    statusFilter !== "active" || categoryFilter !== "all" || grantTypeFilter !== "all";
 
   const clearFilters = () => {
-    setStatusFilter("all");
+    setStatusFilter("active");
     setCategoryFilter("all");
     setGrantTypeFilter("all");
   };
