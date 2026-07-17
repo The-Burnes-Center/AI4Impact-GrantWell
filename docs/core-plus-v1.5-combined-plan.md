@@ -18,6 +18,12 @@ from-scratch repo would delete-and-recreate stateful resources). ~3–5 days vs 
 ## Target structure
 
 ### Engine — this repo, neutralized (`grantwell-core`, tag-versioned)
+Repo stays named `AI4Impact-GrantWell` (no rename); "grantwell-core" names its *role*, the neutral
+engine. **Generic is NOT a snapshot** — it's this repo run with `GRANTWELL_INSTANCE=generic`,
+deployed straight to `grantwell-staging`. Only states that own their deployment (MA, future states)
+get a `freeze.sh` snapshot. Snapshotting generic would just mirror this repo and reintroduce
+two-copy drift.
+
 Same layout as today; the change is *inside files* + one config seam, minus hardcoded identity.
 ```
 lib/shared/config.ts        ★ InstanceConfig / BrandingConfig — the ONLY core↔config surface (DONE)
@@ -207,8 +213,17 @@ stays neutral + generic. Everything is proven by build/tsc/synth locally:
 - B2: turnkey MA deliverable with Mayflower chrome; B3: isolated `ma-staging` target + CI workflow +
   parity checklist; B4: demo state proves full swap with zero cross-instance leakage.
 
-**What remains (needs AWS/CI — not local):**
-1. `scripts/freeze.sh --template ma ../grantwell-ma`, push it as its own repo (I don't touch remotes).
+**Delivery model reaffirmed (2026-07-16):** MA ships as a **snapshot** (own standalone repo from
+`freeze.sh`), NOT a git fork of the engine. A fork was weighed and rejected: snapshot gives MA an
+owned, pinned, auditable `core/` (no `upstream` remote; core updates arrive via re-freeze), and the
+tooling for it is already built and verified. So `grantwell-ma` is a plain repo, not a fork.
+
+**What remains:**
+0. **Push tag `v0.1.0`** — `git push origin v0.1.0`. Local-only today; MA's `core/` must pin a tagged
+   baseline, not a bare SHA. *(Blocked in the agent env: `origin` is HTTPS with no stored creds and
+   `gh` isn't installed — human must push.)*
+1. `scripts/freeze.sh --template ma ../grantwell-ma`; verify green (`npm i --legacy-peer-deps` for
+   Mayflower peer deps), then `git init` + push as its own **standalone** repo (no fork/upstream).
 2. Run `deploy-ma-staging.yml` → walk `docs/B3-PARITY.md`. Needs `SERVICE_ROLE_ARN_MA_STAGING` +
    a bootstrapped account. *(This is the "prove on real AWS" step Phase A/B never had — no blocker
    now beyond creds; GitHub runners handle Docker bundling.)*
