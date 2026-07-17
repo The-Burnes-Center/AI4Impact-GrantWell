@@ -6,13 +6,14 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
-import { stackName } from "../../constants";
+import { stackName, emailConfig } from "../../constants";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
+import * as ses from "aws-cdk-lib/aws-ses";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
@@ -39,6 +40,7 @@ interface LambdaFunctionStackProps {
   readonly nofoProcessingReviewTable: Table;
   readonly draftGenerationJobsTable: Table;
   readonly featureRolloutTable: Table;
+  readonly userNotificationPrefsTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -78,6 +80,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly applicationDocxGeneratorFunction: lambda.Function;
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
+  public readonly notificationDigestFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
   public readonly feedbackProxyFunction: lambda.Function;
   public readonly nofoSummaryUpdateFunction: lambda.Function;
@@ -1697,6 +1700,77 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Get the stack object
     const stack = cdk.Stack.of(this);
+
+    // --- NOFO notification digest ------------------------------------------------
+    // SES verified sender for digest emails. Domain identity so DKIM can be enabled;
+    // the actual DKIM DNS records must be published to the sender domain post-deploy.
+    const notificationSender =
+      process.env.NOTIFICATION_SENDER || "no-reply@grantwell.us";
+    const senderDomain = notificationSender.split("@")[1] || "grantwell.us";
+    const notificationEmailIdentity = new ses.EmailIdentity(
+      scope,
+      "NotificationSenderIdentity",
+      {
+        identity: ses.Identity.domain(senderDomain),
+      }
+    );
+
+    const notificationDigestFunction = new lambda.Function(
+      scope,
+      "NotificationDigestFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(path.join(__dirname, "notifications/digest")),
+        handler: "index.handler",
+        environment: {
+          USER_NOTIFICATION_PREFS_TABLE_NAME:
+            props.userNotificationPrefsTable.tableName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          USER_POOL_ID: props.userPool.userPoolId,
+          NOTIFICATION_SENDER: notificationSender,
+          DEPLOYMENT_URL: emailConfig.deploymentUrl,
+        },
+        timeout: cdk.Duration.minutes(15),
+      }
+    );
+
+    props.userNotificationPrefsTable.grantReadWriteData(notificationDigestFunction);
+    props.nofoMetadataTable.grantReadData(notificationDigestFunction);
+    props.userPool.grant(notificationDigestFunction, "cognito-idp:AdminGetUser");
+    notificationDigestFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["ses:SendEmail"],
+        resources: ["*"],
+        conditions: {
+          StringEquals: { "ses:FromAddress": notificationSender },
+        },
+      })
+    );
+    // Ensure the identity exists before the sender-scoped policy is exercised.
+    notificationDigestFunction.node.addDependency(notificationEmailIdentity);
+
+    this.notificationDigestFunction = notificationDigestFunction;
+
+    // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its
+    // frequency so the same Lambda serves both cadences.
+    new events.Rule(scope, "NotificationDigestDailyRule", {
+      schedule: events.Schedule.cron({ minute: "0", hour: "8", day: "*", month: "*", year: "*" }),
+      description: "Send daily NOFO notification digests",
+    }).addTarget(
+      new targets.LambdaFunction(notificationDigestFunction, {
+        event: events.RuleTargetInput.fromObject({ frequency: "daily" }),
+      })
+    );
+
+    new events.Rule(scope, "NotificationDigestWeeklyRule", {
+      schedule: events.Schedule.cron({ minute: "0", hour: "8", weekDay: "MON", month: "*", year: "*" }),
+      description: "Send weekly NOFO notification digests",
+    }).addTarget(
+      new targets.LambdaFunction(notificationDigestFunction, {
+        event: events.RuleTargetInput.fromObject({ frequency: "weekly" }),
+      })
+    );
 
     // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
     const aiGrantSearchFunction = new lambda.Function(

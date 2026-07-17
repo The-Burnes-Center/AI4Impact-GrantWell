@@ -5,6 +5,7 @@ import { KBSyncClient } from "./kb-sync-client";
 import { LandingPageClient } from "./landing-page-clients";
 import { UserManagementClient } from "./user-management-client";
 import { DraftsClient } from "./drafts-client";
+import { NotificationsClient } from "./notifications-client";
 
 export class ApiClient {
   private _sessionsClient: SessionsClient | undefined;
@@ -13,6 +14,7 @@ export class ApiClient {
   private _landingPageClient: LandingPageClient | undefined;
   private _userManagementClient: UserManagementClient | undefined;
   private _draftsClient: DraftsClient | undefined;
+  private _notificationsClient: NotificationsClient | undefined;
 
   public get userDocuments() {
     if (!this._userDocumentsClient) {
@@ -54,6 +56,13 @@ export class ApiClient {
       this._userManagementClient = new UserManagementClient(this._appConfig);
     }
     return this._userManagementClient;
+  }
+
+  public get notifications() {
+    if (!this._notificationsClient) {
+      this._notificationsClient = new NotificationsClient(this._appConfig);
+    }
+    return this._notificationsClient;
   }
 
   constructor(protected _appConfig: AppConfig) {}

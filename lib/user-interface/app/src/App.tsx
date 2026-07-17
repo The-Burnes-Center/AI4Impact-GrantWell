@@ -20,6 +20,7 @@ const Checklists = React.lazy(() => import("./pages/requirements/ChecklistPage")
 const DocumentEditor = React.lazy(() => import("./pages/document-editor/DocumentEditorPage"));
 const DocEditorSessionsPage = React.lazy(() => import("./pages/document-editor/DocEditorSessionsPage"));
 const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
+const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
 
 function ScrollToTop(): null {
   const { pathname, search } = useLocation();
@@ -38,6 +39,7 @@ function ScrollToTop(): null {
         "/": "Home",
         "/home": "Home",
         "/admin/dashboard": "Admin Dashboard",
+        "/profile": "Your Profile",
         "/chat/sessions": "Chat Sessions",
         "/document-editor": "Document Editor",
         "/document-editor/drafts": "Document Editor Drafts",
@@ -129,6 +131,7 @@ function AppContent() {
               path="/document-editor/drafts"
               element={<DocEditorSessionsPage />}
             />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/admin" element={<Outlet />}>
               <Route path="dashboard" element={<Dashboard />} />
             </Route>

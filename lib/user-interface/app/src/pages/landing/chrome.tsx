@@ -177,6 +177,9 @@ export function AppNavbar() {
         <NavLink to="/chat/sessions" className={navLinkClass}>
           Chat Sessions
         </NavLink>
+        <NavLink to="/profile" className={navLinkClass}>
+          Profile
+        </NavLink>
         {isAdmin && (
           <NavLink to="/admin/dashboard" className={navLinkClass}>
             Admin

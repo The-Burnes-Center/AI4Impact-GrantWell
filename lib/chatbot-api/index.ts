@@ -69,6 +69,7 @@ export class ChatBotApi extends Construct {
       nofoProcessingReviewTable: tables.nofoProcessingReviewTable,
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
       featureRolloutTable: tables.featureRolloutTable,
+      userNotificationPrefsTable: tables.userNotificationPrefsTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
@@ -477,6 +478,32 @@ export class ChatBotApi extends Construct {
       path: "/feature-rollouts/{featureKey}/users/{email}",
       methods: [apigwv2.HttpMethod.PUT, apigwv2.HttpMethod.DELETE],
       integration: featureRolloutIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Per-user notification preferences (self-service; scoped to the caller by JWT sub).
+    const notificationPrefsFunction = new lambda.Function(this, "NotificationPrefsFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "functions/user-management/notification-prefs")
+      ),
+      handler: "index.handler",
+      environment: {
+        USER_NOTIFICATION_PREFS_TABLE_NAME: tables.userNotificationPrefsTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(30),
+    });
+
+    tables.userNotificationPrefsTable.grantReadWriteData(notificationPrefsFunction);
+
+    const notificationPrefsIntegration = new HttpLambdaIntegration(
+      "NotificationPrefsIntegration",
+      notificationPrefsFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/notification-prefs",
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT],
+      integration: notificationPrefsIntegration,
       authorizer: httpAuthorizer,
     });
 
