@@ -228,21 +228,27 @@ const Dashboard: React.FC = () => {
   }, [statusFilter, grantTypeFilter]);
 
   const filteredNofos = useMemo(() => {
-    let filtered = nofos.filter((nofo) =>
-      !nofo.processingStatus &&
-      nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    let filtered = nofos.filter((nofo) => {
+      if (nofo.processingStatus === "quarantined") return false;
+      return nofo.name.toLowerCase().includes(searchQuery.toLowerCase());
+    });
     if (statusFilter !== "all") {
       filtered = filtered.filter((nofo) => {
+        if (nofo.processingStatus) return statusFilter === "active";
         const s = nofo.status || "active";
         if (statusFilter === "active") return s === "active";
         return s === statusFilter;
       });
     }
     if (grantTypeFilter !== "all") {
-      filtered = filtered.filter((nofo) => nofo.grantType === grantTypeFilter);
+      filtered = filtered.filter(
+        (nofo) => nofo.processingStatus || nofo.grantType === grantTypeFilter
+      );
     }
     filtered.sort((a, b) => {
+      const aProc = a.processingStatus ? 1 : 0;
+      const bProc = b.processingStatus ? 1 : 0;
+      if (aProc !== bProc) return bProc - aProc;
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
       return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
