@@ -1085,28 +1085,20 @@ body {
   50% { opacity: 0.7; }
 }
 
-/* Row-level processing pill — clickable, opens the detailed step modal. */
-.grant-processing-pill {
+/* Read-only in-row marker for a processing grant (defensive; in-flight rows normally live in the
+   "Processing" segment, not the browse list). */
+.grant-processing-marker {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   margin-left: 8px;
-  padding: 2px 10px;
   font-size: 12px;
   font-weight: 500;
   color: var(--gw-color-primary);
-  background-color: color-mix(in srgb, var(--gw-color-primary) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--gw-color-primary) 35%, transparent);
-  border-radius: 999px;
-  cursor: pointer;
   vertical-align: middle;
 }
 
-.grant-processing-pill:hover {
-  background-color: color-mix(in srgb, var(--gw-color-primary) 16%, transparent);
-}
-
-.grant-processing-pill__dot {
+.grant-processing-marker__dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -1114,65 +1106,86 @@ body {
   animation: processing-pulse 1.5s ease-in-out infinite;
 }
 
-/* Detailed processing step list (inside the modal). */
-.processing-detail__name {
-  font-weight: 600;
-  color: var(--gw-color-text);
-  margin: 0 0 16px;
+/* "Processing" segment: one card per in-flight grant with a full labeled stepper. */
+.processing-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
 }
 
-.processing-detail__steps {
+.processing-tab__card {
+  border: 1px solid var(--gw-color-border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  background-color: var(--gw-color-surface, #fff);
+}
+
+.processing-tab__name {
+  font-weight: 600;
+  color: var(--gw-color-text);
+  margin: 0 0 12px;
+}
+
+.processing-tab__steps {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
 }
 
-.processing-detail__step {
-  display: flex;
+.processing-tab__step {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-  font-size: 14px;
+  gap: 8px;
+  font-size: 13px;
   color: var(--gw-color-text-secondary, #6b7280);
 }
 
-.processing-detail__marker {
+.processing-tab__marker {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   flex-shrink: 0;
   background-color: var(--gw-color-border);
   color: #fff;
 }
 
-.processing-detail__step--done .processing-detail__marker {
+.processing-tab__step--done .processing-tab__marker {
   background-color: var(--gw-color-success);
 }
 
-.processing-detail__step--done .processing-detail__label {
+.processing-tab__step--done .processing-tab__label {
   color: var(--gw-color-text);
 }
 
-.processing-detail__step--current .processing-detail__marker {
+.processing-tab__step--current .processing-tab__marker {
   background-color: var(--gw-color-primary);
 }
 
-.processing-detail__step--current .processing-detail__label {
+.processing-tab__step--current .processing-tab__label {
   color: var(--gw-color-primary);
   font-weight: 600;
 }
 
-.processing-detail__spin {
+.processing-tab__spin {
   animation: spin 1s linear infinite;
 }
 
-.processing-detail__hint {
-  margin: 16px 0 0;
-  font-size: 12px;
+.processing-tab__empty {
+  padding: 40px 20px;
+  text-align: center;
   color: var(--gw-color-text-secondary, #6b7280);
+}
+
+.processing-tab__empty-hint {
+  font-size: 13px;
+  margin-top: 4px;
 }
 
 /* Row-level review links: quarantined (needs review) and flagged (review suggested) */

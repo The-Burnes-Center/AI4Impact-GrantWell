@@ -9,6 +9,7 @@ import PaginationControls from "./components/PaginationControls";
 import FeatureRolloutsTab from "./components/FeatureRolloutsTab";
 import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
+import ProcessingTab from "./components/ProcessingTab";
 import DigestPreviewTab from "./components/DigestPreviewTab";
 import {
   LuSearch, LuFilter, LuUpload, LuCheck, LuX,
@@ -21,7 +22,7 @@ import "../../styles/dashboard.css";
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"grants" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
-   const [grantsSegment, setGrantsSegment] = useState<"all" | "attention">("all");
+   const [grantsSegment, setGrantsSegment] = useState<"all" | "processing" | "attention">("all");
   const [reviewFocus, setReviewFocus] = useState<string | null>(null);
   const [pendingReviewCount, setPendingReviewCount] = useState(0);
   const [nofos, setNofos] = useState<NOFO[]>([]);
@@ -228,33 +229,33 @@ const Dashboard: React.FC = () => {
   }, [statusFilter, grantTypeFilter]);
 
   const filteredNofos = useMemo(() => {
-    let filtered = nofos.filter((nofo) => {
-      if (nofo.processingStatus === "quarantined") return false;
-      return nofo.name.toLowerCase().includes(searchQuery.toLowerCase());
-    });
+    // In-flight grants live in the "Processing" segment, not the browse list.
+    let filtered = nofos.filter((nofo) =>
+      !nofo.processingStatus &&
+      nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     if (statusFilter !== "all") {
       filtered = filtered.filter((nofo) => {
-        if (nofo.processingStatus) return statusFilter === "active";
         const s = nofo.status || "active";
         if (statusFilter === "active") return s === "active";
         return s === statusFilter;
       });
     }
     if (grantTypeFilter !== "all") {
-      filtered = filtered.filter(
-        (nofo) => nofo.processingStatus || nofo.grantType === grantTypeFilter
-      );
+      filtered = filtered.filter((nofo) => nofo.grantType === grantTypeFilter);
     }
     filtered.sort((a, b) => {
-      const aProc = a.processingStatus ? 1 : 0;
-      const bProc = b.processingStatus ? 1 : 0;
-      if (aProc !== bProc) return bProc - aProc;
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
       return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
     });
     return filtered;
   }, [nofos, searchQuery, statusFilter, grantTypeFilter]);
+
+  const processingNofos = useMemo(
+    () => nofos.filter((n) => n.processingStatus && n.processingStatus !== "quarantined"),
+    [nofos]
+  );
 
   const paginatedData = useMemo(() => {
     const totalPages = Math.ceil(filteredNofos.length / itemsPerPage);
@@ -436,6 +437,21 @@ const Dashboard: React.FC = () => {
                       All grants
                     </button>
                     <button
+                      className={`grants-segment__btn ${grantsSegment === "processing" ? "grants-segment__btn--active" : ""}`}
+                      onClick={() => { setGrantsSegment("processing"); setReviewFocus(null); }}
+                      aria-pressed={grantsSegment === "processing"}
+                    >
+                      Processing
+                      {processingNofos.length > 0 && (
+                        <span
+                          className="grants-segment__badge"
+                          aria-label={`${processingNofos.length} grants processing`}
+                        >
+                          <span aria-hidden="true">{processingNofos.length > 99 ? "99+" : processingNofos.length}</span>
+                        </span>
+                      )}
+                    </button>
+                    <button
                       className={`grants-segment__btn ${grantsSegment === "attention" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => setGrantsSegment("attention")}
                       aria-pressed={grantsSegment === "attention"}
@@ -459,6 +475,8 @@ const Dashboard: React.FC = () => {
                     addNotification={addNotification}
                     focusNofo={reviewFocus}
                   />
+                ) : isAdmin && grantsSegment === "processing" ? (
+                  <ProcessingTab nofos={processingNofos} />
                 ) : (
                 <>
                 <div className="search-actions-container">
