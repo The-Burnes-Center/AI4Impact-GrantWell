@@ -121,6 +121,7 @@ export class TableStack extends Stack {
     const nofoProcessingReviewTable = new Table(this, 'NOFOProcessingReviewTable', {
       partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
       sortKey: { name: 'review_id', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
       timeToLiveAttribute: 'ttl',
     });
 
