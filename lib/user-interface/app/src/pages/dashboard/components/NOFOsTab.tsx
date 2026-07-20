@@ -7,7 +7,8 @@ import { Modal } from "../../../components/common/Modal";
 import { DeleteConfirmationModal } from "../../../components/common/DeleteConfirmationModal";
 import GrantActionsDropdown from "./GrantActionsDropdown";
 import SummaryEditor from "./SummaryEditor";
-import ProcessingStepper from "./ProcessingStepper";
+import ProcessingDetailModal from "./ProcessingDetailModal";
+import { PROCESSING_LABELS } from "./processing-stages";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
@@ -44,6 +45,9 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedNofo, setSelectedNofo] = useState<NOFO | null>(null);
+  // Name of the in-flight grant whose detailed processing modal is open, or null when closed.
+  // Keyed by name (not the object) so the modal reflects live status as polling advances it.
+  const [processingModalName, setProcessingModalName] = useState<string | null>(null);
   const [editedNofoName, setEditedNofoName] = useState("");
   const [editedNofoStatus, setEditedNofoStatus] = useState<"active" | "archived">("active");
   const [editedNofoExpirationDate, setEditedNofoExpirationDate] = useState<string>("");
@@ -342,7 +346,15 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     Needs review
                   </button>
                 ) : nofo.processingStatus ? (
-                  <ProcessingStepper status={nofo.processingStatus} />
+                  <button
+                    type="button"
+                    className="grant-processing-pill"
+                    onClick={() => setProcessingModalName(nofo.name)}
+                    aria-label={`Processing: ${PROCESSING_LABELS[nofo.processingStatus] || "in progress"}. View steps.`}
+                  >
+                    <span className="grant-processing-pill__dot" aria-hidden="true" />
+                    {PROCESSING_LABELS[nofo.processingStatus] || "Processing"}
+                  </button>
                 ) : nofo.reviewFlag ? (
                   // A flagged partial published live (no review row), so the fix is to
                   // correct its extracted summary — open the editor rather than the queue.
@@ -463,6 +475,18 @@ const NOFOsTab = React.memo(function NOFOsTab({
       </Modal>
 
       <DeleteConfirmationModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} onConfirm={confirmDeleteNofo} title="Delete Grant" itemName={selectedNofo?.name} itemLabel="grant" />
+
+      {(() => {
+        const live = nofos.find((n) => n.name === processingModalName);
+        return (
+          <ProcessingDetailModal
+            isOpen={processingModalName !== null}
+            onClose={() => setProcessingModalName(null)}
+            nofoName={processingModalName || ""}
+            status={live?.processingStatus || ""}
+          />
+        );
+      })()}
 
       {/* Edit Summary Modal */}
       <Modal

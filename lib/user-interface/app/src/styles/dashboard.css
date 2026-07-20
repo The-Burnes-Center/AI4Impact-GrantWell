@@ -1085,48 +1085,94 @@ body {
   50% { opacity: 0.7; }
 }
 
-/* Upload progress stepper (replaces the single processing pill) */
-.processing-stepper {
+/* Row-level processing pill — clickable, opens the detailed step modal. */
+.grant-processing-pill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin-left: 8px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gw-color-primary);
+  background-color: color-mix(in srgb, var(--gw-color-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gw-color-primary) 35%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
   vertical-align: middle;
 }
 
-.processing-stepper__dots {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
+.grant-processing-pill:hover {
+  background-color: color-mix(in srgb, var(--gw-color-primary) 16%, transparent);
 }
 
-.processing-stepper__dot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 12px;
-  height: 12px;
+.grant-processing-pill__dot {
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  color: #fff;
-}
-
-.processing-stepper__dot--done {
-  background-color: var(--gw-color-success);
-}
-
-.processing-stepper__dot--current {
   background-color: var(--gw-color-primary);
   animation: processing-pulse 1.5s ease-in-out infinite;
 }
 
-.processing-stepper__dot--upcoming {
-  background-color: var(--gw-color-border);
+/* Detailed processing step list (inside the modal). */
+.processing-detail__name {
+  font-weight: 600;
+  color: var(--gw-color-text);
+  margin: 0 0 16px;
 }
 
-.processing-stepper__label {
-  font-size: 12px;
-  font-weight: 500;
+.processing-detail__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.processing-detail__step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--gw-color-text-secondary, #6b7280);
+}
+
+.processing-detail__marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: var(--gw-color-border);
+  color: #fff;
+}
+
+.processing-detail__step--done .processing-detail__marker {
+  background-color: var(--gw-color-success);
+}
+
+.processing-detail__step--done .processing-detail__label {
+  color: var(--gw-color-text);
+}
+
+.processing-detail__step--current .processing-detail__marker {
+  background-color: var(--gw-color-primary);
+}
+
+.processing-detail__step--current .processing-detail__label {
   color: var(--gw-color-primary);
+  font-weight: 600;
+}
+
+.processing-detail__spin {
+  animation: spin 1s linear infinite;
+}
+
+.processing-detail__hint {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--gw-color-text-secondary, #6b7280);
 }
 
 /* Row-level review links: quarantined (needs review) and flagged (review suggested) */
