@@ -1,26 +1,17 @@
 import React, { useState, useCallback } from "react";
 import {
-  LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader,
+  LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader, LuTriangleAlert,
 } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import { Modal } from "../../../components/common/Modal";
 import { DeleteConfirmationModal } from "../../../components/common/DeleteConfirmationModal";
 import GrantActionsDropdown from "./GrantActionsDropdown";
 import SummaryEditor from "./SummaryEditor";
+import ProcessingStepper from "./ProcessingStepper";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
 import { SUPPORTED_STATES } from "../../../common/generated/states";
-
-const PROCESSING_LABELS: Record<string, string> = {
-  uploading: "Uploading...",
-  extracting_text: "Extracting text...",
-  detecting_sections: "Detecting sections...",
-  synthesizing: "Synthesizing...",
-  validating: "Validating...",
-  quarantined: "Quarantined",
-  incomplete: "Incomplete",
-};
 
 function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback;
@@ -35,6 +26,8 @@ interface NOFOsTabProps {
   setUploadNofoModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showGrantSuccessBanner?: (grantName: string) => void;
   addNotification: (type: string, message: string) => void;
+  /** Open the review view for a NOFO that quarantined or auto-published flagged. */
+  onOpenReview?: (nofoName: string) => void;
 }
 
 const NOFOsTab = React.memo(function NOFOsTab({
@@ -46,6 +39,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   setUploadNofoModalOpen,
   showGrantSuccessBanner,
   addNotification,
+  onOpenReview,
 }: NOFOsTabProps) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -338,11 +332,34 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 {nofo.isPinned && (
                   <span className="pinned-badge" aria-label="Pinned"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
                 )}
-                {nofo.processingStatus && (
-                  <span className="processing-status-pill" aria-live="polite">
-                    {PROCESSING_LABELS[nofo.processingStatus] ?? nofo.processingStatus}
-                  </span>
-                )}
+                {nofo.processingStatus === "quarantined" ? (
+                  <button
+                    type="button"
+                    className="grant-review-link grant-review-link--needs-review"
+                    onClick={() => onOpenReview?.(nofo.name)}
+                    disabled={!onOpenReview}
+                  >
+                    <LuTriangleAlert size={12} aria-hidden="true" />
+                    Needs review
+                  </button>
+                ) : nofo.processingStatus ? (
+                  <ProcessingStepper status={nofo.processingStatus} />
+                ) : nofo.reviewFlag ? (
+                  <button
+                    type="button"
+                    className="grant-review-link grant-review-link--suggested"
+                    onClick={() => onOpenReview?.(nofo.name)}
+                    disabled={!onOpenReview}
+                    title={
+                      nofo.reviewFlag.missingCategories.length > 0
+                        ? `Missing: ${nofo.reviewFlag.missingCategories.join(", ")}`
+                        : undefined
+                    }
+                  >
+                    <LuInfo size={12} aria-hidden="true" />
+                    Review suggested
+                  </button>
+                ) : null}
               </div>
               <div className="row-cell" role="cell">
                 {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
@@ -495,7 +512,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
           <p className="modal-description">Upload a new grant file in PDF, TXT, or DOCX format.</p>
           <div className="info-box">
             <LuInfo size={18} className="info-icon" />
-            <span>Upload a new NOFO to the NOFO dropdown above. It will take 5-7 minutes for the document to process and appear in the dropdown. Grab a coffee, and it&#39;ll be ready for your review!</span>
+            <span>After you upload, the grant appears in the list above and processes automatically (about 5&ndash;7 minutes). You can watch each stage on its row &mdash; most grants publish on their own, and only ones that need a closer look are flagged for review.</span>
           </div>
           <div className="form-group">
             <label htmlFor="file-upload">Select File</label>

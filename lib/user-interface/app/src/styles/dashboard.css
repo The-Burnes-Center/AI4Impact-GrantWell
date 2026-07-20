@@ -1035,6 +1035,85 @@ body {
   50% { opacity: 0.7; }
 }
 
+/* Upload progress stepper (replaces the single processing pill) */
+.processing-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.processing-stepper__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.processing-stepper__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.processing-stepper__dot--done {
+  background-color: var(--gw-color-success);
+}
+
+.processing-stepper__dot--current {
+  background-color: var(--gw-color-primary);
+  animation: processing-pulse 1.5s ease-in-out infinite;
+}
+
+.processing-stepper__dot--upcoming {
+  background-color: var(--gw-color-border);
+}
+
+.processing-stepper__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gw-color-primary);
+}
+
+/* Row-level review links: quarantined (needs review) and flagged (review suggested) */
+.grant-review-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.grant-review-link:disabled {
+  cursor: default;
+}
+
+.grant-review-link--needs-review {
+  color: var(--gw-color-danger);
+  background-color: color-mix(in srgb, var(--gw-color-danger) 10%, transparent);
+  border-color: color-mix(in srgb, var(--gw-color-danger) 40%, transparent);
+}
+
+.grant-review-link--suggested {
+  color: var(--gw-color-warning);
+  background-color: color-mix(in srgb, var(--gw-color-warning) 12%, transparent);
+  border-color: color-mix(in srgb, var(--gw-color-warning) 40%, transparent);
+}
+
+.grant-review-link:not(:disabled):hover {
+  filter: brightness(0.95);
+}
+
 /* Summary diff view */
 .diff-removed {
   color: var(--gw-color-danger);
@@ -2430,6 +2509,62 @@ select.form-input {
 .review-table-grid-select {
   grid-template-columns: 44px minmax(0, 2fr) minmax(0, 0.8fr) 110px 90px 80px;
   padding-right: 8px;
+}
+
+/* Unified lifecycle view */
+.lifecycle-table-grid {
+  grid-template-columns: minmax(0, 2fr) 120px minmax(0, 1.2fr) 80px 80px;
+  padding-right: 8px;
+}
+
+.lifecycle-stage-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lifecycle-stage-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--gw-color-border, #d1d5db);
+  border-radius: 16px;
+  background: var(--gw-color-white, #fff);
+  color: var(--gw-color-text, #1f2937);
+  cursor: pointer;
+}
+
+.lifecycle-stage-chip:hover {
+  border-color: var(--gw-color-primary, #23776C);
+}
+
+.lifecycle-stage-chip--active {
+  background: var(--gw-color-primary, #23776C);
+  border-color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-white, #fff);
+}
+
+.lifecycle-stage-chip__count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--gw-color-text-secondary) 12%, transparent);
+  color: inherit;
+}
+
+.lifecycle-stage-chip--active .lifecycle-stage-chip__count {
+  background: color-mix(in srgb, var(--gw-color-white) 25%, transparent);
+}
+
+.review-refreshing {
+  margin-left: 12px;
+  font-size: 13px;
+  color: var(--gw-color-text-secondary, #6b7280);
 }
 
 .review-checkbox-cell {

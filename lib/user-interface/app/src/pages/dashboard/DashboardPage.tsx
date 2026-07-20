@@ -518,6 +518,7 @@ const Dashboard: React.FC = () => {
                   setUploadNofoModalOpen={setUploadNofoModalOpen}
                   showGrantSuccessBanner={showGrantSuccessBanner}
                   addNotification={addNotification}
+                  onOpenReview={() => setActiveTab("processing-review")}
                 />
 
                 <PaginationControls
