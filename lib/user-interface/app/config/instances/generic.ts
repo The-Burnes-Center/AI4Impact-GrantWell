@@ -8,7 +8,7 @@ import { genericBrandingData } from "../../../../shared/generic-branding";
 export const branding: Branding = {
   ...genericBrandingData,
   footer: {
-    wordmark: "/images/marketing/grantwell-wordmark-footer.svg",
+    wordmark: genericBrandingData.footerLogo,
     madeBy: {
       label: "ai4impact",
       href: "https://ai4impact.ai/",

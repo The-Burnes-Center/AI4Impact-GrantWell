@@ -1717,13 +1717,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       }
     );
 
-    // Digest branding is pulled from the same instance config the UI uses (single source),
-    // so the email matches the site. Logo is a relative asset path there; emails need an
-    // absolute URL, so resolve it against the deployment URL.
     const digestBrandEnv = {
-      DIGEST_APP_NAME: genericBrandingData.appName,
       DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
-      DIGEST_LOGO_URL: `${emailConfig.deploymentUrl}${genericBrandingData.logo}`,
+      DIGEST_LOGO_URL: `${emailConfig.deploymentUrl}${genericBrandingData.footerLogo}`,
       DIGEST_ORG_NAME: genericBrandingData.orgName,
     };
 

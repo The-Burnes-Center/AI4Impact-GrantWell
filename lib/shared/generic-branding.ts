@@ -13,6 +13,7 @@ export const genericBrandingData = {
     accentHover: "#32784E",
   },
   logo: "/images/marketing/grantwell-wordmark-dark.svg",
+  footerLogo: "/images/marketing/grantwell-wordmark-footer.svg",
   favicon: "/images/marketing/favicon.svg",
   analyticsId: "G-K27MB9Y26C",
 } as const;
