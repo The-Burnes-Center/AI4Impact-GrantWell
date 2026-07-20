@@ -1,3 +1,6 @@
+// Plain branding values for the "generic" (Burnes multi-state) instance.
+// Lives in lib/shared — not the ESM app package — so both the CDK stack (CJS
+// ts-node, for the backend digest at synth) and the frontend app can import it.
 export const genericBrandingData = {
   appName: "GrantWell",
   orgName: "Burnes Center for Social Change",

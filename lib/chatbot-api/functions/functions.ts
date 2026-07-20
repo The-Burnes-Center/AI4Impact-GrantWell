@@ -7,7 +7,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
 import { stackName, emailConfig } from "../../constants";
-import { genericBrandingData } from "../../user-interface/app/config/instances/generic.branding";
+import { genericBrandingData } from "../../shared/generic-branding";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
