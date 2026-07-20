@@ -437,10 +437,10 @@ const Dashboard: React.FC = () => {
                       Needs attention
                       {pendingReviewCount > 0 && (
                         <span
-                          className="grants-segment__badge"
+                          className={`grants-segment__badge ${pendingReviewCount >= 25 ? "grants-segment__badge--high" : ""}`}
                           aria-label={`${pendingReviewCount} items need review`}
                         >
-                          {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
+                          <span aria-hidden="true">{pendingReviewCount > 99 ? "99+" : pendingReviewCount}</span>
                         </span>
                       )}
                     </button>

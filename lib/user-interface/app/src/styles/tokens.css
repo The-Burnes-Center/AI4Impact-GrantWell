@@ -52,6 +52,8 @@
   --gw-color-success: #047857;
   --gw-color-success-light: #d4edda;
   --gw-color-warning: #F6B622;
+  /* Readable amber for text/icons on light surfaces; the base warning yellow fails AA as a foreground. */
+  --gw-color-warning-text: #92510a;
   --gw-color-warning-light: #fff3cd;
   --gw-color-danger: #CD0D0D;
   --gw-color-danger-light: #ffebee;

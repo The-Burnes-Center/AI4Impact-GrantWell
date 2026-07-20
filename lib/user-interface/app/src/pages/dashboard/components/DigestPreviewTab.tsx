@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { DigestPreviewResult } from "../../../common/api-client/notifications-client";
 
@@ -9,46 +9,77 @@ interface DigestPreviewTabProps {
 
 type Frequency = "daily" | "weekly";
 
+const FREQUENCIES: { value: Frequency; label: string }[] = [
+  { value: "daily", label: "Daily" },
+  { value: "weekly", label: "Weekly" },
+];
+
 export default function DigestPreviewTab({ apiClient, addNotification }: DigestPreviewTabProps) {
   const [frequency, setFrequency] = useState<Frequency>("daily");
   const [rendered, setRendered] = useState<DigestPreviewResult["rendered"] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [testing, setTesting] = useState(false);
+  const [sentAt, setSentAt] = useState<Frequency | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    // Full spinner only when there's nothing to show yet; otherwise dim the stale preview.
+    setError(null);
+    setRendered((prev) => {
+      if (prev) setRefreshing(true);
+      else setLoading(true);
+      return prev;
+    });
+    try {
+      const res = await apiClient.notifications.getDigestPreview(frequency);
+      setRendered(res?.rendered ?? null);
+    } catch {
+      setError("Could not load the digest preview. The digest endpoint may not be deployed yet.");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, [apiClient, frequency]);
 
   useEffect(() => {
     let active = true;
     (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await apiClient.notifications.getDigestPreview(frequency);
-        if (!active) return;
-        setRendered(res?.rendered ?? null);
-      } catch {
-        if (active) {
-          setError("Could not load the digest preview. The digest endpoint may not be deployed yet.");
-        }
-      } finally {
-        if (active) setLoading(false);
-      }
+      if (active) await load();
     })();
     return () => {
       active = false;
     };
-  }, [apiClient, frequency]);
+  }, [load]);
 
   const onTest = async () => {
     setTesting(true);
     try {
       const res = await apiClient.notifications.sendTestDigest(frequency);
       addNotification("success", res.message || "Test digest sent.");
+      setSentAt(frequency);
     } catch {
       addNotification("error", "Could not send the test digest (is SES configured?).");
     } finally {
       setTesting(false);
     }
   };
+
+  // Reset the "Sent ✓" confirmation whenever the frequency changes.
+  useEffect(() => setSentAt(null), [frequency]);
+
+  const onSegmentKey = (e: React.KeyboardEvent, values: Frequency[], current: Frequency) => {
+    const idx = values.indexOf(current);
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      setFrequency(values[(idx + 1) % values.length]);
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setFrequency(values[(idx - 1 + values.length) % values.length]);
+    }
+  };
+
+  const justSent = sentAt === frequency;
 
   return (
     <div className="tab-content">
@@ -62,58 +93,77 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
         </div>
         <div className="dashboard-actions">
           <button
-            className={`action-button ${frequency === "daily" ? "add-button" : "invite-button"}`}
-            onClick={() => setFrequency("daily")}
-          >
-            Daily
-          </button>
-          <button
-            className={`action-button ${frequency === "weekly" ? "add-button" : "invite-button"}`}
-            onClick={() => setFrequency("weekly")}
-          >
-            Weekly
-          </button>
-          <button
-            className="action-button refresh-button"
+            className={`action-button ${justSent ? "add-button" : "refresh-button"}`}
             onClick={onTest}
             disabled={testing || loading}
-            title="Sends the sample digest to your own email"
+            aria-label={`Send the sample ${frequency} digest to your own email`}
           >
-            {testing ? "Sending…" : "Send test to me"}
+            {testing ? "Sending…" : justSent ? "Sent ✓ — send again" : "Send test to me"}
           </button>
         </div>
       </div>
 
-      {error && (
-        <div className="no-data">
-          <div style={{ fontSize: "18px", fontWeight: 500 }}>{error}</div>
+      <div className="digest-toolbar">
+        <div
+          className="digest-segment"
+          role="radiogroup"
+          aria-label="Digest frequency"
+        >
+          {FREQUENCIES.map(({ value, label }) => (
+            <button
+              key={value}
+              role="radio"
+              aria-checked={frequency === value}
+              tabIndex={frequency === value ? 0 : -1}
+              className={`digest-segment__option ${frequency === value ? "is-active" : ""}`}
+              onClick={() => setFrequency(value)}
+              onKeyDown={(e) => onSegmentKey(e, FREQUENCIES.map((f) => f.value), frequency)}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-      )}
 
-      {loading ? (
+      </div>
+
+      {error ? (
+        <div className="no-data">
+          <div style={{ fontSize: "18px", fontWeight: 500, marginBottom: 12 }}>{error}</div>
+          <button className="action-button refresh-button" onClick={load}>
+            Retry
+          </button>
+        </div>
+      ) : loading ? (
         <div className="table-loading">
           <div className="table-loading-spinner" />
         </div>
       ) : rendered ? (
         <div
-          className="table-container"
-          style={{ marginBottom: 40, padding: 0, overflow: "hidden", maxWidth: 700 }}
+          className={`digest-preview ${refreshing ? "is-refreshing" : ""}`}
+          aria-busy={refreshing}
         >
-          <div
-            style={{
-              padding: "12px 16px",
-              background: "#f5f8fc",
-              borderBottom: "1px solid #e0e0e0",
-              fontSize: "14px",
-            }}
-          >
+          {refreshing && (
+            <div className="digest-preview__overlay">
+              <div className="table-loading-spinner" />
+            </div>
+          )}
+          <div className="digest-preview__subject">
             <strong>Subject:</strong> {rendered.subject}
           </div>
-          <iframe
-            title="Digest preview"
-            srcDoc={rendered.html}
-            style={{ width: "100%", height: 480, border: "none", background: "#fff" }}
-          />
+          <div className="digest-preview__panes">
+            <div className="digest-preview__pane">
+              <div className="digest-preview__pane-label">HTML</div>
+              <iframe
+                title={`${frequency} digest preview`}
+                srcDoc={rendered.html}
+                style={{ width: "100%", height: 480, border: "none", background: "#fff" }}
+              />
+            </div>
+            <div className="digest-preview__pane">
+              <div className="digest-preview__pane-label">Plain text</div>
+              <pre className="digest-preview__text">{rendered.text}</pre>
+            </div>
+          </div>
         </div>
       ) : null}
     </div>

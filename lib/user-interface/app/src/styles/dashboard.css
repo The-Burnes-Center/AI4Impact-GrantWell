@@ -199,8 +199,14 @@ body {
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
-  color: var(--gw-color-warning);
-  background-color: color-mix(in srgb, var(--gw-color-warning) 16%, transparent);
+  color: var(--gw-color-warning-text);
+  background-color: color-mix(in srgb, var(--gw-color-warning) 22%, transparent);
+}
+
+/* A large backlog gets a solid fill so it reads as "act on this", not a faint chip. */
+.grants-segment__badge--high {
+  color: var(--gw-color-white);
+  background-color: var(--gw-color-warning-text);
 }
 
 .feature-rollouts-panel {
@@ -3104,4 +3110,118 @@ select.form-input {
   height: 1px;
   background-color: #e0e0e0;
   margin: 8px 0;
+}
+
+/* ── Digest preview tab ─────────────────────────────────────────── */
+.digest-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-space-sm, 8px);
+  flex-wrap: wrap;
+  margin-bottom: var(--gw-space-md, 16px);
+}
+.digest-toolbar__spacer {
+  flex: 1 1 auto;
+}
+
+/* Segmented control — one setting, joined options */
+.digest-segment {
+  display: inline-flex;
+  border: 1px solid var(--gw-color-border, #e2e8f0);
+  border-radius: var(--gw-radius-md, 6px);
+  overflow: hidden;
+  background: #fff;
+}
+.digest-segment__option {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: var(--gw-space-sm, 8px) var(--gw-space-md, 16px);
+  font-size: var(--gw-font-size-sm, 14px);
+  color: var(--gw-color-text, #333);
+  cursor: pointer;
+  border-left: 1px solid var(--gw-color-border, #e2e8f0);
+}
+.digest-segment__option:first-child {
+  border-left: none;
+}
+.digest-segment__option:hover:not(.is-active) {
+  background: var(--gw-color-border-light, #f3f4f6);
+}
+.digest-segment__option.is-active {
+  background: var(--gw-color-primary, #23776C);
+  color: #fff;
+  font-weight: var(--gw-font-weight-medium, 500);
+}
+.digest-segment__option:focus-visible {
+  outline: 2px solid var(--gw-color-primary-active, #244140);
+  outline-offset: -2px;
+}
+
+.digest-preview {
+  position: relative;
+  margin-bottom: 40px;
+  border: 1px solid var(--gw-color-border, #e0e0e0);
+  border-radius: var(--gw-radius-md, 6px);
+  overflow: hidden;
+  background: #fff;
+}
+.digest-preview.is-refreshing {
+  opacity: 0.6;
+}
+.digest-preview__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 1;
+}
+.digest-preview__subject {
+  padding: 12px 16px;
+  background: #f5f8fc;
+  border-bottom: 1px solid var(--gw-color-border, #e0e0e0);
+  font-size: 14px;
+}
+.digest-preview__panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.digest-preview__pane {
+  min-width: 0;
+}
+.digest-preview__pane + .digest-preview__pane {
+  border-left: 1px solid var(--gw-color-border, #e0e0e0);
+}
+.digest-preview__pane-label {
+  padding: 8px 16px;
+  background: #f5f8fc;
+  border-bottom: 1px solid var(--gw-color-border, #e0e0e0);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #666;
+}
+.digest-preview__text {
+  margin: 0;
+  padding: 16px;
+  font-family: var(--gw-font-mono, monospace);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--gw-color-text, #333);
+  max-height: 480px;
+  overflow: auto;
+}
+@media (max-width: 900px) {
+  .digest-preview__panes {
+    grid-template-columns: 1fr;
+  }
+  .digest-preview__pane + .digest-preview__pane {
+    border-left: none;
+    border-top: 1px solid var(--gw-color-border, #e0e0e0);
+  }
 }
