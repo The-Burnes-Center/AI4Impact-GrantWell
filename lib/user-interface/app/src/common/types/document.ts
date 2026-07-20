@@ -58,6 +58,11 @@ export interface RawNOFOData {
   name: string;
   status: string;
   processing_status?: string | null;
+  review_flag?: {
+    reason: string;
+    missingCategories?: string[];
+    flaggedAt?: string;
+  } | null;
   isPinned?: boolean;
   is_rolling?: boolean;
   expiration_date?: string | null;

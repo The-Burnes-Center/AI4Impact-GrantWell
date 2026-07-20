@@ -7,6 +7,16 @@
 
 export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic";
 
+/**
+ * Advisory flag on a live grant that auto-published with an incomplete extraction
+ * (1-2 sections missing). The grant is active; the flag marks it for optional review.
+ */
+export interface ReviewFlag {
+  reason: string;
+  missingCategories: string[];
+  flaggedAt?: string;
+}
+
 export interface NOFO {
   id: number;
   name: string;
@@ -18,6 +28,7 @@ export interface NOFO {
   agency?: string | null;
   category?: string | null;
   processingStatus?: string | null;
+  reviewFlag?: ReviewFlag | null;
   createdAt?: string | null;
 }
 

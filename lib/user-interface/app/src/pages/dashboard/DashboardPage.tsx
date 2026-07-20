@@ -76,6 +76,13 @@ const Dashboard: React.FC = () => {
           agency: nofo.agency || null,
           category: nofo.category || null,
           processingStatus: nofo.processing_status ?? null,
+          reviewFlag: nofo.review_flag
+            ? {
+                reason: nofo.review_flag.reason,
+                missingCategories: nofo.review_flag.missingCategories ?? [],
+                flaggedAt: nofo.review_flag.flaggedAt,
+              }
+            : null,
         })));
       } else {
         setNofos((nofoResult.folders || []).map((nofo: string, index: number): NOFO => ({
