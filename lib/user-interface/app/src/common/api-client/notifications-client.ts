@@ -46,8 +46,8 @@ export class NotificationsClient {
     return response.json();
   }
 
-  // Developer-only: the real digest template rendered with sample data. Copy + branding come
-  // from the instance config (server-side), so this is a faithful, read-only preview.
+  // Developer-only: the real digest for the calling developer — the server runs the actual
+  // selection (their prefs + the active NOFO pool), so this is what they'd truly receive.
   async getDigestPreview(
     frequency: "daily" | "weekly"
   ): Promise<DigestPreviewResult> {
@@ -64,8 +64,11 @@ export class NotificationsClient {
     return response.json();
   }
 
-  // Developer-only: send the sample digest to your own email.
-  async sendTestDigest(frequency: "daily" | "weekly"): Promise<{ message: string }> {
+  // Developer-only: send your real digest to your own email. No-op (sent: false) when nothing
+  // matches your prefs this window — the scheduled digest skips empty runs too.
+  async sendTestDigest(
+    frequency: "daily" | "weekly"
+  ): Promise<{ message: string; sent?: boolean; count?: number }> {
     const token = await Utils.authenticate();
     const url = new URL(`${this.API}/notification-digest/preview`);
     url.searchParams.append("frequency", frequency);
@@ -82,4 +85,6 @@ export class NotificationsClient {
 
 export interface DigestPreviewResult {
   rendered: { subject: string; html: string; text: string };
+  // Number of grants that actually matched the caller's prefs this window (0 = empty digest).
+  count?: number;
 }

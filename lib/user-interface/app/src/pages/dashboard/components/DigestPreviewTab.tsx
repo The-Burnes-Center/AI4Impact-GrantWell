@@ -17,6 +17,7 @@ const FREQUENCIES: { value: Frequency; label: string }[] = [
 export default function DigestPreviewTab({ apiClient, addNotification }: DigestPreviewTabProps) {
   const [frequency, setFrequency] = useState<Frequency>("daily");
   const [rendered, setRendered] = useState<DigestPreviewResult["rendered"] | null>(null);
+  const [count, setCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [testing, setTesting] = useState(false);
@@ -34,6 +35,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
     try {
       const res = await apiClient.notifications.getDigestPreview(frequency);
       setRendered(res?.rendered ?? null);
+      setCount(res?.count ?? null);
     } catch {
       setError("Could not load the digest preview. The digest endpoint may not be deployed yet.");
     } finally {
@@ -56,8 +58,13 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
     setTesting(true);
     try {
       const res = await apiClient.notifications.sendTestDigest(frequency);
-      addNotification("success", res.message || "Test digest sent.");
-      setSentAt(frequency);
+      if (res.sent === false) {
+        // Nothing matched your prefs this window — the real digest would skip too.
+        addNotification("info", res.message || "No matching grants right now — nothing to send.");
+      } else {
+        addNotification("success", res.message || "Test digest sent.");
+        setSentAt(frequency);
+      }
     } catch {
       addNotification("error", "Could not send the test digest (is SES configured?).");
     } finally {
@@ -87,16 +94,16 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
         <div>
           <h1 style={{ fontSize: "var(--gw-font-size-lg)" }}>Digest preview</h1>
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
-            The exact notification email users receive (sample data). Copy and branding are
-            pulled from the GrantWell configuration.
+            Your real {frequency} digest — the server runs the actual selection against your own
+            notification preferences and the active grants, so this is exactly what you'd receive.
           </p>
         </div>
         <div className="dashboard-actions">
           <button
             className={`action-button ${justSent ? "add-button" : "refresh-button"}`}
             onClick={onTest}
-            disabled={testing || loading}
-            aria-label={`Send the sample ${frequency} digest to your own email`}
+            disabled={testing || loading || count === 0}
+            aria-label={`Send your ${frequency} digest to your own email`}
           >
             {testing ? "Sending…" : justSent ? "Sent ✓ — send again" : "Send test to me"}
           </button>
@@ -138,6 +145,13 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
           <div className="table-loading-spinner" />
         </div>
       ) : rendered ? (
+        <>
+        {count === 0 && (
+          <div className="digest-preview__empty-note" role="status">
+            No grants currently match your notification preferences for this cadence, so no digest
+            would be sent. The empty layout below is what a zero-match run renders.
+          </div>
+        )}
         <div
           className={`digest-preview ${refreshing ? "is-refreshing" : ""}`}
           aria-busy={refreshing}
@@ -165,6 +179,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
             </div>
           </div>
         </div>
+        </>
       ) : null}
     </div>
   );

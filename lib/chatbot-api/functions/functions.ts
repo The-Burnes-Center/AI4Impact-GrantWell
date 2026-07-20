@@ -1775,6 +1775,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         layers: [jsSharedLayer],
         environment: {
+          USER_NOTIFICATION_PREFS_TABLE_NAME:
+            props.userNotificationPrefsTable.tableName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
           NOTIFICATION_SENDER: notificationSender,
           ...digestBrandEnv,
@@ -1782,6 +1785,11 @@ export class LambdaFunctionStack extends cdk.Stack {
         timeout: cdk.Duration.seconds(15),
       }
     );
+    // Preview runs the real selection: read the caller's prefs and the active NOFO pool.
+    props.userNotificationPrefsTable.grantReadData(
+      notificationDigestPreviewFunction
+    );
+    props.nofoMetadataTable.grantReadData(notificationDigestPreviewFunction);
     // Test-send uses the same verified sender as the digest.
     notificationDigestPreviewFunction.addToRolePolicy(
       new iam.PolicyStatement({
