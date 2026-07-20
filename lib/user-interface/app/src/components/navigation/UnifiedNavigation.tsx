@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
-import { Home, MessageSquare, FileText, CheckSquare, Upload, LayoutDashboard } from "lucide-react";
+import { Home, MessageSquare, FileText, CheckSquare, Upload, LayoutDashboard, User } from "lucide-react";
 import Modal from "../common/Modal";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 
@@ -46,6 +46,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
   const isChat = currentPath.startsWith('/chat');
   const isDrafts = currentPath === '/document-editor/drafts';
   const isDashboard = currentPath.startsWith('/admin');
+  const isProfile = currentPath.startsWith('/profile');
 
   // Get documentIdentifier from various sources
   const docId = documentIdentifier || params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo');
@@ -361,6 +362,37 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             >
               <Home size={20} />
               {isOpen && <span style={{ marginLeft: "12px" }}>Home</span>}
+            </button>
+
+            {/* Profile */}
+            <button
+              onClick={() => navigate("/profile")}
+              aria-label="Your Profile"
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                padding: "12px 16px",
+                borderRadius: "8px",
+                marginBottom: "8px",
+                background: isProfile ? "#23776C" : "none",
+                color: isProfile ? "white" : "#e2e8f0",
+                border: "none",
+                fontSize: "16px",
+                cursor: "pointer",
+                transition: "background 0.2s, color 0.2s",
+                textAlign: "left",
+                fontFamily: "'Noto Sans', sans-serif",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = isProfile ? "#23776C" : "#2d3748")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = isProfile ? "#23776C" : "none")
+              }
+            >
+              <User size={20} />
+              {isOpen && <span style={{ marginLeft: "12px" }}>Profile</span>}
             </button>
 
             {/* Admin Dashboard - only visible to admins */}

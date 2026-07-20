@@ -1138,7 +1138,7 @@ body {
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 600;
-  color: #fff;
+  color: var(--gw-color-white);
   background-color: var(--gw-color-primary);
   border: none;
   border-radius: 6px;
@@ -1178,7 +1178,7 @@ body {
   border: 1px solid var(--gw-color-border);
   border-radius: 8px;
   padding: 16px 20px;
-  background-color: var(--gw-color-surface, #fff);
+  background-color: var(--gw-color-white);
 }
 
 .processing-tab__header {
@@ -1198,7 +1198,7 @@ body {
 .processing-tab__count {
   font-size: 12px;
   font-weight: 500;
-  color: var(--gw-color-text-secondary, #6b7280);
+  color: var(--gw-color-text-secondary);
   white-space: nowrap;
 }
 
@@ -1236,7 +1236,7 @@ body {
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: var(--gw-color-text-secondary, #6b7280);
+  color: var(--gw-color-text-secondary);
 }
 
 .processing-tab__step-text {
@@ -1249,7 +1249,7 @@ body {
 
 .processing-tab__state {
   font-size: 12px;
-  color: var(--gw-color-text-secondary, #6b7280);
+  color: var(--gw-color-text-secondary);
   white-space: nowrap;
 }
 
@@ -1267,7 +1267,7 @@ body {
   border-radius: 50%;
   flex-shrink: 0;
   background-color: var(--gw-color-border);
-  color: #fff;
+  color: var(--gw-color-white);
 }
 
 .processing-tab__step--done .processing-tab__marker {
@@ -1294,7 +1294,7 @@ body {
 .processing-tab__empty {
   padding: 40px 20px;
   text-align: center;
-  color: var(--gw-color-text-secondary, #6b7280);
+  color: var(--gw-color-text-secondary);
 }
 
 .processing-tab__empty-hint {
@@ -1307,7 +1307,7 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--gw-color-text-secondary, #6b7280);
+  color: var(--gw-color-text-secondary);
   margin: 4px 0 0;
 }
 
@@ -1335,7 +1335,7 @@ body {
   border-radius: 4px;
   border: none;
   background: transparent;
-  color: var(--gw-color-text-secondary, #6b7280);
+  color: var(--gw-color-text-secondary);
   cursor: pointer;
 }
 
@@ -1375,7 +1375,7 @@ body {
 }
 
 .processing-tab__action--primary {
-  color: #fff;
+  color: var(--gw-color-white);
   background-color: var(--gw-color-primary);
 }
 

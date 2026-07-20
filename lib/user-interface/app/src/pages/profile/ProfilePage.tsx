@@ -69,16 +69,8 @@ export default function ProfilePage() {
     username,
     userState,
     roles,
-    isDeveloper,
     loading: identityLoading,
   } = useAdminCheck();
-
-  // Gated to Developers for now.
-  useEffect(() => {
-    if (!identityLoading && !isDeveloper) {
-      navigate("/home", { replace: true });
-    }
-  }, [identityLoading, isDeveloper, navigate]);
 
   // useAdminCheck exposes cognito:username (a UUID here), not the email claim, so
   // read the email attribute directly for display.
@@ -210,8 +202,8 @@ export default function ProfilePage() {
 
   const stateLabel = userState ? stateNameFromCode(userState) || userState : "—";
 
-  // Hold rendering until the role resolves; non-Developers are redirected above.
-  if (identityLoading || !isDeveloper) {
+  // Hold rendering until identity (email, state, roles) resolves.
+  if (identityLoading) {
     return <div className="loading">Loading...</div>;
   }
 

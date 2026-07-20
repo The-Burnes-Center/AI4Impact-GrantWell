@@ -220,12 +220,12 @@ const Dashboard: React.FC = () => {
   }, [apiClient, addNotification, fetchNofos]);
 
   const showGrantSuccessBanner = useCallback((grantName: string) => {
+    // The green success banner already announces this; a toast here would double the same message.
     setAddedGrantName(grantName);
     setShowGrantBanner(true);
-    addNotification("success", `Grant "${grantName}" added successfully!`);
     setTimeout(() => setShowGrantBanner(false), 5000);
     fetchNofos();
-  }, [addNotification, fetchNofos]);
+  }, [fetchNofos]);
 
   const getActiveFilterCount = useCallback(() => {
     let count = 0;
