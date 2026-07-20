@@ -11,6 +11,8 @@ import ReviewExpandedRow from "./ReviewExpandedRow";
 interface ProcessingReviewTabProps {
   apiClient: ApiClient;
   addNotification: (type: string, message: string) => void;
+  /** When set, open the queue with this NOFO's row expanded (deep-link from Grants). */
+  focusNofo?: string | null;
 }
 
 type StatusFilter = "all" | "pending_review" | "approved" | "rejected" | "failed" | "needs_reupload" | "superseded";
@@ -47,6 +49,7 @@ const REPROCESSABLE_STATUSES = new Set(["failed", "pending_review", "needs_reupl
 const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   apiClient,
   addNotification,
+  focusNofo,
 }) => {
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [metrics, setMetrics] = useState<MetricsType | null>(null);
@@ -94,6 +97,12 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   useEffect(() => {
     setSelected(new Set());
   }, [statusFilter]);
+
+  useEffect(() => {
+    if (!focusNofo) return;
+    setStatusFilter("all");
+    setExpandedNofo(focusNofo);
+  }, [focusNofo]);
 
   const handleActionComplete = () => {
     setExpandedNofo(null);

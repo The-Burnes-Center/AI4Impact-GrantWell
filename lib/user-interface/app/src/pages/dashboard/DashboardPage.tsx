@@ -21,8 +21,8 @@ import "../../styles/dashboard.css";
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"grants" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
-  // Within the Grants tab: browse all grants vs. triage the ones needing review.
-  const [grantsSegment, setGrantsSegment] = useState<"all" | "attention">("all");
+   const [grantsSegment, setGrantsSegment] = useState<"all" | "attention">("all");
+  const [reviewFocus, setReviewFocus] = useState<string | null>(null);
   const [pendingReviewCount, setPendingReviewCount] = useState(0);
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -136,6 +136,13 @@ const Dashboard: React.FC = () => {
   }, [isAdmin, roleLoading]);
 
   const handleRefresh = useCallback(() => fetchNofos(true), [fetchNofos]);
+
+  // Deep-link a quarantined grant's row into the review queue (stable identity so
+  // it doesn't defeat NOFOsTab's memo).
+  const handleOpenReview = useCallback((nofoName: string) => {
+    setReviewFocus(nofoName);
+    setGrantsSegment("attention");
+  }, []);
 
   const handleTabKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -417,7 +424,7 @@ const Dashboard: React.FC = () => {
                   <div className="grants-segment" role="group" aria-label="Grant view">
                     <button
                       className={`grants-segment__btn ${grantsSegment === "all" ? "grants-segment__btn--active" : ""}`}
-                      onClick={() => setGrantsSegment("all")}
+                      onClick={() => { setGrantsSegment("all"); setReviewFocus(null); }}
                       aria-pressed={grantsSegment === "all"}
                     >
                       All grants
@@ -429,7 +436,10 @@ const Dashboard: React.FC = () => {
                     >
                       Needs attention
                       {pendingReviewCount > 0 && (
-                        <span className="tab-badge" aria-label={`${pendingReviewCount} items need review`}>
+                        <span
+                          className="grants-segment__badge"
+                          aria-label={`${pendingReviewCount} items need review`}
+                        >
                           {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
                         </span>
                       )}
@@ -441,6 +451,7 @@ const Dashboard: React.FC = () => {
                   <ProcessingReviewTab
                     apiClient={apiClient}
                     addNotification={addNotification}
+                    focusNofo={reviewFocus}
                   />
                 ) : (
                 <>
@@ -522,7 +533,7 @@ const Dashboard: React.FC = () => {
                   setUploadNofoModalOpen={setUploadNofoModalOpen}
                   showGrantSuccessBanner={showGrantSuccessBanner}
                   addNotification={addNotification}
-                  onOpenReview={() => setGrantsSegment("attention")}
+                  onOpenReview={handleOpenReview}
                 />
 
                 <PaginationControls

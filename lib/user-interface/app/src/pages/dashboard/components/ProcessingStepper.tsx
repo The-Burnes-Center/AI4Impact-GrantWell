@@ -15,13 +15,15 @@ interface ProcessingStepperProps {
  */
 const ProcessingStepper: React.FC<ProcessingStepperProps> = ({ status }) => {
   const current = stageIndex(status);
+  // An unrecognized/terminal status has no position; show a neutral label rather
+  // than pinning the stepper to the first stage.
+  const label = current >= 0 ? PROCESSING_STAGES[current].label : "Processing";
 
   return (
     <span
       className="processing-stepper"
       role="status"
-      aria-live="polite"
-      aria-label={`Processing: ${PROCESSING_STAGES[Math.max(current, 0)]?.label ?? status}`}
+      aria-label={`Processing: ${label}`}
     >
       <span className="processing-stepper__dots" aria-hidden="true">
         {PROCESSING_STAGES.map((stage, i) => {
@@ -38,9 +40,7 @@ const ProcessingStepper: React.FC<ProcessingStepperProps> = ({ status }) => {
           );
         })}
       </span>
-      <span className="processing-stepper__label">
-        {PROCESSING_STAGES[Math.max(current, 0)]?.label ?? "Processing"}
-      </span>
+      <span className="processing-stepper__label">{label}</span>
     </span>
   );
 };

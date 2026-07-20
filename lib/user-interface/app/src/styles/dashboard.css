@@ -175,8 +175,32 @@ body {
 
 .grants-segment__btn--active {
   color: var(--gw-color-primary);
-  background-color: var(--gw-color-surface);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  background-color: var(--gw-color-white);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.grants-segment__btn:focus-visible {
+  outline: 2px solid var(--gw-color-focus-light);
+  outline-offset: 2px;
+}
+
+/* Attention count on the segment — a warning tone, not the danger-red tab badge,
+   since "items to review" is an advisory queue rather than an error state. */
+.grants-segment__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--gw-color-warning);
+  background-color: color-mix(in srgb, var(--gw-color-warning) 16%, transparent);
 }
 
 .feature-rollouts-panel {
@@ -1048,20 +1072,6 @@ body {
 .nofo-name {
   font-weight: 500;
   color: #333;
-}
-
-.processing-status-pill {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 8px;
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--gw-color-primary);
-  background-color: var(--gw-color-primary-light);
-  border: 1px solid var(--gw-color-primary);
-  border-radius: 4px;
-  animation: processing-pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes processing-pulse {
@@ -2423,7 +2433,6 @@ select.form-input {
    default move; other actions stay available but visually quieter. */
 .review-btn--recommended {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--gw-color-primary) 45%, transparent);
-  order: -1;
 }
 
 .review-btn--secondary {
@@ -2566,62 +2575,6 @@ select.form-input {
 .review-table-grid-select {
   grid-template-columns: 44px minmax(0, 2fr) minmax(0, 0.8fr) 110px 90px 80px;
   padding-right: 8px;
-}
-
-/* Unified lifecycle view */
-.lifecycle-table-grid {
-  grid-template-columns: minmax(0, 2fr) 120px minmax(0, 1.2fr) 80px 80px;
-  padding-right: 8px;
-}
-
-.lifecycle-stage-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.lifecycle-stage-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid var(--gw-color-border, #d1d5db);
-  border-radius: 16px;
-  background: var(--gw-color-white, #fff);
-  color: var(--gw-color-text, #1f2937);
-  cursor: pointer;
-}
-
-.lifecycle-stage-chip:hover {
-  border-color: var(--gw-color-primary, #23776C);
-}
-
-.lifecycle-stage-chip--active {
-  background: var(--gw-color-primary, #23776C);
-  border-color: var(--gw-color-primary, #23776C);
-  color: var(--gw-color-white, #fff);
-}
-
-.lifecycle-stage-chip__count {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--gw-color-text-secondary) 12%, transparent);
-  color: inherit;
-}
-
-.lifecycle-stage-chip--active .lifecycle-stage-chip__count {
-  background: color-mix(in srgb, var(--gw-color-white) 25%, transparent);
-}
-
-.review-refreshing {
-  margin-left: 12px;
-  font-size: 13px;
-  color: var(--gw-color-text-secondary, #6b7280);
 }
 
 .review-checkbox-cell {

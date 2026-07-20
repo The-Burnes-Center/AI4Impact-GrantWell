@@ -78,6 +78,9 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   }
 
   const recommended = recommendedAction(source, canApprove);
+  // Recommendation is a color-only cue visually, so name it for assistive tech too.
+  const rec = (action: RecommendedAction, label: string) =>
+    recommended === action ? `${label} (recommended)` : label;
 
   const approveBtn = canApprove ? (
     <button
@@ -85,7 +88,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       className={`review-btn review-btn--approve ${recommended === "approve" ? "review-btn--recommended" : ""}`}
       onClick={onApprove}
       disabled={busy}
-      aria-label="Approve and publish this NOFO"
+      aria-label={rec("approve", "Approve and publish this NOFO")}
     >
       <LuCheck size={14} aria-hidden="true" />
       {actionInProgress === "approve"
@@ -102,7 +105,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       className={`review-btn ${recommended === "reupload" ? "review-btn--approve review-btn--recommended" : "review-btn--secondary"}`}
       onClick={onReupload}
       disabled={busy}
-      aria-label="Upload the correct NOFO document to replace this one"
+      aria-label={rec("reupload", "Upload the correct NOFO document to replace this one")}
     >
       <LuUpload size={14} aria-hidden="true" />
       {actionInProgress === "reupload" ? "Uploading..." : "Re-upload Correct NOFO"}
@@ -115,7 +118,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       className={`review-btn ${recommended === "reprocess" ? "review-btn--approve review-btn--recommended" : "review-btn--reprocess"}`}
       onClick={onReprocess}
       disabled={busy}
-      aria-label="Reprocess this NOFO through the pipeline"
+      aria-label={rec("reprocess", "Reprocess this NOFO through the pipeline")}
     >
       <LuRefreshCw
         size={14}
@@ -132,7 +135,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       className={`review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
       onClick={onReject}
       disabled={busy || rejectDisabled}
-      aria-label={rejectDisabled ? "Reject this NOFO (admin notes required)" : "Reject this NOFO"}
+      aria-label={rejectDisabled ? "Reject this NOFO (admin notes required)" : rec("reject", "Reject this NOFO")}
     >
       <LuX size={14} aria-hidden="true" />
       {actionInProgress === "reject" ? "Rejecting..." : "Reject"}

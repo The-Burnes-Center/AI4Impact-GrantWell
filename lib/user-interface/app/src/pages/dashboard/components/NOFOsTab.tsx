@@ -26,7 +26,7 @@ interface NOFOsTabProps {
   setUploadNofoModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showGrantSuccessBanner?: (grantName: string) => void;
   addNotification: (type: string, message: string) => void;
-  /** Open the review view for a NOFO that quarantined or auto-published flagged. */
+  /** Open the review queue focused on a quarantined NOFO. */
   onOpenReview?: (nofoName: string) => void;
 }
 
@@ -337,7 +337,6 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     type="button"
                     className="grant-review-link grant-review-link--needs-review"
                     onClick={() => onOpenReview?.(nofo.name)}
-                    disabled={!onOpenReview}
                   >
                     <LuTriangleAlert size={12} aria-hidden="true" />
                     Needs review
@@ -345,11 +344,12 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 ) : nofo.processingStatus ? (
                   <ProcessingStepper status={nofo.processingStatus} />
                 ) : nofo.reviewFlag ? (
+                  // A flagged partial published live (no review row), so the fix is to
+                  // correct its extracted summary — open the editor rather than the queue.
                   <button
                     type="button"
                     className="grant-review-link grant-review-link--suggested"
-                    onClick={() => onOpenReview?.(nofo.name)}
-                    disabled={!onOpenReview}
+                    onClick={() => handleEditSummary(nofo)}
                     title={
                       nofo.reviewFlag.missingCategories.length > 0
                         ? `Missing: ${nofo.reviewFlag.missingCategories.join(", ")}`
