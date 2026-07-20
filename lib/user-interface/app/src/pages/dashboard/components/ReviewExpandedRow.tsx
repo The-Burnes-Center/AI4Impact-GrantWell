@@ -504,6 +504,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               detail.extractedSummary != null
             }
             status={review.status}
+            source={review.source}
             onApprove={handleApprove}
             onReject={handleRejectClick}
             onReprocess={handleReprocess}

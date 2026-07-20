@@ -145,6 +145,40 @@ body {
   line-height: 1;
 }
 
+/* Segmented control inside the Grants tab: browse vs. triage */
+.grants-segment {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px;
+  background-color: var(--gw-color-background);
+  border: 1px solid var(--gw-color-border);
+  border-radius: 8px;
+}
+
+.grants-segment__btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gw-color-text-secondary);
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.grants-segment__btn:hover:not(.grants-segment__btn--active) {
+  color: var(--gw-color-text);
+}
+
+.grants-segment__btn--active {
+  color: var(--gw-color-primary);
+  background-color: var(--gw-color-surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
 .feature-rollouts-panel {
   display: flex;
   flex-direction: column;
@@ -2383,6 +2417,29 @@ select.form-input {
 
 .review-btn--approve:hover:not(:disabled) {
   background-color: var(--gw-color-primary-hover);
+}
+
+/* The recommended action for a given failure — emphasized so it reads as the
+   default move; other actions stay available but visually quieter. */
+.review-btn--recommended {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gw-color-primary) 45%, transparent);
+  order: -1;
+}
+
+.review-btn--secondary {
+  padding: 8px 16px;
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  color: var(--gw-color-text);
+  background-color: var(--gw-color-surface);
+  border: 1px solid var(--gw-color-border);
+  border-radius: 999px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.review-btn--secondary:hover:not(:disabled) {
+  background-color: var(--gw-color-background);
 }
 
 .review-btn--apply-fix {

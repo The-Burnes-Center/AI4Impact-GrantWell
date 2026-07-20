@@ -20,7 +20,9 @@ import type { RawNOFOData } from "../../common/types/document";
 import "../../styles/dashboard.css";
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "processing-review" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
+  // Within the Grants tab: browse all grants vs. triage the ones needing review.
+  const [grantsSegment, setGrantsSegment] = useState<"all" | "attention">("all");
   const [pendingReviewCount, setPendingReviewCount] = useState(0);
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,7 +46,6 @@ const Dashboard: React.FC = () => {
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
   const grantsTabRef = useRef<HTMLButtonElement>(null);
-  const processingReviewTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
   const digestPreviewTabRef = useRef<HTMLButtonElement>(null);
@@ -140,9 +141,6 @@ const Dashboard: React.FC = () => {
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
       const tabs = [
         { key: "grants" as const, ref: grantsTabRef },
-        ...(isAdmin
-          ? [{ key: "processing-review" as const, ref: processingReviewTabRef }]
-          : []),
         ...(isDeveloper
           ? [{ key: "feature-rollouts" as const, ref: rolloutsTabRef }]
           : []),
@@ -178,7 +176,7 @@ const Dashboard: React.FC = () => {
         focusTabAt(tabs.length - 1);
       }
     },
-    [activeTab, isAdmin, isDeveloper, canManageUsers]
+    [activeTab, isDeveloper, canManageUsers]
   );
 
   const confirmAutomatedScraper = useCallback(async () => {
@@ -281,11 +279,9 @@ const Dashboard: React.FC = () => {
   const filterCount = getActiveFilterCount();
   const activeTabAnnouncement = activeTab === "grants"
     ? "Grants tab selected"
-    : activeTab === "processing-review"
-      ? "Processing review tab selected"
-      : activeTab === "feature-rollouts"
-        ? "Developer rollouts tab selected"
-        : "Developer user management tab selected";
+    : activeTab === "feature-rollouts"
+      ? "Developer rollouts tab selected"
+      : "Developer user management tab selected";
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
@@ -362,29 +358,6 @@ const Dashboard: React.FC = () => {
             >
               Grants
             </button>
-            {isAdmin && (
-              <button
-                id="dashboard-tab-processing-review"
-                ref={processingReviewTabRef}
-                className={`tab-button ${activeTab === "processing-review" ? "active" : ""}`}
-                onClick={() => setActiveTab("processing-review")}
-                onKeyDown={handleTabKeyDown}
-                role="tab"
-                aria-selected={activeTab === "processing-review"}
-                aria-controls="dashboard-panel-processing-review"
-                tabIndex={activeTab === "processing-review" ? 0 : -1}
-              >
-                Processing Review
-                {pendingReviewCount > 0 && (
-                  <span
-                    className="tab-badge"
-                    aria-label={`${pendingReviewCount} items need review`}
-                  >
-                    {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
-                  </span>
-                )}
-              </button>
-            )}
             {isDeveloper && (
               <button
                 id="dashboard-tab-rollouts"
@@ -440,6 +413,37 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-grants"
                 tabIndex={0}
               >
+                {isAdmin && (
+                  <div className="grants-segment" role="group" aria-label="Grant view">
+                    <button
+                      className={`grants-segment__btn ${grantsSegment === "all" ? "grants-segment__btn--active" : ""}`}
+                      onClick={() => setGrantsSegment("all")}
+                      aria-pressed={grantsSegment === "all"}
+                    >
+                      All grants
+                    </button>
+                    <button
+                      className={`grants-segment__btn ${grantsSegment === "attention" ? "grants-segment__btn--active" : ""}`}
+                      onClick={() => setGrantsSegment("attention")}
+                      aria-pressed={grantsSegment === "attention"}
+                    >
+                      Needs attention
+                      {pendingReviewCount > 0 && (
+                        <span className="tab-badge" aria-label={`${pendingReviewCount} items need review`}>
+                          {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+                {isAdmin && grantsSegment === "attention" ? (
+                  <ProcessingReviewTab
+                    apiClient={apiClient}
+                    addNotification={addNotification}
+                  />
+                ) : (
+                <>
                 <div className="search-actions-container">
                   <div className="search-filter-container">
                     <div className="search-input-wrapper">
@@ -518,7 +522,7 @@ const Dashboard: React.FC = () => {
                   setUploadNofoModalOpen={setUploadNofoModalOpen}
                   showGrantSuccessBanner={showGrantSuccessBanner}
                   addNotification={addNotification}
-                  onOpenReview={() => setActiveTab("processing-review")}
+                  onOpenReview={() => setGrantsSegment("attention")}
                 />
 
                 <PaginationControls
@@ -529,18 +533,8 @@ const Dashboard: React.FC = () => {
                   onPageChange={setCurrentPage}
                   onItemsPerPageChange={(e) => { setItemsPerPage(parseInt(e.target.value)); setCurrentPage(1); }}
                 />
-              </div>
-            ) : activeTab === "processing-review" ? (
-              <div
-                id="dashboard-panel-processing-review"
-                role="tabpanel"
-                aria-labelledby="dashboard-tab-processing-review"
-                tabIndex={0}
-              >
-                <ProcessingReviewTab
-                  apiClient={apiClient}
-                  addNotification={addNotification}
-                />
+                </>
+                )}
               </div>
             ) : activeTab === "feature-rollouts" ? (
               <div
