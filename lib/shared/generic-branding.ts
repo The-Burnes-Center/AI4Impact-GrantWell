@@ -4,6 +4,8 @@
 export const genericBrandingData = {
   appName: "GrantWell",
   orgName: "Burnes Center for Social Change",
+  postalAddress: "271 Huntington Ave, Boston, MA 02115",
+  supportEmail: "hello@grantwell.us",
   colors: {
     primary: "#23776C",
     primaryHover: "#195C53",

@@ -521,6 +521,21 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
+      "NotificationUnsubscribeIntegration",
+      lambdaFunctions.notificationUnsubscribeFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/unsubscribe",
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],
+      integration: notificationUnsubscribeIntegration,
+    });
+
+    lambdaFunctions.notificationDigestFunction.addEnvironment(
+      "UNSUBSCRIBE_URL_BASE",
+      `${restBackend.restAPI.apiEndpoint}/unsubscribe`
+    );
+
     // Admin API routes for NOFO processing review
     const nofoAdminAPIIntegration = new HttpLambdaIntegration(
       "NofoAdminAPIIntegration",

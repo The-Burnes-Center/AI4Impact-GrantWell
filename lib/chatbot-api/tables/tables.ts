@@ -133,12 +133,15 @@ export class TableStack extends Stack {
 
     this.nofoProcessingReviewTable = nofoProcessingReviewTable;
 
-    // Per-user notification preferences: subscriptions (states/categories/keywords),
-    // digest frequency, and a last_sent watermark so a digest only carries NOFOs newer
-    // than the previous send. Keyed by Cognito user id; the digest Lambda scans it.
     const userNotificationPrefsTable = new Table(this, 'UserNotificationPrefsTable', {
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
+    userNotificationPrefsTable.addGlobalSecondaryIndex({
+      indexName: 'FrequencyIndex',
+      partitionKey: { name: 'frequency', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
     });
 
     this.userNotificationPrefsTable = userNotificationPrefsTable;

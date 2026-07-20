@@ -15,6 +15,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as ses from "aws-cdk-lib/aws-ses";
+import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
@@ -83,6 +84,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
   public readonly notificationDigestPreviewFunction: lambda.Function;
+  public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
   public readonly feedbackProxyFunction: lambda.Function;
   public readonly nofoSummaryUpdateFunction: lambda.Function;
@@ -1720,8 +1722,26 @@ export class LambdaFunctionStack extends cdk.Stack {
     const digestBrandEnv = {
       DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
       DIGEST_LOGO_URL: `${emailConfig.deploymentUrl}${genericBrandingData.footerLogo}`,
+      DIGEST_APP_NAME: genericBrandingData.appName,
       DIGEST_ORG_NAME: genericBrandingData.orgName,
+      DIGEST_POSTAL_ADDRESS: genericBrandingData.postalAddress,
+      DIGEST_SUPPORT_EMAIL: genericBrandingData.supportEmail,
     };
+
+    // Shared HMAC key for one-click unsubscribe tokens: the digest Lambda signs the per-user token
+    // it embeds in each email; the public unsubscribe Lambda verifies it. Same secret must reach
+    // both. Generated once and stored in Secrets Manager (no plaintext key in code or env at rest).
+    const unsubscribeSecret = new secretsmanager.Secret(scope, "DigestUnsubscribeSecret", {
+      description: "HMAC key for GrantWell digest one-click unsubscribe tokens",
+      generateSecretString: {
+        passwordLength: 48,
+        excludePunctuation: true,
+      },
+    });
+
+    // Sectioned digest (New / Closing soon / Still open + fallback). Off by default; flip to "true"
+    // to enable the richer layout once it's been reviewed.
+    const digestV2 = process.env.DIGEST_V2 === "true" ? "true" : "false";
 
     const notificationDigestFunction = new lambda.Function(
       scope,
@@ -1738,6 +1758,8 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_POOL_ID: props.userPool.userPoolId,
           NOTIFICATION_SENDER: notificationSender,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
+          DIGEST_V2: digestV2,
+          UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
           ...digestBrandEnv,
         },
         timeout: cdk.Duration.minutes(15),
@@ -1747,6 +1769,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     props.userNotificationPrefsTable.grantReadWriteData(notificationDigestFunction);
     props.nofoMetadataTable.grantReadData(notificationDigestFunction);
     props.userPool.grant(notificationDigestFunction, "cognito-idp:AdminGetUser");
+    unsubscribeSecret.grantRead(notificationDigestFunction);
     notificationDigestFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -1780,6 +1803,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
           NOTIFICATION_SENDER: notificationSender,
+          DIGEST_V2: digestV2,
           ...digestBrandEnv,
         },
         timeout: cdk.Duration.seconds(15),
@@ -1804,11 +1828,40 @@ export class LambdaFunctionStack extends cdk.Stack {
     notificationDigestPreviewFunction.node.addDependency(notificationEmailIdentity);
     this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
 
+    // Public one-click unsubscribe endpoint (no JWT — the signed token is the authorization). Sets
+    // the caller's frequency to "off". Route is wired in chatbot-api/index.ts without an authorizer.
+    const notificationUnsubscribeFunction = new lambda.Function(
+      scope,
+      "NotificationUnsubscribeFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "notifications/unsubscribe")
+        ),
+        handler: "index.handler",
+        layers: [jsSharedLayer],
+        environment: {
+          USER_NOTIFICATION_PREFS_TABLE_NAME:
+            props.userNotificationPrefsTable.tableName,
+          UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
+        },
+        timeout: cdk.Duration.seconds(15),
+      }
+    );
+    props.userNotificationPrefsTable.grantWriteData(notificationUnsubscribeFunction);
+    unsubscribeSecret.grantRead(notificationUnsubscribeFunction);
+    this.notificationUnsubscribeFunction = notificationUnsubscribeFunction;
+
     // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its
     // frequency so the same Lambda serves both cadences.
+    // DISABLED at deploy: the digest is not live yet. With the rules disabled the sender Lambda is
+    // never invoked on schedule, so nothing goes out to any user regardless of their frequency pref.
+    // The Developer preview / [TEST] path is unaffected (it invokes the preview Lambda directly).
+    // Flip `enabled` to true to turn the scheduled digest on.
     new events.Rule(scope, "NotificationDigestDailyRule", {
       schedule: events.Schedule.cron({ minute: "0", hour: "8", day: "*", month: "*", year: "*" }),
       description: "Send daily NOFO notification digests",
+      enabled: false,
     }).addTarget(
       new targets.LambdaFunction(notificationDigestFunction, {
         event: events.RuleTargetInput.fromObject({ frequency: "daily" }),
@@ -1818,6 +1871,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     new events.Rule(scope, "NotificationDigestWeeklyRule", {
       schedule: events.Schedule.cron({ minute: "0", hour: "8", weekDay: "MON", month: "*", year: "*" }),
       description: "Send weekly NOFO notification digests",
+      enabled: false,
     }).addTarget(
       new targets.LambdaFunction(notificationDigestFunction, {
         event: events.RuleTargetInput.fromObject({ frequency: "weekly" }),
