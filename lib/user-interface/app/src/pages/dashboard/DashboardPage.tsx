@@ -13,7 +13,7 @@ import ProcessingTab from "./components/ProcessingTab";
 import DigestPreviewTab from "./components/DigestPreviewTab";
 import {
   LuSearch, LuFilter, LuUpload, LuCheck, LuX,
-  LuRefreshCw, LuDownload, LuInfo,
+  LuRefreshCw, LuDownload, LuInfo, LuLoader, LuArrowRight,
 } from "react-icons/lu";
 import { Modal } from "../../components/common/Modal";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
@@ -24,6 +24,10 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"grants" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
    const [grantsSegment, setGrantsSegment] = useState<"all" | "processing" | "attention">("all");
   const [reviewFocus, setReviewFocus] = useState<string | null>(null);
+  // Names of finished grants the admin has dismissed from the Processing tab (client-side, resets on reload).
+  const [dismissedProcessing, setDismissedProcessing] = useState<Set<string>>(new Set());
+  // Whether the "grants processing" pointer banner on the All-grants view is dismissed this session.
+  const [processingBannerDismissed, setProcessingBannerDismissed] = useState(false);
   const [pendingReviewCount, setPendingReviewCount] = useState(0);
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,6 +82,8 @@ const Dashboard: React.FC = () => {
           agency: nofo.agency || null,
           category: nofo.category || null,
           processingStatus: nofo.processing_status ?? null,
+          processingCompletedAt: nofo.processing_completed_at ?? null,
+          processingOutcome: nofo.processing_outcome ?? null,
           reviewFlag: nofo.review_flag
             ? {
                 reason: nofo.review_flag.reason,
@@ -252,10 +258,41 @@ const Dashboard: React.FC = () => {
     return filtered;
   }, [nofos, searchQuery, statusFilter, grantTypeFilter]);
 
-  const processingNofos = useMemo(
-    () => nofos.filter((n) => n.processingStatus && n.processingStatus !== "quarantined"),
+  const RECENT_MS = 24 * 60 * 60 * 1000;
+  const processingNofos = useMemo(() => {
+    const now = Date.now();
+    return nofos.filter((n) => {
+      if (n.processingStatus && n.processingStatus !== "quarantined") return true;
+      if (!n.processingCompletedAt) return false;
+      // A dismissed finished card stays hidden until the next reload (client-side only; the
+      // completion stamp itself persists on the record for the full 24h window).
+      if (dismissedProcessing.has(n.name)) return false;
+      const finished = new Date(n.processingCompletedAt).getTime();
+      return !isNaN(finished) && now - finished <= RECENT_MS;
+    });
+  }, [nofos, RECENT_MS, dismissedProcessing]);
+
+  // Badge counts only actively-processing grants (recently-finished are informational, not "todo").
+  const processingCount = useMemo(
+    () => nofos.filter((n) => n.processingStatus && n.processingStatus !== "quarantined").length,
     [nofos]
   );
+  // Recently-finished (not dismissed) count, for the pointer banner on the All-grants view.
+  const finishedCount = useMemo(
+    () =>
+      processingNofos.filter((n) => !n.processingStatus && n.processingCompletedAt).length,
+    [processingNofos]
+  );
+
+  // Re-show a dismissed pointer banner when a fresh batch starts processing, so dismissing it once
+  // doesn't hide progress for later uploads. Tracks the previous in-flight count via a ref.
+  const prevProcessingCount = useRef(0);
+  useEffect(() => {
+    if (processingCount > prevProcessingCount.current) {
+      setProcessingBannerDismissed(false);
+    }
+    prevProcessingCount.current = processingCount;
+  }, [processingCount]);
 
   const paginatedData = useMemo(() => {
     const totalPages = Math.ceil(filteredNofos.length / itemsPerPage);
@@ -442,12 +479,12 @@ const Dashboard: React.FC = () => {
                       aria-pressed={grantsSegment === "processing"}
                     >
                       Processing
-                      {processingNofos.length > 0 && (
+                      {processingCount > 0 && (
                         <span
                           className="grants-segment__badge"
-                          aria-label={`${processingNofos.length} grants processing`}
+                          aria-label={`${processingCount} grants processing`}
                         >
-                          <span aria-hidden="true">{processingNofos.length > 99 ? "99+" : processingNofos.length}</span>
+                          <span aria-hidden="true">{processingCount > 99 ? "99+" : processingCount}</span>
                         </span>
                       )}
                     </button>
@@ -476,9 +513,45 @@ const Dashboard: React.FC = () => {
                     focusNofo={reviewFocus}
                   />
                 ) : isAdmin && grantsSegment === "processing" ? (
-                  <ProcessingTab nofos={processingNofos} />
+                  <ProcessingTab
+                    nofos={processingNofos}
+                    onViewSummary={(name) => navigate(`/requirements/${encodeURIComponent(name)}`)}
+                    onOpenReview={handleOpenReview}
+                    onDismiss={(name) =>
+                      setDismissedProcessing((prev) => new Set(prev).add(name))
+                    }
+                  />
                 ) : (
                 <>
+                {isAdmin && !processingBannerDismissed && (processingCount > 0 || finishedCount > 0) && (
+                  <div className="processing-banner" role="status">
+                    {processingCount > 0 ? (
+                      <LuLoader size={16} className="processing-banner__spin" aria-hidden="true" />
+                    ) : (
+                      <LuCheck size={16} aria-hidden="true" />
+                    )}
+                    <span className="processing-banner__text">
+                      {processingCount > 0 && `${processingCount} grant${processingCount === 1 ? "" : "s"} processing`}
+                      {processingCount > 0 && finishedCount > 0 && " · "}
+                      {finishedCount > 0 && `${finishedCount} recently finished`}
+                    </span>
+                    <button
+                      type="button"
+                      className="processing-banner__view"
+                      onClick={() => setGrantsSegment("processing")}
+                    >
+                      View <LuArrowRight size={13} aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      className="processing-banner__dismiss"
+                      onClick={() => setProcessingBannerDismissed(true)}
+                      aria-label="Dismiss processing notice"
+                    >
+                      <LuX size={14} aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
                 <div className="search-actions-container">
                   <div className="search-filter-container">
                     <div className="search-input-wrapper">

@@ -70,4 +70,6 @@ export interface RawNOFOData {
   agency?: string | null;
   category?: string | null;
   created_at?: string | null;
+  processing_completed_at?: string | null;
+  processing_outcome?: "published" | "needs_review" | null;
 }

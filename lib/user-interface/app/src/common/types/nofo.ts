@@ -30,6 +30,10 @@ export interface NOFO {
   processingStatus?: string | null;
   reviewFlag?: ReviewFlag | null;
   createdAt?: string | null;
+  /** Set when the pipeline finished; drives the "recently finished" state in the Processing tab. */
+  processingCompletedAt?: string | null;
+  /** How the pipeline finished: "published" (live) or "needs_review" (failed/quarantined). */
+  processingOutcome?: "published" | "needs_review" | null;
 }
 
 export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {

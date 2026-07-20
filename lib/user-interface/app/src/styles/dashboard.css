@@ -1106,6 +1106,66 @@ body {
   animation: processing-pulse 1.5s ease-in-out infinite;
 }
 
+/* Slim pointer banner on the All-grants view: appears while grants are in flight / recently
+   finished, links to the Processing segment. Not a container for detail — just a nudge. */
+.processing-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--gw-color-primary);
+  background-color: color-mix(in srgb, var(--gw-color-primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gw-color-primary) 25%, transparent);
+}
+
+.processing-banner__spin {
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.processing-banner__text {
+  flex: 1;
+  font-weight: 500;
+}
+
+.processing-banner__view {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--gw-color-primary);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.processing-banner__view:hover {
+  filter: brightness(0.96);
+}
+
+.processing-banner__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--gw-color-primary);
+  cursor: pointer;
+}
+
+.processing-banner__dismiss:hover {
+  background-color: color-mix(in srgb, var(--gw-color-primary) 15%, transparent);
+}
+
 /* "Processing" segment: one card per in-flight grant with a full labeled stepper. */
 .processing-tab {
   display: flex;
@@ -1240,6 +1300,93 @@ body {
 .processing-tab__empty-hint {
   font-size: 13px;
   margin-top: 4px;
+}
+
+.processing-tab__group-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gw-color-text-secondary, #6b7280);
+  margin: 4px 0 0;
+}
+
+/* Terminal (recently finished) card accents. */
+.processing-tab__card--published {
+  border-left: 3px solid var(--gw-color-success);
+}
+
+.processing-tab__card--failed {
+  border-left: 3px solid var(--gw-color-danger);
+}
+
+.processing-tab__header-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.processing-tab__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--gw-color-text-secondary, #6b7280);
+  cursor: pointer;
+}
+
+.processing-tab__dismiss:hover {
+  background-color: var(--gw-color-border);
+  color: var(--gw-color-text);
+}
+
+.processing-tab__outcome {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.processing-tab__outcome--published {
+  color: var(--gw-color-success);
+}
+
+.processing-tab__outcome--failed {
+  color: var(--gw-color-danger);
+}
+
+.processing-tab__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.processing-tab__action--primary {
+  color: #fff;
+  background-color: var(--gw-color-primary);
+}
+
+.processing-tab__action--attention {
+  color: var(--gw-color-danger);
+  background-color: color-mix(in srgb, var(--gw-color-danger) 10%, transparent);
+  border-color: color-mix(in srgb, var(--gw-color-danger) 40%, transparent);
+}
+
+.processing-tab__action:hover {
+  filter: brightness(0.96);
 }
 
 /* Row-level review links: quarantined (needs review) and flagged (review suggested) */
