@@ -1711,13 +1711,15 @@ export class LambdaFunctionStack extends cdk.Stack {
     const notificationSender =
       process.env.NOTIFICATION_SENDER || "no-reply@grantwell.us";
     const senderDomain = notificationSender.split("@")[1] || "grantwell.us";
-    const notificationEmailIdentity = new ses.EmailIdentity(
-      scope,
-      "NotificationSenderIdentity",
-      {
-        identity: ses.Identity.domain(senderDomain),
-      }
-    );
+    // SES identities are account+region scoped: the generic stack already owns the grantwell.us
+    // identity, so a second stack in the same account (burnes-staging) must reuse it, not re-create
+    // it. Both still send as no-reply@grantwell.us; only the primary stack manages the identity.
+    const managesSenderIdentity = process.env.ENVIRONMENT !== "grantwell-burnes-staging";
+    const notificationEmailIdentity = managesSenderIdentity
+      ? new ses.EmailIdentity(scope, "NotificationSenderIdentity", {
+          identity: ses.Identity.domain(senderDomain),
+        })
+      : undefined;
 
     const digestBrandEnv = {
       DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
@@ -1781,7 +1783,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
     // Ensure the identity exists before the sender-scoped policy is exercised.
-    notificationDigestFunction.node.addDependency(notificationEmailIdentity);
+    if (notificationEmailIdentity) {
+      notificationDigestFunction.node.addDependency(notificationEmailIdentity);
+    }
 
     this.notificationDigestFunction = notificationDigestFunction;
 
@@ -1825,7 +1829,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         },
       })
     );
-    notificationDigestPreviewFunction.node.addDependency(notificationEmailIdentity);
+    if (notificationEmailIdentity) {
+      notificationDigestPreviewFunction.node.addDependency(notificationEmailIdentity);
+    }
     this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
 
     // Public one-click unsubscribe endpoint (no JWT — the signed token is the authorization). Sets

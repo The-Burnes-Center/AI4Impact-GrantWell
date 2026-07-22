@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Deploy to GrantWell
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-production
+  group: deploy-grantwell-staging
   cancel-in-progress: false
 
 jobs:
@@ -16,10 +16,11 @@ jobs:
 
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
-      ENVIRONMENT: production
-      STACK_NAME: gw-stack-prod
-      CLOUDFRONT_CERTIFICATE_ARN: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
-      CLOUDFRONT_CUSTOM_DOMAIN: ${{ secrets.CLOUDFRONT_CUSTOM_DOMAIN }}
+      ENVIRONMENT: grantwell-staging
+      GRANTWELL_INSTANCE: generic
+      STACK_NAME: grantwell-staging
+      CLOUDFRONT_CERTIFICATE_ARN: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_STAGING }}
+      CLOUDFRONT_CUSTOM_DOMAIN: ${{ secrets.CLOUDFRONT_CUSTOM_DOMAIN_STAGING }}
 
     permissions:
       id-token: write
@@ -32,8 +33,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
-          role-to-assume: ${{ secrets.SERVICE_ROLE_ARN_PROD }}
-          role-session-name: ${{ github.actor }}-production
+          role-to-assume: ${{ secrets.SERVICE_ROLE_ARN_GRANTWELL_STAGING }}
+          role-session-name: ${{ github.actor }}-grantwell
           aws-region: us-east-1
 
       - name: Set up Node.js
@@ -53,6 +54,6 @@ jobs:
       - name: Bootstrap AWS environment
         run: cdk bootstrap
 
-      - name: Deploy CDK stacks to production
+      - name: Deploy CDK stacks to GrantWell staging
         run: |
           cdk deploy ${{ env.STACK_NAME }} --require-approval never

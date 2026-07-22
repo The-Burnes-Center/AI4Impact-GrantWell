@@ -12,67 +12,45 @@ const ENVIRONMENT = process.env.ENVIRONMENT;
 // ENVIRONMENT switch below runs unchanged (so MA/generic deploys are byte-identical).
 const instanceInfra = resolveInstanceInfra();
 
-// Change these as needed
-// Must be unique globally or the deployment will fail
-// Environment-specific domain names for branch-based deployment
-const getCognitoDomainName = () => {
-  if (instanceInfra) return instanceInfra.cognitoDomainName;
+// Per-environment resource names, keyed by the ENVIRONMENT env var. These must be globally unique
+// per account (Cognito domains especially). To add an environment, add one row here — every derived
+// name below reads from it. A config-driven GRANTWELL_INSTANCE overrides this map entirely.
+interface EnvNames {
+  cognitoDomainName: string;
+  stackName: string;
+  knowledgeBaseIndexName: string;
+}
 
-  if (ENVIRONMENT === 'production') {
-    return 'gw-auth-prod';
-  } else if (ENVIRONMENT === 'staging') {
-    return 'gw-auth-staging';
-  } else if (ENVIRONMENT === 'grantwell-staging') {
-    return 'gw-auth-grantwell-staging';
-  }
-
-  // Fallback for local development
-  return 'gw-auth-dev';
+const ENV_CONFIG: Record<string, EnvNames> = {
+  'grantwell-staging': {
+    cognitoDomainName: 'gw-auth-grantwell-staging',
+    stackName: 'grantwell-staging',
+    knowledgeBaseIndexName: 'knowledge-base-index-grantwell-staging',
+  },
+  'grantwell-burnes-staging': {
+    cognitoDomainName: 'gw-auth-grantwell-burnes-staging',
+    stackName: 'grantwell-burnes-staging',
+    knowledgeBaseIndexName: 'knowledge-base-index-grantwell-burnes-staging',
+  },
 };
 
-export const cognitoDomainName = getCognitoDomainName();
+// A config-driven instance (GRANTWELL_INSTANCE) wins; otherwise resolve by ENVIRONMENT. There is no
+// fallback — an unknown ENVIRONMENT fails loudly instead of silently deploying wrong-named resources.
+const envNames = instanceInfra ?? (ENVIRONMENT ? ENV_CONFIG[ENVIRONMENT] : undefined);
+if (!envNames) {
+  throw new Error(
+    `No config for ENVIRONMENT="${ENVIRONMENT ?? ''}". Expected one of: ${Object.keys(ENV_CONFIG).join(', ')} (or set GRANTWELL_INSTANCE).`
+  );
+}
+
+export const cognitoDomainName = envNames.cognitoDomainName;
+export const stackName = envNames.stackName;
+export const knowledgeBaseIndexName = envNames.knowledgeBaseIndexName;
 
 // This can be anything that would be understood easily, but you must use the same name
 // when setting up a sign-in provider in Cognito
 // Make sure to leave it blank if you do not actually have an SSO provider configured in Cognito!
 export const OIDCIntegrationName = "";
-
-// This MUST be unique to your account and is case sensitive
-// Environment-specific stack names for branch-based deployment
-const getStackName = () => {
-  if (instanceInfra) return instanceInfra.stackName;
-
-  if (ENVIRONMENT === 'production') {
-    return 'gw-stack-prod';
-  } else if (ENVIRONMENT === 'staging') {
-    return 'gw-stack-staging';
-  } else if (ENVIRONMENT === 'grantwell-staging') {
-    return 'grantwell-staging';
-  }
-
-  // Fallback for local development
-  return 'gw-stack-dev';
-};
-
-export const stackName = getStackName();
-
-// Environment-specific OpenSearch index name for Knowledge Base
-const getKnowledgeBaseIndexName = () => {
-  if (instanceInfra) return instanceInfra.knowledgeBaseIndexName;
-
-  if (ENVIRONMENT === 'production') {
-    return 'knowledge-base-index-prod';
-  } else if (ENVIRONMENT === 'staging') {
-    return 'knowledge-base-index-staging';
-  } else if (ENVIRONMENT === 'grantwell-staging') {
-    return 'knowledge-base-index-grantwell-staging';
-  }
-
-  // Fallback for local development
-  return 'knowledge-base-index-dev';
-};
-
-export const knowledgeBaseIndexName = getKnowledgeBaseIndexName();
 
 // Environment-specific custom domain configuration for CloudFront
 const getCustomDomainConfig = () => {
@@ -111,9 +89,6 @@ const getEmailConfig = () => {
   }
   if (instanceInfra?.deploymentUrl) {
     return { deploymentUrl: stripTrailingSlash(instanceInfra.deploymentUrl) };
-  }
-  if (ENVIRONMENT === 'production') {
-    return { deploymentUrl: 'https://d1mu5xcqb0ac30.cloudfront.net' };
   }
   return { deploymentUrl: 'https://d2zwf0gxpj9c8c.cloudfront.net' };
 };

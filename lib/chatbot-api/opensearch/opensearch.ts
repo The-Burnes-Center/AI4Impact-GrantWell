@@ -31,16 +31,20 @@ export class OpenSearchStack extends cdk.Stack {
       type: 'VECTORSEARCH',
     });
 
+    const policyPrefix = stackName.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    const ossPolicyName = (suffix: string) =>
+      `${policyPrefix}-${suffix}`.slice(0, 32);
+
     // Create encryption policy first
     const encPolicy = new opensearchserverless.CfnSecurityPolicy(scope, 'OSSEncryptionPolicy', {
-      name: `${stackName.toLowerCase().slice(0, 10)}-oss-enc-policy`,
+      name: ossPolicyName("oss-enc"),
       policy: `{"Rules":[{"ResourceType":"collection","Resource":["collection/${this.collectionName}"]}],"AWSOwnedKey":true}`,
       type: 'encryption',
     });
 
     // Also network policy
     const networkPolicy = new opensearchserverless.CfnSecurityPolicy(scope, "OSSNetworkPolicy", {
-      name: `${stackName.toLowerCase().slice(0, 10)}-oss-network-policy`,
+      name: ossPolicyName("oss-net"),
       type: "network",
       policy: `[{"Rules":[{"ResourceType":"dashboard","Resource":["collection/${this.collectionName}"]},{"ResourceType":"collection","Resource":["collection/${this.collectionName}"]}],"AllowFromPublic":true}]`,
     });
@@ -59,7 +63,7 @@ export class OpenSearchStack extends cdk.Stack {
     this.knowledgeBaseRole = knowledgeBaseRole;
 
     const accessPolicy = new opensearchserverless.CfnAccessPolicy(scope, "OSSAccessPolicy", {
-      name: `${stackName.toLowerCase().slice(0, 10)}-oss-access-policy`,
+      name: ossPolicyName("oss-access"),
       type: "data",
       policy: JSON.stringify([
         {
