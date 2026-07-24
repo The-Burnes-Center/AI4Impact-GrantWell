@@ -4,6 +4,7 @@
  */
 
 import * as cdk from 'aws-cdk-lib';
+import * as crypto from 'crypto';
 import * as path from 'path';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -11,6 +12,35 @@ import * as cr from 'aws-cdk-lib/custom-resources';
 import { Construct } from "constructs";
 import { aws_opensearchserverless as opensearchserverless } from 'aws-cdk-lib';
 import { stackName, knowledgeBaseIndexName } from "../../constants";
+
+type OssPolicyNames = { enc: string; network: string; access: string };
+
+const LIVE_OSS_POLICY_NAMES: Record<string, OssPolicyNames> = {
+  'grantwell-staging': {
+    enc: 'grantwell--oss-enc-policy',
+    network: 'grantwell--oss-network-policy',
+    access: 'grantwell--oss-access-policy',
+  },
+  'grantwell-burnes-staging': {
+    enc: 'grantwell-burnes-staging-oss-enc',
+    network: 'grantwell-burnes-staging-oss-net',
+    access: 'grantwell-burnes-staging-oss-acc',
+  },
+};
+
+function ossPolicyNamesFor(name: string): OssPolicyNames {
+  const lower = name.toLowerCase();
+  const live = LIVE_OSS_POLICY_NAMES[lower];
+  if (live) return live;
+  const head = lower.replace(/[^a-z0-9]/g, '').slice(0, 5);
+  const hash = crypto.createHash('sha256').update(lower).digest('hex').slice(0, 5);
+  const prefix = `${head}-${hash}`;
+  return {
+    enc: `${prefix}-oss-enc-policy`,
+    network: `${prefix}-oss-network-policy`,
+    access: `${prefix}-oss-access-policy`,
+  };
+}
 
 export interface OpenSearchStackProps {}
 
@@ -31,22 +61,20 @@ export class OpenSearchStack extends cdk.Stack {
       type: 'VECTORSEARCH',
     });
 
-    // Policy names are derived from the first 10 chars of the stack name to match
-    // the policies already protecting the live collection. Do not "fix" this to a
-    // per-stack scheme without reconciling the deployed OSS policies first — a
-    // renamed policy conflicts with the existing one (OSS allows one per collection).
-    const ossPolicyPrefix = stackName.toLowerCase().slice(0, 10);
+    // Per-stack, collision-free policy names. See ossPolicyNamesFor: live stacks pinned to their
+    // exact deployed names so existing policies aren't renamed; new stacks get a unique scheme.
+    const ossPolicyNames = ossPolicyNamesFor(stackName);
 
     // Create encryption policy first
     const encPolicy = new opensearchserverless.CfnSecurityPolicy(scope, 'OSSEncryptionPolicy', {
-      name: `${ossPolicyPrefix}-oss-enc-policy`,
+      name: ossPolicyNames.enc,
       policy: `{"Rules":[{"ResourceType":"collection","Resource":["collection/${this.collectionName}"]}],"AWSOwnedKey":true}`,
       type: 'encryption',
     });
 
     // Also network policy
     const networkPolicy = new opensearchserverless.CfnSecurityPolicy(scope, "OSSNetworkPolicy", {
-      name: `${ossPolicyPrefix}-oss-network-policy`,
+      name: ossPolicyNames.network,
       type: "network",
       policy: `[{"Rules":[{"ResourceType":"dashboard","Resource":["collection/${this.collectionName}"]},{"ResourceType":"collection","Resource":["collection/${this.collectionName}"]}],"AllowFromPublic":true}]`,
     });
@@ -65,7 +93,7 @@ export class OpenSearchStack extends cdk.Stack {
     this.knowledgeBaseRole = knowledgeBaseRole;
 
     const accessPolicy = new opensearchserverless.CfnAccessPolicy(scope, "OSSAccessPolicy", {
-      name: `${ossPolicyPrefix}-oss-access-policy`,
+      name: ossPolicyNames.access,
       type: "data",
       policy: JSON.stringify([
         {
