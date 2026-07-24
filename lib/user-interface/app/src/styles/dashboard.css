@@ -708,6 +708,13 @@ body {
   justify-content: flex-end;
 }
 
+.user-management-row-error {
+  margin: 6px 0 0;
+  color: var(--gw-color-danger, #cd0d0d);
+  font-size: 13px;
+  text-align: right;
+}
+
 .user-management-delete-button {
   background: var(--gw-color-white);
   border: 1px solid var(--gw-color-danger, #cd0d0d);
