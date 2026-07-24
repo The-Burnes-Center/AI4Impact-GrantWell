@@ -46,6 +46,7 @@ const Checklists: React.FC = () => {
 
   const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: "", documents: "", narrative: "", deadlines: "" });
   const [grantType, setGrantType] = useState<GrantTypeId | null>(null);
+  const [stateGuidance, setStateGuidance] = useState<{ stateName: string; note: string } | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTabId, setActiveTabId] = useState<TabId>("eligibility");
@@ -102,6 +103,10 @@ const Checklists: React.FC = () => {
           narrative: processApiItems(result.data.ProjectNarrativeSections),
           deadlines: processApiItems(result.data.KeyDeadlines),
         });
+
+        // Server merges the viewer's own state's overlay onto federal grants (if any).
+        const guidance = (result.data as { stateGuidance?: { stateName?: string; note?: string } }).stateGuidance;
+        setStateGuidance(guidance?.note ? { stateName: guidance.stateName || "your state", note: guidance.note } : null);
       } catch (err) {
         console.error("Error loading NOFO summary:", err);
         setError("Failed to load grant requirements. Please try again.");
@@ -199,6 +204,26 @@ const Checklists: React.FC = () => {
                   <LuInfo size={16} aria-hidden="true" /> Help
                 </button>
               </div>
+
+              {stateGuidance && (
+                <div
+                  role="note"
+                  className="checklist-state-guidance"
+                  style={{
+                    margin: "0 0 20px",
+                    padding: "14px 16px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--gw-color-border, #d0d7de)",
+                    borderLeft: "4px solid var(--gw-color-primary, #195C53)",
+                    background: "var(--gw-color-surface-subtle, #f6f8fa)",
+                  }}
+                >
+                  <strong style={{ display: "block", marginBottom: "6px" }}>
+                    Additional guidance for {stateGuidance.stateName}
+                  </strong>
+                  <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{stateGuidance.note}</p>
+                </div>
+              )}
 
               <div className="checklist-tabs">
                 <div className="checklist-tabs__header" role="tablist" aria-label="Grant requirements" onKeyDown={handleTabsKeyDown}>

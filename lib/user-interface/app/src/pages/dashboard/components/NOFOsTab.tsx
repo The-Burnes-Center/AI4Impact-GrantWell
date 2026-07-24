@@ -28,6 +28,10 @@ interface NOFOsTabProps {
   addNotification: (type: string, message: string) => void;
   /** Open the review queue focused on a quarantined NOFO. */
   onOpenReview?: (nofoName: string) => void;
+  /** True when the current admin is scoped to a single state (mirrors backend delete scope). */
+  isStateAdmin?: boolean;
+  /** The state-scoped admin's own state code, uppercased; empty otherwise. */
+  userState?: string;
 }
 
 const NOFOsTab = React.memo(function NOFOsTab({
@@ -40,6 +44,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
   showGrantSuccessBanner,
   addNotification,
   onOpenReview,
+  isStateAdmin,
+  userState,
 }: NOFOsTabProps) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -62,6 +68,11 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [uploadState, setUploadState] = useState<string>("");
   const [uploadCategory, setUploadCategory] = useState<string>("");
   const [uploadAgency, setUploadAgency] = useState<string>("");
+
+  const [overlayModalOpen, setOverlayModalOpen] = useState(false);
+  const [overlayLoading, setOverlayLoading] = useState(false);
+  const [overlaySaving, setOverlaySaving] = useState(false);
+  const [overlayNote, setOverlayNote] = useState("");
 
   const handleEditSummary = useCallback(async (nofo: NOFO) => {
     setSelectedNofo(nofo);
@@ -112,6 +123,55 @@ const NOFOsTab = React.memo(function NOFOsTab({
     setOriginalSummary(null);
     setEditedSummary({});
   }, []);
+
+  // State admins can't edit a federal NOFO, but they can attach guidance for their own state.
+  const handleEditOverlay = useCallback(async (nofo: NOFO) => {
+    setSelectedNofo(nofo);
+    setOverlayModalOpen(true);
+    setOverlayLoading(true);
+    try {
+      const result = await apiClient.landingPage.getStateOverlay(nofo.name);
+      setOverlayNote(result.note || "");
+    } catch {
+      addNotification("error", "Failed to load state guidance. Please try again.");
+      setOverlayModalOpen(false);
+    } finally {
+      setOverlayLoading(false);
+    }
+  }, [apiClient, addNotification]);
+
+  const confirmSaveOverlay = useCallback(async () => {
+    if (!selectedNofo) return;
+    setOverlaySaving(true);
+    try {
+      await apiClient.landingPage.putStateOverlay(selectedNofo.name, overlayNote);
+      addNotification("success", `State guidance for "${selectedNofo.name}" saved`);
+      setOverlayModalOpen(false);
+      setSelectedNofo(null);
+      setOverlayNote("");
+    } catch (error) {
+      addNotification("error", getErrorMessage(error, "Failed to save state guidance."));
+    } finally {
+      setOverlaySaving(false);
+    }
+  }, [selectedNofo, overlayNote, apiClient, addNotification]);
+
+  // Fork a federal NOFO into a fully-owned state copy.
+  const handlePromoteToCopy = useCallback(async (nofo: NOFO) => {
+    if (!window.confirm(
+      `Create your state's own editable copy of "${nofo.name}"? The federal grant stays unchanged, and the copy won't track later federal updates.`
+    )) return;
+    try {
+      const result = await apiClient.landingPage.promoteToCopy(nofo.name);
+      if (showGrantSuccessBanner) {
+        showGrantSuccessBanner(result.newName);
+      } else {
+        addNotification("success", `Created state copy "${result.newName}". Refresh to see it.`);
+      }
+    } catch (error) {
+      addNotification("error", getErrorMessage(error, "Failed to create state copy."));
+    }
+  }, [apiClient, addNotification, showGrantSuccessBanner]);
 
   const handlePinGrant = async (nofo: NOFO, event?: React.MouseEvent) => {
     event?.stopPropagation();
@@ -388,22 +448,45 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 )}
               </div>
               <div className="row-cell actions" role="cell">
-                {nofo.isPinned ? (
-                  <button className="action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`}>
-                    <LuPinOff size={18} aria-hidden="true" />
-                  </button>
-                ) : (
-                  <button className="action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`}>
-                    <LuPin size={18} aria-hidden="true" />
-                  </button>
-                )}
-                <GrantActionsDropdown
-                  nofo={nofo}
-                  onToggleStatus={() => toggleNofoStatus(nofo)}
-                  onEdit={() => handleEditNofo(nofo)}
-                  onEditSummary={() => handleEditSummary(nofo)}
-                  onDelete={() => handleDeleteNofo(nofo)}
-                />
+                {(() => {
+                  // Mirror the backend scope check: a state admin may only modify
+                  // NOFOs owned by their own state. Unknown scope fails closed, so
+                  // every mutating action (pin/delete/archive/edit) is gated together.
+                  const editDisabled = Boolean(
+                    isStateAdmin && !(nofo.scope === "state" && nofo.state === userState)
+                  );
+                  const editDisabledReason = nofo.scope === "federal"
+                    ? "State admins can't modify federal NOFOs."
+                    : "State admins can only modify NOFOs for their own state.";
+                  // On a federal grant, a state admin instead gets state-scoped actions:
+                  // attach guidance for their state, or fork it into their own copy.
+                  const showStateActions = Boolean(isStateAdmin && nofo.scope === "federal");
+                  return (
+                    <>
+                      {nofo.isPinned ? (
+                        <button className="action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`} disabled={editDisabled} aria-disabled={editDisabled} title={editDisabled ? editDisabledReason : undefined}>
+                          <LuPinOff size={18} aria-hidden="true" />
+                        </button>
+                      ) : (
+                        <button className="action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`} disabled={editDisabled} aria-disabled={editDisabled} title={editDisabled ? editDisabledReason : undefined}>
+                          <LuPin size={18} aria-hidden="true" />
+                        </button>
+                      )}
+                      <GrantActionsDropdown
+                        nofo={nofo}
+                        onToggleStatus={() => toggleNofoStatus(nofo)}
+                        onEdit={() => handleEditNofo(nofo)}
+                        onEditSummary={() => handleEditSummary(nofo)}
+                        onDelete={() => handleDeleteNofo(nofo)}
+                        editDisabled={editDisabled}
+                        editDisabledReason={editDisabledReason}
+                        showStateActions={showStateActions}
+                        onEditOverlay={() => handleEditOverlay(nofo)}
+                        onPromoteToCopy={() => handlePromoteToCopy(nofo)}
+                      />
+                    </>
+                  );
+                })()}
               </div>
             </div>
           ))}
@@ -496,6 +579,44 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   disabled={!isSummaryChanged() || summarySaving}
                 >
                   {summarySaving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </Modal>
+
+      {/* State Guidance Overlay Modal */}
+      <Modal
+        isOpen={overlayModalOpen}
+        onClose={() => { setOverlayModalOpen(false); setSelectedNofo(null); setOverlayNote(""); }}
+        title={`State guidance — ${selectedNofo?.name || ""}`}
+      >
+        <div className="modal-form">
+          {overlayLoading ? (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--gw-color-text-secondary)" }}>
+              <LuLoader size={20} className="spin-animation" aria-hidden="true" />
+              <span role="status">Loading...</span>
+            </div>
+          ) : (
+            <>
+              <p className="modal-description" style={{ marginBottom: "16px" }}>
+                Add guidance for this federal grant shown only to your state's users. The federal grant itself is unchanged. Leave empty to remove.
+              </p>
+              <textarea
+                value={overlayNote}
+                onChange={(e) => setOverlayNote(e.target.value)}
+                rows={8}
+                style={{ width: "100%" }}
+                placeholder="e.g. Applicants from our state should also submit Form X and contact our office before applying."
+                aria-label="State guidance note"
+              />
+              <div className="modal-actions" style={{ marginTop: "16px" }}>
+                <button className="modal-button secondary" onClick={() => { setOverlayModalOpen(false); setSelectedNofo(null); setOverlayNote(""); }}>
+                  Cancel
+                </button>
+                <button className="modal-button primary" onClick={confirmSaveOverlay} disabled={overlaySaving}>
+                  {overlaySaving ? "Saving..." : "Save Guidance"}
                 </button>
               </div>
             </>

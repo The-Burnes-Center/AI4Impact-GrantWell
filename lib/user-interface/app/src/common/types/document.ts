@@ -67,6 +67,8 @@ export interface RawNOFOData {
   is_rolling?: boolean;
   expiration_date?: string | null;
   grant_type?: string | null;
+  scope?: string | null;
+  state?: string | null;
   agency?: string | null;
   category?: string | null;
   created_at?: string | null;

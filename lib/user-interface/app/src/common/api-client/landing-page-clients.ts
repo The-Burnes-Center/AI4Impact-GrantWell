@@ -492,4 +492,42 @@ export class LandingPageClient {
     }
   }
 
+  // Get the caller's-state guidance overlay for a federal NOFO.
+  async getStateOverlay(nofoName: string): Promise<{ nofoName: string; state: string; note: string; updatedAt: string | null }> {
+    const token = await Utils.authenticate();
+    const response = await fetch(`${this.baseUrl}/nofo-overlay?nofoName=${encodeURIComponent(nofoName)}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", Authorization: token },
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || `Error: ${response.status}`);
+    return data;
+  }
+
+  // Upsert the caller's-state guidance overlay (empty note clears it).
+  async putStateOverlay(nofoName: string, note: string) {
+    const token = await Utils.authenticate();
+    const response = await fetch(`${this.baseUrl}/nofo-overlay`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: token },
+      body: JSON.stringify({ nofoName, note }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || `Error: ${response.status}`);
+    return data;
+  }
+
+  // Fork a federal NOFO into a state-owned copy the caller's state fully controls.
+  async promoteToCopy(nofoName: string): Promise<{ newName: string; state: string }> {
+    const token = await Utils.authenticate();
+    const response = await fetch(`${this.baseUrl}/nofo-promote-copy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: token },
+      body: JSON.stringify({ nofoName }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || `Error: ${response.status}`);
+    return data;
+  }
+
 }

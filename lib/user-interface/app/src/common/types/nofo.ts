@@ -25,6 +25,10 @@ export interface NOFO {
   isRolling?: boolean;
   expirationDate?: string | null;
   grantType?: GrantTypeId | null;
+  /** Authorization scope: "federal" (all states) or "state" (owned by `state`). */
+  scope?: "federal" | "state" | null;
+  /** Two-letter state code this NOFO belongs to when `scope === "state"`. */
+  state?: string | null;
   agency?: string | null;
   category?: string | null;
   processingStatus?: string | null;

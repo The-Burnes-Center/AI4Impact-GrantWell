@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen } from "react-icons/lu";
+import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen, LuMessageSquarePlus, LuCopy } from "react-icons/lu";
 import type { NOFO } from "../../../common/types/nofo";
 
 interface GrantActionsDropdownProps {
@@ -8,6 +8,13 @@ interface GrantActionsDropdownProps {
   onEdit: () => void;
   onEditSummary: () => void;
   onDelete: () => void;
+  /** When true, every mutating action is disabled (out-of-scope for a state admin). */
+  editDisabled?: boolean;
+  editDisabledReason?: string;
+  /** State admin viewing a federal grant: offer state-scoped actions instead of edit/delete. */
+  showStateActions?: boolean;
+  onEditOverlay?: () => void;
+  onPromoteToCopy?: () => void;
 }
 
 const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
@@ -16,7 +23,13 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
   onEdit,
   onEditSummary,
   onDelete,
+  editDisabled = false,
+  editDisabledReason,
+  showStateActions = false,
+  onEditOverlay,
+  onPromoteToCopy,
 }: GrantActionsDropdownProps) {
+  const disabledTitle = editDisabled ? editDisabledReason : undefined;
   const [isOpen, setIsOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -100,9 +113,12 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
           onKeyDown={handleMenuKeyDown}
         >
           <button
-            onClick={() => { onToggleStatus(); setIsOpen(false); }}
+            onClick={() => { if (editDisabled) return; onToggleStatus(); setIsOpen(false); }}
             className="dropdown-menu-item"
             role="menuitem"
+            disabled={editDisabled}
+            aria-disabled={editDisabled}
+            title={disabledTitle}
           >
             {nofo.status === "active" ? (
               <><LuArchive size={16} className="menu-icon" /><span>Archive</span></>
@@ -111,29 +127,60 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
             )}
           </button>
           <button
-            onClick={() => { onEdit(); setIsOpen(false); }}
+            onClick={() => { if (editDisabled) return; onEdit(); setIsOpen(false); }}
             className="dropdown-menu-item"
             role="menuitem"
+            disabled={editDisabled}
+            aria-disabled={editDisabled}
+            title={disabledTitle}
           >
             <LuPencil size={16} className="menu-icon" />
             <span>Edit</span>
           </button>
           <button
-            onClick={() => { onEditSummary(); setIsOpen(false); }}
+            onClick={() => { if (editDisabled) return; onEditSummary(); setIsOpen(false); }}
             className="dropdown-menu-item"
             role="menuitem"
+            disabled={editDisabled}
+            aria-disabled={editDisabled}
+            title={disabledTitle}
           >
             <LuFilePen size={16} className="menu-icon" />
             <span>Edit Summary</span>
           </button>
           <button
-            onClick={() => { onDelete(); setIsOpen(false); }}
+            onClick={() => { if (editDisabled) return; onDelete(); setIsOpen(false); }}
             className="dropdown-menu-item delete-item"
             role="menuitem"
+            disabled={editDisabled}
+            aria-disabled={editDisabled}
+            title={disabledTitle}
           >
             <LuTrash size={16} className="menu-icon" />
             <span>Delete</span>
           </button>
+          {showStateActions && (
+            <>
+              <button
+                onClick={() => { onEditOverlay?.(); setIsOpen(false); }}
+                className="dropdown-menu-item"
+                role="menuitem"
+                title="Add guidance shown only to your state's users"
+              >
+                <LuMessageSquarePlus size={16} className="menu-icon" />
+                <span>State guidance</span>
+              </button>
+              <button
+                onClick={() => { onPromoteToCopy?.(); setIsOpen(false); }}
+                className="dropdown-menu-item"
+                role="menuitem"
+                title="Create your state's own editable copy of this federal grant"
+              >
+                <LuCopy size={16} className="menu-icon" />
+                <span>Promote to my state copy</span>
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>
