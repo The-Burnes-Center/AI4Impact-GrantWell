@@ -50,18 +50,6 @@ export class NofoProcessingStateMachine extends Construct {
       retryOnServiceExceptions: true,
     });
 
-    const quarantineDuplicate = new sfn.Pass(this, "QuarantineDuplicate", {
-      parameters: {
-        "nofoName.$": "$.nofoName",
-        "s3Bucket.$": "$.s3Bucket",
-        "rawTextKey.$": "$.rawTextKey",
-        "documentKey.$": "$.documentKey",
-        "source": "duplicate",
-        "errorMessage.$": "States.Format('Duplicate of {}', $.duplicateOf)",
-      },
-    });
-    quarantineDuplicate.next(quarantine);
-
     const quarantineQualityFailed = new sfn.Pass(this, "QuarantineQualityFailed", {
       parameters: {
         "nofoName.$": "$.nofoName",
@@ -159,9 +147,10 @@ export class NofoProcessingStateMachine extends Construct {
     });
     handleExtractTextError.next(quarantine);
 
-    // After text extraction: route duplicates/quality-failed to quarantine, otherwise extract
+    // After text extraction: route quality-failed to quarantine, otherwise extract.
+    // (Content-hash duplicate detection was removed — it false-matched distinct
+    // grants sharing agency boilerplate.)
     const afterExtractText = new sfn.Choice(this, "AfterExtractText")
-      .when(sfn.Condition.isPresent("$.duplicateOf"), quarantineDuplicate)
       .when(sfn.Condition.isPresent("$.sourceQualityFailed"), quarantineQualityFailed)
       .otherwise(extractAndAnalyze);
 
