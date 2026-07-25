@@ -70,6 +70,7 @@ export class ChatBotApi extends Construct {
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
       featureRolloutTable: tables.featureRolloutTable,
       userNotificationPrefsTable: tables.userNotificationPrefsTable,
+      nofoStateOverlayTable: tables.nofoStateOverlayTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
@@ -202,6 +203,28 @@ export class ChatBotApi extends Construct {
       path: "/s3-nofo-summary-update",
       methods: [apigwv2.HttpMethod.POST],
       integration: nofoSummaryUpdateAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoStateOverlayIntegration = new HttpLambdaIntegration(
+      "NofoStateOverlayIntegration",
+      lambdaFunctions.nofoStateOverlayFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/nofo-overlay",
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT, apigwv2.HttpMethod.DELETE],
+      integration: nofoStateOverlayIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const nofoPromoteCopyIntegration = new HttpLambdaIntegration(
+      "NofoPromoteCopyIntegration",
+      lambdaFunctions.nofoPromoteCopyFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/nofo-promote-copy",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoPromoteCopyIntegration,
       authorizer: httpAuthorizer,
     });
 

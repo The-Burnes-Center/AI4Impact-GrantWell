@@ -60,6 +60,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [draftStates, setDraftStates] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [savingUsername, setSavingUsername] = useState<string | null>(null);
+  const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
   const [pageSize, setPageSize] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageTokens, setPageTokens] = useState<Array<string | null>>([null]);
@@ -157,6 +158,12 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
       try {
         setSavingUsername(user.username);
+        setRowErrors((current) => {
+          if (!(user.username in current)) return current;
+          const rest = { ...current };
+          delete rest[user.username];
+          return rest;
+        });
         let updatedRoles = user.roles;
         let updatedState = currentState;
 
@@ -179,7 +186,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         addNotification("success", `Updated ${user.email}`);
       } catch (error) {
         console.error("Error updating user:", error);
-        addNotification("error", error instanceof Error ? error.message : `Failed to update ${user.email}`);
+        const message = error instanceof Error ? error.message : `Failed to update ${user.email}`;
+        setRowErrors((current) => ({ ...current, [user.username]: message }));
+        addNotification("error", message);
       } finally {
         setSavingUsername(null);
       }
@@ -383,6 +392,11 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                           </button>
                         )}
                       </div>
+                      {rowErrors[user.username] && (
+                        <p className="user-management-row-error" role="alert">
+                          {rowErrors[user.username]}
+                        </p>
+                      )}
                     </td>
                   </tr>
                 );

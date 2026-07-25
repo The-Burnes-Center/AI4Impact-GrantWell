@@ -43,6 +43,7 @@ interface LambdaFunctionStackProps {
   readonly draftGenerationJobsTable: Table;
   readonly featureRolloutTable: Table;
   readonly userNotificationPrefsTable: Table;
+  readonly nofoStateOverlayTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -88,6 +89,8 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly aiGrantSearchFunction: lambda.Function;
   public readonly feedbackProxyFunction: lambda.Function;
   public readonly nofoSummaryUpdateFunction: lambda.Function;
+  public readonly nofoStateOverlayFunction: lambda.Function;
+  public readonly nofoPromoteCopyFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -814,6 +817,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         BUCKET: props.ffioNofosBucket.bucketName,
         PUBLISH_FUNCTION_NAME: publishFunction.functionName,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
@@ -859,6 +863,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         QUEUE_URL: nofoProcessingQueue.queueUrl,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
@@ -888,6 +893,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.minutes(2),
@@ -905,6 +911,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
     props.nofoMetadataTable.grantReadData(RequirementsForNOFOs);
+    props.nofoStateOverlayTable.grantReadData(RequirementsForNOFOs);
     this.getNOFOSummary = RequirementsForNOFOs;
 
     const NOFOQuestionsForNOFOs = new lambda.Function(
@@ -1075,6 +1082,49 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.nofoSummaryUpdateFunction = nofoSummaryUpdateFunction;
 
+    // State overlay CRUD: a state admin attaches guidance to a federal NOFO (state-locked).
+    const nofoStateOverlayFunction = new lambda.Function(scope, "NofoStateOverlayFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "landing-page/nofo-state-overlay")),
+      handler: "index.handler",
+      layers: [jsSharedLayer],
+      environment: {
+        NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      },
+      timeout: cdk.Duration.seconds(30),
+    });
+    props.nofoStateOverlayTable.grantReadWriteData(nofoStateOverlayFunction);
+    props.nofoMetadataTable.grantReadData(nofoStateOverlayFunction);
+    this.nofoStateOverlayFunction = nofoStateOverlayFunction;
+
+    // Promote a federal NOFO to a state-owned copy (fork): copy S3 folder + new scope:state row.
+    const nofoPromoteCopyFunction = new lambda.Function(scope, "NofoPromoteCopyFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "landing-page/nofo-promote-copy")),
+      handler: "index.handler",
+      layers: [jsSharedLayer],
+      environment: {
+        BUCKET: props.ffioNofosBucket.bucketName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      },
+      timeout: cdk.Duration.seconds(60),
+    });
+    nofoPromoteCopyFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+        resources: [
+          props.ffioNofosBucket.bucketArn,
+          props.ffioNofosBucket.bucketArn + "/*",
+        ],
+      })
+    );
+    props.nofoMetadataTable.grantReadWriteData(nofoPromoteCopyFunction);
+    this.nofoPromoteCopyFunction = nofoPromoteCopyFunction;
+
     // Add the NOFO rename function
     const nofoRenameHandlerFunction = new lambda.Function(
       scope,
@@ -1088,6 +1138,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -1107,6 +1159,14 @@ export class LambdaFunctionStack extends cdk.Stack {
           props.ffioNofosBucket.bucketArn,
           props.ffioNofosBucket.bucketArn + "/*",
         ],
+      })
+    );
+
+    nofoRenameHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:GetItem"],
+        resources: [props.nofoMetadataTable.tableArn],
       })
     );
 

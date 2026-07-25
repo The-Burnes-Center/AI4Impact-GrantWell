@@ -16,6 +16,7 @@ export class TableStack extends Stack {
   public readonly featureRolloutTable: Table;
   public readonly nofoProcessingReviewTable: Table;
   public readonly userNotificationPrefsTable: Table;
+  public readonly nofoStateOverlayTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -146,5 +147,16 @@ export class TableStack extends Stack {
     });
 
     this.userNotificationPrefsTable = userNotificationPrefsTable;
+
+    // State-specific overlays on federal NOFOs. One row per (nofo, state): a state admin
+    // attaches guidance shown only to their state's users, without mutating the shared
+    // federal record. See nofo-state-overlay Lambda and the merge in retrieveNOFOSummary.
+    const nofoStateOverlayTable = new Table(this, 'NOFOStateOverlayTable', {
+      partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
+      sortKey: { name: 'state', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
+    this.nofoStateOverlayTable = nofoStateOverlayTable;
   }
 }

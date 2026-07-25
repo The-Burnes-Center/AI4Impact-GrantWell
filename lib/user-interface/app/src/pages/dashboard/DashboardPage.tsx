@@ -79,6 +79,8 @@ const Dashboard: React.FC = () => {
           isRolling: nofo.is_rolling || false,
           expirationDate: nofo.expiration_date || null,
           grantType: nofo.grant_type || null,
+          scope: nofo.scope === "federal" || nofo.scope === "state" ? nofo.scope : null,
+          state: nofo.state ? String(nofo.state).toUpperCase() : null,
           agency: nofo.agency || null,
           category: nofo.category || null,
           processingStatus: nofo.processing_status ?? null,
@@ -631,6 +633,8 @@ const Dashboard: React.FC = () => {
                   showGrantSuccessBanner={showGrantSuccessBanner}
                   addNotification={addNotification}
                   onOpenReview={handleOpenReview}
+                  isStateAdmin={isStateAdmin}
+                  userState={userState}
                 />
 
                 <PaginationControls
