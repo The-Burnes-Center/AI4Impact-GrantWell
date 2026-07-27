@@ -85,6 +85,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
   public readonly notificationDigestPreviewFunction: lambda.Function;
+  public readonly notificationDigestBroadcastFunction: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
   public readonly feedbackProxyFunction: lambda.Function;
@@ -1894,6 +1895,28 @@ export class LambdaFunctionStack extends cdk.Stack {
     }
     this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
 
+    // Developer-only broadcast trigger: fires the REAL digest on demand (async-invokes the digest
+    // Lambda) instead of waiting for the cron. scope=me sends only to the caller; scope=all sends to
+    // every subscribed user. Either way it's the real email (no [TEST] prefix, real unsubscribe link,
+    // real watermark advance) — exactly what a user would receive.
+    const notificationDigestBroadcastFunction = new lambda.Function(
+      scope,
+      "NotificationDigestBroadcastFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "notifications/digest-broadcast")
+        ),
+        handler: "index.handler",
+        environment: {
+          DIGEST_FUNCTION_NAME: notificationDigestFunction.functionName,
+        },
+        timeout: cdk.Duration.seconds(15),
+      }
+    );
+    notificationDigestFunction.grantInvoke(notificationDigestBroadcastFunction);
+    this.notificationDigestBroadcastFunction = notificationDigestBroadcastFunction;
+
     // Public one-click unsubscribe endpoint (no JWT — the signed token is the authorization). Sets
     // the caller's frequency to "off". Route is wired in chatbot-api/index.ts without an authorizer.
     const notificationUnsubscribeFunction = new lambda.Function(
@@ -1920,14 +1943,16 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its
     // frequency so the same Lambda serves both cadences.
-    // DISABLED at deploy: the digest is not live yet. With the rules disabled the sender Lambda is
-    // never invoked on schedule, so nothing goes out to any user regardless of their frequency pref.
-    // The Developer preview / [TEST] path is unaffected (it invokes the preview Lambda directly).
-    // Flip `enabled` to true to turn the scheduled digest on.
+    // Live on the burnes-staging (dev) stack only; disabled everywhere else (prod / grantwell-staging)
+    // until the digest is signed off for those environments. When disabled the sender Lambda is never
+    // invoked on schedule, so nothing goes out regardless of a user's frequency pref. The Developer
+    // preview / [TEST] / broadcast paths are unaffected (they invoke Lambdas directly, not on cron).
+    const digestScheduleEnabled =
+      process.env.ENVIRONMENT === "grantwell-burnes-staging";
     new events.Rule(scope, "NotificationDigestDailyRule", {
       schedule: events.Schedule.cron({ minute: "0", hour: "8", day: "*", month: "*", year: "*" }),
       description: "Send daily NOFO notification digests",
-      enabled: false,
+      enabled: digestScheduleEnabled,
     }).addTarget(
       new targets.LambdaFunction(notificationDigestFunction, {
         event: events.RuleTargetInput.fromObject({ frequency: "daily" }),
@@ -1937,7 +1962,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     new events.Rule(scope, "NotificationDigestWeeklyRule", {
       schedule: events.Schedule.cron({ minute: "0", hour: "8", weekDay: "MON", month: "*", year: "*" }),
       description: "Send weekly NOFO notification digests",
-      enabled: false,
+      enabled: digestScheduleEnabled,
     }).addTarget(
       new targets.LambdaFunction(notificationDigestFunction, {
         event: events.RuleTargetInput.fromObject({ frequency: "weekly" }),

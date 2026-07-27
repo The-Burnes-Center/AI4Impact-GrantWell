@@ -544,6 +544,18 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
+    // Developer-only: fire the real digest on demand (scope=me → caller, scope=all → everyone).
+    const notificationDigestBroadcastIntegration = new HttpLambdaIntegration(
+      "NotificationDigestBroadcastIntegration",
+      lambdaFunctions.notificationDigestBroadcastFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/notification-digest/broadcast",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: notificationDigestBroadcastIntegration,
+      authorizer: httpAuthorizer,
+    });
+
 const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
       "NotificationUnsubscribeIntegration",
       lambdaFunctions.notificationUnsubscribeFunction

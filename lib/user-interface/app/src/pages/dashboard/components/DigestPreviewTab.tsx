@@ -20,8 +20,8 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
   const [count, setCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [testing, setTesting] = useState(false);
-  const [sentAt, setSentAt] = useState<Frequency | null>(null);
+  // Which scope is mid-send (null when idle), so each button shows its own spinner.
+  const [sending, setSending] = useState<"me" | "all" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -54,26 +54,29 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
     };
   }, [load]);
 
-  const onTest = async () => {
-    setTesting(true);
+  const onSend = async (scope: "me" | "all") => {
+    // The all-users send is a real broadcast to every subscribed account — guard it behind a confirm.
+    if (
+      scope === "all" &&
+      !window.confirm(
+        `Send the real ${frequency} digest to ALL subscribed users now? This is not a test — each ` +
+          `user gets a live email with a working unsubscribe link.`
+      )
+    ) {
+      return;
+    }
+    setSending(scope);
     try {
-      const res = await apiClient.notifications.sendTestDigest(frequency);
-      if (res.sent === false) {
-        // Nothing matched your prefs this window — the real digest would skip too.
-        addNotification("info", res.message || "No matching grants right now — nothing to send.");
-      } else {
-        addNotification("success", res.message || "Test digest sent.");
-        setSentAt(frequency);
-      }
+      const res = await apiClient.notifications.broadcastDigest(frequency, scope);
+      // Fire-and-forget on the backend: it returns once the run is started, before delivery. Nothing
+      // is sent to users with no matching grants — the digest run skips them.
+      addNotification("success", res.message || "Digest started.");
     } catch {
-      addNotification("error", "Could not send the test digest (is SES configured?).");
+      addNotification("error", "Could not start the digest (is SES configured?).");
     } finally {
-      setTesting(false);
+      setSending(null);
     }
   };
-
-  // Reset the "Sent ✓" confirmation whenever the frequency changes.
-  useEffect(() => setSentAt(null), [frequency]);
 
   const onSegmentKey = (e: React.KeyboardEvent, values: Frequency[], current: Frequency) => {
     const idx = values.indexOf(current);
@@ -86,7 +89,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
     }
   };
 
-  const justSent = sentAt === frequency;
+  const busy = sending !== null;
 
   return (
     <div className="tab-content">
@@ -96,16 +99,25 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
             Your real {frequency} digest — the server runs the actual selection against your own
             notification preferences and the active grants, so this is exactly what you'd receive.
+            Sending delivers the real email (not a test), with a working unsubscribe link.
           </p>
         </div>
         <div className="dashboard-actions">
           <button
-            className={`action-button ${justSent ? "add-button" : "refresh-button"}`}
-            onClick={onTest}
-            disabled={testing || loading || count === 0}
-            aria-label={`Send your ${frequency} digest to your own email`}
+            className="action-button refresh-button"
+            onClick={() => onSend("me")}
+            disabled={busy || loading}
+            aria-label={`Send the real ${frequency} digest to your own email`}
           >
-            {testing ? "Sending…" : justSent ? "Sent ✓ — send again" : "Send test to me"}
+            {sending === "me" ? "Sending…" : "Send to me"}
+          </button>
+          <button
+            className="action-button add-button"
+            onClick={() => onSend("all")}
+            disabled={busy || loading}
+            aria-label={`Send the real ${frequency} digest to all subscribed users`}
+          >
+            {sending === "all" ? "Sending…" : "Send to all users"}
           </button>
         </div>
       </div>
