@@ -20,7 +20,6 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
   const [count, setCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  // Which scope is mid-send (null when idle), so each button shows its own spinner.
   const [sending, setSending] = useState<"me" | "all" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,7 +54,6 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
   }, [load]);
 
   const onSend = async (scope: "me" | "all") => {
-    // The all-users send is a real broadcast to every subscribed account — guard it behind a confirm.
     if (
       scope === "all" &&
       !window.confirm(
@@ -68,8 +66,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
     setSending(scope);
     try {
       const res = await apiClient.notifications.broadcastDigest(frequency, scope);
-      // Fire-and-forget on the backend: it returns once the run is started, before delivery. Nothing
-      // is sent to users with no matching grants — the digest run skips them.
+      // Fire-and-forget: the backend returns once the run starts, before delivery.
       addNotification("success", res.message || "Digest started.");
     } catch {
       addNotification("error", "Could not start the digest (is SES configured?).");

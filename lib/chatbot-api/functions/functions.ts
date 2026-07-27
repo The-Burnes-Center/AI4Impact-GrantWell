@@ -1895,10 +1895,8 @@ export class LambdaFunctionStack extends cdk.Stack {
     }
     this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
 
-    // Developer-only broadcast trigger: fires the REAL digest on demand (async-invokes the digest
-    // Lambda) instead of waiting for the cron. scope=me sends only to the caller; scope=all sends to
-    // every subscribed user. Either way it's the real email (no [TEST] prefix, real unsubscribe link,
-    // real watermark advance) — exactly what a user would receive.
+    // Developer-only trigger that fires the real digest on demand (async-invokes the digest Lambda),
+    // for a single user or everyone. Route is wired in chatbot-api/index.ts.
     const notificationDigestBroadcastFunction = new lambda.Function(
       scope,
       "NotificationDigestBroadcastFunction",
@@ -1941,12 +1939,9 @@ export class LambdaFunctionStack extends cdk.Stack {
     unsubscribeSecret.grantRead(notificationUnsubscribeFunction);
     this.notificationUnsubscribeFunction = notificationUnsubscribeFunction;
 
-    // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its
-    // frequency so the same Lambda serves both cadences.
-    // Live on the burnes-staging (dev) stack only; disabled everywhere else (prod / grantwell-staging)
-    // until the digest is signed off for those environments. When disabled the sender Lambda is never
-    // invoked on schedule, so nothing goes out regardless of a user's frequency pref. The Developer
-    // preview / [TEST] / broadcast paths are unaffected (they invoke Lambdas directly, not on cron).
+    // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its frequency so
+    // the same Lambda serves both cadences. Scheduled sends are live on burnes-staging (dev) only;
+    // still off on prod / grantwell-staging until the digest is signed off there.
     const digestScheduleEnabled =
       process.env.ENVIRONMENT === "grantwell-burnes-staging";
     new events.Rule(scope, "NotificationDigestDailyRule", {
