@@ -52,8 +52,9 @@ export default function HomePage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const aiSearch = useAIGrantSearch();
-  const { access: featureAccess } = useFeatureRolloutAccess();
+  const { access: featureAccess, loading: featureAccessLoading } = useFeatureRolloutAccess();
   const canUseAIGrantSearch = featureAccess?.features.aiGrantSearch.canUse ?? false;
+  const featureCopyResolved = !featureAccessLoading;
   const searchPlaceholder = canUseAIGrantSearch
     ? "Search by keyword, category, or describe what you need..."
     : "Search by grant name, agency, or category...";
@@ -287,9 +288,11 @@ export default function HomePage() {
           </h2>
           <p className="how-it-works__text">
             Use the filters below to find grants by name, agency, or category.
-            {canUseAIGrantSearch
-              ? " Or use AI search to describe what you need. "
-              : " Or use the search to find specific grants in the table. "}
+            {featureCopyResolved
+              ? canUseAIGrantSearch
+                ? " Or use AI search to describe what you need. "
+                : " Or use the search to find specific grants in the table. "
+              : " Or use the search to find the grants you need. "}
             Click on any grant row to select it, then choose an action:{" "}
             <strong className="how-it-works__action-label">View Key Requirements</strong>{" "}
             to see eligibility and NOFO requirements,{" "}
@@ -300,7 +303,7 @@ export default function HomePage() {
           </p>
           <div className="visually-hidden" role="note" aria-label="Screen reader navigation note">
             Screen-reader note: Use the search bar below to filter grants by name, agency, or category.
-            {canUseAIGrantSearch
+            {featureCopyResolved && canUseAIGrantSearch
               ? " AI search is enabled for your account, so descriptive searches will return ranked matches."
               : ""}
             The table shows filtered results. Use the dropdown filters to narrow by status,
