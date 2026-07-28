@@ -12,7 +12,9 @@ export interface IntegratedSearchBarProps {
   isLoading: boolean;
   searchTerm?: string;
   onSearchTermChange?: (term: string) => void;
-  onSearch?: (query: string) => void;
+  // `committed` marks a deliberate search (Enter / result selection) vs a debounced
+  // as-you-type call; drives whether the search is logged for analytics.
+  onSearch?: (query: string, committed?: boolean) => void;
   isSearching?: boolean;
   onClearSearch?: () => void;
   onSearchPendingChange?: (isPending: boolean) => void;

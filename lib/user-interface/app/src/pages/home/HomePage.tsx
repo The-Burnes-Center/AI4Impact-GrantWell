@@ -62,9 +62,9 @@ export default function HomePage() {
     : "Search grants by name, agency, or category";
 
   const handleSearch = useCallback(
-    (query: string) => {
+    (query: string, committed = false) => {
       if (!canUseAIGrantSearch) return;
-      aiSearch.search(query);
+      aiSearch.search(query, committed);
     },
     [aiSearch.search, canUseAIGrantSearch]
   );

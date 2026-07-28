@@ -17,6 +17,7 @@ import type {
   AnalyticsWindow,
   RankedItem,
 } from "../../../common/api-client/analytics-client";
+import { SUPPORTED_STATES, stateNameFromCode } from "../../../common/generated/states";
 import "../../../styles/analytics.css";
 
 interface AnalyticsTabProps {
@@ -25,6 +26,10 @@ interface AnalyticsTabProps {
     type: "success" | "error" | "info" | "warning",
     message: string
   ) => void;
+  // State admins are locked to their own state (no filter shown); developers/regular admins may
+  // narrow the all-states view to one state.
+  isStateAdmin: boolean;
+  userState: string;
 }
 
 // GrantWell brand palette (tokens.css). Two-series charts pair brand green with the amber
@@ -61,16 +66,25 @@ const STAGE_LABELS: Record<string, string> = {
 const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
   apiClient,
   addNotification,
+  isStateAdmin,
+  userState,
 }) => {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [windowDays, setWindowDays] = useState<AnalyticsWindow>(30);
+  // "" = all states. State admins are pinned to their own state and can't change it.
+  const [stateFilter, setStateFilter] = useState<string>(
+    isStateAdmin ? userState : ""
+  );
   const [loading, setLoading] = useState(true);
 
   const fetchAnalytics = useCallback(
-    async (w: AnalyticsWindow) => {
+    async (w: AnalyticsWindow, state: string) => {
       setLoading(true);
       try {
-        const result = await apiClient.analytics.getAnalytics(w);
+        const result = await apiClient.analytics.getAnalytics(
+          w,
+          state || undefined
+        );
         setData(result);
       } catch {
         addNotification("error", "Failed to load analytics.");
@@ -82,33 +96,57 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
   );
 
   useEffect(() => {
-    fetchAnalytics(windowDays);
-  }, [fetchAnalytics, windowDays]);
+    fetchAnalytics(windowDays, stateFilter);
+  }, [fetchAnalytics, windowDays, stateFilter]);
 
   return (
     <div className="analytics">
       <div className="analytics__toolbar">
         <p className="analytics__caption">
-          Usage across your instance. Metrics accrue from launch onward.
+          {isStateAdmin
+            ? `Usage for ${stateNameFromCode(userState) || userState}. Metrics accrue from launch onward.`
+            : "Usage across your instance. Metrics accrue from launch onward."}
         </p>
-        <div
-          className="analytics__window"
-          role="group"
-          aria-label="Time window"
-        >
-          {WINDOWS.map((w) => (
-            <button
-              key={w}
-              type="button"
-              className={`analytics__window-btn ${
-                windowDays === w ? "analytics__window-btn--active" : ""
-              }`}
-              aria-pressed={windowDays === w}
-              onClick={() => setWindowDays(w)}
-            >
-              Last {w} days
-            </button>
-          ))}
+        <div className="analytics__controls">
+          {!isStateAdmin && (
+            <div className="analytics__state">
+              <label className="visually-hidden" htmlFor="analytics-state">
+                Filter by state
+              </label>
+              <select
+                id="analytics-state"
+                className="analytics__state-select"
+                value={stateFilter}
+                onChange={(e) => setStateFilter(e.target.value)}
+              >
+                <option value="">All states</option>
+                {SUPPORTED_STATES.map((s) => (
+                  <option key={s.code} value={s.code}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div
+            className="analytics__window"
+            role="group"
+            aria-label="Time window"
+          >
+            {WINDOWS.map((w) => (
+              <button
+                key={w}
+                type="button"
+                className={`analytics__window-btn ${
+                  windowDays === w ? "analytics__window-btn--active" : ""
+                }`}
+                aria-pressed={windowDays === w}
+                onClick={() => setWindowDays(w)}
+              >
+                Last {w} days
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

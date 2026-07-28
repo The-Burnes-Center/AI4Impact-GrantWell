@@ -57,10 +57,16 @@ export class AnalyticsClient {
     this.API = appConfig.httpEndpoint;
   }
 
-  async getAnalytics(windowDays: AnalyticsWindow): Promise<AnalyticsData> {
+  async getAnalytics(
+    windowDays: AnalyticsWindow,
+    state?: string
+  ): Promise<AnalyticsData> {
     const token = await Utils.authenticate();
     const url = new URL(`${this.API}/admin/analytics`);
     url.searchParams.append("window", String(windowDays));
+    if (state) {
+      url.searchParams.append("state", state);
+    }
     const response = await fetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },

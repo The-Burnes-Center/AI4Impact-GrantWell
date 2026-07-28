@@ -677,7 +677,12 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-analytics"
                 tabIndex={0}
               >
-                <AnalyticsTab apiClient={apiClient} addNotification={addNotification} />
+                <AnalyticsTab
+                  apiClient={apiClient}
+                  addNotification={addNotification}
+                  isStateAdmin={isStateAdmin}
+                  userState={userState}
+                />
               </div>
             ) : activeTab === "feature-rollouts" ? (
               <div

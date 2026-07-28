@@ -22,6 +22,29 @@
   font-size: 14px;
 }
 
+.analytics__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.analytics__state-select {
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+}
+
+.analytics__state-select:focus-visible {
+  outline: 2px solid var(--mk-green-dark, #195c53);
+  outline-offset: 0;
+  border-color: var(--mk-green-dark, #195c53);
+}
+
 .analytics__window {
   display: inline-flex;
   border: 1px solid #d9d9d9;
