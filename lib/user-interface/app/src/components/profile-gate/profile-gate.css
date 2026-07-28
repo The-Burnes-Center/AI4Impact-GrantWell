@@ -1,0 +1,40 @@
+/* Full-screen hard block shown until the user completes their profile. Covers the whole viewport
+ * so no app content is reachable behind it. Reuses .profile-* form classes from profile.css. */
+
+.profile-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(40, 40, 40, 0.55);
+  overflow-y: auto;
+}
+
+.profile-gate__panel {
+  width: 100%;
+  max-width: 480px;
+}
+
+.profile-gate__panel input[type="text"] {
+  padding: 10px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.profile-gate__panel input[type="text"]:focus-visible {
+  outline: 2px solid var(--mk-green-dark, #195c53);
+  outline-offset: 0;
+  border-color: var(--mk-green-dark, #195c53);
+}
+
+.profile-gate__loading {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}

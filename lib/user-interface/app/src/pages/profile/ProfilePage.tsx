@@ -125,6 +125,69 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
+  // Organization details (agency / org / title) — same fields as the profile-completion gate.
+  const [orgAgency, setOrgAgency] = useState("");
+  const [orgOrganization, setOrgOrganization] = useState("");
+  const [orgJobTitle, setOrgJobTitle] = useState("");
+  const [orgBaseline, setOrgBaseline] = useState({ agency: "", organization: "", jobTitle: "" });
+  const [orgSaving, setOrgSaving] = useState(false);
+  const [orgError, setOrgError] = useState<string | null>(null);
+  const [orgSaved, setOrgSaved] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    apiClient.userProfile
+      .getProfile()
+      .then((p) => {
+        if (!active) return;
+        setOrgAgency(p.agency || "");
+        setOrgOrganization(p.organization || "");
+        setOrgJobTitle(p.jobTitle || "");
+        setOrgBaseline({
+          agency: p.agency || "",
+          organization: p.organization || "",
+          jobTitle: p.jobTitle || "",
+        });
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [apiClient]);
+
+  const orgDirty =
+    orgAgency.trim() !== orgBaseline.agency.trim() ||
+    orgOrganization.trim() !== orgBaseline.organization.trim() ||
+    orgJobTitle.trim() !== orgBaseline.jobTitle.trim();
+
+  const onSaveOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!orgAgency.trim() || !orgOrganization.trim() || !orgJobTitle.trim()) {
+      setOrgError("Please complete all three fields.");
+      return;
+    }
+    setOrgSaving(true);
+    setOrgError(null);
+    setOrgSaved(false);
+    try {
+      await apiClient.userProfile.updateProfile({
+        agency: orgAgency.trim(),
+        organization: orgOrganization.trim(),
+        jobTitle: orgJobTitle.trim(),
+      });
+      setOrgBaseline({
+        agency: orgAgency.trim(),
+        organization: orgOrganization.trim(),
+        jobTitle: orgJobTitle.trim(),
+      });
+      setOrgSaved(true);
+    } catch {
+      setOrgError("Could not save your organization details.");
+    } finally {
+      setOrgSaving(false);
+    }
+  };
+
   // "My activity" — read-only summaries linking to each item's detail page.
   const [drafts, setDrafts] = useState<DocumentDraft[]>([]);
   const [sessions, setSessions] = useState<SessionListItem[]>([]);
@@ -246,6 +309,75 @@ export default function ProfilePage() {
                 <dt>State</dt>
                 <dd>{stateLabel}</dd>
               </dl>
+            </Card>
+
+            <Card header="Organization details">
+              <p className="profile-hint">
+                Your agency, organization, and role. Used to understand who&apos;s
+                using GrantWell.
+              </p>
+              {orgError && (
+                <div className="profile-alert profile-alert--error" role="alert">
+                  {orgError}
+                </div>
+              )}
+              {orgSaved && (
+                <div className="profile-alert profile-alert--success" role="status">
+                  Organization details saved.
+                </div>
+              )}
+              <form onSubmit={onSaveOrg}>
+                <div className="profile-section">
+                  <label className="profile-field-label" htmlFor="profile-agency">
+                    Agency
+                  </label>
+                  <input
+                    id="profile-agency"
+                    type="text"
+                    value={orgAgency}
+                    onChange={(e) => {
+                      setOrgAgency(e.target.value);
+                      setOrgSaved(false);
+                    }}
+                    style={{ width: "100%", maxWidth: 420 }}
+                  />
+                </div>
+                <div className="profile-section">
+                  <label className="profile-field-label" htmlFor="profile-org">
+                    Organization
+                  </label>
+                  <input
+                    id="profile-org"
+                    type="text"
+                    value={orgOrganization}
+                    onChange={(e) => {
+                      setOrgOrganization(e.target.value);
+                      setOrgSaved(false);
+                    }}
+                    style={{ width: "100%", maxWidth: 420 }}
+                  />
+                </div>
+                <div className="profile-section">
+                  <label className="profile-field-label" htmlFor="profile-title">
+                    Role / Title
+                  </label>
+                  <input
+                    id="profile-title"
+                    type="text"
+                    value={orgJobTitle}
+                    onChange={(e) => {
+                      setOrgJobTitle(e.target.value);
+                      setOrgSaved(false);
+                    }}
+                    style={{ width: "100%", maxWidth: 420 }}
+                  />
+                </div>
+                <div className="profile-actions">
+                  <Button type="submit" loading={orgSaving} disabled={!orgDirty}>
+                    {orgDirty ? "Save changes" : "Saved"}
+                  </Button>
+                </div>
+              </form>
             </Card>
 
         <Card header="Notification preferences">

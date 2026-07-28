@@ -14,6 +14,7 @@ import { activeBranding } from "../../config/active-instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import MaintenanceGate from "./MaintenanceGate";
+import ProfileGate from "./profile-gate/ProfileGate";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
 import {
@@ -214,9 +215,11 @@ function AppLayoutContent({
         <OmniHeader />
         <AppNavbar />
         <div className="marketing__app-main">
-          <MaintenanceGate>
-            <App />
-          </MaintenanceGate>
+          <ProfileGate>
+            <MaintenanceGate>
+              <App />
+            </MaintenanceGate>
+          </ProfileGate>
         </div>
         <LandingFooter />
         <OmniHeader position="bottom" />

@@ -17,6 +17,7 @@ export class TableStack extends Stack {
   public readonly nofoProcessingReviewTable: Table;
   public readonly userNotificationPrefsTable: Table;
   public readonly nofoStateOverlayTable: Table;
+  public readonly analyticsTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -158,5 +159,26 @@ export class TableStack extends Stack {
     });
 
     this.nofoStateOverlayTable = nofoStateOverlayTable;
+
+    // Single-table store for the analytics dashboard: user profile rows and append-only usage
+    // events share one table (pk/sk). Profile rows (sk=PROFILE) never expire; event rows
+    // (sk=EVT#...) set `ttl` and self-delete. The sparse EventDayIndex holds only event rows
+    // (only they carry event_day/event_sk), so the dashboard can query "events on day D" without
+    // scanning. See lib/chatbot-api/functions/shared/analytics.mjs for the row shape.
+    const analyticsTable = new Table(this, 'AnalyticsTable', {
+      partitionKey: { name: 'pk', type: AttributeType.STRING },
+      sortKey: { name: 'sk', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      timeToLiveAttribute: 'ttl',
+    });
+
+    analyticsTable.addGlobalSecondaryIndex({
+      indexName: 'EventDayIndex',
+      partitionKey: { name: 'event_day', type: AttributeType.STRING },
+      sortKey: { name: 'event_sk', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    this.analyticsTable = analyticsTable;
   }
 }

@@ -71,6 +71,7 @@ export class ChatBotApi extends Construct {
       featureRolloutTable: tables.featureRolloutTable,
       userNotificationPrefsTable: tables.userNotificationPrefsTable,
       nofoStateOverlayTable: tables.nofoStateOverlayTable,
+      analyticsTable: tables.analyticsTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
@@ -527,6 +528,31 @@ export class ChatBotApi extends Construct {
       path: "/notification-prefs",
       methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT],
       integration: notificationPrefsIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Self-service user profile (agency/org/title) — drives the profile-completion gate and
+    // last-activity tracking for the analytics dashboard.
+    const userProfileIntegration = new HttpLambdaIntegration(
+      "UserProfileIntegration",
+      lambdaFunctions.userProfileFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-profile",
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT],
+      integration: userProfileIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Admin analytics dashboard (read-only aggregations). Admin-gated inside the Lambda.
+    const analyticsIntegration = new HttpLambdaIntegration(
+      "AnalyticsIntegration",
+      lambdaFunctions.analyticsFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/admin/analytics",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: analyticsIntegration,
       authorizer: httpAuthorizer,
     });
 

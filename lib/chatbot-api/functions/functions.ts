@@ -44,6 +44,7 @@ interface LambdaFunctionStackProps {
   readonly featureRolloutTable: Table;
   readonly userNotificationPrefsTable: Table;
   readonly nofoStateOverlayTable: Table;
+  readonly analyticsTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -92,6 +93,8 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoSummaryUpdateFunction: lambda.Function;
   public readonly nofoStateOverlayFunction: lambda.Function;
   public readonly nofoPromoteCopyFunction: lambda.Function;
+  public readonly userProfileFunction: lambda.Function;
+  public readonly analyticsFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -177,10 +180,12 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [pythonSharedLayer],
         environment: {
           DRAFT_TABLE_NAME: props.draftTable.tableName,
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
       }
     );
+    props.analyticsTable.grantWriteData(draftAPIHandlerFunction);
 
     draftAPIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -891,15 +896,18 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/retrieveNOFOSummary")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer], // for recordEvent / touchLastActive
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.minutes(2),
       }
     );
+    props.analyticsTable.grantWriteData(RequirementsForNOFOs);
 
     RequirementsForNOFOs.addToRolePolicy(
       new iam.PolicyStatement({
@@ -1609,10 +1617,14 @@ export class LambdaFunctionStack extends cdk.Stack {
         ),
         handler: "index.handler",
         layers: [puppeteerCoreLayer, jsSharedLayer],
+        environment: {
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        },
         timeout: cdk.Duration.minutes(5),
         memorySize: 2048, // PDF conversion with Chromium can be memory-intensive
       }
     );
+    props.analyticsTable.grantWriteData(applicationPdfGeneratorFunction);
 
     this.applicationPdfGeneratorFunction = applicationPdfGeneratorFunction;
 
@@ -1690,10 +1702,14 @@ export class LambdaFunctionStack extends cdk.Stack {
         ),
         handler: "index.handler",
         layers: [htmlToDocxLayer, jsSharedLayer],
+        environment: {
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        },
         timeout: cdk.Duration.minutes(2),
         memorySize: 512,
       }
     );
+    props.analyticsTable.grantWriteData(applicationDocxGeneratorFunction);
 
     this.applicationDocxGeneratorFunction = applicationDocxGeneratorFunction;
 
@@ -1974,17 +1990,20 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/ai-grant-search")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer], // for recordEvent / touchLastActive
         environment: {
           OPENSEARCH_ENDPOINT: `${props.openSearchCollection.attrId}.${stack.region}.aoss.amazonaws.com`,
           OPENSEARCH_INDEX: knowledgeBaseIndexName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 512,
       }
     );
+    props.analyticsTable.grantWriteData(aiGrantSearchFunction);
 
     aiGrantSearchFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -2020,6 +2039,46 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.aiGrantSearchFunction = aiGrantSearchFunction;
+
+    // --- User profile Lambda (self-service; profile-completion gate + last-activity) ---
+    // Reads/writes the PROFILE row in the shared analytics table. Uses the js-shared layer for
+    // touchLastActive.
+    const userProfileFunction = new lambda.Function(scope, "UserProfileFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "user-management/user-profile")
+      ),
+      handler: "index.handler",
+      layers: [jsSharedLayer],
+      environment: {
+        ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(30),
+    });
+    props.analyticsTable.grantReadWriteData(userProfileFunction);
+    this.userProfileFunction = userProfileFunction;
+
+    // --- Analytics Lambda (admin dashboard; read-only) ---
+    // Aggregates usage events + profile rows from the analytics table and registered-user counts
+    // from Cognito. Admin-gated via requireAdmin in the handler (js-shared layer).
+    const analyticsFunction = new lambda.Function(scope, "AnalyticsFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "analytics")),
+      handler: "index.handler",
+      layers: [jsSharedLayer],
+      environment: {
+        ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        DRAFT_TABLE_NAME: props.draftTable.tableName,
+        USER_POOL_ID: props.userPool.userPoolId,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      },
+      timeout: cdk.Duration.seconds(60),
+      memorySize: 512,
+    });
+    props.analyticsTable.grantReadData(analyticsFunction);
+    props.draftTable.grantReadData(analyticsFunction);
+    props.userPool.grant(analyticsFunction, "cognito-idp:ListUsers");
+    this.analyticsFunction = analyticsFunction;
 
     // Feedback proxy Lambda — optionally forwards user feedback to an external form.
     // If FEEDBACK_FORM_URL is unset, the Lambda logs the feedback and returns success.

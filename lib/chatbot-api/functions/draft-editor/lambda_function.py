@@ -5,10 +5,11 @@ The function also lists drafts by user ID and deletes all drafts for a user.
 """
 
 import os
+import uuid
 import boto3
 from botocore.exceptions import ClientError
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from boto3.dynamodb.conditions import Key, Attr
 from pydantic import ValidationError
 from shared.models import DraftOperationRequest, parse_lambda_event_body
@@ -20,6 +21,36 @@ DDB_TABLE_NAME = os.environ["DRAFT_TABLE_NAME"]
 dynamodb = boto3.resource("dynamodb", region_name=os.environ.get("AWS_REGION", "us-east-1"))
 # Connect to the specified DynamoDB table
 table = dynamodb.Table(DDB_TABLE_NAME)
+
+# Analytics tracking (mirrors grantwell-shared recordEvent in JS; see functions/analytics).
+# Best-effort: any failure is swallowed so tracking never breaks a draft operation.
+ANALYTICS_TABLE_NAME = os.environ.get("ANALYTICS_TABLE_NAME")
+ANALYTICS_EVENT_TTL_SECONDS = 400 * 86400
+_analytics_table = dynamodb.Table(ANALYTICS_TABLE_NAME) if ANALYTICS_TABLE_NAME else None
+
+
+def record_event(event_type, user_id, state=None, nofo_name=None):
+    if not _analytics_table or not user_id:
+        return
+    try:
+        now = datetime.now(timezone.utc)
+        iso = now.isoformat()
+        item = {
+            "pk": f"USER#{user_id}",
+            "sk": f"EVT#{iso}#{uuid.uuid4()}",
+            "event_type": event_type,
+            "event_day": iso[:10],
+            "event_sk": f"{event_type}#{iso}",
+            "created_at": iso,
+            "ttl": int(now.timestamp()) + ANALYTICS_EVENT_TTL_SECONDS,
+        }
+        if state:
+            item["state"] = state.strip().upper()
+        if nofo_name:
+            item["nofo_name"] = str(nofo_name)
+        _analytics_table.put_item(Item=item)
+    except Exception as e:  # noqa: BLE001 - tracking must never fail the caller
+        print(f"record_event failed (non-fatal): {e}")
 
 # Define a function to add a draft or update an existing one in the DynamoDB table
 def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None, status=None):
@@ -428,11 +459,12 @@ def lambda_handler(event, context):
         request_context = event.get('requestContext') or {}
         is_apigw_invocation = bool(request_context)
         authenticated_user_id = None
+        caller_state = None
         if is_apigw_invocation:
             try:
-                authenticated_user_id = (
-                    request_context['authorizer']['jwt']['claims']['sub']
-                )
+                claims = request_context['authorizer']['jwt']['claims']
+                authenticated_user_id = claims['sub']
+                caller_state = str(claims.get('custom:state') or '').strip().upper()
             except (KeyError, TypeError):
                 return {
                     'statusCode': 401,
@@ -467,10 +499,19 @@ def lambda_handler(event, context):
 
         # Route to appropriate operation handler
         if operation == 'add_draft':
-            return add_draft(session_id, user_id, sections, title, document_identifier, project_basics, questionnaire, last_modified, status)
+            result = add_draft(session_id, user_id, sections, title, document_identifier, project_basics, questionnaire, last_modified, status)
+            # Creating a draft is both a draft-created event and "pursuing" its grant.
+            record_event('draft_created', user_id, caller_state, document_identifier)
+            if document_identifier:
+                record_event('nofo_pursue', user_id, caller_state, document_identifier)
+            return result
         elif operation == 'get_draft':
             return get_draft(session_id, user_id)
         elif operation == 'update_draft':
+            # Reaching 'submitted' completes the application (funnel terminal). Everything short of
+            # that, once stale, is an abandonment — the funnel is derived from DraftTable statuses.
+            if status == 'submitted':
+                record_event('draft_completed', user_id, caller_state, document_identifier)
             return update_draft(
                 session_id=session_id,
                 user_id=user_id,
