@@ -162,7 +162,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const jsSharedLayer = new lambda.LayerVersion(scope, "JsSharedLayer", {
       layerVersionName: `${stackName}-js-shared-layer`,
-      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/js-shared-layer")
       ),
@@ -247,7 +247,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "ChatHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(path.join(__dirname, "websocket-chat")),
         handler: "index.handler",
         environment: {
@@ -354,7 +354,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       "CreateMetadataFunction",
       {
         functionName: `${stackName}-createMetadataFunction`,
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/create-metadata")
         ),
@@ -473,7 +473,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management")
         ),
@@ -500,7 +500,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetS3APIHandlerFunctionForNOFOs",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/retrieve-nofos")
         ),
@@ -627,7 +627,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- Pipeline Lambda Functions ---
 
     const extractTextFunction = new lambda.Function(scope, "ExtractTextFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "extract-text/index.handler",
       environment: {
@@ -641,7 +641,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     extractTextFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const extractAndAnalyzeFunction = new lambda.Function(scope, "ExtractAndAnalyzeFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "extract-and-analyze/index.handler",
       environment: {
@@ -656,7 +656,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     extractAndAnalyzeFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const synthesizeFunction = new lambda.Function(scope, "SynthesizeFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "synthesize/index.handler",
       environment: {
@@ -671,7 +671,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     synthesizeFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const validateFunction = new lambda.Function(scope, "ValidateFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "validate/index.handler",
       environment: {
@@ -683,7 +683,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     validateFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const publishFunction = new lambda.Function(scope, "PublishFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "publish/index.handler",
       environment: {
@@ -705,7 +705,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     const quarantineFunction = new lambda.Function(scope, "QuarantineFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "quarantine/index.handler",
       environment: {
@@ -739,7 +739,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- Dispatcher Lambda (SQS -> Step Functions) ---
 
     const dispatcherFunction = new lambda.Function(scope, "PipelineDispatcherFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "dispatcher/index.handler",
       environment: {
@@ -785,7 +785,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- DLQ Processor Lambda (EventBridge schedule) ---
 
     const dlqProcessorFunction = new lambda.Function(scope, "DLQProcessorFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "dlq-processor/index.handler",
       environment: {
@@ -814,7 +814,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- Admin API Lambda ---
 
     const nofoAdminFunction = new lambda.Function(scope, "NofoAdminFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "admin/index.handler",
       layers: [jsSharedLayer],
@@ -860,7 +860,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- Reprocess Lambda ---
 
     const nofoReprocessFunction = new lambda.Function(scope, "NofoReprocessFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "reprocess/index.handler",
       layers: [jsSharedLayer],
@@ -891,7 +891,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetRequirementsForNOFOs",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/retrieveNOFOSummary")
         ),
@@ -927,7 +927,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetQuestionsForNOFOs",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/retrieveNOFOQuestions")
         ),
@@ -960,7 +960,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "nofoUploadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+        runtime: lambda.Runtime.NODEJS_24_X, // Choose any supported Node.js runtime
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/upload-nofos")
         ), // Points to the lambda directory
@@ -994,7 +994,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NofoStatusHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/nofo-status")
         ),
@@ -1045,7 +1045,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NofoSummaryUpdateFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/nofo-summary-update")
         ),
@@ -1095,7 +1095,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // State overlay CRUD: a state admin attaches guidance to a federal NOFO (state-locked).
     const nofoStateOverlayFunction = new lambda.Function(scope, "NofoStateOverlayFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "landing-page/nofo-state-overlay")),
       handler: "index.handler",
       layers: [jsSharedLayer],
@@ -1112,7 +1112,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Promote a federal NOFO to a state-owned copy (fork): copy S3 folder + new scope:state row.
     const nofoPromoteCopyFunction = new lambda.Function(scope, "NofoPromoteCopyFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "landing-page/nofo-promote-copy")),
       handler: "index.handler",
       layers: [jsSharedLayer],
@@ -1141,7 +1141,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NofoRenameHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/nofo-rename")
         ),
@@ -1188,7 +1188,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NofoDeleteHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/nofo-delete")
         ),
@@ -1244,7 +1244,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "UploadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management")
         ),
@@ -1271,7 +1271,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DownloadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management")
         ),
@@ -1300,7 +1300,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftPrepareFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "draft-pipeline/prepare")
         ),
@@ -1344,7 +1344,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftGenerateSectionFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "draft-pipeline/generate-section")
         ),
@@ -1378,7 +1378,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftAssembleFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "draft-pipeline/assemble")
         ),
@@ -1422,7 +1422,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "ScraperCoordinatorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "nofo-scraper")
         ),
@@ -1452,7 +1452,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "OpportunityProcessorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "nofo-scraper")
         ),
@@ -1506,7 +1506,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "SyncNofoMetadataFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/sync-nofo-metadata")
         ),
@@ -1553,7 +1553,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Note: @sparticuz/chromium v131+ bundles all required dependencies, so no separate Chromium layer is needed
     const puppeteerCoreLayer = new lambda.LayerVersion(scope, "PuppeteerCoreLayer", {
       layerVersionName: "PuppeteerCoreLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/puppeteer-core-layer.zip")
       ),
@@ -1565,7 +1565,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "HtmlToPdfConverterFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/html-to-pdf-converter")),
         handler: "index.handler",
@@ -1613,7 +1613,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "ApplicationPdfGeneratorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "application-pdf-generator")
         ),
@@ -1635,7 +1635,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Lambda Layer: mammoth (DOCX text extraction, pure JS)
     const mammothLayer = new lambda.LayerVersion(scope, "MammothLayer", {
       layerVersionName: "MammothLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/mammoth-layer.zip")
       ),
@@ -1645,7 +1645,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Lambda Layer: html-to-docx (HTML → DOCX conversion)
     const htmlToDocxLayer = new lambda.LayerVersion(scope, "HtmlToDocxLayer", {
       layerVersionName: "HtmlToDocxLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/html-to-docx-layer.zip")
       ),
@@ -1657,7 +1657,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DocxToTextConverterFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "nofo-pipeline/docx-to-text-converter")
         ),
@@ -1698,7 +1698,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "ApplicationDocxGeneratorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "application-docx-generator")
         ),
@@ -1720,7 +1720,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       'AutoArchiveExpiredNofosFunction',
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, 'landing-page/auto-archive-expired-nofos')
         ),
@@ -1828,7 +1828,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NotificationDigestFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(path.join(__dirname, "notifications/digest")),
         handler: "index.handler",
         layers: [jsSharedLayer],
@@ -1874,7 +1874,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NotificationDigestPreviewFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "notifications/digest-preview")
         ),
@@ -1919,7 +1919,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NotificationDigestBroadcastFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "notifications/digest-broadcast")
         ),
@@ -1939,7 +1939,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NotificationUnsubscribeFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "notifications/unsubscribe")
         ),
@@ -1987,7 +1987,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "AIGrantSearchFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/ai-grant-search")
         ),
@@ -2046,7 +2046,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Reads/writes the PROFILE row in the shared analytics table. Uses the js-shared layer for
     // touchLastActive.
     const userProfileFunction = new lambda.Function(scope, "UserProfileFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "user-management/user-profile")
       ),
@@ -2064,7 +2064,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Aggregates usage events + profile rows from the analytics table and registered-user counts
     // from Cognito. Admin-gated via requireAdmin in the handler (js-shared layer).
     const analyticsFunction = new lambda.Function(scope, "AnalyticsFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "analytics")),
       handler: "index.handler",
       layers: [jsSharedLayer],
@@ -2088,7 +2088,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "FeedbackProxyFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "feedback-proxy")
         ),

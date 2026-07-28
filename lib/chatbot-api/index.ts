@@ -356,7 +356,7 @@ export class ChatBotApi extends Construct {
     // Add REST API route for draft generation
     // Create a dedicated API function that starts jobs asynchronously
     const draftGeneratorAPIFunction = new lambda.Function(this, "DraftGeneratorAPIFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "gateway/api-routes/draft-generation")
       ),
@@ -392,7 +392,7 @@ export class ChatBotApi extends Construct {
 
     // Add REST API route for draft generation job status polling
     const draftJobStatusFunction = new lambda.Function(this, "DraftJobStatusFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "gateway/api-routes/draft-job-status")
       ),
@@ -416,7 +416,7 @@ export class ChatBotApi extends Construct {
     });
 
     const manageUsersFunction = new lambda.Function(this, "ManageUsersFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "functions/user-management/users")
       ),
@@ -461,7 +461,7 @@ export class ChatBotApi extends Construct {
     });
 
     const featureRolloutFunction = new lambda.Function(this, "FeatureRolloutFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "functions/user-management/feature-rollouts")
       ),
@@ -507,7 +507,7 @@ export class ChatBotApi extends Construct {
 
     // Per-user notification preferences (self-service; scoped to the caller by JWT sub).
     const notificationPrefsFunction = new lambda.Function(this, "NotificationPrefsFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "functions/user-management/notification-prefs")
       ),
