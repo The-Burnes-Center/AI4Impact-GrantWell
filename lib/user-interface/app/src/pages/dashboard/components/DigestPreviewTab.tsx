@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { DigestPreviewResult } from "../../../common/api-client/notifications-client";
+import { ConfirmationModal } from "../../../components/common/ConfirmationModal";
 
 interface DigestPreviewTabProps {
   apiClient: ApiClient;
@@ -22,6 +23,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
   const [refreshing, setRefreshing] = useState(false);
   const [sending, setSending] = useState<"me" | "all" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [confirmBroadcastOpen, setConfirmBroadcastOpen] = useState(false);
 
   const load = useCallback(async () => {
     // Full spinner only when there's nothing to show yet; otherwise dim the stale preview.
@@ -54,15 +56,14 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
   }, [load]);
 
   const onSend = async (scope: "me" | "all") => {
-    if (
-      scope === "all" &&
-      !window.confirm(
-        `Send the real ${frequency} digest to ALL subscribed users now? This is not a test — each ` +
-          `user gets a live email with a working unsubscribe link.`
-      )
-    ) {
+    if (scope === "all") {
+      setConfirmBroadcastOpen(true);
       return;
     }
+    await sendDigest(scope);
+  };
+
+  const sendDigest = async (scope: "me" | "all") => {
     setSending(scope);
     try {
       const res = await apiClient.notifications.broadcastDigest(frequency, scope);
@@ -190,6 +191,25 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
         </div>
         </>
       ) : null}
+
+      <ConfirmationModal
+        isOpen={confirmBroadcastOpen}
+        onClose={() => setConfirmBroadcastOpen(false)}
+        onConfirm={() => {
+          setConfirmBroadcastOpen(false);
+          void sendDigest("all");
+        }}
+        title="Send digest to all subscribers"
+        message={
+          <>
+            Send the real {frequency} digest to <strong>all subscribed users</strong> now?
+          </>
+        }
+        warning="This is not a test — each user gets a live email with a working unsubscribe link."
+        confirmLabel="Send to all"
+        variant="danger"
+        confirming={sending === "all"}
+      />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import {
 import { ApiClient } from "../../../common/api-client/api-client";
 import { Modal } from "../../../components/common/Modal";
 import { DeleteConfirmationModal } from "../../../components/common/DeleteConfirmationModal";
+import { ConfirmationModal } from "../../../components/common/ConfirmationModal";
 import GrantActionsDropdown from "./GrantActionsDropdown";
 import SummaryEditor from "./SummaryEditor";
 import { PROCESSING_LABELS } from "./processing-stages";
@@ -78,6 +79,9 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [customQuestionsLoading, setCustomQuestionsLoading] = useState(false);
   const [customQuestionsSaving, setCustomQuestionsSaving] = useState(false);
   const [customQuestions, setCustomQuestions] = useState<CustomQuestion[]>([]);
+
+  const [promoteModalOpen, setPromoteModalOpen] = useState(false);
+  const [promoting, setPromoting] = useState(false);
 
   const handleEditSummary = useCallback(async (nofo: NOFO) => {
     setSelectedNofo(nofo);
@@ -199,12 +203,18 @@ const NOFOsTab = React.memo(function NOFOsTab({
   }, [selectedNofo, customQuestions, apiClient, addNotification]);
 
   // Fork a federal NOFO into a fully-owned state copy.
-  const handlePromoteToCopy = useCallback(async (nofo: NOFO) => {
-    if (!window.confirm(
-      `Create your state's own editable copy of "${nofo.name}"? The federal grant stays unchanged, and the copy won't track later federal updates.`
-    )) return;
+  const handlePromoteToCopy = useCallback((nofo: NOFO) => {
+    setSelectedNofo(nofo);
+    setPromoteModalOpen(true);
+  }, []);
+
+  const confirmPromoteToCopy = useCallback(async () => {
+    if (!selectedNofo) return;
+    setPromoting(true);
     try {
-      const result = await apiClient.landingPage.promoteToCopy(nofo.name);
+      const result = await apiClient.landingPage.promoteToCopy(selectedNofo.name);
+      setPromoteModalOpen(false);
+      setSelectedNofo(null);
       if (showGrantSuccessBanner) {
         showGrantSuccessBanner(result.newName);
       } else {
@@ -212,8 +222,10 @@ const NOFOsTab = React.memo(function NOFOsTab({
       }
     } catch (error) {
       addNotification("error", getErrorMessage(error, "Failed to create state copy."));
+    } finally {
+      setPromoting(false);
     }
-  }, [apiClient, addNotification, showGrantSuccessBanner]);
+  }, [selectedNofo, apiClient, addNotification, showGrantSuccessBanner]);
 
   const handlePinGrant = async (nofo: NOFO, event?: React.MouseEvent) => {
     event?.stopPropagation();
@@ -497,9 +509,6 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   const editDisabled = Boolean(
                     isStateAdmin && !(nofo.scope === "state" && nofo.state === userState)
                   );
-                  const editDisabledReason = nofo.scope === "federal"
-                    ? "State admins can't modify federal NOFOs."
-                    : "State admins can only modify NOFOs for their own state.";
                   // On a federal grant, a state admin instead gets state-scoped actions:
                   // attach guidance for their state, or fork it into their own copy.
                   const showStateActions = Boolean(isStateAdmin && nofo.scope === "federal");
@@ -508,15 +517,15 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   const showCustomQuestions = Boolean(!editDisabled && nofo.scope === "state");
                   return (
                     <>
-                      {nofo.isPinned ? (
-                        <button className="action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`} disabled={editDisabled} aria-disabled={editDisabled} title={editDisabled ? editDisabledReason : undefined}>
+                      {!editDisabled && (nofo.isPinned ? (
+                        <button className="action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`} title="Unpin grant">
                           <LuPinOff size={18} aria-hidden="true" />
                         </button>
                       ) : (
-                        <button className="action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`} disabled={editDisabled} aria-disabled={editDisabled} title={editDisabled ? editDisabledReason : undefined}>
+                        <button className="action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`} title="Pin grant">
                           <LuPin size={18} aria-hidden="true" />
                         </button>
-                      )}
+                      ))}
                       <GrantActionsDropdown
                         nofo={nofo}
                         onToggleStatus={() => toggleNofoStatus(nofo)}
@@ -524,7 +533,6 @@ const NOFOsTab = React.memo(function NOFOsTab({
                         onEditSummary={() => handleEditSummary(nofo)}
                         onDelete={() => handleDeleteNofo(nofo)}
                         editDisabled={editDisabled}
-                        editDisabledReason={editDisabledReason}
                         showStateActions={showStateActions}
                         onEditOverlay={() => handleEditOverlay(nofo)}
                         onPromoteToCopy={() => handlePromoteToCopy(nofo)}
@@ -595,11 +603,23 @@ const NOFOsTab = React.memo(function NOFOsTab({
 
       <DeleteConfirmationModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} onConfirm={confirmDeleteNofo} title="Delete Grant" itemName={selectedNofo?.name} itemLabel="grant" />
 
+      <ConfirmationModal
+        isOpen={promoteModalOpen}
+        onClose={() => { setPromoteModalOpen(false); setSelectedNofo(null); }}
+        onConfirm={confirmPromoteToCopy}
+        title="Create state copy"
+        message={<>Create your state&apos;s own editable copy of <strong>{selectedNofo?.name}</strong>?</>}
+        warning="The federal grant stays unchanged, and the copy won't track later federal updates."
+        confirmLabel="Create copy"
+        confirming={promoting}
+      />
+
       {/* Edit Summary Modal */}
       <Modal
         isOpen={summaryModalOpen}
         onClose={closeSummaryModal}
         title={`Edit Summary — ${selectedNofo?.name || ""}`}
+        maxWidth="800px"
       >
         <div className="modal-form" style={{ maxHeight: "70vh", overflowY: "auto" }}>
           {summaryLoading ? (
@@ -638,6 +658,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
         isOpen={overlayModalOpen}
         onClose={() => { setOverlayModalOpen(false); setSelectedNofo(null); setOverlayNote(""); }}
         title={`State guidance — ${selectedNofo?.name || ""}`}
+        maxWidth="720px"
       >
         <div className="modal-form">
           {overlayLoading ? (
@@ -676,6 +697,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
         isOpen={customQuestionsModalOpen}
         onClose={() => { setCustomQuestionsModalOpen(false); setSelectedNofo(null); setCustomQuestions([]); }}
         title={`Custom questions — ${selectedNofo?.name || ""}`}
+        maxWidth="720px"
       >
         <div className="modal-form">
           {customQuestionsLoading ? (

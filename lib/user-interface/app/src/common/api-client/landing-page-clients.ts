@@ -110,8 +110,7 @@ export class LandingPageClient {
     state?: string
   ): Promise<string> {
     if (!fileType) {
-      alert("Must have a valid file type!");
-      throw new Error("Invalid file type");
+      throw new Error("Must have a valid file type (PDF, TXT, or DOCX).");
     }
 
     try {

@@ -11,6 +11,7 @@ This release builds on the v1.0.0 foundation with an admin analytics dashboard, 
 - Rebuilt **NOFO processing pipeline** with live progress, a "Needs attention" review queue, and auto-publish for partial extractions
 - **State-scoped administration** — state admins manage only their own state's grants, with state-specific overlays on federal opportunities
 - One-time **profile completion** (agency, organization, role) and a personal profile page with activity history
+- **Custom questions** on state grants — admins can add their own questionnaire questions for applicants to answer
 
 ## New in this release
 
@@ -48,6 +49,12 @@ This release builds on the v1.0.0 foundation with an admin analytics dashboard, 
 - **State admins** can manage only their own state's grants; all NOFO-mutating actions are enforced server-side (fail-closed)
 - State-specific guidance **overlays** on federal NOFOs, shown only to that state's users
 - Promote-a-federal-NOFO-to-a-state-copy workflow
+
+### Custom Questions on State Grants
+
+- Admins can add, edit, and remove their own questionnaire questions on a state grant (up to 25), each with optional help text
+- Custom questions appear in the application writer's questionnaire alongside the questions extracted from the grant document, and are labeled as custom
+- Useful when a grant document doesn't spell out what an agency wants applicants to address
 
 ### User Management
 
