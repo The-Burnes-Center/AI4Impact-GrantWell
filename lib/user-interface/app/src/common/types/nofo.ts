@@ -8,6 +8,17 @@
 export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic";
 
 /**
+ * An admin-authored questionnaire question layered onto a state NOFO, for grants whose document
+ * doesn't spell out the questions an agency wants applicants to answer. `id` is server-controlled
+ * (`custom_<uuid>`) and may be omitted when adding a new question.
+ */
+export interface CustomQuestion {
+  id?: string;
+  question: string;
+  helpText?: string;
+}
+
+/**
  * Advisory flag on a live grant that auto-published with an incomplete extraction
  * (1-2 sections missing). The grant is active; the flag marks it for optional review.
  */

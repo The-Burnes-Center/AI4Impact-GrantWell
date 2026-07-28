@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import {
-  LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader, LuTriangleAlert,
+  LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader, LuTriangleAlert, LuPlus, LuTrash,
 } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import { Modal } from "../../../components/common/Modal";
@@ -9,7 +9,7 @@ import GrantActionsDropdown from "./GrantActionsDropdown";
 import SummaryEditor from "./SummaryEditor";
 import { PROCESSING_LABELS } from "./processing-stages";
 import { Utils } from "../../../common/utils";
-import type { NOFO, GrantTypeId } from "../../../common/types/nofo";
+import type { NOFO, GrantTypeId, CustomQuestion } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
 import { SUPPORTED_STATES } from "../../../common/generated/states";
 
@@ -73,6 +73,11 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [overlayLoading, setOverlayLoading] = useState(false);
   const [overlaySaving, setOverlaySaving] = useState(false);
   const [overlayNote, setOverlayNote] = useState("");
+
+  const [customQuestionsModalOpen, setCustomQuestionsModalOpen] = useState(false);
+  const [customQuestionsLoading, setCustomQuestionsLoading] = useState(false);
+  const [customQuestionsSaving, setCustomQuestionsSaving] = useState(false);
+  const [customQuestions, setCustomQuestions] = useState<CustomQuestion[]>([]);
 
   const handleEditSummary = useCallback(async (nofo: NOFO) => {
     setSelectedNofo(nofo);
@@ -155,6 +160,43 @@ const NOFOsTab = React.memo(function NOFOsTab({
       setOverlaySaving(false);
     }
   }, [selectedNofo, overlayNote, apiClient, addNotification]);
+
+  // Custom questions layer onto a state NOFO's application-writer questionnaire. Loaded from and
+  // saved to the same overlay row as state guidance, but the backend writes only this field.
+  const handleEditCustomQuestions = useCallback(async (nofo: NOFO) => {
+    setSelectedNofo(nofo);
+    setCustomQuestionsModalOpen(true);
+    setCustomQuestionsLoading(true);
+    try {
+      const result = await apiClient.landingPage.getStateOverlay(nofo.name);
+      setCustomQuestions(result.customQuestions || []);
+    } catch {
+      addNotification("error", "Failed to load custom questions. Please try again.");
+      setCustomQuestionsModalOpen(false);
+    } finally {
+      setCustomQuestionsLoading(false);
+    }
+  }, [apiClient, addNotification]);
+
+  const confirmSaveCustomQuestions = useCallback(async () => {
+    if (!selectedNofo) return;
+    // Drop blank rows; the backend re-validates and assigns ids.
+    const cleaned = customQuestions
+      .map((q) => ({ ...q, question: q.question.trim(), helpText: q.helpText?.trim() || undefined }))
+      .filter((q) => q.question.length > 0);
+    setCustomQuestionsSaving(true);
+    try {
+      await apiClient.landingPage.putCustomQuestions(selectedNofo.name, cleaned);
+      addNotification("success", `Custom questions for "${selectedNofo.name}" saved`);
+      setCustomQuestionsModalOpen(false);
+      setSelectedNofo(null);
+      setCustomQuestions([]);
+    } catch (error) {
+      addNotification("error", getErrorMessage(error, "Failed to save custom questions."));
+    } finally {
+      setCustomQuestionsSaving(false);
+    }
+  }, [selectedNofo, customQuestions, apiClient, addNotification]);
 
   // Fork a federal NOFO into a fully-owned state copy.
   const handlePromoteToCopy = useCallback(async (nofo: NOFO) => {
@@ -461,6 +503,9 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   // On a federal grant, a state admin instead gets state-scoped actions:
                   // attach guidance for their state, or fork it into their own copy.
                   const showStateActions = Boolean(isStateAdmin && nofo.scope === "federal");
+                  // Custom questions apply to state grants; offer them to any admin allowed to edit
+                  // this grant (dev/regular admins, or the owning state's admin).
+                  const showCustomQuestions = Boolean(!editDisabled && nofo.scope === "state");
                   return (
                     <>
                       {nofo.isPinned ? (
@@ -483,6 +528,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
                         showStateActions={showStateActions}
                         onEditOverlay={() => handleEditOverlay(nofo)}
                         onPromoteToCopy={() => handlePromoteToCopy(nofo)}
+                        showCustomQuestions={showCustomQuestions}
+                        onEditCustomQuestions={() => handleEditCustomQuestions(nofo)}
                       />
                     </>
                   );
@@ -617,6 +664,84 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 </button>
                 <button className="modal-button primary" onClick={confirmSaveOverlay} disabled={overlaySaving}>
                   {overlaySaving ? "Saving..." : "Save Guidance"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </Modal>
+
+      {/* Custom Questions Modal */}
+      <Modal
+        isOpen={customQuestionsModalOpen}
+        onClose={() => { setCustomQuestionsModalOpen(false); setSelectedNofo(null); setCustomQuestions([]); }}
+        title={`Custom questions — ${selectedNofo?.name || ""}`}
+      >
+        <div className="modal-form">
+          {customQuestionsLoading ? (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--gw-color-text-secondary)" }}>
+              <LuLoader size={20} className="spin-animation" aria-hidden="true" />
+              <span role="status">Loading...</span>
+            </div>
+          ) : (
+            <>
+              <p className="modal-description" style={{ marginBottom: "16px" }}>
+                Add questions applicants answer in the application writer, alongside any questions from the grant document. Useful when the grant doesn&apos;t spell out what your agency wants to ask.
+              </p>
+              {customQuestions.length === 0 ? (
+                <p style={{ color: "var(--gw-color-text-secondary)", marginBottom: "16px" }}>
+                  No custom questions yet.
+                </p>
+              ) : (
+                customQuestions.map((q, index) => (
+                  <div key={q.id ?? index} style={{ marginBottom: "16px", padding: "12px", border: "1px solid var(--gw-color-border)", borderRadius: "8px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                      <span style={{ fontWeight: 500 }}>Question {index + 1}</span>
+                      <button
+                        type="button"
+                        className="action-button"
+                        aria-label={`Remove question ${index + 1}`}
+                        onClick={() => setCustomQuestions((prev) => prev.filter((_, i) => i !== index))}
+                      >
+                        <LuTrash size={16} aria-hidden="true" />
+                      </button>
+                    </div>
+                    <textarea
+                      value={q.question}
+                      onChange={(e) => setCustomQuestions((prev) => prev.map((item, i) => i === index ? { ...item, question: e.target.value } : item))}
+                      rows={2}
+                      maxLength={500}
+                      style={{ width: "100%", marginBottom: "8px" }}
+                      placeholder="e.g. Describe how this project serves residents in our state."
+                      aria-label={`Question ${index + 1} text`}
+                    />
+                    <input
+                      type="text"
+                      value={q.helpText ?? ""}
+                      onChange={(e) => setCustomQuestions((prev) => prev.map((item, i) => i === index ? { ...item, helpText: e.target.value } : item))}
+                      maxLength={300}
+                      style={{ width: "100%" }}
+                      placeholder="Optional help text shown under the question"
+                      aria-label={`Question ${index + 1} help text`}
+                    />
+                  </div>
+                ))
+              )}
+              <button
+                type="button"
+                className="modal-button secondary"
+                onClick={() => setCustomQuestions((prev) => [...prev, { question: "" }])}
+                disabled={customQuestions.length >= 25}
+                style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+              >
+                <LuPlus size={16} aria-hidden="true" /> Add question
+              </button>
+              <div className="modal-actions" style={{ marginTop: "16px" }}>
+                <button className="modal-button secondary" onClick={() => { setCustomQuestionsModalOpen(false); setSelectedNofo(null); setCustomQuestions([]); }}>
+                  Cancel
+                </button>
+                <button className="modal-button primary" onClick={confirmSaveCustomQuestions} disabled={customQuestionsSaving}>
+                  {customQuestionsSaving ? "Saving..." : "Save Questions"}
                 </button>
               </div>
             </>

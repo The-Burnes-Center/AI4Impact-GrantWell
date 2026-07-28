@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen, LuMessageSquarePlus, LuCopy } from "react-icons/lu";
+import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen, LuMessageSquarePlus, LuCopy, LuListChecks } from "react-icons/lu";
 import type { NOFO } from "../../../common/types/nofo";
 
 interface GrantActionsDropdownProps {
@@ -15,6 +15,9 @@ interface GrantActionsDropdownProps {
   showStateActions?: boolean;
   onEditOverlay?: () => void;
   onPromoteToCopy?: () => void;
+  /** Show "Custom questions" — an editable state NOFO the caller may edit. */
+  showCustomQuestions?: boolean;
+  onEditCustomQuestions?: () => void;
 }
 
 const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
@@ -28,6 +31,8 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
   showStateActions = false,
   onEditOverlay,
   onPromoteToCopy,
+  showCustomQuestions = false,
+  onEditCustomQuestions,
 }: GrantActionsDropdownProps) {
   const disabledTitle = editDisabled ? editDisabledReason : undefined;
   const [isOpen, setIsOpen] = useState(false);
@@ -159,6 +164,17 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
             <LuTrash size={16} className="menu-icon" />
             <span>Delete</span>
           </button>
+          {showCustomQuestions && (
+            <button
+              onClick={() => { onEditCustomQuestions?.(); setIsOpen(false); }}
+              className="dropdown-menu-item"
+              role="menuitem"
+              title="Add questions applicants answer in the application writer"
+            >
+              <LuListChecks size={16} className="menu-icon" />
+              <span>Custom questions</span>
+            </button>
+          )}
           {showStateActions && (
             <>
               <button

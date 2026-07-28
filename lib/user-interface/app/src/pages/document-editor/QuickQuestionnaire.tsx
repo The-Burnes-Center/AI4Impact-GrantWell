@@ -28,8 +28,11 @@ interface QuickQuestionnaireProps {
 }
 
 interface QuestionData {
-  id: number;
+  // Parsed questions use sequential integer ids; admin-authored custom questions use string ids.
+  id: number | string;
   question: string;
+  helpText?: string;
+  source?: "custom";
 }
 
 interface QuestionnaireFormData {
@@ -268,7 +271,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
         </p>
 
         <div style={{ background: colors.white, borderRadius: "8px", padding: "24px" }}>
-          {questions.map((questionItem) => (
+          {questions.map((questionItem, index) => (
             <div key={questionItem.id} style={{ marginBottom: "24px" }}>
               <label
                 htmlFor={`question_${questionItem.id}`}
@@ -281,7 +284,19 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   fontFamily: typography.fontFamily,
                 }}
               >
-                {questionItem.id}. {questionItem.question}
+                {index + 1}. {questionItem.question}
+                {questionItem.source === "custom" && (
+                  <span
+                    style={{
+                      marginLeft: "8px",
+                      fontSize: typography.fontSize.sm,
+                      fontWeight: typography.fontWeight.medium,
+                      color: colors.textSecondary,
+                    }}
+                  >
+                    (Added by your agency)
+                  </span>
+                )}
               </label>
               <textarea
                 id={`question_${questionItem.id}`}
@@ -312,7 +327,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   fontFamily: typography.fontFamily,
                 }}
               >
-                Provide a detailed answer. You can edit this later in the document editor.
+                {questionItem.helpText || "Provide a detailed answer. You can edit this later in the document editor."}
               </span>
             </div>
           ))}
