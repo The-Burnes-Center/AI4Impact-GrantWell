@@ -15,11 +15,14 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as ses from "aws-cdk-lib/aws-ses";
+import * as sns from "aws-cdk-lib/aws-sns";
+import * as scheduler from "aws-cdk-lib/aws-scheduler";
+import * as schedulerTargets from "aws-cdk-lib/aws-scheduler-targets";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
-import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { SqsEventSource, SnsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
@@ -49,6 +52,8 @@ interface LambdaFunctionStackProps {
   readonly draftGenerationJobsTable: Table;
   readonly featureRolloutTable: Table;
   readonly userNotificationPrefsTable: Table;
+  readonly digestSendLogTable: Table;
+  readonly digestSuppressionTable: Table;
   readonly nofoStateOverlayTable: Table;
   readonly analyticsTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
@@ -94,6 +99,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly notificationDigestPreviewFunction: lambda.Function;
   public readonly notificationDigestBroadcastFunction: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
+  public readonly notificationSesFeedbackFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
   public readonly feedbackProxyFunction: lambda.Function;
   public readonly nofoSummaryUpdateFunction: lambda.Function;
@@ -556,14 +562,12 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.getNOFOsList = getS3APIHandlerFunctionForNOFOs;
 
-    // Create Dead Letter Queue for NOFO processing
     const nofoProcessingDLQ = new sqs.Queue(scope, "NOFOProcessingDLQ", {
       retentionPeriod: cdk.Duration.days(14),
     });
 
-    // Create SQS Queue for NOFO processing
     const nofoProcessingQueue = new sqs.Queue(scope, "NOFOProcessingQueue", {
-      visibilityTimeout: cdk.Duration.minutes(20),
+      visibilityTimeout: cdk.Duration.minutes(2),
       receiveMessageWaitTime: cdk.Duration.seconds(20),
       deadLetterQueue: {
         queue: nofoProcessingDLQ,
@@ -755,7 +759,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
       },
-      timeout: cdk.Duration.minutes(15),
+      // The dispatcher only enqueues work now — it no longer waits for the state machine, which
+      // may run up to 30 min (longer than any Lambda can live).
+      timeout: cdk.Duration.minutes(1),
       memorySize: 256,
     });
 
@@ -765,7 +771,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     dispatcherFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["states:DescribeExecution", "states:ListExecutions", "states:StopExecution"],
+        actions: ["states:DescribeExecution", "states:StopExecution"],
         resources: ["*"],
       })
     );
@@ -1821,20 +1827,69 @@ export class LambdaFunctionStack extends cdk.Stack {
     const stack = cdk.Stack.of(this);
 
     // --- NOFO notification digest ------------------------------------------------
-    // SES verified sender for digest emails. Domain identity so DKIM can be enabled;
-    // the actual DKIM DNS records must be published to the sender domain post-deploy.
+    // SES verified sender for digest emails. Branding config is the source of truth for the From
+    // address so a new instance doesn't silently send as GrantWell; env is the per-deploy override.
     const notificationSender =
-      process.env.NOTIFICATION_SENDER || "no-reply@grantwell.us";
-    const senderDomain = notificationSender.split("@")[1] || "grantwell.us";
+      process.env.NOTIFICATION_SENDER || genericBrandingData.senderEmail;
+    const senderDomain =
+      notificationSender.split("@")[1] ||
+      genericBrandingData.senderEmail.split("@")[1];
     // SES identities are account+region scoped: the generic stack already owns the grantwell.us
     // identity, so a second stack in the same account (burnes-staging) must reuse it, not re-create
-    // it. Both still send as no-reply@grantwell.us; only the primary stack manages the identity.
+    // it. Both still send as the same address; only the primary stack manages the identity.
     const managesSenderIdentity = process.env.ENVIRONMENT !== "grantwell-burnes-staging";
+    // Easy DKIM's three CNAME tokens must reach the sender domain's DNS before the identity
+    // verifies. They're emitted as this stack's NotificationSenderDkim* outputs.
     const notificationEmailIdentity = managesSenderIdentity
       ? new ses.EmailIdentity(scope, "NotificationSenderIdentity", {
           identity: ses.Identity.domain(senderDomain),
+          dkimSigning: true,
+          dkimIdentity: ses.DkimIdentity.easyDkim(
+            ses.EasyDkimSigningKeyLength.RSA_2048_BIT
+          ),
         })
       : undefined;
+
+    if (notificationEmailIdentity) {
+      for (const [i, record] of notificationEmailIdentity.dkimRecords.entries()) {
+        new cdk.CfnOutput(scope, `NotificationSenderDkimRecord${i + 1}`, {
+          value: `${record.name} CNAME ${record.value}`,
+          description: `DKIM CNAME to publish in ${senderDomain} DNS before digest mail can send`,
+        });
+      }
+      // Sandbox status can't be detected or changed from CloudFormation, and in a sandbox account
+      // digests silently no-op for every unverified recipient.
+      new cdk.CfnOutput(scope, "NotificationSenderManualSteps", {
+        value: [
+          `1. Publish the three NotificationSenderDkimRecord* CNAMEs in ${senderDomain} DNS.`,
+          "2. Request SES production access (exit sandbox) for this account+region via AWS Support.",
+        ].join(" "),
+        description: "Manual post-deploy steps required for digest email delivery",
+      });
+    }
+
+    // Config set names are account+region scoped, same collision risk as the sender identity.
+    const sesConfigurationSet = new ses.ConfigurationSet(
+      scope,
+      "NotificationDigestConfigurationSet",
+      {
+        configurationSetName: `${process.env.ENVIRONMENT || stackName}-digest`,
+        suppressionReasons: ses.SuppressionReasons.BOUNCES_AND_COMPLAINTS,
+      }
+    );
+
+    const sesFeedbackTopic = new sns.Topic(scope, "NotificationDigestFeedbackTopic", {
+      displayName: "SES digest bounce/complaint feedback",
+    });
+
+    sesConfigurationSet.addEventDestination("SnsFeedback", {
+      destination: ses.EventDestination.snsTopic(sesFeedbackTopic),
+      events: [
+        ses.EmailSendingEvent.BOUNCE,
+        ses.EmailSendingEvent.COMPLAINT,
+        ses.EmailSendingEvent.DELIVERY,
+      ],
+    });
 
     const digestBrandEnv = {
       DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
@@ -1856,9 +1911,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       },
     });
 
-    // Sectioned digest (New / Closing soon / Still open + fallback). Off by default; flip to "true"
-    // to enable the richer layout once it's been reviewed.
-    const digestV2 = process.env.DIGEST_V2 === "true" ? "true" : "false";
+    // Sectioned digest (New / Closing soon / Still open + fallback) is the default layout.
+    // DIGEST_V2="false" is the kill switch back to the flat list.
+    const digestV2 = process.env.DIGEST_V2 === "false" ? "false" : "true";
 
     const notificationDigestFunction = new lambda.Function(
       scope,
@@ -1877,6 +1932,9 @@ export class LambdaFunctionStack extends cdk.Stack {
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
           DIGEST_V2: digestV2,
           UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
+          DIGEST_SEND_LOG_TABLE_NAME: props.digestSendLogTable.tableName,
+          DIGEST_SUPPRESSION_TABLE_NAME: props.digestSuppressionTable.tableName,
+          SES_CONFIGURATION_SET: sesConfigurationSet.configurationSetName,
           ...digestBrandEnv,
         },
         timeout: cdk.Duration.minutes(15),
@@ -1885,6 +1943,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     props.userNotificationPrefsTable.grantReadWriteData(notificationDigestFunction);
     props.nofoMetadataTable.grantReadData(notificationDigestFunction);
+    props.digestSendLogTable.grantReadWriteData(notificationDigestFunction);
+    props.digestSuppressionTable.grantReadData(notificationDigestFunction);
     props.userPool.grant(notificationDigestFunction, "cognito-idp:AdminGetUser");
     unsubscribeSecret.grantRead(notificationDigestFunction);
     notificationDigestFunction.addToRolePolicy(
@@ -1904,8 +1964,9 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.notificationDigestFunction = notificationDigestFunction;
 
-    // Developer-only digest preview: renders the real template (shared layer) with
-    // sample data, no send. Same stack as the layer to avoid a cross-stack reference.
+    // Developer-only digest preview: renders the real template (shared layer) against real data —
+    // the caller's own prefs and the live active NOFO pool — and can also send a test message to the
+    // caller. Same stack as the layer to avoid a cross-stack reference.
     const notificationDigestPreviewFunction = new lambda.Function(
       scope,
       "NotificationDigestPreviewFunction",
@@ -1923,6 +1984,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
           NOTIFICATION_SENDER: notificationSender,
           DIGEST_V2: digestV2,
+          SES_CONFIGURATION_SET: sesConfigurationSet.configurationSetName,
           ...digestBrandEnv,
         },
         timeout: cdk.Duration.seconds(15),
@@ -1985,6 +2047,8 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_NOTIFICATION_PREFS_TABLE_NAME:
             props.userNotificationPrefsTable.tableName,
           UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
+          DIGEST_APP_NAME: genericBrandingData.appName,
+          DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
         },
         timeout: cdk.Duration.seconds(15),
       }
@@ -1993,30 +2057,66 @@ export class LambdaFunctionStack extends cdk.Stack {
     unsubscribeSecret.grantRead(notificationUnsubscribeFunction);
     this.notificationUnsubscribeFunction = notificationUnsubscribeFunction;
 
-    // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its frequency so
-    // the same Lambda serves both cadences. Scheduled sends are live on burnes-staging (dev) only;
-    // still off on prod / grantwell-staging until the digest is signed off there.
-    const digestScheduleEnabled =
-      process.env.ENVIRONMENT === "grantwell-burnes-staging";
-    new events.Rule(scope, "NotificationDigestDailyRule", {
-      schedule: events.Schedule.cron({ minute: "0", hour: "8", day: "*", month: "*", year: "*" }),
-      description: "Send daily NOFO notification digests",
-      enabled: digestScheduleEnabled,
-    }).addTarget(
-      new targets.LambdaFunction(notificationDigestFunction, {
-        event: events.RuleTargetInput.fromObject({ frequency: "daily" }),
-      })
+    // Hard bounces and complaints land in the suppression table, the digest's send gate.
+    const notificationSesFeedbackFunction = new lambda.Function(
+      scope,
+      "NotificationSesFeedbackFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_24_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "notifications/ses-feedback")
+        ),
+        handler: "index.handler",
+        environment: {
+          DIGEST_SUPPRESSION_TABLE_NAME: props.digestSuppressionTable.tableName,
+          USER_NOTIFICATION_PREFS_TABLE_NAME:
+            props.userNotificationPrefsTable.tableName,
+          USER_POOL_ID: props.userPool.userPoolId,
+        },
+        timeout: cdk.Duration.seconds(30),
+      }
     );
+    notificationSesFeedbackFunction.addEventSource(
+      new SnsEventSource(sesFeedbackTopic)
+    );
+    props.digestSuppressionTable.grantWriteData(notificationSesFeedbackFunction);
+    props.userNotificationPrefsTable.grantReadWriteData(notificationSesFeedbackFunction);
+    props.userPool.grant(notificationSesFeedbackFunction, "cognito-idp:ListUsers");
+    this.notificationSesFeedbackFunction = notificationSesFeedbackFunction;
 
-    new events.Rule(scope, "NotificationDigestWeeklyRule", {
-      schedule: events.Schedule.cron({ minute: "0", hour: "8", weekDay: "MON", month: "*", year: "*" }),
+    // 1:00 PM America/New_York year-round. Scheduler, not events.Rule, because a Rule cron is UTC
+    // only and would drift an hour across DST. Daily skips Monday, the weekly slot, so the two
+    // cadences never fire in the same minute.
+    const digestSchedulerRole = new iam.Role(scope, "NotificationDigestSchedulerRole", {
+      assumedBy: new iam.ServicePrincipal("scheduler.amazonaws.com"),
+    });
+    notificationDigestFunction.grantInvoke(digestSchedulerRole);
+
+    new scheduler.Schedule(scope, "NotificationDigestDailySchedule", {
+      schedule: scheduler.ScheduleExpression.expression(
+        // Explicit day list, not TUE-SUN: Scheduler numbers SUN=1, so that range descends and its
+        // wrap behavior is undocumented.
+        "cron(0 13 ? * TUE,WED,THU,FRI,SAT,SUN *)",
+        cdk.TimeZone.AMERICA_NEW_YORK
+      ),
+      description: "Send daily NOFO notification digests",
+      target: new schedulerTargets.LambdaInvoke(notificationDigestFunction, {
+        role: digestSchedulerRole,
+        input: scheduler.ScheduleTargetInput.fromObject({ frequency: "daily" }),
+      }),
+    });
+
+    new scheduler.Schedule(scope, "NotificationDigestWeeklySchedule", {
+      schedule: scheduler.ScheduleExpression.expression(
+        "cron(0 13 ? * MON *)",
+        cdk.TimeZone.AMERICA_NEW_YORK
+      ),
       description: "Send weekly NOFO notification digests",
-      enabled: digestScheduleEnabled,
-    }).addTarget(
-      new targets.LambdaFunction(notificationDigestFunction, {
-        event: events.RuleTargetInput.fromObject({ frequency: "weekly" }),
-      })
-    );
+      target: new schedulerTargets.LambdaInvoke(notificationDigestFunction, {
+        role: digestSchedulerRole,
+        input: scheduler.ScheduleTargetInput.fromObject({ frequency: "weekly" }),
+      }),
+    });
 
     // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
     const aiGrantSearchFunction = new lambda.Function(

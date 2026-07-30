@@ -74,6 +74,8 @@ export class ChatBotApi extends Construct {
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
       featureRolloutTable: tables.featureRolloutTable,
       userNotificationPrefsTable: tables.userNotificationPrefsTable,
+      digestSendLogTable: tables.digestSendLogTable,
+      digestSuppressionTable: tables.digestSuppressionTable,
       nofoStateOverlayTable: tables.nofoStateOverlayTable,
       analyticsTable: tables.analyticsTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
@@ -562,7 +564,8 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    // Developer-only: render the real digest template with sample data (no send).
+    // Developer-only: render the real digest template against real data (the caller's prefs and the
+    // live active NOFO pool); POST can also send the rendered digest to the caller as a test.
     // The function is defined in LambdaFunctionStack so it shares that stack's
     // js-shared layer (avoids a cross-stack layer reference).
     const notificationDigestPreviewIntegration = new HttpLambdaIntegration(
@@ -588,7 +591,7 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
+    const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
       "NotificationUnsubscribeIntegration",
       lambdaFunctions.notificationUnsubscribeFunction
     );
@@ -598,6 +601,10 @@ const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
       integration: notificationUnsubscribeIntegration,
     });
 
+    // Still the raw execute-api host, which doesn't match the From domain. Branding it needs a
+    // `/unsubscribe*` behavior on the app's CloudFront distribution, but that is built by
+    // UserInterface after (and from) ChatBotApi and exposes no handle upward, so it has to be added
+    // in lib/user-interface/generate-app.ts before this can use emailConfig.deploymentUrl.
     lambdaFunctions.notificationDigestFunction.addEnvironment(
       "UNSUBSCRIBE_URL_BASE",
       `${restBackend.restAPI.apiEndpoint}/unsubscribe`

@@ -76,8 +76,6 @@ export class AuthorizationStack extends Construct {
       cognito.UserPoolOperation.POST_CONFIRMATION,
       signupTriggerFunction
     );
-    // Wildcard, not userPool.grant(): addTrigger already points the pool at this function, so
-    // referencing the pool back would be a dependency cycle.
     signupTriggerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,

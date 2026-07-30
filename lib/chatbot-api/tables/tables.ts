@@ -16,6 +16,8 @@ export class TableStack extends Stack {
   public readonly featureRolloutTable: Table;
   public readonly nofoProcessingReviewTable: Table;
   public readonly userNotificationPrefsTable: Table;
+  public readonly digestSendLogTable: Table;
+  public readonly digestSuppressionTable: Table;
   public readonly nofoStateOverlayTable: Table;
   public readonly analyticsTable: Table;
 
@@ -148,6 +150,26 @@ export class TableStack extends Stack {
     });
 
     this.userNotificationPrefsTable = userNotificationPrefsTable;
+
+    // One row per send attempt. (user_id, sent_at) doubles as the idempotency claim, where sent_at
+    // is the cadence window key, so a retry or double-fire collides instead of mailing twice.
+    const digestSendLogTable = new Table(this, 'DigestSendLogTable', {
+      partitionKey: { name: 'user_id', type: AttributeType.STRING },
+      sortKey: { name: 'sent_at', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      timeToLiveAttribute: 'expires_at',
+    });
+
+    this.digestSendLogTable = digestSendLogTable;
+
+    // Hard bounces and complaints by lowercased email. Checked before every send, independent of
+    // the user's prefs row.
+    const digestSuppressionTable = new Table(this, 'DigestSuppressionTable', {
+      partitionKey: { name: 'email', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
+    this.digestSuppressionTable = digestSuppressionTable;
 
     // State-specific overlays on federal NOFOs. One row per (nofo, state): a state admin
     // attaches guidance shown only to their state's users, without mutating the shared
