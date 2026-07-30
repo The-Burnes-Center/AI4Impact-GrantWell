@@ -62,8 +62,10 @@ export class AuthorizationStack extends Construct {
     });
 
     // Exposed as token claims so Lambdas read role/state from the JWT instead of an
-    // AdminGetUser per request. writeAttributes omits 'role' on purpose; admin-API
-    // AdminUpdateUserAttributes bypasses it, so reassignment still works via User Management.
+    // AdminGetUser per request. writeAttributes omits both 'role' and 'state' on purpose:
+    // a self-writable state let an admin clear it to become a platform admin. Admin-API
+    // AdminUpdateUserAttributes bypasses it, so reassignment still works via User Management,
+    // and Auth.signUp validates against the schema, so signup state selection is unaffected.
     const clientAttributes = new cognito.ClientAttributes()
       .withStandardAttributes({
         email: true,
@@ -79,8 +81,7 @@ export class AuthorizationStack extends Construct {
       },
       readAttributes: clientAttributes,
       writeAttributes: new cognito.ClientAttributes()
-        .withStandardAttributes({ email: true })
-        .withCustomAttributes('state'),
+        .withStandardAttributes({ email: true }),
     });
 
     this.userPoolClient = userPoolClient;

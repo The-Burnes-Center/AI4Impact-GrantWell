@@ -24,22 +24,28 @@ const allRoleOptions: Array<{
 }> = [
   { value: "user", label: "User" },
   { value: "admin", label: "Admin" },
+  { value: "platformadmin", label: "Platform Admin", requiresDeveloper: true },
   { value: "developer", label: "Developer", requiresDeveloper: true },
 ];
 
 const ROLE_DEFINITIONS: Record<UserRolePreset, string> = {
   user: "Browse grants, view requirements, and draft applications. No admin access.",
-  admin: "Everything a User can do, plus the Admin Dashboard: manage grants, review processing, and manage user roles (User or Admin only).",
-  developer: "Everything an Admin can do, plus manage feature rollouts and assign any role, including Developer.",
+  admin: "Everything a User can do, plus the Admin Dashboard: manage grants, review processing, and manage user roles (User or Admin only). Scoped to their assigned state.",
+  platformadmin: "An Admin with no state restriction: manages grants and users across every state. Cannot be scoped to a state.",
+  developer: "Everything a Platform Admin can do, plus manage feature rollouts and assign any role, including Developer.",
 };
 
 function getRolePreset(roles: string[]): UserRolePreset {
   const normalizedRoles = roles.map((role) => role.toLowerCase());
   const isAdmin = normalizedRoles.includes("admin");
+  const isPlatformAdmin = normalizedRoles.includes("platformadmin");
   const isDeveloper = normalizedRoles.includes("developer");
 
   if (isDeveloper) {
     return "developer";
+  }
+  if (isPlatformAdmin) {
+    return "platformadmin";
   }
   if (isAdmin) {
     return "admin";

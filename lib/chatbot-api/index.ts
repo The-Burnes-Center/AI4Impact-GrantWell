@@ -32,6 +32,10 @@ const SUPPORTED_STATES_ENV: string = JSON.stringify(
   SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
 );
 
+// See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
+// still resolves to platform-wide. Flip both to "false" only after migrating every pool.
+const LEGACY_STATELESS_ADMIN_IS_PLATFORM = "true";
+
 export interface ChatbotAPIProps {
   readonly authentication: AuthorizationStack;
   readonly grantsGovApiKey: string;
@@ -366,6 +370,7 @@ export class ChatBotApi extends Construct {
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
         NOFO_METADATA_TABLE_NAME: tables.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
     });
@@ -424,6 +429,7 @@ export class ChatBotApi extends Construct {
       environment: {
         USER_POOL_ID: props.authentication.userPool.userPoolId,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30),
     });

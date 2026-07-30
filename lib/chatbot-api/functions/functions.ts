@@ -34,6 +34,12 @@ const SUPPORTED_STATES_ENV = JSON.stringify(
   SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
 );
 
+// Platform authority is the explicit PlatformAdmin role. While this is "true", a legacy
+// stateless Admin still resolves to platform-wide — the pre-migration form. Flip to "false"
+// only after every stateless admin in the pool has been migrated to PlatformAdmin, or they
+// lose cross-state access. See scripts/migrate-platform-admins.mjs.
+const LEGACY_STATELESS_ADMIN_IS_PLATFORM = "true";
+
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
   readonly sessionTable: Table;
@@ -258,6 +264,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           // Flip to "true" once existing NOFOs are sidecar-tagged.
           NOFO_STATE_FILTER_ENABLED: "false",
         },
@@ -510,6 +517,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.minutes(3),
       }
@@ -824,6 +832,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         BUCKET: props.ffioNofosBucket.bucketName,
         PUBLISH_FUNCTION_NAME: publishFunction.functionName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
@@ -870,6 +879,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
@@ -902,6 +912,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.minutes(2),
@@ -937,6 +948,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -969,6 +981,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         },
         timeout: cdk.Duration.seconds(60),
@@ -1005,6 +1018,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -1057,6 +1071,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           ENABLE_DYNAMODB_CACHE: "true",
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -1103,6 +1118,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30),
     });
@@ -1120,6 +1136,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         BUCKET: props.ffioNofosBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(60),
     });
@@ -1151,6 +1168,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -1200,6 +1218,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -1353,6 +1372,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           SONNET_MODEL_ID: sonnetDraftProfile.attrInferenceProfileArn,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.minutes(3),
         memorySize: 256,
@@ -2073,6 +2093,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         DRAFT_TABLE_NAME: props.draftTable.tableName,
         USER_POOL_ID: props.userPool.userPoolId,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(60),
       memorySize: 512,
