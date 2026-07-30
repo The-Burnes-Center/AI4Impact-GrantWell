@@ -33,6 +33,38 @@ interface CardCopy {
   title: string;
   subtitle: string;
 }
+const PENDING_STATE_KEY = "grantwell.pendingSignupState";
+
+function writePendingSignupState(email: string, state: string) {
+  try {
+    if (!state) {
+      sessionStorage.removeItem(PENDING_STATE_KEY);
+      return;
+    }
+    sessionStorage.setItem(PENDING_STATE_KEY, JSON.stringify({ email, state }));
+  } catch {
+    // Storage denied (private mode): state falls back to admin assignment.
+  }
+}
+
+function readPendingSignupState(email: string): string {
+  try {
+    const raw = sessionStorage.getItem(PENDING_STATE_KEY);
+    if (!raw) return "";
+    const parsed = JSON.parse(raw);
+    return parsed?.email === email ? String(parsed.state || "") : "";
+  } catch {
+    return "";
+  }
+}
+
+function clearPendingSignupState() {
+  try {
+    sessionStorage.removeItem(PENDING_STATE_KEY);
+  } catch {
+    // Nothing to recover; the value is only a hint for confirmSignUp.
+  }
+}
 
 export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
   const branding = useBranding();
@@ -269,9 +301,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
         password,
         attributes: {
           email: normalizedEmail,
-          ...(signupState ? { "custom:state": signupState } : {}),
         },
+        clientMetadata: signupState ? { state: signupState } : undefined,
       });
+      writePendingSignupState(normalizedEmail, signupState);
       setVerificationCode("");
       setSuccess("Verification code sent. Enter it below to finish creating your account.");
       setView("verify-sign-up");
@@ -297,7 +330,11 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.confirmSignUp(normalizedEmail, verificationCode.trim());
+      const pendingState = signupState || readPendingSignupState(normalizedEmail);
+      await Auth.confirmSignUp(normalizedEmail, verificationCode.trim(), {
+        clientMetadata: pendingState ? { state: pendingState } : undefined,
+      });
+      clearPendingSignupState();
 
       if (!password) {
         switchToSignIn("Email verified. Sign in to continue.");

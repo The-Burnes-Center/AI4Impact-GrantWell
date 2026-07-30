@@ -5,6 +5,11 @@ import { UserPool, UserPoolClient, FeaturePlan} from 'aws-cdk-lib/aws-cognito';
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as path from 'path';
+import { SUPPORTED_STATES } from '../shared/states';
+
+const SUPPORTED_STATES_ENV: string = JSON.stringify(
+  SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
+);
 
 export class AuthorizationStack extends Construct {
   public readonly lambdaAuthorizer: lambda.Function;
@@ -55,17 +60,29 @@ export class AuthorizationStack extends Construct {
     });
     this.userPool = userPool;
 
+    const signupTriggerFunction = new lambda.Function(this, 'SignUpTriggerFunction', {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, 'signup-triggers')),
+      handler: 'index.handler',
+      environment: {
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      },
+      timeout: cdk.Duration.seconds(30),
+    });
+
+    userPool.addTrigger(cognito.UserPoolOperation.PRE_SIGN_UP, signupTriggerFunction);
+    userPool.addTrigger(
+      cognito.UserPoolOperation.POST_CONFIRMATION,
+      signupTriggerFunction
+    );
+    userPool.grant(signupTriggerFunction, 'cognito-idp:AdminUpdateUserAttributes');
+
     userPool.addDomain('CognitoDomain', {
       cognitoDomain: {
         domainPrefix: cognitoDomainName,
       },
     });
 
-    // Exposed as token claims so Lambdas read role/state from the JWT instead of an
-    // AdminGetUser per request. writeAttributes omits both 'role' and 'state' on purpose:
-    // a self-writable state let an admin clear it to become a platform admin. Admin-API
-    // AdminUpdateUserAttributes bypasses it, so reassignment still works via User Management,
-    // and Auth.signUp validates against the schema, so signup state selection is unaffected.
     const clientAttributes = new cognito.ClientAttributes()
       .withStandardAttributes({
         email: true,
