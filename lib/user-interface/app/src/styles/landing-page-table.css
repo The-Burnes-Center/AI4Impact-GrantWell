@@ -600,6 +600,22 @@
 }
 
 /* New grant badge */
+/* State ownership marker on a state-owned grant. Deliberately quieter than .landing-new-badge —
+   it's standing metadata, not news. */
+.landing-state-badge {
+  display: inline-block;
+  background-color: #eef2f7;
+  color: #1a4480;
+  border: 1px solid #c9d6e5;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-left: 6px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
 .landing-new-badge {
   display: inline-block;
   background-color: var(--gw-color-success, #1f8a4c);

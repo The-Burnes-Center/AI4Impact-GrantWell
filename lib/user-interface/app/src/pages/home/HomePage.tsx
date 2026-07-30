@@ -135,6 +135,9 @@ export default function HomePage() {
               agency: nofo.agency || null,
               category: nofo.category || null,
               createdAt: nofo.created_at || null,
+              scope: (nofo.scope as NOFO["scope"]) || null,
+              state: nofo.state || null,
+              promotedFrom: nofo.promoted_from || null,
             }))
           );
         } else {

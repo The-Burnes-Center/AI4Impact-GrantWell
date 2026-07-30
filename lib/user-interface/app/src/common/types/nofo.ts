@@ -5,6 +5,8 @@
  * the dashboard, landing page, and grants table.
  */
 
+import { stateNameFromCode } from "../generated/states";
+
 export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic";
 
 /**
@@ -40,6 +42,8 @@ export interface NOFO {
   scope?: "federal" | "state" | null;
   /** Two-letter state code this NOFO belongs to when `scope === "state"`. */
   state?: string | null;
+  /** Federal NOFO this row was forked from, when created by "promote to state copy". */
+  promotedFrom?: string | null;
   agency?: string | null;
   category?: string | null;
   processingStatus?: string | null;
@@ -49,6 +53,27 @@ export interface NOFO {
   processingCompletedAt?: string | null;
   /** How the pipeline finished: "published" (live) or "needs_review" (failed/quarantined). */
   processingOutcome?: "published" | "needs_review" | null;
+}
+
+/**
+ * Title to show for a NOFO, and the state whose ownership should render as a badge beside it.
+ *
+ * "Promote to state copy" has to suffix the copy's name — `nofo_name` is the table's partition key,
+ * so the fork cannot share its parent's name. That suffix is storage bookkeeping, not something to
+ * read in a title cell, so strip it here and let the caller render the state as a badge.
+ */
+export function nofoDisplayName(nofo: Pick<NOFO, "name" | "scope" | "state" | "promotedFrom">): {
+  title: string;
+  stateBadge: string | null;
+} {
+  const stateName = nofo.scope === "state" && nofo.state ? stateNameFromCode(nofo.state) : undefined;
+  if (!stateName) return { title: nofo.name, stateBadge: null };
+
+  const suffix = ` (${stateName})`;
+  const title = nofo.promotedFrom && nofo.name.endsWith(suffix)
+    ? nofo.name.slice(0, -suffix.length)
+    : nofo.name;
+  return { title, stateBadge: stateName };
 }
 
 export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
