@@ -1911,10 +1911,6 @@ export class LambdaFunctionStack extends cdk.Stack {
       },
     });
 
-    // Sectioned digest (New / Closing soon / Still open + fallback) is the default layout.
-    // DIGEST_V2="false" is the kill switch back to the flat list.
-    const digestV2 = process.env.DIGEST_V2 === "false" ? "false" : "true";
-
     const notificationDigestFunction = new lambda.Function(
       scope,
       "NotificationDigestFunction",
@@ -1930,11 +1926,11 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_POOL_ID: props.userPool.userPoolId,
           NOTIFICATION_SENDER: notificationSender,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
-          DIGEST_V2: digestV2,
           UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
           DIGEST_SEND_LOG_TABLE_NAME: props.digestSendLogTable.tableName,
           DIGEST_SUPPRESSION_TABLE_NAME: props.digestSuppressionTable.tableName,
           SES_CONFIGURATION_SET: sesConfigurationSet.configurationSetName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           ...digestBrandEnv,
         },
         timeout: cdk.Duration.minutes(15),
@@ -1983,8 +1979,8 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
           NOTIFICATION_SENDER: notificationSender,
-          DIGEST_V2: digestV2,
           SES_CONFIGURATION_SET: sesConfigurationSet.configurationSetName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           ...digestBrandEnv,
         },
         timeout: cdk.Duration.seconds(15),
@@ -2083,10 +2079,9 @@ export class LambdaFunctionStack extends cdk.Stack {
     props.userNotificationPrefsTable.grantReadWriteData(notificationSesFeedbackFunction);
     props.userPool.grant(notificationSesFeedbackFunction, "cognito-idp:ListUsers");
     this.notificationSesFeedbackFunction = notificationSesFeedbackFunction;
-
-    // 1:00 PM America/New_York year-round. Scheduler, not events.Rule, because a Rule cron is UTC
-    // only and would drift an hour across DST. Daily skips Monday, the weekly slot, so the two
-    // cadences never fire in the same minute.
+    // 2:00 PM America/New_York year-round. Scheduler, not events.Rule, because a Rule cron is UTC
+    // only and would drift an hour across DST. Both cadences fire together on Mondays; a user is
+    // only ever on one of them, so the overlap costs a concurrent table read, not a double-send.
     const digestSchedulerRole = new iam.Role(scope, "NotificationDigestSchedulerRole", {
       assumedBy: new iam.ServicePrincipal("scheduler.amazonaws.com"),
     });
@@ -2094,9 +2089,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     new scheduler.Schedule(scope, "NotificationDigestDailySchedule", {
       schedule: scheduler.ScheduleExpression.expression(
-        // Explicit day list, not TUE-SUN: Scheduler numbers SUN=1, so that range descends and its
-        // wrap behavior is undocumented.
-        "cron(0 13 ? * TUE,WED,THU,FRI,SAT,SUN *)",
+        "cron(0 14 * * ? *)",
         cdk.TimeZone.AMERICA_NEW_YORK
       ),
       description: "Send daily NOFO notification digests",
@@ -2108,7 +2101,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     new scheduler.Schedule(scope, "NotificationDigestWeeklySchedule", {
       schedule: scheduler.ScheduleExpression.expression(
-        "cron(0 13 ? * MON *)",
+        "cron(0 14 ? * MON *)",
         cdk.TimeZone.AMERICA_NEW_YORK
       ),
       description: "Send weekly NOFO notification digests",
