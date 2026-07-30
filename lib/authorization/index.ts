@@ -4,6 +4,7 @@ import { cognitoDomainName, emailConfig } from '../constants';
 import { UserPool, UserPoolClient, FeaturePlan} from 'aws-cdk-lib/aws-cognito';
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as path from 'path';
 import { SUPPORTED_STATES } from '../shared/states';
 
@@ -75,7 +76,21 @@ export class AuthorizationStack extends Construct {
       cognito.UserPoolOperation.POST_CONFIRMATION,
       signupTriggerFunction
     );
-    userPool.grant(signupTriggerFunction, 'cognito-idp:AdminUpdateUserAttributes');
+    // Wildcard, not userPool.grant(): addTrigger already points the pool at this function, so
+    // referencing the pool back would be a dependency cycle.
+    signupTriggerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['cognito-idp:AdminUpdateUserAttributes'],
+        resources: [
+          cdk.Stack.of(this).formatArn({
+            service: 'cognito-idp',
+            resource: 'userpool',
+            resourceName: '*',
+          }),
+        ],
+      })
+    );
 
     userPool.addDomain('CognitoDomain', {
       cognitoDomain: {
