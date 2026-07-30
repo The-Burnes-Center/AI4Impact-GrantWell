@@ -1167,6 +1167,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
@@ -1191,11 +1194,24 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // A rename re-creates the metadata row under the new name (the name is the partition key),
+    // so it needs write access, not just the read used for the scope check.
     nofoRenameHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:GetItem"],
+        actions: ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem"],
         resources: [props.nofoMetadataTable.tableArn],
+      })
+    );
+
+    props.nofoStateOverlayTable.grantReadWriteData(nofoRenameHandlerFunction);
+
+    // Re-index the KB so it drops the old prefix and picks up the new one.
+    nofoRenameHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
       })
     );
 
