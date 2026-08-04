@@ -9,6 +9,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
+    "test:unit": "node --test tests/**/*.test.mjs",
     "cdk": "cdk",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:a11y": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --rule 'jsx-a11y/*: error'",
