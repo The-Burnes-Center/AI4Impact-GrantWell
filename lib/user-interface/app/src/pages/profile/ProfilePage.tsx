@@ -202,6 +202,7 @@ export default function ProfilePage() {
   const [frequency, setFrequency] = useState<DigestFrequency>("off");
   const [categories, setCategories] = useState<string[]>([]);
   const [keywords, setKeywords] = useState("");
+  const [categoryQuery, setCategoryQuery] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -239,6 +240,30 @@ export default function ProfilePage() {
 
   const toggle = (list: string[], set: (v: string[]) => void, code: string) => {
     set(list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
+    setSaved(false);
+  };
+
+  const visibleCategories = useMemo<string[]>(() => {
+    const q = categoryQuery.trim().toLowerCase();
+    if (!q) return [...GRANT_CATEGORIES];
+    return GRANT_CATEGORIES.filter((c) => c.toLowerCase().includes(q));
+  }, [categoryQuery]);
+
+  const allVisibleSelected =
+    visibleCategories.length > 0 &&
+    visibleCategories.every((c) => categories.includes(c));
+  const someVisibleSelected = visibleCategories.some((c) =>
+    categories.includes(c)
+  );
+
+  // Bulk actions apply to the filtered set only, so they never silently touch
+  // selections the user can't currently see.
+  const setVisibleSelected = (selected: boolean) => {
+    setCategories(
+      selected
+        ? Array.from(new Set([...categories, ...visibleCategories]))
+        : categories.filter((c) => !visibleCategories.includes(c))
+    );
     setSaved(false);
   };
 
@@ -424,18 +449,57 @@ export default function ProfilePage() {
 
                 <div className="profile-section">
                   <h3>Categories</h3>
-                  <div className="profile-chip-grid">
-                    {GRANT_CATEGORIES.map((c) => (
-                      <label key={c} className="profile-chip">
-                        <input
-                          type="checkbox"
-                          checked={categories.includes(c)}
-                          onChange={() => toggle(categories, setCategories, c)}
-                        />
-                        {c}
-                      </label>
-                    ))}
+                  <div className="profile-chip-toolbar">
+                    <input
+                      type="search"
+                      className="profile-chip-search"
+                      value={categoryQuery}
+                      onChange={(e) => setCategoryQuery(e.target.value)}
+                      placeholder="Search categories"
+                      aria-label="Search categories"
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setVisibleSelected(true)}
+                      disabled={allVisibleSelected}
+                    >
+                      {categoryQuery.trim()
+                        ? `Select all ${visibleCategories.length} shown`
+                        : "Select all"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setVisibleSelected(false)}
+                      disabled={!someVisibleSelected}
+                    >
+                      Clear
+                    </Button>
+                    <span className="profile-chip-count" aria-live="polite">
+                      {categories.length} of {GRANT_CATEGORIES.length} selected
+                    </span>
                   </div>
+                  {visibleCategories.length === 0 ? (
+                    <p className="profile-hint">
+                      No categories match “{categoryQuery.trim()}”.
+                    </p>
+                  ) : (
+                    <div className="profile-chip-grid">
+                      {visibleCategories.map((c) => (
+                        <label key={c} className="profile-chip">
+                          <input
+                            type="checkbox"
+                            checked={categories.includes(c)}
+                            onChange={() => toggle(categories, setCategories, c)}
+                          />
+                          {c}
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div className="profile-section">

@@ -326,7 +326,7 @@
 }
 
 .mk-btn--outline {
-  background-color: transparent;
+  background-color: var(--mk-off-white);
   color: var(--mk-green);
   border-color: var(--mk-green);
 }
