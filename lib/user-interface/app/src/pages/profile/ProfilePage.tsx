@@ -530,55 +530,57 @@ export default function ProfilePage() {
           )}
         </Card>
 
-            <ActivityTable
-              title="My drafts"
-              emptyText="No drafts"
-              timeHeader="Last modified"
-              viewAll={drafts.length > ACTIVITY_LIMIT ? {
-                label: `View all ${drafts.length} drafts`,
-                onClick: () => navigate("/document-editor/drafts"),
-              } : undefined}
-              rows={drafts.slice(0, ACTIVITY_LIMIT).map((d) => ({
-                key: d.sessionId,
-                title: d.title || "Untitled draft",
-                when: d.lastModified,
-                onOpen: () =>
-                  navigate(
-                    `/document-editor/${d.sessionId}?nofo=${encodeURIComponent(
-                      d.documentIdentifier || ""
-                    )}`
-                  ),
-              }))}
-            />
+            <Card header="Recent activity">
+              <ActivityList
+                title="My drafts"
+                emptyText="No drafts yet."
+                timeHeader="Last modified"
+                viewAll={drafts.length > ACTIVITY_LIMIT ? {
+                  label: `View all ${drafts.length} drafts`,
+                  onClick: () => navigate("/document-editor/drafts"),
+                } : undefined}
+                rows={drafts.slice(0, ACTIVITY_LIMIT).map((d) => ({
+                  key: d.sessionId,
+                  title: d.title || "Untitled draft",
+                  when: d.lastModified,
+                  onOpen: () =>
+                    navigate(
+                      `/document-editor/${d.sessionId}?nofo=${encodeURIComponent(
+                        d.documentIdentifier || ""
+                      )}`
+                    ),
+                }))}
+              />
 
-            <ActivityTable
-              title="My chat sessions"
-              emptyText="No sessions"
-              timeHeader="Last used"
-              viewAll={sessions.length > ACTIVITY_LIMIT ? {
-                label: `View all ${sessions.length} sessions`,
-                onClick: () => navigate("/chat/sessions"),
-              } : undefined}
-              rows={sessions.slice(0, ACTIVITY_LIMIT).map((s) => ({
-                key: s.session_id,
-                title: s.title || "Untitled session",
-                when: s.time_stamp,
-                onOpen: () => navigate(`/chat/${s.session_id}`),
-              }))}
-            />
+              <ActivityList
+                title="My chat sessions"
+                emptyText="No sessions yet."
+                timeHeader="Last used"
+                viewAll={sessions.length > ACTIVITY_LIMIT ? {
+                  label: `View all ${sessions.length} sessions`,
+                  onClick: () => navigate("/chat/sessions"),
+                } : undefined}
+                rows={sessions.slice(0, ACTIVITY_LIMIT).map((s) => ({
+                  key: s.session_id,
+                  title: s.title || "Untitled session",
+                  when: s.time_stamp,
+                  onOpen: () => navigate(`/chat/${s.session_id}`),
+                }))}
+              />
 
-            <ActivityTable
-              title="Recently viewed grants"
-              emptyText="No recently viewed grants"
-              timeHeader="Viewed"
-              rows={recentNofos.slice(0, ACTIVITY_LIMIT).map((n) => ({
-                key: n.value,
-                title: n.label,
-                when: n.lastViewed,
-                onOpen: () =>
-                  navigate(`/requirements/${encodeURIComponent(n.value)}`),
-              }))}
-            />
+              <ActivityList
+                title="Recently viewed grants"
+                emptyText="No recently viewed grants."
+                timeHeader="Viewed"
+                rows={recentNofos.slice(0, ACTIVITY_LIMIT).map((n) => ({
+                  key: n.value,
+                  title: n.label,
+                  when: n.lastViewed,
+                  onOpen: () =>
+                    navigate(`/requirements/${encodeURIComponent(n.value)}`),
+                }))}
+              />
+            </Card>
 
             <AccountActionsCard onSignedOut={() => navigate("/")} />
           </div>
@@ -595,7 +597,7 @@ interface ActivityRow {
   onOpen: () => void;
 }
 
-function ActivityTable({
+function ActivityList({
   title,
   emptyText,
   timeHeader,
@@ -610,13 +612,12 @@ function ActivityTable({
 }) {
   const gridCols = "2.5fr 1fr";
   return (
-    <Card header={title}>
+    <div className="profile-section">
+      <h3>{title}</h3>
       {rows.length === 0 ? (
-        <div className="no-data">
-          <div style={{ fontSize: "18px", fontWeight: 500, marginBottom: "8px" }}>
-            {emptyText}
-          </div>
-        </div>
+        <p className="profile-hint" style={{ marginBottom: 0 }}>
+          {emptyText}
+        </p>
       ) : (
         <div className="table-container" style={{ marginBottom: 0 }}>
           <div className="table-header" style={{ gridTemplateColumns: gridCols }}>
@@ -653,7 +654,7 @@ function ActivityTable({
           {viewAll.label}
         </button>
       )}
-    </Card>
+    </div>
   );
 }
 
