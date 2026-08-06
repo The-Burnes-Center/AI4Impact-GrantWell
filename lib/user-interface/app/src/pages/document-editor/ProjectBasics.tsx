@@ -1,21 +1,15 @@
 /**
- * ProjectBasics Component
- * 
- * Form for collecting basic project information including project name,
- * organization details, funding request, and contact information.
- * 
- * Features:
- * - Real-time validation with accessible error messages
- * - Auto-save with debouncing
- * - LocalStorage fallback for data persistence
- * - WCAG 2.1 compliant form controls
+ * Form for collecting basic project information: project name, organization
+ * details, funding request, and contact information. Saving is owned by the
+ * parent's useDraftSave; this component only reports changes.
  */
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Card from "../../components/ui/Card";
-import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import AutoSaveIndicator, { type SaveStatus } from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import FormErrorSummary from "../../components/ui/FormErrorSummary";
 import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
+import { readDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DocumentData } from "../../common/types/document";
 
 interface ProjectBasicsProps {
@@ -23,6 +17,8 @@ interface ProjectBasicsProps {
   selectedNofo: string | null;
   documentData?: DocumentData | null;
   onUpdateData?: (data: Partial<DocumentData>) => void;
+  saveStatus?: SaveStatus;
+  onRetrySave?: () => void;
 }
 
 interface ProjectBasicsFormData {
@@ -183,7 +179,9 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   onContinue,
   selectedNofo,
   documentData,
-  onUpdateData
+  onUpdateData,
+  saveStatus = "idle",
+  onRetrySave,
 }) => {
   const [formData, setFormData] = useState<ProjectBasicsFormData>({
     projectName: "",
@@ -197,50 +195,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const isInitialLoad = useRef(true);
   const hasLoadedFromDocumentData = useRef(false);
 
-  // Auto-save debounce refs
-  const autoSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Auto-save function (debounced)
   const autoSave = useCallback((data: ProjectBasicsFormData) => {
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current);
-    }
-
-    setSaveStatus('saving');
-
-    autoSaveTimeoutRef.current = setTimeout(async () => {
-      try {
-        localStorage.setItem('projectBasics', JSON.stringify(data));
-        
-        if (onUpdateData) {
-          try {
-            await onUpdateData({ projectBasics: data });
-          } catch (error) {
-            console.error('Database save failed, but localStorage updated:', error);
-          }
-        }
-        
-        setSaveStatus('saved');
-        
-        if (saveStatusTimeoutRef.current) {
-          clearTimeout(saveStatusTimeoutRef.current);
-        }
-        saveStatusTimeoutRef.current = setTimeout(() => {
-          setSaveStatus('idle');
-        }, 2000);
-      } catch (error) {
-        console.error('Auto-save failed:', error);
-        setSaveStatus('idle');
-      }
-    }, 1000);
+    onUpdateData?.({ projectBasics: data });
   }, [onUpdateData]);
 
-  // Load existing data
   useEffect(() => {
     if (documentData?.projectBasics && !hasLoadedFromDocumentData.current) {
       setFormData({
@@ -255,45 +216,22 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       hasLoadedFromDocumentData.current = true;
       isInitialLoad.current = false;
     } else if (isInitialLoad.current && !documentData?.projectBasics && !hasLoadedFromDocumentData.current) {
-      try {
-        const savedData = localStorage.getItem('projectBasics');
-        if (savedData) {
-          const parsedData = JSON.parse(savedData);
-          const hasData = parsedData.projectName || parsedData.organizationName || 
-                         parsedData.requestedAmount || parsedData.location || 
-                         parsedData.zipCode || parsedData.contactName || 
-                         parsedData.contactEmail;
-          
-          if (hasData) {
-            setFormData({
-              projectName: parsedData.projectName || "",
-              organizationName: parsedData.organizationName || "",
-              requestedAmount: parsedData.requestedAmount || "",
-              location: parsedData.location || "",
-              zipCode: parsedData.zipCode || "",
-              contactName: parsedData.contactName || "",
-              contactEmail: parsedData.contactEmail || "",
-            });
-            if (onUpdateData) {
-              onUpdateData({ projectBasics: parsedData });
-            }
-          }
-        }
-        isInitialLoad.current = false;
-      } catch (error) {
-        console.error('Error loading from localStorage:', error);
-        isInitialLoad.current = false;
+      const cached = readDraftCache<ProjectBasicsFormData>(documentData?.id, "projectBasics");
+      if (cached && Object.values(cached).some((value) => typeof value === "string" && value.trim())) {
+        setFormData({
+          projectName: cached.projectName || "",
+          organizationName: cached.organizationName || "",
+          requestedAmount: cached.requestedAmount || "",
+          location: cached.location || "",
+          zipCode: cached.zipCode || "",
+          contactName: cached.contactName || "",
+          contactEmail: cached.contactEmail || "",
+        });
+        onUpdateData?.({ projectBasics: cached });
       }
+      isInitialLoad.current = false;
     }
   }, [documentData, onUpdateData]);
-
-  // Cleanup timeouts
-  useEffect(() => {
-    return () => {
-      if (autoSaveTimeoutRef.current) clearTimeout(autoSaveTimeoutRef.current);
-      if (saveStatusTimeoutRef.current) clearTimeout(saveStatusTimeoutRef.current);
-    };
-  }, []);
 
   // Validation functions
   const validateEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -415,8 +353,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       return;
     }
 
-    if (onUpdateData) onUpdateData({ projectBasics: formData });
-    localStorage.setItem('projectBasics', JSON.stringify(formData));
+    onUpdateData?.({ projectBasics: formData });
     onContinue();
   };
 
@@ -430,7 +367,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
         <Card
           header="Project Basics"
-          headerActions={<AutoSaveIndicator status={saveStatus} />}
+          headerActions={<AutoSaveIndicator status={saveStatus} onRetry={onRetrySave} />}
         >
           <div style={{ marginBottom: spacing["2xl"], color: colors.textSecondary }}>
             Let's start with some basic information about your project. These

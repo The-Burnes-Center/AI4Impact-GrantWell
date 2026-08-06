@@ -12,6 +12,22 @@ export type DraftStatus =
   | 'reviewing'            // User is reviewing application
   | 'submitted';            // Application has been submitted
 
+/** Write attribution stamped on the row; the stream consumer cannot infer it. */
+export type DraftWriteSource =
+  | 'autosave'
+  | 'ai_generated'
+  | 'ai_regenerated'
+  | 'manual'
+  | 'restore'
+  | 'status_change';
+
+export interface UploadedFileMeta {
+  name: string;
+  size: number;
+  type: string;
+  lastModified: number;
+}
+
 export interface DocumentDraft {
   sessionId: string;
   userId: string;
@@ -22,15 +38,51 @@ export interface DocumentDraft {
   projectBasics?: ProjectBasicsData;
   questionnaire?: Record<string, string>;
   additionalInfo?: string;
-  uploadedFiles?: Array<{
-    name: string;
-    size: number;
-    type: string;
-    lastModified: number;
-  }>;
+  uploadedFiles?: UploadedFileMeta[];
   createdAt?: string;
   updatedAt?: string;
   lastModified?: string;
+  rev?: number;
+  lastWriteSource?: DraftWriteSource;
+}
+
+/** Thrown by updateDraft when the row moved on; `remote` is the server state. */
+export class DraftConflictError extends Error {
+  readonly remote: DocumentDraft | null;
+
+  constructor(remote: DocumentDraft | null) {
+    super('Draft was modified elsewhere');
+    this.name = 'DraftConflictError';
+    this.remote = remote;
+  }
+}
+
+/**
+ * One snapshot's metadata. `rev` holds the content as of that draft revision,
+ * and `source` is the write that superseded it — so a row with source
+ * `ai_regenerated` is the text from *before* that regeneration.
+ */
+export interface DraftVersionMeta {
+  rev: number;
+  created_at: string;
+  source?: DraftWriteSource | 'manual_snapshot';
+  label?: string;
+  changed_sections?: string[];
+  section_word_counts?: Record<string, number>;
+  total_word_count?: number;
+  oversize?: boolean;
+}
+
+export interface DraftVersionDetail extends DraftVersionMeta {
+  content: {
+    title?: string;
+    status?: DraftStatus;
+    sections?: Record<string, string>;
+    project_basics?: ProjectBasicsData;
+    questionnaire?: Record<string, string>;
+    additional_info?: string;
+    uploaded_files?: UploadedFileMeta[];
+  } | null;
 }
 
 export interface DraftJobStatus {
@@ -81,142 +133,27 @@ export class DraftsClient {
     return response.json();
   }
 
-  // Gets a document draft
-  // If draft doesn't exist, waits for draft generation to complete (if in progress)
-  async getDraft(params: { 
-    sessionId: string; 
-    userId: string;
-    onProgress?: (message: string, attempt: number, maxAttempts: number) => void;
-  }): Promise<DocumentDraft | null> {
-    const auth = await Utils.authenticate();
-    let output;
-    let pollCount = 0;
-    const maxPolls = 150; // Max 150 polls (5 minutes with 2s interval) - accounts for Step Functions fan-out
-    const pollInterval = 2000; // 2 seconds
-
-    while (pollCount < maxPolls) {
-      pollCount++;
-      
-      const response = await fetch(this.API + '/user-draft', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + auth,
-        },
-        body: JSON.stringify({
-          operation: 'get_draft',
-          session_id: params.sessionId,
-          user_id: params.userId
-        }),
-      });
-
-      // If 404, draft doesn't exist yet - wait and retry (might be generating)
-      if (response.status === 404) {
-        console.log(`[getDraft] Draft not found for sessionId ${params.sessionId}, waiting... (attempt ${pollCount}/${maxPolls})`);
-        
-        // Notify progress callback
-        if (params.onProgress) {
-          if (pollCount === 1) {
-            params.onProgress('Waiting for draft generation to complete...', pollCount, maxPolls);
-          } else if (pollCount <= 15) {
-            params.onProgress('Draft generation in progress...', pollCount, maxPolls);
-          } else if (pollCount <= 30) {
-            params.onProgress('Draft generation is taking longer than expected...', pollCount, maxPolls);
-          } else {
-            params.onProgress('Still waiting for draft generation...', pollCount, maxPolls);
-          }
-        }
-        
-        // Wait before retrying (unless this is the last attempt)
-        if (pollCount < maxPolls) {
-          await new Promise(resolve => setTimeout(resolve, pollInterval));
-          continue;
-        } else {
-          // After max polls, draft still doesn't exist
-          if (params.onProgress) {
-            params.onProgress('Draft generation timed out', pollCount, maxPolls);
-          }
-          return null;
-        }
-      }
-
-      // For other errors, log and retry
-      if (response.status !== 200) {
-        try {
-          const errorData = await response.json();
-          console.warn(`[getDraft] Error fetching draft (attempt ${pollCount}):`, errorData);
-        } catch (e) {
-          console.warn(`[getDraft] Error parsing error response (attempt ${pollCount}):`, e);
-        }
-        
-        // Notify progress callback about retry
-        if (params.onProgress && pollCount < maxPolls) {
-          params.onProgress('Retrying...', pollCount, maxPolls);
-        }
-        
-        // Wait and retry for non-404 errors
-        if (pollCount < maxPolls) {
-          await new Promise(resolve => setTimeout(resolve, pollInterval));
-          continue;
-        } else {
-          // After max retries, return null
-          return null;
-        }
-      }
-      
-      // Success - parse and return draft
-      try {
-        output = await response.json();
-        // Check if response body contains an error message
-        if (typeof output === 'string' && output.includes('No record found')) {
-          // Notify progress callback
-          if (params.onProgress && pollCount < maxPolls) {
-            params.onProgress('Waiting for draft...', pollCount, maxPolls);
-          }
-          // Wait and retry
-          if (pollCount < maxPolls) {
-            await new Promise(resolve => setTimeout(resolve, pollInterval));
-            continue;
-          } else {
-            return null;
-          }
-        }
-        
-        // Draft found!
-        console.log(`[getDraft] Draft found for sessionId ${params.sessionId} after ${pollCount} attempts`);
-        if (params.onProgress && pollCount > 1) {
-          params.onProgress('Draft loaded successfully!', pollCount, maxPolls);
-        }
-        return {
-          sessionId: params.sessionId,
-          userId: params.userId,
-          title: output.title || '',
-          documentIdentifier: output.document_identifier || '',
-          status: (output.status || 'project_basics') as DraftStatus,
-          sections: output.sections || {},
-          projectBasics: output.project_basics || {},
-          questionnaire: output.questionnaire || {},
-          lastModified: output.last_modified || new Date().toISOString(),
-        };
-      } catch (e) {
-        console.log(`[getDraft] Error parsing response (attempt ${pollCount}):`, e);
-        // Wait and retry
-        if (pollCount < maxPolls) {
-          await new Promise(resolve => setTimeout(resolve, pollInterval));
-          continue;
-        }
-      }
-    }
-
-    // If we've exhausted all polls, draft doesn't exist
-    console.log(`[getDraft] Draft not found after ${maxPolls} attempts for sessionId ${params.sessionId}`);
-    return null;
+  private mapDraft(sessionId: string, userId: string, row: Record<string, unknown>): DocumentDraft {
+    return {
+      sessionId,
+      userId,
+      title: (row.title as string) || '',
+      documentIdentifier: (row.document_identifier as string) || '',
+      status: ((row.status as DraftStatus) || 'project_basics'),
+      sections: (row.sections as Record<string, string>) || {},
+      projectBasics: (row.project_basics as ProjectBasicsData) || {},
+      questionnaire: (row.questionnaire as Record<string, string>) || {},
+      additionalInfo: (row.additional_info as string) ?? '',
+      uploadedFiles: (row.uploaded_files as UploadedFileMeta[]) || [],
+      lastModified: (row.last_modified as string) || new Date().toISOString(),
+      rev: typeof row.rev === 'number' ? row.rev : undefined,
+      lastWriteSource: row.last_write_source as DraftWriteSource | undefined,
+    };
   }
 
-  // Updates a document draft
-  async updateDraft(draft: DocumentDraft) {
+  /** Single-shot read; null when there is no such row. See waitForDraft. */
+  async getDraft(params: { sessionId: string; userId: string }): Promise<DocumentDraft | null> {
     const auth = await Utils.authenticate();
-    console.log('Updating draft with:', draft);
     const response = await fetch(this.API + '/user-draft', {
       method: 'POST',
       headers: {
@@ -224,31 +161,243 @@ export class DraftsClient {
         'Authorization': 'Bearer ' + auth,
       },
       body: JSON.stringify({
-        operation: 'update_draft',
-        session_id: draft.sessionId,
-        user_id: draft.userId,
-        title: draft.title,
-        document_identifier: draft.documentIdentifier,
-        sections: draft.sections || {},
-        project_basics: draft.projectBasics || {},
-        questionnaire: draft.questionnaire || {},
-        last_modified: draft.lastModified || new Date().toISOString(),
-        status: draft.status,
-        additionalInfo: draft.additionalInfo,
-        uploadedFiles: draft.uploadedFiles
+        operation: 'get_draft',
+        session_id: params.sessionId,
+        user_id: params.userId,
       }),
     });
 
-    console.log('Update draft response status:', response.status);
+    if (response.status === 404) return null;
+
     if (response.status !== 200) {
-      const errorMessage = await response.json();
-      console.error('Update draft error:', errorMessage);
-      throw new Error(errorMessage);
+      let detail = `HTTP ${response.status}`;
+      try {
+        detail = JSON.stringify(await response.json());
+      } catch {
+        /* non-JSON error body */
+      }
+      throw new Error(`Failed to fetch draft: ${detail}`);
+    }
+
+    const output = await response.json();
+
+    // A missing row comes back as 200 with an empty object, or as a
+    // "No record found" string from the older handler.
+    if (!output || typeof output === 'string' || Object.keys(output).length === 0) {
+      return null;
+    }
+
+    return this.mapDraft(params.sessionId, params.userId, output);
+  }
+
+  /** Polls until the row exists, for the window where the generation fan-out
+   *  has not written it yet. */
+  async waitForDraft(params: {
+    sessionId: string;
+    userId: string;
+    onProgress?: (message: string, attempt: number, maxAttempts: number) => void;
+    maxAttempts?: number;
+    intervalMs?: number;
+  }): Promise<DocumentDraft | null> {
+    const maxAttempts = params.maxAttempts ?? 150; // ~5 minutes at 2s
+    const intervalMs = params.intervalMs ?? 2000;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const draft = await this.getDraft(params);
+        if (draft) {
+          if (params.onProgress && attempt > 1) {
+            params.onProgress('Draft loaded successfully!', attempt, maxAttempts);
+          }
+          return draft;
+        }
+        params.onProgress?.(
+          attempt === 1
+            ? 'Waiting for draft generation to complete...'
+            : attempt <= 15
+              ? 'Draft generation in progress...'
+              : attempt <= 30
+                ? 'Draft generation is taking longer than expected...'
+                : 'Still waiting for draft generation...',
+          attempt,
+          maxAttempts
+        );
+      } catch (error) {
+        console.warn(`[waitForDraft] attempt ${attempt} failed:`, error);
+        params.onProgress?.('Retrying...', attempt, maxAttempts);
+      }
+
+      if (attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, intervalMs));
+      }
+    }
+
+    params.onProgress?.('Draft generation timed out', maxAttempts, maxAttempts);
+    return null;
+  }
+
+  private buildUpdatePayload(draft: DocumentDraft & { expectedRev?: number; writeSource?: DraftWriteSource }) {
+    return {
+      operation: 'update_draft',
+      session_id: draft.sessionId,
+      user_id: draft.userId,
+      title: draft.title,
+      document_identifier: draft.documentIdentifier,
+      sections: draft.sections || {},
+      project_basics: draft.projectBasics || {},
+      questionnaire: draft.questionnaire || {},
+      additional_info: draft.additionalInfo,
+      uploaded_files: draft.uploadedFiles,
+      last_modified: draft.lastModified || new Date().toISOString(),
+      status: draft.status,
+      expected_rev: draft.expectedRev,
+      last_write_source: draft.writeSource,
+    };
+  }
+
+  /** Pass expectedRev to make the write conditional; a losing write throws
+   *  DraftConflictError carrying the current server state. */
+  async updateDraft(
+    draft: DocumentDraft & { expectedRev?: number; writeSource?: DraftWriteSource }
+  ): Promise<DocumentDraft> {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + '/user-draft', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify(this.buildUpdatePayload(draft)),
+    });
+
+    if (response.status === 409) {
+      let remote: DocumentDraft | null = null;
+      try {
+        const conflict = await response.json();
+        if (conflict?.current) {
+          remote = this.mapDraft(draft.sessionId, draft.userId, conflict.current);
+        }
+      } catch {
+        /* fall through with remote=null; caller will re-read */
+      }
+      throw new DraftConflictError(remote);
+    }
+
+    if (response.status !== 200) {
+      let detail = `HTTP ${response.status}`;
+      try {
+        detail = JSON.stringify(await response.json());
+      } catch {
+        /* non-JSON error body */
+      }
+      throw new Error(`Failed to save draft: ${detail}`);
     }
 
     const data = await response.json();
-    console.log('Update draft response data:', data);
-    return data;
+    return {
+      ...draft,
+      title: data.title ?? draft.title,
+      sections: data.sections ?? draft.sections,
+      projectBasics: data.projectBasics ?? draft.projectBasics,
+      questionnaire: data.questionnaire ?? draft.questionnaire,
+      additionalInfo: data.additionalInfo ?? draft.additionalInfo,
+      uploadedFiles: data.uploadedFiles ?? draft.uploadedFiles,
+      status: (data.status ?? draft.status) as DraftStatus,
+      lastModified: data.lastModified ?? draft.lastModified,
+      rev: typeof data.rev === 'number' ? data.rev : draft.rev,
+    };
+  }
+
+  /**
+   * Fire-and-forget save for page-exit paths. The caller supplies a token
+   * because `beforeunload` cannot await one, and this uses keepalive rather
+   * than sendBeacon because sendBeacon cannot set an Authorization header.
+   */
+  saveDraftOnExit(
+    draft: DocumentDraft & { expectedRev?: number; writeSource?: DraftWriteSource },
+    authToken: string
+  ): void {
+    try {
+      void fetch(this.API + '/user-draft', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + authToken,
+        },
+        body: JSON.stringify(this.buildUpdatePayload(draft)),
+        keepalive: true,
+      });
+    } catch (error) {
+      console.warn('Exit-path draft save failed:', error);
+    }
+  }
+
+  private async draftOperation<T>(body: Record<string, unknown>, what: string): Promise<T> {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + '/user-draft', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json().catch((): null => null);
+    if (response.status !== 200) {
+      throw new Error(data?.message || data?.error || `Failed to ${what}: HTTP ${response.status}`);
+    }
+    return data as T;
+  }
+
+  async listVersions(params: { sessionId: string; limit?: number }): Promise<DraftVersionMeta[]> {
+    const data = await this.draftOperation<{ versions: DraftVersionMeta[] }>(
+      { operation: 'list_draft_versions', session_id: params.sessionId, limit: params.limit },
+      'list versions'
+    );
+    return data?.versions || [];
+  }
+
+  async getVersion(params: { sessionId: string; rev: number }): Promise<DraftVersionDetail> {
+    return this.draftOperation<DraftVersionDetail>(
+      { operation: 'get_draft_version', session_id: params.sessionId, rev: params.rev },
+      'read version'
+    );
+  }
+
+  async restoreVersion(params: {
+    sessionId: string;
+    rev: number;
+    sectionsOnly?: string[];
+  }): Promise<{ restoredFrom: number; restoredSections: string[] }> {
+    return this.draftOperation(
+      {
+        operation: 'restore_draft_version',
+        session_id: params.sessionId,
+        rev: params.rev,
+        sections_only: params.sectionsOnly,
+      },
+      'restore version'
+    );
+  }
+
+  async labelVersion(params: { sessionId: string; rev: number; label?: string }) {
+    return this.draftOperation(
+      {
+        operation: 'label_draft_version',
+        session_id: params.sessionId,
+        rev: params.rev,
+        label: params.label ?? null,
+      },
+      'label version'
+    );
+  }
+
+  async createVersion(params: { sessionId: string; label?: string }) {
+    return this.draftOperation<{ rev: number; label: string | null; oversize: boolean }>(
+      { operation: 'create_draft_version', session_id: params.sessionId, label: params.label },
+      'save version'
+    );
   }
 
   // Deletes a document draft

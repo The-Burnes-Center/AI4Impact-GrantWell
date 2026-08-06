@@ -1,22 +1,15 @@
 /**
- * QuickQuestionnaire Component
- * 
- * A multi-question form for gathering project-specific information based on the selected NOFO.
- * Questions are dynamically loaded from the API based on the selected Notice of Funding Opportunity.
- * 
- * Features:
- * - Dynamic question loading from API
- * - Auto-save with debouncing
- * - LocalStorage fallback for data persistence
- * - Accessible form with ARIA attributes
+ * NOFO-specific questions, loaded from the API. Saving is owned by the parent's
+ * useDraftSave; this component only reports changes.
  */
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import Card from "../../components/ui/Card";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
-import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import AutoSaveIndicator, { type SaveStatus } from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import { colors, typography } from "../../components/ui/styles";
+import { readDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DocumentData } from "../../common/types/document";
 
 interface QuickQuestionnaireProps {
@@ -25,6 +18,8 @@ interface QuickQuestionnaireProps {
   onNavigate: (step: string) => void;
   documentData?: DocumentData | null;
   onUpdateData?: (data: Partial<DocumentData>) => void;
+  saveStatus?: SaveStatus;
+  onRetrySave?: () => void;
 }
 
 interface QuestionData {
@@ -44,48 +39,31 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   selectedNofo,
   onNavigate,
   documentData,
-  onUpdateData
+  onUpdateData,
+  saveStatus = "idle",
+  onRetrySave,
 }) => {
   const [formData, setFormData] = useState<QuestionnaireFormData>({});
   const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [noQuestionsFound, setNoQuestionsFound] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const isInitialLoad = useRef(true);
   const hasLoadedFromDocumentData = useRef(false);
   const apiClient = useApiClient();
 
-  // Auto-save debounce refs
-  const autoSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Load form data when documentData becomes available
   useEffect(() => {
     if (documentData?.questionnaire && !hasLoadedFromDocumentData.current) {
       setFormData(documentData.questionnaire);
       hasLoadedFromDocumentData.current = true;
       isInitialLoad.current = false;
     } else if (isInitialLoad.current && !documentData?.questionnaire && !hasLoadedFromDocumentData.current) {
-      try {
-        const savedData = localStorage.getItem('questionnaire');
-        if (savedData) {
-          const parsedData = JSON.parse(savedData);
-          const hasData = Object.keys(parsedData).length > 0 && 
-                         Object.values(parsedData).some((val: unknown) => typeof val === "string" && val.trim().length > 0);
-          
-          if (hasData) {
-            setFormData(parsedData);
-            if (onUpdateData) {
-              onUpdateData({ questionnaire: parsedData });
-            }
-          }
-        }
-        isInitialLoad.current = false;
-      } catch (error) {
-        console.error('Error loading from localStorage:', error);
-        isInitialLoad.current = false;
+      const cached = readDraftCache<QuestionnaireFormData>(documentData?.id, "questionnaire");
+      if (cached && Object.values(cached).some((value) => typeof value === "string" && value.trim())) {
+        setFormData(cached);
+        onUpdateData?.({ questionnaire: cached });
       }
+      isInitialLoad.current = false;
     }
   }, [documentData, onUpdateData]);
 
@@ -141,39 +119,8 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     fetchQuestions();
   }, [selectedNofo, apiClient]);
 
-  // Auto-save function (debounced)
   const autoSave = useCallback((data: QuestionnaireFormData) => {
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current);
-    }
-
-    setSaveStatus('saving');
-
-    autoSaveTimeoutRef.current = setTimeout(async () => {
-      try {
-        localStorage.setItem('questionnaire', JSON.stringify(data));
-        
-        if (onUpdateData) {
-          try {
-            await onUpdateData({ questionnaire: data });
-          } catch (error) {
-            console.error('Database save failed, but localStorage updated:', error);
-          }
-        }
-        
-        setSaveStatus('saved');
-        
-        if (saveStatusTimeoutRef.current) {
-          clearTimeout(saveStatusTimeoutRef.current);
-        }
-        saveStatusTimeoutRef.current = setTimeout(() => {
-          setSaveStatus('idle');
-        }, 2000);
-      } catch (error) {
-        console.error('Auto-save failed:', error);
-        setSaveStatus('idle');
-      }
-    }, 1000);
+    onUpdateData?.({ questionnaire: data });
   }, [onUpdateData]);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -190,23 +137,8 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     });
   }, [autoSave]);
 
-  // Cleanup timeouts on unmount
-  useEffect(() => {
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-      if (saveStatusTimeoutRef.current) {
-        clearTimeout(saveStatusTimeoutRef.current);
-      }
-    };
-  }, []);
-
   const handleCreateDraft = async () => {
-    if (onUpdateData) {
-      onUpdateData({ questionnaire: formData });
-    }
-    localStorage.setItem('questionnaire', JSON.stringify(formData));
+    onUpdateData?.({ questionnaire: formData });
     onContinue();
   };
 
@@ -262,7 +194,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
       <Card
         header="Questionnaire"
-        headerActions={<AutoSaveIndicator status={saveStatus} />}
+        headerActions={<AutoSaveIndicator status={saveStatus} onRetry={onRetrySave} />}
       >
         <p style={{ color: colors.textSecondary, marginBottom: "24px", fontFamily: typography.fontFamily }}>
           Answer these simple questions to help us create a draft of your

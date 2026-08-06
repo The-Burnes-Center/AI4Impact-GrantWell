@@ -5,6 +5,9 @@ import { FileUploader } from "../../common/file-uploader";
 import Card from "../../components/ui/Card";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
+import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import { readDraftCache } from "../../common/helpers/document-editor-utils";
+import type { useDraftSave } from "../../hooks/use-draft-save";
 import type { DocumentData } from "../../common/types/document";
 
 const MIME_TYPES: Record<string, string> = {
@@ -66,6 +69,7 @@ interface UploadDocumentsProps {
   onNavigateToEditor?: (jobId: string) => void;
   sessionId: string;
   documentData?: DocumentData | null;
+  draftSave: ReturnType<typeof useDraftSave>;
 }
 
 const UploadDocuments: React.FC<UploadDocumentsProps> = ({
@@ -75,6 +79,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   onNavigateToEditor,
   sessionId,
   documentData,
+  draftSave,
 }) => {
   const apiClient = useApiClient();
   const [files, setFiles] = useState<File[]>([]);
@@ -116,6 +121,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             if (draft?.sections && Object.keys(draft.sections).length > 0) {
               setHasExistingDraft(true);
             }
+            const cached = readDraftCache<string>(sessionId, "additionalInfo");
+            const restored = cached ?? draft?.additionalInfo;
+            if (restored) setAdditionalInfo(restored);
           } catch {
             console.log("No existing draft found");
           }
@@ -277,16 +285,17 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         throw new Error("Draft not found. Please start a new document first.");
       }
 
-      // Save additional info before starting generation
       const uploadedFileInfo = files.map((f) => ({
         name: f.name, size: f.size, type: f.type, lastModified: f.lastModified,
       }));
-      await apiClient.drafts.updateDraft({
-        ...draftToUse,
-        status: "generating_draft",
-        additionalInfo,
-        uploadedFiles: uploadedFileInfo,
-      });
+      await draftSave.saveFields(
+        {
+          status: "generating_draft",
+          additionalInfo,
+          uploadedFiles: uploadedFileInfo,
+        },
+        { source: "manual", immediate: true }
+      );
 
       setGeneratingDraft(true);
       setGenerationPhase("preparing");
@@ -556,7 +565,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   // ── Normal upload form ─────────────────────────────────────────────
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
-      <Card header="Upload & Additional Info">
+      <Card
+        header="Upload & Additional Info"
+        headerActions={<AutoSaveIndicator status={draftSave.saveStatus} onRetry={draftSave.retry} />}
+      >
         <p style={{ color: colors.textSecondary, marginBottom: spacing["2xl"], fontFamily: typography.fontFamily }}>
           Upload supporting documents and share any additional context to help
           generate your grant application.
@@ -790,7 +802,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           <textarea
             id="additional-info"
             value={additionalInfo}
-            onChange={(e) => setAdditionalInfo(e.target.value)}
+            onChange={(e) => {
+              setAdditionalInfo(e.target.value);
+              draftSave.saveFields({ additionalInfo: e.target.value });
+            }}
             placeholder="Enter any additional context or notes about your application..."
             aria-describedby="additional-info-help"
             style={{

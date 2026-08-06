@@ -44,3 +44,63 @@ export const stepToIndex = (step: string): number => {
   const idx = EDITOR_STEPS.findIndex((s) => s.id === step);
   return idx >= 0 ? idx : 0;
 };
+
+/**
+ * Session-scoped local mirror of in-progress draft edits, so a closed tab or a
+ * failed save doesn't lose typing. Keys must stay scoped by session — the
+ * unscoped predecessors let one draft pre-fill and then overwrite another's.
+ */
+
+export type DraftCachePart =
+  | "projectBasics"
+  | "questionnaire"
+  | "sections"
+  | "additionalInfo";
+
+const DRAFT_CACHE_PREFIX = "gw:draft";
+
+const LEGACY_DRAFT_CACHE_KEYS = ["projectBasics", "questionnaire", "sectionAnswers"];
+
+export const draftCacheKey = (sessionId: string, part: DraftCachePart): string =>
+  `${DRAFT_CACHE_PREFIX}:${sessionId}:${part}`;
+
+export function readDraftCache<T>(sessionId: string | null | undefined, part: DraftCachePart): T | null {
+  if (!sessionId) return null;
+  try {
+    const raw = localStorage.getItem(draftCacheKey(sessionId, part));
+    return raw ? (JSON.parse(raw) as T) : null;
+  } catch {
+    return null;
+  }
+}
+
+
+export function writeDraftCache<T>(sessionId: string | null | undefined, part: DraftCachePart, value: T): void {
+  if (!sessionId) return;
+  try {
+    localStorage.setItem(draftCacheKey(sessionId, part), JSON.stringify(value));
+  } catch (error) {
+    console.warn("Draft cache write failed:", error);
+  }
+}
+
+/** Drop every cached part for one session (e.g. after the draft is deleted). */
+export function clearDraftCache(sessionId: string | null | undefined): void {
+  if (!sessionId) return;
+  const prefix = `${DRAFT_CACHE_PREFIX}:${sessionId}:`;
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (key.startsWith(prefix)) localStorage.removeItem(key);
+    }
+  } catch (error) {
+    console.warn("Draft cache clear failed:", error);
+  }
+}
+
+export function sweepLegacyDraftCache(): void {
+  try {
+    for (const key of LEGACY_DRAFT_CACHE_KEYS) localStorage.removeItem(key);
+  } catch {
+    /* storage unavailable — nothing to sweep */
+  }
+}

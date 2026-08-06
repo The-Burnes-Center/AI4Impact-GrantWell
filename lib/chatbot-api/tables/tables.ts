@@ -6,11 +6,12 @@
 
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { AttributeType, Table, ProjectionType, BillingMode } from 'aws-cdk-lib/aws-dynamodb';
+import { AttributeType, Table, ProjectionType, BillingMode, StreamViewType } from 'aws-cdk-lib/aws-dynamodb';
 
 export class TableStack extends Stack {
   public readonly historyTable: Table;
   public readonly draftTable: Table;
+  public readonly draftVersionTable: Table;
   public readonly nofoMetadataTable: Table;
   public readonly draftGenerationJobsTable: Table;
   public readonly featureRolloutTable: Table;
@@ -44,6 +45,8 @@ export class TableStack extends Stack {
     const draftTable = new Table(this, 'DraftTable', {
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
       sortKey: { name: 'session_id', type: AttributeType.STRING },
+      stream: StreamViewType.NEW_AND_OLD_IMAGES,
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: true },
     });
 
     // Add global secondary index to DraftTable by last_modified
@@ -55,6 +58,17 @@ export class TableStack extends Stack {
     });
 
     this.draftTable = draftTable;
+
+    // Version history, one row per draft revision, written by the DraftTable
+    // stream consumer. No GSI: every read is a single-partition query.
+    const draftVersionTable = new Table(this, 'DraftVersionTable', {
+      partitionKey: { name: 'draft_key', type: AttributeType.STRING },
+      sortKey: { name: 'rev', type: AttributeType.NUMBER },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      timeToLiveAttribute: 'ttl',
+    });
+
+    this.draftVersionTable = draftVersionTable;
 
     // Define the NOFO Metadata Table for caching NOFO information
     // On-demand: landing-page reads scan StatusIndex on every load; provisioned 5 RCU throttled it.

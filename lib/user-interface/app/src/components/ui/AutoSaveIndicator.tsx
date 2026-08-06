@@ -19,11 +19,13 @@
 import React from "react";
 import { colors, typography, spacing } from "./styles";
 
-export type SaveStatus = "idle" | "saving" | "saved" | "error";
+export type SaveStatus = "idle" | "pending" | "saving" | "saved" | "error";
 
 export interface AutoSaveIndicatorProps {
   /** Current save status */
   status: SaveStatus;
+  /** Text to show while edits are debounced but not yet sent */
+  pendingText?: string;
   /** Text to show while saving */
   savingText?: string;
   /** Text to show when saved */
@@ -32,13 +34,17 @@ export interface AutoSaveIndicatorProps {
   errorText?: string;
   /** Duration before auto-hiding after save (0 to disable) */
   hideAfterMs?: number;
+  /** Offers a retry button alongside the error state */
+  onRetry?: () => void;
 }
 
 const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   status,
+  pendingText = "Unsaved changes",
   savingText = "Saving...",
   savedText = "Saved",
-  errorText = "Error saving",
+  errorText = "Not saved",
+  onRetry,
 }) => {
   if (status === "idle") {
     return null;
@@ -69,13 +75,35 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
       role="status"
       aria-live="polite"
       aria-label={
-        status === "saving"
+        status === "pending"
+          ? pendingText
+          : status === "saving"
           ? savingText
           : status === "saved"
           ? savedText
           : errorText
       }
     >
+      {status === "pending" && (
+        <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          {pendingText}
+        </span>
+      )}
+
       {status === "saving" && (
         <>
           <div style={spinnerStyle} aria-hidden="true" />
@@ -120,6 +148,24 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
             <line x1="9" y1="9" x2="15" y2="15" />
           </svg>
           {errorText}
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                color: colors.error,
+                font: "inherit",
+                fontWeight: typography.fontWeight.semibold,
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              Retry
+            </button>
+          )}
         </span>
       )}
 

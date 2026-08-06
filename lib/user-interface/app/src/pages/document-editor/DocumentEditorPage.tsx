@@ -3,8 +3,17 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
+import { useDraftSave } from "../../hooks/use-draft-save";
 import { useHeaderOffset } from "../../hooks/use-header-offset";
-import { stepToStatus, statusToStep, EDITOR_STEPS, stepToIndex } from "../../common/helpers/document-editor-utils";
+import {
+  stepToStatus,
+  statusToStep,
+  EDITOR_STEPS,
+  stepToIndex,
+  readDraftCache,
+  clearDraftCache,
+  sweepLegacyDraftCache,
+} from "../../common/helpers/document-editor-utils";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import ProjectBasics from "./ProjectBasics";
 import QuickQuestionnaire from "./QuickQuestionnaire";
@@ -14,7 +23,7 @@ import UploadDocuments from "./UploadDocuments";
 import WelcomeModal from "./components/WelcomeModal";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { Auth } from "aws-amplify";
-import type { DraftStatus } from "../../common/api-client/drafts-client";
+import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
 import { Utils } from "../../common/utils";
 import "../../styles/document-editor.css";
@@ -25,9 +34,11 @@ const ERROR_MESSAGES = {
   START_FAILED: "Failed to start new document",
 } as const;
 
-/** Custom hook: loads/saves document via DraftsClient */
+/** Custom hook: loads the document via DraftsClient */
 const useDocumentStorage = (nofoId: string | null, onStepRestore?: (step: string) => void) => {
   const [documentData, setDocumentData] = useState<DocumentData | null>(null);
+  /** Baseline for useDraftSave; `undefined` means "not loaded yet". */
+  const [loadedDraft, setLoadedDraft] = useState<DocumentDraft | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Loading document editor...");
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +54,7 @@ const useDocumentStorage = (nofoId: string | null, onStepRestore?: (step: string
     try {
       const username = (await Auth.currentAuthenticatedUser()).username;
       if (username) {
-        const draft = await draftsClient.getDraft({
+        const draft = await draftsClient.waitForDraft({
           sessionId,
           userId: username,
           onProgress: (message: string, attempt: number) => {
@@ -54,17 +65,21 @@ const useDocumentStorage = (nofoId: string | null, onStepRestore?: (step: string
         });
 
         if (draft) {
+          // Cache wins: it holds edits whose save was still pending at exit.
+          const cachedSections = readDraftCache<Record<string, string>>(sessionId, "sections");
           setDocumentData({
             id: draft.sessionId,
             nofoId: draft.documentIdentifier,
-            sections: draft.sections || {},
+            sections: { ...(draft.sections || {}), ...(cachedSections || {}) },
             projectBasics: draft.projectBasics,
             questionnaire: draft.questionnaire,
             lastModified: draft.lastModified || new Date().toISOString(),
           });
+          setLoadedDraft(draft);
           if (draft.status && onStepRestore) onStepRestore(statusToStep(draft.status));
         } else {
           setDocumentData({ id: sessionId, nofoId, sections: {}, lastModified: new Date().toISOString() });
+          setLoadedDraft(null);
         }
       }
     } catch (err) {
@@ -77,7 +92,7 @@ const useDocumentStorage = (nofoId: string | null, onStepRestore?: (step: string
 
   useEffect(() => { loadDocument(); }, [loadDocument]);
 
-  return { documentData, setDocumentData, isLoading, loadingMessage, error, setError };
+  return { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError };
 };
 
 const DocumentEditor: React.FC = () => {
@@ -96,7 +111,21 @@ const DocumentEditor: React.FC = () => {
   const draftsClient = useDraftsClient();
   const topOffset = useHeaderOffset();
 
-  const { documentData, setDocumentData, isLoading, loadingMessage, error, setError } = useDocumentStorage(selectedNofo, setCurrentStep);
+  const { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError } =
+    useDocumentStorage(selectedNofo, setCurrentStep);
+
+  const draftSave = useDraftSave({
+    sessionId,
+    documentIdentifier: selectedNofo,
+    fallbackTitle: selectedNofo ? `Application for ${selectedNofo}` : undefined,
+  });
+  const { setBaseline, saveFields } = draftSave;
+
+  useEffect(() => {
+    if (loadedDraft !== undefined) setBaseline(loadedDraft);
+  }, [loadedDraft, setBaseline]);
+
+  useEffect(() => { sweepLegacyDraftCache(); }, []);
 
   // Extract NOFO and step from URL
   useEffect(() => {
@@ -131,8 +160,6 @@ const DocumentEditor: React.FC = () => {
   const startNewDocument = useCallback(async () => {
     if (!selectedNofo) return;
     try {
-      localStorage.removeItem("projectBasics");
-      localStorage.removeItem("questionnaire");
       const newSessionId = uuidv4();
       const username = (await Auth.currentAuthenticatedUser()).username;
       if (username) {
@@ -143,6 +170,7 @@ const DocumentEditor: React.FC = () => {
           status: "project_basics", lastModified: Utils.getCurrentTimestamp(),
         });
       }
+      clearDraftCache(newSessionId);
       setCurrentStep("projectBasics");
       navigate(`/document-editor/${newSessionId}?step=projectBasics&nofo=${encodeURIComponent(selectedNofo)}`);
     } catch (err) {
@@ -160,65 +188,50 @@ const DocumentEditor: React.FC = () => {
   }, [selectedNofo, sessionId, navigate]);
 
   const navigateToStep = useCallback(async (step: string) => {
-    if (!documentData) {
+    const go = () => {
       const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : "";
       navigate(`/document-editor/${sessionId}?step=${step}${nofoParam}`);
+    };
+
+    if (!documentData) {
+      go();
       return;
     }
     try {
-      const username = (await Auth.currentAuthenticatedUser()).username;
-      if (username && sessionId) {
-        const currentDraft = await draftsClient.getDraft({ sessionId, userId: username });
-        await draftsClient.updateDraft({
-          sessionId, userId: username,
-          title: `Application for ${selectedNofo}`, documentIdentifier: selectedNofo || "",
-          sections: { ...currentDraft?.sections, ...documentData.sections },
-          projectBasics: documentData.projectBasics || currentDraft?.projectBasics,
-          questionnaire: documentData.questionnaire || currentDraft?.questionnaire,
-          status: stepToStatus(step) as DraftStatus,
-          lastModified: Utils.getCurrentTimestamp(),
-        });
-      }
+      // Status only: useDraftSave's own baseline holds the authoritative
+      // sections, which documentData does not see once SectionsEditor has run.
+      await saveFields(
+        { status: stepToStatus(step) },
+        { source: "status_change", immediate: true }
+      );
       setCurrentStep(step);
-      const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : "";
-      navigate(`/document-editor/${sessionId}?step=${step}${nofoParam}`);
+      go();
     } catch (err) {
       console.error("Failed to navigate to step:", err);
       setError(ERROR_MESSAGES.SAVE_FAILED);
     }
-  }, [documentData, selectedNofo, sessionId, draftsClient, navigate, setError]);
+  }, [documentData, selectedNofo, sessionId, saveFields, navigate, setError]);
 
-  const handleUpdateData = useCallback(async (data: Partial<DocumentData>) => {
-    if (!documentData) return;
-    const updatedData = { ...documentData, ...data };
-    setDocumentData(updatedData);
-    try {
-      const username = (await Auth.currentAuthenticatedUser()).username;
-      if (username && sessionId && selectedNofo) {
-        await draftsClient.updateDraft({
-          sessionId, userId: username,
-          title: `Application for ${selectedNofo}`, documentIdentifier: selectedNofo,
-          sections: updatedData.sections || {}, projectBasics: updatedData.projectBasics,
-          questionnaire: updatedData.questionnaire,
-          status: stepToStatus(currentStep) as DraftStatus,
-          lastModified: new Date().toISOString(),
-        });
-      }
-    } catch (err) {
-      console.error("Failed to auto-save:", err);
-    }
-  }, [documentData, sessionId, selectedNofo, currentStep, draftsClient, setDocumentData]);
+  const handleUpdateData = useCallback((data: Partial<DocumentData>) => {
+    setDocumentData((prev) => (prev ? { ...prev, ...data } : prev));
+    saveFields({
+      ...(data.sections ? { sections: data.sections } : {}),
+      ...(data.projectBasics ? { projectBasics: data.projectBasics } : {}),
+      ...(data.questionnaire ? { questionnaire: data.questionnaire } : {}),
+      status: stepToStatus(currentStep),
+    });
+  }, [currentStep, saveFields, setDocumentData]);
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case "projectBasics":
-        return <ProjectBasics onContinue={() => navigateToStep("questionnaire")} selectedNofo={selectedNofo} documentData={documentData} onUpdateData={handleUpdateData} />;
+        return <ProjectBasics onContinue={() => navigateToStep("questionnaire")} selectedNofo={selectedNofo} documentData={documentData} onUpdateData={handleUpdateData} saveStatus={draftSave.saveStatus} onRetrySave={draftSave.retry} />;
       case "questionnaire":
-        return <QuickQuestionnaire onContinue={() => navigateToStep("uploadDocuments")} selectedNofo={selectedNofo} onNavigate={navigateToStep} documentData={documentData} onUpdateData={handleUpdateData} />;
+        return <QuickQuestionnaire onContinue={() => navigateToStep("uploadDocuments")} selectedNofo={selectedNofo} onNavigate={navigateToStep} documentData={documentData} onUpdateData={handleUpdateData} saveStatus={draftSave.saveStatus} onRetrySave={draftSave.retry} />;
       case "uploadDocuments":
-        return <UploadDocuments onContinue={() => navigateToSectionEditor("")} selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} />;
+        return <UploadDocuments onContinue={() => navigateToSectionEditor("")} selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} draftSave={draftSave} />;
       case "sectionEditor":
-        return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} activeJobId={activeJobId} isGenerating={isGeneratingDraft} />;
+        return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} activeJobId={activeJobId} isGenerating={isGeneratingDraft} draftSave={draftSave} />;
       case "reviewApplication":
         return <ReviewApplication onExport={() => {}} selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} />;
       default:

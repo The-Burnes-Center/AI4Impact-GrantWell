@@ -69,6 +69,7 @@ export class ChatBotApi extends Construct {
       wsApiEndpoint: websocketBackend.wsAPIStage.url,
       sessionTable: tables.historyTable,
       draftTable: tables.draftTable,
+      draftVersionTable: tables.draftVersionTable,
       nofoMetadataTable: tables.nofoMetadataTable,
       nofoProcessingReviewTable: tables.nofoProcessingReviewTable,
       draftGenerationJobsTable: tables.draftGenerationJobsTable,

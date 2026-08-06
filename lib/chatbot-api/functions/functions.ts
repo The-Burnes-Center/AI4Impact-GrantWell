@@ -22,7 +22,7 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
-import { SqsEventSource, SnsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { SqsEventSource, SnsEventSource, DynamoEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
@@ -47,6 +47,7 @@ interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
   readonly sessionTable: Table;
   readonly draftTable: Table;
+  readonly draftVersionTable: Table;
   readonly nofoMetadataTable: Table;
   readonly nofoProcessingReviewTable: Table;
   readonly draftGenerationJobsTable: Table;
@@ -86,6 +87,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoRenameFunction: lambda.Function;
   public readonly nofoDeleteFunction: lambda.Function;
   public readonly draftFunction: lambda.Function;
+  public readonly draftVersionWriterFunction: lambda.Function;
   public readonly draftGenerationStateMachine: sfn.StateMachine;
   public readonly scraperCoordinatorFunction: lambda.Function;
   public readonly opportunityProcessorFunction: lambda.Function;
@@ -192,12 +194,14 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [pythonSharedLayer],
         environment: {
           DRAFT_TABLE_NAME: props.draftTable.tableName,
+          DRAFT_VERSION_TABLE_NAME: props.draftVersionTable.tableName,
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
       }
     );
     props.analyticsTable.grantWriteData(draftAPIHandlerFunction);
+    props.draftVersionTable.grantReadWriteData(draftAPIHandlerFunction);
 
     draftAPIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -218,6 +222,34 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     this.draftFunction = draftAPIHandlerFunction;
+
+    const draftVersionWriterFunction = new lambda.Function(
+      scope,
+      "DraftVersionWriterFunction",
+      {
+        runtime: lambda.Runtime.PYTHON_3_12,
+        code: lambda.Code.fromAsset(path.join(__dirname, "draft-version-writer")),
+        handler: "lambda_function.lambda_handler",
+        layers: [pythonSharedLayer],
+        environment: {
+          DRAFT_VERSION_TABLE_NAME: props.draftVersionTable.tableName,
+          SNAPSHOT_MIN_INTERVAL_SECONDS: "300",
+        },
+        timeout: cdk.Duration.seconds(30),
+      }
+    );
+
+    props.draftVersionTable.grantReadWriteData(draftVersionWriterFunction);
+    draftVersionWriterFunction.addEventSource(
+      new DynamoEventSource(props.draftTable, {
+        startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+        batchSize: 10,
+        retryAttempts: 3,
+        reportBatchItemFailures: true,
+      })
+    );
+
+    this.draftVersionWriterFunction = draftVersionWriterFunction;
 
     const sessionAPIHandlerFunction = new lambda.Function(
       scope,
