@@ -24,6 +24,7 @@ import { Construct } from "constructs";
 import { OpenSearchStack } from "./opensearch/opensearch";
 import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
 import { SUPPORTED_STATES } from "../shared/states";
 
@@ -376,6 +377,7 @@ export class ChatBotApi extends Construct {
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
+      logRetention: logs.RetentionDays.THREE_MONTHS,
     });
 
     // Grant permission to start Step Functions execution
@@ -409,6 +411,7 @@ export class ChatBotApi extends Construct {
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
       },
       timeout: cdk.Duration.seconds(10),
+      logRetention: logs.RetentionDays.THREE_MONTHS,
     });
     tables.draftGenerationJobsTable.grantReadData(draftJobStatusFunction);
     

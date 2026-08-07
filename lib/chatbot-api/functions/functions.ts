@@ -11,6 +11,7 @@ import { genericBrandingData } from "../../shared/generic-branding";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as logs from "aws-cdk-lib/aws-logs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
@@ -198,6 +199,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
+        logRetention: logs.RetentionDays.THREE_MONTHS,
       }
     );
     props.analyticsTable.grantWriteData(draftAPIHandlerFunction);
@@ -1385,6 +1387,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         },
         timeout: cdk.Duration.seconds(60),
         memorySize: 256,
+        logRetention: logs.RetentionDays.THREE_MONTHS,
       }
     );
 
@@ -1428,8 +1431,9 @@ export class LambdaFunctionStack extends cdk.Stack {
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
-        timeout: cdk.Duration.minutes(3),
+        timeout: cdk.Duration.minutes(5),
         memorySize: 256,
+        logRetention: logs.RetentionDays.THREE_MONTHS,
       }
     );
 
@@ -1463,6 +1467,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 128,
+        logRetention: logs.RetentionDays.THREE_MONTHS,
       }
     );
 
