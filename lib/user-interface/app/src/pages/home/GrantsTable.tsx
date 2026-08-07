@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { LuFileX, LuX, LuArrowUp, LuArrowDown, LuArrowUpDown, LuPin } from "react-icons/lu";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
-import { GRANT_TYPES } from "../../common/types/nofo";
+import { GRANT_TYPES, nofoDisplayName } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
 import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
@@ -461,6 +461,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           ) : null}
           {!awaitingAIResults && visibleNofos.map((nofo) => {
             const isArchived = nofo.status === "archived";
+            const { title, stateBadge } = nofoDisplayName(nofo);
             return (
               <div
                 key={nofo.name}
@@ -479,7 +480,11 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                   opacity: isArchived ? 0.7 : 1,
                   backgroundColor: isArchived ? "#f9f9f9" : undefined,
                 }}
-                aria-label={isArchived ? `${nofo.name} (Expired - no longer accepting applications)` : `Select ${nofo.name}`}
+                aria-label={
+                  isArchived
+                    ? `${title} (Expired - no longer accepting applications)`
+                    : `Select ${title}${stateBadge ? `, maintained by ${stateBadge}` : ""}`
+                }
                 aria-disabled={isArchived}
               >
                 <div className="landing-row-cell" role="cell">
@@ -492,8 +497,17 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     />
                   )}
                   <span className="landing-nofo-name" style={{ color: isArchived ? "#6b7280" : undefined }}>
-                    {nofo.name}
+                    {title}
                   </span>
+                  {stateBadge && (
+                    <span
+                      className="landing-state-badge"
+                      title={`Maintained by ${stateBadge}`}
+                      style={{ opacity: isArchived ? 0.6 : 1 }}
+                    >
+                      {nofo.state}
+                    </span>
+                  )}
                   {!isArchived && isRecentlyAdded(nofo.createdAt) && (
                     <span
                       className="landing-new-badge"

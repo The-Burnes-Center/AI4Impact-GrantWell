@@ -30,10 +30,10 @@ const DraftView: React.FC<DraftViewProps> = ({
         
         const username = (await Auth.currentAuthenticatedUser()).username;
         
-        const currentDraft = await apiClient.drafts.getDraft({
+        const currentDraft = await apiClient.drafts.waitForDraft({
           sessionId: sessionId,
           userId: username,
-          onProgress: (message: string, attempt: number, maxAttempts: number) => {
+          onProgress: (message: string, attempt: number) => {
             setLoadingMessage(message);
             if (attempt === 15) {
               setLoadingMessage("Draft generation is taking longer than expected. Please wait...");

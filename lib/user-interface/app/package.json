@@ -41,6 +41,7 @@
     "aws-amplify": "^5.3.12",
     "axios": "^1.10.0",
     "bootstrap": "^5.3.3",
+    "diff": "^7.0.0",
     "esbuild": "^0.25.1",
     "jspdf": "^3.0.1",
     "lucide-react": "^0.509.0",
@@ -58,12 +59,14 @@
     "react-speech-recognition": "^3.10.0",
     "react-textarea-autosize": "^8.5.4",
     "react-use-websocket": "^4.5.0",
+    "recharts": "^2.15.4",
     "regenerator-runtime": "^0.14.0",
     "remark-gfm": "^4.0.0",
     "styled-components": "^6.1.17",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/diff": "^7.0.2",
     "@types/luxon": "^3.3.2",
     "@types/react": "^18.2.15",
     "@types/react-bootstrap": "^0.32.37",

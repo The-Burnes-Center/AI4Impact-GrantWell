@@ -1,0 +1,158 @@
+/* Analytics dashboard tab. Reuses .metrics-grid / .metric-card / .no-data / .visually-hidden
+ * from dashboard.css; adds the toolbar, chart cards, and ranked tables. Brand tokens from
+ * tokens.css. Light-mode only (the app has no dark theme). */
+
+.analytics {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.analytics__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.analytics__caption {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.analytics__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.analytics__state-select {
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+}
+
+.analytics__state-select:focus-visible {
+  outline: 2px solid var(--mk-green-dark, #195c53);
+  outline-offset: 0;
+  border-color: var(--mk-green-dark, #195c53);
+}
+
+.analytics__window {
+  display: inline-flex;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.analytics__window-btn {
+  border: none;
+  background: transparent;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #333;
+  border-right: 1px solid #eee;
+}
+
+.analytics__window-btn:last-child {
+  border-right: none;
+}
+
+.analytics__window-btn:hover {
+  background: var(--mk-green-light, #dfece0);
+}
+
+.analytics__window-btn--active {
+  background: var(--mk-green, #23776c);
+  color: #fff;
+}
+
+.analytics__window-btn--active:hover {
+  background: var(--mk-green-dark, #195c53);
+}
+
+.analytics__window-btn:focus-visible {
+  outline: 2px solid var(--mk-green-dark, #195c53);
+  outline-offset: -2px;
+}
+
+.analytics__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.analytics__card {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.analytics__card-head {
+  margin-bottom: 12px;
+}
+
+.analytics__card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.analytics__card-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.analytics__grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .analytics__grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analytics__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.analytics__table th,
+.analytics__table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.analytics__table th {
+  color: #52514e;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.analytics__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.analytics__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

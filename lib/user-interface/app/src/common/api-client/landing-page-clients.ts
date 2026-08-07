@@ -1,6 +1,7 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 import type { ReviewItem, ReviewDetail, ProcessingMetrics } from "../types/processing-review";
+import type { CustomQuestion } from "../types/nofo";
 
 export class LandingPageClient {
   private readonly baseUrl: string;
@@ -109,8 +110,7 @@ export class LandingPageClient {
     state?: string
   ): Promise<string> {
     if (!fileType) {
-      alert("Must have a valid file type!");
-      throw new Error("Invalid file type");
+      throw new Error("Must have a valid file type (PDF, TXT, or DOCX).");
     }
 
     try {
@@ -492,8 +492,8 @@ export class LandingPageClient {
     }
   }
 
-  // Get the caller's-state guidance overlay for a federal NOFO.
-  async getStateOverlay(nofoName: string): Promise<{ nofoName: string; state: string; note: string; updatedAt: string | null }> {
+  // Get a NOFO's overlay row (guidance note and/or admin-authored custom questions).
+  async getStateOverlay(nofoName: string): Promise<{ nofoName: string; state: string; note: string; customQuestions: CustomQuestion[]; updatedAt: string | null }> {
     const token = await Utils.authenticate();
     const response = await fetch(`${this.baseUrl}/nofo-overlay?nofoName=${encodeURIComponent(nofoName)}`, {
       method: "GET",
@@ -501,7 +501,7 @@ export class LandingPageClient {
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || `Error: ${response.status}`);
-    return data;
+    return { customQuestions: [], ...data };
   }
 
   // Upsert the caller's-state guidance overlay (empty note clears it).
@@ -511,6 +511,21 @@ export class LandingPageClient {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: token },
       body: JSON.stringify({ nofoName, note }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || `Error: ${response.status}`);
+    return data;
+  }
+
+  // Upsert admin-authored custom questions for a state NOFO. Independent of the guidance note:
+  // the backend writes only this field, so the two editors never clobber each other. An empty
+  // array clears them. Ids are server-controlled; new questions may omit `id`.
+  async putCustomQuestions(nofoName: string, customQuestions: CustomQuestion[]) {
+    const token = await Utils.authenticate();
+    const response = await fetch(`${this.baseUrl}/nofo-overlay`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: token },
+      body: JSON.stringify({ nofoName, customQuestions }),
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || `Error: ${response.status}`);

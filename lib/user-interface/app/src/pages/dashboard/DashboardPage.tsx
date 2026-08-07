@@ -11,6 +11,7 @@ import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import ProcessingTab from "./components/ProcessingTab";
 import DigestPreviewTab from "./components/DigestPreviewTab";
+import AnalyticsTab from "./components/AnalyticsTab";
 import {
   LuSearch, LuFilter, LuUpload, LuCheck, LuX,
   LuRefreshCw, LuDownload, LuInfo, LuLoader, LuArrowRight,
@@ -21,7 +22,7 @@ import type { RawNOFOData } from "../../common/types/document";
 import "../../styles/dashboard.css";
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
    const [grantsSegment, setGrantsSegment] = useState<"all" | "processing" | "attention">("all");
   const [reviewFocus, setReviewFocus] = useState<string | null>(null);
   // Names of finished grants the admin has dismissed from the Processing tab (client-side, resets on reload).
@@ -51,6 +52,7 @@ const Dashboard: React.FC = () => {
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
   const grantsTabRef = useRef<HTMLButtonElement>(null);
+  const analyticsTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
   const digestPreviewTabRef = useRef<HTMLButtonElement>(null);
@@ -157,6 +159,9 @@ const Dashboard: React.FC = () => {
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
       const tabs = [
         { key: "grants" as const, ref: grantsTabRef },
+        ...(canManageUsers
+          ? [{ key: "analytics" as const, ref: analyticsTabRef }]
+          : []),
         ...(isDeveloper
           ? [{ key: "feature-rollouts" as const, ref: rolloutsTabRef }]
           : []),
@@ -332,9 +337,11 @@ const Dashboard: React.FC = () => {
   const filterCount = getActiveFilterCount();
   const activeTabAnnouncement = activeTab === "grants"
     ? "Grants tab selected"
-    : activeTab === "feature-rollouts"
-      ? "Developer rollouts tab selected"
-      : "Developer user management tab selected";
+    : activeTab === "analytics"
+      ? "Analytics tab selected"
+      : activeTab === "feature-rollouts"
+        ? "Developer rollouts tab selected"
+        : "Developer user management tab selected";
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
@@ -411,6 +418,21 @@ const Dashboard: React.FC = () => {
             >
               Grants
             </button>
+            {canManageUsers && (
+              <button
+                id="dashboard-tab-analytics"
+                ref={analyticsTabRef}
+                className={`tab-button ${activeTab === "analytics" ? "active" : ""}`}
+                onClick={() => setActiveTab("analytics")}
+                onKeyDown={handleTabKeyDown}
+                role="tab"
+                aria-selected={activeTab === "analytics"}
+                aria-controls="dashboard-panel-analytics"
+                tabIndex={activeTab === "analytics" ? 0 : -1}
+              >
+                Analytics
+              </button>
+            )}
             {isDeveloper && (
               <button
                 id="dashboard-tab-rollouts"
@@ -647,6 +669,20 @@ const Dashboard: React.FC = () => {
                 />
                 </>
                 )}
+              </div>
+            ) : activeTab === "analytics" ? (
+              <div
+                id="dashboard-panel-analytics"
+                role="tabpanel"
+                aria-labelledby="dashboard-tab-analytics"
+                tabIndex={0}
+              >
+                <AnalyticsTab
+                  apiClient={apiClient}
+                  addNotification={addNotification}
+                  isStateAdmin={isStateAdmin}
+                  userState={userState}
+                />
               </div>
             ) : activeTab === "feature-rollouts" ? (
               <div

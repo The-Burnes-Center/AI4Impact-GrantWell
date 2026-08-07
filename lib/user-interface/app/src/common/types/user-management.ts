@@ -1,4 +1,4 @@
-export type UserRolePreset = "user" | "admin" | "developer";
+export type UserRolePreset = "user" | "admin" | "platformadmin" | "developer";
 
 export {
   SUPPORTED_STATES,

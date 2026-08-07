@@ -125,6 +125,69 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
+  // Organization details (agency / org / title) — same fields as the profile-completion gate.
+  const [orgAgency, setOrgAgency] = useState("");
+  const [orgOrganization, setOrgOrganization] = useState("");
+  const [orgJobTitle, setOrgJobTitle] = useState("");
+  const [orgBaseline, setOrgBaseline] = useState({ agency: "", organization: "", jobTitle: "" });
+  const [orgSaving, setOrgSaving] = useState(false);
+  const [orgError, setOrgError] = useState<string | null>(null);
+  const [orgSaved, setOrgSaved] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    apiClient.userProfile
+      .getProfile()
+      .then((p) => {
+        if (!active) return;
+        setOrgAgency(p.agency || "");
+        setOrgOrganization(p.organization || "");
+        setOrgJobTitle(p.jobTitle || "");
+        setOrgBaseline({
+          agency: p.agency || "",
+          organization: p.organization || "",
+          jobTitle: p.jobTitle || "",
+        });
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [apiClient]);
+
+  const orgDirty =
+    orgAgency.trim() !== orgBaseline.agency.trim() ||
+    orgOrganization.trim() !== orgBaseline.organization.trim() ||
+    orgJobTitle.trim() !== orgBaseline.jobTitle.trim();
+
+  const onSaveOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!orgAgency.trim() || !orgOrganization.trim() || !orgJobTitle.trim()) {
+      setOrgError("Please complete all three fields.");
+      return;
+    }
+    setOrgSaving(true);
+    setOrgError(null);
+    setOrgSaved(false);
+    try {
+      await apiClient.userProfile.updateProfile({
+        agency: orgAgency.trim(),
+        organization: orgOrganization.trim(),
+        jobTitle: orgJobTitle.trim(),
+      });
+      setOrgBaseline({
+        agency: orgAgency.trim(),
+        organization: orgOrganization.trim(),
+        jobTitle: orgJobTitle.trim(),
+      });
+      setOrgSaved(true);
+    } catch {
+      setOrgError("Could not save your organization details.");
+    } finally {
+      setOrgSaving(false);
+    }
+  };
+
   // "My activity" — read-only summaries linking to each item's detail page.
   const [drafts, setDrafts] = useState<DocumentDraft[]>([]);
   const [sessions, setSessions] = useState<SessionListItem[]>([]);
@@ -139,6 +202,7 @@ export default function ProfilePage() {
   const [frequency, setFrequency] = useState<DigestFrequency>("off");
   const [categories, setCategories] = useState<string[]>([]);
   const [keywords, setKeywords] = useState("");
+  const [categoryQuery, setCategoryQuery] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -176,6 +240,30 @@ export default function ProfilePage() {
 
   const toggle = (list: string[], set: (v: string[]) => void, code: string) => {
     set(list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
+    setSaved(false);
+  };
+
+  const visibleCategories = useMemo<string[]>(() => {
+    const q = categoryQuery.trim().toLowerCase();
+    if (!q) return [...GRANT_CATEGORIES];
+    return GRANT_CATEGORIES.filter((c) => c.toLowerCase().includes(q));
+  }, [categoryQuery]);
+
+  const allVisibleSelected =
+    visibleCategories.length > 0 &&
+    visibleCategories.every((c) => categories.includes(c));
+  const someVisibleSelected = visibleCategories.some((c) =>
+    categories.includes(c)
+  );
+
+  // Bulk actions apply to the filtered set only, so they never silently touch
+  // selections the user can't currently see.
+  const setVisibleSelected = (selected: boolean) => {
+    setCategories(
+      selected
+        ? Array.from(new Set([...categories, ...visibleCategories]))
+        : categories.filter((c) => !visibleCategories.includes(c))
+    );
     setSaved(false);
   };
 
@@ -248,6 +336,75 @@ export default function ProfilePage() {
               </dl>
             </Card>
 
+            <Card header="Organization details">
+              <p className="profile-hint">
+                Your agency, organization, and role. Used to understand who&apos;s
+                using GrantWell.
+              </p>
+              {orgError && (
+                <div className="profile-alert profile-alert--error" role="alert">
+                  {orgError}
+                </div>
+              )}
+              {orgSaved && (
+                <div className="profile-alert profile-alert--success" role="status">
+                  Organization details saved.
+                </div>
+              )}
+              <form onSubmit={onSaveOrg}>
+                <div className="profile-section">
+                  <label className="profile-field-label" htmlFor="profile-agency">
+                    Agency
+                  </label>
+                  <input
+                    id="profile-agency"
+                    type="text"
+                    value={orgAgency}
+                    onChange={(e) => {
+                      setOrgAgency(e.target.value);
+                      setOrgSaved(false);
+                    }}
+                    style={{ width: "100%", maxWidth: 420 }}
+                  />
+                </div>
+                <div className="profile-section">
+                  <label className="profile-field-label" htmlFor="profile-org">
+                    Organization
+                  </label>
+                  <input
+                    id="profile-org"
+                    type="text"
+                    value={orgOrganization}
+                    onChange={(e) => {
+                      setOrgOrganization(e.target.value);
+                      setOrgSaved(false);
+                    }}
+                    style={{ width: "100%", maxWidth: 420 }}
+                  />
+                </div>
+                <div className="profile-section">
+                  <label className="profile-field-label" htmlFor="profile-title">
+                    Role / Title
+                  </label>
+                  <input
+                    id="profile-title"
+                    type="text"
+                    value={orgJobTitle}
+                    onChange={(e) => {
+                      setOrgJobTitle(e.target.value);
+                      setOrgSaved(false);
+                    }}
+                    style={{ width: "100%", maxWidth: 420 }}
+                  />
+                </div>
+                <div className="profile-actions">
+                  <Button type="submit" loading={orgSaving} disabled={!orgDirty}>
+                    {orgDirty ? "Save changes" : "Saved"}
+                  </Button>
+                </div>
+              </form>
+            </Card>
+
         <Card header="Notification preferences">
           <p className="profile-hint">
             Get an email digest of new grant opportunities that match what you care about.
@@ -292,18 +449,57 @@ export default function ProfilePage() {
 
                 <div className="profile-section">
                   <h3>Categories</h3>
-                  <div className="profile-chip-grid">
-                    {GRANT_CATEGORIES.map((c) => (
-                      <label key={c} className="profile-chip">
-                        <input
-                          type="checkbox"
-                          checked={categories.includes(c)}
-                          onChange={() => toggle(categories, setCategories, c)}
-                        />
-                        {c}
-                      </label>
-                    ))}
+                  <div className="profile-chip-toolbar">
+                    <input
+                      type="search"
+                      className="profile-chip-search"
+                      value={categoryQuery}
+                      onChange={(e) => setCategoryQuery(e.target.value)}
+                      placeholder="Search categories"
+                      aria-label="Search categories"
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setVisibleSelected(true)}
+                      disabled={allVisibleSelected}
+                    >
+                      {categoryQuery.trim()
+                        ? `Select all ${visibleCategories.length} shown`
+                        : "Select all"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setVisibleSelected(false)}
+                      disabled={!someVisibleSelected}
+                    >
+                      Clear
+                    </Button>
+                    <span className="profile-chip-count" aria-live="polite">
+                      {categories.length} of {GRANT_CATEGORIES.length} selected
+                    </span>
                   </div>
+                  {visibleCategories.length === 0 ? (
+                    <p className="profile-hint">
+                      No categories match “{categoryQuery.trim()}”.
+                    </p>
+                  ) : (
+                    <div className="profile-chip-grid">
+                      {visibleCategories.map((c) => (
+                        <label key={c} className="profile-chip">
+                          <input
+                            type="checkbox"
+                            checked={categories.includes(c)}
+                            onChange={() => toggle(categories, setCategories, c)}
+                          />
+                          {c}
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div className="profile-section">
@@ -334,55 +530,57 @@ export default function ProfilePage() {
           )}
         </Card>
 
-            <ActivityTable
-              title="My drafts"
-              emptyText="No drafts"
-              timeHeader="Last modified"
-              viewAll={drafts.length > ACTIVITY_LIMIT ? {
-                label: `View all ${drafts.length} drafts`,
-                onClick: () => navigate("/document-editor/drafts"),
-              } : undefined}
-              rows={drafts.slice(0, ACTIVITY_LIMIT).map((d) => ({
-                key: d.sessionId,
-                title: d.title || "Untitled draft",
-                when: d.lastModified,
-                onOpen: () =>
-                  navigate(
-                    `/document-editor/${d.sessionId}?nofo=${encodeURIComponent(
-                      d.documentIdentifier || ""
-                    )}`
-                  ),
-              }))}
-            />
+            <Card header="Recent activity">
+              <ActivityList
+                title="My drafts"
+                emptyText="No drafts yet."
+                timeHeader="Last modified"
+                viewAll={drafts.length > ACTIVITY_LIMIT ? {
+                  label: `View all ${drafts.length} drafts`,
+                  onClick: () => navigate("/document-editor/drafts"),
+                } : undefined}
+                rows={drafts.slice(0, ACTIVITY_LIMIT).map((d) => ({
+                  key: d.sessionId,
+                  title: d.title || "Untitled draft",
+                  when: d.lastModified,
+                  onOpen: () =>
+                    navigate(
+                      `/document-editor/${d.sessionId}?nofo=${encodeURIComponent(
+                        d.documentIdentifier || ""
+                      )}`
+                    ),
+                }))}
+              />
 
-            <ActivityTable
-              title="My chat sessions"
-              emptyText="No sessions"
-              timeHeader="Last used"
-              viewAll={sessions.length > ACTIVITY_LIMIT ? {
-                label: `View all ${sessions.length} sessions`,
-                onClick: () => navigate("/chat/sessions"),
-              } : undefined}
-              rows={sessions.slice(0, ACTIVITY_LIMIT).map((s) => ({
-                key: s.session_id,
-                title: s.title || "Untitled session",
-                when: s.time_stamp,
-                onOpen: () => navigate(`/chat/${s.session_id}`),
-              }))}
-            />
+              <ActivityList
+                title="My chat sessions"
+                emptyText="No sessions yet."
+                timeHeader="Last used"
+                viewAll={sessions.length > ACTIVITY_LIMIT ? {
+                  label: `View all ${sessions.length} sessions`,
+                  onClick: () => navigate("/chat/sessions"),
+                } : undefined}
+                rows={sessions.slice(0, ACTIVITY_LIMIT).map((s) => ({
+                  key: s.session_id,
+                  title: s.title || "Untitled session",
+                  when: s.time_stamp,
+                  onOpen: () => navigate(`/chat/${s.session_id}`),
+                }))}
+              />
 
-            <ActivityTable
-              title="Recently viewed grants"
-              emptyText="No recently viewed grants"
-              timeHeader="Viewed"
-              rows={recentNofos.slice(0, ACTIVITY_LIMIT).map((n) => ({
-                key: n.value,
-                title: n.label,
-                when: n.lastViewed,
-                onOpen: () =>
-                  navigate(`/requirements/${encodeURIComponent(n.value)}`),
-              }))}
-            />
+              <ActivityList
+                title="Recently viewed grants"
+                emptyText="No recently viewed grants."
+                timeHeader="Viewed"
+                rows={recentNofos.slice(0, ACTIVITY_LIMIT).map((n) => ({
+                  key: n.value,
+                  title: n.label,
+                  when: n.lastViewed,
+                  onOpen: () =>
+                    navigate(`/requirements/${encodeURIComponent(n.value)}`),
+                }))}
+              />
+            </Card>
 
             <AccountActionsCard onSignedOut={() => navigate("/")} />
           </div>
@@ -399,7 +597,7 @@ interface ActivityRow {
   onOpen: () => void;
 }
 
-function ActivityTable({
+function ActivityList({
   title,
   emptyText,
   timeHeader,
@@ -414,13 +612,12 @@ function ActivityTable({
 }) {
   const gridCols = "2.5fr 1fr";
   return (
-    <Card header={title}>
+    <div className="profile-section">
+      <h3>{title}</h3>
       {rows.length === 0 ? (
-        <div className="no-data">
-          <div style={{ fontSize: "18px", fontWeight: 500, marginBottom: "8px" }}>
-            {emptyText}
-          </div>
-        </div>
+        <p className="profile-hint" style={{ marginBottom: 0 }}>
+          {emptyText}
+        </p>
       ) : (
         <div className="table-container" style={{ marginBottom: 0 }}>
           <div className="table-header" style={{ gridTemplateColumns: gridCols }}>
@@ -457,7 +654,7 @@ function ActivityTable({
           {viewAll.label}
         </button>
       )}
-    </Card>
+    </div>
   );
 }
 

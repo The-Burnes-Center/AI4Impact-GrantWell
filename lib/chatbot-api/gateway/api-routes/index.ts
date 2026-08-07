@@ -128,7 +128,7 @@ export class Routes extends Construct {
     // Draft Generation Lambda Integration
     // Create a new dedicated Lambda function for the REST API endpoint
     const draftGeneratorAPIFunction = new lambda.Function(this, 'DraftGeneratorAPIFunction', {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, 'draft-generation')),
       handler: 'index.handler',
       environment: {
@@ -162,7 +162,7 @@ export class Routes extends Construct {
     // Draft Generation Job Status Lambda Integration
     // Allows frontend to poll for async draft generation results
     const draftJobStatusFunction = new lambda.Function(this, 'DraftJobStatusFunction', {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, 'draft-job-status')),
       handler: 'index.handler',
       environment: {

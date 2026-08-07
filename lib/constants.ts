@@ -19,6 +19,7 @@ interface EnvNames {
   cognitoDomainName: string;
   stackName: string;
   knowledgeBaseIndexName: string;
+  deploymentUrl: string;
 }
 
 const ENV_CONFIG: Record<string, EnvNames> = {
@@ -26,11 +27,13 @@ const ENV_CONFIG: Record<string, EnvNames> = {
     cognitoDomainName: 'gw-auth-grantwell-staging',
     stackName: 'grantwell-staging',
     knowledgeBaseIndexName: 'knowledge-base-index-grantwell-staging',
+    deploymentUrl: 'https://grantwell.us',
   },
   'grantwell-burnes-staging': {
     cognitoDomainName: 'gw-auth-grantwell-burnes-staging',
     stackName: 'grantwell-burnes-staging',
     knowledgeBaseIndexName: 'knowledge-base-index-grantwell-burnes-staging',
+    deploymentUrl: 'https://dghmgwzg4jiug.cloudfront.net',
   },
 };
 
@@ -90,7 +93,13 @@ const getEmailConfig = () => {
   if (instanceInfra?.deploymentUrl) {
     return { deploymentUrl: stripTrailingSlash(instanceInfra.deploymentUrl) };
   }
-  return { deploymentUrl: 'https://d2zwf0gxpj9c8c.cloudfront.net' };
+  const envDeploymentUrl = ENVIRONMENT ? ENV_CONFIG[ENVIRONMENT]?.deploymentUrl : undefined;
+  if (envDeploymentUrl) {
+    return { deploymentUrl: stripTrailingSlash(envDeploymentUrl) };
+  }
+  throw new Error(
+    `No deploymentUrl for ENVIRONMENT="${ENVIRONMENT ?? ''}". Set DEPLOYMENT_URL or add one to ENV_CONFIG.`
+  );
 };
 
 export const emailConfig = getEmailConfig();

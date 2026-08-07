@@ -99,6 +99,7 @@ export class DraftGenerationStateMachine extends Construct {
         "userState.$": "$.userState",
         "grantInfos.$": "$.grantInfos",
         "totalSections.$": "$.totalSections",
+        "sectionNames.$": "$.sectionNames",
       },
     });
     generateAllSections.itemProcessor(generateSection);
@@ -142,7 +143,7 @@ export class DraftGenerationStateMachine extends Construct {
     this.stateMachine = new sfn.StateMachine(this, "DraftGenerationSFN", {
       definitionBody: sfn.DefinitionBody.fromChainable(definition),
       stateMachineType: sfn.StateMachineType.STANDARD,
-      timeout: cdk.Duration.minutes(15),
+      timeout: cdk.Duration.minutes(45),
       logs: {
         destination: logGroup,
         level: sfn.LogLevel.ERROR,

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { DigestPreviewResult } from "../../../common/api-client/notifications-client";
+import { ConfirmationModal } from "../../../components/common/ConfirmationModal";
 
 interface DigestPreviewTabProps {
   apiClient: ApiClient;
@@ -20,9 +21,9 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
   const [count, setCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [testing, setTesting] = useState(false);
-  const [sentAt, setSentAt] = useState<Frequency | null>(null);
+  const [sending, setSending] = useState<"me" | "all" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [confirmBroadcastOpen, setConfirmBroadcastOpen] = useState(false);
 
   const load = useCallback(async () => {
     // Full spinner only when there's nothing to show yet; otherwise dim the stale preview.
@@ -54,26 +55,26 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
     };
   }, [load]);
 
-  const onTest = async () => {
-    setTesting(true);
-    try {
-      const res = await apiClient.notifications.sendTestDigest(frequency);
-      if (res.sent === false) {
-        // Nothing matched your prefs this window — the real digest would skip too.
-        addNotification("info", res.message || "No matching grants right now — nothing to send.");
-      } else {
-        addNotification("success", res.message || "Test digest sent.");
-        setSentAt(frequency);
-      }
-    } catch {
-      addNotification("error", "Could not send the test digest (is SES configured?).");
-    } finally {
-      setTesting(false);
+  const onSend = async (scope: "me" | "all") => {
+    if (scope === "all") {
+      setConfirmBroadcastOpen(true);
+      return;
     }
+    await sendDigest(scope);
   };
 
-  // Reset the "Sent ✓" confirmation whenever the frequency changes.
-  useEffect(() => setSentAt(null), [frequency]);
+  const sendDigest = async (scope: "me" | "all") => {
+    setSending(scope);
+    try {
+      const res = await apiClient.notifications.broadcastDigest(frequency, scope);
+      // Fire-and-forget: the backend returns once the run starts, before delivery.
+      addNotification("success", res.message || "Digest started.");
+    } catch {
+      addNotification("error", "Could not start the digest (is SES configured?).");
+    } finally {
+      setSending(null);
+    }
+  };
 
   const onSegmentKey = (e: React.KeyboardEvent, values: Frequency[], current: Frequency) => {
     const idx = values.indexOf(current);
@@ -86,7 +87,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
     }
   };
 
-  const justSent = sentAt === frequency;
+  const busy = sending !== null;
 
   return (
     <div className="tab-content">
@@ -96,16 +97,25 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
             Your real {frequency} digest — the server runs the actual selection against your own
             notification preferences and the active grants, so this is exactly what you'd receive.
+            Sending delivers the real email (not a test), with a working unsubscribe link.
           </p>
         </div>
         <div className="dashboard-actions">
           <button
-            className={`action-button ${justSent ? "add-button" : "refresh-button"}`}
-            onClick={onTest}
-            disabled={testing || loading || count === 0}
-            aria-label={`Send your ${frequency} digest to your own email`}
+            className="action-button refresh-button"
+            onClick={() => onSend("me")}
+            disabled={busy || loading}
+            aria-label={`Send the real ${frequency} digest to your own email`}
           >
-            {testing ? "Sending…" : justSent ? "Sent ✓ — send again" : "Send test to me"}
+            {sending === "me" ? "Sending…" : "Send to me"}
+          </button>
+          <button
+            className="action-button add-button"
+            onClick={() => onSend("all")}
+            disabled={busy || loading}
+            aria-label={`Send the real ${frequency} digest to all subscribed users`}
+          >
+            {sending === "all" ? "Sending…" : "Send to all users"}
           </button>
         </div>
       </div>
@@ -181,6 +191,25 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
         </div>
         </>
       ) : null}
+
+      <ConfirmationModal
+        isOpen={confirmBroadcastOpen}
+        onClose={() => setConfirmBroadcastOpen(false)}
+        onConfirm={() => {
+          setConfirmBroadcastOpen(false);
+          void sendDigest("all");
+        }}
+        title="Send digest to all subscribers"
+        message={
+          <>
+            Send the real {frequency} digest to <strong>all subscribed users</strong> now?
+          </>
+        }
+        warning="This is not a test — each user gets a live email with a working unsubscribe link."
+        confirmLabel="Send to all"
+        variant="danger"
+        confirming={sending === "all"}
+      />
     </div>
   );
 }

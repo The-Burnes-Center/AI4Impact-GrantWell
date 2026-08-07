@@ -36,7 +36,9 @@ export interface UseAIGrantSearchReturn {
   results: AISearchResult[] | null;
   searchQuery: string | null;
   searchTimeMs: number | null;
-  search: (query: string) => Promise<void>;
+  // `committed` marks a deliberate search (Enter / result selection) vs a debounced
+  // as-you-type call; only committed searches are logged for analytics server-side.
+  search: (query: string, committed?: boolean) => Promise<void>;
   clearResults: () => void;
 }
 
@@ -52,7 +54,7 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
   const cancelledRef = useRef(false);
 
   const search = useCallback(
-    async (query: string) => {
+    async (query: string, committed = false) => {
       if (!appContext) {
         setError("Application context not available");
         return;
@@ -64,8 +66,11 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
 
       const trimmed = query.trim().toLowerCase();
 
+      // A committed search (Enter/result-click) must reach the server so it gets logged for
+      // analytics, even if the same query is already cached from a debounced keystroke. Debounced
+      // calls still short-circuit on cache to avoid redundant network requests.
       const cached = cacheRef.current.get(trimmed);
-      if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
+      if (!committed && cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
         setResults(cached.results);
         setSearchTimeMs(cached.searchTimeMs);
         setSearchQuery(query.trim());
@@ -99,7 +104,7 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
             "Content-Type": "application/json",
             Authorization: `Bearer ${idToken}`,
           },
-          body: JSON.stringify({ query: query.trim() }),
+          body: JSON.stringify({ query: query.trim(), committed }),
           signal: controller.signal,
         });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen, LuMessageSquarePlus, LuCopy } from "react-icons/lu";
+import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen, LuMessageSquarePlus, LuCopy, LuListChecks } from "react-icons/lu";
 import type { NOFO } from "../../../common/types/nofo";
 
 interface GrantActionsDropdownProps {
@@ -8,13 +8,15 @@ interface GrantActionsDropdownProps {
   onEdit: () => void;
   onEditSummary: () => void;
   onDelete: () => void;
-  /** When true, every mutating action is disabled (out-of-scope for a state admin). */
+  /** When true, every mutating action is out-of-scope for this admin and is hidden. */
   editDisabled?: boolean;
-  editDisabledReason?: string;
   /** State admin viewing a federal grant: offer state-scoped actions instead of edit/delete. */
   showStateActions?: boolean;
   onEditOverlay?: () => void;
   onPromoteToCopy?: () => void;
+  /** Show "Custom questions" — an editable state NOFO the caller may edit. */
+  showCustomQuestions?: boolean;
+  onEditCustomQuestions?: () => void;
 }
 
 const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
@@ -24,12 +26,16 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
   onEditSummary,
   onDelete,
   editDisabled = false,
-  editDisabledReason,
   showStateActions = false,
   onEditOverlay,
   onPromoteToCopy,
+  showCustomQuestions = false,
+  onEditCustomQuestions,
 }: GrantActionsDropdownProps) {
-  const disabledTitle = editDisabled ? editDisabledReason : undefined;
+  // Out-of-scope actions are omitted rather than shown disabled, so the menu only
+  // ever offers what the backend would actually accept.
+  const showEditActions = !editDisabled;
+  const hasAnyAction = showEditActions || showCustomQuestions || showStateActions;
   const [isOpen, setIsOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -93,6 +99,8 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
     }
   };
 
+  if (!hasAnyAction) return null;
+
   return (
     <div className={`grant-actions-dropdown ${isOpen ? "dropdown-open" : ""}`} ref={menuRef}>
       <button
@@ -112,53 +120,56 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
           aria-label={`Actions for ${nofo.name}`}
           onKeyDown={handleMenuKeyDown}
         >
-          <button
-            onClick={() => { if (editDisabled) return; onToggleStatus(); setIsOpen(false); }}
-            className="dropdown-menu-item"
-            role="menuitem"
-            disabled={editDisabled}
-            aria-disabled={editDisabled}
-            title={disabledTitle}
-          >
-            {nofo.status === "active" ? (
-              <><LuArchive size={16} className="menu-icon" /><span>Archive</span></>
-            ) : (
-              <><LuCheck size={16} className="menu-icon" /><span>Mark Active</span></>
-            )}
-          </button>
-          <button
-            onClick={() => { if (editDisabled) return; onEdit(); setIsOpen(false); }}
-            className="dropdown-menu-item"
-            role="menuitem"
-            disabled={editDisabled}
-            aria-disabled={editDisabled}
-            title={disabledTitle}
-          >
-            <LuPencil size={16} className="menu-icon" />
-            <span>Edit</span>
-          </button>
-          <button
-            onClick={() => { if (editDisabled) return; onEditSummary(); setIsOpen(false); }}
-            className="dropdown-menu-item"
-            role="menuitem"
-            disabled={editDisabled}
-            aria-disabled={editDisabled}
-            title={disabledTitle}
-          >
-            <LuFilePen size={16} className="menu-icon" />
-            <span>Edit Summary</span>
-          </button>
-          <button
-            onClick={() => { if (editDisabled) return; onDelete(); setIsOpen(false); }}
-            className="dropdown-menu-item delete-item"
-            role="menuitem"
-            disabled={editDisabled}
-            aria-disabled={editDisabled}
-            title={disabledTitle}
-          >
-            <LuTrash size={16} className="menu-icon" />
-            <span>Delete</span>
-          </button>
+          {showEditActions && (
+            <>
+              <button
+                onClick={() => { onToggleStatus(); setIsOpen(false); }}
+                className="dropdown-menu-item"
+                role="menuitem"
+              >
+                {nofo.status === "active" ? (
+                  <><LuArchive size={16} className="menu-icon" /><span>Archive</span></>
+                ) : (
+                  <><LuCheck size={16} className="menu-icon" /><span>Mark Active</span></>
+                )}
+              </button>
+              <button
+                onClick={() => { onEdit(); setIsOpen(false); }}
+                className="dropdown-menu-item"
+                role="menuitem"
+              >
+                <LuPencil size={16} className="menu-icon" />
+                <span>Edit</span>
+              </button>
+              <button
+                onClick={() => { onEditSummary(); setIsOpen(false); }}
+                className="dropdown-menu-item"
+                role="menuitem"
+              >
+                <LuFilePen size={16} className="menu-icon" />
+                <span>Edit Summary</span>
+              </button>
+              <button
+                onClick={() => { onDelete(); setIsOpen(false); }}
+                className="dropdown-menu-item delete-item"
+                role="menuitem"
+              >
+                <LuTrash size={16} className="menu-icon" />
+                <span>Delete</span>
+              </button>
+            </>
+          )}
+          {showCustomQuestions && (
+            <button
+              onClick={() => { onEditCustomQuestions?.(); setIsOpen(false); }}
+              className="dropdown-menu-item"
+              role="menuitem"
+              title="Add questions applicants answer in the application writer"
+            >
+              <LuListChecks size={16} className="menu-icon" />
+              <span>Custom questions</span>
+            </button>
+          )}
           {showStateActions && (
             <>
               <button
