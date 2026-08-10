@@ -62,7 +62,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [undoCandidate, setUndoCandidate] = useState<DraftVersionMeta | null>(null);
   const [undoConfirmOpen, setUndoConfirmOpen] = useState(false);
   const apiClient = useApiClient();
-  const { saveFields, flush, saveStatus, retry } = draftSave;
+  const { saveFields, flush, saveStatus, retry, remoteSections } = draftSave;
 
   // Load sections from NOFO summary API
   useEffect(() => {
@@ -203,6 +203,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
     return () => clearInterval(interval);
   }, [activeJobId, generating, apiClient, sections, activeSection, sectionAnswers, sessionId, saveFields]);
+
+  // A save lost a race and text from the other writer was merged in. Take it
+  // into local state and the cache, or the next save — and the next reload —
+  // would put our superseded copy back.
+  useEffect(() => {
+    if (!remoteSections) return;
+    setSectionAnswers((prev) => {
+      const adopted = { ...prev, ...remoteSections };
+      writeDraftCache(sessionId, "sections", adopted);
+      return adopted;
+    });
+  }, [remoteSections, sessionId]);
 
   // Update editor content when active section changes
   useEffect(() => {

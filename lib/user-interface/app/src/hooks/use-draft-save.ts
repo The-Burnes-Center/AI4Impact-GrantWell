@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Auth } from "aws-amplify";
 import { useDraftsClient } from "./use-drafts-client";
 import { useAutoSave } from "./use-auto-save";
@@ -12,6 +12,12 @@ import {
   type UploadedFileMeta,
 } from "../common/api-client/drafts-client";
 import { writeDraftCache } from "../common/helpers/document-editor-utils";
+import {
+  applyRemoteSections,
+  mergeSectionMaps,
+  remoteOwnedSections,
+  type SectionMap,
+} from "../common/helpers/draft-merge";
 import type { ProjectBasicsData } from "../common/types/document";
 
 export interface DraftSaveFields {
@@ -71,6 +77,13 @@ export function useDraftSave({
   const authTokenRef = useRef<string | null>(null);
   const dirtySectionsRef = useRef<Set<string>>(new Set());
   const dirtyPartsRef = useRef<Set<DraftPart>>(new Set());
+  /** Sections as the server last reported them, for spotting remote changes. */
+  const serverSectionsRef = useRef<SectionMap>({});
+  // Sections another writer changed under us. A write sends the client's whole
+  // map, which still holds this client's superseded copy of them, so they have
+  // to be re-applied to every write until the user edits them.
+  const remoteSectionsRef = useRef<SectionMap>({});
+  const [remoteSections, setRemoteSections] = useState<SectionMap | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -110,7 +123,11 @@ export function useDraftSave({
         userId: userIdRef.current || "",
         title: snapshot.title ?? known?.title ?? fallbackTitle ?? "",
         documentIdentifier: documentIdentifier || known?.documentIdentifier || "",
-        sections: snapshot.sections ?? known?.sections ?? {},
+        sections: applyRemoteSections(
+          snapshot.sections ?? known?.sections ?? {},
+          remoteSectionsRef.current,
+          snapshot.dirtySections
+        ),
         projectBasics: snapshot.projectBasics ?? known?.projectBasics ?? {},
         questionnaire: snapshot.questionnaire ?? known?.questionnaire ?? {},
         additionalInfo: snapshot.additionalInfo ?? known?.additionalInfo,
@@ -123,15 +140,19 @@ export function useDraftSave({
     [sessionId, documentIdentifier, fallbackTitle]
   );
 
-  const mergeWithRemote = useCallback((remote: DocumentDraft, snapshot: Snapshot): DocumentDraft => {
+  const mergeWithRemote = useCallback((remote: DocumentDraft, snapshot: Snapshot) => {
     const local = draftRef.current;
     const merged: DocumentDraft = { ...remote };
 
-    merged.sections = { ...(remote.sections || {}) };
-    for (const name of snapshot.dirtySections) {
-      const localSections = snapshot.sections ?? local?.sections;
-      if (localSections && name in localSections) merged.sections[name] = localSections[name];
-    }
+    // Anything edited since this snapshot was taken counts as ours too, so a
+    // save still queued behind this one does not lose its section.
+    const dirty = new Set([...snapshot.dirtySections, ...dirtySectionsRef.current]);
+
+    merged.sections = mergeSectionMaps(remote.sections, snapshot.sections ?? local?.sections, dirty);
+    // Remembered so the retry — and every later write, which no longer
+    // conflicts and so never merges again — stops re-asserting our stale copy.
+    const adopted = remoteOwnedSections(remote.sections, serverSectionsRef.current, dirty);
+    remoteSectionsRef.current = { ...remoteSectionsRef.current, ...adopted };
 
     const mergedRecord = merged as unknown as Record<string, unknown>;
     const localRecord = (local ?? {}) as unknown as Record<string, unknown>;
@@ -141,7 +162,7 @@ export function useDraftSave({
       if (value !== undefined) mergedRecord[part] = value;
     }
 
-    return merged;
+    return { merged, adopted };
   }, []);
 
   const persist = useCallback(
@@ -175,9 +196,11 @@ export function useDraftSave({
           (await draftsClient.getDraft({ sessionId, userId: userIdRef.current || "" }));
         if (!remote) throw error;
 
-        const merged = mergeWithRemote(remote, snapshot);
+        const { merged, adopted } = mergeWithRemote(remote, snapshot);
         draftRef.current = merged;
         saved = await attempt(merged, remote.rev);
+        // Hand the adopted text to the editor so it shows what is now stored.
+        if (Object.keys(adopted).length > 0) setRemoteSections(adopted);
         addNotification(
           "info",
           "This draft was also edited in another tab or window. Your changes were merged with the newer version — please review the sections you were not editing."
@@ -190,6 +213,7 @@ export function useDraftSave({
         lastModified: saved.lastModified,
         status: saved.status ?? draftRef.current?.status,
       };
+      if (saved.sections) serverSectionsRef.current = saved.sections;
 
       for (const name of snapshot.dirtySections) dirtySectionsRef.current.delete(name);
       for (const part of snapshot.dirtyParts) dirtyPartsRef.current.delete(part);
@@ -229,7 +253,11 @@ export function useDraftSave({
     (fields: DraftSaveFields, options: SaveOptions = {}) => {
       const parts = Object.keys(fields) as DraftPart[];
       for (const part of parts) dirtyPartsRef.current.add(part);
-      for (const name of options.changedSections || []) dirtySectionsRef.current.add(name);
+      for (const name of options.changedSections || []) {
+        dirtySectionsRef.current.add(name);
+        // This client is editing it again, so it stops deferring to the remote.
+        delete remoteSectionsRef.current[name];
+      }
 
       draftRef.current = { ...(draftRef.current as DocumentDraft), ...fields };
       cacheLocally(fields);
@@ -256,6 +284,9 @@ export function useDraftSave({
     draftRef.current = draft;
     dirtySectionsRef.current = new Set();
     dirtyPartsRef.current = new Set();
+    serverSectionsRef.current = draft?.sections ?? {};
+    remoteSectionsRef.current = {};
+    setRemoteSections(null);
   }, []);
 
   const getDraftSnapshot = useCallback(() => draftRef.current, []);
@@ -264,6 +295,8 @@ export function useDraftSave({
     saveFields,
     setBaseline,
     getDraftSnapshot,
+    /** Sections adopted from another writer during a conflict merge. */
+    remoteSections,
     flush,
     retry,
     saveStatus,
