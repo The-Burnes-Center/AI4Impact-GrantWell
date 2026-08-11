@@ -375,9 +375,9 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
       {isResolved ? (
         <div style={{ marginBottom: "16px" }}>
-          <label className="summary-field__label">
+          <span className="summary-field__label">
             Admin Notes
-          </label>
+          </span>
           {adminNotes ? (
             <div
               style={{
@@ -455,7 +455,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               </p>
               {adminNotes && (
                 <div className="form-group" style={{ marginTop: "16px" }}>
-                  <label className="summary-field__label">Rejection reason:</label>
+                  <span className="summary-field__label">Rejection reason:</span>
                   <div
                     style={{
                       padding: "12px",

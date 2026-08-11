@@ -31,7 +31,7 @@
 
 .analytics__state-select {
   padding: 8px 12px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: 8px;
   background: #fff;
   font-size: 13px;

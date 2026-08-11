@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen, LuMessageSquarePlus, LuCopy, LuListChecks } from "react-icons/lu";
 import type { NOFO } from "../../../common/types/nofo";
 
@@ -49,16 +49,23 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
     }
   }, [isOpen]);
 
+  const closeMenu = useCallback(() => {
+    setIsOpen(false);
+    const trigger = buttonRef.current;
+    if (trigger && document.body.contains(trigger)) {
+      trigger.focus();
+    }
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        closeMenu();
       }
     };
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsOpen(false);
-        buttonRef.current?.focus();
+        closeMenu();
       }
     };
 
@@ -75,7 +82,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, closeMenu]);
 
   const handleMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const items = Array.from(
@@ -123,7 +130,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
           {showEditActions && (
             <>
               <button
-                onClick={() => { onToggleStatus(); setIsOpen(false); }}
+                onClick={() => { onToggleStatus(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
               >
@@ -134,7 +141,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 )}
               </button>
               <button
-                onClick={() => { onEdit(); setIsOpen(false); }}
+                onClick={() => { onEdit(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
               >
@@ -142,7 +149,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 <span>Edit</span>
               </button>
               <button
-                onClick={() => { onEditSummary(); setIsOpen(false); }}
+                onClick={() => { onEditSummary(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
               >
@@ -150,7 +157,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 <span>Edit Summary</span>
               </button>
               <button
-                onClick={() => { onDelete(); setIsOpen(false); }}
+                onClick={() => { onDelete(); closeMenu(); }}
                 className="dropdown-menu-item delete-item"
                 role="menuitem"
               >
@@ -161,7 +168,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
           )}
           {showCustomQuestions && (
             <button
-              onClick={() => { onEditCustomQuestions?.(); setIsOpen(false); }}
+              onClick={() => { onEditCustomQuestions?.(); closeMenu(); }}
               className="dropdown-menu-item"
               role="menuitem"
               title="Add questions applicants answer in the application writer"
@@ -173,7 +180,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
           {showStateActions && (
             <>
               <button
-                onClick={() => { onEditOverlay?.(); setIsOpen(false); }}
+                onClick={() => { onEditOverlay?.(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
                 title="Add guidance shown only to your state's users"
@@ -182,7 +189,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 <span>State guidance</span>
               </button>
               <button
-                onClick={() => { onPromoteToCopy?.(); setIsOpen(false); }}
+                onClick={() => { onPromoteToCopy?.(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
                 title="Create your state's own editable copy of this federal grant"

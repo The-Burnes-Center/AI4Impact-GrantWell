@@ -19,6 +19,9 @@ interface SignUpStepProps {
   onStateChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onSwitchToSignIn: () => void;
+  emailErrorId?: string;
+  passwordErrorId?: string;
+  confirmPasswordErrorId?: string;
 }
 
 export default function SignUpStep({
@@ -36,6 +39,9 @@ export default function SignUpStep({
   onStateChange,
   onSubmit,
   onSwitchToSignIn,
+  emailErrorId,
+  passwordErrorId,
+  confirmPasswordErrorId,
 }: SignUpStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
@@ -55,6 +61,8 @@ export default function SignUpStep({
             required
             className="form-input"
             aria-required="true"
+            aria-invalid={emailErrorId ? true : undefined}
+            aria-describedby={emailErrorId}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -72,7 +80,12 @@ export default function SignUpStep({
             required
             className="form-input"
             aria-required="true"
-            aria-describedby="password-requirements"
+            aria-invalid={passwordErrorId ? true : undefined}
+            aria-describedby={
+              passwordErrorId
+                ? `${passwordErrorId} password-requirements`
+                : "password-requirements"
+            }
           />
           <PasswordRequirementsList
             id="password-requirements"
@@ -94,6 +107,8 @@ export default function SignUpStep({
             required
             className="form-input"
             aria-required="true"
+            aria-invalid={confirmPasswordErrorId ? true : undefined}
+            aria-describedby={confirmPasswordErrorId}
           />
         </Form.Group>
         <Form.Group className="mb-3">

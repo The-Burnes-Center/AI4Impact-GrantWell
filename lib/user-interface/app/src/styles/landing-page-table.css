@@ -37,7 +37,7 @@
 .landing-filter-dropdown {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: 6px;
   font-size: 14px;
   background-color: white;
@@ -101,6 +101,7 @@
   border-bottom: 1px solid #e0e0e0;
   transition: all 0.2s;
   cursor: pointer;
+  position: relative;
 }
 
 .landing-table-row:last-child {
@@ -111,10 +112,38 @@
   background-color: #DFECE0;
 }
 
-.landing-table-row:focus-visible {
-  outline: 3px solid var(--gw-color-primary, #23776C);
-  outline-offset: -3px;
+/* The row itself is not a tab stop; the grant-name button inside it is. Keep the
+   whole-row highlight so the focused row still reads as one unit. */
+.landing-table-row:has(.landing-nofo-name-button:focus-visible) {
   background-color: #DFECE0;
+}
+
+/* Stretched-link pattern: the button is the only control in the row, but its
+   hit area covers the whole row so pointer users keep the large target. */
+.landing-nofo-name-button {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.landing-nofo-name-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.landing-nofo-name-button:disabled {
+  cursor: not-allowed;
+}
+
+.landing-nofo-name-button:focus-visible {
+  outline: 3px solid var(--gw-color-primary, #23776C);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .landing-table-row.archived {
@@ -203,7 +232,7 @@
 .landing-no-data {
   padding: 40px;
   text-align: center;
-  color: #777;
+  color: #5a5a5a;
   font-style: italic;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -343,7 +372,7 @@
 
 .landing-pagination-ellipsis {
   padding: 0 4px;
-  color: #999;
+  color: #5a5a5a;
   font-size: 14px;
 }
 
@@ -570,7 +599,7 @@
   gap: 6px;
   padding: 10px 14px;
   height: 42px;
-  border: 1px solid var(--gw-color-border, #c4d4e2);
+  border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: 6px;
   background-color: var(--gw-color-white, #fff);
   color: var(--gw-color-primary, #23776C);
@@ -594,7 +623,7 @@
 
 /* Pinned grant icon */
 .landing-pinned-icon {
-  color: var(--gw-color-highlight, #c89b14);
+  color: #B45309;
   flex-shrink: 0;
   fill: currentColor;
 }

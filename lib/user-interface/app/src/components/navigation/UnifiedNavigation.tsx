@@ -264,9 +264,9 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
           }}
         >
           {isOpen && (
-            <div style={{ fontWeight: "bold", fontSize: "1.2rem", fontFamily: "'Noto Sans', sans-serif" }}>
+            <h2 style={{ margin: 0, fontWeight: "bold", fontSize: "1.2rem", fontFamily: "'Noto Sans', sans-serif" }}>
               Navigation
-            </div>
+            </h2>
           )}
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -318,8 +318,9 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
         >
           <div>
             {isOpen && (
-              <div
+              <h2
                 style={{
+                  margin: 0,
                   padding: "0 16px 8px 16px",
                   fontSize: "14px",
                   fontWeight: 600,
@@ -330,7 +331,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 }}
               >
                 Menu
-              </div>
+              </h2>
             )}
 
             {/* Home Button */}

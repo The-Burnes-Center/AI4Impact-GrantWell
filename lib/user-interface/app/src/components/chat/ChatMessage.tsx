@@ -330,10 +330,10 @@ function ChatMessage(props: ChatMessageProps) {
                           marginTop: "8px",
                           fontSize: "12px",
                           fontStyle: "italic",
-                          color: "#9ca3af",
+                          color: "#565d6b",
                         }}
                       >
-                        <FaRegStopCircle size={12} />
+                        <FaRegStopCircle size={12} aria-hidden="true" />
                         Response stopped
                       </div>
                     )}

@@ -122,7 +122,7 @@ export default function Playground() {
                 <button
                   className="pg-upload-btn"
                   onClick={() => setUploadModalOpen(true)}
-                  aria-label={`Upload supporting documents${uploadedFileCount > 0 ? `. ${uploadedFileCount} files uploaded.` : ""}`}
+                  aria-label={`Upload Documents — supporting documents for this grant${uploadedFileCount > 0 ? `. ${uploadedFileCount} files uploaded.` : ""}`}
                 >
                   <Upload size={16} aria-hidden="true" /> Upload Documents
                   {uploadedFileCount > 0 && (

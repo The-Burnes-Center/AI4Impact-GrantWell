@@ -5,17 +5,11 @@ import remarkGfm from "remark-gfm";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useHeaderOffset } from "../../hooks/use-header-offset";
+import { useInert } from "../../hooks/use-inert";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
-import type { GrantTypeId } from "../../common/types/nofo";
+import { GRANT_TYPES, type GrantTypeId } from "../../common/types/nofo";
 import "../../styles/checklists.css";
-
-const GRANT_TYPES: Record<string, { label: string; color: string }> = {
-  federal: { label: "Federal", color: "#1a4480" },
-  state: { label: "State", color: "#2b7d3c" },
-  quasi: { label: "Quasi", color: "#5b3f8a" },
-  philanthropic: { label: "Philanthropic", color: "#a04500" },
-};
 
 interface LlmData {
   grantName: string;
@@ -51,6 +45,8 @@ const Checklists: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTabId, setActiveTabId] = useState<TabId>("eligibility");
   const [showHelp, setShowHelp] = useState(false);
+  const inertNavRef = useInert<HTMLElement>(showHelp);
+  const inertMainRef = useInert<HTMLDivElement>(showHelp);
 
   // Show help modal automatically on first visit
   useEffect(() => {
@@ -148,11 +144,11 @@ const Checklists: React.FC = () => {
 
   return (
     <div className="checklist-layout" style={{ minHeight: `calc(100vh - ${topOffset}px)` }}>
-      <nav aria-label="Application navigation" aria-hidden={showHelp} style={{ margin: 0, padding: 0, flexShrink: 0 }}>
+      <nav ref={inertNavRef} aria-label="Application navigation" aria-hidden={showHelp} style={{ margin: 0, padding: 0, flexShrink: 0 }}>
         <UnifiedNavigation documentIdentifier={folderParam} />
       </nav>
 
-      <div className="checklist-main" aria-hidden={showHelp}>
+      <div ref={inertMainRef} className="checklist-main" aria-hidden={showHelp}>
         <div className="checklist-main-container">
           {isLoading ? (
             <div className="checklist-loading" role="status" aria-live="polite">

@@ -7,6 +7,7 @@ interface ForgotPasswordStepProps {
   onEmailChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onBackToSignIn: () => void;
+  emailErrorId?: string;
 }
 
 export default function ForgotPasswordStep({
@@ -15,6 +16,7 @@ export default function ForgotPasswordStep({
   onEmailChange,
   onSubmit,
   onBackToSignIn,
+  emailErrorId,
 }: ForgotPasswordStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
@@ -34,6 +36,8 @@ export default function ForgotPasswordStep({
             required
             className="form-input"
             aria-required="true"
+            aria-invalid={emailErrorId ? true : undefined}
+            aria-describedby={emailErrorId}
           />
         </Form.Group>
         <div className="login-form-actions">
