@@ -41,7 +41,6 @@ export class DraftGenerationStateMachine extends Construct {
     const sectionErrorFallback = new sfn.Pass(this, "SectionErrorFallback", {
       parameters: {
         "sectionName.$": "$.sectionItem.item",
-        "content": "",
         "status": "error",
       },
     });
@@ -78,9 +77,8 @@ export class DraftGenerationStateMachine extends Construct {
       backoffRate: 2,
     });
 
-    // Catch all unhandled errors — route to fallback stub
     generateSection.addCatch(sectionErrorFallback, {
-      resultPath: "$",
+      resultPath: "$.error",
     });
 
     const generateAllSections = new sfn.Map(this, "GenerateAllSections", {
