@@ -134,7 +134,39 @@ const styles = {
     minWidth: "44px",
     minHeight: "44px",
   },
+  timeoutWarning: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    width: "100%",
+    maxWidth: "800px",
+    minWidth: "280px",
+    margin: "0 auto 8px",
+    padding: "10px 14px",
+    borderRadius: "12px",
+    border: "1px solid #b45309",
+    background: "#fffbeb",
+    color: "#7c2d12",
+    fontSize: "14px",
+  },
+  timeoutExtendButton: {
+    marginLeft: "auto",
+    padding: "6px 12px",
+    minHeight: "32px",
+    borderRadius: "8px",
+    border: "1px solid #b45309",
+    background: "white",
+    color: "#7c2d12",
+    fontSize: "14px",
+    fontWeight: 600,
+    cursor: "pointer",
+  },
 };
+
+// WCAG 2.2.1 — the response deadline must be extendable, so warn with enough of the
+// budget left for the user to ask for more time before anything is torn down.
+const RESPONSE_WARN_MS = 40000;
+const RESPONSE_EXTEND_MS = 20000;
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -166,12 +198,21 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   const wsRef = useRef<WebSocket | null>(null);
   const stoppedRef = useRef(false);
   const responseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const responseWarnRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const extendResponseRef = useRef<(() => void) | null>(null);
+  const [responseTimeoutWarning, setResponseTimeoutWarning] = useState(false);
 
   const clearResponseTimeout = () => {
     if (responseTimeoutRef.current) {
       clearTimeout(responseTimeoutRef.current);
       responseTimeoutRef.current = null;
     }
+    if (responseWarnRef.current) {
+      clearTimeout(responseWarnRef.current);
+      responseWarnRef.current = null;
+    }
+    extendResponseRef.current = null;
+    setResponseTimeoutWarning(false);
   };
 
   // Enhanced speech recognition config
@@ -450,22 +491,42 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       let incomingMetadata: boolean = false;
       let sources: Record<string, Array<{ title: string; uri: string }>> = {};
 
-      /**If there is no response after a minute, time out the response to try again. */
+      /**If there is no response in time, warn first and only time out if the user
+       * declines to extend. Any incoming chunk clears both timers. */
+      const armResponseTimeout = () => {
+        responseWarnRef.current = setTimeout(() => {
+          responseWarnRef.current = null;
+          if (receivedData != "") return;
+          setResponseTimeoutWarning(true);
+
+          responseTimeoutRef.current = setTimeout(() => {
+            responseTimeoutRef.current = null;
+            extendResponseRef.current = null;
+            setResponseTimeoutWarning(false);
+            if (receivedData != "") return;
+            ws.close();
+            messageHistoryRef.current.pop();
+            messageHistoryRef.current.push({
+              type: ChatBotMessageType.AI,
+              content: "Response timed out!",
+              metadata: {},
+            });
+            props.setMessageHistory([...messageHistoryRef.current]);
+            props.setRunning(false);
+          }, RESPONSE_EXTEND_MS);
+        }, RESPONSE_WARN_MS);
+      };
+
       clearResponseTimeout();
-      responseTimeoutRef.current = setTimeout(() => {
-        responseTimeoutRef.current = null;
-        if (receivedData == "") {
-          ws.close();
-          messageHistoryRef.current.pop();
-          messageHistoryRef.current.push({
-            type: ChatBotMessageType.AI,
-            content: "Response timed out!",
-            metadata: {},
-          });
-          props.setMessageHistory([...messageHistoryRef.current]);
-          props.setRunning(false);
+      extendResponseRef.current = () => {
+        if (responseTimeoutRef.current) {
+          clearTimeout(responseTimeoutRef.current);
+          responseTimeoutRef.current = null;
         }
-      }, 60000);
+        setResponseTimeoutWarning(false);
+        armResponseTimeout();
+      };
+      armResponseTimeout();
 
       // Event listener for when the connection is open
       ws.addEventListener("open", function open() {
@@ -593,12 +654,27 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   };
 
   return (
-    <div
-      style={{
-        ...styles.inputBorder,
-        ...(isInputFocused ? styles.inputBorderFocused : {}),
-      }}
-    >
+    <>
+      {responseTimeoutWarning && (
+        <div style={styles.timeoutWarning} role="alert">
+          <AlertCircle size={18} aria-hidden="true" />
+          <span>The assistant is taking longer than usual to respond.</span>
+          <button
+            type="button"
+            style={styles.timeoutExtendButton}
+            onClick={() => extendResponseRef.current?.()}
+            aria-label="Keep waiting for the response"
+          >
+            Keep waiting
+          </button>
+        </div>
+      )}
+      <div
+        style={{
+          ...styles.inputBorder,
+          ...(isInputFocused ? styles.inputBorderFocused : {}),
+        }}
+      >
       <label htmlFor="chat-input" className="sr-only">
         Message the GrantWell assistant
       </label>
@@ -761,7 +837,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           <Send size={20} />
         </button>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 
