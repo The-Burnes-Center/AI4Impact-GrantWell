@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Spinner } from "react-bootstrap";
+import { Auth } from "aws-amplify";
 import {
   LuBuilding2,
   LuLandmark,
@@ -10,6 +11,7 @@ import {
 } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
+import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { stateNameFromCode } from "../../common/generated/states";
 import Button from "../ui/Button";
 import "./profile-gate.css";
@@ -75,6 +77,10 @@ export default function ProfileGate({ children }: ProfileGateProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const gating = !checking && needsProfile;
+  // No onEscape: the gate is a hard block, so Escape must not dismiss it.
+  const dialogRef = useFocusTrap<HTMLDivElement>({ isOpen: gating });
+
   useEffect(() => {
     let active = true;
     (async () => {
@@ -107,6 +113,17 @@ export default function ProfileGate({ children }: ProfileGateProps) {
 
   const setField = (key: FieldKey, value: string) =>
     setValues((prev) => ({ ...prev, [key]: value }));
+
+  // The focus trap seals the page chrome off, so the gate has to carry its own way out.
+  const onSignOut = useCallback(async () => {
+    try {
+      await Auth.signOut();
+    } catch (err) {
+      console.error("Error signing out:", err);
+    } finally {
+      window.location.assign("/");
+    }
+  }, []);
 
   const onSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -160,6 +177,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="profile-gate-title"
+      ref={dialogRef}
     >
       <div className="profile-gate__panel">
         <header className="profile-gate__header">
@@ -267,6 +285,15 @@ export default function ProfileGate({ children }: ProfileGateProps) {
               </span>
             </Button>
           </form>
+
+          <button
+            type="button"
+            className="profile-gate__signout"
+            onClick={onSignOut}
+            aria-label="Sign out instead"
+          >
+            Sign out instead
+          </button>
         </div>
       </div>
     </div>

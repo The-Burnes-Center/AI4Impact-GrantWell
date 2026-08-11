@@ -169,6 +169,23 @@
   gap: 8px;
 }
 
+.profile-gate__signout {
+  display: block;
+  margin: 14px auto 0;
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: #5a5a5a;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.profile-gate__signout:hover {
+  color: #1a1a1a;
+}
+
 .profile-gate__loading {
   min-height: 60vh;
   display: flex;
