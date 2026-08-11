@@ -76,6 +76,9 @@
   --gw-color-background-alt: #f8f9fa;
   --gw-color-border: #e2e8f0;
   --gw-color-border-light: #f3f4f6;
+  /* Form-control boundaries only. WCAG 1.4.11 needs 3:1 where the border is the
+     sole boundary of a control; --gw-color-border is 1.23:1 and is decorative. */
+  --gw-color-border-input: #767676;
 
   --gw-color-text: #333333;
   --gw-color-text-secondary: #5a5a5a;

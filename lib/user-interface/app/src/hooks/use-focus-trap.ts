@@ -1,7 +1,17 @@
 import { useEffect, useRef } from "react";
 
-const FOCUSABLE_SELECTOR =
-  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE_SELECTOR = [
+  "button",
+  "[href]",
+  "input",
+  "select",
+  "textarea",
+  '[tabindex]:not([tabindex="-1"])',
+]
+  .map((s) => `${s}:not([disabled]):not([aria-hidden="true"]):not([inert])`)
+  .join(", ");
+
+const trapStack: symbol[] = [];
 
 interface UseFocusTrapOptions {
   /** Whether the focus trap is active */
@@ -29,6 +39,17 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
 }: UseFocusTrapOptions) {
   const containerRef = useRef<T>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const trapId = useRef<symbol>(Symbol("focus-trap"));
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const id = trapId.current;
+    trapStack.push(id);
+    return () => {
+      const i = trapStack.lastIndexOf(id);
+      if (i !== -1) trapStack.splice(i, 1);
+    };
+  }, [isOpen]);
 
   // Save previous focus & auto-focus first focusable element
   useEffect(() => {
@@ -65,6 +86,8 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
     if (!isOpen || !containerRef.current) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (trapStack[trapStack.length - 1] !== trapId.current) return;
+
       if (e.key === "Escape" && onEscape) {
         onEscape();
         return;

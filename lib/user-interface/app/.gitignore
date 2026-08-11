@@ -40,6 +40,11 @@ Thumbs.db
 coverage/
 *.lcov
 
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
 # ESLint / Prettier cache
 .eslintcache
 .stylelintcache

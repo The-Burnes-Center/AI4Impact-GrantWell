@@ -14,6 +14,8 @@ interface ResetPasswordStepProps {
   onShowPasswordChange: (checked: boolean) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onBackToSignIn: () => void;
+  verificationCodeErrorId?: string;
+  newPasswordErrorId?: string;
 }
 
 export default function ResetPasswordStep({
@@ -27,6 +29,8 @@ export default function ResetPasswordStep({
   onShowPasswordChange,
   onSubmit,
   onBackToSignIn,
+  verificationCodeErrorId,
+  newPasswordErrorId,
 }: ResetPasswordStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
@@ -47,6 +51,8 @@ export default function ResetPasswordStep({
             inputMode="numeric"
             autoComplete="one-time-code"
             aria-required="true"
+            aria-invalid={verificationCodeErrorId ? true : undefined}
+            aria-describedby={verificationCodeErrorId}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -64,7 +70,12 @@ export default function ResetPasswordStep({
             required
             className="form-input"
             aria-required="true"
-            aria-describedby="reset-password-requirements"
+            aria-invalid={newPasswordErrorId ? true : undefined}
+            aria-describedby={
+              newPasswordErrorId
+                ? `${newPasswordErrorId} reset-password-requirements`
+                : "reset-password-requirements"
+            }
           />
           <PasswordRequirementsList
             id="reset-password-requirements"

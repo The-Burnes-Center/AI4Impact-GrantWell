@@ -37,7 +37,7 @@ const styles = {
     gap: "16px",
   },
   inputBorder: {
-    border: "2px solid #9ca3af",
+    border: "2px solid #767676",
     borderRadius: "16px",
     overflow: "hidden",
     backgroundColor: "white",
@@ -165,6 +165,14 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   // Active WebSocket — kept in a ref so the Stop button can close it.
   const wsRef = useRef<WebSocket | null>(null);
   const stoppedRef = useRef(false);
+  const responseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearResponseTimeout = () => {
+    if (responseTimeoutRef.current) {
+      clearTimeout(responseTimeoutRef.current);
+      responseTimeoutRef.current = null;
+    }
+  };
 
   // Enhanced speech recognition config
   const {
@@ -246,6 +254,12 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   }, [listening]);
 
   useEffect(() => {
+    return () => {
+      clearResponseTimeout();
+    };
+  }, []);
+
+  useEffect(() => {
     const messageArea = props.messageAreaRef?.current;
     if (!messageArea) return;
 
@@ -297,6 +311,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
 
   const handleStopGeneration = async () => {
     stoppedRef.current = true;
+    clearResponseTimeout();
     if (wsRef.current) {
       try {
         wsRef.current.close();
@@ -436,7 +451,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       let sources: Record<string, Array<{ title: string; uri: string }>> = {};
 
       /**If there is no response after a minute, time out the response to try again. */
-      setTimeout(() => {
+      clearResponseTimeout();
+      responseTimeoutRef.current = setTimeout(() => {
+        responseTimeoutRef.current = null;
         if (receivedData == "") {
           ws.close();
           messageHistoryRef.current.pop();
@@ -470,6 +487,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener("message", async function incoming(data) {
+        clearResponseTimeout();
         if (stoppedRef.current) return;
         if (typeof data.data === "string" && data.data.startsWith("<!ACCESS_DENIED!>")) {
           try {

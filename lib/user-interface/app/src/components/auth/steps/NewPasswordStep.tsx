@@ -12,6 +12,7 @@ interface NewPasswordStepProps {
   onShowPasswordChange: (checked: boolean) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onCancel: () => void;
+  newPasswordErrorId?: string;
 }
 
 export default function NewPasswordStep({
@@ -23,6 +24,7 @@ export default function NewPasswordStep({
   onShowPasswordChange,
   onSubmit,
   onCancel,
+  newPasswordErrorId,
 }: NewPasswordStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
@@ -42,7 +44,12 @@ export default function NewPasswordStep({
             required
             className="form-input"
             aria-required="true"
-            aria-describedby="new-password-requirements"
+            aria-invalid={newPasswordErrorId ? true : undefined}
+            aria-describedby={
+              newPasswordErrorId
+                ? `${newPasswordErrorId} new-password-requirements`
+                : "new-password-requirements"
+            }
           />
           <PasswordRequirementsList
             id="new-password-requirements"

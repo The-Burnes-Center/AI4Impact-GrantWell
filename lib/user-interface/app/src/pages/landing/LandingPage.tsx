@@ -43,7 +43,7 @@ export default function LandingPage() {
     <div className="marketing">
       <OmniHeader />
 
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
       <section className="marketing__hero" aria-labelledby="hero-title">
         <div className="marketing__hero-bg" aria-hidden="true" />
         <LandingNavbar />

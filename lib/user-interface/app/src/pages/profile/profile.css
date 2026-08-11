@@ -81,7 +81,7 @@
   min-width: 0;
   max-width: 320px;
   padding: var(--gw-space-xs, 6px) var(--gw-space-sm, 8px);
-  border: 1px solid var(--gw-color-border, #e2e8f0);
+  border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: var(--gw-radius-md, 6px);
   font-size: var(--gw-font-size-sm, 14px);
 }

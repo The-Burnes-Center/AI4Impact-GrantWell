@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
-import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
+import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar, LuCheck } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { Utils } from "../../common/utils";
 import { DraftStatus } from "../../common/api-client/drafts-client";
@@ -259,9 +259,11 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             <button
               className="action-button invite-button"
               onClick={onToggleShowAllNOFOs}
-              aria-label={showAllNOFOs ? "Show Current NOFO Only — hide drafts for other NOFOs" : "Show All NOFOs — include drafts for other NOFOs"}
+              aria-label="Show All NOFOs — include drafts for other NOFOs"
+              aria-pressed={showAllNOFOs}
             >
-              {showAllNOFOs ? "Show Current NOFO Only" : "Show All NOFOs"}
+              {showAllNOFOs && <LuCheck size={16} className="button-icon" aria-hidden="true" />}
+              <span>Show All NOFOs</span>
             </button>
           )}
           <button
@@ -269,7 +271,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             onClick={() => setShowModalDelete(true)}
             disabled={selectedItems.length === 0}
             style={{
-              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#e74c3c",
+              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#cd0d0d",
               color: selectedItems.length === 0 ? "#9ca3af" : "white",
               cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
             }}

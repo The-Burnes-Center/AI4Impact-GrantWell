@@ -12,6 +12,8 @@ interface SignInStepProps {
   onForgotPassword: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onSwitchToSignUp: () => void;
+  emailErrorId?: string;
+  passwordErrorId?: string;
 }
 
 export default function SignInStep({
@@ -25,6 +27,8 @@ export default function SignInStep({
   onForgotPassword,
   onSubmit,
   onSwitchToSignUp,
+  emailErrorId,
+  passwordErrorId,
 }: SignInStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
@@ -44,6 +48,8 @@ export default function SignInStep({
             required
             className="form-input"
             aria-required="true"
+            aria-invalid={emailErrorId ? true : undefined}
+            aria-describedby={emailErrorId}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -61,6 +67,8 @@ export default function SignInStep({
             required
             className="form-input"
             aria-required="true"
+            aria-invalid={passwordErrorId ? true : undefined}
+            aria-describedby={passwordErrorId}
           />
         </Form.Group>
         <div className="login-form-options">

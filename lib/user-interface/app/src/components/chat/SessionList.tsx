@@ -198,7 +198,7 @@ export default function Sessions(props: SessionsProps) {
             onClick={() => setShowModalDelete(true)}
             disabled={selectedItems.length === 0}
             style={{
-              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#e74c3c",
+              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#cd0d0d",
               color: selectedItems.length === 0 ? "#9ca3af" : "white",
               cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
             }}

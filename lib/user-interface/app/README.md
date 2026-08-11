@@ -89,14 +89,13 @@ npm run dev
 ### Component Hierarchy
 
 ```
-App
-├── BaseAppLayout (navigation, header)
-│   ├── UnifiedNavigation (sidebar navigation)
-│   ├── MDSHeader (top header bar)
+AppConfigured (global chrome: OmniHeader, AppNavbar, LandingFooter)
+├── App (authenticated routes)
+│   ├── UnifiedNavigation
 │   └── Page Content
 │       ├── Dashboard
 │       ├── DocumentEditor
-│       ├── Chatbot
+│       ├── Chatbot (layouts/ChatLayout, whose default export is named BaseAppLayout)
 │       └── ...
 └── Auth Pages (unauthenticated routes)
 ```
