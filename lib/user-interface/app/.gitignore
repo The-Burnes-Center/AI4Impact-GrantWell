@@ -36,15 +36,6 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
-# Test coverage
-coverage/
-*.lcov
-
-playwright-report/
-test-results/
-blob-report/
-.playwright/
-
 # ESLint / Prettier cache
 .eslintcache
 .stylelintcache

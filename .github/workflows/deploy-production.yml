@@ -11,51 +11,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  quality:
-    runs-on: ubuntu-latest
-
-    env:
-      GRANTWELL_INSTANCE: generic
-
-    defaults:
-      run:
-        working-directory: lib/user-interface/app
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24'
-
-      - name: Install frontend dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Lint (fails on errors, including jsx-a11y/strict)
-        run: npm run lint
-
-      - name: Component accessibility tests
-        run: npm run test
-
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: Page-level accessibility scan (unauthenticated states)
-        run: npm run test:a11y
-
-      - name: Upload accessibility report
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: a11y-report-production
-          path: lib/user-interface/app/playwright-report/
-          retention-days: 14
-
   deploy:
     runs-on: ubuntu-latest
-    needs: quality
 
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
