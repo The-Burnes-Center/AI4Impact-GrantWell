@@ -11,6 +11,7 @@ import {
   Undo2,
 } from "lucide-react";
 import SectionsSidebar from "./components/SectionsSidebar";
+import { useNotifications } from "../../components/notifications/NotificationManager";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
 import VersionHistoryPanel from "../../components/document-editor/VersionHistoryPanel";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
@@ -62,6 +63,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [undoCandidate, setUndoCandidate] = useState<DraftVersionMeta | null>(null);
   const [undoConfirmOpen, setUndoConfirmOpen] = useState(false);
   const apiClient = useApiClient();
+  const { addNotification } = useNotifications();
   const { saveFields, flush, saveStatus, retry } = draftSave;
 
   // Load sections from NOFO summary API
@@ -391,13 +393,23 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }
     try {
       const versions = await apiClient.drafts.listVersions({ sessionId });
+      const aiIndex = versions.findIndex(
+        (version) =>
+          (version.source === "ai_regenerated" || version.source === "ai_generated") &&
+          (version.changed_sections || []).includes(section.name)
+      );
+      // A version now holds the state its write produced, so the text the AI
+      // overwrote is the next row down — and only rows that actually have text
+      // for this section are worth offering.
       setUndoCandidate(
-        versions.find(
-          (version) =>
-            !version.oversize &&
-            (version.source === "ai_regenerated" || version.source === "ai_generated") &&
-            (version.changed_sections || []).includes(section.name)
-        ) || null
+        (aiIndex === -1
+          ? undefined
+          : versions
+              .slice(aiIndex + 1)
+              .find(
+                (version) =>
+                  !version.oversize && (version.section_word_counts?.[section.name] ?? 0) > 0
+              )) || null
       );
     } catch (error) {
       console.warn("Could not check for an undoable generation:", error);
@@ -422,6 +434,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       await refreshUndoCandidate();
     } catch (error) {
       console.error("Error undoing generation:", error);
+      addNotification(
+        "error",
+        error instanceof Error ? error.message : "That earlier text could not be restored."
+      );
     } finally {
       setUndoConfirmOpen(false);
     }
@@ -717,6 +733,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         sessionId={sessionId}
         activeSectionName={activeSectionName}
         currentSections={sectionAnswers}
+        currentRev={draftSave.getDraftSnapshot()?.rev}
         onRestored={async () => {
           await reloadAfterRestore();
           await refreshUndoCandidate();
@@ -759,7 +776,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         title="Undo AI rewrite"
         confirmLabel="Restore my earlier text"
         message={`This puts back the "${activeSectionName}" text from before the AI wrote over it. Other sections are left alone.`}
-        warning="Your current text is saved as a version first, so you can redo this."
+        warning="Your current text is already kept as a version, so you can redo this."
       />
     </div>
   );

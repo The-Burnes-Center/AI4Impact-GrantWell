@@ -58,14 +58,14 @@ export class DraftConflictError extends Error {
 }
 
 /**
- * One snapshot's metadata. `rev` holds the content as of that draft revision,
- * and `source` is the write that superseded it — so a row with source
- * `ai_regenerated` is the text from *before* that regeneration.
+ * One snapshot's metadata. `rev` holds the content as of that draft revision and
+ * `source` is the write that produced it — so a row with source `ai_regenerated`
+ * is the text the AI wrote, not the text it replaced.
  */
 export interface DraftVersionMeta {
   rev: number;
   created_at: string;
-  source?: DraftWriteSource | 'manual_snapshot';
+  source?: DraftWriteSource | 'manual_snapshot' | 'initial';
   label?: string;
   changed_sections?: string[];
   section_word_counts?: Record<string, number>;

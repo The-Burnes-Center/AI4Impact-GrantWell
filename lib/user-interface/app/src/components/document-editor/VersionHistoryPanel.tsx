@@ -11,14 +11,15 @@ import ConfirmationModal from "../common/ConfirmationModal";
 import VersionDiff from "./VersionDiff";
 import type { DraftVersionDetail, DraftVersionMeta } from "../../common/api-client/drafts-client";
 
-/** A row's source is the write that replaced it, hence "Before ...". */
+/** A row's source is the write that produced its content. */
 const SOURCE_LABELS: Record<string, string> = {
-  autosave: "Before autosave",
-  ai_generated: "Before AI generation",
-  ai_regenerated: "Before AI rewrite",
-  manual: "Before manual save",
-  restore: "Before restore",
-  status_change: "Before step change",
+  initial: "Blank draft",
+  autosave: "Your edit",
+  manual: "Your edit",
+  ai_generated: "AI generated",
+  ai_regenerated: "AI rewrite",
+  restore: "Restored version",
+  status_change: "Step change",
   manual_snapshot: "Saved version",
 };
 
@@ -28,6 +29,8 @@ interface VersionHistoryPanelProps {
   sessionId: string;
   activeSectionName?: string;
   currentSections: Record<string, string>;
+  /** Marks the row that is already the live draft, which cannot be restored onto itself. */
+  currentRev?: number;
   onRestored: () => Promise<void> | void;
 }
 
@@ -39,6 +42,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
   sessionId,
   activeSectionName,
   currentSections,
+  currentRev,
   onRestored,
 }) => {
   const apiClient = useApiClient();
@@ -119,7 +123,9 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
       setSelected(null);
     } catch (err) {
       console.error("Restore failed:", err);
-      setError("That version could not be restored.");
+      // The server explains refusals precisely (empty version, missing section);
+      // a generic message here would hide the reason.
+      setError(err instanceof Error ? err.message : "That version could not be restored.");
     } finally {
       setRestoring(false);
       setRestoreScope(null);
@@ -146,6 +152,14 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
 
   const previousText = activeSectionName ? selected?.content?.sections?.[activeSectionName] ?? "" : "";
   const currentText = activeSectionName ? currentSections?.[activeSectionName] ?? "" : "";
+
+  const snapshotSections = selected?.content?.sections ?? {};
+  const versionHasText = Object.values(snapshotSections).some(Boolean);
+  const draftHasText = Object.values(currentSections || {}).some(Boolean);
+  const canRestoreSection = Boolean(activeSectionName && snapshotSections[activeSectionName]);
+  // Blocked rather than merely warned about: this snapshot predates the draft's text.
+  const wouldEraseDraft = draftHasText && !versionHasText;
+  const isCurrent = selected != null && selected.rev === currentRev;
 
   return (
     <>
@@ -193,7 +207,9 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                       {DateTime.fromISO(version.created_at).toRelative() || version.created_at}
                     </span>
                     <span className="vh-badge">
-                      {SOURCE_LABELS[version.source || ""] || "Earlier version"}
+                      {version.rev === currentRev
+                        ? "Current draft"
+                        : SOURCE_LABELS[version.source || ""] || "Earlier version"}
                     </span>
                     {version.label && (
                       <span className="vh-label">
@@ -208,11 +224,13 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                     <span className="vh-row-meta">
                       {version.oversize
                         ? "Too large to store — cannot be restored"
-                        : delta === 0
-                          ? "Same length as now"
-                          : delta > 0
-                            ? `${delta} words more than now`
-                            : `${Math.abs(delta)} words fewer than now`}
+                        : (version.total_word_count ?? 0) === 0
+                          ? "No narrative text in this version"
+                          : delta === 0
+                            ? "Same length as now"
+                            : delta > 0
+                              ? `${delta} words more than now`
+                              : `${Math.abs(delta)} words fewer than now`}
                     </span>
                   </button>
                 </li>
@@ -248,16 +266,45 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
               <button type="button" className="vh-btn" onClick={handleLabel}>Save label</button>
             </div>
 
-            <div className="vh-actions">
-              {activeSectionName && (
-                <button type="button" className="vh-btn vh-btn--primary" onClick={() => setRestoreScope("section")}>
-                  Restore this section only
-                </button>
-              )}
-              <button type="button" className="vh-btn" onClick={() => setRestoreScope("all")}>
-                Restore whole draft
-              </button>
-            </div>
+            {isCurrent ? (
+              <p className="vh-status">This is your draft as it stands now, so there is nothing to restore.</p>
+            ) : (
+              <>
+                {!versionHasText && (
+                  <p className="vh-status">
+                    This version was saved before any narrative text existed.
+                    {draftHasText ? " Restoring it would erase your sections, so it is disabled." : ""}
+                  </p>
+                )}
+                {versionHasText && activeSectionName && !canRestoreSection && (
+                  <p className="vh-status">
+                    This version has no saved text for &quot;{activeSectionName}&quot;. You can still
+                    restore the sections it does contain.
+                  </p>
+                )}
+
+                <div className="vh-actions">
+                  {activeSectionName && (
+                    <button
+                      type="button"
+                      className="vh-btn vh-btn--primary"
+                      onClick={() => setRestoreScope("section")}
+                      disabled={!canRestoreSection}
+                    >
+                      Restore this section only
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="vh-btn"
+                    onClick={() => setRestoreScope("all")}
+                    disabled={wouldEraseDraft}
+                  >
+                    Restore whole draft
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -274,7 +321,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
             ? `This replaces your current "${activeSectionName}" text with the version you are viewing. Other sections are left alone.`
             : "This replaces every section, plus your project basics and questionnaire answers, with the version you are viewing."
         }
-        warning="Your current text is saved as a version first, so this can be undone."
+        warning="Your current text is already kept as a version, so this can be undone."
       />
     </>
   );

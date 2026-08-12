@@ -2,11 +2,12 @@
 Shape, codec and retention rules for draft version snapshots.
 
 Invariant, relied on by both writers and the UI: version row `rev = N` holds the
-draft content as it stood at draft revision N — that is, immediately *before* the
-write that produced revision N+1. `source` names that superseding write, which is
-why the panel reads a row as "before AI regeneration" rather than
-"AI regeneration", and why restoring the newest `ai_regenerated` row undoes a
-regeneration.
+draft content as it stood at draft revision N, and `source` names the write that
+*produced* that state. So an `ai_generated` row is the text the AI wrote, and
+restoring a row gives you exactly the content the panel previewed.
+
+Undoing a generation therefore means restoring the row immediately *below* the
+`ai_generated` row, not the row itself.
 
 Bodies are gzipped JSON stored inline on the version item. Everything goes
 through compress_body/decompress_body so the store can move to S3 later without

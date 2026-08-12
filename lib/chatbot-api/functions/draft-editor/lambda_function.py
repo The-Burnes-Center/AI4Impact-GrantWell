@@ -606,8 +606,8 @@ def get_draft_version(session_id, user_id, rev):
 
 def restore_draft_version(session_id, user_id, rev, sections_only=None):
     """Write a past snapshot back onto the draft. This is an ordinary draft
-    write, so the stream consumer snapshots the pre-restore state and the
-    restore is itself undoable."""
+    write, so it gets its own version row and the state it replaced is already
+    one — a restore is itself undoable in both directions."""
     if not _version_table:
         return _version_unavailable()
 
@@ -635,21 +635,31 @@ def restore_draft_version(session_id, user_id, rev, sections_only=None):
 
     snapshot_sections = snapshot.get('sections') or {}
 
-    if sections_only:
-        try:
-            current = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item") or {}
-        except ClientError as error:
-            print(f"Caught error: could not read draft for partial restore - {error}")
-            return _json_response(500, {'error': 'Failed to read draft'})
+    try:
+        current = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item") or {}
+    except ClientError as error:
+        print(f"Caught error: could not read draft for restore - {error}")
+        return _json_response(500, {'error': 'Failed to read draft'})
 
-        merged = dict(current.get('sections') or {})
-        restored = []
-        for name in sections_only:
-            if name in snapshot_sections:
-                merged[name] = snapshot_sections[name]
-                restored.append(name)
+    current_sections = current.get('sections') or {}
+
+    if sections_only:
+        # A section stored as empty is not a restore candidate: writing it back
+        # erases the user's text under the guise of recovering it.
+        restored = [name for name in sections_only if snapshot_sections.get(name)]
         if not restored:
-            return _json_response(404, {'error': 'None of the requested sections exist in that version'})
+            named = ', '.join(f'"{name}"' for name in sections_only)
+            return _json_response(422, {
+                'error': 'section_not_in_version',
+                'message': (
+                    f'This version has no saved text for {named}, so there is nothing to '
+                    'restore. Choose a version created after that section was written.'
+                ),
+            })
+
+        merged = dict(current_sections)
+        for name in restored:
+            merged[name] = snapshot_sections[name]
         result = update_draft(
             session_id=session_id,
             user_id=user_id,
@@ -658,7 +668,19 @@ def restore_draft_version(session_id, user_id, rev, sections_only=None):
             last_write_source='restore',
         )
     else:
-        restored = sorted(snapshot_sections.keys())
+        # Restoring a snapshot taken before any narrative existed would erase the
+        # whole draft, which is never what "restore" is asked to mean.
+        if any(current_sections.values()) and not any(snapshot_sections.values()):
+            return _json_response(422, {
+                'error': 'empty_version',
+                'message': (
+                    'This version was saved before any narrative text existed, so restoring '
+                    'it would erase every section of your draft. Choose a version that has '
+                    'content.'
+                ),
+            })
+
+        restored = sorted(name for name, text in snapshot_sections.items() if text)
         result = update_draft(
             session_id=session_id,
             user_id=user_id,
