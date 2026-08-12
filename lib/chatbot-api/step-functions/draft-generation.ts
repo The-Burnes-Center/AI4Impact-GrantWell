@@ -4,11 +4,13 @@ import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import * as tasks from "aws-cdk-lib/aws-stepfunctions-tasks";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
+import { ITable } from "aws-cdk-lib/aws-dynamodb";
 
 export interface DraftGenerationStateMachineProps {
   prepareFunction: lambda.Function;
   generateSectionFunction: lambda.Function;
   assembleFunction: lambda.Function;
+  draftGenerationJobsTable: ITable;
 }
 
 export class DraftGenerationStateMachine extends Construct {
@@ -116,13 +118,44 @@ export class DraftGenerationStateMachine extends Construct {
     });
 
     // ── Top-level error handler ─────────────────────────────────────
-    // If Prepare or Assemble fails catastrophically, mark the job as error
-    const handlePipelineError = new sfn.Pass(this, "HandlePipelineError", {
-      parameters: {
-        "error": "Draft generation pipeline failed",
-        "cause.$": "$.error.Cause",
+    // If Prepare or Assemble fails catastrophically, mark the job as error.
+    // This has to be a real write: a Pass state here left the row on
+    // "in_progress" forever, so the editor polled a job that would never finish
+    // and the user watched a spinner with no way to tell it had died.
+    const markJobFailed = new tasks.DynamoUpdateItem(this, "MarkJobFailed", {
+      table: props.draftGenerationJobsTable,
+      key: {
+        jobId: tasks.DynamoAttributeValue.fromString(
+          sfn.JsonPath.stringAt("$.jobId")
+        ),
       },
+      updateExpression:
+        "SET #status = :status, #error = :error, #completedAt = :completedAt",
+      expressionAttributeNames: {
+        "#status": "status",
+        "#error": "error",
+        "#completedAt": "completedAt",
+      },
+      expressionAttributeValues: {
+        ":status": tasks.DynamoAttributeValue.fromString("error"),
+        ":error": tasks.DynamoAttributeValue.fromString(
+          sfn.JsonPath.stringAt("$.error.Cause")
+        ),
+        ":completedAt": tasks.DynamoAttributeValue.fromString(
+          sfn.JsonPath.stringAt("$$.State.EnteredTime")
+        ),
+      },
+      resultPath: sfn.JsonPath.DISCARD,
     });
+
+    // Surface the failure to Step Functions too — reporting SUCCEEDED for a dead
+    // pipeline meant no alarm could ever fire on it.
+    const pipelineFailed = new sfn.Fail(this, "PipelineFailed", {
+      error: "DraftGenerationFailed",
+      cause: "Draft generation pipeline failed; job marked as error.",
+    });
+
+    const handlePipelineError = markJobFailed.next(pipelineFailed);
 
     // ── Chain ───────────────────────────────────────────────────────
     const definition = prepareSections

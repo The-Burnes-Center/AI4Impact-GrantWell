@@ -7,7 +7,7 @@ export const stepToStatus = (step: string): DraftStatus => {
   const stepMap: Record<string, string> = {
     projectBasics: "project_basics",
     questionnaire: "questionnaire",
-    uploadDocuments: "questionnaire",
+    uploadDocuments: "uploading_documents",
     sectionEditor: "editing_sections",
     reviewApplication: "editing_sections",
   };

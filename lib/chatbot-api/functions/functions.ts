@@ -1489,6 +1489,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         prepareFunction: draftPrepareFunction,
         generateSectionFunction: draftGenerateSectionFunction,
         assembleFunction: draftAssembleFunction,
+        draftGenerationJobsTable: props.draftGenerationJobsTable,
       }
     );
 
