@@ -24,6 +24,7 @@ import { Construct } from "constructs";
 import { OpenSearchStack } from "./opensearch/opensearch";
 import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
 import { SUPPORTED_STATES } from "../shared/states";
 
@@ -31,6 +32,10 @@ import { SUPPORTED_STATES } from "../shared/states";
 const SUPPORTED_STATES_ENV: string = JSON.stringify(
   SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
 );
+
+// See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
+// still resolves to platform-wide. Flip both to "false" only after migrating every pool.
+const LEGACY_STATELESS_ADMIN_IS_PLATFORM = "true";
 
 export interface ChatbotAPIProps {
   readonly authentication: AuthorizationStack;
@@ -65,12 +70,16 @@ export class ChatBotApi extends Construct {
       wsApiEndpoint: websocketBackend.wsAPIStage.url,
       sessionTable: tables.historyTable,
       draftTable: tables.draftTable,
+      draftVersionTable: tables.draftVersionTable,
       nofoMetadataTable: tables.nofoMetadataTable,
       nofoProcessingReviewTable: tables.nofoProcessingReviewTable,
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
       featureRolloutTable: tables.featureRolloutTable,
       userNotificationPrefsTable: tables.userNotificationPrefsTable,
+      digestSendLogTable: tables.digestSendLogTable,
+      digestSuppressionTable: tables.digestSuppressionTable,
       nofoStateOverlayTable: tables.nofoStateOverlayTable,
+      analyticsTable: tables.analyticsTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
@@ -355,7 +364,7 @@ export class ChatBotApi extends Construct {
     // Add REST API route for draft generation
     // Create a dedicated API function that starts jobs asynchronously
     const draftGeneratorAPIFunction = new lambda.Function(this, "DraftGeneratorAPIFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "gateway/api-routes/draft-generation")
       ),
@@ -365,8 +374,10 @@ export class ChatBotApi extends Construct {
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
         NOFO_METADATA_TABLE_NAME: tables.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
+      logRetention: logs.RetentionDays.THREE_MONTHS,
     });
 
     // Grant permission to start Step Functions execution
@@ -391,7 +402,7 @@ export class ChatBotApi extends Construct {
 
     // Add REST API route for draft generation job status polling
     const draftJobStatusFunction = new lambda.Function(this, "DraftJobStatusFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "gateway/api-routes/draft-job-status")
       ),
@@ -400,6 +411,7 @@ export class ChatBotApi extends Construct {
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
       },
       timeout: cdk.Duration.seconds(10),
+      logRetention: logs.RetentionDays.THREE_MONTHS,
     });
     tables.draftGenerationJobsTable.grantReadData(draftJobStatusFunction);
     
@@ -415,7 +427,7 @@ export class ChatBotApi extends Construct {
     });
 
     const manageUsersFunction = new lambda.Function(this, "ManageUsersFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "functions/user-management/users")
       ),
@@ -423,6 +435,7 @@ export class ChatBotApi extends Construct {
       environment: {
         USER_POOL_ID: props.authentication.userPool.userPoolId,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30),
     });
@@ -460,7 +473,7 @@ export class ChatBotApi extends Construct {
     });
 
     const featureRolloutFunction = new lambda.Function(this, "FeatureRolloutFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "functions/user-management/feature-rollouts")
       ),
@@ -506,7 +519,7 @@ export class ChatBotApi extends Construct {
 
     // Per-user notification preferences (self-service; scoped to the caller by JWT sub).
     const notificationPrefsFunction = new lambda.Function(this, "NotificationPrefsFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
         path.join(__dirname, "functions/user-management/notification-prefs")
       ),
@@ -530,7 +543,33 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-    // Developer-only: render the real digest template with sample data (no send).
+    // Self-service user profile (agency/org/title) — drives the profile-completion gate and
+    // last-activity tracking for the analytics dashboard.
+    const userProfileIntegration = new HttpLambdaIntegration(
+      "UserProfileIntegration",
+      lambdaFunctions.userProfileFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/user-profile",
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT],
+      integration: userProfileIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Admin analytics dashboard (read-only aggregations). Admin-gated inside the Lambda.
+    const analyticsIntegration = new HttpLambdaIntegration(
+      "AnalyticsIntegration",
+      lambdaFunctions.analyticsFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/admin/analytics",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: analyticsIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    // Developer-only: render the real digest template against real data (the caller's prefs and the
+    // live active NOFO pool); POST can also send the rendered digest to the caller as a test.
     // The function is defined in LambdaFunctionStack so it shares that stack's
     // js-shared layer (avoids a cross-stack layer reference).
     const notificationDigestPreviewIntegration = new HttpLambdaIntegration(
@@ -544,7 +583,19 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
 
-const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
+    // Developer-only: fire the real digest on demand (scope=me → caller, scope=all → everyone).
+    const notificationDigestBroadcastIntegration = new HttpLambdaIntegration(
+      "NotificationDigestBroadcastIntegration",
+      lambdaFunctions.notificationDigestBroadcastFunction
+    );
+    restBackend.restAPI.addRoutes({
+      path: "/notification-digest/broadcast",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: notificationDigestBroadcastIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
       "NotificationUnsubscribeIntegration",
       lambdaFunctions.notificationUnsubscribeFunction
     );
@@ -554,6 +605,10 @@ const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
       integration: notificationUnsubscribeIntegration,
     });
 
+    // Still the raw execute-api host, which doesn't match the From domain. Branding it needs a
+    // `/unsubscribe*` behavior on the app's CloudFront distribution, but that is built by
+    // UserInterface after (and from) ChatBotApi and exposes no handle upward, so it has to be added
+    // in lib/user-interface/generate-app.ts before this can use emailConfig.deploymentUrl.
     lambdaFunctions.notificationDigestFunction.addEnvironment(
       "UNSUBSCRIBE_URL_BASE",
       `${restBackend.restAPI.apiEndpoint}/unsubscribe`

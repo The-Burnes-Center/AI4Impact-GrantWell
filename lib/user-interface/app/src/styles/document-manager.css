@@ -779,7 +779,7 @@
 .dm-search-input {
   width: 100%;
   padding: 6px 10px 6px 30px;
-  border: 1px solid var(--gw-color-border, #e2e8f0);
+  border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: 6px;
   font-size: var(--gw-font-size-sm, 13px);
   background: var(--gw-color-white, #ffffff);

@@ -36,10 +36,6 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
-# Test coverage
-coverage/
-*.lcov
-
 # ESLint / Prettier cache
 .eslintcache
 .stylelintcache

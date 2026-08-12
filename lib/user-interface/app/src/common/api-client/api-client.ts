@@ -6,6 +6,8 @@ import { LandingPageClient } from "./landing-page-clients";
 import { UserManagementClient } from "./user-management-client";
 import { DraftsClient } from "./drafts-client";
 import { NotificationsClient } from "./notifications-client";
+import { AnalyticsClient } from "./analytics-client";
+import { UserProfileClient } from "./user-profile-client";
 
 export class ApiClient {
   private _sessionsClient: SessionsClient | undefined;
@@ -15,6 +17,8 @@ export class ApiClient {
   private _userManagementClient: UserManagementClient | undefined;
   private _draftsClient: DraftsClient | undefined;
   private _notificationsClient: NotificationsClient | undefined;
+  private _analyticsClient: AnalyticsClient | undefined;
+  private _userProfileClient: UserProfileClient | undefined;
 
   public get userDocuments() {
     if (!this._userDocumentsClient) {
@@ -63,6 +67,20 @@ export class ApiClient {
       this._notificationsClient = new NotificationsClient(this._appConfig);
     }
     return this._notificationsClient;
+  }
+
+  public get analytics() {
+    if (!this._analyticsClient) {
+      this._analyticsClient = new AnalyticsClient(this._appConfig);
+    }
+    return this._analyticsClient;
+  }
+
+  public get userProfile() {
+    if (!this._userProfileClient) {
+      this._userProfileClient = new UserProfileClient(this._appConfig);
+    }
+    return this._userProfileClient;
   }
 
   constructor(protected _appConfig: AppConfig) {}

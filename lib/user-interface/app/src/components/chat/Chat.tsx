@@ -111,7 +111,6 @@ const styles: Record<string, React.CSSProperties> = {
     transition: "all 0.2s ease",
     opacity: 0,
     pointerEvents: "none",
-    outline: "none", // Remove default browser outline
     WebkitAppearance: "none", // Remove webkit default styling
     MozAppearance: "none", // Remove Firefox default styling
   },

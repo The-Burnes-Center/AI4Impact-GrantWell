@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useId, useMemo, useRef } from "react";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
@@ -11,6 +11,7 @@ import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import ProcessingTab from "./components/ProcessingTab";
 import DigestPreviewTab from "./components/DigestPreviewTab";
+import AnalyticsTab from "./components/AnalyticsTab";
 import {
   LuSearch, LuFilter, LuUpload, LuCheck, LuX,
   LuRefreshCw, LuDownload, LuInfo, LuLoader, LuArrowRight,
@@ -20,8 +21,12 @@ import type { NOFO, GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
 import "../../styles/dashboard.css";
 
+const STATUS_FILTERS = ["all", "active", "archived"] as const;
+const GRANT_TYPE_FILTERS = ["all", "federal", "state", "quasi", "philanthropic"] as const;
+const FILTER_ITEM_COUNT = STATUS_FILTERS.length + GRANT_TYPE_FILTERS.length;
+
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
    const [grantsSegment, setGrantsSegment] = useState<"all" | "processing" | "attention">("all");
   const [reviewFocus, setReviewFocus] = useState<string | null>(null);
   // Names of finished grants the admin has dismissed from the Processing tab (client-side, resets on reload).
@@ -32,6 +37,7 @@ const Dashboard: React.FC = () => {
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+  const [focusedFilterIndex, setFocusedFilterIndex] = useState(0);
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("active");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
 
@@ -50,7 +56,11 @@ const Dashboard: React.FC = () => {
 
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
+  const filterItemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const statusGroupId = useId();
+  const grantTypeGroupId = useId();
   const grantsTabRef = useRef<HTMLButtonElement>(null);
+  const analyticsTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
   const digestPreviewTabRef = useRef<HTMLButtonElement>(null);
@@ -157,6 +167,9 @@ const Dashboard: React.FC = () => {
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
       const tabs = [
         { key: "grants" as const, ref: grantsTabRef },
+        ...(canManageUsers
+          ? [{ key: "analytics" as const, ref: analyticsTabRef }]
+          : []),
         ...(isDeveloper
           ? [{ key: "feature-rollouts" as const, ref: rolloutsTabRef }]
           : []),
@@ -194,6 +207,65 @@ const Dashboard: React.FC = () => {
     },
     [activeTab, isDeveloper, canManageUsers]
   );
+
+  const toggleFilterMenu = useCallback(() => {
+    if (filterMenuOpen) {
+      setFilterMenuOpen(false);
+      return;
+    }
+    setFocusedFilterIndex(Math.max(STATUS_FILTERS.indexOf(statusFilter), 0));
+    setFilterMenuOpen(true);
+  }, [filterMenuOpen, statusFilter]);
+
+  const closeFilterMenu = useCallback(() => {
+    setFilterMenuOpen(false);
+    filterButtonRef.current?.focus();
+  }, []);
+
+  const handleFilterMenuKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      if (!filterMenuOpen) {
+        return;
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeFilterMenu();
+        return;
+      }
+
+      const focusItemAt = (index: number) => {
+        filterItemRefs.current[index]?.focus();
+      };
+      const currentIndex = event.target === filterButtonRef.current ? -1 : focusedFilterIndex;
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        focusItemAt((currentIndex + 1) % FILTER_ITEM_COUNT);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        focusItemAt(currentIndex <= 0 ? FILTER_ITEM_COUNT - 1 : currentIndex - 1);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        focusItemAt(0);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        focusItemAt(FILTER_ITEM_COUNT - 1);
+      }
+    },
+    [filterMenuOpen, focusedFilterIndex, closeFilterMenu]
+  );
+
+  const handleFilterFocusOut = useCallback((event: React.FocusEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setFilterMenuOpen(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!filterMenuOpen) return;
+    filterItemRefs.current[focusedFilterIndex]?.focus();
+  }, [filterMenuOpen, focusedFilterIndex]);
 
   const confirmAutomatedScraper = useCallback(async () => {
     setScrapeConfirmModalOpen(false);
@@ -319,7 +391,15 @@ const Dashboard: React.FC = () => {
       if (filterMenuOpen && filterMenuRef.current && filterButtonRef.current &&
           !filterMenuRef.current.contains(event.target as Node) &&
           !filterButtonRef.current.contains(event.target as Node)) {
+        const menuHadFocus = filterMenuRef.current.contains(document.activeElement);
         setFilterMenuOpen(false);
+        if (menuHadFocus) {
+          requestAnimationFrame(() => {
+            if (document.activeElement === document.body) {
+              filterButtonRef.current?.focus();
+            }
+          });
+        }
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -332,9 +412,11 @@ const Dashboard: React.FC = () => {
   const filterCount = getActiveFilterCount();
   const activeTabAnnouncement = activeTab === "grants"
     ? "Grants tab selected"
-    : activeTab === "feature-rollouts"
-      ? "Developer rollouts tab selected"
-      : "Developer user management tab selected";
+    : activeTab === "analytics"
+      ? "Analytics tab selected"
+      : activeTab === "feature-rollouts"
+        ? "Developer rollouts tab selected"
+        : "Developer user management tab selected";
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
@@ -411,6 +493,21 @@ const Dashboard: React.FC = () => {
             >
               Grants
             </button>
+            {canManageUsers && (
+              <button
+                id="dashboard-tab-analytics"
+                ref={analyticsTabRef}
+                className={`tab-button ${activeTab === "analytics" ? "active" : ""}`}
+                onClick={() => setActiveTab("analytics")}
+                onKeyDown={handleTabKeyDown}
+                role="tab"
+                aria-selected={activeTab === "analytics"}
+                aria-controls="dashboard-panel-analytics"
+                tabIndex={activeTab === "analytics" ? 0 : -1}
+              >
+                Analytics
+              </button>
+            )}
             {isDeveloper && (
               <button
                 id="dashboard-tab-rollouts"
@@ -562,38 +659,51 @@ const Dashboard: React.FC = () => {
                       <input id="grant-search" type="text" className="search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
 
-                    <div className="filter-container">
+                    <div className="filter-container" onBlur={handleFilterFocusOut}>
                       <button ref={filterButtonRef} className={`filter-button ${filterCount > 0 ? "active" : ""}`}
-                        onClick={() => setFilterMenuOpen(!filterMenuOpen)} aria-label="Filter grants" aria-expanded={filterMenuOpen} aria-haspopup="menu">
+                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} aria-label="Filter grants" aria-expanded={filterMenuOpen} aria-haspopup="menu">
                         <LuFilter size={18} />
                         {filterCount > 0 && <span className="filter-badge" aria-label={`${filterCount} filter(s) active`}>{filterCount}</span>}
                       </button>
 
                       {filterMenuOpen && (
-                        <div ref={filterMenuRef} className="filter-menu" role="menu">
-                          <div className="filter-menu-header">Filter by Status</div>
-                          {(["all", "active", "archived"] as const).map((status) => (
-                            <button key={status} onClick={() => setStatusFilter(status)}
-                              className={`filter-option ${statusFilter === status ? "selected" : ""}`}
-                              role="menuitemradio" aria-checked={statusFilter === status}>
-                              <div className="filter-option-content">
-                                <span className="filter-option-check">{statusFilter === status ? "✓" : ""}</span>
-                                {status === "all" ? "All Status" : status.charAt(0).toUpperCase() + status.slice(1)}
-                              </div>
-                            </button>
-                          ))}
+                        <div ref={filterMenuRef} className="filter-menu" role="menu" tabIndex={-1} onKeyDown={handleFilterMenuKeyDown}>
+                          <div className="filter-menu-group" role="group" aria-labelledby={statusGroupId}>
+                            <div className="filter-menu-header" id={statusGroupId}>Filter by Status</div>
+                            {STATUS_FILTERS.map((status, index) => (
+                              <button key={status} onClick={() => setStatusFilter(status)}
+                                ref={(el) => { filterItemRefs.current[index] = el; }}
+                                onFocus={() => setFocusedFilterIndex(index)}
+                                className={`filter-option ${statusFilter === status ? "selected" : ""}`}
+                                role="menuitemradio" aria-checked={statusFilter === status}
+                                tabIndex={focusedFilterIndex === index ? 0 : -1}>
+                                <div className="filter-option-content">
+                                  <span className="filter-option-check">{statusFilter === status ? "✓" : ""}</span>
+                                  {status === "all" ? "All Status" : status.charAt(0).toUpperCase() + status.slice(1)}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
                           <div className="filter-menu-divider" />
-                          <div className="filter-menu-header">Filter by Grant Type</div>
-                          {(["all", "federal", "state", "quasi", "philanthropic"] as const).map((type) => (
-                            <button key={type} onClick={() => setGrantTypeFilter(type)}
-                              className={`filter-option ${grantTypeFilter === type ? "selected" : ""}`}
-                              role="menuitemradio" aria-checked={grantTypeFilter === type}>
-                              <div className="filter-option-content">
-                                <span className="filter-option-check">{grantTypeFilter === type ? "✓" : ""}</span>
-                                {type === "all" ? "All Types" : type.charAt(0).toUpperCase() + type.slice(1)}
-                              </div>
-                            </button>
-                          ))}
+                          <div className="filter-menu-group" role="group" aria-labelledby={grantTypeGroupId}>
+                            <div className="filter-menu-header" id={grantTypeGroupId}>Filter by Grant Type</div>
+                            {GRANT_TYPE_FILTERS.map((type, typeIndex) => {
+                              const index = STATUS_FILTERS.length + typeIndex;
+                              return (
+                                <button key={type} onClick={() => setGrantTypeFilter(type)}
+                                  ref={(el) => { filterItemRefs.current[index] = el; }}
+                                  onFocus={() => setFocusedFilterIndex(index)}
+                                  className={`filter-option ${grantTypeFilter === type ? "selected" : ""}`}
+                                  role="menuitemradio" aria-checked={grantTypeFilter === type}
+                                  tabIndex={focusedFilterIndex === index ? 0 : -1}>
+                                  <div className="filter-option-content">
+                                    <span className="filter-option-check">{grantTypeFilter === type ? "✓" : ""}</span>
+                                    {type === "all" ? "All Types" : type.charAt(0).toUpperCase() + type.slice(1)}
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       )}
                     </div>
@@ -647,6 +757,20 @@ const Dashboard: React.FC = () => {
                 />
                 </>
                 )}
+              </div>
+            ) : activeTab === "analytics" ? (
+              <div
+                id="dashboard-panel-analytics"
+                role="tabpanel"
+                aria-labelledby="dashboard-tab-analytics"
+                tabIndex={0}
+              >
+                <AnalyticsTab
+                  apiClient={apiClient}
+                  addNotification={addNotification}
+                  isStateAdmin={isStateAdmin}
+                  userState={userState}
+                />
               </div>
             ) : activeTab === "feature-rollouts" ? (
               <div

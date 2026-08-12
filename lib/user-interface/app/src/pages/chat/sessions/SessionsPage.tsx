@@ -5,6 +5,7 @@ import { useApiClient } from "../../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import UnifiedNavigation from "../../../components/navigation/UnifiedNavigation";
+import Breadcrumbs from "../../../components/common/Breadcrumbs";
 import "../../../styles/dashboard.css";
 
 export default function SessionPage() {
@@ -68,8 +69,7 @@ export default function SessionPage() {
     navigate(`/chat/${sessionId}${queryParams}`);
   };
 
-  const handleHomeClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleHomeClick = () => {
     navigate("/");
   };
 
@@ -79,20 +79,12 @@ export default function SessionPage() {
         <UnifiedNavigation />
       </nav>
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="breadcrumb">
-          <div className="breadcrumb-item">
-            <button
-              className="breadcrumb-link"
-              onClick={handleHomeClick}
-            >
-              Home
-            </button>
-          </div>
-          <div className="breadcrumb-item" aria-current="page">
-            Sessions
-          </div>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "Home", onClick: handleHomeClick },
+            { label: "Sessions" },
+          ]}
+        />
 
         <div className="dashboard-main-content">
           {isLoading ? (

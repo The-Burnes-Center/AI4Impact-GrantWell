@@ -64,14 +64,17 @@ export class NotificationsClient {
     return response.json();
   }
 
-  // Developer-only: send your real digest to your own email. No-op (sent: false) when nothing
-  // matches your prefs this window — the scheduled digest skips empty runs too.
-  async sendTestDigest(
-    frequency: "daily" | "weekly"
-  ): Promise<{ message: string; sent?: boolean; count?: number }> {
+  // Developer-only: fire the REAL digest on demand (not a [TEST] preview). scope "me" sends only to
+  // the caller, "all" sends to every subscribed user — real subject, real unsubscribe link, exactly
+  // what a user would receive. Runs in the background; nothing is sent if no grants match.
+  async broadcastDigest(
+    frequency: "daily" | "weekly",
+    scope: "me" | "all"
+  ): Promise<{ started?: boolean; message: string; frequency?: string; scope?: string }> {
     const token = await Utils.authenticate();
-    const url = new URL(`${this.API}/notification-digest/preview`);
+    const url = new URL(`${this.API}/notification-digest/broadcast`);
     url.searchParams.append("frequency", frequency);
+    url.searchParams.append("scope", scope);
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: token },

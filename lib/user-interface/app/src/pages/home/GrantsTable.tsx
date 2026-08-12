@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { LuFileX, LuX, LuArrowUp, LuArrowDown, LuArrowUpDown, LuPin } from "react-icons/lu";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
-import { GRANT_TYPES } from "../../common/types/nofo";
+import { GRANT_TYPES, nofoDisplayName } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
 import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
@@ -362,7 +362,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             type="button"
             className="landing-clear-filters-button"
             onClick={clearFilters}
-            aria-label="Clear all filters"
+            aria-label="Clear filters — reset all active filters"
           >
             <LuX size={14} aria-hidden="true" />
             Clear filters
@@ -461,26 +461,17 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           ) : null}
           {!awaitingAIResults && visibleNofos.map((nofo) => {
             const isArchived = nofo.status === "archived";
+            const { title, stateBadge } = nofoDisplayName(nofo);
             return (
               <div
                 key={nofo.name}
                 role="row"
                 className={`landing-table-row ${isArchived ? "archived" : ""}`}
-                onClick={() => !isArchived && handleRowClick(nofo)}
-                tabIndex={isArchived ? -1 : 0}
-                onKeyDown={(e) => {
-                  if (!isArchived && (e.key === "Enter" || e.key === " ")) {
-                    e.preventDefault();
-                    handleRowClick(nofo);
-                  }
-                }}
                 style={{
                   cursor: isArchived ? "not-allowed" : "pointer",
                   opacity: isArchived ? 0.7 : 1,
                   backgroundColor: isArchived ? "#f9f9f9" : undefined,
                 }}
-                aria-label={isArchived ? `${nofo.name} (Expired - no longer accepting applications)` : `Select ${nofo.name}`}
-                aria-disabled={isArchived}
               >
                 <div className="landing-row-cell" role="cell">
                   {nofo.isPinned && (
@@ -491,9 +482,30 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                       title="Pinned — featured by an administrator"
                     />
                   )}
-                  <span className="landing-nofo-name" style={{ color: isArchived ? "#6b7280" : undefined }}>
-                    {nofo.name}
-                  </span>
+                  <button
+                    type="button"
+                    className="landing-nofo-name-button"
+                    disabled={isArchived}
+                    onClick={() => handleRowClick(nofo)}
+                    aria-label={
+                      isArchived
+                        ? `${title} (Expired - no longer accepting applications)`
+                        : `Select ${title}${stateBadge ? `, maintained by ${stateBadge}` : ""}`
+                    }
+                  >
+                    <span className="landing-nofo-name" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                      {title}
+                    </span>
+                  </button>
+                  {stateBadge && (
+                    <span
+                      className="landing-state-badge"
+                      title={`Maintained by ${stateBadge}`}
+                      style={{ opacity: isArchived ? 0.6 : 1 }}
+                    >
+                      {nofo.state}
+                    </span>
+                  )}
                   {!isArchived && isRecentlyAdded(nofo.createdAt) && (
                     <span
                       className="landing-new-badge"
@@ -559,7 +571,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             onClick={() => setShowAllAIResults((prev) => !prev)}
             aria-label={showAllAIResults
               ? `Show less — top ${AI_INITIAL_LIMIT} results only`
-              : `Show more — all ${filteredNofos.length} results`}
+              : `Show more (${filteredNofos.length - AI_INITIAL_LIMIT} more) — all ${filteredNofos.length} results`}
           >
             {showAllAIResults
               ? "Show less"

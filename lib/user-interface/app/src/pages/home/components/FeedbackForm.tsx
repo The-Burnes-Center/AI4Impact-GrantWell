@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useId } from "react";
 
 const MAX_CHARS = 500;
 
@@ -18,6 +18,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const infoButtonRef = useRef<HTMLButtonElement>(null);
+  const errorId = useId();
 
   useEffect(() => {
     if (selectedOption && textareaRef.current) {
@@ -72,6 +73,10 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   };
 
   const charsRemaining = MAX_CHARS - feedbackText.length;
+  const textInvalid =
+    feedbackError !== null &&
+    selectedOption === "no" &&
+    feedbackText.trim().length === 0;
 
   return (
     <div
@@ -210,8 +215,13 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                   value={feedbackText}
                   onChange={handleTextChange}
                   rows={5}
-                  aria-describedby="feedback-char-count"
+                  aria-describedby={
+                    feedbackError
+                      ? `${errorId} feedback-char-count`
+                      : "feedback-char-count"
+                  }
                   aria-required={selectedOption === "no" ? "true" : "false"}
+                  aria-invalid={textInvalid ? true : undefined}
                 />
                 <span
                   id="feedback-char-count"
@@ -232,7 +242,9 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                   aria-live="assertive"
                   className="feedback-error-container"
                 >
-                  <p className="feedback-error">{feedbackError}</p>
+                  <p className="feedback-error" id={errorId}>
+                    {feedbackError}
+                  </p>
                 </div>
               )}
 

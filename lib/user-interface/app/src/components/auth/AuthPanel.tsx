@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useBranding } from "../../common/branding";
 import { Auth } from "aws-amplify";
@@ -10,8 +10,10 @@ import NewPasswordStep from "./steps/NewPasswordStep";
 import SignUpStep from "./steps/SignUpStep";
 import VerifySignUpStep from "./steps/VerifySignUpStep";
 import { AuthChallengeUser, AuthView } from "./auth-types";
+import type { AuthErrorContext } from "./auth-utils";
 import {
   getAuthErrorCode,
+  getEmailValidationError,
   getForgotPasswordValidationError,
   getPasswordRequirements,
   getPasswordValidationError,
@@ -19,6 +21,7 @@ import {
   getSignInValidationError,
   getSignUpValidationError,
   getUnsupportedChallengeMessage,
+  getVerificationCodeValidationError,
   getVerifySignUpValidationError,
   mapAuthError,
   normalizeEmail,
@@ -34,6 +37,91 @@ interface CardCopy {
   subtitle: string;
 }
 
+type AuthErrorField =
+  | "email"
+  | "password"
+  | "confirmPassword"
+  | "newPassword"
+  | "verificationCode";
+
+function authErrorFields(
+  code: string,
+  context: AuthErrorContext,
+): AuthErrorField[] {
+  switch (code) {
+    case "NotAuthorizedException":
+      return context === "sign-in" ? ["email", "password"] : [];
+    case "UserNotFoundException":
+      return context === "sign-in" ? ["email", "password"] : ["email"];
+    case "UsernameExistsException":
+      return ["email"];
+    case "CodeMismatchException":
+    case "ExpiredCodeException":
+      return ["verificationCode"];
+    case "InvalidPasswordException":
+      return context === "reset-password" || context === "new-password"
+        ? ["newPassword"]
+        : ["password"];
+    default:
+      return [];
+  }
+}
+
+function signUpValidationFields(
+  email: string,
+  password: string,
+): AuthErrorField[] {
+  if (getEmailValidationError(email)) return ["email"];
+  if (getPasswordValidationError(password)) return ["password"];
+  return ["confirmPassword"];
+}
+
+function resetPasswordValidationFields(
+  email: string,
+  verificationCode: string,
+  newPassword: string,
+): AuthErrorField[] {
+  if (getEmailValidationError(email)) return [];
+  if (getVerificationCodeValidationError(verificationCode)) {
+    return ["verificationCode"];
+  }
+  if (getPasswordValidationError(newPassword)) return ["newPassword"];
+  return [];
+}
+
+const PENDING_STATE_KEY = "grantwell.pendingSignupState";
+
+function writePendingSignupState(email: string, state: string) {
+  try {
+    if (!state) {
+      sessionStorage.removeItem(PENDING_STATE_KEY);
+      return;
+    }
+    sessionStorage.setItem(PENDING_STATE_KEY, JSON.stringify({ email, state }));
+  } catch {
+    // Storage denied (private mode): state falls back to admin assignment.
+  }
+}
+
+function readPendingSignupState(email: string): string {
+  try {
+    const raw = sessionStorage.getItem(PENDING_STATE_KEY);
+    if (!raw) return "";
+    const parsed = JSON.parse(raw);
+    return parsed?.email === email ? String(parsed.state || "") : "";
+  } catch {
+    return "";
+  }
+}
+
+function clearPendingSignupState() {
+  try {
+    sessionStorage.removeItem(PENDING_STATE_KEY);
+  } catch {
+    // Nothing to recover; the value is only a hint for confirmSignUp.
+  }
+}
+
 export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
   const branding = useBranding();
   const [view, setView] = useState<AuthView>("sign-in");
@@ -46,9 +134,11 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
   const [signupState, setSignupState] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorFields, setErrorFields] = useState<AuthErrorField[]>([]);
   const [success, setSuccess] = useState<string | null>(null);
   const [challengeUser, setChallengeUser] = useState<AuthChallengeUser | null>(null);
 
+  const errorId = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
@@ -96,7 +186,8 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       case "reset-password":
         return {
           title: "Enter verification code",
-          subtitle: "Use the code from your email to set a new password.",
+          subtitle:
+            "Use the code from your email to set a new password. If you don't see it, check your spam or junk folder.",
         };
       case "verify-sign-up":
         return {
@@ -116,8 +207,21 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     }
   }, [view]);
 
-  const clearMessages = () => {
+  const setStepError = (message: string, fields: AuthErrorField[] = []) => {
+    setError(message);
+    setErrorFields(fields);
+  };
+
+  const clearError = () => {
     setError(null);
+    setErrorFields([]);
+  };
+
+  const fieldErrorId = (field: AuthErrorField) =>
+    error && errorFields.includes(field) ? errorId : undefined;
+
+  const clearMessages = () => {
+    clearError();
     setSuccess(null);
   };
 
@@ -133,7 +237,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     resetTransientState();
     setPassword("");
     setView("sign-in");
-    setError(null);
+    clearError();
     setSuccess(message ?? null);
   };
 
@@ -150,7 +254,9 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
     const validationError = getSignInValidationError(email, password);
     if (validationError) {
-      setError(validationError);
+      setStepError(validationError, [
+        getEmailValidationError(email) ? "email" : "password",
+      ]);
       setSuccess(null);
       return;
     }
@@ -173,16 +279,20 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       }
 
       if (challengeName) {
-        setError(getUnsupportedChallengeMessage(challengeName));
+        setStepError(getUnsupportedChallengeMessage(challengeName));
         return;
       }
 
       onAuthenticated();
     } catch (authError) {
-      if (getAuthErrorCode(authError) === "UserNotConfirmedException") {
+      const code = getAuthErrorCode(authError);
+      if (code === "UserNotConfirmedException") {
         setView("verify-sign-up");
       }
-      setError(mapAuthError(authError, "sign-in"));
+      setStepError(
+        mapAuthError(authError, "sign-in"),
+        authErrorFields(code, "sign-in"),
+      );
     } finally {
       setLoading(false);
     }
@@ -194,7 +304,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
     const validationError = getForgotPasswordValidationError(email);
     if (validationError) {
-      setError(validationError);
+      setStepError(validationError, ["email"]);
       setSuccess(null);
       return;
     }
@@ -209,7 +319,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       setSuccess("Check your email for a verification code to reset your password.");
       setView("reset-password");
     } catch (authError) {
-      setError(mapAuthError(authError, "forgot-password"));
+      setStepError(
+        mapAuthError(authError, "forgot-password"),
+        authErrorFields(getAuthErrorCode(authError), "forgot-password"),
+      );
     } finally {
       setLoading(false);
     }
@@ -225,7 +338,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       newPassword,
     );
     if (validationError) {
-      setError(validationError);
+      setStepError(
+        validationError,
+        resetPasswordValidationFields(email, verificationCode, newPassword),
+      );
       setSuccess(null);
       return;
     }
@@ -243,7 +359,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       setVerificationCode("");
       switchToSignIn("Password reset successful. Sign in with your new password.");
     } catch (authError) {
-      setError(mapAuthError(authError, "reset-password"));
+      setStepError(
+        mapAuthError(authError, "reset-password"),
+        authErrorFields(getAuthErrorCode(authError), "reset-password"),
+      );
     } finally {
       setLoading(false);
     }
@@ -255,7 +374,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
     const validationError = getSignUpValidationError(email, password, confirmPassword);
     if (validationError) {
-      setError(validationError);
+      setStepError(validationError, signUpValidationFields(email, password));
       setSuccess(null);
       return;
     }
@@ -269,14 +388,18 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
         password,
         attributes: {
           email: normalizedEmail,
-          ...(signupState ? { "custom:state": signupState } : {}),
         },
+        clientMetadata: signupState ? { state: signupState } : undefined,
       });
+      writePendingSignupState(normalizedEmail, signupState);
       setVerificationCode("");
       setSuccess("Verification code sent. Enter it below to finish creating your account.");
       setView("verify-sign-up");
     } catch (authError) {
-      setError(mapAuthError(authError, "sign-up"));
+      setStepError(
+        mapAuthError(authError, "sign-up"),
+        authErrorFields(getAuthErrorCode(authError), "sign-up"),
+      );
     } finally {
       setLoading(false);
     }
@@ -288,7 +411,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
     const validationError = getVerifySignUpValidationError(email, verificationCode);
     if (validationError) {
-      setError(validationError);
+      setStepError(
+        validationError,
+        getEmailValidationError(email) ? [] : ["verificationCode"],
+      );
       setSuccess(null);
       return;
     }
@@ -297,7 +423,11 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.confirmSignUp(normalizedEmail, verificationCode.trim());
+      const pendingState = signupState || readPendingSignupState(normalizedEmail);
+      await Auth.confirmSignUp(normalizedEmail, verificationCode.trim(), {
+        clientMetadata: pendingState ? { state: pendingState } : undefined,
+      });
+      clearPendingSignupState();
 
       if (!password) {
         switchToSignIn("Email verified. Sign in to continue.");
@@ -323,7 +453,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
       onAuthenticated();
     } catch (authError) {
-      setError(mapAuthError(authError, "verify-sign-up"));
+      setStepError(
+        mapAuthError(authError, "verify-sign-up"),
+        authErrorFields(getAuthErrorCode(authError), "verify-sign-up"),
+      );
     } finally {
       setLoading(false);
     }
@@ -334,7 +467,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
     const validationError = getForgotPasswordValidationError(email);
     if (validationError) {
-      setError(validationError);
+      setStepError(validationError);
       setSuccess(null);
       return;
     }
@@ -346,7 +479,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       await Auth.resendSignUp(normalizedEmail);
       setSuccess("Verification code resent. Check your email for the latest code.");
     } catch (authError) {
-      setError(mapAuthError(authError, "resend-sign-up"));
+      setStepError(
+        mapAuthError(authError, "resend-sign-up"),
+        authErrorFields(getAuthErrorCode(authError), "resend-sign-up"),
+      );
     } finally {
       setLoading(false);
     }
@@ -358,7 +494,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
     const validationError = getPasswordValidationError(newPassword);
     if (validationError) {
-      setError(validationError);
+      setStepError(validationError, ["newPassword"]);
       setSuccess(null);
       return;
     }
@@ -375,7 +511,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       await Auth.completeNewPassword(challengeUser, newPassword);
       onAuthenticated();
     } catch (authError) {
-      setError(mapAuthError(authError, "new-password"));
+      setStepError(
+        mapAuthError(authError, "new-password"),
+        authErrorFields(getAuthErrorCode(authError), "new-password"),
+      );
     } finally {
       setLoading(false);
     }
@@ -400,6 +539,9 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             onStateChange={setSignupState}
             onSubmit={handleSignUp}
             onSwitchToSignIn={() => switchToSignIn()}
+            emailErrorId={fieldErrorId("email")}
+            passwordErrorId={fieldErrorId("password")}
+            confirmPasswordErrorId={fieldErrorId("confirmPassword")}
           />
         );
       case "forgot-password":
@@ -410,6 +552,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             onEmailChange={setEmail}
             onSubmit={handleForgotPassword}
             onBackToSignIn={() => switchToSignIn()}
+            emailErrorId={fieldErrorId("email")}
           />
         );
       case "reset-password":
@@ -425,6 +568,8 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             onShowPasswordChange={setShowPassword}
             onSubmit={handleResetPassword}
             onBackToSignIn={() => switchToSignIn()}
+            verificationCodeErrorId={fieldErrorId("verificationCode")}
+            newPasswordErrorId={fieldErrorId("newPassword")}
           />
         );
       case "verify-sign-up":
@@ -437,6 +582,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             onSubmit={handleVerifySignUp}
             onResendCode={handleResendSignUpCode}
             onBackToSignUp={switchToSignUp}
+            verificationCodeErrorId={fieldErrorId("verificationCode")}
           />
         );
       case "new-password-required":
@@ -450,6 +596,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             onShowPasswordChange={setShowPassword}
             onSubmit={handleNewPasswordRequired}
             onCancel={() => switchToSignIn()}
+            newPasswordErrorId={fieldErrorId("newPassword")}
           />
         );
       default:
@@ -471,6 +618,8 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             }}
             onSubmit={handleSignIn}
             onSwitchToSignUp={switchToSignUp}
+            emailErrorId={fieldErrorId("email")}
+            passwordErrorId={fieldErrorId("password")}
           />
         );
     }
@@ -526,12 +675,12 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             <Alert
               variant="danger"
               dismissible
-              onClose={() => setError(null)}
+              onClose={clearError}
               className="mb-3"
               ref={errorRef}
               tabIndex={-1}
             >
-              {error}
+              <span id={errorId}>{error}</span>
             </Alert>
           ) : null}
           {success ? (

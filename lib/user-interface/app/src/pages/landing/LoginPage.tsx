@@ -22,7 +22,7 @@ export default function LoginPage({ onAuthenticated }: LoginPageProps) {
     <div className="marketing">
       <OmniHeader />
 
-      <main className="marketing__signin" id="main-content">
+      <main className="marketing__signin" id="main-content" tabIndex={-1}>
         <LandingNavbar />
         <div className="marketing__signin-inner">
           <AuthPanel onAuthenticated={onAuthenticated} />

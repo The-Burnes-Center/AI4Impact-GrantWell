@@ -133,7 +133,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         e.preventDefault();
         if (debounceRef.current) clearTimeout(debounceRef.current);
         lastSubmittedQuery.current = searchTerm.trim();
-        onSearch(searchTerm.trim());
+        // Enter is a deliberate, committed search — log it for analytics.
+        onSearch(searchTerm.trim(), true);
       }
     },
     [onSearch, searchTerm, isSearching]

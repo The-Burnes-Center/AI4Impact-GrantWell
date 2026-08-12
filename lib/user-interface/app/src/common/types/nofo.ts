@@ -5,7 +5,20 @@
  * the dashboard, landing page, and grants table.
  */
 
+import { stateNameFromCode } from "../generated/states";
+
 export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic";
+
+/**
+ * An admin-authored questionnaire question layered onto a state NOFO, for grants whose document
+ * doesn't spell out the questions an agency wants applicants to answer. `id` is server-controlled
+ * (`custom_<uuid>`) and may be omitted when adding a new question.
+ */
+export interface CustomQuestion {
+  id?: string;
+  question: string;
+  helpText?: string;
+}
 
 /**
  * Advisory flag on a live grant that auto-published with an incomplete extraction
@@ -29,6 +42,8 @@ export interface NOFO {
   scope?: "federal" | "state" | null;
   /** Two-letter state code this NOFO belongs to when `scope === "state"`. */
   state?: string | null;
+  /** Federal NOFO this row was forked from, when created by "promote to state copy". */
+  promotedFrom?: string | null;
   agency?: string | null;
   category?: string | null;
   processingStatus?: string | null;
@@ -40,11 +55,34 @@ export interface NOFO {
   processingOutcome?: "published" | "needs_review" | null;
 }
 
+/**
+ * Title to show for a NOFO, and the state whose ownership should render as a badge beside it.
+ *
+ * "Promote to state copy" has to suffix the copy's name — `nofo_name` is the table's partition key,
+ * so the fork cannot share its parent's name. That suffix is storage bookkeeping, not something to
+ * read in a title cell, so strip it here and let the caller render the state as a badge.
+ */
+export function nofoDisplayName(nofo: Pick<NOFO, "name" | "scope" | "state" | "promotedFrom">): {
+  title: string;
+  stateBadge: string | null;
+} {
+  const stateName = nofo.scope === "state" && nofo.state ? stateNameFromCode(nofo.state) : undefined;
+  if (!stateName) return { title: nofo.name, stateBadge: null };
+
+  const suffix = ` (${stateName})`;
+  const title = nofo.promotedFrom && nofo.name.endsWith(suffix)
+    ? nofo.name.slice(0, -suffix.length)
+    : nofo.name;
+  return { title, stateBadge: stateName };
+}
+
 export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
+  // Each colour is also the badge text, on a 8% tint of itself. Worst case is a
+  // hovered grant row (#DFECE0); these clear 4.5:1 there.
   federal: { label: "Federal", color: "#1a4480" },
-  state: { label: "State", color: "#2b7d3c" },
-  quasi: { label: "Quasi", color: "#7962a8" },
-  philanthropic: { label: "Philanthropic", color: "#af540b" },
+  state: { label: "State", color: "#1e6b2e" },
+  quasi: { label: "Quasi", color: "#5b3f8a" },
+  philanthropic: { label: "Philanthropic", color: "#8f4409" },
 };
 
 export const GRANT_CATEGORIES = [

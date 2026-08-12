@@ -86,11 +86,14 @@
   background: #fff;
 }
 
+/* The base rule sets `box-shadow: none !important`, so a box-shadow ring here
+   would never paint; and #767676 -> #23776C is only a 1.18:1 luminance change.
+   Use a real outline (5.35:1 on the card) as the focus indicator. */
 .auth-login-card .form-input:focus,
 .auth-login-card .form-control.form-input:focus {
   border-color: #23776C;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(35, 119, 108, 0.15);
+  outline: 3px solid #23776C;
+  outline-offset: 2px;
   background: #fff;
 }
 

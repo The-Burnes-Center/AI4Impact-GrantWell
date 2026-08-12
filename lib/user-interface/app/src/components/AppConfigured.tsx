@@ -3,17 +3,24 @@ import {
   ThemeProvider,
   defaultDarkModeOverride,
 } from "@aws-amplify/ui-react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { Amplify, Auth, Hub } from "aws-amplify";
 import { Alert, Spinner } from "react-bootstrap";
 import App from "../App";
 import { AppConfig } from "../common/types/app";
 import { AppContext } from "../common/app-context";
-import { BrandingProvider } from "../common/branding";
+import { BrandingProvider, useBranding } from "../common/branding";
 import { activeBranding } from "../../config/active-instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import "@aws-amplify/ui-react/styles.css";
 import MaintenanceGate from "./MaintenanceGate";
+import ProfileGate from "./profile-gate/ProfileGate";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
 import {
@@ -30,6 +37,18 @@ async function getInitialAuthState() {
   } catch {
     return false;
   }
+}
+
+function UnauthenticatedPageTitle(): null {
+  const { pathname } = useLocation();
+  const { appName } = useBranding();
+
+  useEffect(() => {
+    document.title =
+      pathname === "/login" ? `Sign In - ${appName}` : `${appName} - Home`;
+  }, [pathname, appName]);
+
+  return null;
 }
 
 export default function AppConfigured() {
@@ -214,9 +233,11 @@ function AppLayoutContent({
         <OmniHeader />
         <AppNavbar />
         <div className="marketing__app-main">
-          <MaintenanceGate>
-            <App />
-          </MaintenanceGate>
+          <ProfileGate>
+            <MaintenanceGate>
+              <App />
+            </MaintenanceGate>
+          </ProfileGate>
         </div>
         <LandingFooter />
         <OmniHeader position="bottom" />
@@ -244,13 +265,16 @@ function AppLayoutContent({
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route
-        path="/login"
-        element={<LoginPage onAuthenticated={onAuthenticated} />}
-      />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <UnauthenticatedPageTitle />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/login"
+          element={<LoginPage onAuthenticated={onAuthenticated} />}
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }

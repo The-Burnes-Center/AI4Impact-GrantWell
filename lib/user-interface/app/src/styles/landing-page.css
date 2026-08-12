@@ -652,6 +652,21 @@
   align-items: flex-start;
 }
 
+@media (max-width: 720px) {
+  .feedback-no-response {
+    position: relative;
+  }
+
+  .feedback-info-wrapper {
+    position: static;
+  }
+
+  .feedback-info-tooltip {
+    left: 0;
+    min-width: 0;
+  }
+}
+
 .feedback-info-tooltip__text {
   font-size: 14px;
   color: var(--gw-color-text);

@@ -9,6 +9,7 @@ interface VerifySignUpStepProps {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onResendCode: () => void;
   onBackToSignUp: () => void;
+  verificationCodeErrorId?: string;
 }
 
 export default function VerifySignUpStep({
@@ -19,12 +20,13 @@ export default function VerifySignUpStep({
   onSubmit,
   onResendCode,
   onBackToSignUp,
+  verificationCodeErrorId,
 }: VerifySignUpStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
       <p className="auth-form-description">
         Enter the verification code sent to <strong>{email}</strong> to finish creating
-        your account.
+        your account. If you don't see it, check your spam or junk folder.
       </p>
       <Form onSubmit={onSubmit} aria-label="Email verification form" noValidate>
         <Form.Group className="mb-3">
@@ -43,6 +45,8 @@ export default function VerifySignUpStep({
             inputMode="numeric"
             autoComplete="one-time-code"
             aria-required="true"
+            aria-invalid={verificationCodeErrorId ? true : undefined}
+            aria-describedby={verificationCodeErrorId}
           />
         </Form.Group>
         <div className="login-form-actions">

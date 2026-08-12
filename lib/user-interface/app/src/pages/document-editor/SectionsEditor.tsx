@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { Auth } from "aws-amplify";
 import {
@@ -7,9 +7,17 @@ import {
   ChevronRight,
   RotateCcw,
   CheckCircle,
+  History,
+  Undo2,
 } from "lucide-react";
 import SectionsSidebar from "./components/SectionsSidebar";
-import type { DraftJobStatus } from "../../common/api-client/drafts-client";
+import { useNotifications } from "../../components/notifications/NotificationManager";
+import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import VersionHistoryPanel from "../../components/document-editor/VersionHistoryPanel";
+import ConfirmationModal from "../../components/common/ConfirmationModal";
+import { readDraftCache, writeDraftCache } from "../../common/helpers/document-editor-utils";
+import type { DraftJobStatus, DraftVersionMeta } from "../../common/api-client/drafts-client";
+import type { useDraftSave } from "../../hooks/use-draft-save";
 import "../../styles/document-editor.css";
 
 interface SectionEditorProps {
@@ -19,6 +27,7 @@ interface SectionEditorProps {
   onNavigate: (step: string) => void;
   activeJobId?: string;
   isGenerating?: boolean;
+  draftSave: ReturnType<typeof useDraftSave>;
 }
 
 interface Section {
@@ -33,6 +42,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   onNavigate,
   activeJobId,
   isGenerating: initialIsGenerating,
+  draftSave,
 }) => {
   const [activeSection, setActiveSection] = useState(0);
   const [editorContent, setEditorContent] = useState("");
@@ -46,9 +56,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [generating, setGenerating] = useState(!!activeJobId && !!initialIsGenerating);
   const [failedSections, setFailedSections] = useState<string[]>([]);
   const [completedSectionCount, setCompletedSectionCount] = useState(0);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "failed">("idle");
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [savingVersion, setSavingVersion] = useState(false);
+  const [versionLabel, setVersionLabel] = useState("");
+  const [labelPromptOpen, setLabelPromptOpen] = useState(false);
+  const [undoCandidate, setUndoCandidate] = useState<DraftVersionMeta | null>(null);
+  const [undoConfirmOpen, setUndoConfirmOpen] = useState(false);
   const apiClient = useApiClient();
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { addNotification } = useNotifications();
+  const { saveFields, flush, saveStatus, retry } = draftSave;
 
   // Load sections from NOFO summary API
   useEffect(() => {
@@ -102,7 +118,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
     fetchSections();
 
-    // Fetch draft from API and initialize sectionAnswers (only if not actively generating)
     const fetchDraftSections = async () => {
       try {
         if (sessionId) {
@@ -111,28 +126,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             sessionId: sessionId,
             userId: username
           });
-          if (draft && draft.sections) {
-            setSectionAnswers(draft.sections);
-            localStorage.setItem("sectionAnswers", JSON.stringify(draft.sections));
-          } else {
-            setSectionAnswers({});
-          }
+          const cached = readDraftCache<Record<string, string>>(sessionId, "sections");
+          setSectionAnswers({ ...(draft?.sections || {}), ...(cached || {}) });
         }
       } catch (error) {
         console.error("Error loading draft sections from API:", error);
-        setSectionAnswers({});
+        setSectionAnswers(readDraftCache<Record<string, string>>(sessionId, "sections") || {});
       }
     };
 
     if (!generating) {
       fetchDraftSections();
     }
-
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-    };
   }, [selectedNofo, apiClient, sessionId, generating]);
 
   // ── Live polling when generation is in progress ───────────────────
@@ -147,7 +152,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         if (jobStatus.sections) {
           setSectionAnswers(prev => {
             const merged = { ...prev, ...jobStatus.sections };
-            localStorage.setItem("sectionAnswers", JSON.stringify(merged));
+            writeDraftCache(sessionId, "sections", merged);
             return merged;
           });
         }
@@ -171,18 +176,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           if (jobStatus.failedSections?.length) {
             setFailedSections(jobStatus.failedSections);
           }
-          // Save full draft to DraftTable
           try {
-            const username = (await Auth.currentAuthenticatedUser()).username;
-            const currentDraft = await apiClient.drafts.getDraft({ sessionId, userId: username });
-            if (currentDraft) {
-              await apiClient.drafts.updateDraft({
-                ...currentDraft,
-                sections: { ...currentDraft.sections, ...jobStatus.sections },
+            await saveFields(
+              {
+                sections: { ...sectionAnswers, ...jobStatus.sections },
                 status: 'editing_sections',
-                lastModified: new Date().toISOString(),
-              });
-            }
+              },
+              {
+                changedSections: Object.keys(jobStatus.sections || {}),
+                source: 'ai_generated',
+                immediate: true,
+              }
+            );
           } catch (err) {
             console.error('Error saving completed draft:', err);
           }
@@ -199,7 +204,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [activeJobId, generating, apiClient, sections, activeSection, sectionAnswers, sessionId]);
+  }, [activeJobId, generating, apiClient, sections, activeSection, sectionAnswers, sessionId, saveFields]);
 
   // Update editor content when active section changes
   useEffect(() => {
@@ -214,153 +219,53 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     const value = e.target.value;
     setEditorContent(value);
 
-    if (sections[activeSection]) {
-      const sectionKey = sections[activeSection].name;
-      setSectionAnswers((prev) => {
-        const updated = { ...prev, [sectionKey]: value };
-        localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+    const section = sections[activeSection];
+    if (!section) return;
 
-        if (autoSaveTimeoutRef.current) {
-          clearTimeout(autoSaveTimeoutRef.current);
-        }
-
-        autoSaveTimeoutRef.current = setTimeout(async () => {
-          if (selectedNofo) {
-            try {
-              const username = (await Auth.currentAuthenticatedUser()).username;
-              const currentDraft = await apiClient.drafts.getDraft({
-                sessionId: sessionId,
-                userId: username
-              });
-
-              if (currentDraft) {
-                await apiClient.drafts.updateDraft({
-                  sessionId: sessionId,
-                  userId: username,
-                  title: currentDraft.title || `Application for ${selectedNofo}`,
-                  documentIdentifier: selectedNofo,
-                  sections: updated,
-                  projectBasics: currentDraft.projectBasics,
-                  questionnaire: currentDraft.questionnaire,
-                  lastModified: new Date().toISOString()
-                });
-              } else {
-                await apiClient.drafts.updateDraft({
-                  sessionId: sessionId,
-                  userId: username,
-                  title: `Application for ${selectedNofo}`,
-                  documentIdentifier: selectedNofo,
-                  sections: updated,
-                  projectBasics: {},
-                  questionnaire: {},
-                  lastModified: new Date().toISOString()
-                });
-              }
-            } catch (error) {
-              console.error("Error auto-saving to database:", error);
-            }
-          }
-        }, 2000);
-
-        return updated;
-      });
-    }
+    setSectionAnswers((prev) => {
+      const updated = { ...prev, [section.name]: value };
+      saveFields(
+        { sections: updated, status: 'editing_sections' },
+        { changedSections: [section.name], source: 'autosave' }
+      );
+      return updated;
+    });
   };
 
-  const handleSaveProgress = async () => {
-    if (sections[activeSection] && selectedNofo) {
-      const sectionKey = sections[activeSection].name;
-      const updated = { ...sectionAnswers, [sectionKey]: editorContent };
-      setSectionAnswers(updated);
-      localStorage.setItem("sectionAnswers", JSON.stringify(updated));
+  const commitActiveSection = useCallback(async () => {
+    const section = sections[activeSection];
+    if (!section) return;
+    const updated = { ...sectionAnswers, [section.name]: editorContent };
+    setSectionAnswers(updated);
+    await saveFields(
+      { sections: updated, status: 'editing_sections' },
+      { changedSections: [section.name], source: 'manual', immediate: true }
+    );
+  }, [sections, activeSection, sectionAnswers, editorContent, saveFields]);
 
-      try {
-        const username = (await Auth.currentAuthenticatedUser()).username;
-        const currentDraft = await apiClient.drafts.getDraft({
-          sessionId: sessionId,
-          userId: username
-        });
-
-        if (currentDraft) {
-          await apiClient.drafts.updateDraft({
-            sessionId: sessionId,
-            userId: username,
-            title: currentDraft.title || `Application for ${selectedNofo}`,
-            documentIdentifier: selectedNofo,
-            sections: updated,
-            projectBasics: currentDraft.projectBasics,
-            questionnaire: currentDraft.questionnaire,
-            status: 'editing_sections',
-            lastModified: new Date().toISOString()
-          });
-        } else {
-          await apiClient.drafts.updateDraft({
-            sessionId: sessionId,
-            userId: username,
-            title: `Application for ${selectedNofo}`,
-            documentIdentifier: selectedNofo,
-            sections: updated,
-            projectBasics: {},
-            questionnaire: {},
-            status: 'editing_sections',
-            lastModified: new Date().toISOString()
-          });
-        }
-
-        setSaveStatus("saved");
-        setTimeout(() => setSaveStatus("idle"), 3000);
-      } catch (error) {
-        console.error("Error saving progress to database:", error);
-        setSaveStatus("failed");
-        setTimeout(() => setSaveStatus("idle"), 5000);
-      }
+  const handleSaveVersion = async () => {
+    setSavingVersion(true);
+    try {
+      await commitActiveSection();
+      await flush();
+      await apiClient.drafts.createVersion({
+        sessionId,
+        label: versionLabel.trim() || undefined,
+      });
+      setVersionLabel("");
+      setLabelPromptOpen(false);
+    } catch (error) {
+      console.error("Error saving version:", error);
+    } finally {
+      setSavingVersion(false);
     }
   };
 
   const handleSaveAndContinue = async () => {
-    if (sections[activeSection]) {
-      const sectionKey = sections[activeSection].name;
-      const updated = { ...sectionAnswers, [sectionKey]: editorContent };
-      setSectionAnswers(updated);
-      localStorage.setItem("sectionAnswers", JSON.stringify(updated));
-
-      if (selectedNofo) {
-        try {
-          const username = (await Auth.currentAuthenticatedUser()).username;
-          const currentDraft = await apiClient.drafts.getDraft({
-            sessionId: sessionId,
-            userId: username
-          });
-
-          if (currentDraft) {
-            await apiClient.drafts.updateDraft({
-              sessionId: sessionId,
-              userId: username,
-              title: currentDraft.title || `Application for ${selectedNofo}`,
-              documentIdentifier: selectedNofo,
-              sections: updated,
-              projectBasics: currentDraft.projectBasics,
-              questionnaire: currentDraft.questionnaire,
-              status: 'editing_sections',
-              lastModified: new Date().toISOString()
-            });
-          } else {
-            await apiClient.drafts.updateDraft({
-              sessionId: sessionId,
-              userId: username,
-              title: `Application for ${selectedNofo}`,
-              documentIdentifier: selectedNofo,
-              sections: updated,
-              projectBasics: {},
-              questionnaire: {},
-              status: 'editing_sections',
-              lastModified: new Date().toISOString()
-            });
-          }
-        } catch (error) {
-          console.error("Error saving before continue:", error);
-        }
-      }
+    try {
+      await commitActiveSection();
+    } catch (error) {
+      console.error("Error saving before continue:", error);
     }
 
     if (activeSection < sections.length - 1) {
@@ -403,22 +308,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         setEditorContent(result.sections[section.name]);
         const updated = { ...sectionAnswers, [section.name]: result.sections[section.name] };
         setSectionAnswers(updated);
-        localStorage.setItem("sectionAnswers", JSON.stringify(updated));
 
-        await apiClient.drafts.updateDraft({
-          sessionId: sessionId,
-          userId: username,
-          title: currentDraft.title,
-          documentIdentifier: selectedNofo,
-          sections: {
-            ...currentDraft.sections,
-            [section.name]: result.sections[section.name]
-          },
-          projectBasics: currentDraft.projectBasics,
-          questionnaire: currentDraft.questionnaire,
-          status: 'editing_sections',
-          lastModified: new Date().toISOString()
-        });
+        await saveFields(
+          { sections: updated, status: 'editing_sections' },
+          { changedSections: [section.name], source: 'ai_regenerated', immediate: true }
+        );
 
         setRegenerateProgress('Content generated successfully!');
       } else {
@@ -461,20 +355,95 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       });
 
       if (result.sections) {
-        setSectionAnswers(prev => ({ ...prev, ...result.sections }));
-        await apiClient.drafts.updateDraft({
-          ...currentDraft,
-          sections: { ...currentDraft.sections, ...result.sections },
-          status: 'editing_sections',
-          lastModified: new Date().toISOString(),
-        });
+        const merged = { ...sectionAnswers, ...result.sections };
+        setSectionAnswers(merged);
+        await saveFields(
+          { sections: merged, status: 'editing_sections' },
+          {
+            changedSections: Object.keys(result.sections),
+            source: 'ai_generated',
+            immediate: true,
+          }
+        );
       }
     } catch (error) {
       console.error('Error retrying failed sections:', error);
     } finally {
       setGenerating(false);
     }
-  }, [selectedNofo, failedSections, sessionId, apiClient]);
+  }, [selectedNofo, failedSections, sessionId, apiClient, sectionAnswers, saveFields]);
+
+  const reloadAfterRestore = useCallback(async () => {
+    const username = (await Auth.currentAuthenticatedUser()).username;
+    const draft = await apiClient.drafts.getDraft({ sessionId, userId: username });
+    if (!draft) return;
+    draftSave.setBaseline(draft);
+    const restored = draft.sections || {};
+    setSectionAnswers(restored);
+    writeDraftCache(sessionId, "sections", restored);
+    const section = sections[activeSection];
+    if (section) setEditorContent(restored[section.name] || "");
+  }, [apiClient, sessionId, draftSave, sections, activeSection]);
+
+  const refreshUndoCandidate = useCallback(async () => {
+    const section = sections[activeSection];
+    if (!section || !sessionId) {
+      setUndoCandidate(null);
+      return;
+    }
+    try {
+      const versions = await apiClient.drafts.listVersions({ sessionId });
+      const aiIndex = versions.findIndex(
+        (version) =>
+          (version.source === "ai_regenerated" || version.source === "ai_generated") &&
+          (version.changed_sections || []).includes(section.name)
+      );
+      // A version now holds the state its write produced, so the text the AI
+      // overwrote is the next row down — and only rows that actually have text
+      // for this section are worth offering.
+      setUndoCandidate(
+        (aiIndex === -1
+          ? undefined
+          : versions
+              .slice(aiIndex + 1)
+              .find(
+                (version) =>
+                  !version.oversize && (version.section_word_counts?.[section.name] ?? 0) > 0
+              )) || null
+      );
+    } catch (error) {
+      console.warn("Could not check for an undoable generation:", error);
+      setUndoCandidate(null);
+    }
+  }, [apiClient, sessionId, sections, activeSection]);
+
+  useEffect(() => {
+    if (!generating) refreshUndoCandidate();
+  }, [refreshUndoCandidate, generating]);
+
+  const handleUndoGeneration = async () => {
+    const section = sections[activeSection];
+    if (!undoCandidate || !section) return;
+    try {
+      await apiClient.drafts.restoreVersion({
+        sessionId,
+        rev: undoCandidate.rev,
+        sectionsOnly: [section.name],
+      });
+      await reloadAfterRestore();
+      await refreshUndoCandidate();
+    } catch (error) {
+      console.error("Error undoing generation:", error);
+      addNotification(
+        "error",
+        error instanceof Error ? error.message : "That earlier text could not be restored."
+      );
+    } finally {
+      setUndoConfirmOpen(false);
+    }
+  };
+
+  const activeSectionName = sections[activeSection]?.name;
 
   return (
     <div className="se-container">
@@ -565,9 +534,34 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             </div>
           )}
 
-          <h2 className="se-section-title" id="se-section-title">
-            {sections[activeSection]?.name || "Section Editor"}
-          </h2>
+          <div className="se-section-header">
+            <h2 className="se-section-title" id="se-section-title">
+              {activeSectionName || "Section Editor"}
+            </h2>
+            <div className="se-section-header-actions">
+              <AutoSaveIndicator status={saveStatus} onRetry={retry} />
+              {undoCandidate && (
+                <button
+                  type="button"
+                  className="se-header-btn"
+                  onClick={() => setUndoConfirmOpen(true)}
+                >
+                  <Undo2 size={16} aria-hidden="true" />
+                  Undo AI rewrite
+                </button>
+              )}
+              <button
+                type="button"
+                className="se-header-btn"
+                onClick={() => setHistoryOpen(true)}
+                aria-haspopup="dialog"
+                aria-expanded={historyOpen}
+              >
+                <History size={16} aria-hidden="true" />
+                Version history
+              </button>
+            </div>
+          </div>
 
           <div className="se-section-description">
             <p>
@@ -682,14 +676,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             <button
               id="save-button"
               className="se-save-btn"
-              onClick={handleSaveProgress}
+              onClick={() => setLabelPromptOpen(true)}
+              disabled={savingVersion}
             >
               <Save size={18} className="se-icon--left" />
-              {saveStatus === "saved" ? "Saved!" : saveStatus === "failed" ? "Save failed" : "Save Progress"}
+              {savingVersion ? "Saving version..." : "Save version"}
             </button>
-            <span role="status" aria-live="polite" className="visually-hidden">
-              {saveStatus === "saved" ? "Progress saved" : saveStatus === "failed" ? "Save failed. Your changes are stored locally; try saving again." : ""}
-            </span>
 
             <div className="se-nav-buttons">
               {activeSection > 0 && (
@@ -733,6 +725,58 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         generating={generating}
         completedSectionCount={completedSectionCount}
         failedSections={failedSections}
+      />
+
+      <VersionHistoryPanel
+        isOpen={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        sessionId={sessionId}
+        activeSectionName={activeSectionName}
+        currentSections={sectionAnswers}
+        currentRev={draftSave.getDraftSnapshot()?.rev}
+        onRestored={async () => {
+          await reloadAfterRestore();
+          await refreshUndoCandidate();
+        }}
+      />
+
+      <ConfirmationModal
+        isOpen={labelPromptOpen}
+        onClose={() => setLabelPromptOpen(false)}
+        onConfirm={handleSaveVersion}
+        title="Save a version"
+        confirmLabel="Save version"
+        confirming={savingVersion}
+        message={
+          <>
+            <span>
+              This saves your work and keeps a named snapshot you can come back to.
+              Labelled versions are never removed automatically.
+            </span>
+            <label htmlFor="version-label" className="se-version-label">
+              Label (optional)
+            </label>
+            <input
+              id="version-label"
+              type="text"
+              value={versionLabel}
+              maxLength={120}
+              onChange={(e) => setVersionLabel(e.target.value)}
+              placeholder="e.g. Before budget rewrite"
+              className="se-version-label-input"
+            />
+          </>
+        }
+      />
+
+      <ConfirmationModal
+        isOpen={undoConfirmOpen}
+        onClose={() => setUndoConfirmOpen(false)}
+        onConfirm={handleUndoGeneration}
+        title="Undo AI rewrite"
+        confirmLabel="Restore my earlier text"
+        message={`This puts back the "${activeSectionName}" text from before the AI wrote over it. Other sections are left alone.`}
+        warning="Your current text is already kept as a version, so you can redo this."
       />
     </div>
   );

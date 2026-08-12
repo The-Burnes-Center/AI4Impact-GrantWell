@@ -47,6 +47,9 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
   const isDrafts = currentPath === '/document-editor/drafts';
   const isDashboard = currentPath.startsWith('/admin');
   const isProfile = currentPath.startsWith('/profile');
+  const isHome = currentPath.startsWith('/home');
+  const isChatSessions = currentPath === '/chat/sessions';
+  const isChatActive = isChat && !isDrafts && !isChatSessions;
 
   // Get documentIdentifier from various sources
   const docId = documentIdentifier || params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo');
@@ -264,9 +267,9 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
           }}
         >
           {isOpen && (
-            <div style={{ fontWeight: "bold", fontSize: "1.2rem", fontFamily: "'Noto Sans', sans-serif" }}>
+            <h2 style={{ margin: 0, fontWeight: "bold", fontSize: "1.2rem", fontFamily: "'Noto Sans', sans-serif" }}>
               Navigation
-            </div>
+            </h2>
           )}
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -318,8 +321,9 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
         >
           <div>
             {isOpen && (
-              <div
+              <h2
                 style={{
+                  margin: 0,
                   padding: "0 16px 8px 16px",
                   fontSize: "14px",
                   fontWeight: 600,
@@ -330,13 +334,14 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 }}
               >
                 Menu
-              </div>
+              </h2>
             )}
 
             {/* Home Button */}
             <button
               onClick={() => navigate("/home")}
               aria-label="Home"
+              aria-current={isHome ? "page" : undefined}
               style={{
                 width: "100%",
                 display: "flex",
@@ -368,6 +373,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             <button
               onClick={() => navigate("/profile")}
               aria-label="Your Profile"
+              aria-current={isProfile ? "page" : undefined}
               style={{
                 width: "100%",
                 display: "flex",
@@ -400,6 +406,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
               <button
                 onClick={() => navigate("/admin")}
                 aria-label="Admin Dashboard"
+                aria-current={isDashboard ? "page" : undefined}
                 style={{
                   width: "100%",
                   display: "flex",
@@ -435,6 +442,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
               <button
                 onClick={handleRequirementsNavigation}
                 aria-label="Requirements"
+                aria-current={isRequirements ? "page" : undefined}
                 style={{
                   width: "100%",
                   display: "flex",
@@ -469,6 +477,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             <button
               onClick={handleChatNavigation}
               aria-label="Chat with AI"
+              aria-current={isChatActive ? "page" : undefined}
               style={{
                 width: "100%",
                 display: "flex",
@@ -503,6 +512,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
               <button
                 onClick={handleChatSessionsNavigation}
                 aria-label="Chat Sessions"
+                aria-current={isChatSessions ? "page" : undefined}
                 style={{
                   width: "100%",
                   display: "flex",
@@ -550,6 +560,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             <button
               onClick={handleDocumentEditorNavigation}
               aria-label="Write Application"
+              aria-current={isDocumentEditor ? "page" : undefined}
               style={{
                 width: "100%",
                 display: "flex",
@@ -585,6 +596,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
               <button
                 onClick={handleDraftsNavigation}
                 aria-label="Drafts"
+                aria-current={isDrafts ? "page" : undefined}
                 style={{
                   width: "100%",
                   display: "flex",
@@ -620,8 +632,9 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
           {isDocumentEditor && currentStep && onNavigate && currentStep !== "drafts" && currentStep !== "welcome" && (
             <div style={{ marginTop: "24px" }}>
               {isOpen && (
-                <div
+                <h3
                   style={{
+                    margin: 0,
                     padding: "0 16px 8px 16px",
                     fontSize: "14px",
                     fontWeight: 600,
@@ -632,12 +645,13 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   }}
                 >
                   Current Document
-                </div>
+                </h3>
               )}
 
               <button
                 onClick={() => onNavigate("projectBasics")}
                 aria-label="Project Basics"
+                aria-current={currentStep === "projectBasics" ? "step" : undefined}
                 style={{
                   width: "100%",
                   display: "flex",
@@ -685,6 +699,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 <button
                   onClick={() => onNavigate("questionnaire")}
                   aria-label="Questionnaire"
+                  aria-current={currentStep === "questionnaire" ? "step" : undefined}
                   style={{
                     width: "100%",
                     display: "flex",
@@ -733,6 +748,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 <button
                   onClick={() => onNavigate("uploadDocuments")}
                   aria-label="Additional Information"
+                  aria-current={currentStep === "uploadDocuments" ? "step" : undefined}
                   style={{
                     width: "100%",
                     display: "flex",
@@ -783,6 +799,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 <button
                   onClick={() => onNavigate("sectionEditor")}
                   aria-label="Section Editor"
+                  aria-current={currentStep === "sectionEditor" ? "step" : undefined}
                   style={{
                     width: "100%",
                     display: "flex",
@@ -831,6 +848,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 <button
                   onClick={() => onNavigate("reviewApplication")}
                   aria-label="Review"
+                  aria-current={currentStep === "reviewApplication" ? "step" : undefined}
                   style={{
                     width: "100%",
                     display: "flex",

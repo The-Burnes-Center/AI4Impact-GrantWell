@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { LuMenu, LuPencil, LuTrash } from "react-icons/lu";
 
 interface RowActionsProps {
@@ -11,16 +11,23 @@ const RowActions = React.memo(function RowActions({ onEdit, onDelete }: RowActio
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  const closeMenu = useCallback(() => {
+    setIsOpen(false);
+    const trigger = buttonRef.current;
+    if (trigger && document.body.contains(trigger)) {
+      trigger.focus();
+    }
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        closeMenu();
       }
     };
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsOpen(false);
-        buttonRef.current?.focus();
+        closeMenu();
       }
     };
 
@@ -37,7 +44,7 @@ const RowActions = React.memo(function RowActions({ onEdit, onDelete }: RowActio
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, closeMenu]);
 
   const handleMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const items = Array.from(
@@ -76,7 +83,7 @@ const RowActions = React.memo(function RowActions({ onEdit, onDelete }: RowActio
       {isOpen && (
         <div className="actions-menu" role="menu" onKeyDown={handleMenuKeyDown}>
           <button
-            onClick={() => { onEdit(); setIsOpen(false); }}
+            onClick={() => { onEdit(); closeMenu(); }}
             className="menu-item"
             role="menuitem"
           >
@@ -84,7 +91,7 @@ const RowActions = React.memo(function RowActions({ onEdit, onDelete }: RowActio
             <span>Edit</span>
           </button>
           <button
-            onClick={() => { onDelete(); setIsOpen(false); }}
+            onClick={() => { onDelete(); closeMenu(); }}
             className="menu-item"
             role="menuitem"
           >

@@ -76,6 +76,9 @@
   --gw-color-background-alt: #f8f9fa;
   --gw-color-border: #e2e8f0;
   --gw-color-border-light: #f3f4f6;
+  /* Form-control boundaries only. WCAG 1.4.11 needs 3:1 where the border is the
+     sole boundary of a control; --gw-color-border is 1.23:1 and is decorative. */
+  --gw-color-border-input: #767676;
 
   --gw-color-text: #333333;
   --gw-color-text-secondary: #5a5a5a;
@@ -101,6 +104,13 @@
   --gw-spacing-2xl: 24px;
   --gw-spacing-3xl: 32px;
   --gw-spacing-4xl: 48px;
+
+  /* ==============================
+   * Layout
+   * ============================== */
+
+  /* Cap for full-page content areas so lines stay readable on wide screens. */
+  --gw-content-max-width: 1400px;
 
   /* ==============================
    * Border Radius

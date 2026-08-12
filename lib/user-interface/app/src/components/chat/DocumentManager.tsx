@@ -1,4 +1,5 @@
-import React, { useState, useContext, useEffect, useCallback, useRef } from "react";
+import React, { useState, useContext, useEffect, useCallback, useRef, useId } from "react";
+import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { FileUploader } from "../../common/file-uploader";
@@ -101,10 +102,10 @@ export default function DocumentManager({
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const appContext = useContext(AppContext);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
-  const confirmDialogRef = useRef<HTMLDivElement>(null);
-  const duplicateDialogRef = useRef<HTMLDivElement>(null);
+  const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose });
+  const titleId = useId();
+  const confirmTitleId = useId();
+  const duplicateTitleId = useId();
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const extractNofoName = (docId: string | null): string => {
@@ -127,132 +128,7 @@ export default function DocumentManager({
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) return;
 
-    previousFocusRef.current = document.activeElement as HTMLElement;
-
-    setTimeout(() => {
-      const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      firstFocusable?.focus();
-    }, 100);
-
-    return () => {
-      if (previousFocusRef.current && document.body.contains(previousFocusRef.current)) {
-        previousFocusRef.current.focus();
-      }
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen || !modalRef.current) return;
-
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-
-      const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-
-      if (!focusableElements || focusableElements.length === 0) return;
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-      const activeElement = document.activeElement as HTMLElement;
-      const isInsideModal = modalRef.current?.contains(activeElement);
-
-      if (!isInsideModal) {
-        e.preventDefault();
-        firstElement.focus();
-        return;
-      }
-
-      if (e.shiftKey && document.activeElement === firstElement) {
-        e.preventDefault();
-        lastElement.focus();
-      } else if (!e.shiftKey && document.activeElement === lastElement) {
-        e.preventDefault();
-        firstElement.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleTabKey);
-    return () => document.removeEventListener("keydown", handleTabKey);
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (fileToDelete && confirmDialogRef.current) {
-      confirmDialogRef.current.focus();
-    }
-  }, [fileToDelete]);
-
-  useEffect(() => {
-    if (duplicateFiles.length > 0 && duplicateDialogRef.current) {
-      duplicateDialogRef.current.focus();
-    }
-  }, [duplicateFiles]);
-
-  useEffect(() => {
-    const trapTab = (dialogRef: React.RefObject<HTMLDivElement>) => (e: KeyboardEvent) => {
-      if (e.key !== "Tab" || !dialogRef.current) return;
-      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (!dialogRef.current.contains(document.activeElement)) {
-        e.preventDefault();
-        first.focus();
-        return;
-      }
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    if (fileToDelete) {
-      const handler = trapTab(confirmDialogRef);
-      document.addEventListener("keydown", handler);
-      return () => document.removeEventListener("keydown", handler);
-    }
-  }, [fileToDelete]);
-
-  useEffect(() => {
-    const trapTab = (dialogRef: React.RefObject<HTMLDivElement>) => (e: KeyboardEvent) => {
-      if (e.key !== "Tab" || !dialogRef.current) return;
-      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (!dialogRef.current.contains(document.activeElement)) {
-        e.preventDefault();
-        first.focus();
-        return;
-      }
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    if (duplicateFiles.length > 0) {
-      const handler = trapTab(duplicateDialogRef);
-      document.addEventListener("keydown", handler);
-      return () => document.removeEventListener("keydown", handler);
-    }
-  }, [duplicateFiles]);
 
   // Auto-dismiss toast
   useEffect(() => {
@@ -528,6 +404,17 @@ export default function DocumentManager({
     setFileToDelete(null);
   };
 
+  const confirmDialogRef = useFocusTrap<HTMLDivElement>({
+    isOpen: !!fileToDelete,
+    onEscape: cancelDelete,
+    lockScroll: false,
+  });
+  const duplicateDialogRef = useFocusTrap<HTMLDivElement>({
+    isOpen: duplicateFiles.length > 0,
+    onEscape: handleDuplicateCancel,
+    lockScroll: false,
+  });
+
   const executeDelete = async () => {
     if (!fileToDelete || !appContext || !documentIdentifier || !userId) return;
 
@@ -724,18 +611,14 @@ export default function DocumentManager({
     <div
       className="dm-overlay"
       onClick={onClose}
-      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="dm-title"
     >
       <div
         ref={modalRef}
         className="dm-container"
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
-        role="document"
-        aria-labelledby="dm-title"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         style={{ position: "relative" }}
       >
         {toastMessage && (
@@ -763,7 +646,7 @@ export default function DocumentManager({
         )}
 
         <div className="dm-header">
-          <h2 id="dm-title" className="dm-title">Document Manager</h2>
+          <h2 id={titleId} className="dm-title">Document Manager</h2>
           <button className="dm-close-btn" onClick={onClose} aria-label="Close document manager">
             <X size={20} />
           </button>
@@ -1092,19 +975,17 @@ export default function DocumentManager({
         <div
           className="dm-confirm-overlay"
           onClick={cancelDelete}
-          onKeyDown={(e) => { if (e.key === "Escape") cancelDelete(); }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="dm-confirm-title"
         >
           <div
             ref={confirmDialogRef}
             className="dm-confirm-dialog"
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={confirmTitleId}
             tabIndex={-1}
           >
-            <h3 id="dm-confirm-title" className="dm-confirm-title">Delete File</h3>
+            <h3 id={confirmTitleId} className="dm-confirm-title">Delete File</h3>
             <p className="dm-confirm-message">
               Are you sure you want to delete <strong>{fileToDelete}</strong>?
               This will remove it from your uploaded documents and it will no
@@ -1127,19 +1008,17 @@ export default function DocumentManager({
         <div
           className="dm-confirm-overlay"
           onClick={handleDuplicateCancel}
-          onKeyDown={(e) => { if (e.key === "Escape") handleDuplicateCancel(); }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="dm-duplicate-title"
         >
           <div
             ref={duplicateDialogRef}
             className="dm-confirm-dialog"
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={duplicateTitleId}
             tabIndex={-1}
           >
-            <h3 id="dm-duplicate-title" className="dm-confirm-title">
+            <h3 id={duplicateTitleId} className="dm-confirm-title">
               {duplicateFiles.length === 1 ? "File Already Exists" : "Files Already Exist"}
             </h3>
             <p className="dm-confirm-message" style={{ wordBreak: "normal" }}>
