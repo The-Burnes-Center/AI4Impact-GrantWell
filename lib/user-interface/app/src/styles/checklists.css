@@ -170,6 +170,7 @@
 /* Content container */
 .checklist-content {
   width: 100%;
+  max-width: var(--gw-content-max-width, 1400px);
   margin: 0 auto;
   padding: 32px;
   font-size: 18px;

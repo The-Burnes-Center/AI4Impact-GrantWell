@@ -12,6 +12,10 @@
 .document-editor-workspace {
   padding: 24px;
   background: #f5f7fa;
+  width: 100%;
+  max-width: var(--gw-content-max-width, 1400px);
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .document-editor-header {
