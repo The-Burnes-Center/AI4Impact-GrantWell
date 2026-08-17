@@ -195,10 +195,13 @@ test("a job row read that has not caught up at all does not fail the whole job",
   });
 
   assert.equal(result.status, "completed");
+  assert.deepEqual(Object.keys(dynamo.writeFor(JOBS_TABLE).sections).sort(), [...SIX].sort());
 
   // status "error" would send the draft back to the questionnaire step, losing
   // the user's place as well as the narrative.
-  assert.equal(dynamo.writeFor(DRAFT_TABLE).status, "editing_sections");
+  const draft = dynamo.writeFor(DRAFT_TABLE);
+  assert.equal(draft.status, "editing_sections");
+  assert.deepEqual(Object.keys(draft.sections).sort(), [...SIX].sort());
 });
 
 test("a lagging read of the draft row does not revert the user's newest edit", async () => {
