@@ -16,7 +16,10 @@ export class TableStack extends Stack {
   public readonly featureRolloutTable: Table;
   public readonly nofoProcessingReviewTable: Table;
   public readonly userNotificationPrefsTable: Table;
+  public readonly digestSendLogTable: Table;
+  public readonly digestSuppressionTable: Table;
   public readonly nofoStateOverlayTable: Table;
+  public readonly analyticsTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -148,6 +151,26 @@ export class TableStack extends Stack {
 
     this.userNotificationPrefsTable = userNotificationPrefsTable;
 
+    // One row per send attempt. (user_id, sent_at) doubles as the idempotency claim, where sent_at
+    // is the cadence window key, so a retry or double-fire collides instead of mailing twice.
+    const digestSendLogTable = new Table(this, 'DigestSendLogTable', {
+      partitionKey: { name: 'user_id', type: AttributeType.STRING },
+      sortKey: { name: 'sent_at', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      timeToLiveAttribute: 'expires_at',
+    });
+
+    this.digestSendLogTable = digestSendLogTable;
+
+    // Hard bounces and complaints by lowercased email. Checked before every send, independent of
+    // the user's prefs row.
+    const digestSuppressionTable = new Table(this, 'DigestSuppressionTable', {
+      partitionKey: { name: 'email', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
+    this.digestSuppressionTable = digestSuppressionTable;
+
     // State-specific overlays on federal NOFOs. One row per (nofo, state): a state admin
     // attaches guidance shown only to their state's users, without mutating the shared
     // federal record. See nofo-state-overlay Lambda and the merge in retrieveNOFOSummary.
@@ -158,5 +181,26 @@ export class TableStack extends Stack {
     });
 
     this.nofoStateOverlayTable = nofoStateOverlayTable;
+
+    // Single-table store for the analytics dashboard: user profile rows and append-only usage
+    // events share one table (pk/sk). Profile rows (sk=PROFILE) never expire; event rows
+    // (sk=EVT#...) set `ttl` and self-delete. The sparse EventDayIndex holds only event rows
+    // (only they carry event_day/event_sk), so the dashboard can query "events on day D" without
+    // scanning. See lib/chatbot-api/functions/shared/analytics.mjs for the row shape.
+    const analyticsTable = new Table(this, 'AnalyticsTable', {
+      partitionKey: { name: 'pk', type: AttributeType.STRING },
+      sortKey: { name: 'sk', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      timeToLiveAttribute: 'ttl',
+    });
+
+    analyticsTable.addGlobalSecondaryIndex({
+      indexName: 'EventDayIndex',
+      partitionKey: { name: 'event_day', type: AttributeType.STRING },
+      sortKey: { name: 'event_sk', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    this.analyticsTable = analyticsTable;
   }
 }

@@ -68,6 +68,35 @@
   font-weight: var(--gw-font-weight-medium, 500);
 }
 
+/* Search + bulk actions above the chip grid */
+.profile-chip-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gw-space-sm, 8px);
+  margin-bottom: var(--gw-space-sm, 12px);
+}
+.profile-chip-search {
+  flex: 1 1 220px;
+  min-width: 0;
+  max-width: 320px;
+  padding: var(--gw-space-xs, 6px) var(--gw-space-sm, 8px);
+  border: 1px solid var(--gw-color-border, #e2e8f0);
+  border-radius: var(--gw-radius-md, 6px);
+  font-size: var(--gw-font-size-sm, 14px);
+}
+.profile-chip-search:focus {
+  outline: 2px solid var(--gw-color-primary, #23776C);
+  outline-offset: 1px;
+  border-color: var(--gw-color-primary, #23776C);
+}
+.profile-chip-count {
+  margin-left: auto;
+  color: var(--gw-color-text-muted, #6b7280);
+  font-size: var(--gw-font-size-sm, 14px);
+  white-space: nowrap;
+}
+
 /* Checkbox chip grid for states + categories */
 .profile-chip-grid {
   display: grid;

@@ -6,6 +6,9 @@ export const genericBrandingData = {
   orgName: "Burnes Center for Social Change",
   postalAddress: "271 Huntington Ave, Boston, MA 02115",
   supportEmail: "hello@grantwell.us",
+  // From: address for digest mail. Its domain is the SES identity that gets verified and DKIM-signed,
+  // so a new instance must change this (or set NOTIFICATION_SENDER) or it sends as GrantWell.
+  senderEmail: "no-reply@grantwell.us",
   colors: {
     primary: "#23776C",
     primaryHover: "#195C53",

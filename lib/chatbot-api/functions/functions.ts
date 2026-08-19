@@ -15,11 +15,14 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as ses from "aws-cdk-lib/aws-ses";
+import * as sns from "aws-cdk-lib/aws-sns";
+import * as scheduler from "aws-cdk-lib/aws-scheduler";
+import * as schedulerTargets from "aws-cdk-lib/aws-scheduler-targets";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
-import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { SqsEventSource, SnsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
@@ -34,6 +37,12 @@ const SUPPORTED_STATES_ENV = JSON.stringify(
   SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
 );
 
+// Platform authority is the explicit PlatformAdmin role. While this is "true", a legacy
+// stateless Admin still resolves to platform-wide — the pre-migration form. Flip to "false"
+// only after every stateless admin in the pool has been migrated to PlatformAdmin, or they
+// lose cross-state access. See scripts/migrate-platform-admins.mjs.
+const LEGACY_STATELESS_ADMIN_IS_PLATFORM = "true";
+
 interface LambdaFunctionStackProps {
   readonly wsApiEndpoint: string;
   readonly sessionTable: Table;
@@ -43,7 +52,10 @@ interface LambdaFunctionStackProps {
   readonly draftGenerationJobsTable: Table;
   readonly featureRolloutTable: Table;
   readonly userNotificationPrefsTable: Table;
+  readonly digestSendLogTable: Table;
+  readonly digestSuppressionTable: Table;
   readonly nofoStateOverlayTable: Table;
+  readonly analyticsTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -85,12 +97,16 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
   public readonly notificationDigestPreviewFunction: lambda.Function;
+  public readonly notificationDigestBroadcastFunction: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
+  public readonly notificationSesFeedbackFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
   public readonly feedbackProxyFunction: lambda.Function;
   public readonly nofoSummaryUpdateFunction: lambda.Function;
   public readonly nofoStateOverlayFunction: lambda.Function;
   public readonly nofoPromoteCopyFunction: lambda.Function;
+  public readonly userProfileFunction: lambda.Function;
+  public readonly analyticsFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -158,7 +174,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const jsSharedLayer = new lambda.LayerVersion(scope, "JsSharedLayer", {
       layerVersionName: `${stackName}-js-shared-layer`,
-      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/js-shared-layer")
       ),
@@ -176,10 +192,12 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [pythonSharedLayer],
         environment: {
           DRAFT_TABLE_NAME: props.draftTable.tableName,
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
       }
     );
+    props.analyticsTable.grantWriteData(draftAPIHandlerFunction);
 
     draftAPIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -241,7 +259,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "ChatHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(path.join(__dirname, "websocket-chat")),
         handler: "index.handler",
         environment: {
@@ -252,6 +270,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           // Flip to "true" once existing NOFOs are sidecar-tagged.
           NOFO_STATE_FILTER_ENABLED: "false",
         },
@@ -348,7 +367,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       "CreateMetadataFunction",
       {
         functionName: `${stackName}-createMetadataFunction`,
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/create-metadata")
         ),
@@ -467,7 +486,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management")
         ),
@@ -494,7 +513,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetS3APIHandlerFunctionForNOFOs",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/retrieve-nofos")
         ),
@@ -504,6 +523,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.minutes(3),
       }
@@ -542,14 +562,12 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.getNOFOsList = getS3APIHandlerFunctionForNOFOs;
 
-    // Create Dead Letter Queue for NOFO processing
     const nofoProcessingDLQ = new sqs.Queue(scope, "NOFOProcessingDLQ", {
       retentionPeriod: cdk.Duration.days(14),
     });
 
-    // Create SQS Queue for NOFO processing
     const nofoProcessingQueue = new sqs.Queue(scope, "NOFOProcessingQueue", {
-      visibilityTimeout: cdk.Duration.minutes(20),
+      visibilityTimeout: cdk.Duration.minutes(2),
       receiveMessageWaitTime: cdk.Duration.seconds(20),
       deadLetterQueue: {
         queue: nofoProcessingDLQ,
@@ -621,7 +639,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- Pipeline Lambda Functions ---
 
     const extractTextFunction = new lambda.Function(scope, "ExtractTextFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "extract-text/index.handler",
       environment: {
@@ -635,7 +653,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     extractTextFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const extractAndAnalyzeFunction = new lambda.Function(scope, "ExtractAndAnalyzeFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "extract-and-analyze/index.handler",
       environment: {
@@ -650,7 +668,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     extractAndAnalyzeFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const synthesizeFunction = new lambda.Function(scope, "SynthesizeFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "synthesize/index.handler",
       environment: {
@@ -665,7 +683,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     synthesizeFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const validateFunction = new lambda.Function(scope, "ValidateFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "validate/index.handler",
       environment: {
@@ -677,7 +695,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     validateFunction.addToRolePolicy(metadataTableReadWritePolicy);
 
     const publishFunction = new lambda.Function(scope, "PublishFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "publish/index.handler",
       environment: {
@@ -699,7 +717,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     const quarantineFunction = new lambda.Function(scope, "QuarantineFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "quarantine/index.handler",
       environment: {
@@ -733,7 +751,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- Dispatcher Lambda (SQS -> Step Functions) ---
 
     const dispatcherFunction = new lambda.Function(scope, "PipelineDispatcherFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "dispatcher/index.handler",
       environment: {
@@ -741,7 +759,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
       },
-      timeout: cdk.Duration.minutes(15),
+      // The dispatcher only enqueues work now — it no longer waits for the state machine, which
+      // may run up to 30 min (longer than any Lambda can live).
+      timeout: cdk.Duration.minutes(1),
       memorySize: 256,
     });
 
@@ -751,7 +771,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     dispatcherFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["states:DescribeExecution", "states:ListExecutions", "states:StopExecution"],
+        actions: ["states:DescribeExecution", "states:StopExecution"],
         resources: ["*"],
       })
     );
@@ -779,7 +799,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- DLQ Processor Lambda (EventBridge schedule) ---
 
     const dlqProcessorFunction = new lambda.Function(scope, "DLQProcessorFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "dlq-processor/index.handler",
       environment: {
@@ -808,7 +828,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- Admin API Lambda ---
 
     const nofoAdminFunction = new lambda.Function(scope, "NofoAdminFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "admin/index.handler",
       layers: [jsSharedLayer],
@@ -818,6 +838,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         BUCKET: props.ffioNofosBucket.bucketName,
         PUBLISH_FUNCTION_NAME: publishFunction.functionName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
@@ -854,7 +875,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // --- Reprocess Lambda ---
 
     const nofoReprocessFunction = new lambda.Function(scope, "NofoReprocessFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "reprocess/index.handler",
       layers: [jsSharedLayer],
@@ -864,6 +885,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
@@ -885,20 +907,24 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetRequirementsForNOFOs",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/retrieveNOFOSummary")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer], // for recordEvent / touchLastActive
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.minutes(2),
       }
     );
+    props.analyticsTable.grantWriteData(RequirementsForNOFOs);
 
     RequirementsForNOFOs.addToRolePolicy(
       new iam.PolicyStatement({
@@ -918,7 +944,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "GetQuestionsForNOFOs",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/retrieveNOFOQuestions")
         ),
@@ -926,7 +952,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -943,13 +971,14 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
     props.nofoMetadataTable.grantReadData(NOFOQuestionsForNOFOs);
+    props.nofoStateOverlayTable.grantReadData(NOFOQuestionsForNOFOs);
     this.getNOFOQuestions = NOFOQuestionsForNOFOs;
 
     const nofoUploadS3APIHandlerFunction = new lambda.Function(
       scope,
       "nofoUploadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+        runtime: lambda.Runtime.NODEJS_24_X, // Choose any supported Node.js runtime
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/upload-nofos")
         ), // Points to the lambda directory
@@ -958,6 +987,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         },
         timeout: cdk.Duration.seconds(60),
@@ -983,7 +1013,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NofoStatusHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/nofo-status")
         ),
@@ -994,6 +1024,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -1034,7 +1065,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NofoSummaryUpdateFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/nofo-summary-update")
         ),
@@ -1046,6 +1077,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           ENABLE_DYNAMODB_CACHE: "true",
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -1084,7 +1116,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // State overlay CRUD: a state admin attaches guidance to a federal NOFO (state-locked).
     const nofoStateOverlayFunction = new lambda.Function(scope, "NofoStateOverlayFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "landing-page/nofo-state-overlay")),
       handler: "index.handler",
       layers: [jsSharedLayer],
@@ -1092,6 +1124,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30),
     });
@@ -1101,7 +1134,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Promote a federal NOFO to a state-owned copy (fork): copy S3 folder + new scope:state row.
     const nofoPromoteCopyFunction = new lambda.Function(scope, "NofoPromoteCopyFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "landing-page/nofo-promote-copy")),
       handler: "index.handler",
       layers: [jsSharedLayer],
@@ -1109,6 +1142,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         BUCKET: props.ffioNofosBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(60),
     });
@@ -1130,7 +1164,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NofoRenameHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/nofo-rename")
         ),
@@ -1139,7 +1173,11 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
+          ENABLE_DYNAMODB_CACHE: "true",
+          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -1162,11 +1200,24 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // A rename re-creates the metadata row under the new name (the name is the partition key),
+    // so it needs write access, not just the read used for the scope check.
     nofoRenameHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:GetItem"],
+        actions: ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem"],
         resources: [props.nofoMetadataTable.tableArn],
+      })
+    );
+
+    props.nofoStateOverlayTable.grantReadWriteData(nofoRenameHandlerFunction);
+
+    // Re-index the KB so it drops the old prefix and picks up the new one.
+    nofoRenameHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [kbSyncAPIHandlerFunction.functionArn],
       })
     );
 
@@ -1177,7 +1228,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NofoDeleteHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/nofo-delete")
         ),
@@ -1189,6 +1240,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -1233,7 +1285,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "UploadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management")
         ),
@@ -1260,7 +1312,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DownloadS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management")
         ),
@@ -1289,7 +1341,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftPrepareFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "draft-pipeline/prepare")
         ),
@@ -1333,7 +1385,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftGenerateSectionFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "draft-pipeline/generate-section")
         ),
@@ -1342,6 +1394,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           SONNET_MODEL_ID: sonnetDraftProfile.attrInferenceProfileArn,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.minutes(3),
         memorySize: 256,
@@ -1367,7 +1420,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftAssembleFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "draft-pipeline/assemble")
         ),
@@ -1411,7 +1464,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "ScraperCoordinatorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "nofo-scraper")
         ),
@@ -1441,7 +1494,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "OpportunityProcessorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "nofo-scraper")
         ),
@@ -1495,7 +1548,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "SyncNofoMetadataFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/sync-nofo-metadata")
         ),
@@ -1542,7 +1595,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Note: @sparticuz/chromium v131+ bundles all required dependencies, so no separate Chromium layer is needed
     const puppeteerCoreLayer = new lambda.LayerVersion(scope, "PuppeteerCoreLayer", {
       layerVersionName: "PuppeteerCoreLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/puppeteer-core-layer.zip")
       ),
@@ -1554,7 +1607,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "HtmlToPdfConverterFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/html-to-pdf-converter")),
         handler: "index.handler",
@@ -1602,16 +1655,20 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "ApplicationPdfGeneratorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "application-pdf-generator")
         ),
         handler: "index.handler",
         layers: [puppeteerCoreLayer, jsSharedLayer],
+        environment: {
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        },
         timeout: cdk.Duration.minutes(5),
         memorySize: 2048, // PDF conversion with Chromium can be memory-intensive
       }
     );
+    props.analyticsTable.grantWriteData(applicationPdfGeneratorFunction);
 
     this.applicationPdfGeneratorFunction = applicationPdfGeneratorFunction;
 
@@ -1620,7 +1677,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Lambda Layer: mammoth (DOCX text extraction, pure JS)
     const mammothLayer = new lambda.LayerVersion(scope, "MammothLayer", {
       layerVersionName: "MammothLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/mammoth-layer.zip")
       ),
@@ -1630,7 +1687,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Lambda Layer: html-to-docx (HTML → DOCX conversion)
     const htmlToDocxLayer = new lambda.LayerVersion(scope, "HtmlToDocxLayer", {
       layerVersionName: "HtmlToDocxLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/html-to-docx-layer.zip")
       ),
@@ -1642,7 +1699,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DocxToTextConverterFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "nofo-pipeline/docx-to-text-converter")
         ),
@@ -1683,16 +1740,20 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "ApplicationDocxGeneratorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "application-docx-generator")
         ),
         handler: "index.handler",
         layers: [htmlToDocxLayer, jsSharedLayer],
+        environment: {
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        },
         timeout: cdk.Duration.minutes(2),
         memorySize: 512,
       }
     );
+    props.analyticsTable.grantWriteData(applicationDocxGeneratorFunction);
 
     this.applicationDocxGeneratorFunction = applicationDocxGeneratorFunction;
 
@@ -1701,7 +1762,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       'AutoArchiveExpiredNofosFunction',
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, 'landing-page/auto-archive-expired-nofos')
         ),
@@ -1766,20 +1827,69 @@ export class LambdaFunctionStack extends cdk.Stack {
     const stack = cdk.Stack.of(this);
 
     // --- NOFO notification digest ------------------------------------------------
-    // SES verified sender for digest emails. Domain identity so DKIM can be enabled;
-    // the actual DKIM DNS records must be published to the sender domain post-deploy.
+    // SES verified sender for digest emails. Branding config is the source of truth for the From
+    // address so a new instance doesn't silently send as GrantWell; env is the per-deploy override.
     const notificationSender =
-      process.env.NOTIFICATION_SENDER || "no-reply@grantwell.us";
-    const senderDomain = notificationSender.split("@")[1] || "grantwell.us";
+      process.env.NOTIFICATION_SENDER || genericBrandingData.senderEmail;
+    const senderDomain =
+      notificationSender.split("@")[1] ||
+      genericBrandingData.senderEmail.split("@")[1];
     // SES identities are account+region scoped: the generic stack already owns the grantwell.us
     // identity, so a second stack in the same account (burnes-staging) must reuse it, not re-create
-    // it. Both still send as no-reply@grantwell.us; only the primary stack manages the identity.
+    // it. Both still send as the same address; only the primary stack manages the identity.
     const managesSenderIdentity = process.env.ENVIRONMENT !== "grantwell-burnes-staging";
+    // Easy DKIM's three CNAME tokens must reach the sender domain's DNS before the identity
+    // verifies. They're emitted as this stack's NotificationSenderDkim* outputs.
     const notificationEmailIdentity = managesSenderIdentity
       ? new ses.EmailIdentity(scope, "NotificationSenderIdentity", {
           identity: ses.Identity.domain(senderDomain),
+          dkimSigning: true,
+          dkimIdentity: ses.DkimIdentity.easyDkim(
+            ses.EasyDkimSigningKeyLength.RSA_2048_BIT
+          ),
         })
       : undefined;
+
+    if (notificationEmailIdentity) {
+      for (const [i, record] of notificationEmailIdentity.dkimRecords.entries()) {
+        new cdk.CfnOutput(scope, `NotificationSenderDkimRecord${i + 1}`, {
+          value: `${record.name} CNAME ${record.value}`,
+          description: `DKIM CNAME to publish in ${senderDomain} DNS before digest mail can send`,
+        });
+      }
+      // Sandbox status can't be detected or changed from CloudFormation, and in a sandbox account
+      // digests silently no-op for every unverified recipient.
+      new cdk.CfnOutput(scope, "NotificationSenderManualSteps", {
+        value: [
+          `1. Publish the three NotificationSenderDkimRecord* CNAMEs in ${senderDomain} DNS.`,
+          "2. Request SES production access (exit sandbox) for this account+region via AWS Support.",
+        ].join(" "),
+        description: "Manual post-deploy steps required for digest email delivery",
+      });
+    }
+
+    // Config set names are account+region scoped, same collision risk as the sender identity.
+    const sesConfigurationSet = new ses.ConfigurationSet(
+      scope,
+      "NotificationDigestConfigurationSet",
+      {
+        configurationSetName: `${process.env.ENVIRONMENT || stackName}-digest`,
+        suppressionReasons: ses.SuppressionReasons.BOUNCES_AND_COMPLAINTS,
+      }
+    );
+
+    const sesFeedbackTopic = new sns.Topic(scope, "NotificationDigestFeedbackTopic", {
+      displayName: "SES digest bounce/complaint feedback",
+    });
+
+    sesConfigurationSet.addEventDestination("SnsFeedback", {
+      destination: ses.EventDestination.snsTopic(sesFeedbackTopic),
+      events: [
+        ses.EmailSendingEvent.BOUNCE,
+        ses.EmailSendingEvent.COMPLAINT,
+        ses.EmailSendingEvent.DELIVERY,
+      ],
+    });
 
     const digestBrandEnv = {
       DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
@@ -1801,15 +1911,11 @@ export class LambdaFunctionStack extends cdk.Stack {
       },
     });
 
-    // Sectioned digest (New / Closing soon / Still open + fallback). Off by default; flip to "true"
-    // to enable the richer layout once it's been reviewed.
-    const digestV2 = process.env.DIGEST_V2 === "true" ? "true" : "false";
-
     const notificationDigestFunction = new lambda.Function(
       scope,
       "NotificationDigestFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(path.join(__dirname, "notifications/digest")),
         handler: "index.handler",
         layers: [jsSharedLayer],
@@ -1820,8 +1926,11 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_POOL_ID: props.userPool.userPoolId,
           NOTIFICATION_SENDER: notificationSender,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
-          DIGEST_V2: digestV2,
           UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
+          DIGEST_SEND_LOG_TABLE_NAME: props.digestSendLogTable.tableName,
+          DIGEST_SUPPRESSION_TABLE_NAME: props.digestSuppressionTable.tableName,
+          SES_CONFIGURATION_SET: sesConfigurationSet.configurationSetName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           ...digestBrandEnv,
         },
         timeout: cdk.Duration.minutes(15),
@@ -1830,6 +1939,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     props.userNotificationPrefsTable.grantReadWriteData(notificationDigestFunction);
     props.nofoMetadataTable.grantReadData(notificationDigestFunction);
+    props.digestSendLogTable.grantReadWriteData(notificationDigestFunction);
+    props.digestSuppressionTable.grantReadData(notificationDigestFunction);
     props.userPool.grant(notificationDigestFunction, "cognito-idp:AdminGetUser");
     unsubscribeSecret.grantRead(notificationDigestFunction);
     notificationDigestFunction.addToRolePolicy(
@@ -1849,13 +1960,14 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.notificationDigestFunction = notificationDigestFunction;
 
-    // Developer-only digest preview: renders the real template (shared layer) with
-    // sample data, no send. Same stack as the layer to avoid a cross-stack reference.
+    // Developer-only digest preview: renders the real template (shared layer) against real data —
+    // the caller's own prefs and the live active NOFO pool — and can also send a test message to the
+    // caller. Same stack as the layer to avoid a cross-stack reference.
     const notificationDigestPreviewFunction = new lambda.Function(
       scope,
       "NotificationDigestPreviewFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "notifications/digest-preview")
         ),
@@ -1867,7 +1979,8 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           DEPLOYMENT_URL: emailConfig.deploymentUrl,
           NOTIFICATION_SENDER: notificationSender,
-          DIGEST_V2: digestV2,
+          SES_CONFIGURATION_SET: sesConfigurationSet.configurationSetName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           ...digestBrandEnv,
         },
         timeout: cdk.Duration.seconds(15),
@@ -1894,13 +2007,33 @@ export class LambdaFunctionStack extends cdk.Stack {
     }
     this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
 
+    // Developer-only trigger that fires the real digest on demand (async-invokes the digest Lambda),
+    // for a single user or everyone. Route is wired in chatbot-api/index.ts.
+    const notificationDigestBroadcastFunction = new lambda.Function(
+      scope,
+      "NotificationDigestBroadcastFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_24_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "notifications/digest-broadcast")
+        ),
+        handler: "index.handler",
+        environment: {
+          DIGEST_FUNCTION_NAME: notificationDigestFunction.functionName,
+        },
+        timeout: cdk.Duration.seconds(15),
+      }
+    );
+    notificationDigestFunction.grantInvoke(notificationDigestBroadcastFunction);
+    this.notificationDigestBroadcastFunction = notificationDigestBroadcastFunction;
+
     // Public one-click unsubscribe endpoint (no JWT — the signed token is the authorization). Sets
     // the caller's frequency to "off". Route is wired in chatbot-api/index.ts without an authorizer.
     const notificationUnsubscribeFunction = new lambda.Function(
       scope,
       "NotificationUnsubscribeFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "notifications/unsubscribe")
         ),
@@ -1910,6 +2043,8 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_NOTIFICATION_PREFS_TABLE_NAME:
             props.userNotificationPrefsTable.tableName,
           UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
+          DIGEST_APP_NAME: genericBrandingData.appName,
+          DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
         },
         timeout: cdk.Duration.seconds(15),
       }
@@ -1918,53 +2053,88 @@ export class LambdaFunctionStack extends cdk.Stack {
     unsubscribeSecret.grantRead(notificationUnsubscribeFunction);
     this.notificationUnsubscribeFunction = notificationUnsubscribeFunction;
 
-    // Daily digest at 08:00 UTC; weekly digest Mondays 08:00 UTC. Each rule passes its
-    // frequency so the same Lambda serves both cadences.
-    // DISABLED at deploy: the digest is not live yet. With the rules disabled the sender Lambda is
-    // never invoked on schedule, so nothing goes out to any user regardless of their frequency pref.
-    // The Developer preview / [TEST] path is unaffected (it invokes the preview Lambda directly).
-    // Flip `enabled` to true to turn the scheduled digest on.
-    new events.Rule(scope, "NotificationDigestDailyRule", {
-      schedule: events.Schedule.cron({ minute: "0", hour: "8", day: "*", month: "*", year: "*" }),
-      description: "Send daily NOFO notification digests",
-      enabled: false,
-    }).addTarget(
-      new targets.LambdaFunction(notificationDigestFunction, {
-        event: events.RuleTargetInput.fromObject({ frequency: "daily" }),
-      })
+    // Hard bounces and complaints land in the suppression table, the digest's send gate.
+    const notificationSesFeedbackFunction = new lambda.Function(
+      scope,
+      "NotificationSesFeedbackFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_24_X,
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "notifications/ses-feedback")
+        ),
+        handler: "index.handler",
+        environment: {
+          DIGEST_SUPPRESSION_TABLE_NAME: props.digestSuppressionTable.tableName,
+          USER_NOTIFICATION_PREFS_TABLE_NAME:
+            props.userNotificationPrefsTable.tableName,
+          USER_POOL_ID: props.userPool.userPoolId,
+        },
+        timeout: cdk.Duration.seconds(30),
+      }
     );
+    notificationSesFeedbackFunction.addEventSource(
+      new SnsEventSource(sesFeedbackTopic)
+    );
+    props.digestSuppressionTable.grantWriteData(notificationSesFeedbackFunction);
+    props.userNotificationPrefsTable.grantReadWriteData(notificationSesFeedbackFunction);
+    props.userPool.grant(notificationSesFeedbackFunction, "cognito-idp:ListUsers");
+    this.notificationSesFeedbackFunction = notificationSesFeedbackFunction;
+    // 2:00 PM America/New_York year-round. Scheduler, not events.Rule, because a Rule cron is UTC
+    // only and would drift an hour across DST. Both cadences fire together on Mondays; a user is
+    // only ever on one of them, so the overlap costs a concurrent table read, not a double-send.
+    const digestSchedulerRole = new iam.Role(scope, "NotificationDigestSchedulerRole", {
+      assumedBy: new iam.ServicePrincipal("scheduler.amazonaws.com"),
+    });
+    notificationDigestFunction.grantInvoke(digestSchedulerRole);
 
-    new events.Rule(scope, "NotificationDigestWeeklyRule", {
-      schedule: events.Schedule.cron({ minute: "0", hour: "8", weekDay: "MON", month: "*", year: "*" }),
+    new scheduler.Schedule(scope, "NotificationDigestDailySchedule", {
+      schedule: scheduler.ScheduleExpression.expression(
+        "cron(0 14 * * ? *)",
+        cdk.TimeZone.AMERICA_NEW_YORK
+      ),
+      description: "Send daily NOFO notification digests",
+      target: new schedulerTargets.LambdaInvoke(notificationDigestFunction, {
+        role: digestSchedulerRole,
+        input: scheduler.ScheduleTargetInput.fromObject({ frequency: "daily" }),
+      }),
+    });
+
+    new scheduler.Schedule(scope, "NotificationDigestWeeklySchedule", {
+      schedule: scheduler.ScheduleExpression.expression(
+        "cron(0 14 ? * MON *)",
+        cdk.TimeZone.AMERICA_NEW_YORK
+      ),
       description: "Send weekly NOFO notification digests",
-      enabled: false,
-    }).addTarget(
-      new targets.LambdaFunction(notificationDigestFunction, {
-        event: events.RuleTargetInput.fromObject({ frequency: "weekly" }),
-      })
-    );
+      target: new schedulerTargets.LambdaInvoke(notificationDigestFunction, {
+        role: digestSchedulerRole,
+        input: scheduler.ScheduleTargetInput.fromObject({ frequency: "weekly" }),
+      }),
+    });
 
     // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
     const aiGrantSearchFunction = new lambda.Function(
       scope,
       "AIGrantSearchFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/ai-grant-search")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer], // for recordEvent / touchLastActive
         environment: {
           OPENSEARCH_ENDPOINT: `${props.openSearchCollection.attrId}.${stack.region}.aoss.amazonaws.com`,
           OPENSEARCH_INDEX: knowledgeBaseIndexName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
+          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 512,
       }
     );
+    props.analyticsTable.grantWriteData(aiGrantSearchFunction);
 
     aiGrantSearchFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -2001,13 +2171,54 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.aiGrantSearchFunction = aiGrantSearchFunction;
 
+    // --- User profile Lambda (self-service; profile-completion gate + last-activity) ---
+    // Reads/writes the PROFILE row in the shared analytics table. Uses the js-shared layer for
+    // touchLastActive.
+    const userProfileFunction = new lambda.Function(scope, "UserProfileFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "user-management/user-profile")
+      ),
+      handler: "index.handler",
+      layers: [jsSharedLayer],
+      environment: {
+        ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+      },
+      timeout: cdk.Duration.seconds(30),
+    });
+    props.analyticsTable.grantReadWriteData(userProfileFunction);
+    this.userProfileFunction = userProfileFunction;
+
+    // --- Analytics Lambda (admin dashboard; read-only) ---
+    // Aggregates usage events + profile rows from the analytics table and registered-user counts
+    // from Cognito. Admin-gated via requireAdmin in the handler (js-shared layer).
+    const analyticsFunction = new lambda.Function(scope, "AnalyticsFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "analytics")),
+      handler: "index.handler",
+      layers: [jsSharedLayer],
+      environment: {
+        ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        DRAFT_TABLE_NAME: props.draftTable.tableName,
+        USER_POOL_ID: props.userPool.userPoolId,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+      },
+      timeout: cdk.Duration.seconds(60),
+      memorySize: 512,
+    });
+    props.analyticsTable.grantReadData(analyticsFunction);
+    props.draftTable.grantReadData(analyticsFunction);
+    props.userPool.grant(analyticsFunction, "cognito-idp:ListUsers");
+    this.analyticsFunction = analyticsFunction;
+
     // Feedback proxy Lambda — optionally forwards user feedback to an external form.
     // If FEEDBACK_FORM_URL is unset, the Lambda logs the feedback and returns success.
     const feedbackProxyFunction = new lambda.Function(
       scope,
       "FeedbackProxyFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_24_X,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "feedback-proxy")
         ),

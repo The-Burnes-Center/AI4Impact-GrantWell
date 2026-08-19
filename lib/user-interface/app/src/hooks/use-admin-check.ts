@@ -33,14 +33,18 @@ export function useAdminCheck(): {
         const usernameClaim = String(payload["cognito:username"] || "").trim();
         const hasDeveloperRole = hasRole(parsedRoles, "Developer");
         const hasAdminRole = hasRole(parsedRoles, "Admin");
+        // Platform authority is the explicit PlatformAdmin role; a stateless Admin is the
+        // pre-migration form and still counts until every pool is migrated.
+        const hasPlatformAdminRole =
+          hasRole(parsedRoles, "PlatformAdmin") || (hasAdminRole && !stateClaim);
         if (!cancelled) {
           setRoles(parsedRoles);
           setUserState(stateClaim);
           setUsername(usernameClaim);
-          setIsAdmin(hasAdminRole || hasDeveloperRole);
+          setIsAdmin(hasAdminRole || hasDeveloperRole || hasPlatformAdminRole);
           setIsDeveloper(hasDeveloperRole);
           setIsStateAdmin(hasAdminRole && !hasDeveloperRole && !!stateClaim);
-          setIsRegularAdmin(hasAdminRole && !hasDeveloperRole && !stateClaim);
+          setIsRegularAdmin(hasPlatformAdminRole && !hasDeveloperRole);
         }
       } catch {
         if (!cancelled) {

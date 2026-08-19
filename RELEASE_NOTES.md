@@ -1,3 +1,66 @@
+# GrantWell v1.5.0
+
+**Last Updated:** July 27, 2026
+
+This release builds on the v1.0.0 foundation with an admin analytics dashboard, grant-opportunity email digests, a rebuilt NOFO processing pipeline, and state-scoped administration. It also adds a one-time profile step so we can better understand who is using the platform.
+
+## Highlights
+
+- New admin **Analytics** dashboard: users per state, popular searches, most viewed and pursued grants, draft creation/completion, and usage by agency
+- **Grant opportunity email digests** — daily or weekly, tailored to each user's state, categories, and keywords
+- Rebuilt **NOFO processing pipeline** with live progress, a "Needs attention" review queue, and auto-publish for partial extractions
+- **State-scoped administration** — state admins manage only their own state's grants, with state-specific overlays on federal opportunities
+- One-time **profile completion** (agency, organization, role) and a personal profile page with activity history
+- **Custom questions** on state grants — admins can add their own questionnaire questions for applicants to answer
+
+## New in this release
+
+### Analytics Dashboard (Admin)
+
+- New **Analytics** tab in the admin dashboard, available to admins and developers
+- Metrics: registered and active users per state, most popular search queries, most viewed and most pursued grant opportunities, drafts created / completed / downloaded, and usage by agency
+- **Grant application funnel** showing completion versus abandonment across the drafting stages
+- Selectable time window (last 7 / 30 / 90 days); developers and platform admins can view all states or filter to one, while state admins see their own state
+- Search analytics record only committed searches (on submit), so partial as-you-type queries are not counted
+
+### User Profiles
+
+- One-time profile completion on next sign-in, collecting agency, organization, and role/title (state is shown but assigned by an administrator)
+- Personal **Profile** page: manage notification preferences, review recent drafts, chat sessions, and viewed grants, and update organization details
+
+### Grant Opportunity Digests
+
+- Opt-in daily or weekly email digests of new and closing-soon grant opportunities
+- Personalized to the user's assigned state, chosen categories, and keywords
+- One-click unsubscribe and self-service preferences on the profile page
+- Developer tools to preview and broadcast digests
+
+## Improvements
+
+### NOFO Processing
+
+- Live pipeline progress shown directly on grant rows, with processing and quarantined states
+- A **"Needs attention"** review queue merged into the Grants tab for grants that need admin review before publishing
+- Partial extractions can be auto-published with an advisory review flag rather than blocking
+- More robust NOFO content detection and metadata extraction, with graceful degradation when a metric can't be computed
+
+### State-Scoped Administration
+
+- **State admins** can manage only their own state's grants; all NOFO-mutating actions are enforced server-side (fail-closed)
+- State-specific guidance **overlays** on federal NOFOs, shown only to that state's users
+- Promote-a-federal-NOFO-to-a-state-copy workflow
+
+### Custom Questions on State Grants
+
+- Admins can add, edit, and remove their own questionnaire questions on a state grant (up to 25), each with optional help text
+- Custom questions appear in the application writer's questionnaire alongside the questions extracted from the grant document, and are labeled as custom
+- Useful when a grant document doesn't spell out what an agency wants applicants to address
+
+### User Management
+
+- Admins can create and delete users and manage roles (User, Admin, Developer) and state assignment
+- Clearer error handling and messaging in the User Management tab
+
 # GrantWell v1.0.0
 
 **Last Updated:** May 13, 2026

@@ -2493,6 +2493,7 @@ select.form-input {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 160px;
+  max-width: 260px;
   z-index: 10000;
   overflow: hidden;
   animation: dropdown-appear 0.15s ease-out;
@@ -2541,6 +2542,7 @@ select.form-input {
   cursor: pointer;
   transition: all 0.15s ease;
   text-align: left;
+  line-height: 1.35;
 }
 
 .dropdown-menu-item:hover {

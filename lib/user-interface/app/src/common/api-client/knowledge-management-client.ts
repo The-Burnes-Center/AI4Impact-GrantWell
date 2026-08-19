@@ -17,8 +17,7 @@ export class KnowledgeManagementClient {
   // nofoName: extracted from documentIdentifier
   async getUploadURL(fileName: string, fileType: string, userId: string, nofoName: string): Promise<string> {    
     if (!fileType) {
-      alert('Must have valid file type!');
-      return;
+      throw new Error('Must have a valid file type.');
     }
 
     try {
