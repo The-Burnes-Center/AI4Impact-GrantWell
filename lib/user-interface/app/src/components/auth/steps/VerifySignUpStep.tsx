@@ -26,7 +26,7 @@ export default function VerifySignUpStep({
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
       <p className="auth-form-description">
         Enter the verification code sent to <strong>{email}</strong> to finish creating
-        your account.
+        your account. If you don't see it, check your spam or junk folder.
       </p>
       <Form onSubmit={onSubmit} aria-label="Email verification form" noValidate>
         <Form.Group className="mb-3">

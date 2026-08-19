@@ -106,6 +106,13 @@
   --gw-spacing-4xl: 48px;
 
   /* ==============================
+   * Layout
+   * ============================== */
+
+  /* Cap for full-page content areas so lines stay readable on wide screens. */
+  --gw-content-max-width: 1400px;
+
+  /* ==============================
    * Border Radius
    * ============================== */
 

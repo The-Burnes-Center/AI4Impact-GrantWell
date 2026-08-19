@@ -186,7 +186,8 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       case "reset-password":
         return {
           title: "Enter verification code",
-          subtitle: "Use the code from your email to set a new password.",
+          subtitle:
+            "Use the code from your email to set a new password. If you don't see it, check your spam or junk folder.",
         };
       case "verify-sign-up":
         return {
