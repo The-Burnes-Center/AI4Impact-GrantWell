@@ -1849,9 +1849,10 @@ export class LambdaFunctionStack extends cdk.Stack {
       ? new ses.EmailIdentity(scope, "NotificationSenderIdentity", {
           identity: ses.Identity.domain(senderDomain),
           dkimSigning: true,
-          dkimIdentity: ses.DkimIdentity.easyDkim(
-            ses.EasyDkimSigningKeyLength.RSA_2048_BIT
-          ),
+          // No explicit easyDkim() key length: that renders DkimSigningAttributes and makes every
+          // stack update call PutEmailIdentityDkimSigningAttributes, which 400s with "key length
+          // preference was already set" on an identity that is already at that length. SES's Easy
+          // DKIM default applies for new identities.
         })
       : undefined;
 
