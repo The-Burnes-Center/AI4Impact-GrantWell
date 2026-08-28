@@ -34,7 +34,10 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
   const [tipIndex, setTipIndex] = useState(0);
-  const [tipsPaused, setTipsPaused] = useState(false);
+  // A deliberate pause must survive mouseleave/blur, so it is tracked apart
+  // from the transient hover/focus pause.
+  const [tipsUserPaused, setTipsUserPaused] = useState(false);
+  const [tipsHoverFocusPaused, setTipsHoverFocusPaused] = useState(false);
   const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
   const setSearchTerm = onSearchTermChange || setInternalSearchTerm;
 
@@ -146,24 +149,24 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
 
   useEffect(() => {
     if (!showSuggestion) return;
-    // WCAG 2.2.2: don't auto-rotate for users who prefer reduced motion,
-    // and pause while the search area has focus or hover
+    // WCAG 2.2.2: don't auto-rotate for users who prefer reduced motion
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-    if (tipsPaused) return;
+    if (tipsUserPaused || tipsHoverFocusPaused) return;
     const interval = setInterval(() => {
       setTipIndex((prev) => (prev + 1) % SEARCH_TIPS.length);
     }, TIP_ROTATE_MS);
     return () => clearInterval(interval);
-  }, [showSuggestion, tipsPaused]);
+  }, [showSuggestion, tipsUserPaused, tipsHoverFocusPaused]);
 
   return (
     <div
       style={searchContainerStyle}
       ref={searchRef}
-      onMouseEnter={() => setTipsPaused(true)}
-      onMouseLeave={() => setTipsPaused(false)}
-      onFocus={() => setTipsPaused(true)}
-      onBlur={() => setTipsPaused(false)}
+      role="presentation"
+      onMouseEnter={() => setTipsHoverFocusPaused(true)}
+      onMouseLeave={() => setTipsHoverFocusPaused(false)}
+      onFocus={() => setTipsHoverFocusPaused(true)}
+      onBlur={() => setTipsHoverFocusPaused(false)}
     >
       <SearchInput
         ref={inputRef}
@@ -172,8 +175,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         isSearching={isSearching}
         placeholder={searchPlaceholder}
         ariaLabel={searchAriaLabel}
-        showResults={false}
-        selectedIndex={-1}
         disabled={isLoading}
         onChange={handleInputChange}
         onFocus={() => {}}
@@ -183,7 +184,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       {showSuggestion && (
         <p className="search-tip">
           Tip: Try a full sentence for more precise results, e.g.,{" "}
-          <em key={tipIndex}>&ldquo;{SEARCH_TIPS[tipIndex]}&rdquo;</em>
+          <em key={tipIndex}>&ldquo;{SEARCH_TIPS[tipIndex]}&rdquo;</em>{" "}
+          <button
+            type="button"
+            className="search-tip-toggle"
+            aria-pressed={tipsUserPaused}
+            onClick={() => setTipsUserPaused((prev) => !prev)}
+          >
+            {tipsUserPaused ? "Resume examples" : "Pause examples"}
+          </button>
         </p>
       )}
     </div>

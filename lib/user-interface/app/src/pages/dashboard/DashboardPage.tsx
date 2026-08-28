@@ -17,6 +17,7 @@ import {
   LuRefreshCw, LuDownload, LuInfo, LuLoader, LuArrowRight,
 } from "react-icons/lu";
 import { Modal } from "../../components/common/Modal";
+import Breadcrumbs from "../../components/common/Breadcrumbs";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
 import "../../styles/dashboard.css";
@@ -74,10 +75,11 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
 
-  // Fetch NOFOs data -- accepts a flag to indicate manual refresh
-  const fetchNofos = useCallback(async (showRefreshNotification = false) => {
+  // Fetch NOFOs data -- accepts a flag to indicate manual refresh. Background polls skip the
+  // busy state: disabling the Refresh button under a keyboard user drops their focus to <body>.
+  const fetchNofos = useCallback(async (showRefreshNotification = false, background = false) => {
     try {
-      setIsRefreshing(true);
+      if (!background) setIsRefreshing(true);
       const nofoResult = await apiClient.landingPage.getNOFOs();
 
       if (nofoResult.nofoData) {
@@ -119,7 +121,7 @@ const Dashboard: React.FC = () => {
         addNotification("error", "Failed to refresh dashboard data");
       }
     } finally {
-      setIsRefreshing(false);
+      if (!background) setIsRefreshing(false);
     }
   }, [apiClient, addNotification]);
 
@@ -144,7 +146,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (!isAdmin || !hasProcessingNofos || autoRefreshPaused) return;
-    const interval = setInterval(() => fetchNofos(), 10000);
+    const interval = setInterval(() => fetchNofos(false, true), 10000);
     return () => clearInterval(interval);
   }, [isAdmin, hasProcessingNofos, fetchNofos, autoRefreshPaused]);
 
@@ -256,10 +258,12 @@ const Dashboard: React.FC = () => {
     [filterMenuOpen, focusedFilterIndex, closeFilterMenu]
   );
 
-  const handleFilterFocusOut = useCallback((event: React.FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget)) {
-      setFilterMenuOpen(false);
+  const handleFilterFocusOut = useCallback((event: React.FocusEvent<HTMLElement>) => {
+    const next = event.relatedTarget;
+    if (filterButtonRef.current?.contains(next) || filterMenuRef.current?.contains(next)) {
+      return;
     }
+    setFilterMenuOpen(false);
   }, []);
 
   useEffect(() => {
@@ -406,17 +410,10 @@ const Dashboard: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [filterMenuOpen]);
 
-  if (loading || roleLoading) return <div className="loading">Loading Dashboard...</div>;
+  if (loading || roleLoading) return <div className="loading" role="status">Loading Dashboard...</div>;
   if (!isAdmin) return <Navigate to="/home" replace />;
 
   const filterCount = getActiveFilterCount();
-  const activeTabAnnouncement = activeTab === "grants"
-    ? "Grants tab selected"
-    : activeTab === "analytics"
-      ? "Analytics tab selected"
-      : activeTab === "feature-rollouts"
-        ? "Developer rollouts tab selected"
-        : "Developer user management tab selected";
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
@@ -424,16 +421,12 @@ const Dashboard: React.FC = () => {
         <UnifiedNavigation />
       </nav>
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <nav aria-label="Breadcrumb" className="breadcrumb">
-          <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex" }}>
-            <li className="breadcrumb-item">
-              <button className="breadcrumb-link" onClick={() => navigate("/")}>
-                Home
-              </button>
-            </li>
-            <li className="breadcrumb-item" aria-current="page">Dashboard</li>
-          </ol>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "Home", onClick: () => navigate("/") },
+            { label: "Dashboard" },
+          ]}
+        />
 
         <div className="dashboard-main-content">
           <div className="dashboard-header">
@@ -448,7 +441,6 @@ const Dashboard: React.FC = () => {
                 className="action-button refresh-button"
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                aria-label="Refresh dashboard"
                 aria-busy={isRefreshing}
               >
                 {isRefreshing ? (
@@ -456,6 +448,7 @@ const Dashboard: React.FC = () => {
                 ) : (
                   <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
                 )}
+                <span className="visually-hidden"> dashboard</span>
               </button>
               {hasProcessingNofos && (
                 <button
@@ -469,16 +462,16 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
+          <div role="status" aria-live="polite" className="visually-hidden">
+            {showGrantBanner ? `Success! Grant "${addedGrantName}" has been added` : ""}
+          </div>
           {showGrantBanner && (
-            <div className="success-banner" role="status" aria-live="polite">
+            <div className="success-banner">
               <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! Grant &quot;{addedGrantName}&quot; has been added</span></div>
               <button onClick={() => setShowGrantBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} aria-hidden="true" /></button>
             </div>
           )}
 
-          <div className="visually-hidden" aria-live="polite">
-            {activeTabAnnouncement}
-          </div>
           <div className="tab-controls" role="tablist" aria-label="Dashboard sections">
             <button
               id="dashboard-tab-grants"
@@ -488,7 +481,7 @@ const Dashboard: React.FC = () => {
               onKeyDown={handleTabKeyDown}
               role="tab"
               aria-selected={activeTab === "grants"}
-              aria-controls="dashboard-panel-grants"
+              aria-controls={activeTab === "grants" ? "dashboard-panel-grants" : undefined}
               tabIndex={activeTab === "grants" ? 0 : -1}
             >
               Grants
@@ -502,7 +495,7 @@ const Dashboard: React.FC = () => {
                 onKeyDown={handleTabKeyDown}
                 role="tab"
                 aria-selected={activeTab === "analytics"}
-                aria-controls="dashboard-panel-analytics"
+                aria-controls={activeTab === "analytics" ? "dashboard-panel-analytics" : undefined}
                 tabIndex={activeTab === "analytics" ? 0 : -1}
               >
                 Analytics
@@ -517,7 +510,7 @@ const Dashboard: React.FC = () => {
                 onKeyDown={handleTabKeyDown}
                 role="tab"
                 aria-selected={activeTab === "feature-rollouts"}
-                aria-controls="dashboard-panel-rollouts"
+                aria-controls={activeTab === "feature-rollouts" ? "dashboard-panel-rollouts" : undefined}
                 tabIndex={activeTab === "feature-rollouts" ? 0 : -1}
               >
                 Feature Rollouts
@@ -532,7 +525,7 @@ const Dashboard: React.FC = () => {
                 onKeyDown={handleTabKeyDown}
                 role="tab"
                 aria-selected={activeTab === "user-management"}
-                aria-controls="dashboard-panel-user-management"
+                aria-controls={activeTab === "user-management" ? "dashboard-panel-user-management" : undefined}
                 tabIndex={activeTab === "user-management" ? 0 : -1}
               >
                 User Management
@@ -547,7 +540,7 @@ const Dashboard: React.FC = () => {
                 onKeyDown={handleTabKeyDown}
                 role="tab"
                 aria-selected={activeTab === "digest-preview"}
-                aria-controls="dashboard-panel-digest-preview"
+                aria-controls={activeTab === "digest-preview" ? "dashboard-panel-digest-preview" : undefined}
                 tabIndex={activeTab === "digest-preview" ? 0 : -1}
               >
                 Digest Preview
@@ -623,17 +616,19 @@ const Dashboard: React.FC = () => {
                 ) : (
                 <>
                 {isAdmin && !processingBannerDismissed && (processingCount > 0 || finishedCount > 0) && (
-                  <div className="processing-banner" role="status">
-                    {processingCount > 0 ? (
-                      <LuLoader size={16} className="processing-banner__spin" aria-hidden="true" />
-                    ) : (
-                      <LuCheck size={16} aria-hidden="true" />
-                    )}
-                    <span className="processing-banner__text">
-                      {processingCount > 0 && `${processingCount} grant${processingCount === 1 ? "" : "s"} processing`}
-                      {processingCount > 0 && finishedCount > 0 && " · "}
-                      {finishedCount > 0 && `${finishedCount} recently finished`}
-                    </span>
+                  <div className="processing-banner">
+                    <div className="processing-banner__message" role="status" aria-atomic="true">
+                      {processingCount > 0 ? (
+                        <LuLoader size={16} className="processing-banner__spin" aria-hidden="true" />
+                      ) : (
+                        <LuCheck size={16} aria-hidden="true" />
+                      )}
+                      <span className="processing-banner__text">
+                        {processingCount > 0 && `${processingCount} grant${processingCount === 1 ? "" : "s"} processing`}
+                        {processingCount > 0 && finishedCount > 0 && " · "}
+                        {finishedCount > 0 && `${finishedCount} recently finished`}
+                      </span>
+                    </div>
                     <button
                       type="button"
                       className="processing-banner__view"
@@ -659,15 +654,15 @@ const Dashboard: React.FC = () => {
                       <input id="grant-search" type="text" className="search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
 
-                    <div className="filter-container" onBlur={handleFilterFocusOut}>
+                    <div className="filter-container">
                       <button ref={filterButtonRef} className={`filter-button ${filterCount > 0 ? "active" : ""}`}
-                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} aria-label="Filter grants" aria-expanded={filterMenuOpen} aria-haspopup="menu">
+                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label="Filter grants" aria-expanded={filterMenuOpen} aria-haspopup="menu">
                         <LuFilter size={18} />
                         {filterCount > 0 && <span className="filter-badge" aria-label={`${filterCount} filter(s) active`}>{filterCount}</span>}
                       </button>
 
                       {filterMenuOpen && (
-                        <div ref={filterMenuRef} className="filter-menu" role="menu" tabIndex={-1} onKeyDown={handleFilterMenuKeyDown}>
+                        <div ref={filterMenuRef} className="filter-menu" role="menu" tabIndex={-1} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut}>
                           <div className="filter-menu-group" role="group" aria-labelledby={statusGroupId}>
                             <div className="filter-menu-header" id={statusGroupId}>Filter by Status</div>
                             {STATUS_FILTERS.map((status, index) => (

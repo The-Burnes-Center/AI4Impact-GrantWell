@@ -143,7 +143,6 @@ import { Button, Card, LoadingSpinner, NavigationButtons } from '../components/u
 
 // Example usage
 <Card header="Project Details">
-  <FormField label="Name" name="name" value={name} onChange={setName} />
   <Button onClick={handleSubmit}>Save</Button>
 </Card>
 ```

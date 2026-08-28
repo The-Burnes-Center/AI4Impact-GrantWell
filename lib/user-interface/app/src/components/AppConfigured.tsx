@@ -150,42 +150,38 @@ export default function AppConfigured() {
   }, [theme]);
 
   if (!config) {
-    if (error) {
-      return (
-        <div
-          style={{
-            height: "100%",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Alert variant="danger">
+    // One region across both boot states, so the swap to the failure message is an
+    // update to a region the screen reader is already watching.
+    return (
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div role="status" aria-live="polite" className="visually-hidden">
+          {error ? "Configuration error" : "Loading"}
+        </div>
+        {error ? (
+          <Alert variant="danger" transition={false} role={undefined}>
             <Alert.Heading>Configuration error</Alert.Heading>
             Error loading configuration from{" "}
             <a href="/aws-exports.json" style={{ fontWeight: "600" }}>
               /aws-exports.json
             </a>
           </Alert>
-        </div>
-      );
-    }
-
-    return (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <div role="status" aria-live="polite" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Spinner animation="border" size="sm" aria-hidden="true" />
-          <span>Loading</span>
-        </div>
+        ) : (
+          <div
+            aria-hidden="true"
+            style={{ display: "flex", alignItems: "center", gap: "8px" }}
+          >
+            <Spinner animation="border" size="sm" />
+            <span>Loading</span>
+          </div>
+        )}
       </div>
     );
   }

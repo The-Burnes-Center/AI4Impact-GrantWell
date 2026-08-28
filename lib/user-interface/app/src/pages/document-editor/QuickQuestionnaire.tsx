@@ -223,7 +223,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   if (error) {
     return (
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0", textAlign: "center" }}>
-        <p style={{ color: colors.error, marginBottom: "16px" }}>{error}</p>
+        <p role="alert" style={{ color: colors.error, marginBottom: "16px" }}>{error}</p>
         <button
           onClick={() => window.location.reload()}
           style={{
@@ -246,7 +246,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     return (
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
         <Card>
-          <p style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
+          <p role="status" style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
             No questions found for this NOFO. You can continue to the next step.
           </p>
         </Card>
@@ -307,7 +307,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                 style={{
                   width: "100%",
                   padding: "12px",
-                  border: `1px solid ${colors.border}`,
+                  border: `1px solid ${colors.inputBorder}`,
                   borderRadius: "6px",
                   fontSize: typography.fontSize.base,
                   minHeight: "120px",

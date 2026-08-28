@@ -261,8 +261,10 @@ export default function HomePage() {
 
         {/* Redirect message */}
         {redirectMessage && (
-          <div className="redirect-banner" role="alert" aria-live="polite">
-            <div style={{ flex: 1 }}>
+          <div className="redirect-banner">
+            {/* The message is informational, and the close button sits outside the
+                region so its label is not read as part of the announcement. */}
+            <div style={{ flex: 1 }} role="status" aria-live="polite">
               <p className="redirect-banner__text">{redirectMessage}</p>
             </div>
             <button
@@ -296,7 +298,7 @@ export default function HomePage() {
                 ? " Or use AI search to describe what you need. "
                 : " Or use the search to find specific grants in the table. "
               : " Or use the search to find the grants you need. "}
-            Click on any grant row to select it, then choose an action:{" "}
+            Click a grant&apos;s name to select it, then choose an action:{" "}
             <strong className="how-it-works__action-label">View Key Requirements</strong>{" "}
             to see eligibility and NOFO requirements,{" "}
             <strong className="how-it-works__action-label">Write Project Narrative</strong>{" "}
@@ -310,14 +312,14 @@ export default function HomePage() {
               ? " AI search is enabled for your account, so descriptive searches will return ranked matches."
               : ""}
             The table shows filtered results. Use the dropdown filters to narrow by status,
-            category, or grant type. Click any grant row to select it, then action buttons will appear.
+            category, or grant type. Each grant name is a button. Activate it to select that grant,
+            then action buttons will appear.
             Use heading navigation to explore the content on each screen.
           </div>
         </section>
 
         {/* Search bar */}
         <IntegratedSearchBar
-          documents={documents}
           onSelectDocument={handleSelectDocument}
           isLoading={loading}
           searchTerm={searchTerm}

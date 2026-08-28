@@ -23,13 +23,6 @@
   box-sizing: border-box;
 }
 
-.document-editor-header-inner {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
 .document-editor-nofo-title {
   font-size: 22px;
   font-weight: 600;
@@ -62,21 +55,6 @@
 
   .document-editor-nofo-title {
     font-size: 18px; /* Smaller font for narrow viewports */
-  }
-
-  .document-editor-content {
-    flex-direction: column; /* Stack sidebar and content vertically */
-  }
-
-  .document-editor-actions {
-    padding: 8px 12px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .document-action-btn {
-    padding: 8px 16px;
-    font-size: 14px;
   }
 }
 
@@ -114,104 +92,6 @@
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-/* Main Document Editor Container */
-.document-editor-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Changed from height to minHeight */
-  width: 100%;
-  overflow: auto; /* Allow scrolling */
-}
-
-/* Content area that holds the workspace */
-.document-editor-content {
-  display: flex;
-  flex: 1;
-  overflow: auto; /* Allow scrolling */
-  background-color: #f5f7fa;
-  min-width: 0; /* Allow flex item to shrink */
-}
-
-/* Action buttons container */
-.document-editor-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 24px;
-  background: #ffffff;
-  border-top: 1px solid #e0e0e0;
-  gap: 12px;
-}
-
-.document-action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 22px;
-  border-radius: 50px;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-
-.save-btn {
-  background-color: transparent;
-  color: #23776C;
-  border-color: #23776C;
-}
-
-.save-btn:hover {
-  background-color: #23776C;
-  color: #f9fbff;
-}
-
-.save-btn:active {
-  transform: translateY(1px);
-}
-
-.primary-btn {
-  background-color: #23776C;
-  color: #f9fbff;
-  border-color: #23776C;
-}
-
-.primary-btn:hover {
-  background-color: #195C53;
-  border-color: #195C53;
-}
-
-.primary-btn:active {
-  transform: translateY(1px);
-}
-
-/* Section navigation */
-.document-section-nav {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-  gap: 8px;
-}
-
-.document-section-item {
-  padding: 8px 16px;
-  background: #e0e0e0;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.document-section-item.active {
-  background: #23776C;
-  color: white;
 }
 
 /* Welcome Modal */
@@ -497,57 +377,6 @@
   gap: 16px;
 }
 
-/* Preview Button (commented-out in JSX, CSS kept for future use) */
-.ra-preview-btn {
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  background: #DFECE0;
-  border: 2px solid #23776C;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.ra-preview-btn:hover {
-  background: #c8e0c9;
-  transform: translateY(-2px);
-}
-
-.ra-preview-btn__icon-wrapper {
-  width: 48px;
-  height: 48px;
-  background: #23776C;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 16px;
-  flex-shrink: 0;
-}
-
-.ra-preview-btn__icon {
-  width: 24px;
-  height: 24px;
-  color: white;
-}
-
-.ra-preview-btn__text {
-  text-align: left;
-}
-
-.ra-preview-btn__title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #195C53;
-  margin-bottom: 4px;
-}
-
-.ra-preview-btn__subtitle {
-  font-size: 14px;
-  color: #195C53;
-}
-
 /* Edit Button */
 .ra-edit-btn {
   display: flex;
@@ -644,6 +473,48 @@
 
 .ra-info-list__item:last-child {
   margin-bottom: 0;
+}
+
+/* Export in progress (announced separately by the status region) */
+.ra-export-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  color: #195C53;
+  font-size: 14px;
+}
+
+.ra-export-progress__spinner {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border: 2px solid #23776C;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Export failure (also announced by the status region in ReviewApplication) */
+.ra-export-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  background: #FEF2F2;
+  border: 1px solid #B91C1C;
+  border-radius: 8px;
+  color: #B91C1C;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.ra-export-error__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 /* Action Buttons */
@@ -776,7 +647,6 @@
 
 /* Focus indicators (WCAG 2.4.7) */
 .ra-edit-btn:focus-visible,
-.ra-preview-btn:focus-visible,
 .ra-back-btn:focus-visible,
 .ra-export-pdf-btn:focus-visible,
 .ra-export-dropdown__item:focus-visible {
@@ -843,51 +713,11 @@
 }
 
 .se-editor-card {
-  border: 1px solid var(--gw-color-border, #e5e7eb);
+  border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 24px;
   background: var(--gw-color-white, #ffffff);
-}
-
-.se-toolbar {
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  border-bottom: 1px solid var(--gw-color-border, #e5e7eb);
-  background: var(--gw-color-background, #f9fafb);
-}
-
-.se-toolbar-btn {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  border-radius: 4px;
-  color: #374151;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.se-toolbar-btn:hover {
-  background: #e5e7eb;
-}
-
-.se-toolbar-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
-  outline-offset: 2px;
-}
-
-.se-toolbar-divider {
-  width: 1px;
-  height: 24px;
-  background: var(--gw-color-border, #e5e7eb);
-  margin: 0 8px;
 }
 
 .se-textarea {
@@ -906,50 +736,6 @@
 .se-textarea:focus-visible {
   outline: 2px solid var(--gw-color-focus-light, #23776C);
   outline-offset: -2px;
-}
-
-/* Regenerate button (disabled feature) */
-.se-regenerate-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 12px;
-  background: #DFECE0;
-  color: var(--gw-color-primary, #23776C);
-  border: 1px solid #d4daff;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 32px;
-  min-height: 44px;
-}
-
-.se-regenerate-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
-  outline-offset: 2px;
-}
-
-.se-regenerate-progress {
-  margin-top: 12px;
-  padding: 12px 16px;
-  background: #DFECE0;
-  border: 1px solid #23776C;
-  border-radius: 6px;
-  color: #195C53;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.se-regenerate-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #23776C;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
 }
 
 /* Content suggestions grid (disabled feature) */

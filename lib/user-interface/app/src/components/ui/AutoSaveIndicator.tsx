@@ -30,8 +30,6 @@ export interface AutoSaveIndicatorProps {
   savedText?: string;
   /** Text to show on error */
   errorText?: string;
-  /** Duration before auto-hiding after save (0 to disable) */
-  hideAfterMs?: number;
 }
 
 const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
@@ -40,10 +38,6 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   savedText = "Saved",
   errorText = "Error saving",
 }) => {
-  if (status === "idle") {
-    return null;
-  }
-
   const containerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
@@ -64,71 +58,64 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   };
 
   return (
-    <div
-      style={containerStyle}
-      role="status"
-      aria-live="polite"
-      aria-label={
-        status === "saving"
-          ? savingText
-          : status === "saved"
-          ? savedText
-          : errorText
-      }
-    >
-      {status === "saving" && (
-        <>
-          <div style={spinnerStyle} aria-hidden="true" />
-          <span>{savingText}</span>
-        </>
-      )}
-
-      {status === "saved" && (
-        <span style={{ display: "flex", alignItems: "center", gap: "6px", color: colors.success }}>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-          {savedText}
-        </span>
-      )}
-
-      {status === "error" && (
-        <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <line x1="15" y1="9" x2="9" y2="15" />
-            <line x1="9" y1="9" x2="15" y2="15" />
-          </svg>
-          {errorText}
-        </span>
-      )}
-
+    <>
+      {/* Outside the live region: CSS text inside one gets read out with the status. */}
       <style>{`
         @keyframes autosave-spin {
           to { transform: rotate(360deg); }
         }
       `}</style>
-    </div>
+      {/* Always mounted, including when idle: a region created at the same instant as
+          "Saving..." is not announced. The status text is the only label. */}
+      <div style={containerStyle} role="status" aria-live="polite">
+        {status === "saving" && (
+          <>
+            <div style={spinnerStyle} aria-hidden="true" />
+            <span>{savingText}</span>
+          </>
+        )}
+
+        {status === "saved" && (
+          <span style={{ display: "flex", alignItems: "center", gap: "6px", color: colors.success }}>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            {savedText}
+          </span>
+        )}
+
+        {status === "error" && (
+          <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+            {errorText}
+          </span>
+        )}
+      </div>
+    </>
   );
 };
 

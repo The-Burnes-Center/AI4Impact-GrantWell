@@ -22,7 +22,9 @@ interface AISearchResponse {
 
 const CACHE_MAX_SIZE = 5;
 const CACHE_TTL_MS = 5 * 60 * 1000;
-const SEARCH_TIMEOUT_MS = 15_000;
+// Generous: an AI search under load routinely runs past 15s, and aborting a
+// working request is worse for the user than waiting.
+const SEARCH_TIMEOUT_MS = 40_000;
 
 interface CacheEntry {
   results: AISearchResult[];
@@ -135,7 +137,7 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         if (!isLatest()) return;
         let message: string;
         if (err instanceof DOMException && err.name === "AbortError") {
-          message = "Search timed out. Try a more specific query or full sentence.";
+          message = `Search timed out after ${SEARCH_TIMEOUT_MS / 1000} seconds. Press Enter to try again, or try a more specific query.`;
         } else if (err instanceof Error) {
           message = err.message;
         } else {

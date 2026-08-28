@@ -84,8 +84,15 @@ const FeedbackForm = React.memo(function FeedbackForm() {
       className="feedback-form-container ma__feedback-form"
       data-mass-feedback-form="true"
     >
+      {/* Success replaces the whole form, so the visible panel is created together
+          with its text. This region is mounted from the start and fills instead. */}
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {feedbackSubmitted
+          ? "Thank you for your feedback! Your response has been submitted successfully."
+          : ""}
+      </div>
       {feedbackSubmitted ? (
-        <div role="alert" aria-live="polite" className="feedback-success">
+        <div className="feedback-success">
           <p style={{ margin: 0 }}>
             Thank you for your feedback! Your response has been submitted
             successfully.
@@ -132,11 +139,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
           </fieldset>
 
           {selectedOption && (
-            <div
-              className="feedback-expanded"
-              role="region"
-              aria-live="polite"
-            >
+            <div className="feedback-expanded" role="region">
               <div className="feedback-divider" />
 
               {selectedOption === "yes" ? (
@@ -223,11 +226,9 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                   aria-required={selectedOption === "no" ? "true" : "false"}
                   aria-invalid={textInvalid ? true : undefined}
                 />
-                <span
-                  id="feedback-char-count"
-                  className="feedback-char-count"
-                  aria-live="polite"
-                >
+                {/* Not a live region: it is reachable through the textarea's
+                    aria-describedby, and announcing it would fire per keystroke. */}
+                <span id="feedback-char-count" className="feedback-char-count">
                   {charsRemaining}/{MAX_CHARS}
                 </span>
               </div>

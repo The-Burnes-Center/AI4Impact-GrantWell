@@ -15,8 +15,6 @@ interface SearchInputProps {
   isSearching?: boolean;
   placeholder?: string;
   ariaLabel?: string;
-  showResults: boolean;
-  selectedIndex: number;
   disabled: boolean;
   onChange: (value: string) => void;
   onFocus: () => void;
@@ -32,8 +30,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       isSearching = false,
       placeholder = "Search by keyword, category, or describe what you need...",
       ariaLabel = "Search grants by name, agency, or category",
-      showResults,
-      selectedIndex,
       disabled,
       onChange,
       onFocus,

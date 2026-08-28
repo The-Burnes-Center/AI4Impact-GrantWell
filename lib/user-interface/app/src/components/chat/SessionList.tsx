@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useContext,
   useCallback,
+  useId,
   useMemo,
 } from "react";
 import { Auth } from "aws-amplify";
@@ -35,6 +36,7 @@ export default function Sessions(props: SessionsProps) {
     "time_stamp"
   );
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const pageSizeSelectId = useId();
   const navigate = useNavigate();
 
   const { documentIdentifier } = props;
@@ -230,139 +232,153 @@ export default function Sessions(props: SessionsProps) {
       </div>
 
       {/* Table section */}
-      <div className="table-container" role="table" aria-label="Chat sessions">
-        <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
-          <div role="row" style={{ display: "contents" }}>
-            <div className="header-cell" role="columnheader">
-              <input
-                type="checkbox"
-                checked={
-                  paginatedItems.length > 0 &&
-                  selectedItems.length === paginatedItems.length
-                }
-                onChange={handleSelectAll}
-                aria-label="Select all sessions"
-                style={{ cursor: "pointer" }}
-                disabled={isLoading || sortedSessions.length === 0}
-              />
-            </div>
-            <div
-              className="header-cell"
-              role="columnheader"
-              aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-            >
-              <button
-                onClick={() => !isLoading && handleSort("title")}
-                disabled={isLoading}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  background: "none",
-                  border: "none",
-                  cursor: isLoading ? "default" : "pointer",
-                  padding: "4px 2px",
-                  font: "inherit",
-                  color: "inherit",
-                }}
+      <div className="table-container">
+        <div role="table" aria-label="Chat sessions">
+          <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+            <div role="row" style={{ display: "contents" }}>
+              <div className="header-cell" role="columnheader">
+                <input
+                  type="checkbox"
+                  checked={
+                    paginatedItems.length > 0 &&
+                    selectedItems.length === paginatedItems.length
+                  }
+                  onChange={handleSelectAll}
+                  aria-label="Select all sessions"
+                  style={{ cursor: "pointer" }}
+                  disabled={isLoading || sortedSessions.length === 0}
+                />
+              </div>
+              <div
+                className="header-cell"
+                role="columnheader"
+                aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
               >
-                Title {!isLoading && getSortIcon("title")}
-              </button>
-            </div>
-            <div
-              className="header-cell"
-              role="columnheader"
-              aria-sort={sortField === "time_stamp" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-            >
-              <button
-                onClick={() => !isLoading && handleSort("time_stamp")}
-                disabled={isLoading}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  background: "none",
-                  border: "none",
-                  cursor: isLoading ? "default" : "pointer",
-                  padding: "4px 2px",
-                  font: "inherit",
-                  color: "inherit",
-                }}
+                <button
+                  onClick={() => !isLoading && handleSort("title")}
+                  disabled={isLoading}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "none",
+                    border: "none",
+                    cursor: isLoading ? "default" : "pointer",
+                    padding: "4px 2px",
+                    font: "inherit",
+                    color: "inherit",
+                  }}
+                >
+                  Title {!isLoading && getSortIcon("title")}
+                </button>
+              </div>
+              <div
+                className="header-cell"
+                role="columnheader"
+                aria-sort={sortField === "time_stamp" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
               >
-                Time {!isLoading && getSortIcon("time_stamp")}
-              </button>
+                <button
+                  onClick={() => !isLoading && handleSort("time_stamp")}
+                  disabled={isLoading}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "none",
+                    border: "none",
+                    cursor: isLoading ? "default" : "pointer",
+                    padding: "4px 2px",
+                    font: "inherit",
+                    color: "inherit",
+                  }}
+                >
+                  Time {!isLoading && getSortIcon("time_stamp")}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="table-body" role={isLoading || sortedSessions.length === 0 ? undefined : "rowgroup"}>
-          {isLoading ? (
-            <div className="table-loading" role="status" aria-live="polite">
-              <div className="table-loading-spinner" aria-hidden="true"></div>
-              <span className="visually-hidden">Loading sessions</span>
-            </div>
-          ) : sortedSessions.length === 0 ? (
-            <div className="no-data">
-              <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
-                No sessions
-              </div>
-            </div>
-          ) : (
-            paginatedItems.map((item) => (
-              <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
-                <div className="row-cell" role="cell">
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.some(
-                      (i) => i.session_id === item.session_id
-                    )}
-                    onChange={(e) => handleSelectItem(item, e)}
-                    aria-label={`Select ${item.title}`}
-                    style={{ cursor: "pointer" }}
-                  />
-                </div>
-                <div className="row-cell" role="cell">
-                  <button
-                    onClick={() => {
-                      if (props.onSessionSelect) {
-                        props.onSessionSelect(item.session_id);
-                      }
-
-                      const queryParam = item.document_identifier
-                        ? `?folder=${encodeURIComponent(
-                            item.document_identifier
-                          )}`
-                        : "";
-
-                      navigate(
-                        `/chat/${item.session_id}${queryParam}`
-                      );
-                    }}
-                    style={{
-                      color: "#195C53",
-                      background: "none",
-                      border: "none",
-                      padding: "4px 2px",
-                      cursor: "pointer",
-                      textAlign: "left",
-                      fontSize: "inherit",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    {item.title}
-                  </button>
-                </div>
-                <div className="row-cell" role="cell">
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
-                    <LuCalendar size={16} aria-hidden="true" />
-                    <time dateTime={item.time_stamp}>
-                      {formatSessionTime(item.time_stamp)}
-                    </time>
+          {!isLoading && (
+            <div className="table-body" role={sortedSessions.length === 0 ? undefined : "rowgroup"}>
+              {sortedSessions.length === 0 ? (
+                <div className="no-data">
+                  <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
+                    No sessions
                   </div>
                 </div>
-              </div>
-            ))
+              ) : (
+                paginatedItems.map((item) => (
+                  <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+                    <div className="row-cell" role="cell">
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.some(
+                          (i) => i.session_id === item.session_id
+                        )}
+                        onChange={(e) => handleSelectItem(item, e)}
+                        aria-label={`Select ${item.title}`}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </div>
+                    <div className="row-cell" role="cell">
+                      <button
+                        onClick={() => {
+                          if (props.onSessionSelect) {
+                            props.onSessionSelect(item.session_id);
+                          }
+
+                          const queryParam = item.document_identifier
+                            ? `?folder=${encodeURIComponent(
+                                item.document_identifier
+                              )}`
+                            : "";
+
+                          navigate(
+                            `/chat/${item.session_id}${queryParam}`
+                          );
+                        }}
+                        style={{
+                          color: "#195C53",
+                          background: "none",
+                          border: "none",
+                          padding: "4px 2px",
+                          cursor: "pointer",
+                          textAlign: "left",
+                          fontSize: "inherit",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {item.title}
+                      </button>
+                    </div>
+                    <div className="row-cell" role="cell">
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                        <LuCalendar size={16} aria-hidden="true" />
+                        <time dateTime={item.time_stamp}>
+                          {formatSessionTime(item.time_stamp)}
+                        </time>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           )}
         </div>
+        {isLoading && (
+          <div className="table-loading" aria-hidden="true">
+            <div className="table-loading-spinner"></div>
+          </div>
+        )}
+      </div>
+
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {isLoading
+          ? "Loading sessions"
+          : sortedSessions.length === 0
+          ? "No sessions"
+          : `${sortedSessions.length} session${
+              sortedSessions.length === 1 ? "" : "s"
+            } loaded`}
       </div>
 
       {/* Pagination */}
@@ -405,11 +421,11 @@ export default function Sessions(props: SessionsProps) {
               </button>
             </div>
             <div className="items-per-page">
-              <label htmlFor="items-per-page-select" style={{ marginRight: "8px" }}>
+              <label htmlFor={pageSizeSelectId} style={{ marginRight: "8px" }}>
                 Show:
               </label>
               <select
-                id="items-per-page-select"
+                id={pageSizeSelectId}
                 value={pageSize}
                 onChange={(e) => {
                   setPageSize(Number(e.target.value));

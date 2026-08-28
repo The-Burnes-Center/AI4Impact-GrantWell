@@ -5,7 +5,6 @@ import {
   Save,
   ChevronLeft,
   ChevronRight,
-  RotateCcw,
   CheckCircle,
 } from "lucide-react";
 import SectionsSidebar from "./components/SectionsSidebar";
@@ -16,7 +15,6 @@ interface SectionEditorProps {
   onContinue: () => void;
   selectedNofo: string | null;
   sessionId: string;
-  onNavigate: (step: string) => void;
   activeJobId?: string;
   isGenerating?: boolean;
 }
@@ -30,7 +28,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   onContinue,
   selectedNofo,
   sessionId,
-  onNavigate,
   activeJobId,
   isGenerating: initialIsGenerating,
 }) => {
@@ -41,14 +38,24 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     [key: string]: string;
   }>({});
   const [, setLoading] = useState(true);
-  const [regenerating, setRegenerating] = useState(false);
-  const [regenerateProgress, setRegenerateProgress] = useState<string>("");
   const [generating, setGenerating] = useState(!!activeJobId && !!initialIsGenerating);
   const [failedSections, setFailedSections] = useState<string[]>([]);
   const [completedSectionCount, setCompletedSectionCount] = useState(0);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "failed">("idle");
   const apiClient = useApiClient();
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Read by the generation poll below; kept in refs so typing (which changes
+  // sectionAnswers/editorContent) cannot tear down and restart the interval.
+  const sectionsRef = useRef(sections);
+  const activeSectionRef = useRef(activeSection);
+  const sectionAnswersRef = useRef(sectionAnswers);
+
+  useEffect(() => {
+    sectionsRef.current = sections;
+    activeSectionRef.current = activeSection;
+    sectionAnswersRef.current = sectionAnswers;
+  }, [sections, activeSection, sectionAnswers]);
 
   // Load sections from NOFO summary API
   useEffect(() => {
@@ -157,9 +164,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         }
 
         // Update editor if active section just completed and editor is empty
-        if (sections[activeSection]) {
-          const activeName = sections[activeSection].name;
-          if (jobStatus.sections?.[activeName] && !sectionAnswers[activeName]) {
+        const activeSectionData = sectionsRef.current[activeSectionRef.current];
+        if (activeSectionData) {
+          const activeName = activeSectionData.name;
+          if (jobStatus.sections?.[activeName] && !sectionAnswersRef.current[activeName]) {
             setEditorContent(jobStatus.sections[activeName]);
           }
         }
@@ -199,7 +207,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [activeJobId, generating, apiClient, sections, activeSection, sectionAnswers, sessionId]);
+  }, [activeJobId, generating, apiClient, sessionId]);
 
   // Update editor content when active section changes
   useEffect(() => {
@@ -370,69 +378,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }
   };
 
-  const handleRegenerateContent = async () => {
-    const section = sections[activeSection];
-    if (!section || !selectedNofo) return;
-
-    try {
-      setRegenerating(true);
-      setRegenerateProgress('Generating content...');
-
-      const username = (await Auth.currentAuthenticatedUser()).username;
-      const currentDraft = await apiClient.drafts.getDraft({
-        sessionId: sessionId,
-        userId: username
-      });
-
-      if (!currentDraft) {
-        throw new Error('No draft found');
-      }
-
-      const result = await apiClient.drafts.generateDraft({
-        query: `Generate content for the ${section.name} section. ${section.description}`,
-        documentIdentifier: selectedNofo,
-        projectBasics: currentDraft.projectBasics || {},
-        questionnaire: currentDraft.questionnaire || {},
-        sessionId: sessionId,
-        onProgress: (status: string) => {
-          setRegenerateProgress(`Generating content for ${section.name}... (${status})`);
-        }
-      });
-
-      if (result.sections && result.sections[section.name]) {
-        setEditorContent(result.sections[section.name]);
-        const updated = { ...sectionAnswers, [section.name]: result.sections[section.name] };
-        setSectionAnswers(updated);
-        localStorage.setItem("sectionAnswers", JSON.stringify(updated));
-
-        await apiClient.drafts.updateDraft({
-          sessionId: sessionId,
-          userId: username,
-          title: currentDraft.title,
-          documentIdentifier: selectedNofo,
-          sections: {
-            ...currentDraft.sections,
-            [section.name]: result.sections[section.name]
-          },
-          projectBasics: currentDraft.projectBasics,
-          questionnaire: currentDraft.questionnaire,
-          status: 'editing_sections',
-          lastModified: new Date().toISOString()
-        });
-
-        setRegenerateProgress('Content generated successfully!');
-      } else {
-        throw new Error('No content generated for this section');
-      }
-    } catch (error) {
-      console.error('Error generating content:', error);
-      console.error(error instanceof Error ? error.message : 'Failed to generate content. Please try again.');
-    } finally {
-      setRegenerating(false);
-      setTimeout(() => setRegenerateProgress(""), 2000);
-    }
-  };
-
   const handleRetryFailedSections = useCallback(async () => {
     if (!selectedNofo || failedSections.length === 0) return;
 
@@ -481,10 +426,17 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       {/* Editor area - now on the left */}
       <div className="se-editor-area">
         <div className="se-editor-inner">
+          {/* Always mounted so the failure text lands as a mutation, and holding
+              the message alone so the retry button is not read out as part of it. */}
+          <div role="alert" className="visually-hidden">
+            {failedSections.length > 0
+              ? `${failedSections.length} section(s) failed to generate: ${failedSections.join(", ")}.`
+              : ""}
+          </div>
+
           {/* Partial failure banner */}
           {failedSections.length > 0 && (
             <div
-              role="alert"
               style={{
                 background: '#FEF3C7',
                 padding: '12px 16px',
@@ -523,6 +475,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               <div
                 role="status"
                 aria-live="polite"
+                aria-atomic="true"
                 style={{
                   background: '#DFECE0',
                   padding: '12px 16px',
@@ -546,8 +499,13 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                     flexShrink: 0,
                   }}
                 />
-                Generating sections ({completedSectionCount}/{sections.length})... You can edit completed sections while others are being written.
+                Generating sections ({completedSectionCount}/{sections.length})...
               </div>
+              {/* Outside the atomic region: it never changes, so re-reading it on
+                  every 2s poll would bury the count. */}
+              <p style={{ margin: 0, fontSize: '14px', color: '#195C53' }}>
+                You can edit completed sections while others are being written.
+              </p>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -578,11 +536,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           {/* Editor */}
           <div className="se-editor-card">
             {generating && !sectionAnswers[sections[activeSection]?.name] ? (
-              <div
-                className="se-skeleton-container"
-                role="status"
-                aria-label={`Generating ${sections[activeSection]?.name}...`}
-              >
+              <div className="se-skeleton-container">
                 <div className="se-skeleton-label">
                   <div className="se-skeleton-spinner" />
                   Generating {sections[activeSection]?.name}...
@@ -609,74 +563,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             )}
           </div>
 
-          {/* Regenerate Content with AI button - DISABLED */}
-          {false && (
-            <button
-              onClick={handleRegenerateContent}
-              disabled={regenerating}
-              className="se-regenerate-btn"
-            >
-              <RotateCcw size={20} className="se-icon--left" />
-              {regenerating ? "Generating..." : "Regenerate Content with AI"}
-            </button>
-          )}
-          {regenerating && regenerateProgress && (
-            <div className="se-regenerate-progress">
-              <div className="se-regenerate-spinner" />
-              {regenerateProgress}
-            </div>
-          )}
-
           {/* Content Suggestions and Completion Checklist sections - DISABLED */}
-          {false && (
-            <div className="se-suggestions-grid">
-              <div>
-                <h3 className="se-suggestions-heading">
-                  Content Suggestions
-                </h3>
-                <div className="se-suggestions-buttons">
-                  <button className="se-suggestion-btn">
-                    Add Community Impact
-                  </button>
-                  <button className="se-suggestion-btn">
-                    Add Statistics
-                  </button>
-                  <button className="se-suggestion-btn">
-                    Add Economic Impact
-                  </button>
-                  <button className="se-suggestion-btn">
-                    Add Comparison
-                  </button>
-                </div>
-              </div>
-
-            <div>
-              <h3 className="se-suggestions-heading">
-                Completion Checklist
-              </h3>
-              <div className="se-checklist-card">
-                <ul className="se-checklist-list">
-                  <li className="se-checklist-item se-checklist-item--done">
-                    <CheckCircle size={16} className="se-icon--left" />
-                    <span>Described the problem</span>
-                  </li>
-                  <li className="se-checklist-item se-checklist-item--done">
-                    <CheckCircle size={16} className="se-icon--left" />
-                    <span>Included data</span>
-                  </li>
-                  <li className="se-checklist-item">
-                    <div className="se-checklist-circle" />
-                    <span>Explained who is affected</span>
-                  </li>
-                  <li className="se-checklist-item">
-                    <div className="se-checklist-circle" />
-                    <span>Connected to solution</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          )}
 
           <div className="se-actions-bar">
             <button
@@ -688,7 +575,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               {saveStatus === "saved" ? "Saved!" : saveStatus === "failed" ? "Save failed" : "Save Progress"}
             </button>
             <span role="status" aria-live="polite" className="visually-hidden">
-              {saveStatus === "saved" ? "Progress saved" : saveStatus === "failed" ? "Save failed. Your changes are stored locally; try saving again." : ""}
+              {saveStatus === "saved" ? "Progress saved" : ""}
+            </span>
+            <span role="alert" className="visually-hidden">
+              {saveStatus === "failed" ? "Save failed. Your changes are stored locally; try saving again." : ""}
             </span>
 
             <div className="se-nav-buttons">

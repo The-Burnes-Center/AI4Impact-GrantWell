@@ -3,7 +3,10 @@
  * 
  * Displays a summary of form validation errors at the top of a form.
  * Provides keyboard-accessible error links for navigation.
- * 
+ *
+ * Announcement is by focus, not by live region: carrying both would make a
+ * screen reader read the summary twice (WCAG 4.1.3).
+ *
  * @example
  * // Basic usage
  * <FormErrorSummary
@@ -24,7 +27,7 @@
  * />
  */
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useId, useRef } from "react";
 import { colors, typography, spacing, borderRadius } from "./styles";
 
 export interface FormErrorSummaryProps {
@@ -38,6 +41,8 @@ export interface FormErrorSummaryProps {
   autoFocus?: boolean;
   /** Callback when clicking an error link */
   onErrorClick?: (fieldName: string) => void;
+  /** Override the generated id (e.g. when a form needs a stable focus target) */
+  id?: string;
 }
 
 const FormErrorSummary: React.FC<FormErrorSummaryProps> = ({
@@ -46,8 +51,11 @@ const FormErrorSummary: React.FC<FormErrorSummaryProps> = ({
   fieldLabels = {},
   autoFocus = true,
   onErrorClick,
+  id,
 }) => {
   const summaryRef = useRef<HTMLDivElement>(null);
+  const generatedId = useId();
+  const summaryId = id ?? generatedId;
   
   // Filter to only include errors with messages
   const activeErrors = Object.entries(errors).filter(([_, message]) => Boolean(message));
@@ -133,9 +141,7 @@ const FormErrorSummary: React.FC<FormErrorSummaryProps> = ({
   return (
     <div
       ref={summaryRef}
-      id="error-summary"
-      role="alert"
-      aria-live="assertive"
+      id={summaryId}
       tabIndex={-1}
       style={containerStyle}
     >

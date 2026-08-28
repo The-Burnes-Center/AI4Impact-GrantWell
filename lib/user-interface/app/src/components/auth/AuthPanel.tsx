@@ -140,8 +140,6 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
   const errorId = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const errorRef = useRef<HTMLDivElement>(null);
-  const successRef = useRef<HTMLDivElement>(null);
 
   const normalizedEmail = useMemo(() => normalizeEmail(email), [email]);
   const passwordRequirements = useMemo(
@@ -152,18 +150,6 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     () => getPasswordRequirements(newPassword),
     [newPassword],
   );
-
-  useEffect(() => {
-    if (error && errorRef.current) {
-      errorRef.current.focus();
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (success && successRef.current) {
-      successRef.current.focus();
-    }
-  }, [success]);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -670,32 +656,38 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
         <p className="auth-card-subtitle">{cardCopy.subtitle}</p>
       </div>
       <div className="auth-card-content">
-        <div aria-live="polite" aria-atomic="true">
-          {error ? (
-            <Alert
-              variant="danger"
-              dismissible
-              onClose={clearError}
-              className="mb-3"
-              ref={errorRef}
-              tabIndex={-1}
-            >
-              <span id={errorId}>{error}</span>
-            </Alert>
-          ) : null}
-          {success ? (
-            <Alert
-              variant="success"
-              dismissible
-              onClose={() => setSuccess(null)}
-              className="mb-3"
-              ref={successRef}
-              tabIndex={-1}
-            >
-              {success}
-            </Alert>
-          ) : null}
+        {/* Always mounted and text-only: a region created together with its text is
+            not announced, and keeping the dismiss buttons out of it stops "Close
+            alert" being read as part of the message. The Alerts below need
+            transition={false} for role={undefined} to reach the div — otherwise
+            react-bootstrap's hardcoded role="alert" announces the same text again. */}
+        <div aria-live="polite" aria-atomic="true" className="visually-hidden">
+          {error || success || ""}
         </div>
+        {error ? (
+          <Alert
+            variant="danger"
+            dismissible
+            onClose={clearError}
+            className="mb-3"
+            transition={false}
+            role={undefined}
+          >
+            <span id={errorId}>{error}</span>
+          </Alert>
+        ) : null}
+        {success ? (
+          <Alert
+            variant="success"
+            dismissible
+            onClose={() => setSuccess(null)}
+            className="mb-3"
+            transition={false}
+            role={undefined}
+          >
+            {success}
+          </Alert>
+        ) : null}
         {renderStep()}
       </div>
     </div>

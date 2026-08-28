@@ -124,6 +124,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
         <div
           className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`}
           role="menu"
+          tabIndex={-1}
           aria-label={`Actions for ${nofo.name}`}
           onKeyDown={handleMenuKeyDown}
         >

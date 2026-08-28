@@ -15,12 +15,14 @@ import Card from "../../components/ui/Card";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import FormErrorSummary from "../../components/ui/FormErrorSummary";
+
+// Stable so handleContinue can re-focus the summary on a repeat submit.
+const PROJECT_BASICS_ERROR_SUMMARY_ID = "project-basics-error-summary";
 import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
 import type { DocumentData } from "../../common/types/document";
 
 interface ProjectBasicsProps {
   onContinue: () => void;
-  selectedNofo: string | null;
   documentData?: DocumentData | null;
   onUpdateData?: (data: Partial<DocumentData>) => void;
 }
@@ -137,7 +139,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
           style={{
             width: "100%",
             padding: prefix ? "12px 12px 12px 28px" : "12px",
-            border: `1px solid ${hasError ? colors.error : colors.border}`,
+            border: `1px solid ${hasError ? colors.error : colors.inputBorder}`,
             borderRadius: borderRadius.md,
             fontSize: typography.fontSize.base,
             fontFamily: typography.fontFamily,
@@ -160,7 +162,6 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
         <span
           id={`${name}-error`}
           role="alert"
-          aria-live="polite"
           style={{
             display: "block",
             fontSize: typography.fontSize.sm,
@@ -181,7 +182,6 @@ InputField.displayName = 'InputField';
 
 const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   onContinue,
-  selectedNofo,
   documentData,
   onUpdateData
 }) => {
@@ -410,7 +410,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const handleContinue = () => {
     if (!validateForm()) {
-      const errorSummary = document.getElementById('error-summary');
+      const errorSummary = document.getElementById(PROJECT_BASICS_ERROR_SUMMARY_ID);
       if (errorSummary) errorSummary.focus();
       return;
     }
@@ -441,7 +441,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             <span style={{ color: colors.error }} aria-hidden="true">*</span> Indicates required field
           </div>
 
-          <FormErrorSummary errors={displayErrors} fieldLabels={FIELD_LABELS} />
+          <FormErrorSummary id={PROJECT_BASICS_ERROR_SUMMARY_ID} errors={displayErrors} fieldLabels={FIELD_LABELS} />
 
           <InputField
             name="projectName"

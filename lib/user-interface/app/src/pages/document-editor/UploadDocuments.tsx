@@ -31,6 +31,16 @@ const MIME_TYPES: Record<string, string> = {
 
 const SUPPORTED_ACCEPT = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.html,.json,.xml,.md,.rtf,.epub,.odt,.tsv,.eml,.msg";
 
+const KB_INDEXING_MESSAGE = "Your documents are being indexed and will be available shortly.";
+
+// Coarse phases only: the poll below updates a percentage every 2s and those
+// must never reach a live region.
+const DRAFT_PHASE_MESSAGES: Record<string, string> = {
+  preparing: "Preparing your draft.",
+  planning: "Retrieving NOFO requirements and planning sections.",
+  generating: "Writing your draft sections. This may take a few minutes.",
+};
+
 // Must match the server cap in generate-upload-url/index.mjs.
 const MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
 const MAX_FILE_SIZE_LABEL = "100 MB";
@@ -60,7 +70,6 @@ function validateFiles(incoming: File[]): FileValidationResult {
 }
 
 interface UploadDocumentsProps {
-  onContinue: () => void;
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
   onNavigateToEditor?: (jobId: string) => void;
@@ -69,7 +78,6 @@ interface UploadDocumentsProps {
 }
 
 const UploadDocuments: React.FC<UploadDocumentsProps> = ({
-  onContinue,
   selectedNofo,
   onNavigate,
   onNavigateToEditor,
@@ -85,6 +93,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [userId, setUserId] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  // Coarse upload state for assistive tech: the progress bar streams percentages,
+  // which must not be announced, but start and completion must be.
+  const [uploadAnnouncement, setUploadAnnouncement] = useState("");
   const [generatingDraft, setGeneratingDraft] = useState(false);
   const [draftProgress, setDraftProgress] = useState<string>("");
   const [draftProgressPercent, setDraftProgressPercent] = useState(0);
@@ -186,6 +197,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     setUploading(true);
     setUploadProgress(0);
     setUploadError(null);
+    setUploadAnnouncement("Uploading files");
 
     const uploader = new FileUploader();
     const nofoName = extractNofoName(selectedNofo);
@@ -208,6 +220,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         } catch (error) {
           console.error(`Error uploading file ${file.name}:`, error);
           setUploadError(`Failed to upload ${file.name}. Please try again.`);
+          setUploadAnnouncement("");
           setUploading(false);
           return;
         }
@@ -230,6 +243,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         }
       }, 5000);
 
+      setUploadAnnouncement("Upload complete");
       setTimeout(() => {
         setFiles([]);
         setUploading(false);
@@ -238,6 +252,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     } catch (error) {
       console.error("Error during upload:", error);
       setUploadError("An error occurred during upload. Please try again.");
+      setUploadAnnouncement("");
       setUploading(false);
     }
   }, [selectedNofo, userId, files, apiClient]);
@@ -256,7 +271,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     return "\u{1F4CE}";
   };
 
-  const [, setGenerationPhase] = useState<string>("preparing");
+  const [generationPhase, setGenerationPhase] = useState<string>("preparing");
   const [totalSections, setTotalSections] = useState(0);
 
   const handleSubmit = async () => {
@@ -393,6 +408,14 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     minHeight: "44px",
   };
 
+  // Rendered as the first child of both views, so React reuses the same node when
+  // the view swaps: a region created together with its first message is missed.
+  const draftPhaseRegion = (
+    <div role="status" aria-live="polite" className="visually-hidden">
+      {generatingDraft ? DRAFT_PHASE_MESSAGES[generationPhase] ?? "" : ""}
+    </div>
+  );
+
   // ── Full-page generation view ──────────────────────────────────────
   if (generatingDraft) {
     const phaseLabel =
@@ -402,6 +425,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
     return (
       <div style={{ maxWidth: "680px", margin: "0 auto", padding: "48px 16px", fontFamily: typography.fontFamily }}>
+        {draftPhaseRegion}
+
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <div
@@ -493,7 +518,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                     {isCompleted ? (
                       <div style={{
                         width: "22px", height: "22px", borderRadius: "50%",
-                        backgroundColor: "#10B981", display: "flex", alignItems: "center",
+                        backgroundColor: colors.success, display: "flex", alignItems: "center",
                         justifyContent: "center", flexShrink: 0, color: "#fff", fontSize: "13px", fontWeight: 700,
                       }}>
                         &#10003;
@@ -526,8 +551,6 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
         {/* Persistence messaging */}
         <div
-          role="status"
-          aria-live="polite"
           style={{
             display: "flex",
             alignItems: "center",
@@ -556,6 +579,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   // ── Normal upload form ─────────────────────────────────────────────
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+      {draftPhaseRegion}
+
       <Card header="Upload & Additional Info">
         <p style={{ color: colors.textSecondary, marginBottom: spacing["2xl"], fontFamily: typography.fontFamily }}>
           Upload supporting documents and share any additional context to help
@@ -597,7 +622,6 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             }}
             role="button"
             tabIndex={0}
-            aria-label="Upload files by clicking or dragging and dropping"
           >
             <p style={{
               fontSize: typography.fontSize.base,
@@ -703,14 +727,26 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             </div>
           )}
 
+          <div role="status" aria-live="polite" className="visually-hidden">
+            {uploadAnnouncement}
+          </div>
+
           {uploading && (
-            <div style={{ marginTop: spacing.lg }} role="status" aria-live="polite">
-              <div style={{
-                height: "6px",
-                backgroundColor: colors.border,
-                borderRadius: borderRadius.sm,
-                overflow: "hidden",
-              }}>
+            <div style={{ marginTop: spacing.lg }}>
+              <div
+                role="progressbar"
+                aria-valuenow={uploadProgress}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="File upload progress"
+                aria-valuetext={`${uploadProgress}% complete`}
+                style={{
+                  height: "6px",
+                  backgroundColor: colors.border,
+                  borderRadius: borderRadius.sm,
+                  overflow: "hidden",
+                }}
+              >
                 <div style={{
                   height: "100%",
                   width: `${uploadProgress}%`,
@@ -730,10 +766,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             </div>
           )}
 
+          <div role="status" aria-live="polite" className="visually-hidden">
+            {kbIndexing && !uploading ? KB_INDEXING_MESSAGE : ""}
+          </div>
+
           {kbIndexing && !uploading && (
             <div
-              role="status"
-              aria-live="polite"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -760,7 +798,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                   flexShrink: 0,
                 }}
               />
-              Your documents are being indexed and will be available shortly.
+              {KB_INDEXING_MESSAGE}
             </div>
           )}
         </div>
@@ -796,7 +834,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             style={{
               width: "100%",
               padding: spacing.md,
-              border: `1px solid ${colors.border}`,
+              border: `1px solid ${colors.inputBorder}`,
               borderRadius: borderRadius.md,
               fontSize: typography.fontSize.base,
               fontFamily: typography.fontFamily,

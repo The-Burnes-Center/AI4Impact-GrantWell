@@ -212,15 +212,15 @@ const DocumentEditor: React.FC = () => {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case "projectBasics":
-        return <ProjectBasics onContinue={() => navigateToStep("questionnaire")} selectedNofo={selectedNofo} documentData={documentData} onUpdateData={handleUpdateData} />;
+        return <ProjectBasics onContinue={() => navigateToStep("questionnaire")} documentData={documentData} onUpdateData={handleUpdateData} />;
       case "questionnaire":
         return <QuickQuestionnaire onContinue={() => navigateToStep("uploadDocuments")} selectedNofo={selectedNofo} onNavigate={navigateToStep} documentData={documentData} onUpdateData={handleUpdateData} />;
       case "uploadDocuments":
-        return <UploadDocuments onContinue={() => navigateToSectionEditor("")} selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} />;
+        return <UploadDocuments selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} />;
       case "sectionEditor":
-        return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} activeJobId={activeJobId} isGenerating={isGeneratingDraft} />;
+        return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} activeJobId={activeJobId} isGenerating={isGeneratingDraft} />;
       case "reviewApplication":
-        return <ReviewApplication onExport={() => {}} selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} />;
+        return <ReviewApplication selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} />;
       default:
         return <div>Welcome to GrantWell</div>;
     }
@@ -270,8 +270,13 @@ const DocumentEditor: React.FC = () => {
             />
 
             <div className="document-editor-workspace" style={{ flex: 1, padding: 20 }}>
+              {/* Outlives the loading view, so both the wait and its end are announced. */}
+              <div role="status" aria-live="polite" className="visually-hidden">
+                {isLoading ? loadingMessage : documentData ? "Document editor ready." : ""}
+              </div>
+
               {isLoading ? (
-                <div id="document-loading-region" role="status" aria-live="polite" aria-busy="true" tabIndex={-1} style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
+                <div id="document-loading-region" aria-busy="true" tabIndex={-1} style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
                   <div style={{ textAlign: "center", maxWidth: 400 }}>
                     <div className="loading-spinner" style={{ margin: "0 auto 16px" }} />
                     <p style={{ color: "#5a6169", fontSize: 16, marginBottom: 8 }}>{loadingMessage}</p>

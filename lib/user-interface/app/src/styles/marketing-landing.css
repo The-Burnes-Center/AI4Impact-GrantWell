@@ -336,17 +336,6 @@
   color: #f9fbff;
 }
 
-.mk-btn--ghost {
-  background-color: transparent;
-  color: var(--mk-green-deepest);
-  border-color: var(--mk-green-deepest);
-}
-
-.mk-btn--ghost:hover {
-  background-color: var(--mk-green-deepest);
-  color: var(--mk-white);
-}
-
 .mk-btn--light {
   background-color: var(--mk-green-light);
   color: var(--mk-green-deepest);
@@ -716,7 +705,6 @@
 @media (max-width: 960px) {
   .marketing__omni { height: auto; padding: 12px 24px; flex-wrap: wrap; gap: 16px; }
   .marketing__omni-link { padding: 4px 0; }
-  .marketing__navbar { height: 60px; }
   .marketing__nav--app { height: auto; padding: 12px 16px; flex-wrap: wrap; gap: 12px; }
   .marketing__nav--app .marketing__nav-links { flex-basis: 100%; order: 3; justify-content: flex-start; }
   .marketing__nav-wordmark { height: 28px; width: auto; }

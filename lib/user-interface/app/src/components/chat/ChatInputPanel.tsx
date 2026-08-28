@@ -13,7 +13,6 @@ import SpeechRecognition, {
 import { Auth } from "aws-amplify";
 import { ApiClient } from "../../common/api-client/api-client";
 import TextareaAutosize from "react-textarea-autosize";
-import { ReadyState } from "react-use-websocket";
 import { AppContext } from "../../common/app-context";
 import {
   ChatBotHistoryItem,
@@ -31,11 +30,6 @@ import { Mic, MicOff, Send, AlertCircle, Square } from "lucide-react";
 
 // Styles for the components
 const styles = {
-  inputContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "16px",
-  },
   inputBorder: {
     border: "2px solid #767676",
     borderRadius: "16px",
@@ -83,23 +77,6 @@ const styles = {
     minWidth: "44px",
     minHeight: "44px",
     margin: "0 4px 0 0",
-  },
-  inputTextarea: {
-    flex: 1,
-    resize: "none",
-    padding: "12px",
-    border: "none",
-    outline: "none",
-    fontFamily: "inherit",
-    fontSize: "14px",
-    backgroundColor: "transparent",
-  },
-  uploadButton: {
-    padding: "10px",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    color: "#5a6169",
   },
   sendButton: {
     padding: "12px",
@@ -201,6 +178,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   const responseWarnRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const extendResponseRef = useRef<(() => void) | null>(null);
   const [responseTimeoutWarning, setResponseTimeoutWarning] = useState(false);
+  const [waitStatus, setWaitStatus] = useState("");
 
   const clearResponseTimeout = () => {
     if (responseTimeoutRef.current) {
@@ -213,6 +191,16 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     }
     extendResponseRef.current = null;
     setResponseTimeoutWarning(false);
+    setWaitStatus("");
+  };
+
+  /** The warning — and the button carrying focus — unmounts on extend, so
+   * confirm the extension and re-home focus instead of dropping it on <body>. */
+  const handleKeepWaiting = () => {
+    if (!extendResponseRef.current) return;
+    extendResponseRef.current();
+    setWaitStatus("Still waiting for the assistant");
+    inputRef.current?.focus();
   };
 
   // Enhanced speech recognition config
@@ -228,7 +216,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
   const [state, setState] = useState<ChatInputState>({
     value: "",
   });
-  const [readyState] = useState<ReadyState>(ReadyState.OPEN);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
   const [isHovered, setIsHovered] = useState(false);
   const [micHovered, setMicHovered] = useState(false);
@@ -413,7 +400,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       return;
     }
     if (props.running) return;
-    if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
 
     let username: string | undefined;
@@ -461,15 +447,16 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       /**Add the user's query to the message history and a blank dummy message
        * for the chatbot as the response loads
        */
+      const pendingAssistantTurn: ChatBotHistoryItem = {
+        type: ChatBotMessageType.AI,
+        content: receivedData,
+        metadata: {},
+      };
+
       messageHistoryRef.current = [
         ...messageHistoryRef.current,
         ...newChatEntry.slice(isFirstMessage ? 1 : 0),
-
-        {
-          type: ChatBotMessageType.AI,
-          content: receivedData,
-          metadata: {},
-        },
+        pendingAssistantTurn,
       ];
       props.setMessageHistory(messageHistoryRef.current);
 
@@ -498,6 +485,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           responseWarnRef.current = null;
           if (receivedData != "") return;
           setResponseTimeoutWarning(true);
+          // Clear so a second "Keep waiting" is a real text change and re-announces.
+          setWaitStatus("");
 
           responseTimeoutRef.current = setTimeout(() => {
             responseTimeoutRef.current = null;
@@ -505,13 +494,19 @@ function ChatInputPanel(props: ChatInputPanelProps) {
             setResponseTimeoutWarning(false);
             if (receivedData != "") return;
             ws.close();
-            messageHistoryRef.current.pop();
-            messageHistoryRef.current.push({
-              type: ChatBotMessageType.AI,
-              content: "Response timed out!",
-              metadata: {},
-            });
-            props.setMessageHistory([...messageHistoryRef.current]);
+            const history = messageHistoryRef.current;
+            if (history[history.length - 1] !== pendingAssistantTurn) return;
+            messageHistoryRef.current = [
+              ...history.slice(0, -1),
+              {
+                type: ChatBotMessageType.AI,
+                content: "Response timed out!",
+                // Read by Chat's status region so the timeout is still spoken
+                // now that the transcript is no longer a live region.
+                metadata: { timedOut: true },
+              },
+            ];
+            props.setMessageHistory(messageHistoryRef.current);
             props.setRunning(false);
           }, RESPONSE_EXTEND_MS);
         }, RESPONSE_WARN_MS);
@@ -628,6 +623,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           Utils.delay(1500).then(() => setNeedsRefresh(true));
         }
         if (!isActiveSocket) return;
+        clearResponseTimeout();
         props.setRunning(false);
 
         // Ensure final scroll to bottom after message is complete
@@ -655,14 +651,21 @@ function ChatInputPanel(props: ChatInputPanelProps) {
 
   return (
     <>
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {waitStatus}
+      </div>
       {responseTimeoutWarning && (
-        <div style={styles.timeoutWarning} role="alert">
+        <div style={styles.timeoutWarning}>
           <AlertCircle size={18} aria-hidden="true" />
-          <span>The assistant is taking longer than usual to respond.</span>
+          {/* Only the message is live — the button inside it made the alert
+              announce "...to respond.Keep waiting". */}
+          <span role="alert">
+            The assistant is taking longer than usual to respond.
+          </span>
           <button
             type="button"
             style={styles.timeoutExtendButton}
-            onClick={() => extendResponseRef.current?.()}
+            onClick={handleKeepWaiting}
             aria-label="Keep waiting for the response"
           >
             Keep waiting
@@ -768,7 +771,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           resize: "none",
           padding: "12px 8px",
           border: "none",
-          outline: "none",
           fontFamily: "inherit",
           fontSize: "15px",
           lineHeight: "1.5",
@@ -809,9 +811,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       ) : (
         <button
           style={{
-            ...(readyState !== ReadyState.OPEN ||
-            state.value.trim().length === 0 ||
-            props.session.loading
+            ...(state.value.trim().length === 0 || props.session.loading
               ? { ...styles.sendButton, ...styles.sendButtonDisabled }
               : {
                   ...styles.sendButton,
@@ -823,11 +823,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
                     : {}),
                 }),
           }}
-          disabled={
-            readyState !== ReadyState.OPEN ||
-            state.value.trim().length === 0 ||
-            props.session.loading
-          }
+          disabled={state.value.trim().length === 0 || props.session.loading}
           onClick={handleSendMessage}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}

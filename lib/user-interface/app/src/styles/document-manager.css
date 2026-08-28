@@ -353,25 +353,6 @@
   cursor: not-allowed;
 }
 
-/* ── Progress bar ── */
-.dm-progress-container {
-  margin-top: var(--gw-spacing-2xl, 24px);
-}
-
-.dm-progress-bar {
-  height: 4px;
-  background-color: var(--gw-color-border, #e2e8f0);
-  border-radius: 2px;
-  margin-top: var(--gw-spacing-sm, 8px);
-  overflow: hidden;
-}
-
-.dm-progress-fill {
-  height: 100%;
-  background-color: var(--gw-color-primary, #23776C);
-  transition: width 0.3s ease;
-}
-
 /* ── Error text ── */
 .dm-error {
   color: var(--gw-color-danger, #CD0D0D);
@@ -592,15 +573,6 @@
   height: 100%;
   background-color: var(--gw-color-primary, #23776C);
   transition: width 0.2s ease;
-}
-
-.dm-file-progress-fill.dm-progress-complete {
-  background-color: var(--gw-color-success, #047857);
-}
-
-.dm-file-progress-fill.dm-progress-failed {
-  background-color: var(--gw-color-danger, #CD0D0D);
-  width: 100% !important;
 }
 
 .dm-file-status-icon {

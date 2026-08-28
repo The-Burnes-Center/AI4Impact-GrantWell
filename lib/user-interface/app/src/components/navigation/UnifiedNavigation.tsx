@@ -5,6 +5,7 @@ import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos"
 import { Home, MessageSquare, FileText, CheckSquare, Upload, LayoutDashboard, User } from "lucide-react";
 import Modal from "../common/Modal";
 import { useAdminCheck } from "../../hooks/use-admin-check";
+import { useInert } from "../../hooks/use-inert";
 
 interface UnifiedNavigationProps {
   documentIdentifier?: string;
@@ -38,6 +39,10 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
   const [isOpen, setIsOpen] = useState(true);
   const [showNofoRequiredModal, setShowNofoRequiredModal] = useState(false);
   const { isAdmin } = useAdminCheck();
+  // At <=320px the closed drawer collapses to zero width, so its links are
+  // clipped but still focusable until they are made inert.
+  const isDrawerCollapsed = isNarrowViewport && !isOpen;
+  const inertDrawerRef = useInert<HTMLDivElement>(isDrawerCollapsed);
 
   // Determine current page/route
   const currentPath = location.pathname;
@@ -313,6 +318,8 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
         </div>
 
         <div
+          ref={inertDrawerRef}
+          aria-hidden={isDrawerCollapsed}
           style={{
             flex: 1,
             padding: "16px 0",

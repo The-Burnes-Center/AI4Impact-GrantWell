@@ -17,7 +17,7 @@ const DraftView: React.FC<DraftViewProps> = ({
 }) => {
   const [, setDraftData] = useState<DocumentDraft | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingMessage, setLoadingMessage] = useState<string>("Loading draft...");
+  const [loadingMessage, setLoadingMessage] = useState<string>("");
   const apiClient = useApiClient();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const DraftView: React.FC<DraftViewProps> = ({
         const currentDraft = await apiClient.drafts.getDraft({
           sessionId: sessionId,
           userId: username,
-          onProgress: (message: string, attempt: number, maxAttempts: number) => {
+          onProgress: (message: string, attempt: number) => {
             setLoadingMessage(message);
             if (attempt === 15) {
               setLoadingMessage("Draft generation is taking longer than expected. Please wait...");
@@ -61,36 +61,40 @@ const DraftView: React.FC<DraftViewProps> = ({
     fetchDraftData();
   }, [apiClient, selectedNofo, sessionId]);
 
-  if (isLoading) {
-    return (
-      <div 
-        className="dv-loading"
-        role="status"
-        aria-live="polite"
-        aria-busy="true"
-        aria-label="Loading draft"
-      >
-        <div className="dv-spinner" aria-hidden="true" />
-        <p className="dv-loading__message">{loadingMessage}</p>
-        {loadingMessage.includes("generation") && (
-          <p className="dv-loading__help">
-            This may take 30-60 seconds. Please don't close this page.
-          </p>
-        )}
-      </div>
-    );
-  }
+  // Same node in both branches, so the outcome is announced even though the
+  // loading view unmounts.
+  const statusMessage = isLoading
+    ? loadingMessage
+    : "Draft created successfully. You can now start editing your application.";
 
   return (
-    <div className="dv-success">
-      <h2 className="dv-success__title">Draft Created Successfully!</h2>
-      <p className="dv-success__text">
-        Your draft has been created. You can now start editing your application.
-      </p>
-      <button className="dv-success__btn" onClick={onStartEditing}>
-        Start Editing
-      </button>
-    </div>
+    <>
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {statusMessage}
+      </div>
+
+      {isLoading ? (
+        <div className="dv-loading" aria-busy="true">
+          <div className="dv-spinner" aria-hidden="true" />
+          <p className="dv-loading__message">{loadingMessage || "Loading draft..."}</p>
+          {loadingMessage.includes("generation") && (
+            <p className="dv-loading__help">
+              This may take 30-60 seconds. Please don't close this page.
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="dv-success">
+          <h2 className="dv-success__title">Draft Created Successfully!</h2>
+          <p className="dv-success__text">
+            Your draft has been created. You can now start editing your application.
+          </p>
+          <button className="dv-success__btn" onClick={onStartEditing}>
+            Start Editing
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 

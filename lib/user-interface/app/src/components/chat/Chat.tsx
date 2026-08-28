@@ -89,6 +89,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderTop: "3px solid #23776C",
     flexShrink: 0,
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -139,6 +140,10 @@ export default function Chat(props: {
   );
   const messageAreaRef = useRef<HTMLDivElement>(null);
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  const [replyStatus, setReplyStatus] = useState<string>("");
+  const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
+  const prevRunningRef = useRef<boolean>(running);
+  const awaitingReplyRef = useRef<boolean>(false);
 
   /** Loads session history */
   useEffect(() => {
@@ -262,6 +267,37 @@ export default function Chat(props: {
     }
   }, [running, messageHistory.length]);
 
+  useEffect(() => {
+    messageHistoryRef.current = messageHistory;
+  }, [messageHistory]);
+
+  /** The transcript is deliberately not a live region, so nothing announces the
+   * end of a reply — an empty status region is silent. Report the outcome once,
+   * on the running true -> false edge. */
+  useEffect(() => {
+    const wasRunning = prevRunningRef.current;
+    prevRunningRef.current = running;
+
+    if (running) {
+      // True on mount as well as while replying, so only a false -> true edge
+      // counts as a reply the user actually asked for.
+      awaitingReplyRef.current = !wasRunning;
+      return;
+    }
+    if (!wasRunning || !awaitingReplyRef.current) return;
+    awaitingReplyRef.current = false;
+
+    const history = messageHistoryRef.current;
+    const last = history[history.length - 1];
+    if (last?.type !== ChatBotMessageType.AI || last.metadata?.stopped) {
+      setReplyStatus("Response stopped");
+    } else if (last.metadata?.timedOut) {
+      setReplyStatus("Response timed out. Send your message again to retry.");
+    } else {
+      setReplyStatus(last.content ? "Assistant replied" : "No response received");
+    }
+  }, [running]);
+
   const scrollToBottom = () => {
     if (messageAreaRef.current) {
       messageAreaRef.current.scrollTo({
@@ -273,9 +309,14 @@ export default function Chat(props: {
 
   return (
     <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
+      {/* Not role="log": every streamed chunk rewrites the last turn, so a live
+          transcript re-announces the whole growing reply. Completion is
+          announced by the status region below instead. */}
       <div
         ref={messageAreaRef}
-        role="log"
+        role="group"
+        aria-label="Chat transcript"
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrollable region needs keyboard access (WCAG 2.1.1)
         tabIndex={0}
         style={styles.messageArea}
       >
@@ -338,14 +379,16 @@ export default function Chat(props: {
           ? "Loading chat session"
           : running
           ? "Assistant is replying"
-          : ""}
+          : replyStatus}
+      </div>
+
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {props.kbSyncing ? "Indexing your documents. You can keep chatting." : ""}
       </div>
 
       {/* KB indexing banner */}
       {props.kbSyncing && (
         <div
-          role="status"
-          aria-live="polite"
           style={{
             display: "flex",
             alignItems: "center",

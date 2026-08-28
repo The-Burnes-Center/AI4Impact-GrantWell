@@ -7,6 +7,7 @@ import { useAdminCheck } from "../../hooks/use-admin-check";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
+import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { stateNameFromCode } from "../../common/generated/states";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
@@ -301,18 +302,12 @@ export default function ProfilePage() {
         <UnifiedNavigation />
       </nav>
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <nav aria-label="Breadcrumb" className="breadcrumb">
-          <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex" }}>
-            <li className="breadcrumb-item">
-              <button className="breadcrumb-link" onClick={() => navigate("/")}>
-                Home
-              </button>
-            </li>
-            <li className="breadcrumb-item" aria-current="page">
-              Profile
-            </li>
-          </ol>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "Home", onClick: () => navigate("/") },
+            { label: "Profile" },
+          ]}
+        />
 
         <div className="dashboard-main-content">
           <div className="dashboard-header">
@@ -415,7 +410,7 @@ export default function ProfilePage() {
           {saved && <div className="profile-alert profile-alert--success" role="status">Preferences saved.</div>}
 
           {loading ? (
-            <p>Loading…</p>
+            <p role="status">Loading…</p>
           ) : (
             <form onSubmit={onSave}>
               <div className="profile-section">
@@ -478,7 +473,9 @@ export default function ProfilePage() {
                     >
                       Clear
                     </Button>
-                    <span className="profile-chip-count" aria-live="polite">
+                    {/* Not a live region: each checkbox already announces its own
+                        state, and this count would talk over that. */}
+                    <span className="profile-chip-count">
                       {categories.length} of {GRANT_CATEGORIES.length} selected
                     </span>
                   </div>
@@ -619,20 +616,22 @@ function ActivityList({
           {emptyText}
         </p>
       ) : (
-        <div className="table-container" style={{ marginBottom: 0 }}>
-          <div className="table-header" style={{ gridTemplateColumns: gridCols }}>
-            <div className="header-cell">Title</div>
-            <div className="header-cell">{timeHeader}</div>
+        <div className="table-container" role="table" aria-label={title} style={{ marginBottom: 0 }}>
+          <div role="rowgroup">
+            <div className="table-header" role="row" style={{ gridTemplateColumns: gridCols }}>
+              <div className="header-cell" role="columnheader">Title</div>
+              <div className="header-cell" role="columnheader">{timeHeader}</div>
+            </div>
           </div>
-          <div className="table-body">
+          <div className="table-body" role="rowgroup">
             {rows.map((r) => (
-              <div key={r.key} className="table-row" style={{ gridTemplateColumns: gridCols }}>
-                <div className="row-cell">
+              <div key={r.key} className="table-row" role="row" style={{ gridTemplateColumns: gridCols }}>
+                <div className="row-cell" role="cell">
                   <button type="button" onClick={r.onOpen} style={titleLinkStyle}>
                     {r.title}
                   </button>
                 </div>
-                <div className="row-cell" style={{ justifyContent: "flex-end" }}>
+                <div className="row-cell" role="cell" style={{ justifyContent: "flex-end" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
                     <LuCalendar size={16} aria-hidden="true" />
                     <time dateTime={r.when}>{formatWhen(r.when)}</time>

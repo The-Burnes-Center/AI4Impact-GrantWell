@@ -43,6 +43,10 @@ const InProgressCard: React.FC<{ nofo: NOFO }> = ({ nofo }) => {
         </span>
       </div>
 
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {currentStage ? `${nofo.name}: ${currentStage.label}` : ""}
+      </div>
+
       <div
         className="processing-tab__bar"
         role="progressbar"

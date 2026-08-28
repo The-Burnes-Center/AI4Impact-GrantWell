@@ -6,6 +6,8 @@ interface Section {
   description: string;
 }
 
+const CONCURRENCY_WINDOW = 5;
+
 interface SectionsSidebarProps {
   sections: Section[];
   activeSection: number;
@@ -29,21 +31,25 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
     return !!sectionAnswers[section.name] || failedSections.includes(section.name);
   };
 
+  // Backend generates sections in a sliding window of CONCURRENCY_WINDOW; anything
+  // past it is still queued. Icon and accessible name must both use this test.
+  const isActivelyGenerating = (idx: number) =>
+    !!generating && idx >= completedSectionCount && idx < completedSectionCount + CONCURRENCY_WINDOW;
+
+  const getStatus = (section: Section, idx: number) => {
+    if (sectionAnswers[section.name]) return "completed";
+    if (failedSections.includes(section.name)) return "failed";
+    if (!generating) return "";
+    return isActivelyGenerating(idx) ? "generating" : "pending";
+  };
+
   const getStatusIcon = (section: Section, idx: number) => {
-    // Section has content — completed
-    if (sectionAnswers[section.name]) {
-      return <CheckCircle size={16} className="se-sidebar__check" aria-label={`${section.name}: completed`} />;
-    }
-
-    // Section explicitly failed
-    if (failedSections.includes(section.name)) {
-      return <AlertCircle size={16} style={{ color: '#EF4444' }} aria-label={`${section.name}: failed`} />;
-    }
-
-    // Currently generating — show spinner for sections in the active concurrency window
-    if (generating) {
-      const isActivelyGenerating = idx >= completedSectionCount && idx < completedSectionCount + 5;
-      if (isActivelyGenerating) {
+    switch (getStatus(section, idx)) {
+      case "completed":
+        return <CheckCircle size={16} className="se-sidebar__check" aria-label={`${section.name}: completed`} />;
+      case "failed":
+        return <AlertCircle size={16} style={{ color: '#EF4444' }} aria-label={`${section.name}: failed`} />;
+      case "generating":
         return (
           <Loader
             size={16}
@@ -52,16 +58,31 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
             aria-label={`${section.name}: generating`}
           />
         );
-      }
-      // Pending — locked
-      return <Lock size={14} style={{ color: '#6b7280' }} aria-label={`${section.name}: pending`} />;
+      case "pending":
+        return <Lock size={14} style={{ color: '#6b7280' }} aria-label={`${section.name}: pending`} />;
+      default:
+        return null;
     }
-
-    return null;
   };
+
+  // Coarse on purpose: the generator flips up to CONCURRENCY_WINDOW sections at
+  // once, so announcing each pending -> generating -> completed step would flood
+  // the queue. Empty until the section list arrives, so the text lands as a
+  // mutation on an already-mounted region.
+  const overallStatus =
+    sections.length === 0
+      ? ""
+      : generating
+        ? `Generating ${sections.length} sections.`
+        : completedSectionCount > 0
+          ? `Section generation finished. ${completedSectionCount} of ${sections.length} sections generated.`
+          : "";
 
   return (
     <div className="se-sidebar">
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {overallStatus}
+      </div>
       <h3 className="se-sidebar__title">
         Sections
         {generating && (
@@ -73,13 +94,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
       <div className="se-sidebar__list">
         {sections.map((section, idx) => {
           const locked = generating && !isSectionReady(section);
-          const status = sectionAnswers[section.name]
-            ? "completed"
-            : failedSections.includes(section.name)
-              ? "failed"
-              : generating
-                ? "generating"
-                : "";
+          const status = getStatus(section, idx);
           return (
             <button
               key={idx}

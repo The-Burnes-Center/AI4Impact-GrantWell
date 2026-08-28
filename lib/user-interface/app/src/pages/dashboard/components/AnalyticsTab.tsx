@@ -151,7 +151,8 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
       </div>
 
       {loading && !data ? (
-        <div className="metrics-grid" role="status" aria-busy="true" aria-label="Loading analytics">
+        <div className="metrics-grid" aria-busy="true">
+          <span role="status" className="visually-hidden">Loading analytics</span>
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="metric-card metric-card--skeleton" />
           ))}
@@ -286,7 +287,7 @@ const StatTile: React.FC<{ label: string; value: number }> = ({
   label,
   value,
 }) => (
-  <div className="metric-card" role="status" aria-label={`${label}: ${value}`}>
+  <div className="metric-card" aria-label={`${label}: ${value}`}>
     <div className="metric-card__value">{value.toLocaleString()}</div>
     <div className="metric-card__label">{label}</div>
   </div>

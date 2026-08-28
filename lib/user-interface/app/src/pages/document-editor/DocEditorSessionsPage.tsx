@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { statusToStep } from "../../common/helpers/document-editor-utils";
 import DocEditorSessions from "../../components/document-editor/DocEditorSessions";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
+import Breadcrumbs from "../../components/common/Breadcrumbs";
 import "../../styles/dashboard.css";
 
 export default function DocEditorSessionsPage() {
@@ -80,10 +81,10 @@ export default function DocEditorSessionsPage() {
     }
   };
 
-  const handleHomeClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate("/");
-  };
+  const breadcrumbItems = [
+    { label: "Home", onClick: () => navigate("/") },
+    { label: "Drafts" },
+  ];
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
@@ -93,22 +94,7 @@ export default function DocEditorSessionsPage() {
         />
       </nav>
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="breadcrumb">
-          <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex" }}>
-            <li className="breadcrumb-item">
-              <button
-                className="breadcrumb-link"
-                onClick={handleHomeClick}
-              >
-                Home
-              </button>
-            </li>
-            <li className="breadcrumb-item" aria-current="page">
-              Drafts
-            </li>
-          </ol>
-        </nav>
+        <Breadcrumbs items={breadcrumbItems} />
 
         <div className="dashboard-main-content">
           <DocEditorSessions

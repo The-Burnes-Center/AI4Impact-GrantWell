@@ -21,8 +21,12 @@ export default function MaintenanceGate({ children }: MaintenanceGateProps) {
           alignItems: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Spinner animation="border" size="sm" />
+        <div
+          role="status"
+          aria-live="polite"
+          style={{ display: "flex", alignItems: "center", gap: "8px" }}
+        >
+          <Spinner animation="border" size="sm" aria-hidden="true" />
           <span>Loading</span>
         </div>
       </div>

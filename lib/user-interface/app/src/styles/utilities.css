@@ -1,8 +1,8 @@
 /*
  * Utility Classes
  *
- * Shared utility classes for accessibility, layout, and visual helpers.
- * Import via tokens.css (already loaded in app.scss).
+ * Shared utility classes for accessibility and focus handling.
+ * Loaded via app.scss.
  */
 
 /* ==============================
@@ -26,31 +26,15 @@
   border: 0;
 }
 
-/* Show the element when it receives focus (e.g., skip-nav link) */
-.visually-hidden-focusable:focus,
-.visually-hidden-focusable:active,
-.sr-only-focusable:focus,
-.sr-only-focusable:active {
-  position: static;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  clip: auto;
-  white-space: normal;
-  margin: 0;
-}
-
 /* ==============================
  * Focus ring
  * ============================== */
 
-.focus-ring:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light);
-  outline-offset: 2px;
-}
-
 button:focus-visible,
 a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
 [role="button"]:focus-visible,
 [role="tab"]:focus-visible,
 [role="menuitem"]:focus-visible,
@@ -61,71 +45,11 @@ a:focus-visible,
   outline-offset: 2px;
 }
 
-.dark-bg button:focus-visible,
 [data-dark-bg="true"] button:focus-visible,
+.marketing__band button:focus-visible,
+.marketing__band a:focus-visible,
 .marketing__omni a:focus-visible,
 .marketing__footer a:focus-visible {
   outline-color: var(--gw-color-focus-dark, #DFECE0);
 }
 
-/* ==============================
- * Skip navigation link
- * ============================== */
-
-.skip-to-main {
-  position: absolute;
-  left: -9999px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  z-index: 9999;
-  padding: 8px 16px;
-  background: var(--gw-color-primary);
-  color: var(--gw-color-white);
-  font-weight: 600;
-  text-decoration: none;
-  border: 2px solid var(--gw-color-focus-light);
-}
-
-.skip-to-main:focus {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  clip: auto;
-}
-
-/* ==============================
- * Layout helpers
- * ============================== */
-
-.container-fluid-padded {
-  width: 100%;
-  padding-left: var(--gw-spacing-xl);
-  padding-right: var(--gw-spacing-xl);
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* ==============================
- * Text helpers
- * ============================== */
-
-.text-truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}

@@ -247,8 +247,8 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   if (loading) {
     return (
-      <div className="feature-rollouts-panel" role="status" aria-busy="true">
-        Loading users...
+      <div className="feature-rollouts-panel" aria-busy="true">
+        <span role="status">Loading users...</span>
       </div>
     );
   }

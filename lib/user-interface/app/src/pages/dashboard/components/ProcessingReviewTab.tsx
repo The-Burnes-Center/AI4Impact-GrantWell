@@ -46,6 +46,9 @@ const SOURCE_LABELS: Record<string, string> = {
 
 const REPROCESSABLE_STATUSES = new Set(["failed", "pending_review", "needs_reupload"]);
 
+/** Checkbox, name, reason, status, date, details — the expanded row spans all of them. */
+const TABLE_COLUMN_COUNT = 6;
+
 const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   apiClient,
   addNotification,
@@ -265,7 +268,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               className="review-btn review-btn--bulk-reprocess"
               onClick={() => void handleBulkReprocess()}
               disabled={!canReprocess || bulkAction !== null}
-              aria-label={`Reprocess ${selected.size} selected NOFOs`}
+              aria-label={`Reprocess Selected — ${selected.size} NOFO${selected.size === 1 ? "" : "s"}`}
             >
               <LuRefreshCw size={14} className={bulkAction === "reprocess" ? "refresh-icon" : ""} />
               <span>{bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"}</span>
@@ -289,102 +292,108 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       )}
 
-      <div className="table-container" role="table" aria-label="Processing reviews">
-        <div className="table-header review-table-grid-select" role="rowgroup">
-          <div role="row" style={{ display: "contents" }}>
-            <div className="header-cell review-checkbox-cell" role="columnheader">
-              <input
-                type="checkbox"
-                checked={reviews.length > 0 && selected.size === reviews.length}
-                onChange={toggleSelectAll}
-                aria-label="Select all reviews"
-                disabled={reviews.length === 0}
-              />
-            </div>
-            <div className="header-cell" role="columnheader">NOFO Name</div>
-            <div className="header-cell" role="columnheader">Reason</div>
-            <div className="header-cell" role="columnheader">Status</div>
-            <div className="header-cell" role="columnheader">Date</div>
-            <div className="header-cell" role="columnheader">Details</div>
-          </div>
-        </div>
-        <div className="table-body" role={loading || reviews.length === 0 ? undefined : "rowgroup"}>
-          {loading ? (
-            <div className="review-loading" role="status" aria-live="polite" aria-busy="true">
-              Loading reviews...
-            </div>
-          ) : reviews.length === 0 ? (
-            <div className="no-data">
-              <LuFileX size={24} className="no-data-icon" />
-              <p>
-                {statusFilter === "pending_review"
-                  ? "No NOFOs pending review"
-                  : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
-              </p>
-            </div>
-          ) : (
-            reviews.map((review) => (
-              <div key={`${review.nofo_name}-${review.review_id}`} style={{ display: "contents" }}>
-                <div
-                  className={`table-row review-table-row review-table-grid-select ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""} ${selected.has(review.review_id) ? "review-table-row--selected" : ""}`}
-                  role="row"
-                >
-                  <div className="row-cell review-checkbox-cell" role="cell">
-                    <input
-                      type="checkbox"
-                      checked={selected.has(review.review_id)}
-                      onChange={() => toggleSelect(review.review_id)}
-                      aria-label={`Select ${review.nofo_name}`}
-                    />
-                  </div>
-                  <div className="row-cell" role="cell">
-                    <span className="review-nofo-name">
-                      {review.nofo_name}
-                    </span>
-                  </div>
-                  <div className="row-cell" role="cell">{getReasonSummary(review)}</div>
-                  <div className="row-cell" role="cell">
-                    <span className={`review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
-                      {STATUS_LABELS[review.status] || review.status}
-                    </span>
-                  </div>
-                  <div className="row-cell" role="cell">
-                    <span className="review-date">
-                      {new Date(review.created_at).toLocaleDateString("en-US", { timeZone: "America/New_York" })}
-                    </span>
-                  </div>
-                  <div className="row-cell actions" role="cell">
-                    <button
-                      type="button"
-                      className="review-expand-toggle"
-                      onClick={() => toggleExpand(review.nofo_name)}
-                      aria-expanded={expandedNofo === review.nofo_name}
-                      aria-label={`${expandedNofo === review.nofo_name ? "Hide" : "View"} details for ${review.nofo_name}`}
-                      style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", padding: 0, font: "inherit", display: "inline-flex", alignItems: "center", gap: "4px" }}
-                    >
-                      {expandedNofo === review.nofo_name ? "Hide" : "View"}
-                      <LuChevronDown
-                        size={14}
-                        className={`review-chevron ${expandedNofo === review.nofo_name ? "review-chevron--expanded" : ""}`}
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </div>
-                </div>
-
-                {expandedNofo === review.nofo_name && (
-                  <ReviewExpandedRow
-                    review={review}
-                    apiClient={apiClient}
-                    onActionComplete={handleActionComplete}
-                    addNotification={addNotification}
-                    onCollapse={() => setExpandedNofo(null)}
-                  />
-                )}
+      <div className="table-container">
+        <div role="table" aria-label="Processing reviews">
+          <div className="table-header review-table-grid-select" role="rowgroup">
+            <div role="row" style={{ display: "contents" }}>
+              <div className="header-cell review-checkbox-cell" role="columnheader">
+                <input
+                  type="checkbox"
+                  checked={reviews.length > 0 && selected.size === reviews.length}
+                  onChange={toggleSelectAll}
+                  aria-label="Select all reviews"
+                  disabled={reviews.length === 0}
+                />
               </div>
-            ))
+              <div className="header-cell" role="columnheader">NOFO Name</div>
+              <div className="header-cell" role="columnheader">Reason</div>
+              <div className="header-cell" role="columnheader">Status</div>
+              <div className="header-cell" role="columnheader">Date</div>
+              <div className="header-cell" role="columnheader">Details</div>
+            </div>
+          </div>
+          {!loading && (
+            <div className="table-body" role={reviews.length === 0 ? undefined : "rowgroup"}>
+              {reviews.length === 0 ? (
+                <div className="no-data">
+                  <LuFileX size={24} className="no-data-icon" />
+                  <p>
+                    {statusFilter === "pending_review"
+                      ? "No NOFOs pending review"
+                      : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
+                  </p>
+                </div>
+              ) : (
+                reviews.map((review) => (
+                  <div key={`${review.nofo_name}-${review.review_id}`} style={{ display: "contents" }}>
+                    <div
+                      className={`table-row review-table-row review-table-grid-select ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""} ${selected.has(review.review_id) ? "review-table-row--selected" : ""}`}
+                      role="row"
+                    >
+                      <div className="row-cell review-checkbox-cell" role="cell">
+                        <input
+                          type="checkbox"
+                          checked={selected.has(review.review_id)}
+                          onChange={() => toggleSelect(review.review_id)}
+                          aria-label={`Select ${review.nofo_name}`}
+                        />
+                      </div>
+                      <div className="row-cell" role="cell">
+                        <span className="review-nofo-name">
+                          {review.nofo_name}
+                        </span>
+                      </div>
+                      <div className="row-cell" role="cell">{getReasonSummary(review)}</div>
+                      <div className="row-cell" role="cell">
+                        <span className={`review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
+                          {STATUS_LABELS[review.status] || review.status}
+                        </span>
+                      </div>
+                      <div className="row-cell" role="cell">
+                        <span className="review-date">
+                          {new Date(review.created_at).toLocaleDateString("en-US", { timeZone: "America/New_York" })}
+                        </span>
+                      </div>
+                      <div className="row-cell actions" role="cell">
+                        <button
+                          type="button"
+                          className="review-expand-toggle"
+                          onClick={() => toggleExpand(review.nofo_name)}
+                          aria-expanded={expandedNofo === review.nofo_name}
+                          aria-label={`${expandedNofo === review.nofo_name ? "Hide" : "View"} details for ${review.nofo_name}`}
+                          style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", padding: 0, font: "inherit", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                        >
+                          {expandedNofo === review.nofo_name ? "Hide" : "View"}
+                          <LuChevronDown
+                            size={14}
+                            className={`review-chevron ${expandedNofo === review.nofo_name ? "review-chevron--expanded" : ""}`}
+                            aria-hidden="true"
+                          />
+                        </button>
+                      </div>
+                    </div>
+
+                    {expandedNofo === review.nofo_name && (
+                      <ReviewExpandedRow
+                        review={review}
+                        apiClient={apiClient}
+                        onActionComplete={handleActionComplete}
+                        addNotification={addNotification}
+                        onCollapse={() => setExpandedNofo(null)}
+                        colSpan={TABLE_COLUMN_COUNT}
+                      />
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
           )}
         </div>
+        {loading && (
+          <div className="review-loading" aria-busy="true">
+            <span role="status" aria-live="polite">Loading reviews...</span>
+          </div>
+        )}
       </div>
     </div>
   );

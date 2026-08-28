@@ -14,7 +14,6 @@ import {
 import "../../styles/document-editor.css";
 
 interface ReviewApplicationProps {
-  onExport: () => void;
   selectedNofo: string | null;
   sessionId: string;
   onNavigate: (step: string) => void;
@@ -26,7 +25,6 @@ interface Section {
 }
 
 const ReviewApplication: React.FC<ReviewApplicationProps> = ({
-  onExport,
   selectedNofo,
   sessionId,
   onNavigate,
@@ -38,6 +36,8 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [isExportingPDF, setIsExportingPDF] = useState(false);
   const [isExportingDOCX, setIsExportingDOCX] = useState(false);
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
+  const [exportStatus, setExportStatus] = useState("");
+  const [exportError, setExportError] = useState<string | null>(null);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
   const apiClient = useApiClient();
 
@@ -153,9 +153,11 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const handleExportPDF = async () => {
     setExportDropdownOpen(false);
     setIsExportingPDF(true);
+    setExportError(null);
+    setExportStatus("Generating PDF. This may take a moment.");
     try {
       const { draftData, grantName } = await fetchDraftForExport();
-      if (!draftData) { console.error("No draft data available for export."); return; }
+      if (!draftData) throw new Error("No draft data available for export.");
 
       const pdfBlob = await apiClient.drafts.generatePDF({
         title: draftData.title,
@@ -172,8 +174,12 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
+      setExportStatus("PDF ready. Downloaded as grant-application.pdf.");
     } catch (error) {
       console.error("Error generating PDF:", error);
+      const message = "PDF export failed. Your work is saved. Please try exporting again.";
+      setExportError(message);
+      setExportStatus(message);
     } finally {
       setIsExportingPDF(false);
     }
@@ -182,9 +188,11 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const handleExportDOCX = async () => {
     setExportDropdownOpen(false);
     setIsExportingDOCX(true);
+    setExportError(null);
+    setExportStatus("Generating Word document. This may take a moment.");
     try {
       const { draftData, grantName } = await fetchDraftForExport();
-      if (!draftData) { console.error("No draft data available for export."); return; }
+      if (!draftData) throw new Error("No draft data available for export.");
 
       const docxBlob = await apiClient.drafts.generateDOCX({
         title: draftData.title,
@@ -201,8 +209,12 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
+      setExportStatus("Word document ready. Downloaded as grant-application.docx.");
     } catch (error) {
       console.error("Error generating DOCX:", error);
+      const message = "Word export failed. Your work is saved. Please try exporting again.";
+      setExportError(message);
+      setExportStatus(message);
     } finally {
       setIsExportingDOCX(false);
     }
@@ -273,23 +285,6 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         <h3 className="ra-export-section__title">Before You Export</h3>
 
         <div className="ra-export-grid">
-          {/* <button
-            className="ra-preview-btn"
-            aria-label="Preview full application (coming soon)"
-          >
-            <div className="ra-preview-btn__icon-wrapper">
-              <FileText className="ra-preview-btn__icon" />
-            </div>
-            <div className="ra-preview-btn__text">
-              <div className="ra-preview-btn__title">
-                Preview Full Application
-              </div>
-              <div className="ra-preview-btn__subtitle">
-                View as a single document
-              </div>
-            </div>
-          </button> */}
-
           <button
             onClick={() => onNavigate("sectionEditor")}
             className="ra-edit-btn"
@@ -330,6 +325,26 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         </ul>
       </div>
 
+      {(isExportingPDF || isExportingDOCX) && (
+        <p className="ra-export-progress">
+          <span className="ra-export-progress__spinner" aria-hidden="true" />
+          {isExportingPDF ? "Generating PDF…" : "Generating Word document…"}
+        </p>
+      )}
+
+      {exportError && (
+        <div className="ra-export-error">
+          <AlertTriangle className="ra-export-error__icon" aria-hidden="true" />
+          <span>{exportError}</span>
+        </div>
+      )}
+
+      {/* Mounted before any export starts: a region that appears together with
+          its first message is routinely missed by screen readers. */}
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {exportStatus}
+      </div>
+
       {/* Action Buttons */}
       <div className="ra-actions">
         <button
@@ -363,6 +378,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div
               className="ra-export-dropdown__menu"
               role="menu"
+              tabIndex={-1}
               aria-labelledby="ra-export-trigger"
               onKeyDown={handleExportMenuKeyDown}
             >

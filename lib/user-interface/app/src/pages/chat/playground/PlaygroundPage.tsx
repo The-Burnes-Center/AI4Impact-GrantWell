@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useId } from "react";
 import BaseAppLayout from "../../../layouts/ChatLayout";
 import Chat from "../../../components/chat/Chat";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { HelpCircle, Upload, FileText } from "lucide-react";
 import { useApiClient } from "../../../hooks/use-api-client";
 import { useFocusTrap } from "../../../hooks/use-focus-trap";
+import { useInert } from "../../../hooks/use-inert";
 import DocumentManager from "../../../components/chat/DocumentManager";
 import "../../../styles/playground.css";
 
@@ -23,6 +24,9 @@ export default function Playground() {
   const [uploadedFileCount, setUploadedFileCount] = useState(0);
   const helpButtonRef = React.useRef<HTMLButtonElement>(null);
   const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const inertContentRef = useInert<HTMLDivElement>(helpOpen);
+  const titleId = useId();
+  const descriptionId = useId();
 
   const handleCloseModal = useCallback(() => {
     if (dontShowAgain) {
@@ -149,7 +153,7 @@ export default function Playground() {
         sessionId={sessionId}
         modalOpen={helpOpen}
         content={
-          <div className="pg-content" aria-hidden={helpOpen}>
+          <div ref={inertContentRef} className="pg-content" aria-hidden={helpOpen}>
             <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} kbSyncing={kbSyncing} />
             {documentIdentifier && (
               <DocumentManager
@@ -172,13 +176,13 @@ export default function Playground() {
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="help-modal-title"
-            aria-describedby="help-modal-description"
+            aria-labelledby={titleId}
+            aria-describedby={descriptionId}
             className="pg-modal"
           >
             {/* Header */}
             <div className="pg-modal-header">
-              <h2 id="help-modal-title" className="pg-modal-title">
+              <h2 id={titleId} className="pg-modal-title">
                 Welcome to GrantWell Chatbot!
               </h2>
               <button
@@ -191,7 +195,7 @@ export default function Playground() {
             </div>
 
             {/* Content */}
-            <div id="help-modal-description" className="pg-modal-body">
+            <div id={descriptionId} className="pg-modal-body">
               <p className="pg-modal-intro">
                 This AI-powered assistant is your expert guide for understanding
                 a grant. Ask questions about any aspect of the grant application

@@ -53,16 +53,17 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   // needs_reupload is a terminal holding state: the only meaningful moves are
   // supplying the new document or abandoning the entry.
   if (status === "needs_reupload") {
+    const reuploadDocLabel = actionInProgress === "reupload" ? "Uploading..." : "Re-upload Document";
     return (
       <div className="review-expanded-row__actions">
         <button
           className="review-btn review-btn--approve review-btn--recommended"
           onClick={onReupload}
           disabled={busy}
-          aria-label="Upload the correct NOFO document"
+          aria-label={`${reuploadDocLabel} — upload the correct NOFO document (recommended)`}
         >
           <LuUpload size={14} aria-hidden="true" />
-          {actionInProgress === "reupload" ? "Uploading..." : "Re-upload Document"}
+          {reuploadDocLabel}
         </button>
         <button
           className="review-btn review-btn--reject"
@@ -82,22 +83,28 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   const rec = (action: RecommendedAction, label: string) =>
     recommended === action ? `${label} (recommended)` : label;
 
+  // Visible text and accessible name share one expression so SC 2.5.3 cannot drift.
+  const approveLabel =
+    actionInProgress === "approve"
+      ? "Publishing..."
+      : hasCorrections
+        ? "Approve with Edits"
+        : "Approve As-Is";
+
   const approveBtn = canApprove ? (
     <button
       key="approve"
       className={`review-btn review-btn--approve ${recommended === "approve" ? "review-btn--recommended" : ""}`}
       onClick={onApprove}
       disabled={busy}
-      aria-label={rec("approve", "Approve and publish this NOFO")}
+      aria-label={rec("approve", `${approveLabel} — publish this NOFO`)}
     >
       <LuCheck size={14} aria-hidden="true" />
-      {actionInProgress === "approve"
-        ? "Publishing..."
-        : hasCorrections
-          ? "Approve with Edits"
-          : "Approve As-Is"}
+      {approveLabel}
     </button>
   ) : null;
+
+  const reuploadLabel = actionInProgress === "reupload" ? "Uploading..." : "Re-upload Correct NOFO";
 
   const reuploadBtn = (
     <button
@@ -105,10 +112,10 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       className={`review-btn ${recommended === "reupload" ? "review-btn--approve review-btn--recommended" : "review-btn--secondary"}`}
       onClick={onReupload}
       disabled={busy}
-      aria-label={rec("reupload", "Upload the correct NOFO document to replace this one")}
+      aria-label={rec("reupload", `${reuploadLabel} — upload a replacement for this document`)}
     >
       <LuUpload size={14} aria-hidden="true" />
-      {actionInProgress === "reupload" ? "Uploading..." : "Re-upload Correct NOFO"}
+      {reuploadLabel}
     </button>
   );
 
@@ -142,16 +149,18 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     </button>
   );
 
+  const needsReuploadLabel = actionInProgress === "needs_reupload" ? "Marking..." : "Needs Re-upload";
+
   const needsReuploadBtn = (
     <button
       key="needs_reupload"
       className="review-btn review-btn--needs-reupload"
       onClick={onNeedsReupload}
       disabled={busy}
-      aria-label="Mark this NOFO as needing a new document upload"
+      aria-label={`${needsReuploadLabel} — mark this NOFO as needing a new document upload`}
     >
       <LuTriangleAlert size={14} aria-hidden="true" />
-      {actionInProgress === "needs_reupload" ? "Marking..." : "Needs Re-upload"}
+      {needsReuploadLabel}
     </button>
   );
 

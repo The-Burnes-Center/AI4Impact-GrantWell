@@ -55,8 +55,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       style,
       onMouseEnter,
       onMouseLeave,
-      onFocus,
-      onBlur,
       ...props
     },
     ref
@@ -88,17 +86,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       onMouseLeave?.(e);
     };
 
-    const handleFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.outline = `2px solid ${colors.primary}`;
-      e.currentTarget.style.outlineOffset = "2px";
-      onFocus?.(e);
-    };
-
-    const handleBlur = (e: React.FocusEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.outline = "none";
-      onBlur?.(e);
-    };
-
     return (
       <button
         ref={ref}
@@ -106,8 +93,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
         aria-disabled={isDisabled}
         {...props}
       >

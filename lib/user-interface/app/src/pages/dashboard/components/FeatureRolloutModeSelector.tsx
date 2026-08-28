@@ -44,8 +44,9 @@ const FeatureRolloutModeSelector: React.FC<FeatureRolloutModeSelectorProps> = ({
           key={option.value}
           className={`feature-rollouts-mode-option ${mode === option.value ? "feature-rollouts-mode-option--selected" : ""}`}
         >
-          <label className="feature-rollouts-mode-option-label">
+          <label className="feature-rollouts-mode-option-label" htmlFor={`ai-search-rollout-mode-${option.value}`}>
             <input
+              id={`ai-search-rollout-mode-${option.value}`}
               type="radio"
               name="ai-search-rollout-mode"
               value={option.value}
@@ -53,10 +54,8 @@ const FeatureRolloutModeSelector: React.FC<FeatureRolloutModeSelectorProps> = ({
               onChange={() => onChange(option.value)}
               disabled={saving}
             />
-            <span className="feature-rollouts-mode-copy">
-              <span className="feature-rollouts-mode-label">{option.label}</span>
-              <span className="feature-rollouts-mode-description">{option.description}</span>
-            </span>
+            <span className="feature-rollouts-mode-label">{option.label}</span>
+            <span className="feature-rollouts-mode-description">{option.description}</span>
           </label>
           {mode === option.value ? renderOptionContent?.(option.value) ?? null : null}
         </div>

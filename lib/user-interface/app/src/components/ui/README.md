@@ -120,59 +120,6 @@ import LoadingSpinner from '../components/ui/LoadingSpinner';
 
 ---
 
-### FormField
-
-A form input wrapper with label, help text, and error handling.
-
-```tsx
-import FormField from '../components/ui/FormField';
-
-// Basic input
-<FormField
-  label="Email"
-  name="email"
-  type="email"
-  value={email}
-  onChange={handleChange}
-  required
-/>
-
-// With error state
-<FormField
-  label="Password"
-  name="password"
-  type="password"
-  value={password}
-  onChange={handleChange}
-  error="Password must be at least 8 characters"
-  helpText="Use a mix of letters, numbers, and symbols"
-/>
-
-// Textarea
-<FormField
-  label="Description"
-  name="description"
-  as="textarea"
-  rows={4}
-  value={description}
-  onChange={handleChange}
-/>
-```
-
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | Required | Field label |
-| `name` | `string` | Required | Field name/id |
-| `type` | `string` | `'text'` | Input type |
-| `as` | `'input' \| 'textarea'` | `'input'` | Element type |
-| `error` | `string` | - | Error message |
-| `helpText` | `string` | - | Help text |
-| `required` | `boolean` | `false` | Required field |
-| `rows` | `number` | `3` | Textarea rows |
-
----
-
 ### FormErrorSummary
 
 Displays a summary of form validation errors.
@@ -198,7 +145,12 @@ import FormErrorSummary from '../components/ui/FormErrorSummary';
 | `errors` | `Record<string, string \| undefined>` | Required | Error messages by field |
 | `fieldLabels` | `Record<string, string>` | `{}` | Display labels for fields |
 | `title` | `string` | Auto-generated | Summary title |
-| `autoFocus` | `boolean` | `true` | Focus summary on render |
+| `autoFocus` | `boolean` | `true` | Move focus to the summary when errors appear |
+| `onErrorClick` | `(field: string) => void` | Focus the field | Handler for an error link |
+| `id` | `string` | Generated | Stable id, for forms that re-focus the summary themselves |
+
+Announced by moving focus, not by a live region — carrying both would make a
+screen reader read the summary twice.
 
 ---
 
@@ -288,7 +240,7 @@ import { colors, typography, spacing, borderRadius, shadows } from '../component
 
 // Use in styles
 const myStyle = {
-  color: colors.primary,           // #14558F
+  color: colors.primary,           // #23776C
   fontFamily: typography.fontFamily, // 'Noto Sans', sans-serif
   padding: spacing.lg,             // 16px
   borderRadius: borderRadius.md,   // 6px
@@ -299,15 +251,15 @@ const myStyle = {
 ### Available Tokens
 
 **Colors:**
-- `colors.primary` - Brand blue (#14558F)
-- `colors.primaryHover` - Darker blue (#104472)
-- `colors.error` - Error red (#d32f2f)
-- `colors.success` - Success green (#28a745)
-- `colors.text` - Primary text (#1a202c)
-- `colors.textSecondary` - Secondary text (#5a6575)
+- `colors.primary` - Brand green (#23776C)
+- `colors.primaryHover` - Darker green (#195C53)
+- `colors.error` - Error red (#CD0D0D)
+- `colors.success` - Success green (#047857)
+- `colors.text` - Primary text (#333333)
+- `colors.textSecondary` - Secondary text (#5a5a5a)
 - `colors.border` - Border color (#e2e8f0)
 - `colors.white` - White (#ffffff)
-- `colors.background` - Background (#f8f9fa)
+- `colors.background` - Background (#f9fafb)
 
 **Typography:**
 - `typography.fontFamily` - 'Noto Sans', sans-serif

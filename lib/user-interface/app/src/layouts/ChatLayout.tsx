@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UnifiedNavigation from "../components/navigation/UnifiedNavigation";
+import { useInert } from "../hooks/use-inert";
 
 const getTopOffset = (): number => {
   const headerElement = document.querySelector("header");
@@ -144,6 +145,9 @@ export default function BaseAppLayout({
   const [topOffset, setTopOffset] = useState<number>(60);
   const viewportWidth = useViewportWidth();
   const isNarrowViewport = viewportWidth <= 320;
+  // Callers render their modals as siblings of this layout, so everything the
+  // layout owns is background while one is open.
+  const inertRootRef = useInert<HTMLDivElement>(modalOpen);
 
   useEffect(() => {
     const updateTopOffset = () => {
@@ -181,6 +185,8 @@ export default function BaseAppLayout({
 
   return (
     <div
+      ref={inertRootRef}
+      aria-hidden={modalOpen || undefined}
       style={{
         ...styles.container,
         height: `calc(100vh - ${topOffset}px)`,

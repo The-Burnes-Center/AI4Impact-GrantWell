@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useId } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { Auth } from "aws-amplify";
@@ -37,6 +37,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [sortField, setSortField] = useState<"title" | "last_modified">("last_modified");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const pageSizeSelectId = useId();
   const navigate = useNavigate();
 
   const { documentIdentifier, showAllNOFOs, onToggleShowAllNOFOs, hasDocId } = props;
@@ -350,7 +351,9 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         </div>
         <div className="table-body" role={isLoading || paginatedItems.length === 0 ? undefined : "rowgroup"}>
           {isLoading ? (
-            <div className="table-loading">
+            // Visual only — role="table" cannot own a live region, so the
+            // announcement lives in the status region below the table.
+            <div className="table-loading" aria-hidden="true">
               <div className="table-loading-spinner"></div>
             </div>
           ) : paginatedItems.length === 0 ? (
@@ -422,6 +425,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         </div>
       </div>
 
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {isLoading ? "Loading drafts" : ""}
+      </div>
+
       {/* Pagination */}
       {!isLoading && sortedSessions.length > 0 && (
         <div className="pagination-container">
@@ -462,17 +469,17 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               </button>
             </div>
             <div className="items-per-page">
-              <label htmlFor="items-per-page-select" style={{ marginRight: "8px" }}>
+              <label htmlFor={pageSizeSelectId} style={{ marginRight: "8px" }}>
                 Show:
               </label>
               <select
-                id="items-per-page-select"
+                id={pageSizeSelectId}
                 value={pageSize}
                 onChange={(e) => {
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                aria-label="Items per page"
+                aria-label="Show items per page"
                 className="form-input"
               >
                 <option value={10}>10</option>
