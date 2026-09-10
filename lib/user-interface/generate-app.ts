@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
+import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
@@ -17,7 +18,7 @@ export interface WebsiteProps {
 }
 
 export class Website extends Construct {
-    readonly distribution: cf.CloudFrontWebDistribution;
+    readonly distribution: cf.Distribution;
     readonly domainName: string;
 
   constructor(scope: Construct, id: string, props: WebsiteProps) {
@@ -44,77 +45,70 @@ export class Website extends Construct {
     );
 
     // Configure custom domain if certificate ARN and domain are provided
-    const viewerCertificate = props.certificateArn && props.customDomain
-      ? cf.ViewerCertificate.fromAcmCertificate(
-          acm.Certificate.fromCertificateArn(this, 'CloudfrontAcm', props.certificateArn),
-          {
-            aliases: [props.customDomain]
-          }
-        )
+    const certificate = props.certificateArn && props.customDomain
+      ? acm.Certificate.fromCertificateArn(this, 'CloudfrontAcm', props.certificateArn)
       : undefined;
 
-    const distribution = new cf.CloudFrontWebDistribution(
+    const s3Origin = origins.S3BucketOrigin.withOriginAccessIdentity(
+      props.websiteBucket,
+      { originAccessIdentity }
+    );
+
+    const chatbotFilesCachePolicy = new cf.CachePolicy(
       this,
-      "Distribution",
+      "ChatbotFilesCachePolicy",
       {
-        // CUSTOM DOMAIN FOR PUBLIC WEBSITE
-        // REQUIRES:
-        // 1. ACM Certificate ARN in us-east-1 and Domain of website to be provided via environment variables or props
-        //    Set CLOUDFRONT_CERTIFICATE_ARN and CLOUDFRONT_CUSTOM_DOMAIN environment variables
-        // 2. After the deployment, in your Route53 Hosted Zone, add an "A Record" that points to the Cloudfront Alias (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-cloudfront-distribution.html)
-        viewerCertificate: viewerCertificate,
-        viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        priceClass: cf.PriceClass.PRICE_CLASS_ALL,
-        httpVersion: cf.HttpVersion.HTTP2_AND_3,
-        loggingConfig: {
-          bucket: distributionLogsBucket,
-        },
-        originConfigs: [
-          {
-            behaviors: [{ isDefaultBehavior: true }],
-            s3OriginSource: {
-              s3BucketSource: props.websiteBucket,
-              originAccessIdentity,
-            },
-          },
-          {
-            behaviors: [
-              {
-                pathPattern: "/chatbot/files/*",
-                allowedMethods: cf.CloudFrontAllowedMethods.ALL,
-                viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                defaultTtl: cdk.Duration.seconds(0),
-                forwardedValues: {
-                  queryString: true,
-                  headers: [
-                    "Referer",
-                    "Origin",
-                    "Authorization",
-                    "Content-Type",
-                    "x-forwarded-user",
-                    "Access-Control-Request-Headers",
-                    "Access-Control-Request-Method",
-                  ],
-                },
-              },
-            ],
-            s3OriginSource: {
-              s3BucketSource: props.websiteBucket,
-              originAccessIdentity,
-            },            
-          },
-        ],
-        
-        // geoRestriction: cfGeoRestrictEnable ? cf.GeoRestriction.allowlist(...cfGeoRestrictList): undefined,
-        errorConfigurations: [
-          {
-            errorCode: 404,
-            errorCachingMinTtl: 0,
-            responseCode: 200,
-            responsePagePath: "/index.html",
-          },
-        ],
+        minTtl: cdk.Duration.seconds(0),
+        defaultTtl: cdk.Duration.seconds(0),
+        maxTtl: cdk.Duration.days(365),
+        queryStringBehavior: cf.CacheQueryStringBehavior.all(),
+        cookieBehavior: cf.CacheCookieBehavior.none(),
+        headerBehavior: cf.CacheHeaderBehavior.allowList(
+          "Referer",
+          "Origin",
+          "Authorization",
+          "Content-Type",
+          "x-forwarded-user",
+          "Access-Control-Request-Headers",
+          "Access-Control-Request-Method"
+        ),
       }
+    );
+
+    const distribution = new cf.Distribution(this, "Distribution", {
+      domainNames: certificate && props.customDomain ? [props.customDomain] : undefined,
+      certificate,
+      minimumProtocolVersion: cf.SecurityPolicyProtocol.TLS_V1_2_2021,
+      defaultRootObject: "index.html",
+      priceClass: cf.PriceClass.PRICE_CLASS_ALL,
+      httpVersion: cf.HttpVersion.HTTP2_AND_3,
+      enableLogging: true,
+      logBucket: distributionLogsBucket,
+      defaultBehavior: {
+        origin: s3Origin,
+        viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: cf.CachePolicy.CACHING_OPTIMIZED,
+      },
+      additionalBehaviors: {
+        "/chatbot/files/*": {
+          origin: s3Origin,
+          viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          allowedMethods: cf.AllowedMethods.ALLOW_ALL,
+          cachePolicy: chatbotFilesCachePolicy,
+        },
+      },
+      errorResponses: [
+        {
+          httpStatus: 404,
+          responseHttpStatus: 200,
+          responsePagePath: "/index.html",
+          ttl: cdk.Duration.seconds(0),
+        },
+      ],
+    });
+
+    (distribution.node.defaultChild as cf.CfnDistribution).overrideLogicalId(
+      "UserInterfaceWebsiteDistributionCFDistributionBCE5BC0C"
     );
 
     this.distribution = distribution;
