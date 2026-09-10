@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { cognitoDomainName, emailConfig } from '../constants';
+import { cognitoDomainName, emailConfig, MFA_REQUIRED } from '../constants';
 import { UserPool, UserPoolClient, FeaturePlan} from 'aws-cdk-lib/aws-cognito';
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -21,9 +21,11 @@ export class AuthorizationStack extends Construct {
     super(scope, id);
 
     const userPool = new UserPool(this, 'UserPool', {
-       removalPolicy: cdk.RemovalPolicy.RETAIN,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
       selfSignUpEnabled: true,
-      mfa: cognito.Mfa.OPTIONAL,
+      mfa: MFA_REQUIRED ? cognito.Mfa.REQUIRED : cognito.Mfa.OPTIONAL,
+      // No phone number is collected, so SMS would leave MFA unenrollable.
+      mfaSecondFactor: { sms: false, otp: true },
       featurePlan: FeaturePlan.PLUS,
       autoVerify: { email: true, phone: true },
       signInAliases: {

@@ -19,6 +19,8 @@ import ResetPasswordStep from "./steps/ResetPasswordStep";
 import NewPasswordStep from "./steps/NewPasswordStep";
 import SignUpStep from "./steps/SignUpStep";
 import VerifySignUpStep from "./steps/VerifySignUpStep";
+import MfaChallengeStep from "./steps/MfaChallengeStep";
+import MfaSetupStep from "./steps/MfaSetupStep";
 import { AuthView } from "./auth-types";
 import type { AuthErrorContext } from "./auth-utils";
 import {
@@ -67,6 +69,7 @@ function authErrorFields(
       return ["email"];
     case "CodeMismatchException":
     case "ExpiredCodeException":
+    case "EnableSoftwareTokenMFAException":
       return ["verificationCode"];
     case "InvalidPasswordException":
       return context === "reset-password" || context === "new-password"
@@ -159,6 +162,9 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
   const [errorFields, setErrorFields] = useState<AuthErrorField[]>([]);
   const [success, setSuccess] = useState<string | null>(null);
   const [newPasswordPending, setNewPasswordPending] = useState(false);
+  const [totpSetup, setTotpSetup] = useState<{ uri: string; secret: string } | null>(
+    null,
+  );
 
   const errorId = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -221,6 +227,16 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
           title: "Set new password",
           subtitle: "Create a permanent password to continue into GrantWell.",
         };
+      case "mfa-challenge":
+        return {
+          title: "Two-step verification",
+          subtitle: "Enter the code from your authenticator app.",
+        };
+      case "mfa-setup":
+        return {
+          title: "Set up two-step verification",
+          subtitle: "Register an authenticator app to finish signing in.",
+        };
       default:
         return {
           title: "Sign in",
@@ -252,6 +268,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     setNewPassword("");
     setVerificationCode("");
     setNewPasswordPending(false);
+    setTotpSetup(null);
     setShowPassword(false);
   };
 
@@ -290,6 +307,20 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       case "RESET_PASSWORD":
         setView("forgot-password");
         setStepError("You need to reset your password before signing in.");
+        return;
+      case "CONFIRM_SIGN_IN_WITH_TOTP_CODE":
+        setVerificationCode("");
+        setView("mfa-challenge");
+        return;
+      case "CONTINUE_SIGN_IN_WITH_TOTP_SETUP":
+        setVerificationCode("");
+        setTotpSetup({
+          uri: nextStep.totpSetupDetails
+            .getSetupUri(branding.appName, normalizedEmail)
+            .toString(),
+          secret: nextStep.totpSetupDetails.sharedSecret,
+        });
+        setView("mfa-setup");
         return;
       default:
         setStepError(getUnsupportedChallengeMessage(nextStep.signInStep));
@@ -507,6 +538,53 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     }
   };
 
+  const submitChallengeCode = async (
+    event: FormEvent<HTMLFormElement>,
+    context: AuthErrorContext,
+  ) => {
+    event.preventDefault();
+    if (loading) return;
+
+    const validationError = getVerificationCodeValidationError(verificationCode);
+    if (validationError) {
+      setStepError(validationError, ["verificationCode"]);
+      setSuccess(null);
+      return;
+    }
+
+    setLoading(true);
+    clearMessages();
+
+    try {
+      const { nextStep } = await confirmSignIn({
+        challengeResponse: verificationCode.trim(),
+      });
+      setVerificationCode("");
+      applySignInStep(nextStep);
+    } catch (authError) {
+      const code = getAuthErrorCode(authError);
+      if (code === "SignInException") {
+        switchToSignIn(mapAuthError(authError, context));
+        return;
+      }
+      if (code === "CodeMismatchException" || code === "EnableSoftwareTokenMFAException") {
+        setVerificationCode("");
+      }
+      setStepError(
+        mapAuthError(authError, context),
+        authErrorFields(code, context),
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMfaChallenge = (event: FormEvent<HTMLFormElement>) =>
+    submitChallengeCode(event, "mfa");
+
+  const handleMfaSetup = (event: FormEvent<HTMLFormElement>) =>
+    submitChallengeCode(event, "mfa-setup");
+
   const handleNewPasswordRequired = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (loading) return;
@@ -602,6 +680,30 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             onSubmit={handleVerifySignUp}
             onResendCode={handleResendSignUpCode}
             onBackToSignUp={switchToSignUp}
+            verificationCodeErrorId={fieldErrorId("verificationCode")}
+          />
+        );
+      case "mfa-challenge":
+        return (
+          <MfaChallengeStep
+            verificationCode={verificationCode}
+            loading={loading}
+            onVerificationCodeChange={setVerificationCode}
+            onSubmit={handleMfaChallenge}
+            onCancel={() => switchToSignIn()}
+            verificationCodeErrorId={fieldErrorId("verificationCode")}
+          />
+        );
+      case "mfa-setup":
+        return (
+          <MfaSetupStep
+            setupUri={totpSetup?.uri ?? ""}
+            secret={totpSetup?.secret ?? ""}
+            verificationCode={verificationCode}
+            loading={loading}
+            onVerificationCodeChange={setVerificationCode}
+            onSubmit={handleMfaSetup}
+            onCancel={() => switchToSignIn()}
             verificationCodeErrorId={fieldErrorId("verificationCode")}
           />
         );

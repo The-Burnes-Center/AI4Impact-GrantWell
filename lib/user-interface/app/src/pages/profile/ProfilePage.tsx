@@ -1,12 +1,28 @@
-import { useEffect, useMemo, useState } from "react";
-import { fetchAuthSession, signOut, updatePassword } from "aws-amplify/auth";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  fetchAuthSession,
+  fetchMFAPreference,
+  setUpTOTP,
+  signOut,
+  updateMFAPreference,
+  updatePassword,
+  verifyTOTPSetup,
+} from "aws-amplify/auth";
 import { useNavigate } from "react-router-dom";
 import { LuCalendar } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
+import { AppContext } from "../../common/app-context";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
+import TotpEnrollment from "../../components/auth/TotpEnrollment";
+import MfaRecoveryNote from "../../components/auth/MfaRecoveryNote";
+import {
+  getVerificationCodeValidationError,
+  mapAuthError,
+} from "../../components/auth/auth-utils";
+import { useBranding } from "../../common/branding";
 import { stateNameFromCode } from "../../common/generated/states";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
@@ -582,6 +598,8 @@ export default function ProfilePage() {
               />
             </Card>
 
+            <TwoStepVerificationCard email={email} />
+
             <AccountActionsCard onSignedOut={() => navigate("/")} />
           </div>
         </div>
@@ -655,6 +673,186 @@ function ActivityList({
         </button>
       )}
     </div>
+  );
+}
+
+function TwoStepVerificationCard({ email }: { email: string }) {
+  const branding = useBranding();
+  const required = useContext(AppContext)?.mfaRequired ?? false;
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [setup, setSetup] = useState<{ uri: string; secret: string } | null>(null);
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const setupHeadingRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (setup) setupHeadingRef.current?.focus();
+  }, [setup]);
+
+  useEffect(() => {
+    let active = true;
+    fetchMFAPreference()
+      .then(({ enabled: enabledTypes }) => {
+        if (active) setEnabled(!!enabledTypes?.includes("TOTP"));
+      })
+      .catch(() => {
+        if (active) setEnabled(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const startSetup = async () => {
+    setBusy(true);
+    setError(null);
+    setNotice(null);
+    try {
+      const details = await setUpTOTP();
+      setSetup({
+        uri: details.getSetupUri(branding.appName, email || undefined).toString(),
+        secret: details.sharedSecret,
+      });
+      setCode("");
+    } catch {
+      setError("Could not start two-step verification setup. Try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const finishSetup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const validationError = getVerificationCodeValidationError(code);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    try {
+      await verifyTOTPSetup({ code: code.trim() });
+      await updateMFAPreference({ totp: "PREFERRED" });
+      setEnabled(true);
+      setSetup(null);
+      setCode("");
+      setNotice("Two-step verification is on.");
+    } catch (err) {
+      setError(mapAuthError(err, "mfa-setup"));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const turnOff = async () => {
+    setBusy(true);
+    setError(null);
+    setNotice(null);
+    try {
+      await updateMFAPreference({ totp: "DISABLED" });
+      setEnabled(false);
+      setNotice("Two-step verification is off.");
+    } catch {
+      setError("Could not turn off two-step verification. Try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Card header="Two-step verification">
+      {error && (
+        <div className="profile-alert profile-alert--error" role="alert">
+          {error}
+        </div>
+      )}
+      {notice && (
+        <div className="profile-alert profile-alert--success" role="status">
+          {notice}
+        </div>
+      )}
+
+      {setup ? (
+        <form onSubmit={finishSetup}>
+          <p className="profile-field-label" tabIndex={-1} ref={setupHeadingRef}>
+            Set up your authenticator app
+          </p>
+          <TotpEnrollment setupUri={setup.uri} secret={setup.secret} />
+          <MfaRecoveryNote variant="setup" />
+          <div className="profile-section">
+            <label className="profile-field-label" htmlFor="totp-code">
+              Authentication code
+            </label>
+            <input
+              id="totp-code"
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              required
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              style={{ width: "100%", maxWidth: 420 }}
+            />
+          </div>
+          <div className="profile-actions">
+            <Button type="submit" loading={busy}>
+              Turn on two-step verification
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setSetup(null)}
+              disabled={busy}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      ) : (
+        <>
+          <p className="profile-hint">
+            {enabled === null
+              ? "Checking your settings..."
+              : enabled
+                ? "On. You'll be asked for a code from your authenticator app each time you sign in."
+                : required
+                  ? "Required for every account. Set it up now, or you'll be asked to at your next sign-in."
+                  : "Off. Add an authenticator app so a password alone isn't enough to sign in."}
+          </p>
+          {enabled && required ? (
+            <p className="profile-hint">
+              Replacing a lost or changed device needs an administrator. Contact
+              support rather than removing the account from your app.
+            </p>
+          ) : (
+            <div className="profile-actions">
+              {enabled ? (
+                <Button
+                  type="button"
+                  variant="danger"
+                  onClick={turnOff}
+                  loading={busy}
+                >
+                  Turn off
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={startSetup}
+                  loading={busy}
+                  disabled={enabled === null}
+                >
+                  Set up authenticator app
+                </Button>
+              )}
+            </div>
+          )}
+        </>
+      )}
+    </Card>
   );
 }
 

@@ -4,7 +4,9 @@ export type AuthView =
   | "forgot-password"
   | "reset-password"
   | "verify-sign-up"
-  | "new-password-required";
+  | "new-password-required"
+  | "mfa-challenge"
+  | "mfa-setup";
 
 export interface PasswordRequirements {
   minLength: boolean;

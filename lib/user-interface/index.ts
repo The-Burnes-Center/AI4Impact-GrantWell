@@ -11,7 +11,7 @@ import { ChatBotApi } from "../chatbot-api";
 import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
-import { OIDCIntegrationName, customDomainConfig } from "../constants";
+import { OIDCIntegrationName, customDomainConfig, MFA_REQUIRED } from "../constants";
 
 export interface UserInterfaceProps {
   readonly userPoolId: string;
@@ -74,7 +74,8 @@ export class UserInterface extends Construct {
       },
       httpEndpoint : props.api.httpAPI.restAPI.url,
       wsEndpoint : props.api.wsAPI.wsAPIStage.url,
-      federatedSignInProvider : OIDCIntegrationName
+      federatedSignInProvider : OIDCIntegrationName,
+      mfaRequired : MFA_REQUIRED
     });
 
     const asset = s3deploy.Source.asset(appPath, {

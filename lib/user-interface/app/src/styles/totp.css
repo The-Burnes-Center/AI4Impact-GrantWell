@@ -1,0 +1,68 @@
+.totp-enrollment {
+  margin-bottom: 20px;
+}
+
+.totp-enrollment-steps {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm);
+  line-height: 1.5;
+}
+
+.totp-enrollment-steps li + li {
+  margin-top: 4px;
+}
+
+.totp-enrollment-qr {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: var(--gw-color-white);
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-lg);
+}
+
+.totp-enrollment-secret {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.totp-enrollment-secret-label {
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm);
+}
+
+.totp-enrollment-secret code {
+  padding: 4px 8px;
+  background: var(--gw-color-background-alt);
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-sm);
+  color: var(--gw-color-text);
+  font-size: var(--gw-font-size-sm);
+  letter-spacing: 0.05em;
+  word-break: break-all;
+}
+
+.totp-enrollment-secret .btn-link {
+  padding: 0;
+  font-size: var(--gw-font-size-sm);
+}
+
+.mfa-recovery-note {
+  margin: 12px 0 0;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm);
+  line-height: 1.5;
+}
+
+.mfa-recovery-note--warning {
+  padding: 10px 12px;
+  background: var(--gw-color-warning-light);
+  border-left: 3px solid var(--gw-color-warning);
+  border-radius: var(--gw-radius-sm);
+  color: var(--gw-color-warning-text);
+}
