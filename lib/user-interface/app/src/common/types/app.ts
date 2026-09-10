@@ -14,7 +14,6 @@ export interface AppConfig {
       httpEndpoint : string,
       wsEndpoint : string,
       federatedSignInProvider : string,
-      mfaRequired? : boolean,
 }
 
 export interface NavigationPanelState {

@@ -44,7 +44,7 @@ export interface Branding {
    */
   omniPartners: { label: string; href: string }[];
   analyticsId?: string;
-  contactEmail?: string;
+  supportEmail?: string;
 }
 
 /** Neutral core default — no instance identity. Real look comes from an injected config. */

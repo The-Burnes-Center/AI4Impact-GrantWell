@@ -11,6 +11,7 @@ import {
   signIn,
   signOut,
   signUp,
+  updateMFAPreference,
 } from "aws-amplify/auth";
 import type { SignInOutput } from "aws-amplify/auth";
 import SignInStep from "./steps/SignInStep";
@@ -560,6 +561,15 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
         challengeResponse: verificationCode.trim(),
       });
       setVerificationCode("");
+      if (context === "mfa-setup" && nextStep.signInStep === "DONE") {
+        // Verifying the token does not add it to the user's MFA settings, so without this
+        // Cognito asks them to enroll again at every sign in.
+        try {
+          await updateMFAPreference({ totp: "PREFERRED" });
+        } catch (preferenceError) {
+          console.error("Could not set TOTP as the MFA preference", preferenceError);
+        }
+      }
       applySignInStep(nextStep);
     } catch (authError) {
       const code = getAuthErrorCode(authError);

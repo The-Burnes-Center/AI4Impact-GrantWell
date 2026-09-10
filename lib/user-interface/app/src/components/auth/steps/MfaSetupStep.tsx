@@ -1,7 +1,7 @@
 import type { FormEvent } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
+import OtpInput from "../OtpInput";
 import TotpEnrollment from "../TotpEnrollment";
-import MfaRecoveryNote from "../MfaRecoveryNote";
 
 interface MfaSetupStepProps {
   setupUri: string;
@@ -27,30 +27,22 @@ export default function MfaSetupStep({
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
       <p className="auth-form-description">
-        This account requires two-step verification. Register an authenticator app
-        to finish signing in.
+        Two-step verification is required on every account.
       </p>
       <TotpEnrollment setupUri={setupUri} secret={secret} />
-      <MfaRecoveryNote variant="setup" />
       <Form onSubmit={onSubmit} aria-label="Two-step verification setup form" noValidate>
         <Form.Group className="mb-3">
-          <Form.Label className="form-label" htmlFor="mfa-setup-code-input">
+          <span className="form-label otp-input-label" id="mfa-setup-code-label">
             Authentication code <span aria-hidden="true">*</span>
-          </Form.Label>
-          <Form.Control
-            id="mfa-setup-code-input"
-            type="text"
-            placeholder="Enter 6-digit code"
+          </span>
+          <OtpInput
+            idPrefix="mfa-setup-code-input"
+            labelId="mfa-setup-code-label"
             value={verificationCode}
-            onChange={(event) => onVerificationCodeChange(event.target.value)}
-            disabled={loading}
-            required
-            className="form-input"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            aria-required="true"
-            aria-invalid={verificationCodeErrorId ? true : undefined}
-            aria-describedby={verificationCodeErrorId}
+            onChange={onVerificationCodeChange}
+            loading={loading}
+            invalid={Boolean(verificationCodeErrorId)}
+            describedById={verificationCodeErrorId}
           />
         </Form.Group>
         <div className="login-form-actions">

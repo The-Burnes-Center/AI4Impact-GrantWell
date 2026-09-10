@@ -59,10 +59,49 @@
   line-height: 1.5;
 }
 
-.mfa-recovery-note--warning {
-  padding: 10px 12px;
-  background: var(--gw-color-warning-light);
-  border-left: 3px solid var(--gw-color-warning);
-  border-radius: var(--gw-radius-sm);
-  color: var(--gw-color-warning-text);
+.otp-input {
+  display: flex;
+  gap: 8px;
+}
+
+.otp-input__box {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 52px;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: #334155;
+  background: #fff;
+  border: 1px solid #767676;
+  border-radius: 8px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.otp-input__box:hover:not(:disabled) {
+  border-color: #4b5563;
+}
+
+/* Matches .form-input:focus in auth-panel.css — a real outline, since the
+   border-colour change alone is only a 1.18:1 luminance shift. */
+.otp-input__box:focus {
+  border-color: #23776C;
+  outline: 3px solid #23776C;
+  outline-offset: 2px;
+}
+
+.otp-input__box:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.otp-input__box[aria-invalid="true"] {
+  border-color: var(--gw-color-danger);
+}
+
+/* Bootstrap sets label{display:inline-block}; this label is a <span> for a role="group". */
+.otp-input-label {
+  display: block;
 }

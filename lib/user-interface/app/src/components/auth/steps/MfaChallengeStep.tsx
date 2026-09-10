@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
+import OtpInput from "../OtpInput";
 import MfaRecoveryNote from "../MfaRecoveryNote";
 
 interface MfaChallengeStepProps {
@@ -21,28 +22,19 @@ export default function MfaChallengeStep({
 }: MfaChallengeStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
-      <p className="auth-form-description">
-        Enter the 6-digit code from your authenticator app to finish signing in.
-      </p>
       <Form onSubmit={onSubmit} aria-label="Two-step verification form" noValidate>
         <Form.Group className="mb-3">
-          <Form.Label className="form-label" htmlFor="mfa-code-input">
+          <span className="form-label otp-input-label" id="mfa-code-label">
             Authentication code <span aria-hidden="true">*</span>
-          </Form.Label>
-          <Form.Control
-            id="mfa-code-input"
-            type="text"
-            placeholder="Enter 6-digit code"
+          </span>
+          <OtpInput
+            idPrefix="mfa-code-input"
+            labelId="mfa-code-label"
             value={verificationCode}
-            onChange={(event) => onVerificationCodeChange(event.target.value)}
-            disabled={loading}
-            required
-            className="form-input"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            aria-required="true"
-            aria-invalid={verificationCodeErrorId ? true : undefined}
-            aria-describedby={verificationCodeErrorId}
+            onChange={onVerificationCodeChange}
+            loading={loading}
+            invalid={Boolean(verificationCodeErrorId)}
+            describedById={verificationCodeErrorId}
           />
         </Form.Group>
         <div className="login-form-actions">
@@ -64,7 +56,7 @@ export default function MfaChallengeStep({
           </Button>
         </div>
       </Form>
-      <MfaRecoveryNote variant="challenge" />
+      <MfaRecoveryNote />
       <div className="login-form-footer">
         <Button
           variant="link"
