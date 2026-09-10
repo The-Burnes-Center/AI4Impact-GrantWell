@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { HeaderSlim, SiteLogo } from "@massds/mayflower-react";
 import { useNavigate } from "react-router-dom";
-import { Auth } from "aws-amplify";
+import { signOut } from "aws-amplify/auth";
 import { useAdminCheck } from "../../src/hooks/use-admin-check";
 
 interface MDSHeaderProps {
@@ -15,7 +15,7 @@ export default function MDSHeader({ showSignOut = true }: MDSHeaderProps) {
 
   const handleSignOut = async () => {
     try {
-      await Auth.signOut();
+      await signOut();
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);

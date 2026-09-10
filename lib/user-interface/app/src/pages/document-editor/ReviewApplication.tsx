@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import {
   FileText,
   Download,
@@ -46,7 +46,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       if (!selectedNofo) return;
 
       try {
-        const username = (await Auth.currentAuthenticatedUser()).username;
+        const username = (await getCurrentUser()).username;
 
         const currentDraft = await apiClient.drafts.getDraft({
           sessionId: sessionId,
@@ -143,7 +143,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
   const fetchDraftForExport = async () => {
     if (!selectedNofo) return { draftData: null, grantName: null };
-    const username = (await Auth.currentAuthenticatedUser()).username;
+    const username = (await getCurrentUser()).username;
     const draftData = await apiClient.drafts.getDraft({ sessionId, userId: username });
     const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo);
     const grantName = nofoSummary?.data?.GrantName || null;

@@ -10,7 +10,7 @@ import React, {
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { ApiClient } from "../../common/api-client/api-client";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
@@ -385,7 +385,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     props.setMessageHistory(messageHistoryRef.current);
 
     try {
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
       if (!username) return;
       const apiClient = new ApiClient(appContext);
       await apiClient.sessions.appendChatEntry({
@@ -417,7 +417,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     ChatScrollState.userHasScrolled = false;
 
     let username: string | undefined;
-    await Auth.currentAuthenticatedUser().then(
+    await getCurrentUser().then(
       (value: any) => {
         username = value.username;
       }

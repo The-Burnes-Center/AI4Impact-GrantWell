@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import { useApiClient } from "../../hooks/use-api-client";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
 import { statusToStep } from "../../common/helpers/document-editor-utils";
 import DocEditorSessions from "../../components/document-editor/DocEditorSessions";
@@ -22,7 +22,7 @@ export default function DocEditorSessionsPage() {
   useEffect(() => {
     const fetchLatestDraft = async () => {
       try {
-        const username = await Auth.currentAuthenticatedUser().then(
+        const username = await getCurrentUser().then(
           (value) => value.username
         );
 
@@ -53,7 +53,7 @@ export default function DocEditorSessionsPage() {
   const handleDraftSelect = async (draftId: string) => {
     setLatestDraftId(draftId);
     try {
-      const username = await Auth.currentAuthenticatedUser().then(
+      const username = await getCurrentUser().then(
         (value) => value.username
       );
 

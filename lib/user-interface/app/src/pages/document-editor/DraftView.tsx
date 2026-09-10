@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import "../../styles/document-editor.css";
 
@@ -28,7 +28,7 @@ const DraftView: React.FC<DraftViewProps> = ({
         setIsLoading(true);
         setLoadingMessage("Loading draft...");
         
-        const username = (await Auth.currentAuthenticatedUser()).username;
+        const username = (await getCurrentUser()).username;
         
         const currentDraft = await apiClient.drafts.waitForDraft({
           sessionId: sessionId,

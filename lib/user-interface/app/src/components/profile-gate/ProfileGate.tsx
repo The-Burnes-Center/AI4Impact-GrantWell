@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import { Auth } from "aws-amplify";
+import { signOut } from "aws-amplify/auth";
 import {
   LuBuilding2,
   LuLandmark,
@@ -117,7 +117,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
   // The focus trap seals the page chrome off, so the gate has to carry its own way out.
   const onSignOut = useCallback(async () => {
     try {
-      await Auth.signOut();
+      await signOut();
     } catch (err) {
       console.error("Error signing out:", err);
     } finally {

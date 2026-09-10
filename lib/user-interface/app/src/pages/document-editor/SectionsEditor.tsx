@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import {
   Save,
   ChevronLeft,
@@ -121,7 +121,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     const fetchDraftSections = async () => {
       try {
         if (sessionId) {
-          const username = (await Auth.currentAuthenticatedUser()).username;
+          const username = (await getCurrentUser()).username;
           const draft = await apiClient.drafts.getDraft({
             sessionId: sessionId,
             userId: username
@@ -283,7 +283,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       setRegenerating(true);
       setRegenerateProgress('Generating content...');
 
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
       const currentDraft = await apiClient.drafts.getDraft({
         sessionId: sessionId,
         userId: username
@@ -334,7 +334,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       setGenerating(true);
       setFailedSections([]);
 
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
       const currentDraft = await apiClient.drafts.getDraft({ sessionId, userId: username });
       if (!currentDraft) throw new Error('No draft found');
 
@@ -374,7 +374,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   }, [selectedNofo, failedSections, sessionId, apiClient, sectionAnswers, saveFields]);
 
   const reloadAfterRestore = useCallback(async () => {
-    const username = (await Auth.currentAuthenticatedUser()).username;
+    const username = (await getCurrentUser()).username;
     const draft = await apiClient.drafts.getDraft({ sessionId, userId: username });
     if (!draft) return;
     draftSave.setBaseline(draft);

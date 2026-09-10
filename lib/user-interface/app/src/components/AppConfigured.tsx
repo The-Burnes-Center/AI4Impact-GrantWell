@@ -10,7 +10,9 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { Amplify, Auth, Hub } from "aws-amplify";
+import { Amplify } from "aws-amplify";
+import { Hub } from "aws-amplify/utils";
+import { getCurrentUser } from "aws-amplify/auth";
 import { Alert, Spinner } from "react-bootstrap";
 import App from "../App";
 import { AppConfig } from "../common/types/app";
@@ -32,11 +34,35 @@ import "../styles/marketing-landing.css";
 
 async function getInitialAuthState() {
   try {
-    await Auth.currentAuthenticatedUser();
+    await getCurrentUser();
     return true;
   } catch {
     return false;
   }
+}
+
+function toResourcesConfig(awsExports: AppConfig) {
+  const { userPoolId, userPoolWebClientId, oauth } = awsExports.Auth;
+
+  return {
+    Auth: {
+      Cognito: {
+        userPoolId,
+        userPoolClientId: userPoolWebClientId,
+        loginWith: oauth?.domain
+          ? {
+              oauth: {
+                domain: oauth.domain,
+                scopes: oauth.scope,
+                redirectSignIn: [oauth.redirectSignIn],
+                redirectSignOut: [oauth.redirectSignOut],
+                responseType: oauth.responseType as "code" | "token",
+              },
+            }
+          : undefined,
+      },
+    },
+  };
 }
 
 function UnauthenticatedPageTitle(): null {
@@ -70,7 +96,7 @@ export default function AppConfigured() {
 
         const awsExports = (await result.json()) as AppConfig;
         awsExports.httpEndpoint = awsExports.httpEndpoint.replace(/\/+$/, "");
-        Amplify.configure(awsExports);
+        Amplify.configure(toResourcesConfig(awsExports));
 
         const isAuthenticated = await getInitialAuthState();
         if (cancelled) return;
@@ -99,17 +125,18 @@ export default function AppConfigured() {
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload }) => {
       switch (payload.event) {
-        case "signIn":
+        case "signedIn":
         case "tokenRefresh":
           setAuthenticated(true);
           break;
-        case "signOut":
+        case "signedOut":
           setAuthenticated(false);
           if (window.location.pathname !== "/") {
             window.location.href = "/";
           }
           break;
-        case "signIn_failure":
+        case "tokenRefresh_failure":
+        case "signInWithRedirect_failure":
           setAuthenticated(false);
           break;
       }

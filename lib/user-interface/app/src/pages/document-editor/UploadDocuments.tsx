@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, type CSSProperties } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { FileUploader } from "../../common/file-uploader";
 import Card from "../../components/ui/Card";
 import NavigationButtons from "../../components/ui/NavigationButtons";
@@ -105,7 +105,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const user = await Auth.currentAuthenticatedUser();
+        const user = await getCurrentUser();
         setUserId(user.username);
 
         if (sessionId && user.username) {
@@ -271,7 +271,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
-      const username = userId || (await Auth.currentAuthenticatedUser()).username;
+      const username = userId || (await getCurrentUser()).username;
       const draftToUse = await apiClient.drafts.getDraft({ sessionId, userId: username });
 
       if (!draftToUse) {

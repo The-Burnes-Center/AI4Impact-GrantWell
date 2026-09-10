@@ -1,5 +1,5 @@
 import { useCallback, useState, useContext, useRef } from "react";
-import { Auth } from "aws-amplify";
+import { fetchAuthSession } from "aws-amplify/auth";
 import { AppContext } from "../common/app-context";
 
 /**
@@ -93,9 +93,12 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
       setSearchQuery(query.trim());
 
       try {
-        const session = await Auth.currentSession();
+        const session = await fetchAuthSession();
         if (!isLatest()) return;
-        const idToken = session.getIdToken().getJwtToken();
+        const idToken = session.tokens?.idToken?.toString();
+        if (!idToken) {
+          throw new Error("Not signed in");
+        }
         const endpoint = appContext.httpEndpoint;
 
         const response = await fetch(`${endpoint}/ai-grant-search`, {

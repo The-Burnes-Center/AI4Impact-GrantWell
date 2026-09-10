@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { DateTime } from "luxon";
@@ -44,7 +44,7 @@ export default function Sessions(props: SessionsProps) {
 
     try {
       const apiClient = new ApiClient(appContext);
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
 
       if (username) {
         const result = await apiClient.sessions.getSessions(
@@ -79,7 +79,7 @@ export default function Sessions(props: SessionsProps) {
     try {
       setIsLoading(true);
       const apiClient = new ApiClient(appContext);
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
 
       await Promise.all(
         selectedItems.map((session) =>

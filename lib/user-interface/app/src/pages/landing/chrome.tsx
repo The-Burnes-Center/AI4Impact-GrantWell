@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Auth } from "aws-amplify";
+import { signOut } from "aws-amplify/auth";
 import { AiForImpactWordmark } from "./featureIllustrations";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useBranding } from "../../common/branding";
@@ -119,7 +119,7 @@ export function AppNavbar() {
 
   const handleSignOut = async () => {
     try {
-      await Auth.signOut();
+      await signOut();
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {

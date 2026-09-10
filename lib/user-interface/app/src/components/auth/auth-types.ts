@@ -13,8 +13,3 @@ export interface PasswordRequirements {
   hasUppercase: boolean;
   hasSymbol: boolean;
 }
-
-export interface AuthChallengeUser extends Record<string, unknown> {
-  challengeName?: string;
-  username?: string;
-}

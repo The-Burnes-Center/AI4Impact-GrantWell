@@ -22,7 +22,7 @@ import ReviewApplication from "./ReviewApplication";
 import UploadDocuments from "./UploadDocuments";
 import WelcomeModal from "./components/WelcomeModal";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
 import { Utils } from "../../common/utils";
@@ -37,7 +37,6 @@ const ERROR_MESSAGES = {
 /** Custom hook: loads the document via DraftsClient */
 const useDocumentStorage = (nofoId: string | null, onStepRestore?: (step: string) => void) => {
   const [documentData, setDocumentData] = useState<DocumentData | null>(null);
-  /** Baseline for useDraftSave; `undefined` means "not loaded yet". */
   const [loadedDraft, setLoadedDraft] = useState<DocumentDraft | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Loading document editor...");
@@ -52,7 +51,7 @@ const useDocumentStorage = (nofoId: string | null, onStepRestore?: (step: string
     setLoadingMessage("Loading document editor...");
 
     try {
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
       if (username) {
         const draft = await draftsClient.waitForDraft({
           sessionId,
@@ -161,7 +160,7 @@ const DocumentEditor: React.FC = () => {
     if (!selectedNofo) return;
     try {
       const newSessionId = uuidv4();
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
       if (username) {
         await draftsClient.createDraft({
           sessionId: newSessionId, userId: username,

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -156,7 +156,7 @@ export default function Chat(props: {
 
       const apiClient = new ApiClient(appContext);
       try {
-        const username = await Auth.currentAuthenticatedUser().then(
+        const username = await getCurrentUser().then(
           (value) => value.username
         );
         if (!username) return;

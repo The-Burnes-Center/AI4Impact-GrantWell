@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { useDraftsClient } from "./use-drafts-client";
 import { useAutoSave } from "./use-auto-save";
 import { useNotifications } from "../components/notifications/NotificationManager";
@@ -76,7 +76,7 @@ export function useDraftSave({
     let cancelled = false;
     (async () => {
       try {
-        const user = await Auth.currentAuthenticatedUser();
+        const user = await getCurrentUser();
         if (!cancelled) userIdRef.current = user.username;
         const token = await Utils.authenticate();
         if (!cancelled) authTokenRef.current = token;
@@ -148,7 +148,7 @@ export function useDraftSave({
     async (snapshot: Snapshot) => {
       if (!sessionId) return;
       if (!userIdRef.current) {
-        userIdRef.current = (await Auth.currentAuthenticatedUser()).username;
+        userIdRef.current = (await getCurrentUser()).username;
       }
       // The exit path cannot await a token, so keep a recent one on hand.
       try {

@@ -2,14 +2,24 @@ import type { FormEvent } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useBranding } from "../../common/branding";
-import { Auth } from "aws-amplify";
+import {
+  confirmResetPassword,
+  confirmSignIn,
+  confirmSignUp,
+  resendSignUpCode,
+  resetPassword,
+  signIn,
+  signOut,
+  signUp,
+} from "aws-amplify/auth";
+import type { SignInOutput } from "aws-amplify/auth";
 import SignInStep from "./steps/SignInStep";
 import ForgotPasswordStep from "./steps/ForgotPasswordStep";
 import ResetPasswordStep from "./steps/ResetPasswordStep";
 import NewPasswordStep from "./steps/NewPasswordStep";
 import SignUpStep from "./steps/SignUpStep";
 import VerifySignUpStep from "./steps/VerifySignUpStep";
-import { AuthChallengeUser, AuthView } from "./auth-types";
+import { AuthView } from "./auth-types";
 import type { AuthErrorContext } from "./auth-utils";
 import {
   getAuthErrorCode,
@@ -89,6 +99,18 @@ function resetPasswordValidationFields(
   return [];
 }
 
+async function signInFresh(username: string, password: string) {
+  try {
+    return await signIn({ username, password });
+  } catch (error) {
+    if ((error as { name?: string })?.name === "UserAlreadyAuthenticatedException") {
+      await signOut();
+      return await signIn({ username, password });
+    }
+    throw error;
+  }
+}
+
 const PENDING_STATE_KEY = "grantwell.pendingSignupState";
 
 function writePendingSignupState(email: string, state: string) {
@@ -136,7 +158,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
   const [error, setError] = useState<string | null>(null);
   const [errorFields, setErrorFields] = useState<AuthErrorField[]>([]);
   const [success, setSuccess] = useState<string | null>(null);
-  const [challengeUser, setChallengeUser] = useState<AuthChallengeUser | null>(null);
+  const [newPasswordPending, setNewPasswordPending] = useState(false);
 
   const errorId = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -229,7 +251,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     setConfirmPassword("");
     setNewPassword("");
     setVerificationCode("");
-    setChallengeUser(null);
+    setNewPasswordPending(false);
     setShowPassword(false);
   };
 
@@ -246,6 +268,32 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     setPassword("");
     clearMessages();
     setView("sign-up");
+  };
+
+  const applySignInStep = (nextStep: SignInOutput["nextStep"]) => {
+    switch (nextStep.signInStep) {
+      case "DONE":
+        onAuthenticated();
+        return;
+      case "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED":
+        setNewPasswordPending(true);
+        setNewPassword("");
+        setView("new-password-required");
+        return;
+      case "CONFIRM_SIGN_UP":
+        setVerificationCode("");
+        setView("verify-sign-up");
+        setStepError(
+          "Your account is not verified yet. Enter your verification code to continue.",
+        );
+        return;
+      case "RESET_PASSWORD":
+        setView("forgot-password");
+        setStepError("You need to reset your password before signing in.");
+        return;
+      default:
+        setStepError(getUnsupportedChallengeMessage(nextStep.signInStep));
+    }
   };
 
   const handleSignIn = async (event: FormEvent<HTMLFormElement>) => {
@@ -265,25 +313,8 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      const user = (await Auth.signIn(
-        normalizedEmail,
-        password,
-      )) as AuthChallengeUser | undefined;
-
-      const challengeName = user?.challengeName;
-      if (challengeName === "NEW_PASSWORD_REQUIRED") {
-        setChallengeUser(user ?? null);
-        setNewPassword("");
-        setView("new-password-required");
-        return;
-      }
-
-      if (challengeName) {
-        setStepError(getUnsupportedChallengeMessage(challengeName));
-        return;
-      }
-
-      onAuthenticated();
+      const { nextStep } = await signInFresh(normalizedEmail, password);
+      applySignInStep(nextStep);
     } catch (authError) {
       const code = getAuthErrorCode(authError);
       if (code === "UserNotConfirmedException") {
@@ -313,7 +344,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.forgotPassword(normalizedEmail);
+      await resetPassword({ username: normalizedEmail });
       setVerificationCode("");
       setNewPassword("");
       setSuccess("Check your email for a verification code to reset your password.");
@@ -350,11 +381,11 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.forgotPasswordSubmit(
-        normalizedEmail,
-        verificationCode.trim(),
+      await confirmResetPassword({
+        username: normalizedEmail,
+        confirmationCode: verificationCode.trim(),
         newPassword,
-      );
+      });
       setNewPassword("");
       setVerificationCode("");
       switchToSignIn("Password reset successful. Sign in with your new password.");
@@ -383,13 +414,13 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.signUp({
+      await signUp({
         username: normalizedEmail,
         password,
-        attributes: {
-          email: normalizedEmail,
+        options: {
+          userAttributes: { email: normalizedEmail },
+          clientMetadata: signupState ? { state: signupState } : undefined,
         },
-        clientMetadata: signupState ? { state: signupState } : undefined,
       });
       writePendingSignupState(normalizedEmail, signupState);
       setVerificationCode("");
@@ -424,8 +455,12 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
     try {
       const pendingState = signupState || readPendingSignupState(normalizedEmail);
-      await Auth.confirmSignUp(normalizedEmail, verificationCode.trim(), {
-        clientMetadata: pendingState ? { state: pendingState } : undefined,
+      await confirmSignUp({
+        username: normalizedEmail,
+        confirmationCode: verificationCode.trim(),
+        options: {
+          clientMetadata: pendingState ? { state: pendingState } : undefined,
+        },
       });
       clearPendingSignupState();
 
@@ -434,24 +469,8 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
         return;
       }
 
-      const user = (await Auth.signIn(
-        normalizedEmail,
-        password,
-      )) as AuthChallengeUser | undefined;
-
-      if (user?.challengeName) {
-        if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-          setChallengeUser(user);
-          setNewPassword("");
-          setView("new-password-required");
-          return;
-        }
-
-        switchToSignIn("Email verified. Sign in to continue.");
-        return;
-      }
-
-      onAuthenticated();
+      const { nextStep } = await signInFresh(normalizedEmail, password);
+      applySignInStep(nextStep);
     } catch (authError) {
       setStepError(
         mapAuthError(authError, "verify-sign-up"),
@@ -476,7 +495,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.resendSignUp(normalizedEmail);
+      await resendSignUpCode({ username: normalizedEmail });
       setSuccess("Verification code resent. Check your email for the latest code.");
     } catch (authError) {
       setStepError(
@@ -499,7 +518,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       return;
     }
 
-    if (!challengeUser) {
+    if (!newPasswordPending) {
       switchToSignIn("Your password setup session expired. Sign in again to continue.");
       return;
     }
@@ -508,8 +527,9 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.completeNewPassword(challengeUser, newPassword);
-      onAuthenticated();
+      const { nextStep } = await confirmSignIn({ challengeResponse: newPassword });
+      setNewPasswordPending(false);
+      applySignInStep(nextStep);
     } catch (authError) {
       setStepError(
         mapAuthError(authError, "new-password"),

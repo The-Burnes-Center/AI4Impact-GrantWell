@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar, LuCheck } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { Utils } from "../../common/utils";
@@ -46,7 +46,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
 
     try {
       const apiClient = new ApiClient(appContext);
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
 
       if (username) {
         // Get drafts filtered by documentIdentifier (null means all drafts)
@@ -100,7 +100,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     try {
       setIsLoading(true);
       const apiClient = new ApiClient(appContext);
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
 
       if (!username) {
         throw new Error("User not authenticated");

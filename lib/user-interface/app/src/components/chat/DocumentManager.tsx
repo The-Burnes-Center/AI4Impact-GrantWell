@@ -3,7 +3,7 @@ import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { FileUploader } from "../../common/file-uploader";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import {
   X,
   Upload,
@@ -116,7 +116,7 @@ export default function DocumentManager({
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const user = await Auth.currentAuthenticatedUser();
+        const user = await getCurrentUser();
         setUserId(user.username);
       } catch (err) {
         console.error("Error getting user:", err);

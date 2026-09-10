@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Auth } from "aws-amplify";
+import { fetchAuthSession, signOut, updatePassword } from "aws-amplify/auth";
 import { useNavigate } from "react-router-dom";
 import { LuCalendar } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
@@ -76,10 +76,10 @@ export default function ProfilePage() {
   // read the email attribute directly for display.
   useEffect(() => {
     let active = true;
-    Auth.currentAuthenticatedUser()
-      .then((user) => {
+    fetchAuthSession()
+      .then((session) => {
         if (!active) return;
-        const payload = user?.signInUserSession?.idToken?.payload || {};
+        const payload = session.tokens?.idToken?.payload ?? {};
         setEmail(String(payload.email || ""));
       })
       .catch(() => {});
@@ -677,8 +677,7 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
     }
     setBusy(true);
     try {
-      const user = await Auth.currentAuthenticatedUser();
-      await Auth.changePassword(user, oldPw, newPw);
+      await updatePassword({ oldPassword: oldPw, newPassword: newPw });
       setPwOk(true);
       setOldPw("");
       setNewPw("");
@@ -696,7 +695,7 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
   const signOutEverywhere = async () => {
     setBusy(true);
     try {
-      await Auth.signOut({ global: true });
+      await signOut({ global: true });
     } catch (err) {
       console.error("Global sign-out failed:", err);
     } finally {
