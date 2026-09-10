@@ -87,7 +87,7 @@ export class DraftGenerationStateMachine extends Construct {
       maxConcurrency: 5,
       itemsPath: "$.sections",
       resultPath: "$.sectionResults",
-      parameters: {
+      itemSelector: {
         "sectionItem.$": "$$.Map.Item.Value",
         "jobId.$": "$.jobId",
         "query.$": "$.query",

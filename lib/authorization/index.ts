@@ -27,7 +27,7 @@ export class AuthorizationStack extends Construct {
       // No phone number is collected, so SMS would leave MFA unenrollable.
       mfaSecondFactor: { sms: false, otp: true },
       featurePlan: FeaturePlan.PLUS,
-      autoVerify: { email: true, phone: true },
+      autoVerify: { email: true },
       signInAliases: {
         email: true,
       },
@@ -48,8 +48,7 @@ export class AuthorizationStack extends Construct {
           'Temporary Password: {####}<br><br>' +
           'Thank you all for your continued support and collaboration as we move into this next phase of testing.<br><br>' +
           'Warm regards,<br>' +
-          'The GrantWell Team',
-        smsMessage: 'Hello {username}, your temporary password for GrantWell is {####}'
+          'The GrantWell Team'
       },
       userVerification: {
         emailSubject: 'Verify Your Account on GrantWell',
@@ -57,8 +56,7 @@ export class AuthorizationStack extends Construct {
           'Hello everyone,<br><br>' +
           'We are thrilled to have you join GrantWell!<br><br>' +
           'The verification code for your new account is {####}. Please enter this code on the verification page to complete the signup process.<br><br>' +
-          'Thank you for choosing GrantWell!<br><br>Warm regards,<br>The GrantWell Team',
-        smsMessage: 'Hello {username}, your temporary password for GrantWell is {####}'
+          'Thank you for choosing GrantWell!<br><br>Warm regards,<br>The GrantWell Team'
       }
     });
     this.userPool = userPool;

@@ -377,7 +377,9 @@ export class ChatBotApi extends Construct {
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
-      logRetention: logs.RetentionDays.THREE_MONTHS,
+      logGroup: new logs.LogGroup(this, "DraftGeneratorAPIFunctionLogGroup", {
+        retention: logs.RetentionDays.THREE_MONTHS,
+      }),
     });
 
     // Grant permission to start Step Functions execution
@@ -411,7 +413,9 @@ export class ChatBotApi extends Construct {
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
       },
       timeout: cdk.Duration.seconds(10),
-      logRetention: logs.RetentionDays.THREE_MONTHS,
+      logGroup: new logs.LogGroup(this, "DraftJobStatusFunctionLogGroup", {
+        retention: logs.RetentionDays.THREE_MONTHS,
+      }),
     });
     tables.draftGenerationJobsTable.grantReadData(draftJobStatusFunction);
     

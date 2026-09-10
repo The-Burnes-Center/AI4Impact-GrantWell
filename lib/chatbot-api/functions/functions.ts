@@ -199,7 +199,9 @@ export class LambdaFunctionStack extends cdk.Stack {
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
-        logRetention: logs.RetentionDays.THREE_MONTHS,
+        logGroup: new logs.LogGroup(scope, "DraftHandlerFunctionLogGroup", {
+          retention: logs.RetentionDays.THREE_MONTHS,
+        }),
       }
     );
     props.analyticsTable.grantWriteData(draftAPIHandlerFunction);
@@ -1387,7 +1389,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         },
         timeout: cdk.Duration.seconds(60),
         memorySize: 256,
-        logRetention: logs.RetentionDays.THREE_MONTHS,
+        logGroup: new logs.LogGroup(scope, "DraftPrepareFunctionLogGroup", {
+          retention: logs.RetentionDays.THREE_MONTHS,
+        }),
       }
     );
 
@@ -1433,7 +1437,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         },
         timeout: cdk.Duration.minutes(5),
         memorySize: 256,
-        logRetention: logs.RetentionDays.THREE_MONTHS,
+        logGroup: new logs.LogGroup(scope, "DraftGenerateSectionFunctionLogGroup", {
+          retention: logs.RetentionDays.THREE_MONTHS,
+        }),
       }
     );
 
@@ -1467,7 +1473,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 128,
-        logRetention: logs.RetentionDays.THREE_MONTHS,
+        logGroup: new logs.LogGroup(scope, "DraftAssembleFunctionLogGroup", {
+          retention: logs.RetentionDays.THREE_MONTHS,
+        }),
       }
     );
 
