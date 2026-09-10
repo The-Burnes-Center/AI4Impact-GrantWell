@@ -438,63 +438,6 @@
   outline-offset: 2px;
 }
 
-/* Admin Section */
-.admin-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  padding: 20px 0;
-}
-
-.admin-section__content {
-  text-align: center;
-  max-width: 700px;
-}
-
-.admin-section__heading {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--gw-color-primary);
-  margin: 0 0 10px 0;
-}
-
-.admin-section__text {
-  font-size: 15px;
-  color: var(--gw-color-text-secondary);
-  line-height: 1.6;
-  margin: 0 0 15px 0;
-}
-
-.admin-section__note {
-  font-size: 14px;
-  font-style: italic;
-  color: var(--gw-color-text-secondary);
-}
-
-.admin-btn {
-  background: var(--gw-color-primary);
-  color: var(--gw-color-white);
-  border: none;
-  border-radius: 20px;
-  padding: 12px 28px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s, outline 0.2s;
-  min-width: 200px;
-}
-
-.admin-btn:hover {
-  background-color: var(--gw-color-primary-hover);
-}
-
-.admin-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(35, 119, 108, 0.2);
-}
-
 /* Feedback Form */
 .feedback-form-container {
   background-color: var(--mk-white);

@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useBranding } from "../../common/branding";
 import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";
-import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useAIGrantSearch } from "../../hooks/use-ai-grant-search";
 import { useFeatureRolloutAccess } from "../../hooks/use-feature-rollout-access";
 import {
@@ -48,7 +47,6 @@ export default function HomePage() {
   const suppressSearchRef = useRef(false);
 
   const apiClient = useApiClient();
-  const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const aiSearch = useAIGrantSearch();
@@ -375,27 +373,6 @@ export default function HomePage() {
             />
           </section>
         </ContentBox>
-
-        {/* Admin Dashboard */}
-        {isAdmin && (
-          <ContentBox>
-            <div className="admin-section">
-              <div className="admin-section__content">
-                <h2 className="admin-section__heading">Admin Dashboard</h2>
-                <p className="admin-section__text">
-                  To access the dashboard to add grants or manage users, click the button below.
-                  <br />
-                  <span className="admin-section__note">
-                    (This section is only visible to administrators)
-                  </span>
-                </p>
-              </div>
-              <button className="admin-btn" onClick={() => navigate("/admin")}>
-                Go to Admin Dashboard
-              </button>
-            </div>
-          </ContentBox>
-        )}
 
         {/* About */}
         <ContentBox variant="band">
