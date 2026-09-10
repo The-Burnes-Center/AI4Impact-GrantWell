@@ -1,0 +1,23 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@sparticuz/chromium": "^131.0.0",
+    "puppeteer-core": "^23.10.4"
+  },
+  "overrides": {
+    "basic-ftp": "^5.3.1",
+    "ws": "^8.20.2",
+    "ip-address": "^10.3.1",
+    "follow-redirects": "^1.15.12"
+  }
+}
