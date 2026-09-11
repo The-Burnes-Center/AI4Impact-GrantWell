@@ -180,6 +180,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
           >
             <ResponsiveContainer width="100%" height={280}>
               <BarChart
+                accessibilityLayer={false}
                 data={data.usersByState.map((s) => ({
                   name: s.stateName || s.state,
                   Registered: s.registered,
@@ -223,6 +224,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
           >
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
+                accessibilityLayer={false}
                 layout="vertical"
                 data={data.draftFunnel.stages.map((s) => ({
                   name: STAGE_LABELS[s.stage] || s.stage,
