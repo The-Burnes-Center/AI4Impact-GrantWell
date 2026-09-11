@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { HeaderSlim, SiteLogo } from "@massds/mayflower-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { signOut } from "aws-amplify/auth";
 import { useAdminCheck } from "../../src/hooks/use-admin-check";
 

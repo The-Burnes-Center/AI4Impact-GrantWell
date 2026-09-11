@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router";
 import { signOut } from "aws-amplify/auth";
 import { AiForImpactWordmark } from "./featureIllustrations";
 import { useAdminCheck } from "../../hooks/use-admin-check";

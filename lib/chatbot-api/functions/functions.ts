@@ -1,5 +1,5 @@
 /**
- * This file defines the LambdaFunctionStack class, which sets up various Lambda functions for the Gen AI MVP application using AWS CDK.
+ * This file defines the LambdaFunctionStack class, which sets up various Lambda functions for the GrantWell application using AWS CDK.
  * These Lambda functions handle session management, S3 operations, and knowledge base synchronization.
  */
 

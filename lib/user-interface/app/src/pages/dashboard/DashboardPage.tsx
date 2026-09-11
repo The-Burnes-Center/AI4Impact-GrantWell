@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useId, useMemo, useRef } from "react";
-import { useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useNotifications } from "../../components/notifications/NotificationManager";

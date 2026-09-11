@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 import { useBranding } from "../../common/branding";
 import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";

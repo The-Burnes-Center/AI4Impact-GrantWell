@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { GenAiMvpStack } from '../lib/gen-ai-mvp-stack';
+import { GrantWellStack } from '../lib/grantwell-stack';
 import { stackName } from "../lib/constants"
 import { resolveInstanceInfra } from "../lib/shared/instance-infra";
 
@@ -16,7 +16,7 @@ cdk.Tags.of(app).add('Project', 'GrantWell');
 // today) the stack stays environment-agnostic, exactly as before.
 const infraAws = resolveInstanceInfra()?.aws;
 
-new GenAiMvpStack(app, stackName, {
+new GrantWellStack(app, stackName, {
   env: infraAws?.account
     ? { account: infraAws.account, region: infraAws.region }
     : undefined,

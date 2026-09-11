@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchAuthSession, signOut, updatePassword } from "aws-amplify/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { LuCalendar } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";

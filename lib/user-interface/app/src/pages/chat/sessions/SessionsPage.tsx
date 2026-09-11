@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Sessions from "../../../components/chat/SessionList";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router";
 import { useApiClient } from "../../../hooks/use-api-client";
 import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";

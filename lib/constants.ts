@@ -1,5 +1,5 @@
 /**
- * This file defines constants used throughout the Gen AI MVP application.
+ * This file defines constants used throughout the GrantWell application.
  * These constants include configuration settings for authentication, Cognito domain name, OIDC integration name, and stack name.
  */
 

@@ -9,7 +9,7 @@ import {
   Route,
   Routes,
   useLocation,
-} from "react-router-dom";
+} from "react-router";
 import { Amplify } from "aws-amplify";
 import { Hub } from "aws-amplify/utils";
 import { getCurrentUser } from "aws-amplify/auth";
@@ -226,12 +226,7 @@ export default function AppConfigured() {
           }}
           colorMode={theme === "dark" ? "dark" : "light"}
         >
-          <BrowserRouter
-            future={{
-              v7_relativeSplatPath: true,
-              v7_startTransition: true,
-            }}
-          >
+          <BrowserRouter>
             <AppLayoutContent
               authenticated={authenticated}
               configured={configured}

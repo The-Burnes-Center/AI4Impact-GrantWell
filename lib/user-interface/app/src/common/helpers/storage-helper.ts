@@ -1,6 +1,6 @@
 import { NavigationPanelState } from "../types/app";
 
-const PREFIX = "aws-genai-llm-chatbot";
+const PREFIX = "grantwell";
 const THEME_STORAGE_NAME = `${PREFIX}-theme`;
 const SELECTED_MODEL_STORAGE_NAME = `${PREFIX}-selected-model`;
 const SELECTED_WORKSPACE_STORAGE_NAME = `${PREFIX}-selected-workspace`;

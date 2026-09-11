@@ -91,8 +91,9 @@ export default defineConfig({
             : parts[0];
 
           if (
-            /^(react|react-dom|scheduler|react-router|react-router-dom)$/.test(name) ||
-            name === "@remix-run/router"
+            /^(react|react-dom|scheduler|react-router|cookie|set-cookie-parser)$/.test(
+              name
+            )
           ) {
             return "vendor-react";
           }

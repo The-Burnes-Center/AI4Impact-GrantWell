@@ -4,7 +4,7 @@ import {
   Routes,
   Navigate,
   useLocation,
-} from "react-router-dom";
+} from "react-router";
 import { ErrorBoundary } from "./components/common/ErrorBoundary";
 import { NotificationProvider } from "./components/notifications/NotificationManager";
 import NotificationBar from "./components/notifications/NotificationBar";

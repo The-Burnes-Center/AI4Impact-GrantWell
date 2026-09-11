@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate, useSearchParams } from "react-router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";

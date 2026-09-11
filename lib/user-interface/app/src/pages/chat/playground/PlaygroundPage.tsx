@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import BaseAppLayout from "../../../layouts/ChatLayout";
 import Chat from "../../../components/chat/Chat";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router";
 import { LuCircleHelp, LuUpload, LuFileText } from "react-icons/lu";
 import { useApiClient } from "../../../hooks/use-api-client";
 import { useFocusTrap } from "../../../hooks/use-focus-trap";

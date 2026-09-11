@@ -1,5 +1,5 @@
 /**
- * This file defines the main stack for the Gen AI MVP application using AWS CDK.
+ * This file defines the main stack for the GrantWell application using AWS CDK.
  * It sets up the authorization stack, chatbot API, and user interface, integrating them with Cognito for user authentication.
  */
 
@@ -10,7 +10,7 @@ import { cognitoDomainName } from "./constants";
 import { AuthorizationStack } from "./authorization";
 import { UserInterface } from "./user-interface";
 
-export class GenAiMvpStack extends cdk.Stack {
+export class GrantWellStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
