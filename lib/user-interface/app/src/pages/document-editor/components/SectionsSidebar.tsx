@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircle, AlertCircle, Loader, Lock } from "lucide-react";
+import { LuCircleCheckBig, LuCircleAlert, LuLoader, LuLock } from "react-icons/lu";
 
 interface Section {
   name: string;
@@ -32,12 +32,12 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
   const getStatusIcon = (section: Section, idx: number) => {
     // Section has content — completed
     if (sectionAnswers[section.name]) {
-      return <CheckCircle size={16} className="se-sidebar__check" aria-label={`${section.name}: completed`} />;
+      return <LuCircleCheckBig size={16} className="se-sidebar__check" aria-label={`${section.name}: completed`} />;
     }
 
     // Section explicitly failed
     if (failedSections.includes(section.name)) {
-      return <AlertCircle size={16} style={{ color: '#EF4444' }} aria-label={`${section.name}: failed`} />;
+      return <LuCircleAlert size={16} style={{ color: '#EF4444' }} aria-label={`${section.name}: failed`} />;
     }
 
     // Currently generating — show spinner for sections in the active concurrency window
@@ -45,7 +45,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
       const isActivelyGenerating = idx >= completedSectionCount && idx < completedSectionCount + 5;
       if (isActivelyGenerating) {
         return (
-          <Loader
+          <LuLoader
             size={16}
             className="se-sidebar__spinner"
             style={{ color: '#23776C', animation: 'spin 1s linear infinite' }}
@@ -54,7 +54,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
         );
       }
       // Pending — locked
-      return <Lock size={14} style={{ color: '#6b7280' }} aria-label={`${section.name}: pending`} />;
+      return <LuLock size={14} style={{ color: '#6b7280' }} aria-label={`${section.name}: pending`} />;
     }
 
     return null;

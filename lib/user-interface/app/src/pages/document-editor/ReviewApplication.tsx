@@ -1,16 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { getCurrentUser } from "aws-amplify/auth";
-import {
-  FileText,
-  Download,
-  ArrowLeft,
-  Edit,
-  Info,
-  CheckCircle,
-  AlertTriangle,
-  ChevronDown,
-} from "lucide-react";
+import { LuFileText, LuDownload, LuArrowLeft, LuSquarePen, LuInfo, LuCircleCheckBig, LuTriangleAlert, LuChevronDown } from "react-icons/lu";
 import "../../styles/document-editor.css";
 
 interface ReviewApplicationProps {
@@ -217,7 +208,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       {/* Application Summary Section */}
       <div className="ra-card">
         <div className="ra-header">
-          <FileText className="ra-header__icon" aria-hidden="true" />
+          <LuFileText className="ra-header__icon" aria-hidden="true" />
           <h2 className="ra-header__title">Application Summary</h2>
         </div>
 
@@ -250,8 +241,8 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         {/* Completeness Check Message */}
         <div className={`ra-compliance ${completenessClass}`}>
           {completenessPassed
-            ? <CheckCircle className="ra-compliance__icon" aria-hidden="true" />
-            : <AlertTriangle className="ra-compliance__icon" aria-hidden="true" />
+            ? <LuCircleCheckBig className="ra-compliance__icon" aria-hidden="true" />
+            : <LuTriangleAlert className="ra-compliance__icon" aria-hidden="true" />
           }
           <div>
             <h3 className="ra-compliance__title">
@@ -278,7 +269,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             aria-label="Preview full application (coming soon)"
           >
             <div className="ra-preview-btn__icon-wrapper">
-              <FileText className="ra-preview-btn__icon" />
+              <LuFileText className="ra-preview-btn__icon" />
             </div>
             <div className="ra-preview-btn__text">
               <div className="ra-preview-btn__title">
@@ -296,7 +287,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             aria-label="Make final edits - return to section editor"
           >
             <div className="ra-edit-btn__icon-wrapper">
-              <Edit className="ra-edit-btn__icon" aria-hidden="true" />
+              <LuSquarePen className="ra-edit-btn__icon" aria-hidden="true" />
             </div>
             <div className="ra-edit-btn__text">
               <div className="ra-edit-btn__title">Make Final Edits</div>
@@ -311,7 +302,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       {/* What Happens After Export Section */}
       <div className="ra-info-section">
         <div className="ra-info-header">
-          <Info className="ra-info-header__icon" aria-hidden="true" />
+          <LuInfo className="ra-info-header__icon" aria-hidden="true" />
           <h3 className="ra-info-header__title">
             What Happens After Export?
           </h3>
@@ -336,7 +327,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           onClick={() => onNavigate("sectionEditor")}
           className="ra-back-btn"
         >
-          <ArrowLeft className="ra-back-btn__icon" aria-hidden="true" />
+          <LuArrowLeft className="ra-back-btn__icon" aria-hidden="true" />
           Back to Editing
         </button>
 
@@ -350,9 +341,9 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             aria-haspopup="menu"
             aria-expanded={exportDropdownOpen}
           >
-            <Download className="ra-export-pdf-btn__icon" aria-hidden="true" />
+            <LuDownload className="ra-export-pdf-btn__icon" aria-hidden="true" />
             Export As
-            <ChevronDown
+            <LuChevronDown
               size={16}
               style={{ marginLeft: "6px" }}
               aria-hidden="true"
@@ -372,7 +363,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
                 onClick={handleExportPDF}
                 disabled={isExportingPDF}
               >
-                <Download size={14} aria-hidden="true" />
+                <LuDownload size={14} aria-hidden="true" />
                 {isExportingPDF ? "Generating PDF…" : "PDF (.pdf)"}
               </button>
               <button
@@ -381,7 +372,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
                 onClick={handleExportDOCX}
                 disabled={isExportingDOCX}
               >
-                <FileText size={14} aria-hidden="true" />
+                <LuFileText size={14} aria-hidden="true" />
                 {isExportingDOCX ? "Generating DOCX…" : "Word Document (.docx)"}
               </button>
             </div>

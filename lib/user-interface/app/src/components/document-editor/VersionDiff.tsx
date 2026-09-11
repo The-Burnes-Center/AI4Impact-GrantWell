@@ -5,7 +5,7 @@
  */
 import React, { useMemo } from "react";
 import { diffWords } from "diff";
-import { Minus, Plus } from "lucide-react";
+import { LuMinus, LuPlus } from "react-icons/lu";
 
 interface VersionDiffProps {
   /** Text as it was in the version being viewed. */
@@ -40,7 +40,7 @@ const VersionDiff: React.FC<VersionDiffProps> = ({ previous, current, label }) =
           if (part.added) {
             return (
               <ins key={index} className="vd-added">
-                <Plus size={12} aria-hidden="true" className="vd-marker" />
+                <LuPlus size={12} aria-hidden="true" className="vd-marker" />
                 <span className="visually-hidden">Added: </span>
                 {part.value}
               </ins>
@@ -49,7 +49,7 @@ const VersionDiff: React.FC<VersionDiffProps> = ({ previous, current, label }) =
           if (part.removed) {
             return (
               <del key={index} className="vd-removed">
-                <Minus size={12} aria-hidden="true" className="vd-marker" />
+                <LuMinus size={12} aria-hidden="true" className="vd-marker" />
                 <span className="visually-hidden">Removed: </span>
                 {part.value}
               </del>

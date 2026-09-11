@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Check } from "lucide-react";
+import { LuCheck } from "react-icons/lu";
 
 interface ProgressStepperProps {
   steps: Array<{
@@ -303,7 +303,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                 }}
               >
                 {completed ? (
-                  <Check size={18} strokeWidth={3} />
+                  <LuCheck size={18} strokeWidth={3} />
                 ) : (
                   <span>{index + 1}</span>
                 )}

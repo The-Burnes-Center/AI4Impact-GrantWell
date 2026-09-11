@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { getCurrentUser } from "aws-amplify/auth";
-import {
-  Save,
-  ChevronLeft,
-  ChevronRight,
-  RotateCcw,
-  CheckCircle,
-  History,
-  Undo2,
-} from "lucide-react";
+import { LuSave, LuChevronLeft, LuChevronRight, LuRotateCcw, LuCircleCheckBig, LuHistory, LuUndo2 } from "react-icons/lu";
 import SectionsSidebar from "./components/SectionsSidebar";
 import { useNotifications } from "../../components/notifications/NotificationManager";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
@@ -546,7 +538,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   className="se-header-btn"
                   onClick={() => setUndoConfirmOpen(true)}
                 >
-                  <Undo2 size={16} aria-hidden="true" />
+                  <LuUndo2 size={16} aria-hidden="true" />
                   Undo AI rewrite
                 </button>
               )}
@@ -557,7 +549,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 aria-haspopup="dialog"
                 aria-expanded={historyOpen}
               >
-                <History size={16} aria-hidden="true" />
+                <LuHistory size={16} aria-hidden="true" />
                 Version history
               </button>
             </div>
@@ -610,7 +602,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               disabled={regenerating}
               className="se-regenerate-btn"
             >
-              <RotateCcw size={20} className="se-icon--left" />
+              <LuRotateCcw size={20} className="se-icon--left" />
               {regenerating ? "Generating..." : "Regenerate Content with AI"}
             </button>
           )}
@@ -651,11 +643,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               <div className="se-checklist-card">
                 <ul className="se-checklist-list">
                   <li className="se-checklist-item se-checklist-item--done">
-                    <CheckCircle size={16} className="se-icon--left" />
+                    <LuCircleCheckBig size={16} className="se-icon--left" />
                     <span>Described the problem</span>
                   </li>
                   <li className="se-checklist-item se-checklist-item--done">
-                    <CheckCircle size={16} className="se-icon--left" />
+                    <LuCircleCheckBig size={16} className="se-icon--left" />
                     <span>Included data</span>
                   </li>
                   <li className="se-checklist-item">
@@ -679,7 +671,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               onClick={() => setLabelPromptOpen(true)}
               disabled={savingVersion}
             >
-              <Save size={18} className="se-icon--left" />
+              <LuSave size={18} className="se-icon--left" />
               {savingVersion ? "Saving version..." : "Save version"}
             </button>
 
@@ -689,7 +681,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   className="se-prev-btn"
                   onClick={() => setActiveSection(activeSection - 1)}
                 >
-                  <ChevronLeft size={18} className="se-icon--left" />
+                  <LuChevronLeft size={18} className="se-icon--left" />
                   Previous
                 </button>
               )}
@@ -700,7 +692,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   onClick={handleSaveAndContinue}
                 >
                   Save and Review
-                  <ChevronRight size={18} className="se-icon--right" />
+                  <LuChevronRight size={18} className="se-icon--right" />
                 </button>
               ) : (
                 <button
@@ -708,7 +700,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   onClick={onContinue}
                 >
                   Review Application
-                  <ChevronRight size={18} className="se-icon--right" />
+                  <LuChevronRight size={18} className="se-icon--right" />
                 </button>
               )}
             </div>

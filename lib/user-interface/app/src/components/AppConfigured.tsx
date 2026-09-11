@@ -20,7 +20,6 @@ import { AppContext } from "../common/app-context";
 import { BrandingProvider, useBranding } from "../common/branding";
 import { activeBranding } from "../../config/active-instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
-import "@aws-amplify/ui-react/styles.css";
 import MaintenanceGate from "./MaintenanceGate";
 import ProfileGate from "./profile-gate/ProfileGate";
 import LandingPage from "../pages/landing/LandingPage";

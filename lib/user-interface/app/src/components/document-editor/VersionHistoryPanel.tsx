@@ -4,7 +4,7 @@
  */
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { DateTime } from "luxon";
-import { Tag, X } from "lucide-react";
+import { LuTag, LuX } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import ConfirmationModal from "../common/ConfirmationModal";
@@ -174,7 +174,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
         <div className="vh-header">
           <h2 id="vh-title" className="vh-title">Version history</h2>
           <button type="button" className="vh-close" onClick={onClose} aria-label="Close version history">
-            <X size={18} aria-hidden="true" />
+            <LuX size={18} aria-hidden="true" />
           </button>
         </div>
 
@@ -213,7 +213,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                     </span>
                     {version.label && (
                       <span className="vh-label">
-                        <Tag size={12} aria-hidden="true" /> {version.label}
+                        <LuTag size={12} aria-hidden="true" /> {version.label}
                       </span>
                     )}
                     <span className="vh-row-meta">

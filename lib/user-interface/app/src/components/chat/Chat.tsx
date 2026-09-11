@@ -8,7 +8,7 @@ import ChatMessage from "./ChatMessage";
 import ChatInputPanel from "./ChatInputPanel";
 import { useBranding } from "../../common/branding";
 import { useNotifications } from "../notifications/NotificationManager";
-import { HelpCircle, ChevronDown, Loader } from "lucide-react";
+import { LuCircleHelp, LuChevronDown, LuLoader } from "react-icons/lu";
 import { parseChatHistory } from "./utils";
 
 // Styles for components
@@ -282,7 +282,7 @@ export default function Chat(props: {
         <ul style={{ ...styles.messageList, listStyle: "none", padding: 0, margin: 0 }}>
           {messageHistory.length === 0 && !session?.loading && (
             <li style={styles.infoAlert}>
-              <HelpCircle size={20} style={styles.infoIcon} />
+              <LuCircleHelp size={20} style={styles.infoIcon} />
               <span>
                 AI Models can make mistakes. Be mindful in validating important
                 information.
@@ -329,7 +329,7 @@ export default function Chat(props: {
             e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
           }}
         >
-          <ChevronDown size={20} />
+          <LuChevronDown size={20} />
         </button>
       )}
 
@@ -359,7 +359,7 @@ export default function Chat(props: {
             flexShrink: 0,
           }}
         >
-          <Loader
+          <LuLoader
             size={14}
             aria-hidden="true"
             style={{ animation: "spin 1s linear infinite" }}

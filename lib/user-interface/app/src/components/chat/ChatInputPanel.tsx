@@ -27,7 +27,7 @@ import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
 import { useNotifications } from "../notifications/NotificationManager";
 import { useAccessDenied } from "../access-denied/AccessDeniedManager";
-import { Mic, MicOff, Send, AlertCircle, Square } from "lucide-react";
+import { LuMic, LuMicOff, LuSend, LuCircleAlert, LuSquare } from "react-icons/lu";
 
 // Styles for the components
 const styles = {
@@ -657,7 +657,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     <>
       {responseTimeoutWarning && (
         <div style={styles.timeoutWarning} role="alert">
-          <AlertCircle size={18} aria-hidden="true" />
+          <LuCircleAlert size={18} aria-hidden="true" />
           <span>The assistant is taking longer than usual to respond.</span>
           <button
             type="button"
@@ -707,11 +707,11 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           }
         >
           {micPermissionDenied ? (
-            <AlertCircle size={20} aria-hidden="true" />
+            <LuCircleAlert size={20} aria-hidden="true" />
           ) : listening ? (
-            <MicOff size={20} aria-hidden="true" />
+            <LuMicOff size={20} aria-hidden="true" />
           ) : (
-            <Mic size={20} aria-hidden="true" />
+            <LuMic size={20} aria-hidden="true" />
           )}
         </button>
       ) : (
@@ -720,7 +720,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           title="Your browser doesn't support speech recognition"
           aria-hidden="true"
         >
-          <MicOff size={20} />
+          <LuMicOff size={20} />
         </span>
       )}
 
@@ -804,7 +804,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           aria-label="Stop generating response"
           title="Stop generating"
         >
-          <Square size={16} fill="white" />
+          <LuSquare size={16} fill="white" />
         </button>
       ) : (
         <button
@@ -834,7 +834,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           aria-label="Send message"
           title="Send message"
         >
-          <Send size={20} />
+          <LuSend size={20} />
         </button>
       )}
       </div>

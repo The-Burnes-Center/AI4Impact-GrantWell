@@ -13,25 +13,30 @@ import { genericBrandingData } from "../../shared/generic-branding";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as iam from "aws-cdk-lib/aws-iam";
-import * as events from "aws-cdk-lib/aws-events";
-import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as ses from "aws-cdk-lib/aws-ses";
 import * as sns from "aws-cdk-lib/aws-sns";
-import * as scheduler from "aws-cdk-lib/aws-scheduler";
-import * as schedulerTargets from "aws-cdk-lib/aws-scheduler-targets";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
-import { SqsEventSource, SnsEventSource, DynamoEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { DynamoEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
 import { knowledgeBaseIndexName } from "../../constants";
-import { NofoProcessingStateMachine } from "../step-functions/nofo-processing";
-import { DraftGenerationStateMachine } from "../step-functions/draft-generation";
 import { SUPPORTED_STATES } from "../../shared/states";
+import { DocumentConversionStack } from "./document-conversion-stack";
+import { NotificationsStack } from "./notifications-stack";
+import { ScraperStack } from "./scraper-stack";
+import { NofoPipelineStack } from "./nofo-pipeline-stack";
+import { DraftGenerationStack } from "./draft-generation-stack";
+import {
+  lambdaInvokePolicy,
+  metadataTableReadWritePolicy,
+  reviewTableReadWritePolicy,
+  s3ReadWritePolicy,
+} from "./shared-policies";
 
 // [{code,name}] so handlers get both membership checks and display names from one env var.
 const SUPPORTED_STATES_ENV = JSON.stringify(
@@ -445,11 +450,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Grant permission to invoke KB sync function
     createMetadataFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [kbSyncAPIHandlerFunction.functionArn],
-      })
+      lambdaInvokePolicy(kbSyncAPIHandlerFunction.functionArn)
     );
 
     // Grant Bedrock permissions for checking sync status before triggering
@@ -509,11 +510,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Grant permission to invoke KB sync function
     deleteS3APIHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [kbSyncAPIHandlerFunction.functionArn],
-      })
+      lambdaInvokePolicy(kbSyncAPIHandlerFunction.functionArn)
     );
 
     this.deleteS3Function = deleteS3APIHandlerFunction;
@@ -626,199 +623,30 @@ export class LambdaFunctionStack extends cdk.Stack {
       },
     });
 
-    // Common IAM helpers
-    const s3ReadWritePolicy = new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-      resources: [
-        props.ffioNofosBucket.bucketArn,
-        `${props.ffioNofosBucket.bucketArn}/*`,
-      ],
+    // The NOFO processing pipeline — task Lambdas, state machine, SQS dispatcher, DLQ drain
+    // and the admin review API — lives in its own NestedStack to keep the main app stack under
+    // the 500-resource CloudFormation limit. The queues, the NOFO bucket, the metadata/review
+    // tables, the inference profiles and the KB sync Lambda stay here and are passed in.
+    const nofoPipeline = new NofoPipelineStack(scope, "NofoPipelineStack", {
+      ffioNofosBucket: props.ffioNofosBucket,
+      nofoMetadataTable: props.nofoMetadataTable,
+      nofoProcessingReviewTable: props.nofoProcessingReviewTable,
+      jsSharedLayer: jsSharedLayer,
+      sonnetNofoProfileArn: sonnetNofoProfile.attrInferenceProfileArn,
+      haikuNofoProfileArn: haikuNofoProfile.attrInferenceProfileArn,
+      syncKBFunctionArn: this.syncKBFunction.functionArn,
+      nofoProcessingQueueArn: nofoProcessingQueue.queueArn,
+      nofoProcessingQueueUrl: nofoProcessingQueue.queueUrl,
+      nofoProcessingDlqArn: nofoProcessingDLQ.queueArn,
+      nofoProcessingDlqUrl: nofoProcessingDLQ.queueUrl,
+      scraperDownloadDlqArn: scraperDownloadDLQ.queueArn,
+      scraperDownloadDlqUrl: scraperDownloadDLQ.queueUrl,
+      supportedStatesEnv: SUPPORTED_STATES_ENV,
+      legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,
     });
 
-    const bedrockInvokePolicy = new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["bedrock:InvokeModel"],
-      resources: ["*"],
-    });
-
-    const textractPolicy = new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "textract:StartDocumentTextDetection",
-        "textract:GetDocumentTextDetection",
-      ],
-      resources: ["*"],
-    });
-
-    const metadataTableReadWritePolicy = new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["dynamodb:GetItem", "dynamodb:BatchGetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:Query", "dynamodb:Scan"],
-      resources: [
-        props.nofoMetadataTable.tableArn,
-        props.nofoMetadataTable.tableArn + "/index/*",
-      ],
-    });
-
-    const reviewTableReadWritePolicy = new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem",
-        "dynamodb:Query", "dynamodb:Scan",
-      ],
-      resources: [
-        props.nofoProcessingReviewTable.tableArn,
-        props.nofoProcessingReviewTable.tableArn + "/index/*",
-      ],
-    });
-
-    // --- Pipeline Lambda Functions ---
-
-    const extractTextFunction = new lambda.Function(scope, "ExtractTextFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "extract-text/index.handler",
-      environment: {
-        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-      },
-      timeout: cdk.Duration.minutes(5),
-      memorySize: 512,
-    });
-    extractTextFunction.addToRolePolicy(s3ReadWritePolicy);
-    extractTextFunction.addToRolePolicy(textractPolicy);
-    extractTextFunction.addToRolePolicy(metadataTableReadWritePolicy);
-
-    const extractAndAnalyzeFunction = new lambda.Function(scope, "ExtractAndAnalyzeFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "extract-and-analyze/index.handler",
-      environment: {
-        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        SONNET_MODEL_ID: sonnetNofoProfile.attrInferenceProfileArn,
-      },
-      timeout: cdk.Duration.minutes(15),
-      memorySize: 512,
-    });
-    extractAndAnalyzeFunction.addToRolePolicy(s3ReadWritePolicy);
-    extractAndAnalyzeFunction.addToRolePolicy(bedrockInvokePolicy);
-    extractAndAnalyzeFunction.addToRolePolicy(metadataTableReadWritePolicy);
-
-    const synthesizeFunction = new lambda.Function(scope, "SynthesizeFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "synthesize/index.handler",
-      environment: {
-        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        HAIKU_MODEL_ID: haikuNofoProfile.attrInferenceProfileArn,
-      },
-      timeout: cdk.Duration.minutes(5),
-      memorySize: 512,
-    });
-    synthesizeFunction.addToRolePolicy(s3ReadWritePolicy);
-    synthesizeFunction.addToRolePolicy(bedrockInvokePolicy);
-    synthesizeFunction.addToRolePolicy(metadataTableReadWritePolicy);
-
-    const validateFunction = new lambda.Function(scope, "ValidateFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "validate/index.handler",
-      environment: {
-        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-      },
-      timeout: cdk.Duration.minutes(3),
-      memorySize: 512,
-    });
-    validateFunction.addToRolePolicy(metadataTableReadWritePolicy);
-
-    const publishFunction = new lambda.Function(scope, "PublishFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "publish/index.handler",
-      environment: {
-        BUCKET: props.ffioNofosBucket.bucketName,
-        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
-      },
-      timeout: cdk.Duration.minutes(2),
-      memorySize: 256,
-    });
-    publishFunction.addToRolePolicy(s3ReadWritePolicy);
-    publishFunction.addToRolePolicy(metadataTableReadWritePolicy);
-    publishFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [this.syncKBFunction.functionArn],
-      })
-    );
-
-    const quarantineFunction = new lambda.Function(scope, "QuarantineFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "quarantine/index.handler",
-      environment: {
-        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
-        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-      },
-      timeout: cdk.Duration.minutes(1),
-      memorySize: 256,
-    });
-    quarantineFunction.addToRolePolicy(s3ReadWritePolicy);
-    quarantineFunction.addToRolePolicy(reviewTableReadWritePolicy);
-    quarantineFunction.addToRolePolicy(metadataTableReadWritePolicy);
-
-    // --- Step Functions State Machine ---
-
-    const nofoProcessing = new NofoProcessingStateMachine(
-      scope,
-      "NofoProcessingPipeline",
-      {
-        extractTextFunction,
-        extractAndAnalyzeFunction,
-        synthesizeFunction,
-        validateFunction,
-        publishFunction,
-        quarantineFunction,
-      }
-    );
-
-    this.nofoProcessingStateMachine = nofoProcessing.stateMachine;
-
-    // --- Dispatcher Lambda (SQS -> Step Functions) ---
-
-    const dispatcherFunction = new lambda.Function(scope, "PipelineDispatcherFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "dispatcher/index.handler",
-      environment: {
-        STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
-        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
-      },
-      // The dispatcher only enqueues work now — it no longer waits for the state machine, which
-      // may run up to 30 min (longer than any Lambda can live).
-      timeout: cdk.Duration.minutes(1),
-      memorySize: 256,
-    });
-
-    dispatcherFunction.addToRolePolicy(metadataTableReadWritePolicy);
-    dispatcherFunction.addToRolePolicy(reviewTableReadWritePolicy);
-    nofoProcessing.stateMachine.grantStartExecution(dispatcherFunction);
-    dispatcherFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["states:DescribeExecution", "states:StopExecution"],
-        resources: ["*"],
-      })
-    );
-
-    dispatcherFunction.addEventSource(
-      new SqsEventSource(nofoProcessingQueue, {
-        batchSize: 1,
-        maxConcurrency: 5,
-        reportBatchItemFailures: true,
-      })
-    );
+    this.nofoProcessingStateMachine = nofoPipeline.nofoProcessingStateMachine;
+    this.nofoAdminFunction = nofoPipeline.nofoAdminFunction;
 
     // S3 → SQS notifications (same as before)
     props.ffioNofosBucket.addEventNotification(
@@ -831,82 +659,6 @@ export class LambdaFunctionStack extends cdk.Stack {
       new s3n.SqsDestination(nofoProcessingQueue),
       { prefix: "", suffix: "NOFO-File-TXT" }
     );
-
-    // --- DLQ Processor Lambda (EventBridge schedule) ---
-
-    const dlqProcessorFunction = new lambda.Function(scope, "DLQProcessorFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "dlq-processor/index.handler",
-      environment: {
-        DLQ_URL: nofoProcessingDLQ.queueUrl,
-        SCRAPER_DLQ_URL: scraperDownloadDLQ.queueUrl,
-        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
-      },
-      timeout: cdk.Duration.minutes(5),
-      memorySize: 256,
-    });
-    dlqProcessorFunction.addToRolePolicy(reviewTableReadWritePolicy);
-    dlqProcessorFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"],
-        resources: [nofoProcessingDLQ.queueArn, scraperDownloadDLQ.queueArn],
-      })
-    );
-
-    const dlqProcessorRule = new events.Rule(scope, "DLQProcessorSchedule", {
-      schedule: events.Schedule.rate(cdk.Duration.minutes(15)),
-      description: "Process DLQ items into review table every 15 minutes",
-    });
-    dlqProcessorRule.addTarget(new targets.LambdaFunction(dlqProcessorFunction));
-
-    // --- Admin API Lambda ---
-
-    const nofoAdminFunction = new lambda.Function(scope, "NofoAdminFunction", {
-      runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
-      handler: "admin/index.handler",
-      layers: [jsSharedLayer],
-      environment: {
-        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
-        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        BUCKET: props.ffioNofosBucket.bucketName,
-        PUBLISH_FUNCTION_NAME: publishFunction.functionName,
-        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
-      LEGACY_STATELESS_ADMIN_IS_PLATFORM,
-      },
-      timeout: cdk.Duration.seconds(30),
-      memorySize: 256,
-    });
-    nofoAdminFunction.addToRolePolicy(reviewTableReadWritePolicy);
-    nofoAdminFunction.addToRolePolicy(metadataTableReadWritePolicy);
-    nofoAdminFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [publishFunction.functionArn],
-      })
-    );
-    nofoAdminFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:ListBucket", "s3:DeleteObject", "s3:PutObject"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
-    );
-    nofoAdminFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:DeleteItem"],
-        resources: [props.nofoMetadataTable.tableArn],
-      })
-    );
-
-    this.nofoAdminFunction = nofoAdminFunction;
 
     // --- Reprocess Lambda ---
 
@@ -926,9 +678,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
     });
-    nofoReprocessFunction.addToRolePolicy(s3ReadWritePolicy);
-    nofoReprocessFunction.addToRolePolicy(metadataTableReadWritePolicy);
-    nofoReprocessFunction.addToRolePolicy(reviewTableReadWritePolicy);
+    nofoReprocessFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    nofoReprocessFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
+    nofoReprocessFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     nofoReprocessFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -1067,14 +819,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     nofoStatusHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
+      s3ReadWritePolicy(props.ffioNofosBucket.bucketArn)
     );
 
     // Grant DynamoDB write permissions
@@ -1141,11 +886,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     nofoSummaryUpdateFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [kbSyncAPIHandlerFunction.functionArn],
-      })
+      lambdaInvokePolicy(kbSyncAPIHandlerFunction.functionArn)
     );
 
     this.nofoSummaryUpdateFunction = nofoSummaryUpdateFunction;
@@ -1183,14 +924,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(60),
     });
     nofoPromoteCopyFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
+      s3ReadWritePolicy(props.ffioNofosBucket.bucketArn)
     );
     props.nofoMetadataTable.grantReadWriteData(nofoPromoteCopyFunction);
     this.nofoPromoteCopyFunction = nofoPromoteCopyFunction;
@@ -1250,11 +984,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Re-index the KB so it drops the old prefix and picks up the new one.
     nofoRenameHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [kbSyncAPIHandlerFunction.functionArn],
-      })
+      lambdaInvokePolicy(kbSyncAPIHandlerFunction.functionArn)
     );
 
     this.nofoRenameFunction = nofoRenameHandlerFunction;
@@ -1308,11 +1038,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // Grant permission to invoke KB sync function
     nofoDeleteHandlerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [kbSyncAPIHandlerFunction.functionArn],
-      })
+      lambdaInvokePolicy(kbSyncAPIHandlerFunction.functionArn)
     );
 
     this.nofoDeleteFunction = nofoDeleteHandlerFunction;
@@ -1371,503 +1097,62 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     this.downloadS3Function = downloadS3APIHandlerFunction;
 
-    // --- Draft Generation Step Functions Pipeline ---
-
-    const draftPrepareFunction = new lambda.Function(
-      scope,
-      "DraftPrepareFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "draft-pipeline/prepare")
-        ),
-        handler: "index.handler",
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
-          DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
-        },
-        timeout: cdk.Duration.seconds(60),
-        memorySize: 256,
-        logGroup: new logs.LogGroup(scope, "DraftPrepareFunctionLogGroup", {
-          retention: logs.RetentionDays.THREE_MONTHS,
-        }),
-      }
-    );
-
-    draftPrepareFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:ListBucket"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
-      })
-    );
-    draftPrepareFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Retrieve", "bedrock-agent:Retrieve"],
-        resources: ["*"],
-      })
-    );
-    draftPrepareFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:UpdateItem"],
-        resources: [props.draftGenerationJobsTable.tableArn],
-      })
-    );
-
-    const draftGenerateSectionFunction = new lambda.Function(
-      scope,
-      "DraftGenerateSectionFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "draft-pipeline/generate-section")
-        ),
-        handler: "index.handler",
-        environment: {
-          SONNET_MODEL_ID: sonnetDraftProfile.attrInferenceProfileArn,
-          DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
-          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
-        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
-        },
-        timeout: cdk.Duration.minutes(5),
-        memorySize: 256,
-        logGroup: new logs.LogGroup(scope, "DraftGenerateSectionFunctionLogGroup", {
-          retention: logs.RetentionDays.THREE_MONTHS,
-        }),
-      }
-    );
-
-    draftGenerateSectionFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:InvokeModel"],
-        resources: ["*"],
-      })
-    );
-    draftGenerateSectionFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:UpdateItem"],
-        resources: [props.draftGenerationJobsTable.tableArn],
-      })
-    );
-
-    const draftAssembleFunction = new lambda.Function(
-      scope,
-      "DraftAssembleFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "draft-pipeline/assemble")
-        ),
-        handler: "index.handler",
-        environment: {
-          DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
-          DRAFT_TABLE_NAME: props.draftTable.tableName,
-        },
-        timeout: cdk.Duration.seconds(30),
-        memorySize: 128,
-        logGroup: new logs.LogGroup(scope, "DraftAssembleFunctionLogGroup", {
-          retention: logs.RetentionDays.THREE_MONTHS,
-        }),
-      }
-    );
-
-    draftAssembleFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:UpdateItem", "dynamodb:GetItem"],
-        resources: [
-          props.draftGenerationJobsTable.tableArn,
-          props.draftTable.tableArn,
-        ],
-      })
-    );
-
-    const draftGenerationPipeline = new DraftGenerationStateMachine(
-      scope,
-      "DraftGenerationPipeline",
-      {
-        prepareFunction: draftPrepareFunction,
-        generateSectionFunction: draftGenerateSectionFunction,
-        assembleFunction: draftAssembleFunction,
-        draftGenerationJobsTable: props.draftGenerationJobsTable,
-      }
-    );
-
-    this.draftGenerationStateMachine = draftGenerationPipeline.stateMachine;
-
-    // --- Scraper Fan-Out Architecture ---
-
-    // Coordinator Lambda — paginate search API, dedup via DynamoDB, queue new opportunities
-    const scraperCoordinatorFunction = new lambda.Function(
-      scope,
-      "ScraperCoordinatorFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "nofo-scraper")
-        ),
-        handler: "coordinator/index.handler",
-        layers: [jsSharedLayer],
-        environment: {
-          GRANTS_GOV_API_KEY: props.grantsGovApiKey,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          SCRAPER_DOWNLOAD_QUEUE_URL: scraperDownloadQueue.queueUrl,
-        },
-        timeout: cdk.Duration.minutes(15),
-        memorySize: 256,
-      }
-    );
-
-    scraperCoordinatorFunction.addToRolePolicy(metadataTableReadWritePolicy);
-    scraperCoordinatorFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["sqs:SendMessage"],
-        resources: [scraperDownloadQueue.queueArn],
-      })
-    );
-
-    // Opportunity Processor Lambda — fetch details, download file, upload to S3, write metadata
-    const opportunityProcessorFunction = new lambda.Function(
-      scope,
-      "OpportunityProcessorFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "nofo-scraper")
-        ),
-        handler: "opportunity-processor/index.handler",
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          GRANTS_GOV_API_KEY: props.grantsGovApiKey,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          HAIKU_MODEL_ID: haikuScraperProfile.attrInferenceProfileArn,
-        },
-        timeout: cdk.Duration.minutes(2),
-        memorySize: 256,
-      }
-    );
-
-    opportunityProcessorFunction.addToRolePolicy(s3ReadWritePolicy);
-    opportunityProcessorFunction.addToRolePolicy(bedrockInvokePolicy);
-    opportunityProcessorFunction.addToRolePolicy(metadataTableReadWritePolicy);
-
-    opportunityProcessorFunction.addEventSource(
-      new SqsEventSource(scraperDownloadQueue, {
-        batchSize: 1,
-        maxConcurrency: 5,
-        reportBatchItemFailures: true,
-      })
-    );
-
-    // EventBridge rule to run the coordinator daily at 9 AM UTC.
-    // The grantwell-staging environment powers the generic deployment.
-    const environment = process.env.ENVIRONMENT;
-    if (environment === 'production' || environment === 'grantwell-staging') {
-      const scraperRule = new events.Rule(scope, 'AutomatedNofoScraperRule', {
-        schedule: events.Schedule.cron({
-          minute: '0',
-          hour: '9',
-          day: '*',
-          month: '*',
-          year: '*',
-        }),
-        description: 'Trigger scraper coordinator daily at 9 AM UTC',
-      });
-
-      scraperRule.addTarget(new targets.LambdaFunction(scraperCoordinatorFunction));
-    }
-
-    this.scraperCoordinatorFunction = scraperCoordinatorFunction;
-    this.opportunityProcessorFunction = opportunityProcessorFunction;
-
-    // Add sync NOFO metadata Lambda function
-    const syncNofoMetadataFunction = new lambda.Function(
-      scope,
-      "SyncNofoMetadataFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/sync-nofo-metadata")
-        ),
-        handler: "index.handler",
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        },
-        timeout: cdk.Duration.minutes(15),
-      }
-    );
-
-    // S3 read permissions
-    syncNofoMetadataFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:ListBucket"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
-      })
-    );
-
-    // DynamoDB write permissions
-    syncNofoMetadataFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "dynamodb:PutItem",
-          "dynamodb:GetItem",
-          "dynamodb:UpdateItem",
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          props.nofoMetadataTable.tableArn + "/index/*",
-        ],
-      })
-    );
-
-    this.syncNofoMetadataFunction = syncNofoMetadataFunction;
-
-    // Create Puppeteer Core Lambda Layer for HTML to PDF conversion
-    // Note: @sparticuz/chromium v131+ bundles all required dependencies, so no separate Chromium layer is needed
-    const puppeteerCoreLayer = new lambda.LayerVersion(scope, "PuppeteerCoreLayer", {
-      layerVersionName: "PuppeteerCoreLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "layers/puppeteer-core-layer.zip")
-      ),
-      description: "Puppeteer Core and dependencies for Lambda",
+    // Draft generation pipeline Lambdas and their Step Functions state machine live in
+    // their own NestedStack to keep the main app stack under the 500-resource
+    // CloudFormation limit. The NOFO bucket, the draft and job tables, the knowledge base
+    // and the Bedrock inference profile stay here and are passed in.
+    const draftGeneration = new DraftGenerationStack(scope, "DraftGenerationStack", {
+      ffioNofosBucket: props.ffioNofosBucket,
+      draftTable: props.draftTable,
+      draftGenerationJobsTable: props.draftGenerationJobsTable,
+      knowledgeBaseId: props.knowledgeBase.attrKnowledgeBaseId,
+      sonnetDraftProfileArn: sonnetDraftProfile.attrInferenceProfileArn,
+      supportedStatesEnv: SUPPORTED_STATES_ENV,
+      legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,
     });
 
-    // Add HTML to PDF converter Lambda function
-    const htmlToPdfConverterFunction = new lambda.Function(
-      scope,
-      "HtmlToPdfConverterFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/html-to-pdf-converter")),
-        handler: "index.handler",
-        layers: [puppeteerCoreLayer],
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-        },
-        timeout: cdk.Duration.minutes(5),
-        memorySize: 1024, // PDF conversion with Chromium can be memory-intensive
-      }
-    );
+    this.draftGenerationStateMachine = draftGeneration.draftGenerationStateMachine;
 
-    // S3 permissions for HTML to PDF converter
-    // ListBucket permission on the bucket itself
-    htmlToPdfConverterFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:ListBucket"],
-        resources: [props.ffioNofosBucket.bucketArn],
-      })
-    );
-    // Object-level permissions on bucket contents
-    htmlToPdfConverterFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
-        resources: [`${props.ffioNofosBucket.bucketArn}/*`],
-      })
-    );
-
-    // Add S3 event notification to trigger HTML-to-PDF conversion
-    props.ffioNofosBucket.addEventNotification(
-      s3.EventType.OBJECT_CREATED,
-      new s3n.LambdaDestination(htmlToPdfConverterFunction),
-      {
-        prefix: "pending-conversion/",
-        suffix: ".html",
-      }
-    );
-
-    this.htmlToPdfConverterFunction = htmlToPdfConverterFunction;
-
-    // Application PDF Generator Lambda Function (using Puppeteer for tagged PDFs)
-    const applicationPdfGeneratorFunction = new lambda.Function(
-      scope,
-      "ApplicationPdfGeneratorFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "application-pdf-generator")
-        ),
-        handler: "index.handler",
-        layers: [puppeteerCoreLayer, jsSharedLayer],
-        environment: {
-          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
-        },
-        timeout: cdk.Duration.minutes(5),
-        memorySize: 2048, // PDF conversion with Chromium can be memory-intensive
-      }
-    );
-    props.analyticsTable.grantWriteData(applicationPdfGeneratorFunction);
-
-    this.applicationPdfGeneratorFunction = applicationPdfGeneratorFunction;
-
-    // --- DOCX Support ---
-
-    // Lambda Layer: mammoth (DOCX text extraction, pure JS)
-    const mammothLayer = new lambda.LayerVersion(scope, "MammothLayer", {
-      layerVersionName: "MammothLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "layers/mammoth-layer.zip")
-      ),
-      description: "mammoth library for DOCX text extraction",
+    // Scraper fan-out and NOFO lifecycle functions live in their own NestedStack to
+    // keep the main app stack under the 500-resource CloudFormation limit. The download
+    // queue, the NOFO bucket, the metadata table and the Bedrock inference profile stay
+    // here and are passed in.
+    const scraper = new ScraperStack(scope, "ScraperStack", {
+      ffioNofosBucket: props.ffioNofosBucket,
+      nofoMetadataTable: props.nofoMetadataTable,
+      jsSharedLayer: jsSharedLayer,
+      grantsGovApiKey: props.grantsGovApiKey,
+      haikuScraperProfileArn: haikuScraperProfile.attrInferenceProfileArn,
+      scraperDownloadQueueArn: scraperDownloadQueue.queueArn,
+      scraperDownloadQueueUrl: scraperDownloadQueue.queueUrl,
     });
 
-    // Lambda Layer: html-to-docx (HTML → DOCX conversion)
-    const htmlToDocxLayer = new lambda.LayerVersion(scope, "HtmlToDocxLayer", {
-      layerVersionName: "HtmlToDocxLayer",
-      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "layers/html-to-docx-layer.zip")
-      ),
-      description: "html-to-docx library for generating Word documents",
-    });
+    this.scraperCoordinatorFunction = scraper.scraperCoordinatorFunction;
+    this.opportunityProcessorFunction = scraper.opportunityProcessorFunction;
+    this.syncNofoMetadataFunction = scraper.syncNofoMetadataFunction;
+    this.autoArchiveExpiredNofosFunction =
+      scraper.autoArchiveExpiredNofosFunction;
 
-    // DOCX to Text Converter — triggered by S3 NOFO-File-DOCX uploads
-    const docxToTextConverterFunction = new lambda.Function(
+    // Document conversion functions live in their own NestedStack to keep the
+    // main app stack under the 500-resource CloudFormation limit.
+    const documentConversion = new DocumentConversionStack(
       scope,
-      "DocxToTextConverterFunction",
+      "DocumentConversionStack",
       {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "nofo-pipeline/docx-to-text-converter")
-        ),
-        handler: "index.handler",
-        layers: [mammothLayer],
-        timeout: cdk.Duration.minutes(2),
-        memorySize: 512,
+        ffioNofosBucket: props.ffioNofosBucket,
+        analyticsTable: props.analyticsTable,
+        jsSharedLayer: jsSharedLayer,
       }
     );
 
-    // S3 permissions for DOCX converter
-    docxToTextConverterFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:ListBucket"],
-        resources: [props.ffioNofosBucket.bucketArn],
-      })
-    );
-    docxToTextConverterFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
-        resources: [`${props.ffioNofosBucket.bucketArn}/*`],
-      })
-    );
-
-    // S3 event: NOFO-File-DOCX upload → docx-to-text-converter Lambda
-    props.ffioNofosBucket.addEventNotification(
-      s3.EventType.OBJECT_CREATED,
-      new s3n.LambdaDestination(docxToTextConverterFunction),
-      { suffix: "NOFO-File-DOCX" }
-    );
-
-    this.docxToTextConverterFunction = docxToTextConverterFunction;
-
-    // Application DOCX Generator — REST API endpoint for draft export
-    const applicationDocxGeneratorFunction = new lambda.Function(
-      scope,
-      "ApplicationDocxGeneratorFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "application-docx-generator")
-        ),
-        handler: "index.handler",
-        layers: [htmlToDocxLayer, jsSharedLayer],
-        environment: {
-          ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
-        },
-        timeout: cdk.Duration.minutes(2),
-        memorySize: 512,
-      }
-    );
-    props.analyticsTable.grantWriteData(applicationDocxGeneratorFunction);
-
-    this.applicationDocxGeneratorFunction = applicationDocxGeneratorFunction;
-
-    // Auto-Archive Expired NOFOs Lambda Function
-    const autoArchiveExpiredNofosFunction = new lambda.Function(
-      scope,
-      'AutoArchiveExpiredNofosFunction',
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, 'landing-page/auto-archive-expired-nofos')
-        ),
-        handler: 'index.handler',
-        environment: {
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          BUCKET: props.ffioNofosBucket.bucketName,
-          GRACE_PERIOD_DAYS: '1', // 1 day grace period (archive next day)
-          DRY_RUN: 'false', // Set to 'true' for testing
-        },
-        timeout: cdk.Duration.minutes(15),
-      }
-    );
-
-    // Grant DynamoDB permissions
-    autoArchiveExpiredNofosFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'dynamodb:Query',
-          'dynamodb:UpdateItem',
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          `${props.nofoMetadataTable.tableArn}/index/*`,
-        ],
-      })
-    );
-
-    // Grant S3 permissions
-    autoArchiveExpiredNofosFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          's3:GetObject',
-          's3:PutObject',
-        ],
-        resources: [
-          `${props.ffioNofosBucket.bucketArn}/*`,
-        ],
-      })
-    );
-
-    this.autoArchiveExpiredNofosFunction = autoArchiveExpiredNofosFunction;
-
-    // Create EventBridge rule to run daily at 2 AM UTC
-    const autoArchiveRule = new events.Rule(scope, 'AutoArchiveExpiredNofosRule', {
-      schedule: events.Schedule.cron({
-        minute: '0',
-        hour: '2',
-        day: '*',
-        month: '*',
-        year: '*',
-      }),
-      description: 'Automatically archive expired NOFOs daily',
-    });
-
-    // Add the Lambda function as a target for the EventBridge rule
-    autoArchiveRule.addTarget(new targets.LambdaFunction(autoArchiveExpiredNofosFunction));
+    this.htmlToPdfConverterFunction =
+      documentConversion.htmlToPdfConverterFunction;
+    this.applicationPdfGeneratorFunction =
+      documentConversion.applicationPdfGeneratorFunction;
+    this.docxToTextConverterFunction =
+      documentConversion.docxToTextConverterFunction;
+    this.applicationDocxGeneratorFunction =
+      documentConversion.applicationDocxGeneratorFunction;
 
     // Get the stack object
     const stack = cdk.Stack.of(this);
@@ -1937,15 +1222,6 @@ export class LambdaFunctionStack extends cdk.Stack {
       ],
     });
 
-    const digestBrandEnv = {
-      DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
-      DIGEST_LOGO_URL: `${emailConfig.deploymentUrl}${genericBrandingData.footerLogo}`,
-      DIGEST_APP_NAME: genericBrandingData.appName,
-      DIGEST_ORG_NAME: genericBrandingData.orgName,
-      DIGEST_POSTAL_ADDRESS: genericBrandingData.postalAddress,
-      DIGEST_SUPPORT_EMAIL: genericBrandingData.supportEmail,
-    };
-
     // Shared HMAC key for one-click unsubscribe tokens: the digest Lambda signs the per-user token
     // it embeds in each email; the public unsubscribe Lambda verifies it. Same secret must reach
     // both. Generated once and stored in Secrets Manager (no plaintext key in code or env at rest).
@@ -1957,205 +1233,37 @@ export class LambdaFunctionStack extends cdk.Stack {
       },
     });
 
-    const notificationDigestFunction = new lambda.Function(
-      scope,
-      "NotificationDigestFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(path.join(__dirname, "notifications/digest")),
-        handler: "index.handler",
-        layers: [jsSharedLayer],
-        environment: {
-          USER_NOTIFICATION_PREFS_TABLE_NAME:
-            props.userNotificationPrefsTable.tableName,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          USER_POOL_ID: props.userPool.userPoolId,
-          NOTIFICATION_SENDER: notificationSender,
-          DEPLOYMENT_URL: emailConfig.deploymentUrl,
-          UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
-          DIGEST_SEND_LOG_TABLE_NAME: props.digestSendLogTable.tableName,
-          DIGEST_SUPPRESSION_TABLE_NAME: props.digestSuppressionTable.tableName,
-          SES_CONFIGURATION_SET: sesConfigurationSet.configurationSetName,
-          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
-          ...digestBrandEnv,
-        },
-        timeout: cdk.Duration.minutes(15),
-      }
-    );
+    // Notification digest functions and their schedules live in their own NestedStack to
+    // keep the main app stack under the 500-resource CloudFormation limit. The SES identity,
+    // configuration set, feedback topic and unsubscribe secret stay here and are passed in.
+    const notifications = new NotificationsStack(scope, "NotificationsStack", {
+      userNotificationPrefsTable: props.userNotificationPrefsTable,
+      nofoMetadataTable: props.nofoMetadataTable,
+      digestSendLogTable: props.digestSendLogTable,
+      digestSuppressionTable: props.digestSuppressionTable,
+      userPool: props.userPool,
+      jsSharedLayer: jsSharedLayer,
+      sesConfigurationSet: sesConfigurationSet,
+      sesFeedbackTopicArn: sesFeedbackTopic.topicArn,
+      unsubscribeSecret: unsubscribeSecret,
+      notificationSender: notificationSender,
+      supportedStatesEnv: SUPPORTED_STATES_ENV,
+    });
 
-    props.userNotificationPrefsTable.grantReadWriteData(notificationDigestFunction);
-    props.nofoMetadataTable.grantReadData(notificationDigestFunction);
-    props.digestSendLogTable.grantReadWriteData(notificationDigestFunction);
-    props.digestSuppressionTable.grantReadData(notificationDigestFunction);
-    props.userPool.grant(notificationDigestFunction, "cognito-idp:AdminGetUser");
-    unsubscribeSecret.grantRead(notificationDigestFunction);
-    notificationDigestFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["ses:SendEmail"],
-        resources: ["*"],
-        conditions: {
-          StringEquals: { "ses:FromAddress": notificationSender },
-        },
-      })
-    );
-    // Ensure the identity exists before the sender-scoped policy is exercised.
+    // Ensure the identity exists before the sender-scoped policies are exercised.
     if (notificationEmailIdentity) {
-      notificationDigestFunction.node.addDependency(notificationEmailIdentity);
+      notifications.node.addDependency(notificationEmailIdentity);
     }
 
-    this.notificationDigestFunction = notificationDigestFunction;
-
-    // Developer-only digest preview: renders the real template (shared layer) against real data —
-    // the caller's own prefs and the live active NOFO pool — and can also send a test message to the
-    // caller. Same stack as the layer to avoid a cross-stack reference.
-    const notificationDigestPreviewFunction = new lambda.Function(
-      scope,
-      "NotificationDigestPreviewFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "notifications/digest-preview")
-        ),
-        handler: "index.handler",
-        layers: [jsSharedLayer],
-        environment: {
-          USER_NOTIFICATION_PREFS_TABLE_NAME:
-            props.userNotificationPrefsTable.tableName,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          DEPLOYMENT_URL: emailConfig.deploymentUrl,
-          NOTIFICATION_SENDER: notificationSender,
-          SES_CONFIGURATION_SET: sesConfigurationSet.configurationSetName,
-          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
-          ...digestBrandEnv,
-        },
-        timeout: cdk.Duration.seconds(15),
-      }
-    );
-    // Preview runs the real selection: read the caller's prefs and the active NOFO pool.
-    props.userNotificationPrefsTable.grantReadData(
-      notificationDigestPreviewFunction
-    );
-    props.nofoMetadataTable.grantReadData(notificationDigestPreviewFunction);
-    // Test-send uses the same verified sender as the digest.
-    notificationDigestPreviewFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["ses:SendEmail"],
-        resources: ["*"],
-        conditions: {
-          StringEquals: { "ses:FromAddress": notificationSender },
-        },
-      })
-    );
-    if (notificationEmailIdentity) {
-      notificationDigestPreviewFunction.node.addDependency(notificationEmailIdentity);
-    }
-    this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
-
-    // Developer-only trigger that fires the real digest on demand (async-invokes the digest Lambda),
-    // for a single user or everyone. Route is wired in chatbot-api/index.ts.
-    const notificationDigestBroadcastFunction = new lambda.Function(
-      scope,
-      "NotificationDigestBroadcastFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "notifications/digest-broadcast")
-        ),
-        handler: "index.handler",
-        environment: {
-          DIGEST_FUNCTION_NAME: notificationDigestFunction.functionName,
-        },
-        timeout: cdk.Duration.seconds(15),
-      }
-    );
-    notificationDigestFunction.grantInvoke(notificationDigestBroadcastFunction);
-    this.notificationDigestBroadcastFunction = notificationDigestBroadcastFunction;
-
-    // Public one-click unsubscribe endpoint (no JWT — the signed token is the authorization). Sets
-    // the caller's frequency to "off". Route is wired in chatbot-api/index.ts without an authorizer.
-    const notificationUnsubscribeFunction = new lambda.Function(
-      scope,
-      "NotificationUnsubscribeFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "notifications/unsubscribe")
-        ),
-        handler: "index.handler",
-        layers: [jsSharedLayer],
-        environment: {
-          USER_NOTIFICATION_PREFS_TABLE_NAME:
-            props.userNotificationPrefsTable.tableName,
-          UNSUBSCRIBE_SECRET_ARN: unsubscribeSecret.secretArn,
-          DIGEST_APP_NAME: genericBrandingData.appName,
-          DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
-        },
-        timeout: cdk.Duration.seconds(15),
-      }
-    );
-    props.userNotificationPrefsTable.grantWriteData(notificationUnsubscribeFunction);
-    unsubscribeSecret.grantRead(notificationUnsubscribeFunction);
-    this.notificationUnsubscribeFunction = notificationUnsubscribeFunction;
-
-    // Hard bounces and complaints land in the suppression table, the digest's send gate.
-    const notificationSesFeedbackFunction = new lambda.Function(
-      scope,
-      "NotificationSesFeedbackFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "notifications/ses-feedback")
-        ),
-        handler: "index.handler",
-        environment: {
-          DIGEST_SUPPRESSION_TABLE_NAME: props.digestSuppressionTable.tableName,
-          USER_NOTIFICATION_PREFS_TABLE_NAME:
-            props.userNotificationPrefsTable.tableName,
-          USER_POOL_ID: props.userPool.userPoolId,
-        },
-        timeout: cdk.Duration.seconds(30),
-      }
-    );
-    notificationSesFeedbackFunction.addEventSource(
-      new SnsEventSource(sesFeedbackTopic)
-    );
-    props.digestSuppressionTable.grantWriteData(notificationSesFeedbackFunction);
-    props.userNotificationPrefsTable.grantReadWriteData(notificationSesFeedbackFunction);
-    props.userPool.grant(notificationSesFeedbackFunction, "cognito-idp:ListUsers");
-    this.notificationSesFeedbackFunction = notificationSesFeedbackFunction;
-    // 2:00 PM America/New_York year-round. Scheduler, not events.Rule, because a Rule cron is UTC
-    // only and would drift an hour across DST. Both cadences fire together on Mondays; a user is
-    // only ever on one of them, so the overlap costs a concurrent table read, not a double-send.
-    const digestSchedulerRole = new iam.Role(scope, "NotificationDigestSchedulerRole", {
-      assumedBy: new iam.ServicePrincipal("scheduler.amazonaws.com"),
-    });
-    notificationDigestFunction.grantInvoke(digestSchedulerRole);
-
-    new scheduler.Schedule(scope, "NotificationDigestDailySchedule", {
-      schedule: scheduler.ScheduleExpression.expression(
-        "cron(0 14 * * ? *)",
-        cdk.TimeZone.AMERICA_NEW_YORK
-      ),
-      description: "Send daily NOFO notification digests",
-      target: new schedulerTargets.LambdaInvoke(notificationDigestFunction, {
-        role: digestSchedulerRole,
-        input: scheduler.ScheduleTargetInput.fromObject({ frequency: "daily" }),
-      }),
-    });
-
-    new scheduler.Schedule(scope, "NotificationDigestWeeklySchedule", {
-      schedule: scheduler.ScheduleExpression.expression(
-        "cron(0 14 ? * MON *)",
-        cdk.TimeZone.AMERICA_NEW_YORK
-      ),
-      description: "Send weekly NOFO notification digests",
-      target: new schedulerTargets.LambdaInvoke(notificationDigestFunction, {
-        role: digestSchedulerRole,
-        input: scheduler.ScheduleTargetInput.fromObject({ frequency: "weekly" }),
-      }),
-    });
+    this.notificationDigestFunction = notifications.notificationDigestFunction;
+    this.notificationDigestPreviewFunction =
+      notifications.notificationDigestPreviewFunction;
+    this.notificationDigestBroadcastFunction =
+      notifications.notificationDigestBroadcastFunction;
+    this.notificationUnsubscribeFunction =
+      notifications.notificationUnsubscribeFunction;
+    this.notificationSesFeedbackFunction =
+      notifications.notificationSesFeedbackFunction;
 
     // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
     const aiGrantSearchFunction = new lambda.Function(

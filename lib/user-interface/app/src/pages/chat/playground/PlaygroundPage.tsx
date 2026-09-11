@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import BaseAppLayout from "../../../layouts/ChatLayout";
 import Chat from "../../../components/chat/Chat";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { HelpCircle, Upload, FileText } from "lucide-react";
+import { LuCircleHelp, LuUpload, LuFileText } from "react-icons/lu";
 import { useApiClient } from "../../../hooks/use-api-client";
 import { useFocusTrap } from "../../../hooks/use-focus-trap";
 import DocumentManager from "../../../components/chat/DocumentManager";
@@ -124,10 +124,10 @@ export default function Playground() {
                   onClick={() => setUploadModalOpen(true)}
                   aria-label={`Upload Documents — supporting documents for this grant${uploadedFileCount > 0 ? `. ${uploadedFileCount} files uploaded.` : ""}`}
                 >
-                  <Upload size={16} aria-hidden="true" /> Upload Documents
+                  <LuUpload size={16} aria-hidden="true" /> Upload Documents
                   {uploadedFileCount > 0 && (
                     <span className="pg-upload-badge" aria-hidden="true">
-                      <FileText size={11} aria-hidden="true" />
+                      <LuFileText size={11} aria-hidden="true" />
                       {uploadedFileCount}
                     </span>
                   )}
@@ -140,7 +140,7 @@ export default function Playground() {
                 aria-label={helpOpen ? "Close help dialog" : "Open help dialog"}
                 aria-expanded={helpOpen}
               >
-                <HelpCircle size={16} aria-hidden="true" /> Help
+                <LuCircleHelp size={16} aria-hidden="true" /> Help
               </button>
             </div>
           </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
-import { Home, MessageSquare, FileText, CheckSquare, Upload, LayoutDashboard, User } from "lucide-react";
+import { LuHouse, LuMessageSquare, LuFileText, LuSquareCheckBig, LuUpload, LuLayoutDashboard, LuUser } from "react-icons/lu";
 import Modal from "../common/Modal";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 
@@ -365,7 +365,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 (e.currentTarget.style.background = "none")
               }
             >
-              <Home size={20} />
+              <LuHouse size={20} />
               {isOpen && <span style={{ marginLeft: "12px" }}>Home</span>}
             </button>
 
@@ -397,7 +397,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                 (e.currentTarget.style.background = isProfile ? "#23776C" : "none")
               }
             >
-              <User size={20} />
+              <LuUser size={20} />
               {isOpen && <span style={{ marginLeft: "12px" }}>Profile</span>}
             </button>
 
@@ -432,7 +432,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                     isDashboard ? "#23776C" : "none")
                 }
               >
-                <LayoutDashboard size={20} />
+                <LuLayoutDashboard size={20} />
                 {isOpen && <span style={{ marginLeft: "12px" }}>Admin Dashboard</span>}
               </button>
             )}
@@ -468,7 +468,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                     isRequirements ? "#23776C" : "none")
                 }
               >
-                <CheckSquare size={20} />
+                <LuSquareCheckBig size={20} />
                 {isOpen && <span style={{ marginLeft: "12px" }}>Requirements</span>}
               </button>
             )}
@@ -503,7 +503,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#23776C" : "none")
               }
             >
-              <MessageSquare size={20} />
+              <LuMessageSquare size={20} />
               {isOpen && <span style={{ marginLeft: "12px" }}>Chat with AI</span>}
             </button>
 
@@ -587,7 +587,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                   isDocumentEditor ? "#23776C" : "none")
               }
             >
-              <Upload size={20} />
+              <LuUpload size={20} />
               {isOpen && <span style={{ marginLeft: "12px" }}>Write Application</span>}
             </button>
 
@@ -622,7 +622,7 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
                     isDrafts ? "#23776C" : "none")
                 }
               >
-                <FileText size={18} />
+                <LuFileText size={18} />
                 <span style={{ marginLeft: "12px" }}>Drafts</span>
               </button>
             )}
