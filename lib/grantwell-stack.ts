@@ -20,8 +20,19 @@ export class GrantWellStack extends cdk.Stack {
       throw new Error('GRANTS_GOV_API_KEY environment variable is required');
     }
 
+    const turnstileSecretKey = process.env.TURNSTILE_SECRET_KEY;
+    if (!turnstileSecretKey) {
+      throw new Error('TURNSTILE_SECRET_KEY environment variable is required');
+    }
+
+    if (!process.env.TURNSTILE_SITE_KEY) {
+      throw new Error('TURNSTILE_SITE_KEY environment variable is required');
+    }
+
     // Create the authorization stack
-    const authentication = new AuthorizationStack(this, "Authorization");
+    const authentication = new AuthorizationStack(this, "Authorization", {
+      turnstileSecretKey,
+    });
 
     // Create the chatbot API and pass the authentication stack
     const chatbotAPI = new ChatBotApi(this, "ChatbotAPI", { 

@@ -1,4 +1,4 @@
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 
 interface VerifySignUpStepProps {
@@ -10,6 +10,7 @@ interface VerifySignUpStepProps {
   onResendCode: () => void;
   onBackToSignUp: () => void;
   verificationCodeErrorId?: string;
+  turnstile?: ReactNode;
 }
 
 export default function VerifySignUpStep({
@@ -21,6 +22,7 @@ export default function VerifySignUpStep({
   onResendCode,
   onBackToSignUp,
   verificationCodeErrorId,
+  turnstile,
 }: VerifySignUpStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
@@ -49,6 +51,7 @@ export default function VerifySignUpStep({
             aria-describedby={verificationCodeErrorId}
           />
         </Form.Group>
+        {turnstile}
         <div className="login-form-actions">
           <Button
             variant="primary"

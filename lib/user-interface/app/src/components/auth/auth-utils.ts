@@ -1,4 +1,5 @@
 import { PasswordRequirements } from "./auth-types";
+import { TURNSTILE_SITE_KEY } from "./turnstile-config";
 
 export type AuthErrorContext =
   | "sign-in"
@@ -153,6 +154,20 @@ export function getVerifySignUpValidationError(
   return getVerificationCodeValidationError(verificationCode);
 }
 
+export function getTurnstileValidationError(token: string) {
+  if (!TURNSTILE_SITE_KEY) return null;
+
+  if (!token) {
+    return "Complete the security check before continuing.";
+  }
+
+  return null;
+}
+
+export function turnstileClientMetadata(token: string) {
+  return TURNSTILE_SITE_KEY && token ? { turnstileToken: token } : undefined;
+}
+
 export function getAuthErrorCode(error: unknown) {
   const authError = error as AuthErrorShape | null;
   return authError?.code || authError?.name || "";
@@ -196,6 +211,16 @@ export function mapAuthError(error: unknown, context: AuthErrorContext) {
       return "Too many attempts. Wait a moment and try again.";
     case "InvalidPasswordException":
       return "Password does not meet the required complexity rules.";
+    case "UserLambdaValidationException": {
+      // Cognito wraps a rejecting trigger as "<Trigger> failed with error <message>." Those
+      // messages are written to be user-facing, so surface them instead of a generic fallback.
+      const triggerMessage = authError?.message?.match(
+        /failed with error (.+?)\.?$/,
+      )?.[1];
+      return triggerMessage
+        ? `${triggerMessage}.`
+        : "We could not complete that request. Try again.";
+    }
     case "InvalidParameterException":
       if (message.includes("current status is confirmed")) {
         return "Your email is already verified. Sign in to continue.";

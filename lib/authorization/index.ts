@@ -12,12 +12,16 @@ const SUPPORTED_STATES_ENV: string = JSON.stringify(
   SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
 );
 
+export interface AuthorizationStackProps {
+  readonly turnstileSecretKey: string;
+}
+
 export class AuthorizationStack extends Construct {
   public readonly lambdaAuthorizer: lambda.Function;
   public readonly userPool: UserPool;
   public readonly userPoolClient: UserPoolClient;
 
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: AuthorizationStackProps) {
     super(scope, id);
 
     const userPool = new UserPool(this, 'UserPool', {
@@ -67,13 +71,18 @@ export class AuthorizationStack extends Construct {
       handler: 'index.handler',
       environment: {
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        TURNSTILE_SECRET_KEY: props.turnstileSecretKey,
       },
-      timeout: cdk.Duration.seconds(30),
+      timeout: cdk.Duration.seconds(5),
     });
 
     userPool.addTrigger(cognito.UserPoolOperation.PRE_SIGN_UP, signupTriggerFunction);
     userPool.addTrigger(
       cognito.UserPoolOperation.POST_CONFIRMATION,
+      signupTriggerFunction
+    );
+    userPool.addTrigger(
+      cognito.UserPoolOperation.PRE_AUTHENTICATION,
       signupTriggerFunction
     );
     signupTriggerFunction.addToRolePolicy(
@@ -109,6 +118,7 @@ export class AuthorizationStack extends Construct {
         userPassword: true,
         userSrp: true,
       },
+      preventUserExistenceErrors: true,
       readAttributes: clientAttributes,
       writeAttributes: new cognito.ClientAttributes()
         .withStandardAttributes({ email: true }),

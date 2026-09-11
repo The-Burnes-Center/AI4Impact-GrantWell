@@ -1,4 +1,4 @@
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import PasswordRequirementsList from "../PasswordRequirementsList";
 import { PasswordRequirements } from "../auth-types";
@@ -22,6 +22,7 @@ interface SignUpStepProps {
   emailErrorId?: string;
   passwordErrorId?: string;
   confirmPasswordErrorId?: string;
+  turnstile?: ReactNode;
 }
 
 export default function SignUpStep({
@@ -42,6 +43,7 @@ export default function SignUpStep({
   emailErrorId,
   passwordErrorId,
   confirmPasswordErrorId,
+  turnstile,
 }: SignUpStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
@@ -142,6 +144,7 @@ export default function SignUpStep({
             className="show-password-checkbox"
           />
         </div>
+        {turnstile}
         <div className="login-form-actions">
           <Button
             variant="primary"

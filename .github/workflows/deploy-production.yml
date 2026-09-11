@@ -16,6 +16,8 @@ jobs:
 
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
+      TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
+      TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
       ENVIRONMENT: grantwell-staging
       GRANTWELL_INSTANCE: generic
       STACK_NAME: grantwell-staging

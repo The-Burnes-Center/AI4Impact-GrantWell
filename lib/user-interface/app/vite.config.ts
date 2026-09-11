@@ -25,6 +25,8 @@ export default defineConfig({
     "__ENVIRONMENT__": JSON.stringify(process.env.ENVIRONMENT),
     // Build-time instance id — informational (the actual module is chosen by the resolve alias).
     "__GRANTWELL_INSTANCE__": JSON.stringify(instance),
+    // Turnstile site key is public by design (it ships in the page); only the secret key is secret.
+    "__TURNSTILE_SITE_KEY__": JSON.stringify(process.env.TURNSTILE_SITE_KEY || ""),
   },
   resolve: {
     alias: {
