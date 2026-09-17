@@ -73,43 +73,31 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   };
 
   return (
-    <div
-      style={containerStyle}
-      role="status"
-      aria-live="polite"
-      aria-label={message}
-    >
-      <div style={spinnerStyle} aria-hidden="true" />
-      {showMessage && (
-        <span
-          style={{
-            fontSize: size === "sm" ? "12px" : "14px",
-            color: colors.textSecondary,
-          }}
-        >
-          {message}
-        </span>
-      )}
-      {/* Screen reader only text */}
-      <span className="sr-only" style={{ 
-        position: "absolute",
-        width: "1px",
-        height: "1px",
-        padding: 0,
-        margin: "-1px",
-        overflow: "hidden",
-        clip: "rect(0, 0, 0, 0)",
-        whiteSpace: "nowrap",
-        border: 0,
-      }}>
-        {message}
-      </span>
+    <>
+      {/* Outside the live region: CSS text inside one gets read out with the message. */}
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
       `}</style>
-    </div>
+      <div style={containerStyle} role="status" aria-live="polite">
+        <div style={spinnerStyle} aria-hidden="true" />
+        {/* Single copy of the message: visible or screen-reader-only, never both. */}
+        <span
+          className={showMessage ? undefined : "visually-hidden"}
+          style={
+            showMessage
+              ? {
+                  fontSize: size === "sm" ? "12px" : "14px",
+                  color: colors.textSecondary,
+                }
+              : undefined
+          }
+        >
+          {message}
+        </span>
+      </div>
+    </>
   );
 };
 

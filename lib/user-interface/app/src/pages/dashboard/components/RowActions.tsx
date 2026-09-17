@@ -81,7 +81,7 @@ const RowActions = React.memo(function RowActions({ onEdit, onDelete }: RowActio
         <LuMenu size={20} aria-hidden="true" />
       </button>
       {isOpen && (
-        <div className="actions-menu" role="menu" onKeyDown={handleMenuKeyDown}>
+        <div className="actions-menu" role="menu" tabIndex={-1} onKeyDown={handleMenuKeyDown}>
           <button
             onClick={() => { onEdit(); closeMenu(); }}
             className="menu-item"

@@ -198,8 +198,8 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
 
   if (loading) {
     return (
-      <div className="feature-rollouts-panel" role="status" aria-busy="true">
-        Loading feature rollouts...
+      <div className="feature-rollouts-panel" aria-busy="true">
+        <span role="status">Loading feature rollouts...</span>
       </div>
     );
   }
@@ -236,8 +236,9 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
               <legend className="feature-rollouts-mode-legend">Maintenance status</legend>
               <div className="feature-rollouts-mode-options">
                 <div className={`feature-rollouts-mode-option ${maintenanceDraftMode === "all" ? "feature-rollouts-mode-option--selected" : ""}`}>
-                  <label className="feature-rollouts-mode-option-label">
+                  <label className="feature-rollouts-mode-option-label" htmlFor="maintenance-mode-all">
                     <input
+                      id="maintenance-mode-all"
                       type="radio"
                       name="maintenance-mode"
                       value="all"
@@ -245,17 +246,16 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
                       onChange={() => setMaintenanceDraftMode("all")}
                       disabled={savingMaintenance}
                     />
-                    <span className="feature-rollouts-mode-copy">
-                      <span className="feature-rollouts-mode-label">Enable maintenance mode</span>
-                      <span className="feature-rollouts-mode-description">
-                        Show the maintenance page to all users and admins. Developers are not affected.
-                      </span>
+                    <span className="feature-rollouts-mode-label">Enable maintenance mode</span>
+                    <span className="feature-rollouts-mode-description">
+                      Show the maintenance page to all users and admins. Developers are not affected.
                     </span>
                   </label>
                 </div>
                 <div className={`feature-rollouts-mode-option ${maintenanceDraftMode === "disabled" ? "feature-rollouts-mode-option--selected" : ""}`}>
-                  <label className="feature-rollouts-mode-option-label">
+                  <label className="feature-rollouts-mode-option-label" htmlFor="maintenance-mode-disabled">
                     <input
+                      id="maintenance-mode-disabled"
                       type="radio"
                       name="maintenance-mode"
                       value="disabled"
@@ -263,11 +263,9 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
                       onChange={() => setMaintenanceDraftMode("disabled")}
                       disabled={savingMaintenance}
                     />
-                    <span className="feature-rollouts-mode-copy">
-                      <span className="feature-rollouts-mode-label">Disable maintenance mode</span>
-                      <span className="feature-rollouts-mode-description">
-                        The site operates normally for everyone.
-                      </span>
+                    <span className="feature-rollouts-mode-label">Disable maintenance mode</span>
+                    <span className="feature-rollouts-mode-description">
+                      The site operates normally for everyone.
                     </span>
                   </label>
                 </div>

@@ -16,6 +16,8 @@ interface ReviewExpandedRowProps {
   onActionComplete: () => void;
   addNotification: (type: string, message: string) => void;
   onCollapse: () => void;
+  /** Columns of the parent ARIA table this panel spans. */
+  colSpan: number;
 }
 
 const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
@@ -24,6 +26,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   onActionComplete,
   addNotification,
   onCollapse,
+  colSpan,
 }) => {
   const [detail, setDetail] = useState<ReviewDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,6 +37,16 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [showDiff, setShowDiff] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // The panel is rendered inside an ARIA table, which may only own rows, so it
+  // presents as a full-width row rather than a bare region.
+  const asTableRow = (content: React.ReactNode) => (
+    <div role="row">
+      <div role="cell" aria-colspan={colSpan}>
+        {content}
+      </div>
+    </div>
+  );
 
   const loadDetail = useCallback(async () => {
     try {
@@ -191,20 +204,18 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   };
 
   if (loading) {
-    return (
+    return asTableRow(
       <div
         style={{ padding: "20px", textAlign: "center", color: "var(--gw-color-text-secondary)" }}
-        role="status"
-        aria-live="polite"
         aria-busy="true"
       >
-        Loading review details...
+        <span role="status" aria-live="polite">Loading review details...</span>
       </div>
     );
   }
 
   if (!detail) {
-    return (
+    return asTableRow(
       <div style={{ padding: "20px", textAlign: "center", color: "var(--gw-color-danger)" }}>
         Failed to load review details.
       </div>
@@ -213,7 +224,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
   const isResolved = review.status === "approved" || review.status === "rejected" || review.status === "superseded";
 
-  return (
+  return asTableRow(
     <div
       className="review-expanded-row"
       role="region"
@@ -238,7 +249,6 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       {detail.adminGuidance && (
         <div
           className="review-dlq-alert"
-          role="alert"
           style={{
             borderLeft: `4px solid ${detail.adminGuidance.severity === "critical" ? "var(--gw-color-danger)" : "var(--gw-color-warning)"}`,
           }}
@@ -262,7 +272,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       )}
 
       {review.status === "needs_reupload" && (
-        <div className="review-dlq-alert" role="status" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
+        <div className="review-dlq-alert" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
           <strong>Awaiting Document Re-upload</strong>
           <p style={{ margin: "8px 0 0" }}>
             This NOFO has been marked as needing a new document upload. Upload a corrected document to trigger reprocessing.
@@ -271,7 +281,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       )}
 
       {(detail.errorMessage || review.source !== "pipeline") && !detail.adminGuidance && (
-        <div className="review-dlq-alert" role="alert">
+        <div className="review-dlq-alert">
           {review.source === "dlq" && (
             <>
               <strong>Processing Failed (Dead Letter Queue)</strong>

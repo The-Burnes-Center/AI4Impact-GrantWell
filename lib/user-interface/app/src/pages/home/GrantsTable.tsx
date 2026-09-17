@@ -61,6 +61,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   const [showAllAIResults, setShowAllAIResults] = useState(false);
   const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [resultsAnnouncement, setResultsAnnouncement] = useState("");
   const itemsPerPage = 10;
   const AI_INITIAL_LIMIT = 10;
 
@@ -261,6 +262,38 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     setCurrentPage(1);
   }, [statusFilter, categoryFilter, grantTypeFilter, searchTerm, searchResults, preferAISearch, sortColumn, sortDirection]);
 
+  // Written from an effect rather than during render so the live region is always
+  // mounted and empty before its text arrives; a region created together with its
+  // text is not reliably announced.
+  useEffect(() => {
+    if (awaitingAIResults) {
+      setResultsAnnouncement("");
+      return;
+    }
+    if (filteredNofos.length === 0) {
+      setResultsAnnouncement(
+        searchTerm
+          ? `No grants found matching "${searchTerm}"`
+          : "No grants found matching your filters"
+      );
+      return;
+    }
+    const total = `${filteredNofos.length} grant${filteredNofos.length !== 1 ? "s" : ""}`;
+    setResultsAnnouncement(
+      totalPages > 1 && !hasRankedResults
+        ? `Showing ${visibleNofos.length} of ${total}, page ${currentPage} of ${totalPages}`
+        : `Showing ${visibleNofos.length} of ${total}`
+    );
+  }, [
+    awaitingAIResults,
+    filteredNofos.length,
+    visibleNofos.length,
+    hasRankedResults,
+    currentPage,
+    totalPages,
+    searchTerm,
+  ]);
+
   const handleRowClick = (nofo: NOFO) => {
     onSelectDocument({
       label: nofo.name,
@@ -370,21 +403,27 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         )}
       </div>
 
-      {/* Error banner */}
+      {/* Error banner. Announcing from the banner itself would create the region
+          together with its text and sweep the dismiss button's label into the
+          message, so the alert below carries the announcement instead. */}
       {searchError && (
-        <div className="search-status-banner search-status-banner--error" role="alert" aria-live="assertive">
+        <div className="search-status-banner search-status-banner--error">
           <span>Search failed: {searchError}</span>
           {onClearSearch && (
             <button className="search-clear-button" onClick={onClearSearch} aria-label="Dismiss error">
-              <LuX size={16} />
+              <LuX size={16} aria-hidden="true" />
             </button>
           )}
         </div>
       )}
+      <div role="alert" aria-atomic="true" className="visually-hidden">
+        {searchError ? `Search failed: ${searchError}` : ""}
+      </div>
 
-      {/* Results summary */}
+      {/* Results summary. Announced by the results region below, not here — this
+          banner is built at the same moment as its text and contains a button. */}
       {searchResults && !isSearching && !searchError && (
-        <div className="search-status-banner" aria-live="polite">
+        <div className="search-status-banner">
           <span>
             Found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
             your search{!showAllAIResults && filteredNofos.length > AI_INITIAL_LIMIT
@@ -406,8 +445,20 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
       )}
 
+      {/* Kept mounted and empty when idle: a live region created at the same
+          moment as its text is unreliably announced. */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="visually-hidden">
+        {awaitingAIResults ? "Searching grants with AI…" : ""}
+      </div>
+
+      {/* Single announcement point for the result count: search, filter, sort,
+          pagination and the empty state all resolve to this one region. */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="visually-hidden">
+        {resultsAnnouncement}
+      </div>
+
       {/* Table */}
-      <div className="landing-table-container" role="table" aria-label="Grants">
+      <div className="landing-table-container" role="table" aria-label="Grants" aria-busy={awaitingAIResults}>
         <div className="landing-table-header" role="rowgroup">
           <div className="landing-table-header-row" role="row">
             {(Object.keys(SORT_COLUMN_LABELS) as SortColumn[]).map((col) => {
@@ -432,7 +483,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
         <div className="landing-table-body" role={awaitingAIResults || visibleNofos.length === 0 ? undefined : "rowgroup"}>
           {awaitingAIResults ? (
-            <div className="landing-search-loading" role="status" aria-busy="true" aria-label="Searching grants with AI">
+            <div className="landing-search-loading" aria-hidden="true">
               <div className="skeleton-row-group">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="skeleton-row" aria-hidden="true">
@@ -450,8 +501,9 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
               </p>
             </div>
           ) : filteredNofos.length === 0 ? (
+            // Announced by the results region above; a role here would double it up.
             <div className="landing-no-data">
-              <LuFileX size={24} className="landing-no-data-icon" />
+              <LuFileX size={24} className="landing-no-data-icon" aria-hidden="true" />
               <p>
                 {searchTerm
                   ? `No grants found matching "${searchTerm}"`
@@ -478,6 +530,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     <LuPin
                       size={14}
                       className="landing-pinned-icon"
+                      role="img"
                       aria-label="Pinned grant"
                       title="Pinned — featured by an administrator"
                     />

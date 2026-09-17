@@ -7,7 +7,6 @@ export interface SearchDocument {
 }
 
 export interface IntegratedSearchBarProps {
-  documents: SearchDocument[];
   onSelectDocument: (document: SearchDocument | null) => void;
   isLoading: boolean;
   searchTerm?: string;

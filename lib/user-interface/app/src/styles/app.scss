@@ -65,95 +65,6 @@ main#main-content:focus-visible {
   outline-offset: 0;
 }
 
-.header-container {
-  display: flex;
-  grid-template-columns: 1fr auto;
-  justify-content: space-between;
-  align-items: center; /* Ensures vertical alignment if needed */
-}
-
-.matrix-table {
-  border: 1px solid #d6d6d6;
-  border-radius: 2px;
-  border-collapse: collapse;
-  font-size: 1.1rem;
-
-  th {
-    border: 1px solid #d6d6d6;
-  }
-
-  td {
-    border: 1px solid #d6d6d6;
-    padding: 10px;
-  }
-}
-
-/* Custom scrollbar styling for chat message area */
-.chat-message-area {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
-}
-
-.chat-message-area::-webkit-scrollbar {
-  width: 8px;
-}
-
-.chat-message-area::-webkit-scrollbar-track {
-  background: #f7fafc;
-  border-radius: 4px;
-}
-
-.chat-message-area::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 4px;
-}
-
-.chat-message-area::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
-}
-
-.new-session-button {
- margin-left: auto; 
-}
-
-new-chat-button[data-alignment = "right"] {
- align-items: center;
-}
-
-.new-session-button:hover {
-  background-color: #45a049; /* Darker green on hover */
-}
-
-.jsonContainer {
-  font-family: "Noto Sans", sans-serif;
-  font-size: 1em;
-  background-color: #0e1b2ac3;
-}
-
-.internal-use-only{
-  color: red;
-}
-
-.jsonStrings {
-  color: rgb(74, 234, 167);
-  
-}
-
-.jsonNumbers {
-  color: rgb(255, 223, 60);
-}
-
-.jsonBool {
-  color: rgb(252, 178, 250);
-  font-weight: 600;
-}
-
-.jsonNull {
-  color:rgb(74, 205, 234);
-  font-weight: 600;
-}
-
-
 /* Focus visible styles - WCAG 2.2 AA Compliance */
 *:focus-visible {
   outline: 2px solid #23776C;
@@ -172,18 +83,6 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-/* Respect prefers-reduced-motion for accessibility - WCAG 2.2 AA */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
 /* Ensure elements with aria-hidden="true" are excluded from interaction */
 [aria-hidden="true"] {
   /* Elements with aria-hidden should not receive focus or pointer events */
@@ -195,35 +94,14 @@ select:focus-visible {
   pointer-events: none;
 }
 
-/* Placeholder text contrast - WCAG 2.1 AA Compliance (4.5:1 contrast ratio) */
+/* Placeholder text contrast - WCAG 1.4.3.
+   Measured against the darkest fill a placeholder actually sits on, not white:
+   #757575 was 4.61:1 on #fff but only 4.40:1 on the auth panel's #f8fafc inputs.
+   #6b7280 is 4.83:1 on #fff and 4.62:1 on #f8fafc. The !important keeps this the
+   single mechanism - per-panel placeholder rules elsewhere would be overridden. */
 input::placeholder,
 textarea::placeholder {
-  color: #757575 !important; /* Darker color meets 4.5:1 contrast ratio with white background */
-  opacity: 1 !important;
-}
-
-/* Browser-specific placeholder styles */
-input::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder {
-  color: #757575 !important;
-  opacity: 1 !important;
-}
-
-input::-moz-placeholder,
-textarea::-moz-placeholder {
-  color: #757575 !important;
-  opacity: 1 !important;
-}
-
-input:-ms-input-placeholder,
-textarea:-ms-input-placeholder {
-  color: #757575 !important;
-  opacity: 1 !important;
-}
-
-input:-moz-placeholder,
-textarea:-moz-placeholder {
-  color: #757575 !important;
+  color: var(--gw-color-text-muted, #6b7280) !important;
   opacity: 1 !important;
 }
 

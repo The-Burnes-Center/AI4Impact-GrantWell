@@ -56,9 +56,12 @@
 }
 
 .landing-filter-dropdown:focus {
-  outline: none;
   border-color: #23776C;
-  box-shadow: 0 0 0 3px rgba(20, 85, 143, 0.1);
+}
+
+.landing-filter-dropdown:focus-visible {
+  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline-offset: 2px;
 }
 
 /* Table Container */
@@ -183,7 +186,7 @@
 }
 
 .landing-no-value {
-  color: #767676;
+  color: #5a5a5a;
   font-style: italic;
 }
 
@@ -211,7 +214,7 @@
 }
 
 .landing-expiry-date.no-date {
-  color: #767676;
+  color: #5a5a5a;
   font-style: italic;
   font-weight: 400;
 }
@@ -251,21 +254,6 @@
 
 .landing-no-data p {
   margin: 0;
-}
-
-.landing-table-empty-state {
-  padding: 60px 20px;
-  text-align: center;
-  color: #666;
-  font-size: 16px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  border: 1px solid #e0e0e0;
-}
-
-.landing-table-empty-state p {
-  margin: 0;
-  font-style: italic;
 }
 
 /* Pagination */
@@ -549,7 +537,7 @@
 }
 
 .landing-header-cell--sortable:hover {
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary-hover, #195C53);
   background-color: var(--gw-color-primary-light, #DFECE0);
 }
 
@@ -563,7 +551,9 @@
 }
 
 .landing-header-sort-icon {
-  opacity: 0.4;
+  /* Sort direction is a graphical indicator (WCAG 1.4.11): the idle icon still
+     has to clear 3:1 once this opacity is composited over the header fill. */
+  opacity: 0.7;
   flex-shrink: 0;
 }
 

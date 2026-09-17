@@ -93,7 +93,17 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
     <div className="tab-content">
       <div className="dashboard-header">
         <div>
-          <h1 style={{ fontSize: "var(--gw-font-size-lg)" }}>Digest preview</h1>
+          <h2
+            style={{
+              fontSize: "var(--gw-font-size-lg)",
+              margin: 0,
+              color: "var(--gw-color-heading)",
+              lineHeight: 1.2,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Digest preview
+          </h2>
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
             Your real {frequency} digest — the server runs the actual selection against your own
             notification preferences and the active grants, so this is exactly what you'd receive.
@@ -105,7 +115,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
             className="action-button refresh-button"
             onClick={() => onSend("me")}
             disabled={busy || loading}
-            aria-label={`Send the real ${frequency} digest to your own email`}
+            aria-label={`Send to me — send the real ${frequency} digest to your own email`}
           >
             {sending === "me" ? "Sending…" : "Send to me"}
           </button>
@@ -113,7 +123,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
             className="action-button add-button"
             onClick={() => onSend("all")}
             disabled={busy || loading}
-            aria-label={`Send the real ${frequency} digest to all subscribed users`}
+            aria-label={`Send to all users — send the real ${frequency} digest to all subscribed users`}
           >
             {sending === "all" ? "Sending…" : "Send to all users"}
           </button>
@@ -156,6 +166,9 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
         </div>
       ) : rendered ? (
         <>
+        <div role="status" aria-live="polite" className="visually-hidden">
+          {refreshing ? `Refreshing ${frequency} digest preview` : ""}
+        </div>
         {count === 0 && (
           <div className="digest-preview__empty-note" role="status">
             No grants currently match your notification preferences for this cadence, so no digest

@@ -4,27 +4,6 @@
   padding: 0;
 }
 
-.requirements-checklist-container {
-  margin: 0;
-  padding: 0;
-}
-
-.full-height-content {
-  height: auto;
-  overflow: visible;
-  position: relative;
-  width: 100%;
-}
-
-.checklist-container {
-  padding: 0 40px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: auto; /* Allow horizontal scrolling when needed */
-  min-width: 0;
-}
-
-
 .custom-markdown {
   font-size: inherit;
   line-height: 1.7;
@@ -68,14 +47,6 @@
 /* WCAG 1.4.10 Reflow: Responsive breakpoints */
 /* Base mobile styles (applies to narrow viewports) */
 @media screen and (max-width: 320px) {
-  .checklist-container {
-    padding: 0 8px; /* Reduced padding for narrow viewports */
-  }
-
-  .full-height-content {
-    padding: 8px !important; /* Minimal padding */
-  }
-
   /* Ensure text wraps properly */
   .custom-markdown {
     word-wrap: break-word;
@@ -84,28 +55,6 @@
     font-size: 16px;
   }
 
-}
-
-/* Small mobile (up to 480px) */
-@media screen and (min-width: 321px) and (max-width: 480px) {
-  .checklist-container {
-    padding: 0 12px;
-  }
-
-  .full-height-content {
-    padding: 12px !important;
-  }
-}
-
-/* Tablet and up (existing breakpoint) */
-@media screen and (max-width: 768px) {
-  .full-height-content {
-    padding: 15px !important;
-  }
-
-  .checklist-container {
-    padding: 0 20px;
-  }
 }
 
 /* Checklist Page Styles - moved from inline */

@@ -44,7 +44,8 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
 }) => {
   if (loading || !metrics) {
     return (
-      <div className="metrics-grid" role="status" aria-busy="true" aria-label="Loading processing metrics">
+      <div className="metrics-grid" aria-busy="true">
+        <span role="status" className="visually-hidden">Loading processing metrics</span>
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="metric-card metric-card--skeleton" />
         ))}
@@ -56,13 +57,12 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
 
   return (
     <div className="metrics-grid" role="region" aria-label="Processing pipeline metrics">
-      <div className="metric-card" role="status" aria-label={`Total Processed: ${metrics.totalProcessed}`}>
+      <div className="metric-card" aria-label={`Total Processed: ${metrics.totalProcessed}`}>
         <div className="metric-card__value">{metrics.totalProcessed}</div>
         <div className="metric-card__label">Total Processed</div>
       </div>
       <div
         className="metric-card"
-        role="status"
         aria-label={`Success Rate: ${metrics.successRate}%, ${RATING_LABELS[successRating]}`}
       >
         <div className={`metric-card__value review-quality-score--${successRating}`}>
@@ -73,7 +73,6 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
       </div>
       <div
         className="metric-card"
-        role="status"
         aria-label={`Pending Review: ${metrics.pendingCount}${metrics.pendingCount > 0 ? ", needs review" : ""}`}
       >
         <div className={`metric-card__value ${metrics.pendingCount > 0 ? "review-quality-score--medium" : ""}`}>
@@ -84,7 +83,6 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
       </div>
       <div
         className="metric-card"
-        role="status"
         aria-label={`Needs Re-upload: ${metrics.needsReuploadCount}${metrics.needsReuploadCount > 0 ? ", needs action" : ""}`}
       >
         <div className={`metric-card__value ${metrics.needsReuploadCount > 0 ? "review-quality-score--medium" : ""}`}>
@@ -95,7 +93,6 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
       </div>
       <div
         className="metric-card"
-        role="status"
         aria-label={`Failed: ${metrics.failedCount}${metrics.failedCount > 0 ? ", failures present" : ""}`}
       >
         <div className={`metric-card__value ${metrics.failedCount > 0 ? "review-quality-score--low" : ""}`}>

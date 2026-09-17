@@ -46,8 +46,8 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               cursor: "pointer",
               border: "1px solid var(--gw-color-border)",
               borderRadius: "4px",
-              background: "var(--gw-color-surface)",
-              color: "var(--gw-color-text-primary)",
+              background: "var(--gw-color-white)",
+              color: "var(--gw-color-text)",
             }}
           >
             + Add Item

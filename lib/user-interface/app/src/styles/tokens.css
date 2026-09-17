@@ -33,17 +33,11 @@
   --gw-color-primary-light: #DFECE0;
 
   --gw-color-accent: #388557;
+  /* Written by BrandingProvider (common/branding.tsx COLOR_VARS), not read by CSS yet. */
   --gw-color-accent-hover: #32784E;
-  --gw-color-accent-active: #275D3D;
 
   /* Highlight (use sparingly) */
   --gw-color-highlight: #F6C51B;
-
-  /* Graphic / illustration accent */
-  --gw-color-graphic-accent: #680A1D;
-
-  /* Neutral mid-gray */
-  --gw-color-neutral: #535353;
 
   /* ==============================
    * Utility / Status Colors
@@ -57,8 +51,6 @@
   --gw-color-warning-light: #fff3cd;
   --gw-color-danger: #CD0D0D;
   --gw-color-danger-light: #ffebee;
-  --gw-color-info: #17a2b8;
-  --gw-color-info-light: #d1ecf1;
 
   /* ==============================
    * Focus Colors
@@ -73,7 +65,6 @@
 
   --gw-color-white: #ffffff;
   --gw-color-background: #f9fafb;
-  --gw-color-background-alt: #f8f9fa;
   --gw-color-border: #e2e8f0;
   --gw-color-border-light: #f3f4f6;
   /* Form-control boundaries only. WCAG 1.4.11 needs 3:1 where the border is the

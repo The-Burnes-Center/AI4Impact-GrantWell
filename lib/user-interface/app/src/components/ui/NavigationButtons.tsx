@@ -183,6 +183,12 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
 
   return (
     <div style={containerStyle}>
+      {/* Outside the button: ARIA treats button children as presentational, so a live
+          region nested in one never fires. Always mounted so the text is an update. */}
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {continueLoading ? `${continueLabel} in progress` : ""}
+      </div>
+
       {showBack && onBack ? (
         <button
           type="button"
@@ -213,6 +219,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           onBlur={handleBlur}
           aria-label={continueLabel}
           aria-disabled={continueDisabled}
+          aria-busy={continueLoading}
         >
           {continueLoading ? <LoadingSpinner /> : continueLabel}
           {!continueLoading && <RightArrow />}

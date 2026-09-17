@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useId } from "react";
 import { createPortal } from "react-dom";
 import { useFocusTrap } from "../../../hooks/use-focus-trap";
 
@@ -11,6 +11,8 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const modalRef = useFocusTrap({ isOpen, onEscape: handleClose, lockScroll: true });
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
+  const descriptionId = useId();
 
   useEffect(() => {
     if (isOpen) {
@@ -32,6 +34,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
 
   return createPortal(
     <div
+      role="presentation"
       className="help-modal-overlay"
       onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
@@ -40,13 +43,12 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="help-modal-title"
-        aria-describedby="help-modal-description"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
         className="help-modal"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="help-modal__header">
-          <h2 id="help-modal-title" className="help-modal__title">
+          <h2 id={titleId} className="help-modal__title">
             How to use this page
           </h2>
           <button
@@ -59,7 +61,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
           </button>
         </div>
 
-        <div id="help-modal-description" className="help-modal__body">
+        <div id={descriptionId} className="help-modal__body">
           <p className="help-modal__text">
             Grantwell uses generative AI to extract and summarize the key
             elements of the grant.

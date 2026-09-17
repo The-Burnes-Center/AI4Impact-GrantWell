@@ -28,49 +28,6 @@
 }
 
 
-
-.new-session-button {
- margin-left: auto; 
-}
-
-new-chat-button[data-alignment = "right"] {
- align-items: center;
-}
-
-.new-session-button:hover {
-  background-color: #45a049; /* Darker green on hover */
-}
-
-.jsonContainer {
-  font-family: "Noto Sans", sans-serif;
-  font-size: 1em;
-  background-color: #0e1b2ac3;
-}
-
-.internal-use-only{
-  color: red;
-}
-
-.jsonStrings {
-  color: rgb(74, 234, 167);
-  
-}
-
-.jsonNumbers {
-  color: rgb(255, 223, 60);
-}
-
-.jsonBool {
-  color: rgb(252, 178, 250);
-  font-weight: 600;
-}
-
-.jsonNull {
-  color:rgb(74, 205, 234);
-  font-weight: 600;
-}
-
-
 /* Focus visible styles - WCAG 2.2 AA Compliance */
 *:focus-visible {
   outline: 2px solid #0088FF;
@@ -126,35 +83,12 @@ select:focus-visible {
   pointer-events: none;
 }
 
-/* Placeholder text contrast - WCAG 2.1 AA Compliance (4.5:1 contrast ratio) */
+/* Placeholder text contrast - WCAG 1.4.3. Mirrors app.scss: #757575 was 4.61:1 on
+   white but 4.40:1 on the tinted input fills the app actually uses; #6b7280 is
+   4.83:1 / 4.62:1. */
 input::placeholder,
 textarea::placeholder {
-  color: #757575 !important; /* Darker color meets 4.5:1 contrast ratio with white background */
-  opacity: 1 !important;
-}
-
-/* Browser-specific placeholder styles */
-input::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder {
-  color: #757575 !important;
-  opacity: 1 !important;
-}
-
-input::-moz-placeholder,
-textarea::-moz-placeholder {
-  color: #757575 !important;
-  opacity: 1 !important;
-}
-
-input:-ms-input-placeholder,
-textarea:-ms-input-placeholder {
-  color: #757575 !important;
-  opacity: 1 !important;
-}
-
-input:-moz-placeholder,
-textarea:-moz-placeholder {
-  color: #757575 !important;
+  color: var(--gw-color-text-muted, #6b7280) !important;
   opacity: 1 !important;
 }
 

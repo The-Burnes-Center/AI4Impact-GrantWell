@@ -1,19 +1,4 @@
 /* Dashboard container styles */
-.dashboard-shell {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  background: linear-gradient(
-    180deg,
-    var(--gw-color-primary-light) 0%,
-    var(--gw-color-background) 160px
-  );
-}
-
-.dashboard-sidebar {
-  flex-shrink: 0;
-}
-
 .dashboard-container {
   max-width: var(--gw-content-max-width, 1400px);
   margin: 0 auto;
@@ -27,12 +12,6 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
-}
-
-.dashboard-main-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 @media screen and (max-width: 320px) {
@@ -117,7 +96,7 @@ body {
 }
 
 .tab-button.active {
-  color: var(--gw-color-primary);
+  color: var(--mk-green-dark);
   border-color: var(--gw-color-primary);
   background: var(--gw-color-primary-light);
   box-shadow: var(--gw-shadow-sm);
@@ -127,22 +106,6 @@ body {
   color: var(--gw-color-heading);
   border-color: var(--gw-color-primary);
   transform: translateY(-1px);
-}
-
-.tab-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 8px;
-  background-color: var(--gw-color-danger);
-  color: var(--gw-color-white);
-  border-radius: 999px;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 6px;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
 }
 
 /* Segmented control inside the Grants tab: browse vs. triage */
@@ -329,7 +292,7 @@ body {
 
 .feature-rollouts-badge--success {
   background: color-mix(in srgb, var(--gw-color-success) 14%, var(--gw-color-white));
-  color: #1a7b3a;
+  color: #156530;
 }
 
 .feature-rollouts-badge--warning {
@@ -398,9 +361,11 @@ body {
 }
 
 .feature-rollouts-mode-option-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  column-gap: 12px;
+  row-gap: 4px;
   padding: 14px 16px;
   cursor: pointer;
 }
@@ -409,11 +374,9 @@ body {
   margin-top: 4px;
 }
 
-.feature-rollouts-mode-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
+.feature-rollouts-mode-label,
+.feature-rollouts-mode-description {
+  grid-column: 2;
 }
 
 .feature-rollouts-mode-label {
@@ -458,14 +421,6 @@ body {
   gap: 8px;
 }
 
-.feature-rollouts-search-field--role {
-  max-width: 220px;
-}
-
-.feature-rollouts-search-field--sort {
-  max-width: 220px;
-}
-
 .feature-rollouts-search-label {
   color: var(--gw-color-heading);
   font-size: var(--gw-font-size-sm);
@@ -474,7 +429,7 @@ body {
 }
 
 .feature-rollouts-search-input {
-  border: 1px solid var(--gw-color-border);
+  border: 1px solid var(--gw-color-border-input);
   border-radius: 10px;
   padding: 12px 14px;
   font-size: var(--gw-font-size-sm);
@@ -636,7 +591,7 @@ body {
 
 .user-management-status-pill.is-enabled {
   background: color-mix(in srgb, var(--gw-color-success) 14%, var(--gw-color-white));
-  color: #1a7b3a;
+  color: #156530;
 }
 
 .user-management-status-pill.is-disabled {
@@ -646,7 +601,7 @@ body {
 
 .user-management-role-select {
   min-width: 180px;
-  border: 1px solid var(--gw-color-border);
+  border: 1px solid var(--gw-color-border-input);
   border-radius: 10px;
   padding: 10px 12px;
   font-size: var(--gw-font-size-sm);
@@ -760,12 +715,6 @@ body {
 }
 
 /* Search container styles */
-.search-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
 .search-input-wrapper {
   position: relative;
   flex: 1;
@@ -783,9 +732,13 @@ body {
 }
 
 .search-input:focus {
-  outline: none;
   border-color: #23776C;
   box-shadow: 0 2px 8px rgba(0, 115, 187, 0.1);
+}
+
+.search-input:focus-visible {
+  outline: 2px solid var(--gw-color-focus-light);
+  outline-offset: 2px;
 }
 
 .search-icon {
@@ -1126,6 +1079,13 @@ body {
   color: var(--gw-color-primary);
   background-color: color-mix(in srgb, var(--gw-color-primary) 8%, transparent);
   border: 1px solid color-mix(in srgb, var(--gw-color-primary) 25%, transparent);
+}
+
+.processing-banner__message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
 }
 
 .processing-banner__spin {
@@ -1501,7 +1461,7 @@ body {
   gap: 8px;
   padding: 10px 15px;
   background-color: #DFECE0;
-  color: #23776C;
+  color: #195C53;
   border: 1px solid #d0e8ff;
   border-radius: 6px;
   font-weight: 500;
@@ -1512,6 +1472,11 @@ body {
 .file-upload-button:hover {
   background-color: #e0f0ff;
   transform: translateY(-2px);
+}
+
+.file-input:focus-visible + .file-upload-button {
+  outline: 2px solid var(--gw-color-focus-light);
+  outline-offset: 2px;
 }
 
 .selected-file {
@@ -1728,9 +1693,13 @@ select.form-input {
 }
 
 .form-input:focus {
-  outline: none;
   border-color: #23776C;
   box-shadow: 0 0 0 3px rgba(0, 115, 187, 0.1);
+}
+
+.form-input:focus-visible {
+  outline: 2px solid var(--gw-color-focus-light);
+  outline-offset: 2px;
 }
 
 .modal-actions {
@@ -1864,35 +1833,6 @@ select.form-input {
   to {
     transform: rotate(360deg);
   }
-}
-
-/* Pinned Grants specific styles */
-.pinned-grants-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.pinned-grants-header h2 {
-  color: #23776C;
-  margin: 0;
-  font-size: 20px;
-}
-
-.add-grant-button {
-  background-color: #23776C;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.add-grant-button:hover {
-  background-color: #195C53;
 }
 
 /* Filter menu styles */
@@ -2137,7 +2077,7 @@ select.form-input {
 
 .action-button.edit {
   background-color: #DFECE0;
-  color: #23776C;
+  color: #195C53;
 }
 
 .action-button.edit:hover {
@@ -2365,7 +2305,7 @@ select.form-input {
   gap: 8px;
   padding: 10px 16px;
   background-color: #DFECE0;
-  color: #23776C;
+  color: #195C53;
   border: 1px solid #d0e8ff;
   border-radius: 25px;
   font-weight: var(--gw-font-weight-medium);
@@ -2719,7 +2659,7 @@ select.form-input {
   font-size: var(--gw-font-size-sm);
   font-weight: var(--gw-font-weight-semibold);
   color: var(--gw-color-text);
-  background-color: var(--gw-color-surface);
+  background-color: var(--gw-color-white);
   border: 1px solid var(--gw-color-border);
   border-radius: 999px;
   min-height: 44px;
@@ -2734,7 +2674,7 @@ select.form-input {
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--gw-color-primary);
+  color: var(--mk-green-dark);
   background-color: var(--gw-color-primary-light);
   border: 1px solid var(--gw-color-primary);
   border-radius: 4px;
@@ -2767,13 +2707,6 @@ select.form-input {
   color: var(--gw-color-heading);
 }
 
-.review-fix-progress {
-  margin: 4px 0 0 0;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--gw-color-success);
-}
-
 .review-expanded-row__actions {
   display: flex;
   gap: 8px;
@@ -2793,7 +2726,7 @@ select.form-input {
   width: 100%;
   padding: 10px 14px;
   font-size: var(--gw-font-size-sm);
-  border: 1px solid var(--gw-color-border);
+  border: 1px solid var(--gw-color-border-input);
   border-radius: 10px;
   resize: vertical;
   box-sizing: border-box;
@@ -2827,7 +2760,7 @@ select.form-input {
   width: 100%;
   padding: 8px 12px;
   font-size: 13px;
-  border: 1px solid var(--gw-color-border);
+  border: 1px solid var(--gw-color-border-input);
   border-radius: 4px;
   box-sizing: border-box;
 }
@@ -3005,11 +2938,6 @@ select.form-input {
   word-break: break-word;
 }
 
-.review-source-label {
-  font-size: var(--gw-font-size-xs);
-  color: var(--gw-color-text-secondary);
-}
-
 .review-date {
   font-size: var(--gw-font-size-xs);
   color: var(--gw-color-text-secondary);
@@ -3182,81 +3110,6 @@ select.form-input {
   }
 }
 
-/* Validation issue card */
-.validation-issue-card {
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 8px;
-}
-
-.validation-issue-card__body {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.validation-issue-card__severity {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.validation-issue-card__field {
-  font-size: 12px;
-  color: var(--gw-color-text-secondary);
-  font-family: monospace;
-}
-
-.validation-issue-card__description {
-  margin: 0 0 6px 0;
-  font-size: 13px;
-  color: var(--gw-color-text);
-  line-height: 1.5;
-}
-
-.validation-issue-card__fix-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.validation-issue-card__suggestion {
-  font-size: 12px;
-  color: var(--gw-color-text-secondary);
-  font-style: italic;
-}
-
-.validation-issue-card--fixed {
-  border: 1px solid color-mix(in srgb, var(--gw-color-success) 30%, transparent);
-  border-left: 4px solid var(--gw-color-success);
-  background-color: color-mix(in srgb, var(--gw-color-success) 5%, var(--gw-color-white));
-  opacity: 0.8;
-}
-
-.validation-issue-card--fixed .validation-issue-card__description {
-  text-decoration: line-through;
-  color: var(--gw-color-text-secondary);
-}
-
-.validation-issue-card__fixed-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--gw-color-success);
-  background-color: color-mix(in srgb, var(--gw-color-success) 10%, var(--gw-color-white));
-  border: 1px solid color-mix(in srgb, var(--gw-color-success) 30%, transparent);
-  border-radius: 4px;
-  white-space: nowrap;
-  min-height: 44px;
-  min-width: 44px;
-}
-
 /* Status badges */
 .review-status-badge {
   display: inline-block;
@@ -3300,12 +3153,6 @@ select.form-input {
   background-color: color-mix(in srgb, var(--gw-color-text-secondary) 6%, var(--gw-color-white));
   color: var(--gw-color-text-secondary);
   border: 1px solid color-mix(in srgb, var(--gw-color-text-secondary) 15%, var(--gw-color-white));
-}
-
-/* Issue summary inline */
-.review-issue-summary {
-  display: inline-flex;
-  gap: 10px;
 }
 
 .review-issue-count {
@@ -3362,7 +3209,7 @@ select.form-input {
 }
 
 .summary-field__item--removed {
-  opacity: 0.4;
+  color: var(--gw-color-text-muted);
   text-decoration: line-through;
 }
 
@@ -3404,10 +3251,6 @@ select.form-input {
   flex-wrap: wrap;
   margin-bottom: var(--gw-space-md, 16px);
 }
-.digest-toolbar__spacer {
-  flex: 1 1 auto;
-}
-
 /* Segmented control — one setting, joined options */
 .digest-segment {
   display: inline-flex;

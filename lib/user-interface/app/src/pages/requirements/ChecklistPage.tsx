@@ -222,7 +222,7 @@ const Checklists: React.FC = () => {
               )}
 
               <div className="checklist-tabs">
-                <div className="checklist-tabs__header" role="tablist" aria-label="Grant requirements" onKeyDown={handleTabsKeyDown}>
+                <div className="checklist-tabs__header" role="tablist" tabIndex={-1} aria-label="Grant requirements" onKeyDown={handleTabsKeyDown}>
                   {TAB_CONFIG.map((tab) => {
                     const isActive = tab.id === activeTabId;
                     return (

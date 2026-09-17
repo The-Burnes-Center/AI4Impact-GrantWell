@@ -69,8 +69,58 @@ export const defaultBranding: Branding = {
 
 const BrandingContext = createContext<Branding>(defaultBranding);
 
+type BrandColor = keyof Branding["colors"];
+
+const relativeLuminance = (hex: string): number => {
+  const h = hex.replace("#", "");
+  const channel = (i: number) => {
+    const c = parseInt(h.slice(i, i + 2), 16) / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(0) + 0.7152 * channel(2) + 0.0722 * channel(4);
+};
+
+const contrastRatio = (a: string, b: string): number => {
+  const [hi, lo] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+/**
+ * Every brand-colour pair the UI actually paints, with the WCAG threshold it must clear
+ * (4.5:1 for text, 3:1 for borders and focus rings). Because these six variables are
+ * swapped per instance at runtime, a rebrand can invalidate a ratio that was certified
+ * against the default palette — this is what catches that.
+ */
+const CONTRAST_RULES: { fg: BrandColor | "white"; bg: BrandColor | "white"; min: number; usage: string }[] = [
+  { fg: "primaryHover", bg: "primaryLight", min: 4.5, usage: "text on the brand tint (hover/active rows, tabs, sort headers)" },
+  { fg: "primary", bg: "white", min: 4.5, usage: "primary text and links" },
+  { fg: "primaryActive", bg: "white", min: 4.5, usage: "heading text" },
+  { fg: "accentHover", bg: "white", min: 4.5, usage: "accent text" },
+  { fg: "white", bg: "primary", min: 4.5, usage: "label on filled primary buttons" },
+  { fg: "primary", bg: "white", min: 3.0, usage: "focus ring on light surfaces" },
+  { fg: "primary", bg: "primaryLight", min: 3.0, usage: "focus ring on the brand tint" },
+  { fg: "accent", bg: "white", min: 3.0, usage: "accent borders and outlines" },
+];
+
+/**
+ * Checks a palette against CONTRAST_RULES. Exported so an instance can assert its own
+ * branding at build time rather than discovering the problem in an audit.
+ */
+export function findBrandingContrastFailures(
+  colors: Branding["colors"]
+): { usage: string; ratio: number; required: number }[] {
+  const resolve = (k: BrandColor | "white") => (k === "white" ? "#ffffff" : colors[k]);
+  return CONTRAST_RULES.flatMap(({ fg, bg, min, usage }) => {
+    const a = resolve(fg);
+    const b = resolve(bg);
+    if (!a || !b) return [];
+    const ratio = contrastRatio(a, b);
+    return ratio >= min ? [] : [{ usage, ratio: Math.round(ratio * 100) / 100, required: min }];
+  });
+}
+
 /** Maps branding.colors onto the --gw-color-* CSS variables defined in tokens.css. */
-const COLOR_VARS: Record<keyof Branding["colors"], string> = {
+const COLOR_VARS: Record<BrandColor, string> = {
   primary: "--gw-color-primary",
   primaryHover: "--gw-color-primary-hover",
   primaryActive: "--gw-color-primary-active",
@@ -90,10 +140,20 @@ export function BrandingProvider({
   // touching component code. tokens.css keeps its defaults if a value is omitted.
   useLayoutEffect(() => {
     const root = document.documentElement;
-    (Object.keys(COLOR_VARS) as (keyof Branding["colors"])[]).forEach((key) => {
+    (Object.keys(COLOR_VARS) as BrandColor[]).forEach((key) => {
       const color = value.colors[key];
       if (color) root.style.setProperty(COLOR_VARS[key], color);
     });
+  }, [value]);
+
+  useLayoutEffect(() => {
+    if (!import.meta.env.DEV) return;
+    const failures = findBrandingContrastFailures(value.colors);
+    if (failures.length === 0) return;
+    console.warn(
+      `[branding] ${value.appName || "This"} palette fails WCAG contrast in ${failures.length} place(s):\n` +
+        failures.map((f) => `  ${f.ratio}:1 (needs ${f.required}:1) — ${f.usage}`).join("\n")
+    );
   }, [value]);
 
   // Load Google Analytics from branding.analyticsId — only when configured, so neutral core

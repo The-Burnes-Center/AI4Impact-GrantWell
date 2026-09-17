@@ -47,9 +47,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return this.props.fallback;
       }
 
+      // No role="alert" here: the react-bootstrap Alert below already carries one,
+      // and nesting two makes a screen reader announce the failure twice.
       return (
         <div
-          role="alert"
           style={{
             display: "flex",
             justifyContent: "center",

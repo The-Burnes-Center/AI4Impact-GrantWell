@@ -153,16 +153,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
     [apiClient, allFilled, values]
   );
 
-  if (checking) {
-    return (
-      <div className="profile-gate__loading" role="status" aria-live="polite">
-        <Spinner animation="border" size="sm" aria-hidden="true" />
-        <span>Loading</span>
-      </div>
-    );
-  }
-
-  if (!needsProfile) {
+  if (!checking && !needsProfile) {
     return <>{children}</>;
   }
 
@@ -171,131 +162,148 @@ export default function ProfileGate({ children }: ProfileGateProps) {
     ? stateNameFromCode(effectiveState) || effectiveState
     : "";
 
+  // One region, mounted for the whole life of the gate, so the checking -> saving
+  // transitions are updates to an existing region rather than fresh insertions.
   return (
-    <div
-      className="profile-gate"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="profile-gate-title"
-      ref={dialogRef}
-    >
-      <div className="profile-gate__panel">
-        <header className="profile-gate__header">
-          <span className="profile-gate__header-icon" aria-hidden="true">
-            <LuBuilding2 size={22} />
-          </span>
-          <h2 className="profile-gate__title" id="profile-gate-title">
-            Complete your profile
-          </h2>
-        </header>
-
-        <div className="profile-gate__body">
-          <p className="profile-gate__lead">
-            One-time setup. Tell us a little about where you work — this helps us
-            understand who&apos;s using GrantWell.
-          </p>
-
-          {error && (
-            <div className="profile-gate__alert" role="alert">
-              <LuTriangleAlert size={16} aria-hidden="true" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          <form onSubmit={onSubmit} noValidate>
-            {FIELDS.map(({ key, label, placeholder, Icon }) => {
-              const showError = touched[key] && values[key].trim().length === 0;
-              const inputId = `gate-${key}`;
-              return (
-                <div className="profile-gate__field" key={key}>
-                  <label className="profile-gate__label" htmlFor={inputId}>
-                    {label} <span className="profile-gate__req">*</span>
-                  </label>
-                  <div
-                    className={`profile-gate__input-wrap ${
-                      showError ? "profile-gate__input-wrap--error" : ""
-                    }`}
-                  >
-                    <span className="profile-gate__field-icon" aria-hidden="true">
-                      <Icon size={16} />
-                    </span>
-                    <input
-                      id={inputId}
-                      type="text"
-                      value={values[key]}
-                      onChange={(e) => setField(key, e.target.value)}
-                      onBlur={() =>
-                        setTouched((prev) => ({ ...prev, [key]: true }))
-                      }
-                      placeholder={placeholder}
-                      required
-                      aria-invalid={showError}
-                      aria-describedby={showError ? `${inputId}-err` : undefined}
-                    />
-                  </div>
-                  {showError && (
-                    <p
-                      className="profile-gate__field-error"
-                      id={`${inputId}-err`}
-                    >
-                      <LuTriangleAlert size={13} aria-hidden="true" />
-                      {label} is required
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-
-            <div className="profile-gate__field">
-              <label className="profile-gate__label" htmlFor="gate-state">
-                State
-              </label>
-              <div className="profile-gate__input-wrap profile-gate__input-wrap--readonly">
-                <span className="profile-gate__field-icon" aria-hidden="true">
-                  <LuMapPin size={16} />
-                </span>
-                <select
-                  id="gate-state"
-                  value={effectiveState}
-                  disabled
-                  aria-readonly="true"
-                  title="Your state is assigned by an administrator"
-                >
-                  {effectiveState ? (
-                    <option value={effectiveState}>{stateLabel}</option>
-                  ) : (
-                    <option value="">Not assigned</option>
-                  )}
-                </select>
-              </div>
-              <p className="profile-gate__hint">
-                Assigned by your administrator.
-              </p>
-            </div>
-
-            <Button
-              type="submit"
-              loading={saving}
-              disabled={!allFilled}
-              fullWidth
-            >
-              <span className="profile-gate__submit-content">
-                Save and continue
-                <LuArrowRight size={16} aria-hidden="true" />
-              </span>
-            </Button>
-          </form>
-
-          <button
-            type="button"
-            className="profile-gate__signout"
-            onClick={onSignOut}
-            aria-label="Sign out instead"
-          >
-            Sign out instead
-          </button>
-        </div>
+    <>
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {checking ? "Checking your profile" : saving ? "Saving your profile" : ""}
       </div>
-    </div>
+      {checking ? (
+        <div className="profile-gate__loading">
+          <Spinner animation="border" size="sm" aria-hidden="true" />
+          <span aria-hidden="true">Loading</span>
+        </div>
+      ) : (
+        <div
+          className="profile-gate"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="profile-gate-title"
+          ref={dialogRef}
+        >
+          <div className="profile-gate__panel">
+            <header className="profile-gate__header">
+              <span className="profile-gate__header-icon" aria-hidden="true">
+                <LuBuilding2 size={22} />
+              </span>
+              <h2 className="profile-gate__title" id="profile-gate-title">
+                Complete your profile
+              </h2>
+            </header>
+
+            <div className="profile-gate__body">
+              <p className="profile-gate__lead">
+                One-time setup. Tell us a little about where you work — this helps us
+                understand who&apos;s using GrantWell.
+              </p>
+
+              {/* The empty slot is the live region; the styled alert is inserted into it. */}
+              <div role="alert">
+                {error && (
+                  <div className="profile-gate__alert">
+                    <LuTriangleAlert size={16} aria-hidden="true" />
+                    <span>{error}</span>
+                  </div>
+                )}
+              </div>
+
+              <form onSubmit={onSubmit} noValidate>
+                {FIELDS.map(({ key, label, placeholder, Icon }) => {
+                  const showError = touched[key] && values[key].trim().length === 0;
+                  const inputId = `gate-${key}`;
+                  return (
+                    <div className="profile-gate__field" key={key}>
+                      <label className="profile-gate__label" htmlFor={inputId}>
+                        {label} <span className="profile-gate__req">*</span>
+                      </label>
+                      <div
+                        className={`profile-gate__input-wrap ${
+                          showError ? "profile-gate__input-wrap--error" : ""
+                        }`}
+                      >
+                        <span className="profile-gate__field-icon" aria-hidden="true">
+                          <Icon size={16} />
+                        </span>
+                        <input
+                          id={inputId}
+                          type="text"
+                          value={values[key]}
+                          onChange={(e) => setField(key, e.target.value)}
+                          onBlur={() =>
+                            setTouched((prev) => ({ ...prev, [key]: true }))
+                          }
+                          placeholder={placeholder}
+                          required
+                          aria-invalid={showError}
+                          aria-describedby={showError ? `${inputId}-err` : undefined}
+                        />
+                      </div>
+                      {showError && (
+                        <p
+                          className="profile-gate__field-error"
+                          id={`${inputId}-err`}
+                        >
+                          <LuTriangleAlert size={13} aria-hidden="true" />
+                          {label} is required
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+
+                <div className="profile-gate__field">
+                  <label className="profile-gate__label" htmlFor="gate-state">
+                    State
+                  </label>
+                  <div className="profile-gate__input-wrap profile-gate__input-wrap--readonly">
+                    <span className="profile-gate__field-icon" aria-hidden="true">
+                      <LuMapPin size={16} />
+                    </span>
+                    <select
+                      id="gate-state"
+                      value={effectiveState}
+                      disabled
+                      aria-readonly="true"
+                      title="Your state is assigned by an administrator"
+                    >
+                      {effectiveState ? (
+                        <option value={effectiveState}>{stateLabel}</option>
+                      ) : (
+                        <option value="">Not assigned</option>
+                      )}
+                    </select>
+                  </div>
+                  <p className="profile-gate__hint">
+                    Assigned by your administrator.
+                  </p>
+                </div>
+
+                <Button
+                  type="submit"
+                  loading={saving}
+                  disabled={!allFilled}
+                  fullWidth
+                >
+                  <span className="profile-gate__submit-content">
+                    Save and continue
+                    <LuArrowRight size={16} aria-hidden="true" />
+                  </span>
+                </Button>
+              </form>
+
+              <button
+                type="button"
+                className="profile-gate__signout"
+                onClick={onSignOut}
+                aria-label="Sign out instead"
+              >
+                Sign out instead
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

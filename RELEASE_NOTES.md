@@ -1,8 +1,8 @@
-# GrantWell v1.5.0
+# GrantWell v2.0.0
 
-**Last Updated:** July 27, 2026
+**Last Updated:** August 19, 2026
 
-This release builds on the v1.0.0 foundation with an admin analytics dashboard, grant-opportunity email digests, a rebuilt NOFO processing pipeline, and state-scoped administration. It also adds a one-time profile step so we can better understand who is using the platform.
+This release builds on the v1.0.0 foundation with an admin analytics dashboard, grant-opportunity email digests, a rebuilt NOFO processing pipeline, and state-scoped administration. It also adds a one-time profile step so we can better understand who is using the platform, along with a round of security hardening and accessibility fixes from our partner accessibility review.
 
 ## Highlights
 
@@ -12,6 +12,8 @@ This release builds on the v1.0.0 foundation with an admin analytics dashboard, 
 - **State-scoped administration** — state admins manage only their own state's grants, with state-specific overlays on federal opportunities
 - One-time **profile completion** (agency, organization, role) and a personal profile page with activity history
 - **Custom questions** on state grants — admins can add their own questionnaire questions for applicants to answer
+- **Security improvements** — stronger access controls, plus safeguards around email notifications and deployments
+- **Accessibility improvements** — keyboard navigation, focus management, color contrast, and screen-reader fixes identified through partner accessibility review
 
 ## New in this release
 
@@ -59,7 +61,27 @@ This release builds on the v1.0.0 foundation with an admin analytics dashboard, 
 ### User Management
 
 - Admins can create and delete users and manage roles (User, Admin, Developer) and state assignment
+- State admins see and manage only the users assigned to their own state
 - Clearer error handling and messaging in the User Management tab
+
+### Security
+
+- An explicit **PlatformAdmin** role replaces the previous implicit admin check, so platform-wide authority is granted rather than inferred
+- State admins are scoped server-side in user management: they cannot reassign a user to another state, and they cannot grant platform-admin authority
+- Every NOFO-mutating handler enforces state-admin scope fail-closed
+- The Cognito signup trigger now uses a narrowly scoped IAM policy instead of broad admin permissions
+- Digest unsubscribe links use verified tokens that expire
+- Bearer tokens are redacted from drafting Lambda logs, and log retention is set explicitly rather than left unbounded
+- Deploy-time frontend config is generated at deploy rather than committed to the repository, and stack security-policy names no longer collide across GrantWell deployments
+
+### Accessibility
+
+- Keyboard navigation and focus management fixes across the app, including the main navigation, dialogs, and multi-step flows
+- Color-contrast corrections to meet WCAG 2.1 AA
+- Improved screen-reader support: accessible names, landmarks, skip links, and live-region announcements for status changes
+- Long-running chat responses now surface a timeout warning instead of failing silently
+- Remaining issues raised in our partner accessibility review have been addressed
+- We expect to have a third-party certified **VPAT/ACR** before the middle of September 2026
 
 # GrantWell v1.0.0
 

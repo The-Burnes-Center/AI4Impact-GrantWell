@@ -13,8 +13,6 @@
  * ======================================================================== */
 .marketing .cta-btn,
 .marketing .upload-button,
-.marketing .primary-btn,
-.marketing .save-btn,
 .marketing .welcome-modal-btn--primary,
 .marketing .help-modal__confirm-btn,
 .marketing .checklist-help-btn,
@@ -47,8 +45,6 @@
 
 .marketing .cta-btn:hover,
 .marketing .upload-button:hover,
-.marketing .primary-btn:hover,
-.marketing .save-btn:hover,
 .marketing .welcome-modal-btn--primary:hover,
 .marketing .help-modal__confirm-btn:hover,
 .marketing .checklist-help-btn:hover,
@@ -65,8 +61,6 @@
 
 .marketing .cta-btn:active,
 .marketing .upload-button:active,
-.marketing .primary-btn:active,
-.marketing .save-btn:active,
 .marketing .welcome-modal-btn--primary:active,
 .marketing .help-modal__confirm-btn:active,
 .marketing .checklist-help-btn:active,
@@ -82,9 +76,7 @@
 /* Disabled state for primary pill buttons */
 .marketing .ra-export-pdf-btn:disabled,
 .marketing .se-save-btn:disabled,
-.marketing .se-next-btn:disabled,
-.marketing .primary-btn:disabled,
-.marketing .save-btn:disabled {
+.marketing .se-next-btn:disabled {
   background-color: var(--gw-color-disabled-bg);
   border-color: var(--gw-color-disabled-bg);
   color: var(--gw-color-disabled-text);
@@ -96,7 +88,6 @@
  * Outline / secondary pill button
  * ======================================================================== */
 .marketing .welcome-modal-btn--secondary,
-.marketing .ra-preview-btn,
 .marketing .ra-edit-btn,
 .marketing .ra-back-btn,
 .marketing .se-prev-btn,
@@ -124,7 +115,6 @@
 }
 
 .marketing .welcome-modal-btn--secondary:hover,
-.marketing .ra-preview-btn:hover,
 .marketing .ra-edit-btn:hover,
 .marketing .ra-back-btn:hover,
 .marketing .se-prev-btn:hover,
@@ -136,7 +126,6 @@
 }
 
 .marketing .welcome-modal-btn--secondary:active,
-.marketing .ra-preview-btn:active,
 .marketing .ra-edit-btn:active,
 .marketing .ra-back-btn:active,
 .marketing .se-prev-btn:active,

@@ -127,11 +127,16 @@
 .profile-gate__input-wrap select {
   flex: 1;
   border: none;
-  outline: none;
   padding: 11px 0;
   font-size: 14px;
   background: transparent;
   color: #222;
+}
+
+.profile-gate__input-wrap input:focus-visible,
+.profile-gate__input-wrap select:focus-visible {
+  outline: 2px solid var(--gw-color-focus-light, #23776c);
+  outline-offset: 2px;
 }
 
 /* Read-only field (State): assigned by an admin, shown for confirmation but not editable. */
@@ -150,7 +155,8 @@
 
 .profile-gate__hint {
   margin: 6px 0 0;
-  color: #8a8a8a;
+  /* #8a8a8a was 3.45:1 on the white panel; this is 6.90:1 (WCAG 1.4.3). */
+  color: var(--gw-color-text-secondary, #5a5a5a);
   font-size: 12px;
 }
 

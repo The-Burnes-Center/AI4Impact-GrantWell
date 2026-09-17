@@ -26,7 +26,6 @@ export interface ChatMessageProps {
 }
 
 function ChatMessage(props: ChatMessageProps) {
-  const [loading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [grantName, setGrantName] = useState<string>("");
   const [sourcesExpanded, setSourcesExpanded] = useState<boolean>(false);
@@ -295,25 +294,14 @@ function ChatMessage(props: ChatMessageProps) {
                           th(props) {
                             const { children, ...rest } = props;
                             return (
-                              <th
-                                scope="col"
-                                {...rest}
-                                className={styles.markdownTableCell}
-                              >
+                              <th scope="col" {...rest}>
                                 {children}
                               </th>
                             );
                           },
                           td(props) {
                             const { children, ...rest } = props;
-                            return (
-                              <td
-                                {...rest}
-                                className={styles.markdownTableCell}
-                              >
-                                {children}
-                              </td>
-                            );
+                            return <td {...rest}>{children}</td>;
                           },
                         }}
                       >
@@ -350,7 +338,7 @@ function ChatMessage(props: ChatMessageProps) {
                         <button
                           onClick={() => setSourcesExpanded(!sourcesExpanded)}
                           aria-expanded={sourcesExpanded}
-                          aria-controls={sourceListId}
+                          aria-controls={sourcesExpanded ? sourceListId : undefined}
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -522,12 +510,6 @@ function ChatMessage(props: ChatMessageProps) {
           </>
         )}
       </div>
-
-      {loading && (
-        <div style={{ float: "left" }}>
-          <div style={spinnerStyle}></div>
-        </div>
-      )}
     </article>
   );
 }

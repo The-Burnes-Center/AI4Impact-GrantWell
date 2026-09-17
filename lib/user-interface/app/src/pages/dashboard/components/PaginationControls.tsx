@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 interface PaginationControlsBaseProps {
   currentPage: number;
@@ -33,9 +33,11 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
   onItemsPerPageChange,
   itemsPerPageOptions = [5, 10, 25, 50],
   itemLabel = "grants",
-  selectId = "items-per-page-select",
+  selectId,
   ...paginationProps
 }) => {
+  const generatedSelectId = useId();
+  const itemsPerPageSelectId = selectId ?? generatedSelectId;
   const isTokenMode = paginationProps.mode === "token";
   const totalItems = isTokenMode ? paginationProps.pageItemCount : paginationProps.totalItems;
   const totalPages = isTokenMode
@@ -78,6 +80,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
           key="1"
           className={`pagination-button ${currentPage === 1 ? "active" : ""}`}
           onClick={() => onPageChange(1)}
+          aria-label="Go to page 1"
         >
           1
         </button>
@@ -110,6 +113,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
           key={totalPages}
           className={`pagination-button ${currentPage === totalPages ? "active" : ""}`}
           onClick={() => onPageChange(totalPages)}
+          aria-label={`Go to page ${totalPages}`}
         >
           {totalPages}
         </button>
@@ -139,11 +143,11 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
       <div style={{ display: "flex", alignItems: "center" }}>
         <div className="pagination-controls">{pageButtons}</div>
         <div className="items-per-page">
-          <label htmlFor={selectId} style={{ marginRight: "8px" }}>
+          <label htmlFor={itemsPerPageSelectId} style={{ marginRight: "8px" }}>
             Items per page:
           </label>
           <select
-            id={selectId}
+            id={itemsPerPageSelectId}
             value={itemsPerPage}
             onChange={onItemsPerPageChange}
             className="form-input"

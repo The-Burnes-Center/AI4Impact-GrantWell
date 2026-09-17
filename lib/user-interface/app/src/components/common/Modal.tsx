@@ -31,6 +31,7 @@ export const Modal = React.memo<ModalProps>(
     return (
       <div
         className="modal-overlay"
+        role="presentation"
         style={{
           position: "fixed",
           top: topOffset,
@@ -46,7 +47,13 @@ export const Modal = React.memo<ModalProps>(
           padding: "20px",
           boxSizing: "border-box",
         }}
-        onClick={hideCloseButton ? undefined : onClose}
+        onClick={
+          hideCloseButton
+            ? undefined
+            : (e) => {
+                if (e.target === e.currentTarget) onClose();
+              }
+        }
       >
         <div
           ref={modalRef}
@@ -66,7 +73,6 @@ export const Modal = React.memo<ModalProps>(
             flexDirection: "column",
             overflow: "hidden",
           }}
-          onClick={(e) => e.stopPropagation()}
         >
           <div
             className="modal-header"

@@ -72,7 +72,10 @@ export default function DocumentManager({
   const [uploading, setUploading] = useState(false);
   const [uploadStatusAnnouncement, setUploadStatusAnnouncement] = useState("");
   const [existingFiles, setExistingFiles] = useState<UploadedFile[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorMessage] = useState<string | null>(null);
+  const [errorSeq, setErrorSeq] = useState(0);
+  const [errorAnnouncement, setErrorAnnouncement] = useState("");
+  const [fileListAnnouncement, setFileListAnnouncement] = useState("");
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [downloadingFile, setDownloadingFile] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -92,6 +95,24 @@ export default function DocumentManager({
   const confirmTitleId = useId();
   const duplicateTitleId = useId();
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  /** The sequence number is what makes a repeat of the *same* error announce
+   * again — identical text alone is not a DOM change. */
+  const setError = useCallback((message: string | null) => {
+    setErrorMessage(message);
+    setErrorSeq((seq) => seq + 1);
+  }, []);
+
+  useEffect(() => {
+    if (!error) {
+      setErrorAnnouncement("");
+      return;
+    }
+    setErrorAnnouncement("");
+    const timer = setTimeout(() => setErrorAnnouncement(error), 100);
+    return () => clearTimeout(timer);
+  }, [error, errorSeq]);
 
   const extractNofoName = (docId: string | null): string => {
     if (!docId) return "";
@@ -111,7 +132,7 @@ export default function DocumentManager({
     if (isOpen) {
       fetchUserId();
     }
-  }, [isOpen]);
+  }, [isOpen, setError]);
 
 
 
@@ -149,18 +170,25 @@ export default function DocumentManager({
           );
 
         setExistingFiles(files);
+        setFileListAnnouncement(
+          files.length === 0
+            ? "No files uploaded"
+            : `${files.length} file${files.length === 1 ? "" : "s"} listed`
+        );
         onFileCountChange?.(files.length);
       } else {
         setExistingFiles([]);
+        setFileListAnnouncement("No files uploaded");
         onFileCountChange?.(0);
       }
     } catch (err) {
       console.error("Error fetching existing files:", err);
+      setFileListAnnouncement("");
       setError("Failed to load existing files. Please try again.");
     } finally {
       setLoadingFiles(false);
     }
-  }, [appContext, documentIdentifier, userId, onFileCountChange]);
+  }, [appContext, documentIdentifier, userId, onFileCountChange, setError]);
 
   useEffect(() => {
     if (isOpen && activeTab === "view") {
@@ -595,22 +623,31 @@ export default function DocumentManager({
   return (
     <div
       className="dm-overlay"
-      onClick={onClose}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         ref={modalRef}
         className="dm-container"
-        onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         style={{ position: "relative" }}
       >
+        {/* Kept mounted and empty when idle: a live region created at the same
+            moment as its text is unreliably announced. */}
+        <div role="status" aria-live="polite" className="visually-hidden">
+          {toastMessage ?? ""}
+        </div>
+        <div role="alert" className="visually-hidden">
+          {errorAnnouncement}
+        </div>
         {toastMessage && (
           <div
             className="dm-toast-container"
-            role="status"
-            aria-live="polite"
+            role="presentation"
             onMouseEnter={() => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }}
             onMouseLeave={() => { toastTimerRef.current = setTimeout(() => setToastMessage(null), 5000); }}
             onFocus={() => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }}
@@ -640,6 +677,7 @@ export default function DocumentManager({
         <div
           className="dm-tab-container"
           role="tablist"
+          tabIndex={-1}
           aria-label="Document manager tabs"
           onKeyDown={(e) => {
             const tabs = ["upload", "view"] as const;
@@ -693,22 +731,21 @@ export default function DocumentManager({
             <div role="tabpanel" aria-labelledby="upload-tab" id="upload-panel">
               <div
                 className={`dm-drop-zone${dragActive ? " dm-drag-active" : ""}`}
+                role="presentation"
                 onDragEnter={handleDrag}
                 onDragOver={handleDrag}
                 onDragLeave={handleDrag}
                 onDrop={handleDrop}
-                role="region"
-                aria-label="File upload area with drag and drop"
               >
-                <label
-                  htmlFor="dm-file-input"
+                <div
                   className="dm-drop-label"
-                  tabIndex={0}
                   role="button"
+                  tabIndex={0}
+                  onClick={() => fileInputRef.current?.click()}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
-                      document.getElementById("dm-file-input")?.click();
+                      fileInputRef.current?.click();
                     }
                   }}
                 >
@@ -717,9 +754,10 @@ export default function DocumentManager({
                   <p className="dm-browse-text" id="upload-instructions">
                     or <span className="dm-browse-link">browse files</span>
                   </p>
-                </label>
+                </div>
 
                 <input
+                  ref={fileInputRef}
                   id="dm-file-input"
                   type="file"
                   multiple
@@ -730,7 +768,7 @@ export default function DocumentManager({
                 />
               </div>
 
-              {error && <div role="alert" className="dm-error">{error}</div>}
+              {error && <div className="dm-error">{error}</div>}
 
               <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
                 {uploadStatusAnnouncement}
@@ -769,7 +807,7 @@ export default function DocumentManager({
                       aria-label={
                         uploading
                           ? "Upload in progress"
-                          : `Upload ${selectedFiles.length} selected files`
+                          : `Upload Files — ${selectedFiles.length} selected`
                       }
                     >
                       <LuUpload size={16} aria-hidden="true" />
@@ -870,7 +908,7 @@ export default function DocumentManager({
               )}
 
               <div role="status" aria-live="polite" className="sr-only">
-                {loadingFiles ? "Loading files" : ""}
+                {loadingFiles ? "Loading files" : fileListAnnouncement}
               </div>
 
               {loadingFiles ? (
@@ -943,7 +981,7 @@ export default function DocumentManager({
                 ))
               )}
 
-              {error && <div role="alert" className="dm-error">{error}</div>}
+              {error && <div className="dm-error">{error}</div>}
             </div>
           )}
         </div>
@@ -959,12 +997,14 @@ export default function DocumentManager({
       {fileToDelete && (
         <div
           className="dm-confirm-overlay"
-          onClick={cancelDelete}
+          role="presentation"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) cancelDelete();
+          }}
         >
           <div
             ref={confirmDialogRef}
             className="dm-confirm-dialog"
-            onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby={confirmTitleId}
@@ -992,12 +1032,14 @@ export default function DocumentManager({
       {duplicateFiles.length > 0 && (
         <div
           className="dm-confirm-overlay"
-          onClick={handleDuplicateCancel}
+          role="presentation"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleDuplicateCancel();
+          }}
         >
           <div
             ref={duplicateDialogRef}
             className="dm-confirm-dialog"
-            onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby={duplicateTitleId}

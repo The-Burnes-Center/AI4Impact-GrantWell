@@ -622,10 +622,13 @@ const NOFOsTab = React.memo(function NOFOsTab({
         maxWidth="800px"
       >
         <div className="modal-form" style={{ maxHeight: "70vh", overflowY: "auto" }}>
+          <div role="status" aria-live="polite" className="visually-hidden">
+            {summaryLoading ? "Loading grant summary" : ""}
+          </div>
           {summaryLoading ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--gw-color-text-secondary)" }}>
               <LuLoader size={20} className="spin-animation" aria-hidden="true" />
-              <span role="status">Loading summary...</span>
+              <span>Loading summary...</span>
             </div>
           ) : (
             <>
@@ -661,10 +664,13 @@ const NOFOsTab = React.memo(function NOFOsTab({
         maxWidth="720px"
       >
         <div className="modal-form">
+          <div role="status" aria-live="polite" className="visually-hidden">
+            {overlayLoading ? "Loading state guidance" : ""}
+          </div>
           {overlayLoading ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--gw-color-text-secondary)" }}>
               <LuLoader size={20} className="spin-animation" aria-hidden="true" />
-              <span role="status">Loading...</span>
+              <span>Loading state guidance...</span>
             </div>
           ) : (
             <>
@@ -700,10 +706,13 @@ const NOFOsTab = React.memo(function NOFOsTab({
         maxWidth="720px"
       >
         <div className="modal-form">
+          <div role="status" aria-live="polite" className="visually-hidden">
+            {customQuestionsLoading ? "Loading custom questions" : ""}
+          </div>
           {customQuestionsLoading ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--gw-color-text-secondary)" }}>
               <LuLoader size={20} className="spin-animation" aria-hidden="true" />
-              <span role="status">Loading...</span>
+              <span>Loading custom questions...</span>
             </div>
           ) : (
             <>
@@ -787,7 +796,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <label htmlFor="file-upload">Select File</label>
             <div className="file-upload-container">
               <input id="file-upload" type="file" accept=".pdf,.txt,.docx" onChange={handleFileSelect} className="file-input" />
-              <div className="file-upload-button"><LuUpload size={16} className="button-icon" /><span>Choose File</span></div>
+              <div className="file-upload-button"><LuUpload size={16} className="button-icon" /><span>Select File</span></div>
             </div>
             {selectedFile && (
               <div className="selected-file"><LuFile size={16} className="file-icon" /><span>{selectedFile.name}</span></div>

@@ -28,8 +28,6 @@ export const colors = {
   errorLight: "#ffebee",
   warning: "#F6B622",
   warningLight: "#fff3cd",
-  info: "#17a2b8",
-  infoLight: "#d1ecf1",
 
   // Focus
   focusLight: "#23776C",
@@ -38,7 +36,6 @@ export const colors = {
   // Neutral colors
   white: "#ffffff",
   background: "#f9fafb",
-  backgroundAlt: "#f8f9fa",
   border: "#e2e8f0",
   borderLight: "#f3f4f6",
   inputBorder: "#767676",
@@ -132,7 +129,6 @@ export const buttonStyles = {
     cursor: "pointer",
     transition: transitions.normal,
     border: "none",
-    outline: "none",
   } as React.CSSProperties,
 
   sizes: {
@@ -172,47 +168,4 @@ export const buttonStyles = {
       color: colors.primary,
     },
   },
-};
-
-// Input base styles
-export const inputStyles = {
-  base: {
-    width: "100%",
-    padding: spacing.md,
-    fontFamily: typography.fontFamily,
-    fontSize: typography.fontSize.base,
-    border: `1px solid ${colors.inputBorder}`,
-    borderRadius: borderRadius.md,
-    outline: "none",
-    transition: transitions.fast,
-  } as React.CSSProperties,
-
-  error: {
-    borderColor: colors.danger,
-  },
-
-  focus: {
-    borderColor: colors.primary,
-    boxShadow: `0 0 0 3px ${colors.primaryLight}`,
-  },
-};
-
-// Card base styles
-export const cardStyles = {
-  container: {
-    background: colors.white,
-    borderRadius: borderRadius.lg,
-    boxShadow: shadows.md,
-    overflow: "hidden",
-  } as React.CSSProperties,
-
-  header: {
-    background: colors.primary,
-    color: colors.white,
-    padding: `${spacing.xl} ${spacing["2xl"]}`,
-  } as React.CSSProperties,
-
-  body: {
-    padding: spacing["2xl"],
-  } as React.CSSProperties,
 };
