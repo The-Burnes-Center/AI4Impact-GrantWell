@@ -171,18 +171,18 @@ export function AppNavbar() {
         <NavLink to="/home" className={navLinkClass}>
           Home
         </NavLink>
-        <NavLink to="/document-editor/drafts" className={navLinkClass}>
-          Drafts
-        </NavLink>
         <NavLink to="/chat/sessions" className={navLinkClass}>
           Chat Sessions
+        </NavLink>
+        <NavLink to="/document-editor/drafts" className={navLinkClass}>
+          Drafts
         </NavLink>
         <NavLink to="/profile" className={navLinkClass}>
           Profile
         </NavLink>
         {isAdmin && (
           <NavLink to="/admin" className={navLinkClass}>
-            Admin
+            Admin Dashboard
           </NavLink>
         )}
       </div>

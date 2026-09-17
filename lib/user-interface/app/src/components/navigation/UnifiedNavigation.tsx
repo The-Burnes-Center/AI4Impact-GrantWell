@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams, useSearchParams } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
-import { LuHouse, LuMessageSquare, LuFileText, LuSquareCheckBig, LuUpload, LuLayoutDashboard, LuUser } from "react-icons/lu";
+import { LuHouse, LuMessageSquare, LuMessagesSquare, LuFileText, LuSquareCheckBig, LuUpload, LuLayoutDashboard, LuUser } from "react-icons/lu";
 import Modal from "../common/Modal";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useInert } from "../../hooks/use-inert";
@@ -24,6 +24,56 @@ const useViewportWidth = () => {
 
   return width;
 };
+
+const groupHeadingStyle: React.CSSProperties = {
+  margin: 0,
+  padding: "0 16px 8px 16px",
+  fontSize: "14px",
+  fontWeight: 600,
+  color: "#e2e8f0",
+  textTransform: "uppercase",
+  letterSpacing: "1px",
+  fontFamily: "'Noto Sans', sans-serif",
+};
+
+const NavItem: React.FC<{
+  onClick: () => void;
+  label: string;
+  icon: React.ReactNode;
+  active: boolean;
+  expanded: boolean;
+}> = ({ onClick, label, icon, active, expanded }) => (
+  <button
+    onClick={onClick}
+    aria-label={label}
+    aria-current={active ? "page" : undefined}
+    style={{
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      padding: "12px 16px",
+      borderRadius: "8px",
+      marginBottom: "8px",
+      background: active ? "#23776C" : "none",
+      color: active ? "white" : "#e2e8f0",
+      border: "none",
+      fontSize: "16px",
+      cursor: "pointer",
+      transition: "background 0.2s, color 0.2s",
+      textAlign: "left",
+      fontFamily: "'Noto Sans', sans-serif",
+    }}
+    onMouseEnter={(e) =>
+      (e.currentTarget.style.background = active ? "#23776C" : "#2d3748")
+    }
+    onMouseLeave={(e) =>
+      (e.currentTarget.style.background = active ? "#23776C" : "none")
+    }
+  >
+    {icon}
+    {expanded && <span style={{ marginLeft: "12px" }}>{label}</span>}
+  </button>
+);
 
 const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
   documentIdentifier,
@@ -328,312 +378,85 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
         >
           <div>
             {isOpen && (
-              <h2
-                style={{
-                  margin: 0,
-                  padding: "0 16px 8px 16px",
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  color: "#e2e8f0",
-                  textTransform: "uppercase",
-                  letterSpacing: "1px",
-                  fontFamily: "'Noto Sans', sans-serif",
-                }}
-              >
-                Menu
-              </h2>
+              <h2 style={groupHeadingStyle}>Menu</h2>
             )}
 
-            {/* Home Button */}
-            <button
+            <NavItem
               onClick={() => navigate("/home")}
-              aria-label="Home"
-              aria-current={isHome ? "page" : undefined}
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                marginBottom: "8px",
-                background: "none",
-                color: "#e2e8f0",
-                border: "none",
-                fontSize: "16px",
-                cursor: "pointer",
-                transition: "background 0.2s, color 0.2s",
-                textAlign: "left",
-                fontFamily: "'Noto Sans', sans-serif",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = "#2d3748")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "none")
-              }
-            >
-              <LuHouse size={20} />
-              {isOpen && <span style={{ marginLeft: "12px" }}>Home</span>}
-            </button>
+              label="Home"
+              icon={<LuHouse size={20} />}
+              active={isHome}
+              expanded={isOpen}
+            />
 
-            {/* Profile */}
-            <button
+            <NavItem
+              onClick={handleChatSessionsNavigation}
+              label="Chat Sessions"
+              icon={<LuMessagesSquare size={20} />}
+              active={isChatSessions}
+              expanded={isOpen}
+            />
+
+            <NavItem
+              onClick={handleDraftsNavigation}
+              label="Drafts"
+              icon={<LuFileText size={20} />}
+              active={isDrafts}
+              expanded={isOpen}
+            />
+
+            <NavItem
               onClick={() => navigate("/profile")}
-              aria-label="Your Profile"
-              aria-current={isProfile ? "page" : undefined}
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                marginBottom: "8px",
-                background: isProfile ? "#23776C" : "none",
-                color: isProfile ? "white" : "#e2e8f0",
-                border: "none",
-                fontSize: "16px",
-                cursor: "pointer",
-                transition: "background 0.2s, color 0.2s",
-                textAlign: "left",
-                fontFamily: "'Noto Sans', sans-serif",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = isProfile ? "#23776C" : "#2d3748")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = isProfile ? "#23776C" : "none")
-              }
-            >
-              <LuUser size={20} />
-              {isOpen && <span style={{ marginLeft: "12px" }}>Profile</span>}
-            </button>
+              label="Profile"
+              icon={<LuUser size={20} />}
+              active={isProfile}
+              expanded={isOpen}
+            />
 
-            {/* Admin Dashboard - only visible to admins */}
             {isAdmin && (
-              <button
+              <NavItem
                 onClick={() => navigate("/admin")}
-                aria-label="Admin Dashboard"
-                aria-current={isDashboard ? "page" : undefined}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "12px 16px",
-                  borderRadius: "8px",
-                  marginBottom: "8px",
-                  background: isDashboard ? "#23776C" : "none",
-                  color: isDashboard ? "white" : "#e2e8f0",
-                  border: "none",
-                  fontSize: "16px",
-                  cursor: "pointer",
-                  transition: "background 0.2s, color 0.2s",
-                  textAlign: "left",
-                  fontFamily: "'Noto Sans', sans-serif",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background =
-                    isDashboard ? "#23776C" : "#2d3748")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background =
-                    isDashboard ? "#23776C" : "none")
-                }
-              >
-                <LuLayoutDashboard size={20} />
-                {isOpen && <span style={{ marginLeft: "12px" }}>Admin Dashboard</span>}
-              </button>
-            )}
-
-            {/* Requirements */}
-            {docId && (
-              <button
-                onClick={handleRequirementsNavigation}
-                aria-label="Requirements"
-                aria-current={isRequirements ? "page" : undefined}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "12px 16px",
-                  borderRadius: "8px",
-                  marginBottom: "8px",
-                  background: isRequirements ? "#23776C" : "none",
-                  color: isRequirements ? "white" : "#e2e8f0",
-                  border: "none",
-                  fontSize: "16px",
-                  cursor: "pointer",
-                  transition: "background 0.2s, color 0.2s",
-                  textAlign: "left",
-                  fontFamily: "'Noto Sans', sans-serif",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background =
-                    isRequirements ? "#23776C" : "#2d3748")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background =
-                    isRequirements ? "#23776C" : "none")
-                }
-              >
-                <LuSquareCheckBig size={20} />
-                {isOpen && <span style={{ marginLeft: "12px" }}>Requirements</span>}
-              </button>
-            )}
-
-            {/* Chat with AI */}
-            <button
-              onClick={handleChatNavigation}
-              aria-label="Chat with AI"
-              aria-current={isChatActive ? "page" : undefined}
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                marginBottom: "4px",
-                background: isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#23776C" : "none",
-                color: isChat && !isDrafts && currentPath !== "/chat/sessions" ? "white" : "#e2e8f0",
-                border: "none",
-                fontSize: "16px",
-                cursor: "pointer",
-                transition: "background 0.2s, color 0.2s",
-                textAlign: "left",
-                fontFamily: "'Noto Sans', sans-serif",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background =
-                  isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#23776C" : "#2d3748")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background =
-                  isChat && !isDrafts && currentPath !== "/chat/sessions" ? "#23776C" : "none")
-              }
-            >
-              <LuMessageSquare size={20} />
-              {isOpen && <span style={{ marginLeft: "12px" }}>Chat with AI</span>}
-            </button>
-
-            {/* Chat Sessions - nested under Chat with AI */}
-            {isOpen && (
-              <button
-                onClick={handleChatSessionsNavigation}
-                aria-label="Chat Sessions"
-                aria-current={isChatSessions ? "page" : undefined}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "8px 16px 8px 44px",
-                  borderRadius: "8px",
-                  marginBottom: "8px",
-                  background: currentPath === "/chat/sessions" ? "#23776C" : "none",
-                  color: currentPath === "/chat/sessions" ? "white" : "#e2e8f0",
-                  border: "none",
-                  fontSize: "15px",
-                  cursor: "pointer",
-                  transition: "background 0.2s, color 0.2s",
-                  textAlign: "left",
-                  fontFamily: "'Noto Sans', sans-serif",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background =
-                    currentPath === "/chat/sessions" ? "#23776C" : "#2d3748")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background =
-                    currentPath === "/chat/sessions" ? "#23776C" : "none")
-                }
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    stroke: "currentColor",
-                    fill: "none",
-                    strokeWidth: 2,
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                  }}
-                >
-                  <path d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-                <span style={{ marginLeft: "12px" }}>Chat Sessions</span>
-              </button>
-            )}
-
-            {/* Write Application / Document Editor */}
-            <button
-              onClick={handleDocumentEditorNavigation}
-              aria-label="Write Application"
-              aria-current={isDocumentEditor ? "page" : undefined}
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                marginBottom: "4px",
-                marginTop: "8px",
-                background: isDocumentEditor ? "#23776C" : "none",
-                color: isDocumentEditor ? "white" : "#e2e8f0",
-                border: "none",
-                fontSize: "16px",
-                cursor: "pointer",
-                transition: "background 0.2s, color 0.2s",
-                textAlign: "left",
-                fontFamily: "'Noto Sans', sans-serif",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background =
-                  isDocumentEditor ? "#23776C" : "#2d3748")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background =
-                  isDocumentEditor ? "#23776C" : "none")
-              }
-            >
-              <LuUpload size={20} />
-              {isOpen && <span style={{ marginLeft: "12px" }}>Write Application</span>}
-            </button>
-
-            {/* Drafts - nested under Write Application */}
-            {isOpen && (
-              <button
-                onClick={handleDraftsNavigation}
-                aria-label="Drafts"
-                aria-current={isDrafts ? "page" : undefined}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "8px 16px 8px 44px",
-                  borderRadius: "8px",
-                  marginBottom: "8px",
-                  background: isDrafts ? "#23776C" : "none",
-                  color: isDrafts ? "white" : "#e2e8f0",
-                  border: "none",
-                  fontSize: "15px",
-                  cursor: "pointer",
-                  transition: "background 0.2s, color 0.2s",
-                  textAlign: "left",
-                  fontFamily: "'Noto Sans', sans-serif",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background =
-                    isDrafts ? "#23776C" : "#2d3748")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background =
-                    isDrafts ? "#23776C" : "none")
-                }
-              >
-                <LuFileText size={18} />
-                <span style={{ marginLeft: "12px" }}>Drafts</span>
-              </button>
+                label="Admin Dashboard"
+                icon={<LuLayoutDashboard size={20} />}
+                active={isDashboard}
+                expanded={isOpen}
+              />
             )}
           </div>
+
+          {docId && (
+            <div style={{ marginTop: "24px" }}>
+              {isOpen && (
+                <h3 style={{ ...groupHeadingStyle, color: "#a0aec0" }}>
+                  This Grant
+                </h3>
+              )}
+
+              <NavItem
+                onClick={handleRequirementsNavigation}
+                label="Requirements"
+                icon={<LuSquareCheckBig size={20} />}
+                active={isRequirements}
+                expanded={isOpen}
+              />
+
+              <NavItem
+                onClick={handleChatNavigation}
+                label="Chat with AI"
+                icon={<LuMessageSquare size={20} />}
+                active={isChatActive}
+                expanded={isOpen}
+              />
+
+              <NavItem
+                onClick={handleDocumentEditorNavigation}
+                label="Write Application"
+                icon={<LuUpload size={20} />}
+                active={isDocumentEditor}
+                expanded={isOpen}
+              />
+            </div>
+          )}
 
           {/* Document Editor specific steps */}
           {isDocumentEditor && currentStep && onNavigate && currentStep !== "drafts" && currentStep !== "welcome" && (
