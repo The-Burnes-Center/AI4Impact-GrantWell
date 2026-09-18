@@ -55,6 +55,12 @@ export class AuthorizationStack extends Construct {
       ],
     });
 
+    // withSES rejects an unresolved region, and the stack is environment-agnostic without an instance config.
+    const stackRegion = cdk.Stack.of(this).region;
+    const sesRegion = cdk.Token.isUnresolved(stackRegion)
+      ? process.env.CDK_DEFAULT_REGION || process.env.AWS_REGION || 'us-east-1'
+      : stackRegion;
+
     const userPool = new UserPool(this, 'UserPool', {
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       selfSignUpEnabled: true,
@@ -96,6 +102,7 @@ export class AuthorizationStack extends Construct {
         fromEmail: verificationSender,
         fromName: 'GrantWell',
         replyTo: genericBrandingData.supportEmail,
+        sesRegion,
         sesVerifiedDomain: verificationSenderDomain,
         configurationSetName: authEmailConfigurationSet.configurationSetName,
       })
