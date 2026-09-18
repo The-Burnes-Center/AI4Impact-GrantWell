@@ -184,7 +184,7 @@ const DocumentEditor: React.FC = () => {
 
   const recordStepReached = useCallback((step: string) => {
     if (!sessionId) return;
-    void draftsClient.markStepReached({ sessionId, step }).catch(() => undefined);
+    void draftsClient.markStepReached({ sessionId, step }).catch((): void => undefined);
   }, [sessionId, draftsClient]);
 
   // Show welcome modal only for new sessions

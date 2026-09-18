@@ -98,7 +98,7 @@ export function useAutoSave({
         if (pendingRef.current) {
           publishStatus("pending");
           clearTimer(debounceRef);
-          debounceRef.current = setTimeout(() => void runSave(0), delay);
+          debounceRef.current = setTimeout((): void => void runSave(0), delay);
           return;
         }
 
@@ -109,7 +109,7 @@ export function useAutoSave({
         if (attempt < RETRY_DELAYS_MS.length) {
           publishStatus("pending");
           clearTimer(retryRef);
-          retryRef.current = setTimeout(() => void runSave(attempt + 1), RETRY_DELAYS_MS[attempt]);
+          retryRef.current = setTimeout((): void => void runSave(attempt + 1), RETRY_DELAYS_MS[attempt]);
           return;
         }
         console.error("Auto-save failed:", err);
@@ -136,7 +136,7 @@ export function useAutoSave({
       clearTimer(savedDisplayRef);
       clearTimer(debounceRef);
       publishStatus("pending");
-      debounceRef.current = setTimeout(() => void runSave(0), delay);
+      debounceRef.current = setTimeout((): void => void runSave(0), delay);
     },
     [delay, runSave, publishStatus]
   );

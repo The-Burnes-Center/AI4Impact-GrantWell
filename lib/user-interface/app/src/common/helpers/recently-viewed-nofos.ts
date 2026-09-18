@@ -42,7 +42,7 @@ function profileClient(): Promise<UserProfileClient | null> {
       .then((config) =>
         config?.httpEndpoint ? new UserProfileClient(config) : null
       )
-      .catch(() => null);
+      .catch((): UserProfileClient | null => null);
   }
   return clientPromise;
 }
