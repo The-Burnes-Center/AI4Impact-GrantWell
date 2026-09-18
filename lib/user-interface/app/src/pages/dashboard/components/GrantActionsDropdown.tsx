@@ -1,6 +1,23 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { LuMenu, LuPencil, LuTrash, LuArchive, LuCheck, LuFilePen, LuMessageSquarePlus, LuCopy, LuListChecks } from "react-icons/lu";
 import type { NOFO } from "../../../common/types/nofo";
+
+// Portalled to document.body: the table's scroll container would clip an absolutely positioned menu.
+type MenuPosition = { right: number; top?: number; bottom?: number };
+
+const MENU_GAP = 4;
+const MENU_MIN_SPACE_BELOW = 150;
+
+function menuPositionFor(trigger: HTMLElement): MenuPosition {
+  const rect = trigger.getBoundingClientRect();
+  const viewportWidth = document.documentElement.clientWidth;
+  const viewportHeight = document.documentElement.clientHeight;
+  const right = Math.max(0, viewportWidth - rect.right);
+  return viewportHeight - rect.bottom < MENU_MIN_SPACE_BELOW
+    ? { right, bottom: Math.max(0, viewportHeight - rect.top + MENU_GAP) }
+    : { right, top: rect.bottom + MENU_GAP };
+}
 
 interface GrantActionsDropdownProps {
   nofo: NOFO;
@@ -37,16 +54,27 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
   const showEditActions = !editDisabled;
   const hasAnyAction = showEditActions || showCustomQuestions || showStateActions;
   const [isOpen, setIsOpen] = useState(false);
-  const [dropUp, setDropUp] = useState(false);
+  const [position, setPosition] = useState<MenuPosition | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  // Fixed position does not travel with the trigger; capture-phase scroll catches the table's scroller.
   useEffect(() => {
-    if (isOpen && buttonRef.current) {
-      const buttonRect = buttonRef.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - buttonRect.bottom;
-      setDropUp(spaceBelow < 150);
+    if (!isOpen) {
+      setPosition(null);
+      return;
     }
+    const reposition = () => {
+      if (buttonRef.current) setPosition(menuPositionFor(buttonRef.current));
+    };
+    reposition();
+    window.addEventListener("scroll", reposition, true);
+    window.addEventListener("resize", reposition);
+    return () => {
+      window.removeEventListener("scroll", reposition, true);
+      window.removeEventListener("resize", reposition);
+    };
   }, [isOpen]);
 
   const closeMenu = useCallback(() => {
@@ -59,7 +87,10 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const insideTrigger = menuRef.current?.contains(target) ?? false;
+      const insideMenu = popupRef.current?.contains(target) ?? false;
+      if (!insideTrigger && !insideMenu) {
         closeMenu();
       }
     };
@@ -72,10 +103,6 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("keydown", handleEscape);
-      requestAnimationFrame(() => {
-        const firstItem = menuRef.current?.querySelector<HTMLElement>('[role="menuitem"]');
-        firstItem?.focus();
-      });
     }
 
     return () => {
@@ -84,9 +111,18 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
     };
   }, [isOpen, closeMenu]);
 
+  const menuMounted = isOpen && position !== null;
+  useEffect(() => {
+    if (!menuMounted) return;
+    const frame = requestAnimationFrame(() => {
+      popupRef.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [menuMounted]);
+
   const handleMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const items = Array.from(
-      menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []
+      popupRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []
     );
     const currentIndex = items.indexOf(document.activeElement as HTMLElement);
     if (e.key === "ArrowDown") {
@@ -120,9 +156,15 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
       >
         <LuMenu size={18} aria-hidden="true" />
       </button>
-      {isOpen && (
+      {menuMounted && createPortal(
         <div
-          className={`actions-dropdown-menu ${dropUp ? "drop-up" : ""}`}
+          ref={popupRef}
+          className={`actions-dropdown-menu ${position.bottom !== undefined ? "drop-up" : ""}`}
+          style={{
+            right: position.right,
+            top: position.top,
+            bottom: position.bottom,
+          }}
           role="menu"
           tabIndex={-1}
           aria-label={`Actions for ${nofo.name}`}
@@ -200,7 +242,8 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
               </button>
             </>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

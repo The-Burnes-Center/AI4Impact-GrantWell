@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircle, AlertCircle, Loader, Lock } from "lucide-react";
+import { LuCircleCheckBig, LuCircleAlert, LuLoader, LuLock } from "react-icons/lu";
 
 interface Section {
   name: string;
@@ -46,12 +46,12 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
   const getStatusIcon = (section: Section, idx: number) => {
     switch (getStatus(section, idx)) {
       case "completed":
-        return <CheckCircle size={16} className="se-sidebar__check" aria-label={`${section.name}: completed`} />;
+        return <LuCircleCheckBig size={16} className="se-sidebar__check" aria-label={`${section.name}: completed`} />;
       case "failed":
-        return <AlertCircle size={16} style={{ color: '#EF4444' }} aria-label={`${section.name}: failed`} />;
+        return <LuCircleAlert size={16} style={{ color: '#EF4444' }} aria-label={`${section.name}: failed`} />;
       case "generating":
         return (
-          <Loader
+          <LuLoader
             size={16}
             className="se-sidebar__spinner"
             style={{ color: '#23776C', animation: 'spin 1s linear infinite' }}
@@ -59,7 +59,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
           />
         );
       case "pending":
-        return <Lock size={14} style={{ color: '#6b7280' }} aria-label={`${section.name}: pending`} />;
+        return <LuLock size={14} style={{ color: '#6b7280' }} aria-label={`${section.name}: pending`} />;
       default:
         return null;
     }

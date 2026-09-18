@@ -9,8 +9,10 @@ import {
   Route,
   Routes,
   useLocation,
-} from "react-router-dom";
-import { Amplify, Auth, Hub } from "aws-amplify";
+} from "react-router";
+import { Amplify } from "aws-amplify";
+import { Hub } from "aws-amplify/utils";
+import { getCurrentUser } from "aws-amplify/auth";
 import { Alert, Spinner } from "react-bootstrap";
 import App from "../App";
 import { AppConfig } from "../common/types/app";
@@ -18,8 +20,9 @@ import { AppContext } from "../common/app-context";
 import { BrandingProvider, useBranding } from "../common/branding";
 import { activeBranding } from "../../config/active-instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
-import "@aws-amplify/ui-react/styles.css";
 import MaintenanceGate from "./MaintenanceGate";
+import { NavigationProvider } from "./navigation/NavigationProvider";
+import { AppSidebar } from "./navigation/UnifiedNavigation";
 import ProfileGate from "./profile-gate/ProfileGate";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
@@ -32,11 +35,35 @@ import "../styles/marketing-landing.css";
 
 async function getInitialAuthState() {
   try {
-    await Auth.currentAuthenticatedUser();
+    await getCurrentUser();
     return true;
   } catch {
     return false;
   }
+}
+
+function toResourcesConfig(awsExports: AppConfig) {
+  const { userPoolId, userPoolWebClientId, oauth } = awsExports.Auth;
+
+  return {
+    Auth: {
+      Cognito: {
+        userPoolId,
+        userPoolClientId: userPoolWebClientId,
+        loginWith: oauth?.domain
+          ? {
+              oauth: {
+                domain: oauth.domain,
+                scopes: oauth.scope,
+                redirectSignIn: [oauth.redirectSignIn],
+                redirectSignOut: [oauth.redirectSignOut],
+                responseType: oauth.responseType as "code" | "token",
+              },
+            }
+          : undefined,
+      },
+    },
+  };
 }
 
 function UnauthenticatedPageTitle(): null {
@@ -70,7 +97,7 @@ export default function AppConfigured() {
 
         const awsExports = (await result.json()) as AppConfig;
         awsExports.httpEndpoint = awsExports.httpEndpoint.replace(/\/+$/, "");
-        Amplify.configure(awsExports);
+        Amplify.configure(toResourcesConfig(awsExports));
 
         const isAuthenticated = await getInitialAuthState();
         if (cancelled) return;
@@ -99,17 +126,18 @@ export default function AppConfigured() {
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload }) => {
       switch (payload.event) {
-        case "signIn":
+        case "signedIn":
         case "tokenRefresh":
           setAuthenticated(true);
           break;
-        case "signOut":
+        case "signedOut":
           setAuthenticated(false);
           if (window.location.pathname !== "/") {
             window.location.href = "/";
           }
           break;
-        case "signIn_failure":
+        case "tokenRefresh_failure":
+        case "signInWithRedirect_failure":
           setAuthenticated(false);
           break;
       }
@@ -196,12 +224,7 @@ export default function AppConfigured() {
           }}
           colorMode={theme === "dark" ? "dark" : "light"}
         >
-          <BrowserRouter
-            future={{
-              v7_relativeSplatPath: true,
-              v7_startTransition: true,
-            }}
-          >
+          <BrowserRouter>
             <AppLayoutContent
               authenticated={authenticated}
               configured={configured}
@@ -225,19 +248,24 @@ function AppLayoutContent({
 }) {
   if (authenticated) {
     return (
-      <div className="marketing marketing__app-shell">
-        <OmniHeader />
-        <AppNavbar />
-        <div className="marketing__app-main">
-          <ProfileGate>
-            <MaintenanceGate>
-              <App />
-            </MaintenanceGate>
-          </ProfileGate>
+      <NavigationProvider>
+        <div className="marketing marketing__app-shell">
+          <OmniHeader />
+          <AppNavbar />
+          <div className="marketing__app-body">
+            <AppSidebar />
+            <div className="marketing__app-main">
+              <ProfileGate>
+                <MaintenanceGate>
+                  <App />
+                </MaintenanceGate>
+              </ProfileGate>
+            </div>
+          </div>
+          <LandingFooter />
+          <OmniHeader position="bottom" />
         </div>
-        <LandingFooter />
-        <OmniHeader position="bottom" />
-      </div>
+      </NavigationProvider>
     );
   }
 

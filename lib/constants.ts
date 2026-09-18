@@ -1,5 +1,5 @@
 /**
- * This file defines constants used throughout the Gen AI MVP application.
+ * This file defines constants used throughout the GrantWell application.
  * These constants include configuration settings for authentication, Cognito domain name, OIDC integration name, and stack name.
  */
 
@@ -50,10 +50,9 @@ export const cognitoDomainName = envNames.cognitoDomainName;
 export const stackName = envNames.stackName;
 export const knowledgeBaseIndexName = envNames.knowledgeBaseIndexName;
 
-// This can be anything that would be understood easily, but you must use the same name
-// when setting up a sign-in provider in Cognito
-// Make sure to leave it blank if you do not actually have an SSO provider configured in Cognito!
 export const OIDCIntegrationName = "";
+
+export const MFA_REQUIRED = process.env.MFA_REQUIRED !== "false";
 
 // Environment-specific custom domain configuration for CloudFront
 const getCustomDomainConfig = () => {

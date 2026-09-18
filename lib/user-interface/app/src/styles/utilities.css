@@ -53,3 +53,101 @@ textarea:focus-visible,
   outline-color: var(--gw-color-focus-dark, #DFECE0);
 }
 
+/* ==============================
+ * Skip navigation link
+ * ============================== */
+
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--gw-color-primary);
+  color: var(--gw-color-white);
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--gw-color-focus-light);
+}
+
+.skip-to-main:focus {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+}
+
+/* ==============================
+ * Layout helpers
+ * ============================== */
+
+.container-fluid-padded {
+  width: 100%;
+  padding-left: var(--gw-spacing-xl);
+  padding-right: var(--gw-spacing-xl);
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==============================
+ * Text helpers
+ * ============================== */
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==============================
+ * Bootstrap spacing/display utilities (self-hosted)
+ *
+ * bootstrap-subset.scss omits Bootstrap's utilities API, which would emit
+ * thousands of rules to serve the seven classes below. Values and !important
+ * are copied verbatim from Bootstrap 5.3 so markup behaviour is unchanged.
+ * ============================== */
+
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.gap-2 {
+  gap: 0.5rem !important;
+}
+
+.text-muted {
+  --bs-text-opacity: 1;
+  color: var(--bs-secondary-color) !important;
+}

@@ -1,12 +1,7 @@
-import {Auth} from 'aws-amplify'
+import { fetchAuthSession } from 'aws-amplify/auth'
 import { DateTime } from "luxon";
 
 export class Utils {
-  // static isDevelopment() {
-  //   return import.meta.env.MODE === "development";
-  // }
-
-  // eslint-disable-next-line @typescript-eslint/ban-types
   static isFunction(value: unknown): value is Function {
     return typeof value === "function";
   }
@@ -134,9 +129,11 @@ export class Utils {
 
   static async authenticate(): Promise<string> {
     try {
-      let token = '';
-      const currentUser = await Auth.currentAuthenticatedUser()
-      token = currentUser.signInUserSession.idToken.jwtToken
+      const session = await fetchAuthSession()
+      const token = session.tokens?.idToken?.toString()
+      if (!token) {
+        throw new Error('No id token on the current session')
+      }
       return token
     } catch (error) {
       console.error('Error getting current user session:', error);

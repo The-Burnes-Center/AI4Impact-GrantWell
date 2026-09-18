@@ -1,5 +1,5 @@
 /**
- * This file defines utility functions used throughout the Gen AI MVP application.
+ * This file defines utility functions used throughout the GrantWell application.
  * The Utils class provides a method for recursively copying directories and their contents.
  */
 

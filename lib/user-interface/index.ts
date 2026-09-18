@@ -7,6 +7,7 @@ import {
   execSync,
 } from "node:child_process";
 import * as path from "node:path";
+import * as fs from "node:fs";
 import { ChatBotApi } from "../chatbot-api";
 import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
@@ -77,6 +78,13 @@ export class UserInterface extends Construct {
       federatedSignInProvider : OIDCIntegrationName
     });
 
+    // The Docker fallback mounts only appPath, so the app's prebuild cannot reach
+    // lib/shared/states.ts. Stage it into the asset input instead.
+    const sharedStates = path.join(__dirname, "..", "shared", "states.ts");
+    const generatedDir = path.join(appPath, "src", "common", "generated");
+    fs.mkdirSync(generatedDir, { recursive: true });
+    fs.copyFileSync(sharedStates, path.join(generatedDir, "states.ts"));
+
     const asset = s3deploy.Source.asset(appPath, {
       bundling: {
         image: cdk.DockerImage.fromRegistry(
@@ -89,7 +97,7 @@ export class UserInterface extends Construct {
             "npm --cache /tmp/.npm install --legacy-peer-deps",
             // Forward the instance selectors into the container so the Docker fallback brands the
             // build like the local path does (the local tryBundle below already inherits them).
-            `GRANTWELL_INSTANCE="${process.env.GRANTWELL_INSTANCE ?? ""}" GRANTWELL_CHROME="${process.env.GRANTWELL_CHROME ?? ""}" npm --cache /tmp/.npm run build`,
+            `GRANTWELL_INSTANCE="${process.env.GRANTWELL_INSTANCE ?? ""}" GRANTWELL_CHROME="${process.env.GRANTWELL_CHROME ?? ""}" TURNSTILE_SITE_KEY="${process.env.TURNSTILE_SITE_KEY ?? ""}" npm --cache /tmp/.npm run build`,
             "cp -aur /asset-input/dist/* /asset-output/",
           ].join(" && "),
         ],
@@ -98,6 +106,9 @@ export class UserInterface extends Construct {
             try {
               const options: ExecSyncOptionsWithBufferEncoding = {
                 stdio: "inherit",
+                // Explicit: npm 11.19 stopped running lifecycle scripts in --prefix, so the
+                // app's prebuild resolved ../../shared/states.ts from the wrong directory.
+                cwd: appPath,
                 env: {
                   ...process.env,
                 },

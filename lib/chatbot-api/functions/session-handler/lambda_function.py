@@ -370,8 +370,10 @@ def lambda_handler(event, context):
                 'body': json.dumps(f'Operation not found/allowed! Operation Sent: {operation}')
             }
     except ValidationError as e:
-        # Return detailed validation errors
-        error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
+        # A model-level validator reports loc=(), and an unguarded err['loc'][0] made that a 500.
+        error_messages = [
+            f"{err['loc'][0] if err.get('loc') else 'request'}: {err['msg']}" for err in e.errors()
+        ]
         return {
             'statusCode': 400,
             'headers': {'Access-Control-Allow-Origin': '*'},

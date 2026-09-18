@@ -57,6 +57,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             id="grant-search-input"
             ref={ref}
             type="search"
+            className="gw-search-input"
             placeholder={placeholder}
             aria-label={ariaLabel}
             aria-describedby="search-help-text"

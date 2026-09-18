@@ -3,23 +3,8 @@ import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { FileUploader } from "../../common/file-uploader";
-import { Auth } from "aws-amplify";
-import {
-  X,
-  Upload,
-  Trash2,
-  FileText,
-  RefreshCw,
-  Download,
-  Check,
-  AlertCircle,
-  Clock,
-  RotateCcw,
-  Search,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-} from "lucide-react";
+import { getCurrentUser } from "aws-amplify/auth";
+import { LuX, LuUpload, LuTrash2, LuFileText, LuRefreshCw, LuDownload, LuCheck, LuCircleAlert, LuClock, LuRotateCcw, LuSearch, LuArrowUpDown, LuArrowUp, LuArrowDown } from "react-icons/lu";
 import "../../styles/document-manager.css";
 
 const SUPPORTED_EXTENSIONS = [
@@ -137,7 +122,7 @@ export default function DocumentManager({
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const user = await Auth.currentAuthenticatedUser();
+        const user = await getCurrentUser();
         setUserId(user.username);
       } catch (err) {
         console.error("Error getting user:", err);
@@ -507,7 +492,7 @@ export default function DocumentManager({
       case "pending":
         return (
           <div className="dm-file-status">
-            <Clock size={14} className="dm-file-status-icon dm-icon-pending" aria-hidden="true" />
+            <LuClock size={14} className="dm-file-status-icon dm-icon-pending" aria-hidden="true" />
             <span className="dm-file-status-text">Pending</span>
           </div>
         );
@@ -530,14 +515,14 @@ export default function DocumentManager({
       case "complete":
         return (
           <div className="dm-file-status">
-            <Check size={14} className="dm-file-status-icon dm-icon-complete" aria-hidden="true" />
+            <LuCheck size={14} className="dm-file-status-icon dm-icon-complete" aria-hidden="true" />
             <span className="dm-file-status-text dm-status-complete">Done</span>
           </div>
         );
       case "failed":
         return (
           <div className="dm-file-status">
-            <AlertCircle size={14} className="dm-file-status-icon dm-icon-failed" aria-hidden="true" />
+            <LuCircleAlert size={14} className="dm-file-status-icon dm-icon-failed" aria-hidden="true" />
             <span className="dm-file-status-text dm-status-failed">Failed</span>
           </div>
         );
@@ -627,10 +612,10 @@ export default function DocumentManager({
   };
 
   const SortIcon = ({ field }: { field: "name" | "date" | "size" }) => {
-    if (sortBy !== field) return <ArrowUpDown size={12} aria-hidden="true" />;
+    if (sortBy !== field) return <LuArrowUpDown size={12} aria-hidden="true" />;
     return sortDirection === "asc"
-      ? <ArrowUp size={12} aria-hidden="true" />
-      : <ArrowDown size={12} aria-hidden="true" />;
+      ? <LuArrowUp size={12} aria-hidden="true" />
+      : <LuArrowDown size={12} aria-hidden="true" />;
   };
 
   if (!isOpen) return null;
@@ -669,14 +654,14 @@ export default function DocumentManager({
             onBlur={() => { toastTimerRef.current = setTimeout(() => setToastMessage(null), 5000); }}
           >
             <div className="dm-toast">
-              <Check size={16} className="dm-toast-icon" aria-hidden="true" />
+              <LuCheck size={16} className="dm-toast-icon" aria-hidden="true" />
               <span className="dm-toast-message">{toastMessage}</span>
               <button
                 className="dm-toast-close"
                 onClick={() => setToastMessage(null)}
                 aria-label="Dismiss notification"
               >
-                <X size={14} aria-hidden="true" />
+                <LuX size={14} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -685,7 +670,7 @@ export default function DocumentManager({
         <div className="dm-header">
           <h2 id={titleId} className="dm-title">Document Manager</h2>
           <button className="dm-close-btn" onClick={onClose} aria-label="Close document manager">
-            <X size={20} />
+            <LuX size={20} />
           </button>
         </div>
 
@@ -764,7 +749,7 @@ export default function DocumentManager({
                     }
                   }}
                 >
-                  <Upload size={40} className="dm-upload-icon" aria-hidden="true" />
+                  <LuUpload size={40} className="dm-upload-icon" aria-hidden="true" />
                   <p className="dm-drop-text">Drag and drop your files here</p>
                   <p className="dm-browse-text" id="upload-instructions">
                     or <span className="dm-browse-link">browse files</span>
@@ -796,7 +781,7 @@ export default function DocumentManager({
                   </p>
                   {selectedFiles.map((file, index) => (
                     <div key={`${file.name}-${index}`} className="dm-file-item">
-                      <FileText size={20} className="dm-file-icon" aria-hidden="true" />
+                      <LuFileText size={20} className="dm-file-icon" aria-hidden="true" />
                       <div className="dm-file-details">
                         <p className="dm-file-name">{file.name}</p>
                         <p className="dm-file-size">{formatFileSize(file.size)}</p>
@@ -808,7 +793,7 @@ export default function DocumentManager({
                           onClick={() => removeFile(index)}
                           aria-label={`Remove ${file.name} from upload queue`}
                         >
-                          <Trash2 size={16} aria-hidden="true" />
+                          <LuTrash2 size={16} aria-hidden="true" />
                         </button>
                       )}
                     </div>
@@ -825,13 +810,13 @@ export default function DocumentManager({
                           : `Upload Files — ${selectedFiles.length} selected`
                       }
                     >
-                      <Upload size={16} aria-hidden="true" />
+                      <LuUpload size={16} aria-hidden="true" />
                       {uploading ? "Uploading..." : "Upload Files"}
                     </button>
 
                     {hasFailedFiles && !uploading && (
                       <button className="dm-retry-btn" onClick={retryFailed}>
-                        <RotateCcw size={16} aria-hidden="true" />
+                        <LuRotateCcw size={16} aria-hidden="true" />
                         Retry Failed
                       </button>
                     )}
@@ -849,7 +834,7 @@ export default function DocumentManager({
                   disabled={loadingFiles || !isOpen}
                   aria-label="Refresh file list"
                 >
-                  <RefreshCw size={14} />
+                  <LuRefreshCw size={14} />
                   {loadingFiles ? "Loading..." : "Refresh"}
                 </button>
               </div>
@@ -857,7 +842,7 @@ export default function DocumentManager({
               {existingFiles.length > 0 && (
                 <div className="dm-toolbar">
                   <div className="dm-search-wrapper">
-                    <Search size={14} className="dm-search-icon" aria-hidden="true" />
+                    <LuSearch size={14} className="dm-search-icon" aria-hidden="true" />
                     <label htmlFor="dm-search-input" className="sr-only">Search files</label>
                     <input
                       id="dm-search-input"
@@ -900,7 +885,7 @@ export default function DocumentManager({
                       disabled={bulkDeleting}
                       aria-label={`Delete ${selectedForDelete.size} selected files`}
                     >
-                      <Trash2 size={14} aria-hidden="true" />
+                      <LuTrash2 size={14} aria-hidden="true" />
                       {bulkDeleting ? "Deleting..." : `Delete (${selectedForDelete.size})`}
                     </button>
                   )}
@@ -948,7 +933,7 @@ export default function DocumentManager({
                       onChange={() => toggleSelectFile(file.name)}
                       aria-label={`Select ${file.name} for deletion`}
                     />
-                    <FileText size={20} className="dm-file-icon" aria-hidden="true" />
+                    <LuFileText size={20} className="dm-file-icon" aria-hidden="true" />
                     <div
                       className="dm-file-details-clickable"
                       onClick={() => downloadFile(file.name)}
@@ -981,7 +966,7 @@ export default function DocumentManager({
                       {downloadingFile === file.name ? (
                         <div className="dm-download-spinner" />
                       ) : (
-                        <Download size={16} />
+                        <LuDownload size={16} />
                       )}
                     </button>
                     <button
@@ -990,7 +975,7 @@ export default function DocumentManager({
                       disabled={downloadingFile === file.name}
                       aria-label={`Delete ${file.name}`}
                     >
-                      <Trash2 size={16} aria-hidden="true" />
+                      <LuTrash2 size={16} aria-hidden="true" />
                     </button>
                   </div>
                 ))
@@ -1070,7 +1055,7 @@ export default function DocumentManager({
             <ul className="dm-duplicate-list">
               {duplicateFiles.map((file) => (
                 <li key={file.name} className="dm-duplicate-item">
-                  <FileText size={14} aria-hidden="true" />
+                  <LuFileText size={14} aria-hidden="true" />
                   {file.name}
                 </li>
               ))}

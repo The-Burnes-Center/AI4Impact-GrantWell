@@ -1,0 +1,107 @@
+.totp-enrollment {
+  margin-bottom: 20px;
+}
+
+.totp-enrollment-steps {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm);
+  line-height: 1.5;
+}
+
+.totp-enrollment-steps li + li {
+  margin-top: 4px;
+}
+
+.totp-enrollment-qr {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: var(--gw-color-white);
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-lg);
+}
+
+.totp-enrollment-secret {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.totp-enrollment-secret-label {
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm);
+}
+
+.totp-enrollment-secret code {
+  padding: 4px 8px;
+  background: var(--gw-color-background-alt);
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-sm);
+  color: var(--gw-color-text);
+  font-size: var(--gw-font-size-sm);
+  letter-spacing: 0.05em;
+  word-break: break-all;
+}
+
+.totp-enrollment-secret .btn-link {
+  padding: 0;
+  font-size: var(--gw-font-size-sm);
+}
+
+.mfa-recovery-note {
+  margin: 12px 0 0;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm);
+  line-height: 1.5;
+}
+
+.otp-input {
+  display: flex;
+  gap: 8px;
+}
+
+.otp-input__box {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 52px;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: #334155;
+  background: #fff;
+  border: 1px solid #767676;
+  border-radius: 8px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.otp-input__box:hover:not(:disabled) {
+  border-color: #4b5563;
+}
+
+/* Matches .form-input:focus in auth-panel.css — a real outline, since the
+   border-colour change alone is only a 1.18:1 luminance shift. */
+.otp-input__box:focus {
+  border-color: #23776C;
+  outline: 3px solid #23776C;
+  outline-offset: 2px;
+}
+
+.otp-input__box:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.otp-input__box[aria-invalid="true"] {
+  border-color: var(--gw-color-danger);
+}
+
+/* Bootstrap sets label{display:inline-block}; this label is a <span> for a role="group". */
+.otp-input-label {
+  display: block;
+}

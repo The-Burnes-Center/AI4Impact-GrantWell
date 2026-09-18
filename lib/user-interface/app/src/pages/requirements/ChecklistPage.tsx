@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate, useSearchParams } from "react-router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
-import { useHeaderOffset } from "../../hooks/use-header-offset";
 import { useInert } from "../../hooks/use-inert";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
@@ -36,7 +35,6 @@ const Checklists: React.FC = () => {
   const [searchParams] = useSearchParams();
   const folderParam = searchParams.get("folder") || documentIdentifier;
   const apiClient = useApiClient();
-  const topOffset = useHeaderOffset();
 
   const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: "", documents: "", narrative: "", deadlines: "" });
   const [grantType, setGrantType] = useState<GrantTypeId | null>(null);
@@ -45,7 +43,6 @@ const Checklists: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTabId, setActiveTabId] = useState<TabId>("eligibility");
   const [showHelp, setShowHelp] = useState(false);
-  const inertNavRef = useInert<HTMLElement>(showHelp);
   const inertMainRef = useInert<HTMLDivElement>(showHelp);
 
   // Show help modal automatically on first visit
@@ -143,10 +140,8 @@ const Checklists: React.FC = () => {
   };
 
   return (
-    <div className="checklist-layout" style={{ minHeight: `calc(100vh - ${topOffset}px)` }}>
-      <nav ref={inertNavRef} aria-label="Application navigation" aria-hidden={showHelp} style={{ margin: 0, padding: 0, flexShrink: 0 }}>
-        <UnifiedNavigation documentIdentifier={folderParam} />
-      </nav>
+    <div className="checklist-layout" style={{ flex: "1 0 auto" }}>
+      <UnifiedNavigation documentIdentifier={folderParam} />
 
       <div ref={inertMainRef} className="checklist-main" aria-hidden={showHelp}>
         <div className="checklist-main-container">

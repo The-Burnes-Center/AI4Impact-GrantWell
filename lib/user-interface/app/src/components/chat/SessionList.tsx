@@ -6,13 +6,14 @@ import React, {
   useId,
   useMemo,
 } from "react";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router";
 import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
+import TableScrollRegion from "../ui/TableScrollRegion";
 import { v4 as uuidv4 } from "uuid";
 import "../../styles/dashboard.css";
 
@@ -46,7 +47,7 @@ export default function Sessions(props: SessionsProps) {
 
     try {
       const apiClient = new ApiClient(appContext);
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
 
       if (username) {
         const result = await apiClient.sessions.getSessions(
@@ -81,7 +82,7 @@ export default function Sessions(props: SessionsProps) {
     try {
       setIsLoading(true);
       const apiClient = new ApiClient(appContext);
-      const username = (await Auth.currentAuthenticatedUser()).username;
+      const username = (await getCurrentUser()).username;
 
       await Promise.all(
         selectedItems.map((session) =>
@@ -232,6 +233,7 @@ export default function Sessions(props: SessionsProps) {
       </div>
 
       {/* Table section */}
+      <TableScrollRegion label="Chat sessions table" minWidth={520}>
       <div className="table-container">
         <div role="table" aria-label="Chat sessions">
           <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
@@ -370,6 +372,7 @@ export default function Sessions(props: SessionsProps) {
           </div>
         )}
       </div>
+      </TableScrollRegion>
 
       <div role="status" aria-live="polite" className="visually-hidden">
         {isLoading

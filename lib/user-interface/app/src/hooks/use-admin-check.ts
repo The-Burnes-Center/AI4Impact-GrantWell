@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Auth } from "aws-amplify";
+import { fetchAuthSession } from "aws-amplify/auth";
 import { hasRole, parseRoleClaim } from "../common/helpers/auth-roles";
 
 export function useAdminCheck(): {
@@ -26,8 +26,8 @@ export function useAdminCheck(): {
 
     const checkAdmin = async () => {
       try {
-        const result = await Auth.currentAuthenticatedUser();
-        const payload = result?.signInUserSession?.idToken?.payload || {};
+        const session = await fetchAuthSession();
+        const payload = session.tokens?.idToken?.payload ?? {};
         const parsedRoles = parseRoleClaim(payload["custom:role"]);
         const stateClaim = String(payload["custom:state"] || "").trim().toUpperCase();
         const usernameClaim = String(payload["cognito:username"] || "").trim();

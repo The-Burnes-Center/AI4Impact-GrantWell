@@ -779,12 +779,34 @@ body {
 }
 
 /* Table container styles */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+  /* `overflow-x` makes this a block formatting context, so a child margin would be trapped inside it. */
+  margin-bottom: 80px;
+}
+
+.table-scroll--flush {
+  margin-bottom: 0;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid var(--gw-color-primary, #23776C);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
 .table-container {
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  overflow: visible;
-  margin-bottom: 80px;
+  /* Safe only because the grant actions menu is portalled to the body. */
+  overflow: hidden;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.table-container:has(.table-row) {
+  min-width: var(--gw-table-min-width, 720px);
 }
 
 .table-header {
@@ -959,11 +981,6 @@ body {
   gap: 8px;
   padding-right: 16px;
   position: relative;
-}
-
-/* Ensure actions cell with open dropdown appears above other content */
-.row-cell.actions:has(.grant-actions-dropdown.dropdown-open) {
-  z-index: 100;
 }
 
 /* Row actions menu styling */
@@ -1582,7 +1599,7 @@ body {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  z-index: 1000 !important;
+  z-index: var(--gw-z-modal, 1000) !important;
   backdrop-filter: blur(3px) !important;
   padding: 20px !important;
   box-sizing: border-box !important;
@@ -1844,7 +1861,7 @@ select.form-input {
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  z-index: 100;
+  z-index: var(--gw-z-dropdown, 100);
   width: 220px;
   overflow: hidden;
   animation: filter-menu-appear 0.2s ease-out forwards;
@@ -2390,17 +2407,6 @@ select.form-input {
 .grant-actions-dropdown {
   position: relative;
   display: inline-block;
-  z-index: 100;
-}
-
-/* When dropdown is open, ensure it appears above all table content */
-.grant-actions-dropdown.dropdown-open {
-  z-index: 10001;
-}
-
-/* Ensure the parent row also has higher z-index when dropdown is open */
-.table-row:has(.grant-actions-dropdown.dropdown-open) {
-  z-index: 100;
 }
 
 .actions-dropdown-button {
@@ -2429,24 +2435,20 @@ select.form-input {
 }
 
 .actions-dropdown-menu {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 4px);
+  position: fixed;
   background: white;
   border: 1px solid #e4e7ec;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 160px;
   max-width: 260px;
-  z-index: 10000;
+  z-index: var(--gw-z-dropdown, 100);
   overflow: hidden;
   animation: dropdown-appear 0.15s ease-out;
 }
 
 /* Drop-up variant for bottom rows */
 .actions-dropdown-menu.drop-up {
-  top: auto;
-  bottom: calc(100% + 4px);
   animation: dropdown-appear-up 0.15s ease-out;
 }
 

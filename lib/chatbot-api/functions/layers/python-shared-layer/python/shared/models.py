@@ -4,8 +4,8 @@ These models provide validation and type safety for JSON data structures.
 """
 
 import json
-from pydantic import BaseModel, Field, field_validator
-from typing import Optional, Dict, List, Any, Literal
+from pydantic import BaseModel, Field, model_validator
+from typing import Optional, Dict, List, Any, ClassVar, Literal
 from datetime import datetime
 
 
@@ -18,15 +18,25 @@ class DraftOperationRequest(BaseModel):
         'list_drafts_by_user_id',
         'list_all_drafts_by_user_id',
         'delete_draft',
-        'delete_user_drafts'
+        'delete_user_drafts',
+        'list_draft_versions',
+        'get_draft_version',
+        'restore_draft_version',
+        'label_draft_version',
+        'create_draft_version',
+        'mark_step_reached'
     ] = Field(..., description="The operation to perform")
     user_id: str = Field(..., min_length=1, description="User identifier")
     session_id: Optional[str] = Field(None, description="Session identifier")
-    sections: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Draft sections")
+    # These default to None, not {}, so an update that omits a field leaves the
+    # stored value alone; an explicit {} still clears it.
+    sections: Optional[Dict[str, Any]] = Field(None, description="Draft sections")
     title: Optional[str] = Field(None, description="Draft title")
     document_identifier: Optional[str] = Field(None, description="Document identifier")
-    project_basics: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Project basics")
-    questionnaire: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Questionnaire responses")
+    project_basics: Optional[Dict[str, Any]] = Field(None, description="Project basics")
+    questionnaire: Optional[Dict[str, Any]] = Field(None, description="Questionnaire responses")
+    additional_info: Optional[str] = Field(None, description="Free-text extra context supplied by the applicant")
+    uploaded_files: Optional[List[Dict[str, Any]]] = Field(None, description="Metadata for supporting documents")
     last_modified: Optional[str] = Field(None, description="Last modified timestamp")
     status: Optional[Literal[
         'project_basics',
@@ -37,16 +47,47 @@ class DraftOperationRequest(BaseModel):
         'reviewing',
         'submitted'
     ]] = Field(None, description="Draft status")
+    expected_rev: Optional[int] = Field(None, ge=0, description="Expected current revision; makes the update conditional")
+    last_write_source: Optional[Literal[
+        'autosave',
+        'ai_generated',
+        'ai_regenerated',
+        'manual',
+        'restore',
+        'status_change'
+    ]] = Field(None, description="Attribution for the write, read by the version-writer stream consumer")
+    rev: Optional[int] = Field(None, ge=0, description="Version revision to read, restore or label")
+    label: Optional[str] = Field(None, max_length=120, description="Human label for a saved version")
+    sections_only: Optional[List[str]] = Field(None, description="Restore just these section names")
+    reached_step: Optional[Literal[
+        'projectBasics',
+        'questionnaire',
+        'uploadDocuments',
+        'sectionEditor',
+        'reviewApplication'
+    ]] = Field(None, description="Wizard step the user has now reached; recorded as a high-water mark")
+    limit: Optional[int] = Field(None, ge=1, le=200, description="Max version rows to return")
 
-    @field_validator('session_id')
-    @classmethod
-    def validate_session_id_for_operations(cls, v, info):
-        """Validate session_id is present for operations that require it."""
-        operation = info.data.get('operation')
-        required_operations = ['add_draft', 'get_draft', 'update_draft', 'delete_draft']
-        if operation in required_operations and not v:
-            raise ValueError(f'session_id is required for {operation} operation')
-        return v
+    SESSION_ID_OPERATIONS: ClassVar[frozenset] = frozenset({
+        'add_draft', 'get_draft', 'update_draft', 'delete_draft',
+        'list_draft_versions', 'get_draft_version', 'restore_draft_version',
+        'label_draft_version', 'create_draft_version', 'mark_step_reached',
+    })
+
+    REV_OPERATIONS: ClassVar[frozenset] = frozenset({
+        'get_draft_version', 'restore_draft_version', 'label_draft_version',
+    })
+
+    @model_validator(mode='after')
+    def validate_required_fields_for_operation(self):
+        """Model-level: a field validator is skipped for an omitted value, which failed as a 500."""
+        if self.operation in self.SESSION_ID_OPERATIONS and not self.session_id:
+            raise ValueError(f'session_id is required for {self.operation} operation')
+        if self.operation in self.REV_OPERATIONS and self.rev is None:
+            raise ValueError(f'rev is required for {self.operation} operation')
+        if self.operation == 'mark_step_reached' and not self.reached_step:
+            raise ValueError('reached_step is required for mark_step_reached operation')
+        return self
 
 
 class DraftItem(BaseModel):
@@ -58,7 +99,12 @@ class DraftItem(BaseModel):
     sections: Dict[str, Any] = Field(default_factory=dict)
     project_basics: Dict[str, Any] = Field(default_factory=dict)
     questionnaire: Dict[str, Any] = Field(default_factory=dict)
+    additional_info: Optional[str] = None
+    uploaded_files: List[Dict[str, Any]] = Field(default_factory=list)
     last_modified: str
+    rev: int = 1
+    last_write_source: Optional[str] = None
+    reached_steps: List[str] = Field(default_factory=list)
     status: Literal[
         'project_basics',
         'questionnaire',
@@ -81,6 +127,22 @@ class DraftResponse(BaseModel):
     sections: Optional[Dict[str, Any]] = None
     projectBasics: Optional[Dict[str, Any]] = None
     questionnaire: Optional[Dict[str, Any]] = None
+    additionalInfo: Optional[str] = None
+    uploadedFiles: Optional[List[Dict[str, Any]]] = None
+    rev: Optional[int] = None
+
+
+class DraftVersionMeta(BaseModel):
+    """Metadata row for one draft snapshot. See shared.draft_versions for the
+    meaning of `rev` and `source`."""
+    rev: int
+    created_at: str
+    source: Optional[str] = None
+    label: Optional[str] = None
+    changed_sections: List[str] = Field(default_factory=list)
+    section_word_counts: Dict[str, int] = Field(default_factory=dict)
+    total_word_count: int = 0
+    oversize: bool = False
 
 
 class ChatEntry(BaseModel):
@@ -108,15 +170,15 @@ class SessionOperationRequest(BaseModel):
     title: Optional[str] = Field(None, description="Session title")
     document_identifier: Optional[str] = Field(None, description="Document identifier")
 
-    @field_validator('session_id')
-    @classmethod
-    def validate_session_id_for_operations(cls, v, info):
-        """Validate session_id is present for operations that require it."""
-        operation = info.data.get('operation')
-        required_operations = ['add_session', 'get_session', 'update_session', 'delete_session']
-        if operation in required_operations and not v:
-            raise ValueError(f'session_id is required for {operation} operation')
-        return v
+    SESSION_ID_OPERATIONS: ClassVar[frozenset] = frozenset({
+        'add_session', 'get_session', 'update_session', 'delete_session',
+    })
+
+    @model_validator(mode='after')
+    def validate_required_fields_for_operation(self):
+        if self.operation in self.SESSION_ID_OPERATIONS and not self.session_id:
+            raise ValueError(f'session_id is required for {self.operation} operation')
+        return self
 
 
 class SessionItem(BaseModel):

@@ -11,16 +11,14 @@
   position: relative;
 }
 
+/* Full-bleed without 100vw: 100vw counts the classic scrollbar and scrolls the page sideways. */
 .landing-page::before {
   content: "";
   position: absolute;
   inset: 0;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
   background-color: var(--mk-off-white);
+  box-shadow: 0 0 0 100vmax var(--mk-off-white);
+  clip-path: inset(0 -100vmax);
   z-index: -1;
 }
 
@@ -43,14 +41,11 @@
   background-color: var(--mk-green-deepest);
   color: var(--mk-green-light);
   border-radius: 0;
-  box-shadow: none;
   padding: 56px 0;
-  width: 100vw;
+  width: 100%;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  box-shadow: 0 0 0 100vmax var(--mk-green-deepest);
+  clip-path: inset(0 -100vmax);
 }
 
 .content-box--band .content-box__inner {
@@ -71,9 +66,12 @@
 
 @media (max-width: 720px) {
   .landing-page { padding: 24px 20px 40px; gap: 24px; }
-  .content-box { padding: 24px 20px; border-radius: 14px; }
+  .content-box { padding: 24px 0; }
   .content-box--band { padding: 40px 0; }
   .content-box--band .content-box__inner { padding: 0 20px; }
+  .feedback-form-container { padding: 22px 18px; }
+  .feedback-heading { font-size: 24px; }
+  .feedback-radio-group { gap: 24px; }
 }
 
 /* Header */
@@ -169,6 +167,23 @@
 
 .how-it-works__action-label {
   color: var(--gw-color-primary);
+  font-weight: 600;
+}
+
+.cta-block {
+  width: 100%;
+}
+
+.cta-selected {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--gw-color-text-secondary);
+}
+
+.cta-selected__name {
+  color: var(--mk-green-dark);
   font-weight: 600;
 }
 
@@ -355,61 +370,48 @@
   text-align: center;
 }
 
-/* Admin Section */
-.admin-section {
+/* Info Banner */
+.info-banner {
+  padding: 20px;
+  margin-block-end: 0;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.info-banner__content {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  max-width: 900px;
   align-items: center;
-  gap: 15px;
-  padding: 20px 0;
+  margin: 0 auto;
+  flex-direction: row;
+  gap: 30px;
+  margin-top: 15px;
 }
 
-.admin-section__content {
-  text-align: center;
-  max-width: 700px;
+.info-banner__text-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
-.admin-section__heading {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--gw-color-primary);
-  margin: 0 0 10px 0;
-}
-
-.admin-section__text {
-  font-size: 15px;
-  color: var(--gw-color-text-secondary);
-  line-height: 1.6;
-  margin: 0 0 15px 0;
-}
-
-.admin-section__note {
+.info-banner__learn-more {
+  text-decoration: underline;
   font-size: 14px;
-  font-style: italic;
-  color: var(--gw-color-text-secondary);
-}
-
-.admin-btn {
-  background: var(--gw-color-primary);
-  color: var(--gw-color-white);
-  border: none;
-  border-radius: 20px;
-  padding: 12px 28px;
-  font-size: 16px;
-  font-weight: 500;
+  margin-top: 8px;
+  display: inline-block;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s, outline 0.2s;
-  min-width: 200px;
 }
 
-.admin-btn:hover {
-  background-color: var(--gw-color-primary-hover);
-}
-
-.admin-btn:focus-visible {
+.info-banner__learn-more:focus-visible {
   outline: 2px solid var(--gw-color-focus-light);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(35, 119, 108, 0.2);
 }
 
 /* Feedback Form */
@@ -665,6 +667,16 @@
   font-style: italic;
 }
 
+.feedback-warning {
+  font-size: 14px;
+  color: var(--gw-color-warning-text);
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  background-color: rgba(246, 182, 34, 0.12);
+  border-left: 3px solid var(--gw-color-warning);
+  border-radius: 6px;
+}
+
 .feedback-error-container {
   margin-bottom: 12px;
 }
@@ -780,6 +792,13 @@
   letter-spacing: 0.5px;
   transform: rotate(180deg);
   display: inline-block;
+}
+
+/* Must stay after the rules above: at equal specificity the later rule wins. */
+@media (max-width: 720px) {
+  .feedback-tab {
+    display: none;
+  }
 }
 
 /* Grants table section */

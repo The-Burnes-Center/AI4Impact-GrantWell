@@ -7,6 +7,7 @@ import type {
 } from "../../../common/types/processing-review";
 import ProcessingMetrics from "./ProcessingMetrics";
 import ReviewExpandedRow from "./ReviewExpandedRow";
+import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 
 interface ProcessingReviewTabProps {
   apiClient: ApiClient;
@@ -292,6 +293,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       )}
 
+      <TableScrollRegion label="Processing reviews table" minWidth={820}>
       <div className="table-container">
         <div role="table" aria-label="Processing reviews">
           <div className="table-header review-table-grid-select" role="rowgroup">
@@ -395,6 +397,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           </div>
         )}
       </div>
+      </TableScrollRegion>
     </div>
   );
 };

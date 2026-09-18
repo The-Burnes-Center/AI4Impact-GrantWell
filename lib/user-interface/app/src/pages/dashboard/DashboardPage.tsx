@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useId, useMemo, useRef } from "react";
-import { useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useNotifications } from "../../components/notifications/NotificationManager";
@@ -417,9 +417,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
-        <UnifiedNavigation />
-      </nav>
+      <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs
           items={[
@@ -654,7 +652,7 @@ const Dashboard: React.FC = () => {
                       <input id="grant-search" type="text" className="search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
 
-                    <div className="filter-container">
+                    <div className="filter-container" onBlur={handleFilterFocusOut}>
                       <button ref={filterButtonRef} className={`filter-button ${filterCount > 0 ? "active" : ""}`}
                         onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label="Filter grants" aria-expanded={filterMenuOpen} aria-haspopup="menu">
                         <LuFilter size={18} />

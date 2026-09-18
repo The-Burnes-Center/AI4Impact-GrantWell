@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import Sessions from "../../../components/chat/SessionList";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router";
 import { useApiClient } from "../../../hooks/use-api-client";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
 import UnifiedNavigation from "../../../components/navigation/UnifiedNavigation";
 import Breadcrumbs from "../../../components/common/Breadcrumbs";
@@ -21,7 +21,7 @@ export default function SessionPage() {
     const fetchLatestSession = async () => {
       setIsLoading(true);
       try {
-        const username = await Auth.currentAuthenticatedUser().then(
+        const username = await getCurrentUser().then(
           (value) => value.username
         );
 
@@ -75,9 +75,7 @@ export default function SessionPage() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
-        <UnifiedNavigation />
-      </nav>
+      <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs
           items={[

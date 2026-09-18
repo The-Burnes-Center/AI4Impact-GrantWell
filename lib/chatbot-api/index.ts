@@ -70,6 +70,7 @@ export class ChatBotApi extends Construct {
       wsApiEndpoint: websocketBackend.wsAPIStage.url,
       sessionTable: tables.historyTable,
       draftTable: tables.draftTable,
+      draftVersionTable: tables.draftVersionTable,
       nofoMetadataTable: tables.nofoMetadataTable,
       nofoProcessingReviewTable: tables.nofoProcessingReviewTable,
       draftGenerationJobsTable: tables.draftGenerationJobsTable,
@@ -376,7 +377,9 @@ export class ChatBotApi extends Construct {
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
       },
       timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
-      logRetention: logs.RetentionDays.THREE_MONTHS,
+      logGroup: new logs.LogGroup(this, "DraftGeneratorAPIFunctionLogGroup", {
+        retention: logs.RetentionDays.THREE_MONTHS,
+      }),
     });
 
     // Grant permission to start Step Functions execution
@@ -408,11 +411,15 @@ export class ChatBotApi extends Construct {
       handler: "index.handler",
       environment: {
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
+        EXPORTS_BUCKET: lambdaFunctions.applicationExportsBucket.bucketName,
       },
       timeout: cdk.Duration.seconds(10),
-      logRetention: logs.RetentionDays.THREE_MONTHS,
+      logGroup: new logs.LogGroup(this, "DraftJobStatusFunctionLogGroup", {
+        retention: logs.RetentionDays.THREE_MONTHS,
+      }),
     });
     tables.draftGenerationJobsTable.grantReadData(draftJobStatusFunction);
+    lambdaFunctions.applicationExportsBucket.grantRead(draftJobStatusFunction);
     
     const draftJobStatusAPIIntegration = new HttpLambdaIntegration(
       "DraftJobStatusAPIIntegration",
@@ -550,6 +557,12 @@ export class ChatBotApi extends Construct {
     );
     restBackend.restAPI.addRoutes({
       path: "/user-profile",
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT],
+      integration: userProfileIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/user-profile/recently-viewed",
       methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT],
       integration: userProfileIntegration,
       authorizer: httpAuthorizer,

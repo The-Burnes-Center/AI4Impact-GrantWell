@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useParams } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
-import { Auth } from "aws-amplify";
+import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
 import { statusToStep } from "../../common/helpers/document-editor-utils";
 import DocEditorSessions from "../../components/document-editor/DocEditorSessions";
@@ -23,7 +23,7 @@ export default function DocEditorSessionsPage() {
   useEffect(() => {
     const fetchLatestDraft = async () => {
       try {
-        const username = await Auth.currentAuthenticatedUser().then(
+        const username = await getCurrentUser().then(
           (value) => value.username
         );
 
@@ -54,7 +54,7 @@ export default function DocEditorSessionsPage() {
   const handleDraftSelect = async (draftId: string) => {
     setLatestDraftId(draftId);
     try {
-      const username = await Auth.currentAuthenticatedUser().then(
+      const username = await getCurrentUser().then(
         (value) => value.username
       );
 
@@ -83,16 +83,12 @@ export default function DocEditorSessionsPage() {
 
   const breadcrumbItems = [
     { label: "Home", onClick: () => navigate("/") },
-    { label: "Drafts" },
+    { label: "Applications" },
   ];
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
-        <UnifiedNavigation
-          documentIdentifier={docId || undefined}
-        />
-      </nav>
+      <UnifiedNavigation documentIdentifier={docId || undefined} />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs items={breadcrumbItems} />
 

@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface SearchDocument {
   label: string;
   value: string;
@@ -19,6 +17,4 @@ export interface IntegratedSearchBarProps {
   onSearchPendingChange?: (isPending: boolean) => void;
   searchPlaceholder?: string;
   searchAriaLabel?: string;
-  /** When true on next search-term change, update the bar text without firing a search. Resets itself. */
-  suppressSearchRef?: React.MutableRefObject<boolean>;
 }

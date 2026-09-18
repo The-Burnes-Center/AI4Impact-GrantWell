@@ -25,6 +25,8 @@ export default defineConfig({
     "__ENVIRONMENT__": JSON.stringify(process.env.ENVIRONMENT),
     // Build-time instance id — informational (the actual module is chosen by the resolve alias).
     "__GRANTWELL_INSTANCE__": JSON.stringify(instance),
+    // Turnstile site key is public by design (it ships in the page); only the secret key is secret.
+    "__TURNSTILE_SITE_KEY__": JSON.stringify(process.env.TURNSTILE_SITE_KEY || ""),
   },
   resolve: {
     alias: {
@@ -79,6 +81,49 @@ export default defineConfig({
     },
     react(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (!id.includes("node_modules")) return;
+          const rest = id.split("node_modules/").pop() as string;
+          const parts = rest.split("/");
+          const name = rest.startsWith("@")
+            ? `${parts[0]}/${parts[1]}`
+            : parts[0];
+
+          if (
+            /^(react|react-dom|scheduler|react-router|cookie|set-cookie-parser)$/.test(
+              name
+            )
+          ) {
+            return "vendor-react";
+          }
+
+          if (
+            name === "aws-amplify" ||
+            name.startsWith("@aws-amplify/") ||
+            name.startsWith("@aws-sdk/") ||
+            name.startsWith("@smithy/") ||
+            name.startsWith("@aws-crypto/")
+          ) {
+            return "vendor-aws";
+          }
+
+          if (
+            /^(micromark|mdast|hast|unist|remark|rehype)/.test(name) ||
+            /^(react-markdown|unified|vfile|property-information|character-entities|decode-named-character-reference|markdown-table|longest-streak|zwitch|trim-lines|html-void-elements|stringify-entities|space-separated-tokens|comma-separated-tokens|ccount|devlop|trough|bail)/.test(
+              name
+            )
+          ) {
+            return "vendor-markdown";
+          }
+
+          if (name === "luxon") return "vendor-luxon";
+        },
+      },
+    },
+  },
   server: {
     port: 3000,
   },

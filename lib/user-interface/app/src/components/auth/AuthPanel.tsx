@@ -2,14 +2,28 @@ import type { FormEvent } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useBranding } from "../../common/branding";
-import { Auth } from "aws-amplify";
+import {
+  confirmResetPassword,
+  confirmSignIn,
+  confirmSignUp,
+  resendSignUpCode,
+  resetPassword,
+  signIn,
+  signOut,
+  signUp,
+  updateMFAPreference,
+} from "aws-amplify/auth";
+import type { SignInOutput } from "aws-amplify/auth";
 import SignInStep from "./steps/SignInStep";
 import ForgotPasswordStep from "./steps/ForgotPasswordStep";
 import ResetPasswordStep from "./steps/ResetPasswordStep";
 import NewPasswordStep from "./steps/NewPasswordStep";
 import SignUpStep from "./steps/SignUpStep";
 import VerifySignUpStep from "./steps/VerifySignUpStep";
-import { AuthChallengeUser, AuthView } from "./auth-types";
+import MfaChallengeStep from "./steps/MfaChallengeStep";
+import MfaSetupStep from "./steps/MfaSetupStep";
+import TurnstileWidget from "./TurnstileWidget";
+import { AuthView } from "./auth-types";
 import type { AuthErrorContext } from "./auth-utils";
 import {
   getAuthErrorCode,
@@ -20,11 +34,13 @@ import {
   getResetPasswordValidationError,
   getSignInValidationError,
   getSignUpValidationError,
+  getTurnstileValidationError,
   getUnsupportedChallengeMessage,
   getVerificationCodeValidationError,
   getVerifySignUpValidationError,
   mapAuthError,
   normalizeEmail,
+  turnstileClientMetadata,
 } from "./auth-utils";
 import "../../styles/auth-panel.css";
 
@@ -57,6 +73,7 @@ function authErrorFields(
       return ["email"];
     case "CodeMismatchException":
     case "ExpiredCodeException":
+    case "EnableSoftwareTokenMFAException":
       return ["verificationCode"];
     case "InvalidPasswordException":
       return context === "reset-password" || context === "new-password"
@@ -87,6 +104,22 @@ function resetPasswordValidationFields(
   }
   if (getPasswordValidationError(newPassword)) return ["newPassword"];
   return [];
+}
+
+async function signInFresh(
+  username: string,
+  password: string,
+  clientMetadata?: Record<string, string>,
+) {
+  try {
+    return await signIn({ username, password, options: { clientMetadata } });
+  } catch (error) {
+    if ((error as { name?: string })?.name === "UserAlreadyAuthenticatedException") {
+      await signOut();
+      return await signIn({ username, password, options: { clientMetadata } });
+    }
+    throw error;
+  }
 }
 
 const PENDING_STATE_KEY = "grantwell.pendingSignupState";
@@ -132,16 +165,29 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
   const [verificationCode, setVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [signupState, setSignupState] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errorFields, setErrorFields] = useState<AuthErrorField[]>([]);
   const [success, setSuccess] = useState<string | null>(null);
-  const [challengeUser, setChallengeUser] = useState<AuthChallengeUser | null>(null);
+  const [newPasswordPending, setNewPasswordPending] = useState(false);
+  const [totpSetup, setTotpSetup] = useState<{ uri: string; secret: string } | null>(
+    null,
+  );
 
   const errorId = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   const normalizedEmail = useMemo(() => normalizeEmail(email), [email]);
+
+  // Every Turnstile token is single-use, so a widget that produced one must be reset before the
+  // same form can be submitted again.
+  const consumeTurnstileToken = () => {
+    setTurnstileToken("");
+    setTurnstileResetKey((key) => key + 1);
+  };
+
   const passwordRequirements = useMemo(
     () => getPasswordRequirements(password),
     [password],
@@ -185,6 +231,16 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
           title: "Set new password",
           subtitle: "Create a permanent password to continue into GrantWell.",
         };
+      case "mfa-challenge":
+        return {
+          title: "Two-step verification",
+          subtitle: "Enter the code from your authenticator app.",
+        };
+      case "mfa-setup":
+        return {
+          title: "Set up two-step verification",
+          subtitle: "Register an authenticator app to finish signing in.",
+        };
       default:
         return {
           title: "Sign in",
@@ -215,7 +271,8 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     setConfirmPassword("");
     setNewPassword("");
     setVerificationCode("");
-    setChallengeUser(null);
+    setNewPasswordPending(false);
+    setTotpSetup(null);
     setShowPassword(false);
   };
 
@@ -234,11 +291,53 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     setView("sign-up");
   };
 
+  const applySignInStep = (nextStep: SignInOutput["nextStep"]) => {
+    switch (nextStep.signInStep) {
+      case "DONE":
+        onAuthenticated();
+        return;
+      case "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED":
+        setNewPasswordPending(true);
+        setNewPassword("");
+        setView("new-password-required");
+        return;
+      case "CONFIRM_SIGN_UP":
+        setVerificationCode("");
+        setView("verify-sign-up");
+        setStepError(
+          "Your account is not verified yet. Enter your verification code to continue.",
+        );
+        return;
+      case "RESET_PASSWORD":
+        setView("forgot-password");
+        setStepError("You need to reset your password before signing in.");
+        return;
+      case "CONFIRM_SIGN_IN_WITH_TOTP_CODE":
+        setVerificationCode("");
+        setView("mfa-challenge");
+        return;
+      case "CONTINUE_SIGN_IN_WITH_TOTP_SETUP":
+        setVerificationCode("");
+        setTotpSetup({
+          uri: nextStep.totpSetupDetails
+            .getSetupUri(branding.appName, normalizedEmail)
+            .toString(),
+          secret: nextStep.totpSetupDetails.sharedSecret,
+        });
+        setView("mfa-setup");
+        return;
+      default:
+        setStepError(getUnsupportedChallengeMessage(nextStep.signInStep));
+    }
+  };
+
   const handleSignIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (loading) return;
 
-    const validationError = getSignInValidationError(email, password);
+    const validationError =
+      getSignInValidationError(email, password) ??
+      getTurnstileValidationError(turnstileToken);
     if (validationError) {
       setStepError(validationError, [
         getEmailValidationError(email) ? "email" : "password",
@@ -251,26 +350,15 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      const user = (await Auth.signIn(
+      const { nextStep } = await signInFresh(
         normalizedEmail,
         password,
-      )) as AuthChallengeUser | undefined;
-
-      const challengeName = user?.challengeName;
-      if (challengeName === "NEW_PASSWORD_REQUIRED") {
-        setChallengeUser(user ?? null);
-        setNewPassword("");
-        setView("new-password-required");
-        return;
-      }
-
-      if (challengeName) {
-        setStepError(getUnsupportedChallengeMessage(challengeName));
-        return;
-      }
-
-      onAuthenticated();
+        turnstileClientMetadata(turnstileToken),
+      );
+      consumeTurnstileToken();
+      applySignInStep(nextStep);
     } catch (authError) {
+      consumeTurnstileToken();
       const code = getAuthErrorCode(authError);
       if (code === "UserNotConfirmedException") {
         setView("verify-sign-up");
@@ -299,7 +387,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.forgotPassword(normalizedEmail);
+      await resetPassword({ username: normalizedEmail });
       setVerificationCode("");
       setNewPassword("");
       setSuccess("Check your email for a verification code to reset your password.");
@@ -336,14 +424,16 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.forgotPasswordSubmit(
-        normalizedEmail,
-        verificationCode.trim(),
+      await confirmResetPassword({
+        username: normalizedEmail,
+        confirmationCode: verificationCode.trim(),
         newPassword,
-      );
+      });
       setNewPassword("");
       setVerificationCode("");
-      switchToSignIn("Password reset successful. Sign in with your new password.");
+      switchToSignIn(
+        "Password reset successful. Any other devices signed in to this account have been signed out. Sign in with your new password.",
+      );
     } catch (authError) {
       setStepError(
         mapAuthError(authError, "reset-password"),
@@ -358,7 +448,9 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     event.preventDefault();
     if (loading) return;
 
-    const validationError = getSignUpValidationError(email, password, confirmPassword);
+    const validationError =
+      getSignUpValidationError(email, password, confirmPassword) ??
+      getTurnstileValidationError(turnstileToken);
     if (validationError) {
       setStepError(validationError, signUpValidationFields(email, password));
       setSuccess(null);
@@ -369,19 +461,24 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.signUp({
+      await signUp({
         username: normalizedEmail,
         password,
-        attributes: {
-          email: normalizedEmail,
+        options: {
+          userAttributes: { email: normalizedEmail },
+          clientMetadata: {
+            ...(signupState ? { state: signupState } : {}),
+            ...turnstileClientMetadata(turnstileToken),
+          },
         },
-        clientMetadata: signupState ? { state: signupState } : undefined,
       });
+      consumeTurnstileToken();
       writePendingSignupState(normalizedEmail, signupState);
       setVerificationCode("");
       setSuccess("Verification code sent. Enter it below to finish creating your account.");
       setView("verify-sign-up");
     } catch (authError) {
+      consumeTurnstileToken();
       setStepError(
         mapAuthError(authError, "sign-up"),
         authErrorFields(getAuthErrorCode(authError), "sign-up"),
@@ -395,7 +492,11 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     event.preventDefault();
     if (loading) return;
 
-    const validationError = getVerifySignUpValidationError(email, verificationCode);
+    // The token here is for the auto sign-in below, not for confirmSignUp itself — so it is only
+    // required when a password is still in hand to sign in with.
+    const validationError =
+      getVerifySignUpValidationError(email, verificationCode) ??
+      (password ? getTurnstileValidationError(turnstileToken) : null);
     if (validationError) {
       setStepError(
         validationError,
@@ -410,8 +511,12 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
     try {
       const pendingState = signupState || readPendingSignupState(normalizedEmail);
-      await Auth.confirmSignUp(normalizedEmail, verificationCode.trim(), {
-        clientMetadata: pendingState ? { state: pendingState } : undefined,
+      await confirmSignUp({
+        username: normalizedEmail,
+        confirmationCode: verificationCode.trim(),
+        options: {
+          clientMetadata: pendingState ? { state: pendingState } : undefined,
+        },
       });
       clearPendingSignupState();
 
@@ -420,25 +525,15 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
         return;
       }
 
-      const user = (await Auth.signIn(
+      const { nextStep } = await signInFresh(
         normalizedEmail,
         password,
-      )) as AuthChallengeUser | undefined;
-
-      if (user?.challengeName) {
-        if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-          setChallengeUser(user);
-          setNewPassword("");
-          setView("new-password-required");
-          return;
-        }
-
-        switchToSignIn("Email verified. Sign in to continue.");
-        return;
-      }
-
-      onAuthenticated();
+        turnstileClientMetadata(turnstileToken),
+      );
+      consumeTurnstileToken();
+      applySignInStep(nextStep);
     } catch (authError) {
+      consumeTurnstileToken();
       setStepError(
         mapAuthError(authError, "verify-sign-up"),
         authErrorFields(getAuthErrorCode(authError), "verify-sign-up"),
@@ -462,7 +557,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.resendSignUp(normalizedEmail);
+      await resendSignUpCode({ username: normalizedEmail });
       setSuccess("Verification code resent. Check your email for the latest code.");
     } catch (authError) {
       setStepError(
@@ -473,6 +568,62 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       setLoading(false);
     }
   };
+
+  const submitChallengeCode = async (
+    event: FormEvent<HTMLFormElement>,
+    context: AuthErrorContext,
+  ) => {
+    event.preventDefault();
+    if (loading) return;
+
+    const validationError = getVerificationCodeValidationError(verificationCode);
+    if (validationError) {
+      setStepError(validationError, ["verificationCode"]);
+      setSuccess(null);
+      return;
+    }
+
+    setLoading(true);
+    clearMessages();
+
+    try {
+      const { nextStep } = await confirmSignIn({
+        challengeResponse: verificationCode.trim(),
+      });
+      setVerificationCode("");
+      if (context === "mfa-setup" && nextStep.signInStep === "DONE") {
+        // Verifying the token does not add it to the user's MFA settings, so without this
+        // Cognito asks them to enroll again at every sign in.
+        try {
+          await updateMFAPreference({ totp: "PREFERRED" });
+        } catch (preferenceError) {
+          console.error("Could not set TOTP as the MFA preference", preferenceError);
+        }
+      }
+      applySignInStep(nextStep);
+    } catch (authError) {
+      const code = getAuthErrorCode(authError);
+      if (code === "SignInException") {
+        switchToSignIn(mapAuthError(authError, context));
+        return;
+      }
+      if (code === "CodeMismatchException" || code === "EnableSoftwareTokenMFAException") {
+        setVerificationCode("");
+      }
+      setStepError(
+        mapAuthError(authError, context),
+        authErrorFields(code, context),
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMfaChallenge = (event: FormEvent<HTMLFormElement>) =>
+    submitChallengeCode(event, "mfa");
+
+  const handleMfaSetup = (event: FormEvent<HTMLFormElement>) =>
+    submitChallengeCode(event, "mfa-setup");
 
   const handleNewPasswordRequired = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -485,7 +636,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       return;
     }
 
-    if (!challengeUser) {
+    if (!newPasswordPending) {
       switchToSignIn("Your password setup session expired. Sign in again to continue.");
       return;
     }
@@ -494,8 +645,9 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     clearMessages();
 
     try {
-      await Auth.completeNewPassword(challengeUser, newPassword);
-      onAuthenticated();
+      const { nextStep } = await confirmSignIn({ challengeResponse: newPassword });
+      setNewPasswordPending(false);
+      applySignInStep(nextStep);
     } catch (authError) {
       setStepError(
         mapAuthError(authError, "new-password"),
@@ -505,6 +657,14 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       setLoading(false);
     }
   };
+
+  const turnstileSlot = (action: string) => (
+    <TurnstileWidget
+      action={action}
+      onToken={setTurnstileToken}
+      resetKey={turnstileResetKey}
+    />
+  );
 
   const renderStep = () => {
     switch (view) {
@@ -525,6 +685,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             onStateChange={setSignupState}
             onSubmit={handleSignUp}
             onSwitchToSignIn={() => switchToSignIn()}
+            turnstile={turnstileSlot("sign-up")}
             emailErrorId={fieldErrorId("email")}
             passwordErrorId={fieldErrorId("password")}
             confirmPasswordErrorId={fieldErrorId("confirmPassword")}
@@ -569,6 +730,31 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             onResendCode={handleResendSignUpCode}
             onBackToSignUp={switchToSignUp}
             verificationCodeErrorId={fieldErrorId("verificationCode")}
+            turnstile={password ? turnstileSlot("verify-sign-up") : null}
+          />
+        );
+      case "mfa-challenge":
+        return (
+          <MfaChallengeStep
+            verificationCode={verificationCode}
+            loading={loading}
+            onVerificationCodeChange={setVerificationCode}
+            onSubmit={handleMfaChallenge}
+            onCancel={() => switchToSignIn()}
+            verificationCodeErrorId={fieldErrorId("verificationCode")}
+          />
+        );
+      case "mfa-setup":
+        return (
+          <MfaSetupStep
+            setupUri={totpSetup?.uri ?? ""}
+            secret={totpSetup?.secret ?? ""}
+            verificationCode={verificationCode}
+            loading={loading}
+            onVerificationCodeChange={setVerificationCode}
+            onSubmit={handleMfaSetup}
+            onCancel={() => switchToSignIn()}
+            verificationCodeErrorId={fieldErrorId("verificationCode")}
           />
         );
       case "new-password-required":
@@ -604,6 +790,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             }}
             onSubmit={handleSignIn}
             onSwitchToSignUp={switchToSignUp}
+            turnstile={turnstileSlot("sign-in")}
             emailErrorId={fieldErrorId("email")}
             passwordErrorId={fieldErrorId("password")}
           />

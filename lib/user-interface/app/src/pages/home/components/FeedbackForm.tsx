@@ -7,6 +7,14 @@ const GOOGLE_FORM_ACTION =
 const GOOGLE_FORM_FIELD_FOUND = "entry.1768889284";
 const GOOGLE_FORM_FIELD_COMMENT = "entry.1810624973";
 
+const looksLikeContactInfo = (text: string): boolean => {
+  if (/[^\s@]+@[^\s@]+\.[a-z]{2,}/i.test(text)) return true;
+  return (text.match(/\+?\d[\d ().-]{7,}\d/g) ?? []).some((run) => {
+    const digits = run.replace(/\D/g, "").length;
+    return digits >= 10 && digits <= 15;
+  });
+};
+
 const FeedbackForm = React.memo(function FeedbackForm() {
   const [selectedOption, setSelectedOption] = useState<"yes" | "no" | null>(
     null
@@ -16,9 +24,11 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
+  const [showContactWarning, setShowContactWarning] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const infoButtonRef = useRef<HTMLButtonElement>(null);
   const errorId = useId();
+  const warningId = useId();
 
   useEffect(() => {
     if (selectedOption && textareaRef.current) {
@@ -30,6 +40,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
     setSelectedOption(option);
     setFeedbackText("");
     setFeedbackError(null);
+    setShowContactWarning(false);
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -37,6 +48,10 @@ const FeedbackForm = React.memo(function FeedbackForm() {
     if (value.length <= MAX_CHARS) {
       setFeedbackText(value);
     }
+  };
+
+  const handleTextBlur = () => {
+    setShowContactWarning(looksLikeContactInfo(feedbackText));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -73,6 +88,13 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   };
 
   const charsRemaining = MAX_CHARS - feedbackText.length;
+  const textareaDescribedBy = [
+    feedbackError ? errorId : null,
+    showContactWarning ? warningId : null,
+    "feedback-char-count",
+  ]
+    .filter(Boolean)
+    .join(" ");
   const textInvalid =
     feedbackError !== null &&
     selectedOption === "no" &&
@@ -217,12 +239,9 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                   maxLength={MAX_CHARS}
                   value={feedbackText}
                   onChange={handleTextChange}
+                  onBlur={handleTextBlur}
                   rows={5}
-                  aria-describedby={
-                    feedbackError
-                      ? `${errorId} feedback-char-count`
-                      : "feedback-char-count"
-                  }
+                  aria-describedby={textareaDescribedBy}
                   aria-required={selectedOption === "no" ? "true" : "false"}
                   aria-invalid={textInvalid ? true : undefined}
                 />
@@ -231,6 +250,16 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                 <span id="feedback-char-count" className="feedback-char-count">
                   {charsRemaining}/{MAX_CHARS}
                 </span>
+              </div>
+
+              <div role="status" aria-live="polite">
+                {showContactWarning && (
+                  <p id={warningId} className="feedback-warning">
+                    This looks like it contains an email address or phone number. You
+                    can still send your feedback &mdash; we just can&rsquo;t reply to
+                    it, so please remove personal contact details if you can.
+                  </p>
+                )}
               </div>
 
               <p className="feedback-attribution">

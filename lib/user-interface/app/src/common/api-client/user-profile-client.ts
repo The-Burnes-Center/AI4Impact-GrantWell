@@ -14,6 +14,12 @@ export type UserProfileInput = Pick<
   "agency" | "organization" | "jobTitle"
 >;
 
+export interface RecentlyViewedItem {
+  label: string;
+  value: string;
+  lastViewed: string;
+}
+
 export class UserProfileClient {
   private readonly API: string;
 
@@ -48,5 +54,36 @@ export class UserProfileClient {
       throw new Error(message || `Error: ${response.status}`);
     }
     return response.json();
+  }
+
+  async getRecentlyViewed(): Promise<RecentlyViewedItem[]> {
+    const token = await Utils.authenticate();
+    const response = await fetch(`${this.API}/user-profile/recently-viewed`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", Authorization: token },
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const body = (await response.json()) as { items?: RecentlyViewedItem[] };
+    return body.items ?? [];
+  }
+
+  /** `replace` overwrites what other devices recorded; correct only when pruning. */
+  async putRecentlyViewed(
+    items: RecentlyViewedItem[],
+    mode: "merge" | "replace" = "merge"
+  ): Promise<RecentlyViewedItem[]> {
+    const token = await Utils.authenticate();
+    const response = await fetch(`${this.API}/user-profile/recently-viewed`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: token },
+      body: JSON.stringify({ items, mode }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const body = (await response.json()) as { items?: RecentlyViewedItem[] };
+    return body.items ?? [];
   }
 }

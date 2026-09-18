@@ -1,5 +1,10 @@
 import React from "react";
 
+import {
+  MAX_RECENTLY_VIEWED,
+  formatLastViewed,
+} from "../../../common/helpers/recently-viewed-nofos";
+
 interface RecentNOFO {
   label: string;
   value: string;
@@ -21,7 +26,7 @@ const HistoryPanel = React.memo(function HistoryPanel({
       Recently viewed funding calls (NOFOs)
     </h2>
     {recentlyViewedNOFOs.length > 0 ? (
-      recentlyViewedNOFOs.slice(0, 6).map((nofo, index) => (
+      recentlyViewedNOFOs.slice(0, MAX_RECENTLY_VIEWED).map((nofo, index) => (
         <button
           key={index}
           className="history-card"
@@ -35,7 +40,7 @@ const HistoryPanel = React.memo(function HistoryPanel({
         >
           <span className="history-card__name">{nofo.label}</span>
           <div className="history-card__date">
-            <span>Last viewed: {nofo.lastViewed}</span>
+            <span>Last viewed: {formatLastViewed(nofo.lastViewed)}</span>
           </div>
         </button>
       ))

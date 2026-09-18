@@ -1,0 +1,21 @@
+// Selective Bootstrap build: only the component layers this app actually renders.
+//
+// Deliberately omits `reboot` and `grid` — app.scss ships its own reset (`* { box-sizing }`,
+// body font/background) and dashboard.css resets html/body margin; the app uses zero grid
+// classes. Also omits the utilities API: the seven utility classes in use are self-hosted
+// in utilities.css so the whole utilities layer need not ship.
+//
+// `variables-dark` and `maps` are not optional here — `root` reads $theme-colors-rgb and the
+// -subtle/-emphasis maps they define.
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/spinners";

@@ -65,11 +65,27 @@
 }
 
 /* Table Container */
+.landing-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+
+.landing-table-scroll:focus-visible {
+  outline: 3px solid var(--gw-color-primary, #23776C);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
 .landing-table-container {
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.landing-table-container:has(.landing-table-row) {
+  min-width: 720px;
 }
 
 .landing-table-header {
@@ -423,6 +439,16 @@
   color: #fff;
 }
 
+/* SearchInput provides a labelled clear button; Blink/WebKit add a second unlabelled X. */
+.gw-search-input::-webkit-search-cancel-button,
+.gw-search-input::-webkit-search-decoration,
+.gw-search-input::-webkit-search-results-button,
+.gw-search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
 /* Search Tip */
 .search-tip {
   margin: 8px 4px 0;
@@ -650,27 +676,6 @@
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
-  .landing-table-header,
-  .landing-table-row {
-    grid-template-columns: 2fr 1.5fr 1fr;
-  }
-
-  .landing-header-cell-wrapper:nth-child(4),
-  .landing-header-cell-wrapper:nth-child(5),
-  .landing-row-cell:nth-child(4),
-  .landing-row-cell:nth-child(5) {
-    display: none;
-  }
-
-  .skeleton-row {
-    grid-template-columns: 2fr 1.5fr 1fr;
-  }
-
-  .skeleton-cell:nth-child(4),
-  .skeleton-cell:nth-child(5) {
-    display: none;
-  }
-
   .landing-table-pagination {
     flex-direction: column;
     align-items: stretch;

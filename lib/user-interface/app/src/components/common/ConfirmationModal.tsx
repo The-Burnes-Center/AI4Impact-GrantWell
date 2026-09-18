@@ -7,6 +7,8 @@ interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  /** Cancel action when declining differs from dismissing. Defaults to onClose. */
+  onCancel?: () => void;
   title: string;
   message: React.ReactNode;
   /** Extra emphasis rendered under the message, e.g. "This cannot be undone." */
@@ -25,6 +27,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
+  onCancel,
   title,
   message,
   warning,
@@ -44,7 +47,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <div className="modal-actions">
           <button
             className="modal-button secondary"
-            onClick={onClose}
+            onClick={onCancel ?? onClose}
             disabled={confirming}
             aria-label={cancelLabel}
           >

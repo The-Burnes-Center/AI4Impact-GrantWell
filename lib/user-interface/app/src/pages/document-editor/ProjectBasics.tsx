@@ -1,30 +1,30 @@
 /**
- * ProjectBasics Component
- * 
- * Form for collecting basic project information including project name,
- * organization details, funding request, and contact information.
- * 
- * Features:
- * - Real-time validation with accessible error messages
- * - Auto-save with debouncing
- * - LocalStorage fallback for data persistence
- * - WCAG 2.1 compliant form controls
+ * Form for collecting basic project information: project name, organization
+ * details, funding request, and contact information. Saving is owned by the
+ * parent's useDraftSave; this component only reports changes.
  */
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Card from "../../components/ui/Card";
-import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import AutoSaveIndicator, { type SaveStatus } from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import FormErrorSummary from "../../components/ui/FormErrorSummary";
 
 // Stable so handleContinue can re-focus the summary on a repeat submit.
 const PROJECT_BASICS_ERROR_SUMMARY_ID = "project-basics-error-summary";
 import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
+import { readDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DocumentData } from "../../common/types/document";
+
+const AUTOSAVE_IDLE_BEFORE_FIRST_SAVE = "Changes save automatically";
+const AUTOSAVE_IDLE_AFTER_FIRST_SAVE = "Saved";
 
 interface ProjectBasicsProps {
   onContinue: () => void;
   documentData?: DocumentData | null;
   onUpdateData?: (data: Partial<DocumentData>) => void;
+  saveStatus?: SaveStatus;
+  lastSavedAt?: string | null;
+  onRetrySave?: () => void;
 }
 
 interface ProjectBasicsFormData {
@@ -183,8 +183,15 @@ InputField.displayName = 'InputField';
 const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   onContinue,
   documentData,
-  onUpdateData
+  onUpdateData,
+  saveStatus = "idle",
+  lastSavedAt,
+  onRetrySave,
 }) => {
+  const autoSaveIdleText = lastSavedAt
+    ? AUTOSAVE_IDLE_AFTER_FIRST_SAVE
+    : AUTOSAVE_IDLE_BEFORE_FIRST_SAVE;
+
   const [formData, setFormData] = useState<ProjectBasicsFormData>({
     projectName: "",
     organizationName: "",
@@ -197,50 +204,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const isInitialLoad = useRef(true);
   const hasLoadedFromDocumentData = useRef(false);
 
-  // Auto-save debounce refs
-  const autoSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Auto-save function (debounced)
   const autoSave = useCallback((data: ProjectBasicsFormData) => {
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current);
-    }
-
-    setSaveStatus('saving');
-
-    autoSaveTimeoutRef.current = setTimeout(async () => {
-      try {
-        localStorage.setItem('projectBasics', JSON.stringify(data));
-        
-        if (onUpdateData) {
-          try {
-            await onUpdateData({ projectBasics: data });
-          } catch (error) {
-            console.error('Database save failed, but localStorage updated:', error);
-          }
-        }
-        
-        setSaveStatus('saved');
-        
-        if (saveStatusTimeoutRef.current) {
-          clearTimeout(saveStatusTimeoutRef.current);
-        }
-        saveStatusTimeoutRef.current = setTimeout(() => {
-          setSaveStatus('idle');
-        }, 2000);
-      } catch (error) {
-        console.error('Auto-save failed:', error);
-        setSaveStatus('idle');
-      }
-    }, 1000);
+    onUpdateData?.({ projectBasics: data });
   }, [onUpdateData]);
 
-  // Load existing data
   useEffect(() => {
     if (documentData?.projectBasics && !hasLoadedFromDocumentData.current) {
       setFormData({
@@ -255,45 +225,22 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       hasLoadedFromDocumentData.current = true;
       isInitialLoad.current = false;
     } else if (isInitialLoad.current && !documentData?.projectBasics && !hasLoadedFromDocumentData.current) {
-      try {
-        const savedData = localStorage.getItem('projectBasics');
-        if (savedData) {
-          const parsedData = JSON.parse(savedData);
-          const hasData = parsedData.projectName || parsedData.organizationName || 
-                         parsedData.requestedAmount || parsedData.location || 
-                         parsedData.zipCode || parsedData.contactName || 
-                         parsedData.contactEmail;
-          
-          if (hasData) {
-            setFormData({
-              projectName: parsedData.projectName || "",
-              organizationName: parsedData.organizationName || "",
-              requestedAmount: parsedData.requestedAmount || "",
-              location: parsedData.location || "",
-              zipCode: parsedData.zipCode || "",
-              contactName: parsedData.contactName || "",
-              contactEmail: parsedData.contactEmail || "",
-            });
-            if (onUpdateData) {
-              onUpdateData({ projectBasics: parsedData });
-            }
-          }
-        }
-        isInitialLoad.current = false;
-      } catch (error) {
-        console.error('Error loading from localStorage:', error);
-        isInitialLoad.current = false;
+      const cached = readDraftCache<ProjectBasicsFormData>(documentData?.id, "projectBasics");
+      if (cached && Object.values(cached).some((value) => typeof value === "string" && value.trim())) {
+        setFormData({
+          projectName: cached.projectName || "",
+          organizationName: cached.organizationName || "",
+          requestedAmount: cached.requestedAmount || "",
+          location: cached.location || "",
+          zipCode: cached.zipCode || "",
+          contactName: cached.contactName || "",
+          contactEmail: cached.contactEmail || "",
+        });
+        onUpdateData?.({ projectBasics: cached });
       }
+      isInitialLoad.current = false;
     }
   }, [documentData, onUpdateData]);
-
-  // Cleanup timeouts
-  useEffect(() => {
-    return () => {
-      if (autoSaveTimeoutRef.current) clearTimeout(autoSaveTimeoutRef.current);
-      if (saveStatusTimeoutRef.current) clearTimeout(saveStatusTimeoutRef.current);
-    };
-  }, []);
 
   // Validation functions
   const validateEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -339,7 +286,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
         break;
       case "contactName":
         if (value.trim().length < 2) return "Contact name must be at least 2 characters";
-        if (!/^[a-zA-Z\s'-]+$/.test(value.trim())) return "Contact name can only contain letters, spaces, hyphens, and apostrophes";
+        if (value.trim().length > 100) return "Contact name cannot exceed 100 characters";
+        if (!/^[\p{L}\p{M}\s'’.,-]+$/u.test(value.trim()))
+          return "Contact name can only contain letters, spaces, and name punctuation (periods, hyphens, apostrophes, commas)";
+        if (!/\p{L}/u.test(value)) return "Contact name must include at least one letter";
         break;
     }
     return undefined;
@@ -415,8 +365,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       return;
     }
 
-    if (onUpdateData) onUpdateData({ projectBasics: formData });
-    localStorage.setItem('projectBasics', JSON.stringify(formData));
+    onUpdateData?.({ projectBasics: formData });
     onContinue();
   };
 
@@ -430,7 +379,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
         <Card
           header="Project Basics"
-          headerActions={<AutoSaveIndicator status={saveStatus} />}
+          headerActions={
+            <AutoSaveIndicator
+              status={saveStatus}
+              idleText={autoSaveIdleText}
+              onRetry={onRetrySave}
+            />
+          }
         >
           <div style={{ marginBottom: spacing["2xl"], color: colors.textSecondary }}>
             Let's start with some basic information about your project. These
@@ -542,6 +497,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             onBlur={handleBlur}
           />
         </Card>
+
+        <div style={{ marginTop: spacing.xl }}>
+          <AutoSaveIndicator
+            status={saveStatus}
+            idleText={autoSaveIdleText}
+            announce={false}
+          />
+        </div>
 
         <NavigationButtons
           showBack={false}

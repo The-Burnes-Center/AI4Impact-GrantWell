@@ -1,4 +1,5 @@
 import { PasswordRequirements } from "./auth-types";
+import { TURNSTILE_SITE_KEY } from "./turnstile-config";
 
 export type AuthErrorContext =
   | "sign-in"
@@ -8,7 +9,9 @@ export type AuthErrorContext =
   | "verify-sign-up"
   | "resend-sign-up"
   | "new-password"
-  | "auto-sign-in";
+  | "auto-sign-in"
+  | "mfa"
+  | "mfa-setup";
 
 interface AuthErrorShape {
   code?: string;
@@ -151,6 +154,20 @@ export function getVerifySignUpValidationError(
   return getVerificationCodeValidationError(verificationCode);
 }
 
+export function getTurnstileValidationError(token: string) {
+  if (!TURNSTILE_SITE_KEY) return null;
+
+  if (!token) {
+    return "Complete the security check before continuing.";
+  }
+
+  return null;
+}
+
+export function turnstileClientMetadata(token: string) {
+  return TURNSTILE_SITE_KEY && token ? { turnstileToken: token } : undefined;
+}
+
 export function getAuthErrorCode(error: unknown) {
   const authError = error as AuthErrorShape | null;
   return authError?.code || authError?.name || "";
@@ -180,6 +197,10 @@ export function mapAuthError(error: unknown, context: AuthErrorContext) {
         : "You are not authorized to complete that action.";
     case "PasswordResetRequiredException":
       return "You need to reset your password before signing in.";
+    case "EnableSoftwareTokenMFAException":
+      return "That code is incorrect or has expired. Wait for your authenticator app to show a new code and try again.";
+    case "SignInException":
+      return "Your sign-in session expired. Sign in again to continue.";
     case "CodeMismatchException":
       return "The verification code is incorrect.";
     case "ExpiredCodeException":
@@ -190,6 +211,16 @@ export function mapAuthError(error: unknown, context: AuthErrorContext) {
       return "Too many attempts. Wait a moment and try again.";
     case "InvalidPasswordException":
       return "Password does not meet the required complexity rules.";
+    case "UserLambdaValidationException": {
+      // Cognito wraps a rejecting trigger as "<Trigger> failed with error <message>." Those
+      // messages are written to be user-facing, so surface them instead of a generic fallback.
+      const triggerMessage = authError?.message?.match(
+        /failed with error (.+?)\.?$/,
+      )?.[1];
+      return triggerMessage
+        ? `${triggerMessage}.`
+        : "We could not complete that request. Try again.";
+    }
     case "InvalidParameterException":
       if (message.includes("current status is confirmed")) {
         return "Your email is already verified. Sign in to continue.";
@@ -212,6 +243,10 @@ export function mapAuthError(error: unknown, context: AuthErrorContext) {
       return "We could not reset your password right now. Try again.";
     case "new-password":
       return "We could not set your new password right now. Try again.";
+    case "mfa":
+      return "We could not verify that code. Try again.";
+    case "mfa-setup":
+      return "We could not finish setting up two-step verification. Try again.";
     default:
       return "Something went wrong. Try again.";
   }

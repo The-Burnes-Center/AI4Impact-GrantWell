@@ -1,4 +1,4 @@
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 
 interface SignInStepProps {
@@ -14,6 +14,7 @@ interface SignInStepProps {
   onSwitchToSignUp: () => void;
   emailErrorId?: string;
   passwordErrorId?: string;
+  turnstile?: ReactNode;
 }
 
 export default function SignInStep({
@@ -29,6 +30,7 @@ export default function SignInStep({
   onSwitchToSignUp,
   emailErrorId,
   passwordErrorId,
+  turnstile,
 }: SignInStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
@@ -90,6 +92,7 @@ export default function SignInStep({
             Forgot password?
           </Button>
         </div>
+        {turnstile}
         <div className="login-form-actions">
           <Button
             variant="primary"
