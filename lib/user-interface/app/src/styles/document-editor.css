@@ -381,6 +381,83 @@
   gap: 16px;
 }
 
+.ra-unviewed {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  background: #fffbeb;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+}
+
+.ra-unviewed__icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #92400e;
+}
+
+.ra-unviewed__body {
+  min-width: 0;
+}
+
+.ra-unviewed__title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.ra-unviewed__text {
+  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #78350f;
+}
+
+.ra-unviewed__list {
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+
+.ra-unviewed__item {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #78350f;
+  overflow-wrap: anywhere;
+}
+
+.ra-unviewed__action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid #92400e;
+  border-radius: 50px;
+  color: #92400e;
+  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.ra-unviewed__action:hover {
+  background: #92400e;
+  color: #ffffff;
+}
+
+.ra-unviewed__action:focus-visible {
+  outline: 2px solid #92400e;
+  outline-offset: 2px;
+}
+
 /* Edit Button */
 .ra-edit-btn {
   display: flex;
@@ -591,20 +668,44 @@
   transform: translateY(1px);
 }
 
-.ra-export-pdf-btn:disabled {
-  background-color: #c8d8d4;
-  border-color: #c8d8d4;
+.ra-export-pdf-btn:disabled,
+.ra-export-pdf-btn:disabled:hover {
+  background-color: var(--gw-color-disabled-bg, #F0F0F0);
+  border-color: var(--gw-color-text-secondary, #5a5a5a);
+  color: var(--gw-color-text-secondary, #5a5a5a);
   cursor: not-allowed;
+  transform: none;
 }
 
-.ra-export-pdf-btn:disabled:hover {
-  background: #d1d5db;
+.ra-export-pdf-btn:disabled[aria-busy="true"],
+.ra-export-pdf-btn:disabled[aria-busy="true"]:hover {
+  background-color: var(--gw-color-primary, #23776C);
+  border-color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-white, #ffffff);
+  cursor: progress;
 }
 
 .ra-export-pdf-btn__icon {
   width: 20px;
   height: 20px;
   margin-right: 8px;
+}
+
+.ra-export-pdf-btn__spinner {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ra-export-pdf-btn__spinner,
+  .ra-export-progress__spinner {
+    animation-duration: 3s;
+  }
 }
 
 /* Export As dropdown */
@@ -645,7 +746,7 @@
 }
 
 .ra-export-dropdown__item:disabled {
-  color: #9ca3af;
+  color: var(--gw-color-disabled-text, #707070);
   cursor: not-allowed;
 }
 
@@ -738,6 +839,12 @@
   margin: 0;
 }
 
+.se-section-title:focus-visible {
+  outline: 2px solid var(--gw-color-primary, #23776c);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 .se-version-label {
   display: block;
   margin: 16px 0 6px;
@@ -759,7 +866,7 @@
   position: fixed;
   inset: 0;
   background: rgba(17, 24, 39, 0.4);
-  z-index: 1000;
+  z-index: var(--gw-z-drawer, 900);
 }
 
 .vh-panel {
@@ -768,12 +875,14 @@
   right: 0;
   bottom: 0;
   width: min(480px, 100%);
-  overflow-y: auto;
-  padding: 20px;
+  /* The definite height from pinning top and bottom is what lets only .vh-body scroll. */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: #fff;
   border-left: 1px solid var(--gw-color-border, #e5e7eb);
   box-shadow: -4px 0 16px rgba(0, 0, 0, 0.12);
-  z-index: 1001;
+  z-index: calc(var(--gw-z-drawer, 900) + 1);
 }
 
 .vh-header {
@@ -781,7 +890,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  flex: 0 0 auto;
+  padding: 20px 20px 12px;
+  border-bottom: 1px solid var(--gw-color-border, #e5e7eb);
 }
 
 .vh-title {
@@ -806,6 +917,24 @@
 
 .vh-close:hover {
   background: #f3f4f6;
+}
+
+.vh-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+.vh-footer {
+  flex: 0 0 auto;
+  padding: 12px 20px;
+  background: #fff;
+  border-top: 1px solid var(--gw-color-border, #e5e7eb);
+}
+
+.vh-footer .vh-status {
+  margin: 0 0 8px;
 }
 
 .vh-status,
@@ -867,9 +996,33 @@
   padding: 2px 8px;
   font-size: 12px;
   font-weight: 600;
-  color: #195C53;
-  background: #DFECE0;
+  border: 1px solid transparent;
   border-radius: 999px;
+}
+
+/* The border keeps the badges apart in forced-colors and greyscale, where the fills flatten. */
+.vh-badge--current {
+  color: var(--gw-color-primary-hover, #195C53);
+  background: var(--gw-color-primary-light, #DFECE0);
+  border-color: color-mix(in srgb, var(--gw-color-primary, #23776C) 60%, var(--gw-color-white, #fff));
+}
+
+.vh-badge--user {
+  color: var(--gw-color-text, #333333);
+  background: color-mix(in srgb, var(--gw-color-text-secondary, #5a5a5a) 12%, var(--gw-color-white, #fff));
+  border-color: color-mix(in srgb, var(--gw-color-text-secondary, #5a5a5a) 80%, var(--gw-color-white, #fff));
+}
+
+.vh-badge--ai {
+  color: var(--gw-color-warning-text, #92510a);
+  background: var(--gw-color-warning-light, #fff3cd);
+  border-color: var(--gw-color-warning, #F6B622);
+}
+
+.vh-badge--system {
+  color: var(--gw-color-text-secondary, #5a5a5a);
+  background: var(--gw-color-white, #fff);
+  border-color: var(--gw-color-border-input, #767676);
 }
 
 .vh-label {
@@ -896,6 +1049,32 @@
   font-size: 16px;
   font-weight: 600;
   color: #111827;
+}
+
+.vh-scope-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.vh-scope-row label {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.vh-scope-row select {
+  flex: 1;
+  min-width: 180px;
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #374151;
+  background: #fff;
+  border: 1px solid var(--gw-color-border-input, #767676);
+  border-radius: 6px;
 }
 
 .vh-label-row {
@@ -925,6 +1104,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+@media (max-width: 420px) {
+  .vh-actions {
+    flex-direction: column;
+  }
 }
 
 .vh-btn {
@@ -963,7 +1148,7 @@
 }
 
 .vd-body {
-  max-height: 320px;
+  max-height: min(320px, 40vh);
   overflow-y: auto;
   padding: 12px;
   font-size: 14px;

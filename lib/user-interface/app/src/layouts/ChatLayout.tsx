@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import UnifiedNavigation from "../components/navigation/UnifiedNavigation";
 import { useInert } from "../hooks/use-inert";
 
-const getTopOffset = (): number => {
-  const headerElement = document.querySelector("header");
-  return headerElement ? headerElement.getBoundingClientRect().height : 60;
-};
+const TOP_CHROME_HEIGHT = 60;
 
 const useViewportWidth = () => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -142,46 +139,11 @@ export default function BaseAppLayout({
   sessionId,
   modalOpen = false,
 }: BaseAppLayoutProps) {
-  const [topOffset, setTopOffset] = useState<number>(60);
   const viewportWidth = useViewportWidth();
   const isNarrowViewport = viewportWidth <= 320;
   // Callers render their modals as siblings of this layout, so everything the
   // layout owns is background while one is open.
   const inertRootRef = useInert<HTMLDivElement>(modalOpen);
-
-  useEffect(() => {
-    const updateTopOffset = () => {
-      requestAnimationFrame(() => {
-        setTopOffset(getTopOffset());
-      });
-    };
-
-    const initialTimer = setTimeout(updateTopOffset, 100);
-    updateTopOffset();
-
-    const observer = new MutationObserver(updateTopOffset);
-    const headerElement = document.querySelector("header");
-
-    if (headerElement) {
-      observer.observe(headerElement, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class", "style"],
-      });
-    }
-
-    window.addEventListener("resize", updateTopOffset);
-    window.addEventListener("scroll", updateTopOffset, { passive: true });
-
-    return () => {
-      clearTimeout(initialTimer);
-      observer.disconnect();
-      window.removeEventListener("resize", updateTopOffset);
-      window.removeEventListener("scroll", updateTopOffset);
-    };
-  }, []);
-
 
   return (
     <div
@@ -189,8 +151,8 @@ export default function BaseAppLayout({
       aria-hidden={modalOpen || undefined}
       style={{
         ...styles.container,
-        height: `calc(100vh - ${topOffset}px)`,
-        maxHeight: `calc(100vh - ${topOffset}px)`,
+        height: `calc(100vh - ${TOP_CHROME_HEIGHT}px)`,
+        maxHeight: `calc(100vh - ${TOP_CHROME_HEIGHT}px)`,
         width: "100%",
         margin: 0,
         padding: 0,
@@ -206,12 +168,7 @@ export default function BaseAppLayout({
           minHeight: 0,
         }}
       >
-        {/* Unified Navigation Sidebar */}
-        <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
-          <UnifiedNavigation
-            documentIdentifier={documentIdentifier}
-          />
-        </nav>
+        <UnifiedNavigation documentIdentifier={documentIdentifier} />
 
         {/* Main content area */}
         <div

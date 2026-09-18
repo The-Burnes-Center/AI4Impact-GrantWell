@@ -15,11 +15,15 @@ import { colors, typography, spacing, borderRadius } from "../../components/ui/s
 import { readDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DocumentData } from "../../common/types/document";
 
+const AUTOSAVE_IDLE_BEFORE_FIRST_SAVE = "Changes save automatically";
+const AUTOSAVE_IDLE_AFTER_FIRST_SAVE = "Saved";
+
 interface ProjectBasicsProps {
   onContinue: () => void;
   documentData?: DocumentData | null;
   onUpdateData?: (data: Partial<DocumentData>) => void;
   saveStatus?: SaveStatus;
+  lastSavedAt?: string | null;
   onRetrySave?: () => void;
 }
 
@@ -181,8 +185,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   documentData,
   onUpdateData,
   saveStatus = "idle",
+  lastSavedAt,
   onRetrySave,
 }) => {
+  const autoSaveIdleText = lastSavedAt
+    ? AUTOSAVE_IDLE_AFTER_FIRST_SAVE
+    : AUTOSAVE_IDLE_BEFORE_FIRST_SAVE;
+
   const [formData, setFormData] = useState<ProjectBasicsFormData>({
     projectName: "",
     organizationName: "",
@@ -277,7 +286,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
         break;
       case "contactName":
         if (value.trim().length < 2) return "Contact name must be at least 2 characters";
-        if (!/^[a-zA-Z\s'-]+$/.test(value.trim())) return "Contact name can only contain letters, spaces, hyphens, and apostrophes";
+        if (value.trim().length > 100) return "Contact name cannot exceed 100 characters";
+        if (!/^[\p{L}\p{M}\s'’.,-]+$/u.test(value.trim()))
+          return "Contact name can only contain letters, spaces, and name punctuation (periods, hyphens, apostrophes, commas)";
+        if (!/\p{L}/u.test(value)) return "Contact name must include at least one letter";
         break;
     }
     return undefined;
@@ -367,7 +379,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
         <Card
           header="Project Basics"
-          headerActions={<AutoSaveIndicator status={saveStatus} onRetry={onRetrySave} />}
+          headerActions={
+            <AutoSaveIndicator
+              status={saveStatus}
+              idleText={autoSaveIdleText}
+              onRetry={onRetrySave}
+            />
+          }
         >
           <div style={{ marginBottom: spacing["2xl"], color: colors.textSecondary }}>
             Let's start with some basic information about your project. These
@@ -479,6 +497,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             onBlur={handleBlur}
           />
         </Card>
+
+        <div style={{ marginTop: spacing.xl }}>
+          <AutoSaveIndicator
+            status={saveStatus}
+            idleText={autoSaveIdleText}
+            announce={false}
+          />
+        </div>
 
         <NavigationButtons
           showBack={false}

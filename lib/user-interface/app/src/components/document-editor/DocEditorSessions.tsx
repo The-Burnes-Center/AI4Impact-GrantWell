@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { Utils } from "../../common/utils";
 import { DraftStatus } from "../../common/api-client/drafts-client";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
+import TableScrollRegion from "../ui/TableScrollRegion";
 import "../../styles/dashboard.css";
 
 export interface DocEditorSessionsProps {
@@ -226,18 +227,18 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         isOpen={showModalDelete}
         onClose={() => setShowModalDelete(false)}
         onConfirm={deleteSelectedSessions}
-        title={`Delete draft${selectedItems.length > 1 ? "s" : ""}`}
+        title={`Delete application${selectedItems.length > 1 ? "s" : ""}`}
         itemName={selectedItems.length === 1 ? selectedItems[0].draft_id : undefined}
         itemCount={selectedItems.length > 1 ? selectedItems.length : undefined}
-        itemLabel="draft"
+        itemLabel="application"
       />
 
       {/* Header section */}
       <div className="dashboard-header">
         <div>
-          <h1>Drafts</h1>
+          <h1>Applications</h1>
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
-            Manage and access your saved grant application drafts
+            Manage and continue your saved grant applications
           </p>
         </div>
         <div className="dashboard-actions">
@@ -251,16 +252,16 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                 navigate(`/document-editor`);
               }
             }}
-            aria-label="Create new draft"
+            aria-label="Create new application"
           >
             <LuPlus size={16} className="button-icon" />
-            <span>New Draft</span>
+            <span>New Application</span>
           </button>
           {hasDocId && onToggleShowAllNOFOs && (
             <button
               className="action-button invite-button"
               onClick={onToggleShowAllNOFOs}
-              aria-label="Show All NOFOs — include drafts for other NOFOs"
+              aria-label="Show All NOFOs — include applications for other NOFOs"
               aria-pressed={showAllNOFOs}
             >
               {showAllNOFOs && <LuCheck size={16} className="button-icon" aria-hidden="true" />}
@@ -276,7 +277,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               color: selectedItems.length === 0 ? "#9ca3af" : "white",
               cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
             }}
-            aria-label={selectedItems.length === 0 ? "Delete drafts (no drafts selected)" : `Delete ${selectedItems.length} selected draft${selectedItems.length > 1 ? 's' : ''}`}
+            aria-label={selectedItems.length === 0 ? "Delete applications (no applications selected)" : `Delete ${selectedItems.length} selected application${selectedItems.length > 1 ? 's' : ''}`}
             aria-disabled={selectedItems.length === 0}
           >
             <LuTrash size={16} className="button-icon" />
@@ -290,7 +291,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               setIsLoading(false);
             }}
             disabled={isLoading}
-            aria-label="Refresh drafts list"
+            aria-label="Refresh applications list"
             aria-busy={isLoading}
           >
             {isLoading ? (
@@ -306,7 +307,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       </div>
 
       {/* Table section */}
-      <div className="table-container" role="table" aria-label="Drafts">
+      <TableScrollRegion label="Applications table" minWidth={720}>
+      <div className="table-container" role="table" aria-label="Applications">
         <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2fr 1.5fr 1.5fr 1fr" }}>
           <div role="row" style={{ display: "contents" }}>
             <div className="header-cell" role="columnheader">
@@ -314,7 +316,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                 type="checkbox"
                 checked={selectedItems.length === sessions.length && sessions.length > 0}
                 onChange={handleSelectAll}
-                aria-label="Select all drafts"
+                aria-label="Select all applications"
                 style={{ cursor: "pointer" }}
                 disabled={isLoading || sessions.length === 0}
               />
@@ -359,7 +361,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           ) : paginatedItems.length === 0 ? (
             <div className="no-data">
               <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
-                No drafts
+                No applications
               </div>
             </div>
           ) : (
@@ -372,7 +374,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                       (i) => i.draft_id === item.draft_id
                     )}
                     onChange={(e) => handleSelectItem(item, e)}
-                    aria-label={`Select draft: ${item.title}`}
+                    aria-label={`Select application: ${item.title}`}
                     style={{ cursor: "pointer" }}
                   />
                 </div>
@@ -383,7 +385,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                         props.onSessionSelect(item.draft_id);
                       }
                     }}
-                    aria-label={`Open draft: ${item.title}`}
+                    aria-label={`Open application: ${item.title}`}
                     style={{
                       color: "#195C53",
                       background: "none",
@@ -424,9 +426,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           )}
         </div>
       </div>
+      </TableScrollRegion>
 
       <div role="status" aria-live="polite" className="visually-hidden">
-        {isLoading ? "Loading drafts" : ""}
+        {isLoading ? "Loading applications" : ""}
       </div>
 
       {/* Pagination */}
@@ -435,7 +438,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           <div className="pagination-info">
             Showing {(currentPage - 1) * pageSize + 1} to{" "}
             {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
-            {sortedSessions.length} drafts
+            {sortedSessions.length} applications
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
             <div className="pagination-controls">

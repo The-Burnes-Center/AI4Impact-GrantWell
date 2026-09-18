@@ -21,6 +21,8 @@ import { BrandingProvider, useBranding } from "../common/branding";
 import { activeBranding } from "../../config/active-instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import MaintenanceGate from "./MaintenanceGate";
+import { NavigationProvider } from "./navigation/NavigationProvider";
+import { AppSidebar } from "./navigation/UnifiedNavigation";
 import ProfileGate from "./profile-gate/ProfileGate";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
@@ -246,19 +248,24 @@ function AppLayoutContent({
 }) {
   if (authenticated) {
     return (
-      <div className="marketing marketing__app-shell">
-        <OmniHeader />
-        <AppNavbar />
-        <div className="marketing__app-main">
-          <ProfileGate>
-            <MaintenanceGate>
-              <App />
-            </MaintenanceGate>
-          </ProfileGate>
+      <NavigationProvider>
+        <div className="marketing marketing__app-shell">
+          <OmniHeader />
+          <AppNavbar />
+          <div className="marketing__app-body">
+            <AppSidebar />
+            <div className="marketing__app-main">
+              <ProfileGate>
+                <MaintenanceGate>
+                  <App />
+                </MaintenanceGate>
+              </ProfileGate>
+            </div>
+          </div>
+          <LandingFooter />
+          <OmniHeader position="bottom" />
         </div>
-        <LandingFooter />
-        <OmniHeader position="bottom" />
-      </div>
+      </NavigationProvider>
     );
   }
 

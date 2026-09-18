@@ -56,6 +56,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
   // Read by the generation poll below; kept in refs so typing (which changes
   // sectionAnswers/editorContent) cannot tear down and restart the interval.
+  const editorAreaRef = useRef<HTMLDivElement>(null);
+  const sectionTitleRef = useRef<HTMLHeadingElement>(null);
+  const previousSectionRef = useRef(activeSection);
   const sectionsRef = useRef(sections);
   const activeSectionRef = useRef(activeSection);
   const sectionAnswersRef = useRef(sectionAnswers);
@@ -207,6 +210,17 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     return () => clearInterval(interval);
   }, [activeJobId, generating, apiClient, sections, activeSection, sectionAnswers, sessionId, saveFields]);
 
+  useEffect(() => {
+    if (previousSectionRef.current === activeSection) return;
+    previousSectionRef.current = activeSection;
+    const area = editorAreaRef.current;
+    if (area) {
+      area.scrollTop = 0;
+      if (area.scrollHeight <= area.clientHeight) area.scrollIntoView({ block: "start" });
+    }
+    sectionTitleRef.current?.focus({ preventScroll: true });
+  }, [activeSection]);
+
   // Update editor content when active section changes
   useEffect(() => {
     if (sections[activeSection]) {
@@ -215,6 +229,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       setEditorContent(savedContent);
     }
   }, [activeSection, sections, sectionAnswers]);
+
+  // Review Application flags the sections that were never opened; nothing else records it.
+  useEffect(() => {
+    const section = sections[activeSection];
+    if (!section || !sessionId) return;
+    const seen = readDraftCache<string[]>(sessionId, "sectionsViewed") || [];
+    if (seen.includes(section.name)) return;
+    writeDraftCache(sessionId, "sectionsViewed", [...seen, section.name]);
+  }, [activeSection, sections, sessionId]);
 
   const handleEditorChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -397,7 +420,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   return (
     <div className="se-container">
       {/* Editor area - now on the left */}
-      <div className="se-editor-area">
+      <div className="se-editor-area" ref={editorAreaRef}>
         <div className="se-editor-inner">
           {/* Always mounted so the failure text lands as a mutation, and holding
               the message alone so the retry button is not read out as part of it. */}
@@ -497,7 +520,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           )}
 
           <div className="se-section-header">
-            <h2 className="se-section-title" id="se-section-title">
+            <h2 className="se-section-title" id="se-section-title" ref={sectionTitleRef} tabIndex={-1}>
               {activeSectionName || "Section Editor"}
             </h2>
             <div className="se-section-header-actions">
@@ -591,23 +614,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 </button>
               )}
 
-              {activeSection < sections.length - 1 ? (
-                <button
-                  className="se-next-btn"
-                  onClick={handleSaveAndContinue}
-                >
-                  Save and Review
-                  <LuChevronRight size={18} className="se-icon--right" />
-                </button>
-              ) : (
-                <button
-                  className="se-next-btn"
-                  onClick={onContinue}
-                >
-                  Review Application
-                  <LuChevronRight size={18} className="se-icon--right" />
-                </button>
-              )}
+              <button
+                className="se-next-btn"
+                onClick={handleSaveAndContinue}
+              >
+                {activeSection < sections.length - 1
+                  ? "Save section & continue"
+                  : "Save section & review application"}
+                <LuChevronRight size={18} className="se-icon--right" />
+              </button>
             </div>
           </div>
         </div>

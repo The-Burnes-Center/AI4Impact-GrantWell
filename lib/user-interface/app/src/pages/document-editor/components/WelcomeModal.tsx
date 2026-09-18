@@ -12,7 +12,6 @@ interface WelcomeModalProps {
   onClose: () => void;
   onGetStarted: () => void;
   onViewDrafts: () => void;
-  topOffset?: number;
 }
 
 const WelcomeModal = React.memo(function WelcomeModal({
@@ -20,7 +19,6 @@ const WelcomeModal = React.memo(function WelcomeModal({
   onClose,
   onGetStarted,
   onViewDrafts,
-  topOffset,
 }: WelcomeModalProps) {
   return (
   <Modal
@@ -28,7 +26,6 @@ const WelcomeModal = React.memo(function WelcomeModal({
     onClose={onClose}
     title="Welcome to GrantWell"
     maxWidth="900px"
-    topOffset={topOffset}
     hideCloseButton
   >
     <div className="welcome-modal-intro">
@@ -56,7 +53,7 @@ const WelcomeModal = React.memo(function WelcomeModal({
         Get Started
       </button>
       <button className="welcome-modal-btn welcome-modal-btn--secondary" onClick={onViewDrafts}>
-        View Existing Drafts
+        View Existing Applications
       </button>
     </div>
   </Modal>

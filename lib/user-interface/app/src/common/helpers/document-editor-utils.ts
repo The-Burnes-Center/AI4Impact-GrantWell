@@ -1,4 +1,4 @@
-import type { DraftStatus } from "../api-client/drafts-client";
+import type { DraftJobStatus, DraftStatus } from "../api-client/drafts-client";
 
 /**
  * Maps a UI step ID to the backend draft status string.
@@ -55,7 +55,8 @@ export type DraftCachePart =
   | "projectBasics"
   | "questionnaire"
   | "sections"
-  | "additionalInfo";
+  | "additionalInfo"
+  | "sectionsViewed";
 
 const DRAFT_CACHE_PREFIX = "gw:draft";
 
@@ -103,4 +104,51 @@ export function sweepLegacyDraftCache(): void {
   } catch {
     /* storage unavailable — nothing to sweep */
   }
+}
+
+export async function pollForExportUrl(options: {
+  poll: () => Promise<DraftJobStatus>;
+  intervalMs: number;
+  timeoutMs: number;
+  maxConsecutiveErrors?: number;
+  sleep?: (ms: number) => Promise<void>;
+  now?: () => number;
+}): Promise<string> {
+  const sleep = options.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)));
+  const now = options.now ?? (() => Date.now());
+  const maxConsecutiveErrors = options.maxConsecutiveErrors ?? 5;
+  const deadline = now() + options.timeoutMs;
+  let lastPollError: string | null = null;
+  let consecutiveErrors = 0;
+
+  while (now() < deadline) {
+    await sleep(options.intervalMs);
+    let job: DraftJobStatus;
+    try {
+      job = await options.poll();
+      consecutiveErrors = 0;
+    } catch (error) {
+      lastPollError = error instanceof Error ? error.message : String(error);
+      if (++consecutiveErrors >= maxConsecutiveErrors) {
+        throw new Error(`Lost contact with the server while building the file (${lastPollError}).`);
+      }
+      continue;
+    }
+
+    if (job.status === "error") {
+      throw new Error(job.error || "The server could not build the file.");
+    }
+    if (job.status === "completed" || job.status === "partial") {
+      if (!job.downloadUrl) {
+        throw new Error("The file was built but no download link came back. Please try again.");
+      }
+      return job.downloadUrl;
+    }
+  }
+
+  throw new Error(
+    lastPollError
+      ? `Timed out waiting for the export (last error: ${lastPollError}).`
+      : "Timed out waiting for the export. It may still be building — please try again."
+  );
 }

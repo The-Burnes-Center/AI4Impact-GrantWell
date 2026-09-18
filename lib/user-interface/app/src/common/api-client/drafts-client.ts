@@ -34,6 +34,7 @@ export interface DocumentDraft {
   title: string;
   documentIdentifier: string;
   status?: DraftStatus;
+  reachedSteps?: string[];
   sections?: Record<string, string>;
   projectBasics?: ProjectBasicsData;
   questionnaire?: Record<string, string>;
@@ -94,6 +95,8 @@ export interface DraftJobStatus {
   sections?: Record<string, string>;
   failedSections?: string[];
   error?: string;
+  jobType?: 'export';
+  downloadUrl?: string;
 }
 
 export class DraftsClient {
@@ -122,6 +125,7 @@ export class DraftsClient {
         project_basics: draft.projectBasics || {},
         questionnaire: draft.questionnaire || {},
         status: draft.status || 'project_basics',
+        reached_step: draft.reachedSteps?.[0],
       }),
     });
 
@@ -140,6 +144,7 @@ export class DraftsClient {
       title: (row.title as string) || '',
       documentIdentifier: (row.document_identifier as string) || '',
       status: ((row.status as DraftStatus) || 'project_basics'),
+      reachedSteps: Array.isArray(row.reached_steps) ? (row.reached_steps as string[]) : undefined,
       sections: (row.sections as Record<string, string>) || {},
       projectBasics: (row.project_basics as ProjectBasicsData) || {},
       questionnaire: (row.questionnaire as Record<string, string>) || {},
@@ -303,6 +308,7 @@ export class DraftsClient {
       additionalInfo: data.additionalInfo ?? draft.additionalInfo,
       uploadedFiles: data.uploadedFiles ?? draft.uploadedFiles,
       status: (data.status ?? draft.status) as DraftStatus,
+      reachedSteps: data.reachedSteps ?? draft.reachedSteps,
       lastModified: data.lastModified ?? draft.lastModified,
       rev: typeof data.rev === 'number' ? data.rev : draft.rev,
     };
@@ -390,6 +396,13 @@ export class DraftsClient {
         label: params.label ?? null,
       },
       'label version'
+    );
+  }
+
+  async markStepReached(params: { sessionId: string; step: string }) {
+    return this.draftOperation(
+      { operation: 'mark_step_reached', session_id: params.sessionId, reached_step: params.step },
+      'record reached step'
     );
   }
 
@@ -702,6 +715,40 @@ export class DraftsClient {
     const blob = await response.blob();
     console.log('DOCX blob created, size:', blob.size, 'bytes');
     return blob;
+  }
+
+  /** Async because Chromium PDF generation does not fit API Gateway's 30s ceiling. */
+  async startPdfExport(draftData: {
+    title?: string;
+    grantName?: string;
+    projectBasics?: ProjectBasicsData;
+    sections?: Record<string, string>;
+  }): Promise<string> {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + '/generate-pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify({
+        async: true,
+        draftData: {
+          title: draftData.title || 'Grant Application',
+          grantName: draftData.grantName,
+          projectBasics: draftData.projectBasics || {},
+          sections: draftData.sections || {},
+        },
+      }),
+    });
+
+    const data = await response.json().catch((): null => null);
+    if (response.status !== 202 || !data?.jobId) {
+      throw new Error(
+        data?.error || data?.message || `Failed to start PDF export: HTTP ${response.status}`
+      );
+    }
+    return data.jobId as string;
   }
 
   // Generates a tagged PDF from draft data

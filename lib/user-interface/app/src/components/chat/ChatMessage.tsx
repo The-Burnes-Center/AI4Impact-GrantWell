@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useEffect, useContext } from "react";
 import ReactMarkdown from "react-markdown";
+import TableScrollRegion from "../ui/TableScrollRegion";
 import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
@@ -286,9 +287,14 @@ function ChatMessage(props: ChatMessageProps) {
                           table(props) {
                             const { children, ...rest } = props;
                             return (
-                              <table {...rest} className={styles.markdownTable}>
-                                {children}
-                              </table>
+                              <TableScrollRegion
+                                label="Table in this answer"
+                                className={styles.markdownTableScroll}
+                              >
+                                <table {...rest} className={styles.markdownTable}>
+                                  {children}
+                                </table>
+                              </TableScrollRegion>
                             );
                           },
                           th(props) {

@@ -28,6 +28,9 @@ CONTENT_KEYS = (
     "uploaded_files",
 )
 
+# `status` is excluded: a step move rewrites it and nothing else.
+WORK_KEYS = tuple(key for key in CONTENT_KEYS if key != "status")
+
 # 400KB DynamoDB item limit less headroom for metadata.
 MAX_BODY_BYTES = 380 * 1024
 
@@ -61,7 +64,7 @@ def snapshot_content(item):
 
 def is_content_change(old_image, new_image):
     """True when a change touched user work rather than only bookkeeping."""
-    for key in CONTENT_KEYS:
+    for key in WORK_KEYS:
         if json.dumps(old_image.get(key), sort_keys=True, default=json_default) != json.dumps(
             new_image.get(key), sort_keys=True, default=json_default
         ):

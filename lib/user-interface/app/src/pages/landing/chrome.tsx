@@ -1,8 +1,10 @@
 import { NavLink, useNavigate } from "react-router";
 import { signOut } from "aws-amplify/auth";
+import { LuMenu } from "react-icons/lu";
 import { AiForImpactWordmark } from "./featureIllustrations";
-import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useBranding } from "../../common/branding";
+import { useNavigationMenuButton } from "../../components/navigation/navigation-context";
+import { SIDEBAR_ID } from "../../components/navigation/UnifiedNavigation";
 
 const ArrowUpRight = ({ className }: { className?: string }) => (
   <svg
@@ -114,8 +116,9 @@ const SignOutIcon = ({ className }: { className?: string }) => (
 
 export function AppNavbar() {
   const navigate = useNavigate();
-  const { isAdmin } = useAdminCheck();
   const branding = useBranding();
+  const { showMenuButton, isDrawerOpen, toggleDrawer } =
+    useNavigationMenuButton();
 
   const handleSignOut = async () => {
     try {
@@ -148,7 +151,7 @@ export function AppNavbar() {
     "marketing__nav-link" + (isActive ? " marketing__nav-link--active" : "");
 
   return (
-    <nav className="marketing__nav marketing__nav--app" aria-label="Primary">
+    <nav className="marketing__nav marketing__nav--app" aria-label="Account">
       <a
         href="#main-content"
         onClick={handleSkipNavClick}
@@ -156,44 +159,44 @@ export function AppNavbar() {
       >
         Skip to main content
       </a>
-      <a
-        href="/home"
-        onClick={handleLogoClick}
-        className="marketing__nav-brand"
-      >
-        <img
-          src={branding.logo}
-          alt={branding.appName}
-          className="marketing__nav-wordmark"
-        />
-      </a>
-      <div className="marketing__nav-links">
-        <NavLink to="/home" className={navLinkClass}>
-          Home
-        </NavLink>
-        <NavLink to="/chat/sessions" className={navLinkClass}>
-          Chat Sessions
-        </NavLink>
-        <NavLink to="/document-editor/drafts" className={navLinkClass}>
-          Drafts
-        </NavLink>
+      <div className="marketing__nav-lead">
+        {showMenuButton && (
+          <button
+            type="button"
+            className="marketing__nav-menu"
+            onClick={toggleDrawer}
+            aria-label={isDrawerOpen ? "Close main menu" : "Open main menu"}
+            aria-expanded={isDrawerOpen}
+            aria-controls={SIDEBAR_ID}
+          >
+            <LuMenu size={22} aria-hidden="true" />
+          </button>
+        )}
+        <a
+          href="/home"
+          onClick={handleLogoClick}
+          className="marketing__nav-brand"
+        >
+          <img
+            src={branding.logo}
+            alt={branding.appName}
+            className="marketing__nav-wordmark"
+          />
+        </a>
+      </div>
+      <div className="marketing__nav-account">
         <NavLink to="/profile" className={navLinkClass}>
           Profile
         </NavLink>
-        {isAdmin && (
-          <NavLink to="/admin" className={navLinkClass}>
-            Admin Dashboard
-          </NavLink>
-        )}
+        <button
+          type="button"
+          onClick={handleSignOut}
+          className="marketing__nav-signout"
+        >
+          <SignOutIcon className="marketing__nav-signout-icon" />
+          <span>Sign out</span>
+        </button>
       </div>
-      <button
-        type="button"
-        onClick={handleSignOut}
-        className="marketing__nav-signout"
-      >
-        <SignOutIcon className="marketing__nav-signout-icon" />
-        <span>Sign out</span>
-      </button>
     </nav>
   );
 }
@@ -242,15 +245,24 @@ export function LandingFooter() {
           </p>
           <div
             className="marketing__footer-partners-grid"
+            role="group"
             aria-label="Partner organizations"
           >
             {partners.map((p) => (
-              <img
+              <a
                 key={p.href}
-                className={`marketing__partner ${p.className ?? ""}`.trim()}
-                src={p.logo}
-                alt={p.label}
-              />
+                className="marketing__partner-link"
+                href={p.href}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <img
+                  className={`marketing__partner ${p.className ?? ""}`.trim()}
+                  src={p.logo}
+                  alt={p.label}
+                />
+                <span className="visually-hidden"> (opens in new tab)</span>
+              </a>
             ))}
           </div>
         </div>

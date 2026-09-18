@@ -6,6 +6,7 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
+import TableScrollRegion from "../../components/ui/TableScrollRegion";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { stateNameFromCode } from "../../common/generated/states";
@@ -15,6 +16,8 @@ import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { SessionListItem } from "../../common/api-client/sessions-client";
 import {
   getRecentlyViewed,
+  fetchRecentlyViewed,
+  formatLastViewed,
   type RecentlyViewedNOFO,
 } from "../../common/helpers/recently-viewed-nofos";
 import "../../styles/dashboard.css";
@@ -89,9 +92,15 @@ export default function ProfilePage() {
     };
   }, []);
 
-  // Recently-viewed is localStorage-backed and synchronous.
   useEffect(() => {
     setRecentNofos(getRecentlyViewed());
+    let active = true;
+    fetchRecentlyViewed().then((items) => {
+      if (active) setRecentNofos(items);
+    });
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Drafts + chat sessions are keyed by cognito:username (the UUID from useAdminCheck).
@@ -298,9 +307,7 @@ export default function ProfilePage() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
-        <UnifiedNavigation />
-      </nav>
+      <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs
           items={[
@@ -572,7 +579,7 @@ export default function ProfilePage() {
                 rows={recentNofos.slice(0, ACTIVITY_LIMIT).map((n) => ({
                   key: n.value,
                   title: n.label,
-                  when: n.lastViewed,
+                  when: formatLastViewed(n.lastViewed),
                   onOpen: () =>
                     navigate(`/requirements/${encodeURIComponent(n.value)}`),
                 }))}
@@ -616,6 +623,11 @@ function ActivityList({
           {emptyText}
         </p>
       ) : (
+        <TableScrollRegion
+          label={`${title} table`}
+          minWidth={420}
+          className="table-scroll table-scroll--flush"
+        >
         <div className="table-container" role="table" aria-label={title} style={{ marginBottom: 0 }}>
           <div role="rowgroup">
             <div className="table-header" role="row" style={{ gridTemplateColumns: gridCols }}>
@@ -641,6 +653,7 @@ function ActivityList({
             ))}
           </div>
         </div>
+        </TableScrollRegion>
       )}
 
       {viewAll && (
@@ -677,11 +690,21 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
     setBusy(true);
     try {
       await updatePassword({ oldPassword: oldPw, newPassword: newPw });
-      setPwOk(true);
       setOldPw("");
       setNewPw("");
       setConfirmPw("");
       setShowPw(false);
+      // Cognito's ChangePassword leaves existing refresh tokens valid; only a global sign-out revokes them.
+      try {
+        await signOut({ global: true });
+        setPwOk(true);
+        onSignedOut();
+      } catch (signOutError) {
+        console.error("Could not revoke other sessions after password change:", signOutError);
+        setPwError(
+          'Your password was changed, but we could not sign out your other devices. Use "Sign out of all devices" to finish.'
+        );
+      }
     } catch (err) {
       setPwError(
         err instanceof Error ? err.message : "Could not change password."
@@ -705,7 +728,7 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
   return (
     <Card header="Account security">
       {pwError && <div className="profile-alert profile-alert--error" role="alert">{pwError}</div>}
-      {pwOk && <div className="profile-alert profile-alert--success" role="status">Password changed.</div>}
+      {pwOk && <div className="profile-alert profile-alert--success" role="status">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
 
       {showPw ? (
         <form onSubmit={changePassword}>

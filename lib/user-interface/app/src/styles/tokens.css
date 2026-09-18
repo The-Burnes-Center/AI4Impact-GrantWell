@@ -154,6 +154,8 @@
 
   --gw-z-dropdown: 100;
   --gw-z-sticky: 200;
+  /* Side drawers sit below modals: a dialog opened from a drawer must cover it. */
+  --gw-z-drawer: 900;
   --gw-z-modal: 1000;
   --gw-z-popover: 1100;
   --gw-z-tooltip: 1200;

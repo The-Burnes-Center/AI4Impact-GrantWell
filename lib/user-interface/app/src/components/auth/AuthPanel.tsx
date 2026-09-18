@@ -431,7 +431,9 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       });
       setNewPassword("");
       setVerificationCode("");
-      switchToSignIn("Password reset successful. Sign in with your new password.");
+      switchToSignIn(
+        "Password reset successful. Any other devices signed in to this account have been signed out. Sign in with your new password.",
+      );
     } catch (authError) {
       setStepError(
         mapAuthError(authError, "reset-password"),

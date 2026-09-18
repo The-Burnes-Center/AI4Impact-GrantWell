@@ -4,6 +4,7 @@ import { getCurrentUser } from "aws-amplify/auth";
 import { FileUploader } from "../../common/file-uploader";
 import Card from "../../components/ui/Card";
 import NavigationButtons from "../../components/ui/NavigationButtons";
+import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
 import { readDraftCache } from "../../common/helpers/document-editor-utils";
@@ -72,6 +73,9 @@ function validateFiles(incoming: File[]): FileValidationResult {
   return { accepted, rejected };
 }
 
+/** Returns true when the step handled the exit itself and navigation must wait. */
+export type StepLeaveGuard = (step: string, proceed: () => void) => boolean;
+
 interface UploadDocumentsProps {
   selectedNofo: string | null;
   onNavigate: (step: string) => void;
@@ -79,6 +83,7 @@ interface UploadDocumentsProps {
   sessionId: string;
   documentData?: DocumentData | null;
   draftSave: ReturnType<typeof useDraftSave>;
+  onRegisterLeaveGuard?: (guard: StepLeaveGuard | null) => void;
 }
 
 const UploadDocuments: React.FC<UploadDocumentsProps> = ({
@@ -88,6 +93,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   sessionId,
   documentData,
   draftSave,
+  onRegisterLeaveGuard,
 }) => {
   const apiClient = useApiClient();
   const [files, setFiles] = useState<File[]>([]);
@@ -106,6 +112,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [generationPhase, setGenerationPhase] = useState<string>("preparing");
   const [hasExistingDraft, setHasExistingDraft] = useState(false);
   const [kbIndexing, setKbIndexing] = useState(false);
+  const [pendingLeave, setPendingLeave] = useState<{ run: () => void } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -156,6 +163,31 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     };
   }, []);
 
+  const hasStagedFiles = files.length > 0 && !uploading && !isLoading && !generatingDraft;
+
+  useEffect(() => {
+    if (!onRegisterLeaveGuard) return;
+    if (!hasStagedFiles) {
+      onRegisterLeaveGuard(null);
+      return;
+    }
+    onRegisterLeaveGuard((_step, proceed) => {
+      setPendingLeave({ run: proceed });
+      return true;
+    });
+    return () => onRegisterLeaveGuard(null);
+  }, [hasStagedFiles, onRegisterLeaveGuard]);
+
+  useEffect(() => {
+    if (!hasStagedFiles) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [hasStagedFiles]);
+
   const addFiles = (incoming: File[]) => {
     const { accepted, rejected } = validateFiles(incoming);
     if (accepted.length > 0) {
@@ -196,8 +228,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
   const openFileSelector = () => fileInputRef.current?.click();
 
-  const uploadFiles = useCallback(async () => {
-    if (!selectedNofo || !userId || files.length === 0) return;
+  const uploadFiles = useCallback(async (): Promise<boolean> => {
+    if (!selectedNofo || !userId || files.length === 0) return false;
 
     setUploading(true);
     setUploadProgress(0);
@@ -227,7 +259,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           setUploadError(`Failed to upload ${file.name}. Please try again.`);
           setUploadAnnouncement("");
           setUploading(false);
-          return;
+          return false;
         }
       }
 
@@ -254,13 +286,22 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         setUploading(false);
         setUploadProgress(0);
       }, 1000);
+      return true;
     } catch (error) {
       console.error("Error during upload:", error);
       setUploadError("An error occurred during upload. Please try again.");
       setUploadAnnouncement("");
       setUploading(false);
+      return false;
     }
   }, [selectedNofo, userId, files, apiClient]);
+
+  const uploadAndLeave = async () => {
+    const leave = pendingLeave;
+    const uploaded = await uploadFiles();
+    setPendingLeave(null);
+    if (uploaded) leave?.run();
+  };
 
   const formatFileSize = (bytes: number): string => {
     if (bytes < 1024) return bytes + " bytes";
@@ -283,7 +324,11 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setIsLoading(true);
 
       if (files.length > 0 && userId) {
-        await uploadFiles();
+        const uploaded = await uploadFiles();
+        if (!uploaded) {
+          setIsLoading(false);
+          return;
+        }
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
@@ -832,6 +877,29 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           />
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={pendingLeave !== null}
+        onClose={() => setPendingLeave(null)}
+        onConfirm={uploadAndLeave}
+        onCancel={() => {
+          const leave = pendingLeave;
+          setPendingLeave(null);
+          leave?.run();
+        }}
+        title="Upload before leaving?"
+        message={
+          uploading
+            ? `Uploading... ${uploadProgress}%`
+            : files.length === 1
+              ? `"${files[0].name}" has been selected but not uploaded yet.`
+              : `${files.length} selected files have not been uploaded yet.`
+        }
+        warning="Leaving without uploading discards the selection, and you will need to pick the files again."
+        confirmLabel="Upload now and continue"
+        cancelLabel="Leave and discard"
+        confirming={uploading}
+      />
 
       <style>{`
         @keyframes spin {

@@ -22,7 +22,7 @@ const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
 const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
 
 function ScrollToTop(): null {
-  const { pathname, search } = useLocation();
+  const { pathname, search, hash } = useLocation();
   const prevPathRef = useRef<string>("");
   const { appName, analyticsId } = useBranding();
 
@@ -30,6 +30,14 @@ function ScrollToTop(): null {
     const mainContent = document.getElementById("main-content");
     if (mainContent) {
       mainContent.focus({ preventScroll: true });
+    }
+
+    const fullPath = pathname + search;
+    const routeChanged = prevPathRef.current !== fullPath;
+
+    // Wizard steps navigate by query string only, so the browser keeps the previous offset.
+    if (routeChanged && !hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
 
     // Page label per route; the app name is appended from branding.
@@ -41,7 +49,7 @@ function ScrollToTop(): null {
         "/profile": "Your Profile",
         "/chat/sessions": "Chat Sessions",
         "/document-editor": "Document Editor",
-        "/document-editor/drafts": "Document Editor Drafts",
+        "/document-editor/drafts": "Applications",
       };
 
       if (exactMatches[path]) {
@@ -70,10 +78,9 @@ function ScrollToTop(): null {
       : `${label} - ${appName}`;
     document.title = baseTitle;
 
-    const fullPath = pathname + search;
     const fullUrl = window.location.origin + fullPath;
-    
-    if (prevPathRef.current !== fullPath) {
+
+    if (routeChanged) {
       prevPathRef.current = fullPath;
       
       const environment = typeof window !== "undefined" && window.__ENVIRONMENT__ 
@@ -89,7 +96,7 @@ function ScrollToTop(): null {
         });
       }
     }
-  }, [pathname, search, appName, analyticsId]);
+  }, [pathname, search, hash, appName, analyticsId]);
 
   return null;
 }

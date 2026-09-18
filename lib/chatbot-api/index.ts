@@ -411,6 +411,7 @@ export class ChatBotApi extends Construct {
       handler: "index.handler",
       environment: {
         DRAFT_GENERATION_JOBS_TABLE_NAME: tables.draftGenerationJobsTable.tableName,
+        EXPORTS_BUCKET: lambdaFunctions.applicationExportsBucket.bucketName,
       },
       timeout: cdk.Duration.seconds(10),
       logGroup: new logs.LogGroup(this, "DraftJobStatusFunctionLogGroup", {
@@ -418,6 +419,7 @@ export class ChatBotApi extends Construct {
       }),
     });
     tables.draftGenerationJobsTable.grantReadData(draftJobStatusFunction);
+    lambdaFunctions.applicationExportsBucket.grantRead(draftJobStatusFunction);
     
     const draftJobStatusAPIIntegration = new HttpLambdaIntegration(
       "DraftJobStatusAPIIntegration",
@@ -555,6 +557,12 @@ export class ChatBotApi extends Construct {
     );
     restBackend.restAPI.addRoutes({
       path: "/user-profile",
+      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT],
+      integration: userProfileIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/user-profile/recently-viewed",
       methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PUT],
       integration: userProfileIntegration,
       authorizer: httpAuthorizer,

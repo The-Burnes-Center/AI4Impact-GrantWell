@@ -30,7 +30,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   onSearchPendingChange,
   searchPlaceholder,
   searchAriaLabel,
-  suppressSearchRef,
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
   const [tipIndex, setTipIndex] = useState(0);
@@ -75,15 +74,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       onSearchPendingChange?.(false);
       return;
     }
-    // Suppress: term was set programmatically (e.g. row click) — show it but don't search
-    if (suppressSearchRef?.current) {
-      suppressSearchRef.current = false;
-      lastSubmittedQuery.current = trimmed;
-      queuedQueryRef.current = null;
-      onSearchPendingChange?.(false);
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      return;
-    }
     if (trimmed === lastSubmittedQuery.current) {
       onSearchPendingChange?.(false);
       return;
@@ -108,7 +98,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [searchTerm, onSearch, onSearchPendingChange, suppressSearchRef]);
+  }, [searchTerm, onSearch, onSearchPendingChange]);
 
   const handleClear = useCallback(() => {
     setSearchTerm("");

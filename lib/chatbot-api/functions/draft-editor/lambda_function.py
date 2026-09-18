@@ -82,7 +82,7 @@ def record_event(event_type, user_id, state=None, nofo_name=None):
         print(f"record_event failed (non-fatal): {e}")
 
 # Define a function to add a draft or update an existing one in the DynamoDB table
-def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, last_write_source=None):
+def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, last_write_source=None, reached_step=None):
     try:
         # Determine default status based on what data exists
         if status is None:
@@ -111,6 +111,8 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
             "rev": 1,
             "last_write_source": last_write_source or "manual"
         }
+        if reached_step:
+            item["reached_steps"] = {reached_step}
 
         # Put the item in DynamoDB
         table.put_item(Item=item)
@@ -293,6 +295,7 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             "uploadedFiles": updated_item.get("uploaded_files", []),
             "lastModified": updated_item.get("last_modified", ""),
             "status": updated_item.get("status", "project_basics"),
+            "reachedSteps": sorted(updated_item.get("reached_steps") or []),
             "rev": updated_item.get("rev")
         }
 
@@ -335,6 +338,24 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             'error': str(general_error),
             'body': 'An unexpected error occurred while updating the draft.'
         }
+
+def mark_step_reached(session_id, user_id, reached_step):
+    """Leaves `rev` alone (a bump makes the next save a spurious 409) and `last_modified` alone (index sort key)."""
+    try:
+        table.update_item(
+            Key={"user_id": user_id, "session_id": session_id},
+            UpdateExpression="ADD #rs :steps",
+            ConditionExpression="attribute_exists(session_id)",
+            ExpressionAttributeNames={"#rs": "reached_steps"},
+            ExpressionAttributeValues={":steps": {reached_step}},
+        )
+    except ClientError as error:
+        if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
+            return _json_response(404, {"error": "no such draft"})
+        print(f"Caught error: could not mark step reached - {error}")
+        return _json_response(500, {"error": "could not record reached step"})
+    return _json_response(200, {"reachedStep": reached_step})
+
 
 def delete_draft_versions(session_id, user_id):
     """Drop every version row for a draft. Snapshots carry contact names, emails
@@ -826,11 +847,12 @@ def lambda_handler(event, context):
         uploaded_files = request.uploaded_files
         expected_rev = request.expected_rev
         last_write_source = request.last_write_source
+        reached_step = request.reached_step
 
         # Route to appropriate operation handler
         if operation == 'add_draft':
             new_title = title or f"Draft on {_now_iso()}"
-            result = add_draft(session_id, user_id, sections, new_title, document_identifier, project_basics, questionnaire, last_modified, status, additional_info, uploaded_files, last_write_source)
+            result = add_draft(session_id, user_id, sections, new_title, document_identifier, project_basics, questionnaire, last_modified, status, additional_info, uploaded_files, last_write_source, reached_step)
             # Creating a draft is both a draft-created event and "pursuing" its grant.
             record_event('draft_created', user_id, caller_state, document_identifier)
             if document_identifier:
@@ -858,6 +880,8 @@ def lambda_handler(event, context):
                 expected_rev=expected_rev,
                 last_write_source=last_write_source
             )
+        elif operation == 'mark_step_reached':
+            return mark_step_reached(session_id, user_id, reached_step)
         elif operation == 'list_draft_versions':
             return list_draft_versions(session_id, user_id, request.limit)
         elif operation == 'get_draft_version':
@@ -890,8 +914,10 @@ def lambda_handler(event, context):
                 'body': json.dumps(f'Operation not found/allowed! Operation Sent: {operation}')
             }
     except ValidationError as e:
-        # Return detailed validation errors
-        error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
+        # A model-level validator reports loc=(), and an unguarded err['loc'][0] made that a 500.
+        error_messages = [
+            f"{err['loc'][0] if err.get('loc') else 'request'}: {err['msg']}" for err in e.errors()
+        ]
         return {
             'statusCode': 400,
             'headers': {'Access-Control-Allow-Origin': '*'},

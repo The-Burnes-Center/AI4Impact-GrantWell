@@ -417,9 +417,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
-        <UnifiedNavigation />
-      </nav>
+      <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs
           items={[

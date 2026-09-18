@@ -9,6 +9,7 @@ import { ConfirmationModal } from "../../../components/common/ConfirmationModal"
 import GrantActionsDropdown from "./GrantActionsDropdown";
 import SummaryEditor from "./SummaryEditor";
 import { PROCESSING_LABELS } from "./processing-stages";
+import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId, CustomQuestion } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
@@ -423,6 +424,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
 
   return (
     <div className="tab-content">
+      <TableScrollRegion label="Grants table" minWidth={640}>
       <div className="table-container" role="table" aria-label="Grants">
         <div className="table-header" role="rowgroup">
           <div role="row" style={{ display: "contents" }}>
@@ -547,6 +549,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
           ))}
         </div>
       </div>
+      </TableScrollRegion>
 
       {/* Edit NOFO Modal */}
       <Modal isOpen={editModalOpen} onClose={() => setEditModalOpen(false)} title="Edit Grant">

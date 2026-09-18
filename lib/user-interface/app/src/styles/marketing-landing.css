@@ -147,10 +147,38 @@
   object-fit: contain;
 }
 
-.marketing__nav--app .marketing__nav-links {
-  flex: 1;
+.marketing__nav-lead {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-spacing-md, 12px);
+  min-width: 0;
+}
+
+.marketing__nav-account {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-spacing-md, 12px);
+  flex-shrink: 0;
+}
+
+.marketing__nav-menu {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--gw-radius-md, 6px);
+  background-color: transparent;
+  color: var(--mk-green-deepest);
+  border: 1px solid var(--mk-green-deepest);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.marketing__nav-menu:hover {
+  background-color: var(--mk-green-deepest);
+  color: var(--mk-white);
 }
 
 .marketing__skip-nav {
@@ -205,11 +233,20 @@
   overflow-x: clip;
 }
 
-.marketing__app-shell > main,
-.marketing__app-shell > .marketing__app-main {
+.marketing__app-body {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-height: 0;
+}
+
+.marketing__app-shell main,
+.marketing__app-shell .marketing__app-main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .marketing__hero {
@@ -702,12 +739,29 @@
 .marketing__partner--reboot { width: 153px; height: 25px; }
 .marketing__partner--govlab { width: 191px; height: 35px; object-fit: cover; }
 
+.marketing__partner-link {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.marketing__partner-link:hover .marketing__partner {
+  opacity: 0.75;
+}
+
+.marketing__partner-link:focus-visible {
+  outline: 2px solid var(--gw-color-focus-dark, #DFECE0);
+  outline-offset: 4px;
+}
+
 @media (max-width: 960px) {
   .marketing__omni { height: auto; padding: 12px 24px; flex-wrap: wrap; gap: 16px; }
   .marketing__omni-link { padding: 4px 0; }
-  .marketing__nav--app { height: auto; padding: 12px 16px; flex-wrap: wrap; gap: 12px; }
-  .marketing__nav--app .marketing__nav-links { flex-basis: 100%; order: 3; justify-content: flex-start; }
+  .marketing__nav--app { height: auto; padding: 8px 16px; flex-wrap: nowrap; gap: 12px; }
   .marketing__nav-wordmark { height: 28px; width: auto; }
+  .marketing__nav-account .marketing__nav-link { padding: 8px 14px; font-size: 12px; letter-spacing: 1.2px; }
   .marketing__nav-signout { padding: 8px 14px; font-size: 12px; letter-spacing: 1.2px; }
   .marketing__hero-row { padding: 0 24px 40px; }
   .marketing__hero-spacer { display: none; }

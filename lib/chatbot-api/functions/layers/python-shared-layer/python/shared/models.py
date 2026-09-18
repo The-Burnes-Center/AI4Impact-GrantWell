@@ -4,8 +4,8 @@ These models provide validation and type safety for JSON data structures.
 """
 
 import json
-from pydantic import BaseModel, Field, field_validator
-from typing import Optional, Dict, List, Any, Literal
+from pydantic import BaseModel, Field, model_validator
+from typing import Optional, Dict, List, Any, ClassVar, Literal
 from datetime import datetime
 
 
@@ -23,7 +23,8 @@ class DraftOperationRequest(BaseModel):
         'get_draft_version',
         'restore_draft_version',
         'label_draft_version',
-        'create_draft_version'
+        'create_draft_version',
+        'mark_step_reached'
     ] = Field(..., description="The operation to perform")
     user_id: str = Field(..., min_length=1, description="User identifier")
     session_id: Optional[str] = Field(None, description="Session identifier")
@@ -58,30 +59,35 @@ class DraftOperationRequest(BaseModel):
     rev: Optional[int] = Field(None, ge=0, description="Version revision to read, restore or label")
     label: Optional[str] = Field(None, max_length=120, description="Human label for a saved version")
     sections_only: Optional[List[str]] = Field(None, description="Restore just these section names")
+    reached_step: Optional[Literal[
+        'projectBasics',
+        'questionnaire',
+        'uploadDocuments',
+        'sectionEditor',
+        'reviewApplication'
+    ]] = Field(None, description="Wizard step the user has now reached; recorded as a high-water mark")
     limit: Optional[int] = Field(None, ge=1, le=200, description="Max version rows to return")
 
-    @field_validator('session_id')
-    @classmethod
-    def validate_session_id_for_operations(cls, v, info):
-        """Validate session_id is present for operations that require it."""
-        operation = info.data.get('operation')
-        required_operations = [
-            'add_draft', 'get_draft', 'update_draft', 'delete_draft',
-            'list_draft_versions', 'get_draft_version', 'restore_draft_version',
-            'label_draft_version', 'create_draft_version',
-        ]
-        if operation in required_operations and not v:
-            raise ValueError(f'session_id is required for {operation} operation')
-        return v
+    SESSION_ID_OPERATIONS: ClassVar[frozenset] = frozenset({
+        'add_draft', 'get_draft', 'update_draft', 'delete_draft',
+        'list_draft_versions', 'get_draft_version', 'restore_draft_version',
+        'label_draft_version', 'create_draft_version', 'mark_step_reached',
+    })
 
-    @field_validator('rev')
-    @classmethod
-    def validate_rev_for_operations(cls, v, info):
-        """Validate rev is present for operations that address one revision."""
-        operation = info.data.get('operation')
-        if operation in ['get_draft_version', 'restore_draft_version', 'label_draft_version'] and v is None:
-            raise ValueError(f'rev is required for {operation} operation')
-        return v
+    REV_OPERATIONS: ClassVar[frozenset] = frozenset({
+        'get_draft_version', 'restore_draft_version', 'label_draft_version',
+    })
+
+    @model_validator(mode='after')
+    def validate_required_fields_for_operation(self):
+        """Model-level: a field validator is skipped for an omitted value, which failed as a 500."""
+        if self.operation in self.SESSION_ID_OPERATIONS and not self.session_id:
+            raise ValueError(f'session_id is required for {self.operation} operation')
+        if self.operation in self.REV_OPERATIONS and self.rev is None:
+            raise ValueError(f'rev is required for {self.operation} operation')
+        if self.operation == 'mark_step_reached' and not self.reached_step:
+            raise ValueError('reached_step is required for mark_step_reached operation')
+        return self
 
 
 class DraftItem(BaseModel):
@@ -98,6 +104,7 @@ class DraftItem(BaseModel):
     last_modified: str
     rev: int = 1
     last_write_source: Optional[str] = None
+    reached_steps: List[str] = Field(default_factory=list)
     status: Literal[
         'project_basics',
         'questionnaire',
@@ -163,15 +170,15 @@ class SessionOperationRequest(BaseModel):
     title: Optional[str] = Field(None, description="Session title")
     document_identifier: Optional[str] = Field(None, description="Document identifier")
 
-    @field_validator('session_id')
-    @classmethod
-    def validate_session_id_for_operations(cls, v, info):
-        """Validate session_id is present for operations that require it."""
-        operation = info.data.get('operation')
-        required_operations = ['add_session', 'get_session', 'update_session', 'delete_session']
-        if operation in required_operations and not v:
-            raise ValueError(f'session_id is required for {operation} operation')
-        return v
+    SESSION_ID_OPERATIONS: ClassVar[frozenset] = frozenset({
+        'add_session', 'get_session', 'update_session', 'delete_session',
+    })
+
+    @model_validator(mode='after')
+    def validate_required_fields_for_operation(self):
+        if self.operation in self.SESSION_ID_OPERATIONS and not self.session_id:
+            raise ValueError(f'session_id is required for {self.operation} operation')
+        return self
 
 
 class SessionItem(BaseModel):

@@ -101,6 +101,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly applicationPdfGeneratorFunction: lambda.Function;
   public readonly docxToTextConverterFunction: lambda.Function;
   public readonly applicationDocxGeneratorFunction: lambda.Function;
+  public readonly applicationExportsBucket: s3.Bucket;
   public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
@@ -182,7 +183,8 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const jsSharedLayer = new lambda.LayerVersion(scope, "JsSharedLayer", {
       layerVersionName: `${stackName}-js-shared-layer`,
-      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
+      // 22.x for the puppeteer functions pinned in document-conversion-stack.ts, which carry this layer.
+      compatibleRuntimes: [lambda.Runtime.NODEJS_22_X, lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/js-shared-layer")
       ),
@@ -1142,11 +1144,14 @@ export class LambdaFunctionStack extends cdk.Stack {
         ffioNofosBucket: props.ffioNofosBucket,
         analyticsTable: props.analyticsTable,
         jsSharedLayer: jsSharedLayer,
+        nofoProcessingReviewTable: props.nofoProcessingReviewTable,
+        draftGenerationJobsTable: props.draftGenerationJobsTable,
       }
     );
 
     this.htmlToPdfConverterFunction =
       documentConversion.htmlToPdfConverterFunction;
+    this.applicationExportsBucket = documentConversion.applicationExportsBucket;
     this.applicationPdfGeneratorFunction =
       documentConversion.applicationPdfGeneratorFunction;
     this.docxToTextConverterFunction =

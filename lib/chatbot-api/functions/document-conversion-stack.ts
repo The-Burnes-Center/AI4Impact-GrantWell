@@ -23,6 +23,8 @@ export interface DocumentConversionStackProps extends cdk.NestedStackProps {
   readonly analyticsTable: Table;
   /** Shared with functions outside this stack, so it stays in the parent. */
   readonly jsSharedLayer: lambda.ILayerVersion;
+  readonly nofoProcessingReviewTable: Table;
+  readonly draftGenerationJobsTable: Table;
 }
 
 export class DocumentConversionStack extends cdk.NestedStack {
@@ -30,6 +32,7 @@ export class DocumentConversionStack extends cdk.NestedStack {
   public readonly applicationPdfGeneratorFunction: lambda.Function;
   public readonly docxToTextConverterFunction: lambda.Function;
   public readonly applicationDocxGeneratorFunction: lambda.Function;
+  public readonly applicationExportsBucket: s3.Bucket;
 
   constructor(
     scope: Construct,
@@ -38,6 +41,9 @@ export class DocumentConversionStack extends cdk.NestedStack {
   ) {
     super(scope, id, props);
 
+    // Pinned: @sparticuz/chromium picks its tarball by runtime string; past 22.x Chromium won't start.
+    const puppeteerRuntime = lambda.Runtime.NODEJS_22_X;
+
     // Create Puppeteer Core Lambda Layer for HTML to PDF conversion
     // Note: @sparticuz/chromium v131+ bundles all required dependencies, so no separate Chromium layer is needed
     const puppeteerCoreLayer = new lambda.LayerVersion(
@@ -45,7 +51,7 @@ export class DocumentConversionStack extends cdk.NestedStack {
       "PuppeteerCoreLayer",
       {
         layerVersionName: "PuppeteerCoreLayer",
-        compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
+        compatibleRuntimes: [puppeteerRuntime],
         code: lambda.Code.fromAsset(
           path.join(__dirname, "layers/puppeteer-core-layer.zip")
         ),
@@ -58,18 +64,20 @@ export class DocumentConversionStack extends cdk.NestedStack {
       this,
       "HtmlToPdfConverterFunction",
       {
-        runtime: lambda.Runtime.NODEJS_24_X,
+        runtime: puppeteerRuntime,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "landing-page/html-to-pdf-converter")),
         handler: "index.handler",
         layers: [puppeteerCoreLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         },
         timeout: cdk.Duration.minutes(5),
         memorySize: 1024, // PDF conversion with Chromium can be memory-intensive
       }
     );
+    props.nofoProcessingReviewTable.grantWriteData(htmlToPdfConverterFunction);
 
     // S3 permissions for HTML to PDF converter
     // ListBucket permission on the bucket itself
@@ -93,12 +101,22 @@ export class DocumentConversionStack extends cdk.NestedStack {
 
     this.htmlToPdfConverterFunction = htmlToPdfConverterFunction;
 
+    const applicationExportsBucket = new s3.Bucket(this, "ApplicationExportsBucket", {
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      lifecycleRules: [{ expiration: cdk.Duration.days(1) }],
+    });
+    this.applicationExportsBucket = applicationExportsBucket;
+
     // Application PDF Generator Lambda Function (using Puppeteer for tagged PDFs)
     const applicationPdfGeneratorFunction = new lambda.Function(
       this,
       "ApplicationPdfGeneratorFunction",
       {
-        runtime: lambda.Runtime.NODEJS_24_X,
+        runtime: puppeteerRuntime,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "application-pdf-generator")
         ),
@@ -106,12 +124,18 @@ export class DocumentConversionStack extends cdk.NestedStack {
         layers: [puppeteerCoreLayer, props.jsSharedLayer],
         environment: {
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+          EXPORTS_BUCKET: applicationExportsBucket.bucketName,
+          EXPORT_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
         },
         timeout: cdk.Duration.minutes(5),
         memorySize: 2048, // PDF conversion with Chromium can be memory-intensive
       }
     );
     props.analyticsTable.grantWriteData(applicationPdfGeneratorFunction);
+    applicationExportsBucket.grantPut(applicationPdfGeneratorFunction);
+    props.draftGenerationJobsTable.grantWriteData(applicationPdfGeneratorFunction);
+    // Self-invoke: a start request hands the work to a second invocation.
+    applicationPdfGeneratorFunction.grantInvoke(applicationPdfGeneratorFunction);
 
     this.applicationPdfGeneratorFunction = applicationPdfGeneratorFunction;
 

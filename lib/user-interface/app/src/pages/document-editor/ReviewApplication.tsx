@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { getCurrentUser } from "aws-amplify/auth";
-import { LuFileText, LuDownload, LuArrowLeft, LuSquarePen, LuInfo, LuCircleCheckBig, LuTriangleAlert, LuChevronDown } from "react-icons/lu";
+import { LuFileText, LuDownload, LuArrowLeft, LuSquarePen, LuInfo, LuCircleCheckBig, LuTriangleAlert, LuChevronDown, LuEye } from "react-icons/lu";
+import { readDraftCache, pollForExportUrl } from "../../common/helpers/document-editor-utils";
 import "../../styles/document-editor.css";
 
 interface ReviewApplicationProps {
@@ -15,6 +16,17 @@ interface Section {
   description: string;
 }
 
+type ExportFormat = "pdf" | "docx";
+
+const EXPORT_LABELS: Record<ExportFormat, string> = {
+  pdf: "PDF",
+  docx: "Word document",
+};
+
+const PDF_EXPORT_POLL_MS = 2000;
+/** Must stay under the generator's own 5-minute Lambda timeout. */
+const PDF_EXPORT_TIMEOUT_MS = 4 * 60 * 1000;
+
 const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   selectedNofo,
   sessionId,
@@ -23,13 +35,14 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [sections, setSections] = useState<Section[]>([]);
   const [sectionAnswers, setSectionAnswers] = useState<Record<string, string>>({});
   const [completenessPassed, setCompletenessPassed] = useState(false);
+  const [unviewedSections, setUnviewedSections] = useState<string[]>([]);
   const [stats, setStats] = useState({ wordCount: 0, pageCount: 0, complete: 0 });
-  const [isExportingPDF, setIsExportingPDF] = useState(false);
-  const [isExportingDOCX, setIsExportingDOCX] = useState(false);
+  const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   const [exportStatus, setExportStatus] = useState("");
   const [exportError, setExportError] = useState<string | null>(null);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
+  const exportInFlightRef = useRef(false);
   const apiClient = useApiClient();
 
   useEffect(() => {
@@ -71,6 +84,12 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
     fetchDraftData();
   }, [apiClient, selectedNofo, sessionId]);
+
+  useEffect(() => {
+    if (sections.length === 0) return;
+    const viewed = readDraftCache<string[]>(sessionId, "sectionsViewed") || [];
+    setUnviewedSections(sections.map((s) => s.name).filter((name) => !viewed.includes(name)));
+  }, [sections, sessionId]);
 
   useEffect(() => {
     if (sections.length > 0) {
@@ -141,73 +160,96 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     return { draftData, grantName };
   };
 
-  const handleExportPDF = async () => {
-    setExportDropdownOpen(false);
-    setIsExportingPDF(true);
-    setExportError(null);
-    setExportStatus("Generating PDF. This may take a moment.");
-    try {
-      const { draftData, grantName } = await fetchDraftForExport();
-      if (!draftData) throw new Error("No draft data available for export.");
-
-      const pdfBlob = await apiClient.drafts.generatePDF({
-        title: draftData.title,
-        grantName: grantName || undefined,
-        projectBasics: draftData.projectBasics,
-        sections: draftData.sections,
-      });
-
-      const url = window.URL.createObjectURL(pdfBlob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "grant-application.pdf";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      setExportStatus("PDF ready. Downloaded as grant-application.pdf.");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      const message = "PDF export failed. Your work is saved. Please try exporting again.";
-      setExportError(message);
-      setExportStatus(message);
-    } finally {
-      setIsExportingPDF(false);
+  const downloadBlob = async (blob: Blob, filename: string) => {
+    if (blob.type.includes("json") || blob.type.startsWith("text/")) {
+      const detail = (await blob.text()).slice(0, 300);
+      throw new Error(detail || "The server did not return a document.");
     }
+    if (blob.size === 0) {
+      throw new Error("The server returned an empty document.");
+    }
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.rel = "noopener";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    // Revoking in the same task as the click cancels the transfer in Chrome.
+    window.setTimeout(() => {
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    }, 10000);
   };
 
-  const handleExportDOCX = async () => {
+  /** Cross-origin, so a `download` attribute is ignored; S3's Content-Disposition saves it. */
+  const downloadFromUrl = (url: string) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.rel = "noopener";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    window.setTimeout(() => link.remove(), 10000);
+  };
+
+  const runExport = async (format: ExportFormat) => {
+    if (exportInFlightRef.current) return;
+    exportInFlightRef.current = true;
+
+    const label = EXPORT_LABELS[format];
+    const filename = `grant-application.${format}`;
     setExportDropdownOpen(false);
-    setIsExportingDOCX(true);
+    setExportingFormat(format);
     setExportError(null);
-    setExportStatus("Generating Word document. This may take a moment.");
+    setExportStatus(`Generating ${label}. This may take a moment.`);
+
     try {
       const { draftData, grantName } = await fetchDraftForExport();
       if (!draftData) throw new Error("No draft data available for export.");
 
-      const docxBlob = await apiClient.drafts.generateDOCX({
+      const payload = {
         title: draftData.title,
         grantName: grantName || undefined,
         projectBasics: draftData.projectBasics,
         sections: draftData.sections,
-      });
+      };
 
-      const url = window.URL.createObjectURL(docxBlob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "grant-application.docx";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      setExportStatus("Word document ready. Downloaded as grant-application.docx.");
+      if (format === "docx") {
+        await downloadBlob(await apiClient.drafts.generateDOCX(payload), filename);
+      } else {
+        let jobId: string | null = null;
+        try {
+          jobId = await apiClient.drafts.startPdfExport(payload);
+        } catch (startError) {
+          console.warn("Async PDF export unavailable, falling back to sync:", startError);
+        }
+        if (jobId) {
+          const id = jobId;
+          downloadFromUrl(
+            await pollForExportUrl({
+              poll: () => apiClient.drafts.pollDraftJob(id),
+              intervalMs: PDF_EXPORT_POLL_MS,
+              timeoutMs: PDF_EXPORT_TIMEOUT_MS,
+            })
+          );
+        } else {
+          await downloadBlob(await apiClient.drafts.generatePDF(payload), filename);
+        }
+      }
+
+      setExportStatus(`${label} ready. Downloaded as ${filename}.`);
     } catch (error) {
-      console.error("Error generating DOCX:", error);
-      const message = "Word export failed. Your work is saved. Please try exporting again.";
+      console.error(`Error generating ${label}:`, error);
+      const detail = error instanceof Error ? error.message : String(error);
+      const message = `${label} export failed. Your work is saved. Please try exporting again. (${detail})`;
       setExportError(message);
       setExportStatus(message);
     } finally {
-      setIsExportingDOCX(false);
+      exportInFlightRef.current = false;
+      setExportingFormat(null);
     }
   };
 
@@ -275,6 +317,37 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       <div className="ra-card">
         <h3 className="ra-export-section__title">Before You Export</h3>
 
+        {unviewedSections.length > 0 && (
+          <div className="ra-unviewed">
+            <LuEye className="ra-unviewed__icon" aria-hidden="true" />
+            <div className="ra-unviewed__body">
+              <h4 className="ra-unviewed__title">
+                {unviewedSections.length === 1
+                  ? "1 section hasn't been opened yet"
+                  : `${unviewedSections.length} sections haven't been opened yet`}
+              </h4>
+              <p className="ra-unviewed__text">
+                This content was drafted for you and never reviewed. You can still
+                export, but reading it first is strongly recommended.
+              </p>
+              <ul className="ra-unviewed__list">
+                {unviewedSections.map((name) => (
+                  <li key={name} className="ra-unviewed__item">
+                    {name}
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => onNavigate("sectionEditor")}
+                className="ra-unviewed__action"
+              >
+                Review these sections
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="ra-export-grid">
           <button
             onClick={() => onNavigate("sectionEditor")}
@@ -316,10 +389,10 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         </ul>
       </div>
 
-      {(isExportingPDF || isExportingDOCX) && (
+      {exportingFormat && (
         <p className="ra-export-progress">
           <span className="ra-export-progress__spinner" aria-hidden="true" />
-          {isExportingPDF ? "Generating PDF…" : "Generating Word document…"}
+          {`Generating ${EXPORT_LABELS[exportingFormat]}…`}
         </p>
       )}
 
@@ -351,18 +424,28 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <button
             id="ra-export-trigger"
             onClick={() => setExportDropdownOpen((o) => !o)}
-            disabled={!completenessPassed}
+            disabled={!completenessPassed || exportingFormat !== null}
             className="ra-export-pdf-btn"
             aria-haspopup="menu"
             aria-expanded={exportDropdownOpen}
+            aria-busy={exportingFormat !== null}
           >
-            <LuDownload className="ra-export-pdf-btn__icon" aria-hidden="true" />
-            Export As
-            <LuChevronDown
-              size={16}
-              style={{ marginLeft: "6px" }}
-              aria-hidden="true"
-            />
+            {exportingFormat ? (
+              <>
+                <span className="ra-export-pdf-btn__spinner" aria-hidden="true" />
+                {`Generating ${EXPORT_LABELS[exportingFormat]}…`}
+              </>
+            ) : (
+              <>
+                <LuDownload className="ra-export-pdf-btn__icon" aria-hidden="true" />
+                Export As
+                <LuChevronDown
+                  size={16}
+                  style={{ marginLeft: "6px" }}
+                  aria-hidden="true"
+                />
+              </>
+            )}
           </button>
 
           {exportDropdownOpen && (
@@ -376,20 +459,20 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
               <button
                 className="ra-export-dropdown__item"
                 role="menuitem"
-                onClick={handleExportPDF}
-                disabled={isExportingPDF}
+                onClick={() => runExport("pdf")}
+                disabled={exportingFormat !== null}
               >
                 <LuDownload size={14} aria-hidden="true" />
-                {isExportingPDF ? "Generating PDF…" : "PDF (.pdf)"}
+                PDF (.pdf)
               </button>
               <button
                 className="ra-export-dropdown__item"
                 role="menuitem"
-                onClick={handleExportDOCX}
-                disabled={isExportingDOCX}
+                onClick={() => runExport("docx")}
+                disabled={exportingFormat !== null}
               >
                 <LuFileText size={14} aria-hidden="true" />
-                {isExportingDOCX ? "Generating DOCX…" : "Word Document (.docx)"}
+                Word Document (.docx)
               </button>
             </div>
           )}

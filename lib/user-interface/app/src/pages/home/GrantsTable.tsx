@@ -3,6 +3,7 @@ import { LuFileX, LuX, LuArrowUp, LuArrowDown, LuArrowUpDown, LuPin } from "reac
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
 import { GRANT_TYPES, nofoDisplayName } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
+import TableScrollRegion from "../../components/ui/TableScrollRegion";
 import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
 
@@ -31,7 +32,6 @@ interface GrantsTableProps {
   nofos: NOFO[];
   loading: boolean;
   onSelectDocument: (document: { label: string; value: string }) => void;
-  onSearchTermChange?: (term: string) => void;
   searchTerm?: string;
   searchResults?: AISearchResult[] | null;
   isSearching?: boolean;
@@ -45,7 +45,6 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   nofos,
   loading,
   onSelectDocument,
-  onSearchTermChange,
   searchTerm = "",
   searchResults = null,
   isSearching = false,
@@ -299,14 +298,6 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       label: nofo.name,
       value: nofo.name + "/",
     });
-    onSearchTermChange?.(nofo.name);
-
-    // Clear AI results so the table returns to normal browsing
-    // (suppressSearchRef in IntegratedSearchBar prevents re-triggering)
-    if (preferAISearch && searchResults) {
-      onClearSearch?.();
-    }
-
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 150);
@@ -457,7 +448,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         {resultsAnnouncement}
       </div>
 
-      {/* Table */}
+      <TableScrollRegion label="Grants table" className="landing-table-scroll">
       <div className="landing-table-container" role="table" aria-label="Grants" aria-busy={awaitingAIResults}>
         <div className="landing-table-header" role="rowgroup">
           <div className="landing-table-header-row" role="row">
@@ -615,6 +606,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           })}
         </div>
       </div>
+      </TableScrollRegion>
 
       {/* Show More / Show Less for AI results */}
       {!awaitingAIResults && hasRankedResults && filteredNofos.length > AI_INITIAL_LIMIT && (

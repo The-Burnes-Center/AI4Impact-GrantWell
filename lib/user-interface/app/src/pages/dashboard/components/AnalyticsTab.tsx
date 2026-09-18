@@ -168,9 +168,9 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
               label={`Active (last ${data.window}d)`}
               value={data.activeUsers}
             />
-            <StatTile label="Drafts created" value={data.draftsCreated} />
-            <StatTile label="Drafts completed" value={data.draftsCompleted} />
-            <StatTile label="Drafts downloaded" value={data.draftsDownloaded} />
+            <StatTile label="Applications created" value={data.draftsCreated} />
+            <StatTile label="Applications completed" value={data.draftsCompleted} />
+            <StatTile label="Applications downloaded" value={data.draftsDownloaded} />
           </div>
 
           {/* Users by state — 2 series (registered vs active) */}
@@ -252,7 +252,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
             </ResponsiveContainer>
             <VisuallyHiddenTable
               caption="Grant application funnel"
-              columns={["Stage", "Drafts"]}
+              columns={["Stage", "Applications"]}
               rows={data.draftFunnel.stages.map((s) => [
                 STAGE_LABELS[s.stage] || s.stage,
                 String(s.count),

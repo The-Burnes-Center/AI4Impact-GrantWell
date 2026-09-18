@@ -19,6 +19,7 @@ interface QuickQuestionnaireProps {
   documentData?: DocumentData | null;
   onUpdateData?: (data: Partial<DocumentData>) => void;
   saveStatus?: SaveStatus;
+  lastSavedAt?: string | null;
   onRetrySave?: () => void;
 }
 
@@ -34,6 +35,9 @@ interface QuestionnaireFormData {
   [key: string]: string;
 }
 
+const AUTOSAVE_IDLE_BEFORE_FIRST_SAVE = "Changes save automatically";
+const AUTOSAVE_IDLE_AFTER_FIRST_SAVE = "Saved";
+
 const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   onContinue,
   selectedNofo,
@@ -41,8 +45,13 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   documentData,
   onUpdateData,
   saveStatus = "idle",
+  lastSavedAt,
   onRetrySave,
 }) => {
+  const autoSaveIdleText = lastSavedAt
+    ? AUTOSAVE_IDLE_AFTER_FIRST_SAVE
+    : AUTOSAVE_IDLE_BEFORE_FIRST_SAVE;
+
   const [formData, setFormData] = useState<QuestionnaireFormData>({});
   const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -194,7 +203,13 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
       <Card
         header="Questionnaire"
-        headerActions={<AutoSaveIndicator status={saveStatus} onRetry={onRetrySave} />}
+        headerActions={
+          <AutoSaveIndicator
+            status={saveStatus}
+            idleText={autoSaveIdleText}
+            onRetry={onRetrySave}
+          />
+        }
       >
         <p style={{ color: colors.textSecondary, marginBottom: "24px", fontFamily: typography.fontFamily }}>
           Answer these simple questions to help us create a draft of your
@@ -265,6 +280,14 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
           ))}
         </div>
       </Card>
+
+      <div style={{ marginTop: "24px" }}>
+        <AutoSaveIndicator
+          status={saveStatus}
+          idleText={autoSaveIdleText}
+          announce={false}
+        />
+      </div>
 
       <NavigationButtons
         onBack={() => onNavigate("projectBasics")}

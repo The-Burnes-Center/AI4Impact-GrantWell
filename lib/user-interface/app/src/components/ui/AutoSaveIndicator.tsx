@@ -34,6 +34,10 @@ export interface AutoSaveIndicatorProps {
   errorText?: string;
   /** Duration before auto-hiding after save (0 to disable) */
   hideAfterMs?: number;
+  /** Standing line for the idle state; omitted renders nothing while idle. */
+  idleText?: string;
+  /** Set false for a second, visual-only copy of a status already announced elsewhere. */
+  announce?: boolean;
   /** Offers a retry button alongside the error state */
   onRetry?: () => void;
 }
@@ -44,9 +48,11 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   savingText = "Saving...",
   savedText = "Saved",
   errorText = "Not saved",
+  idleText,
+  announce = true,
   onRetry,
 }) => {
-  if (status === "idle") {
+  if (status === "idle" && !idleText) {
     return null;
   }
 
@@ -77,9 +83,15 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
           to { transform: rotate(360deg); }
         }
       `}</style>
-      {/* Always mounted, including when idle: a region created at the same instant as
-          "Saving..." is not announced. The status text is the only label. */}
-      <div style={containerStyle} role="status" aria-live="polite">
+      {/* With idleText the region mounts before the first save: one created with its message is not announced. */}
+      <div
+        style={containerStyle}
+        {...(announce
+          ? { role: "status", "aria-live": "polite" as const }
+          : { "aria-hidden": true })}
+      >
+        {status === "idle" && idleText && <span>{idleText}</span>}
+
         {status === "pending" && (
           <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <svg

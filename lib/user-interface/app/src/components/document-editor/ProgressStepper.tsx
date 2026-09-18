@@ -354,7 +354,6 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         })}
       </div>
 
-      {/* Progress Percentage (Optional) */}
       {showProgress && (
         <div
           style={{
@@ -366,7 +365,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             fontWeight: 500,
           }}
         >
-          {Math.round(progressPercentage)}% Complete
+          {`Application progress: step ${activeStep + 1} of ${steps.length} (${Math.round(progressPercentage)}%)`}
         </div>
       )}
     </div>

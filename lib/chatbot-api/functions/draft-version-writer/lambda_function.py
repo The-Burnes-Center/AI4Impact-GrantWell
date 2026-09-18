@@ -1,6 +1,6 @@
 """
-DynamoDB Stream consumer for the draft table: turns every content change into a
-version snapshot.
+DynamoDB Stream consumer for the draft table: turns every change to a user's
+work into a version snapshot.
 
 Snapshots the NewImage — the state each write produced — so the row a user picks
 in the panel is literally the content they will get back. A stream record cannot
@@ -60,20 +60,18 @@ def _newest_version(draft_key):
     return items[0] if items else None
 
 
-def _supersedes(draft_key, source, changed, created_at):
+def _superseded_row(draft_key, source, changed, created_at):
     """One editing episode should leave one row, holding its latest text.
 
-    Returns the rev of a row this snapshot replaces, or None to just append.
-    Only consecutive autosaves of the *same* section set collapse, and within the
-    window — so moving to another section always starts a new version.
+    ai_generated always collapses: one generation is written twice.
     """
-    if source != "autosave":
+    if source not in ("autosave", "ai_generated"):
         return None
 
     newest = _newest_version(draft_key)
-    if not newest or newest.get("source") != "autosave" or newest.get("label"):
+    if not newest or newest.get("source") != source or newest.get("label"):
         return None
-    if sorted(newest.get("changed_sections") or []) != sorted(changed or []):
+    if source == "autosave" and sorted(newest.get("changed_sections") or []) != sorted(changed or []):
         return None
 
     try:
@@ -89,7 +87,7 @@ def _supersedes(draft_key, source, changed, created_at):
 
     if (current - previous).total_seconds() >= SNAPSHOT_MIN_INTERVAL_SECONDS:
         return None
-    return newest.get("rev")
+    return newest
 
 
 def _prune(draft_key):
@@ -136,10 +134,15 @@ def process(record):
         source = "initial"
     else:
         source = new_image.get("last_write_source") or "autosave"
+        # A surviving `status_change` row carries work the browser had not flushed yet.
+        if source == "status_change":
+            source = "autosave"
     created_at = _record_timestamp(record)
     changed = dv.changed_sections(old_image.get("sections"), new_image.get("sections"))
 
-    superseded = _supersedes(draft_key, source, changed, created_at)
+    superseded = _superseded_row(draft_key, source, changed, created_at)
+    if superseded is not None and source == "ai_generated":
+        changed = sorted(set(changed) | set(superseded.get("changed_sections") or []))
 
     item = dv.build_version_item(
         user_id=user_id,
@@ -165,11 +168,11 @@ def process(record):
 
     # Written before deleting, so a failure here leaves a spare row rather than
     # a hole in the history.
-    if superseded is not None and int(superseded) != rev:
+    if superseded is not None and int(superseded["rev"]) != rev:
         try:
-            table.delete_item(Key={"draft_key": draft_key, "rev": int(superseded)})
+            table.delete_item(Key={"draft_key": draft_key, "rev": int(superseded["rev"])})
         except ClientError as error:
-            print(f"Could not collapse superseded version {superseded}: {error}")
+            print(f"Could not collapse superseded version {superseded['rev']}: {error}")
 
     _prune(draft_key)
 

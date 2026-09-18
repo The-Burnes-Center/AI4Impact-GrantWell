@@ -9,7 +9,6 @@ interface ModalProps {
   title: string;
   children: React.ReactNode;
   maxWidth?: string;
-  topOffset?: number;
   hideCloseButton?: boolean;
 }
 
@@ -22,7 +21,7 @@ interface ModalProps {
  * - Consistent styling matching Dashboard
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, maxWidth = "500px", topOffset = 0, hideCloseButton = false }) => {
+  ({ isOpen, onClose, title, children, maxWidth = "500px", hideCloseButton = false }) => {
     const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose });
     const titleId = useId();
 
@@ -34,7 +33,8 @@ export const Modal = React.memo<ModalProps>(
         role="presentation"
         style={{
           position: "fixed",
-          top: topOffset,
+          // Full-viewport: an offset would leave the top bar clickable behind an aria-modal dialog.
+          top: 0,
           left: 0,
           right: 0,
           bottom: 0,

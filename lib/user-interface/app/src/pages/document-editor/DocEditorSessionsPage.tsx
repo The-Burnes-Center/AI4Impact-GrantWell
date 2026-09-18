@@ -83,16 +83,12 @@ export default function DocEditorSessionsPage() {
 
   const breadcrumbItems = [
     { label: "Home", onClick: () => navigate("/") },
-    { label: "Drafts" },
+    { label: "Applications" },
   ];
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      <nav aria-label="Application navigation" style={{ flexShrink: 0 }}>
-        <UnifiedNavigation
-          documentIdentifier={docId || undefined}
-        />
-      </nav>
+      <UnifiedNavigation documentIdentifier={docId || undefined} />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs items={breadcrumbItems} />
 

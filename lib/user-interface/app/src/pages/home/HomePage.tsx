@@ -8,6 +8,7 @@ import { useFeatureRolloutAccess } from "../../hooks/use-feature-rollout-access"
 import {
   addToRecentlyViewed,
   getRecentlyViewed,
+  fetchRecentlyViewed,
   cleanupRecentlyViewed,
 } from "../../common/helpers/recently-viewed-nofos";
 import IntegratedSearchBar from "../../components/search/IntegratedSearchBar";
@@ -36,6 +37,7 @@ export default function HomePage() {
   const [selectedDocument, setSelectedDocument] = useState<SelectableDocument | null>(null);
   const [documents, setDocuments] = useState<SelectableDocument[]>([]);
   const [recentlyViewedNOFOs, setRecentlyViewedNOFOs] = useState<RecentlyViewedNOFO[]>([]);
+  const [recentlyViewedLoaded, setRecentlyViewedLoaded] = useState(false);
   const [tableNofos, setTableNofos] = useState<NOFO[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchPending, setIsSearchPending] = useState(false);
@@ -44,7 +46,6 @@ export default function HomePage() {
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
   const prevSelectedDocRef = useRef<SelectableDocument | null>(null);
   const firstCTAButtonRef = useRef<HTMLButtonElement>(null);
-  const suppressSearchRef = useRef(false);
 
   const apiClient = useApiClient();
   const navigate = useNavigate();
@@ -82,14 +83,23 @@ export default function HomePage() {
   // Load recently viewed NOFOs
   useEffect(() => {
     setRecentlyViewedNOFOs(getRecentlyViewed());
+    let active = true;
+    fetchRecentlyViewed().then((items) => {
+      if (!active) return;
+      setRecentlyViewedNOFOs(items);
+      setRecentlyViewedLoaded(true);
+    });
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Filter out archived NOFOs from history when documents change
   useEffect(() => {
-    if (documents.length === 0) return;
+    if (!recentlyViewedLoaded || documents.length === 0) return;
     const activeNames = documents.map((doc) => doc.label);
     setRecentlyViewedNOFOs(cleanupRecentlyViewed(activeNames));
-  }, [documents]);
+  }, [documents, recentlyViewedLoaded]);
 
   // Fetch NOFO documents
   useEffect(() => {
@@ -202,15 +212,9 @@ export default function HomePage() {
     prevSelectedDocRef.current = selectedDocument;
   }, [selectedDocument]);
 
-  const handleSelectDocument = useCallback(
-    (doc: SelectableDocument | null) => {
-      setSelectedDocument(doc);
-      if (doc) {
-        suppressSearchRef.current = true;
-      }
-    },
-    []
-  );
+  const handleSelectDocument = useCallback((doc: SelectableDocument | null) => {
+    setSelectedDocument(doc);
+  }, []);
 
   const handleNOFOSelect = useCallback(
     (href: string, selectedNOFO: { label: string; value: string }) => {
@@ -328,7 +332,6 @@ export default function HomePage() {
           onSearchPendingChange={canUseAIGrantSearch ? setIsSearchPending : undefined}
           searchPlaceholder={searchPlaceholder}
           searchAriaLabel={searchAriaLabel}
-          suppressSearchRef={canUseAIGrantSearch ? suppressSearchRef : undefined}
         />
 
         {/* Screen reader announcement */}
@@ -336,22 +339,27 @@ export default function HomePage() {
           {srAnnouncement}
         </div>
 
-        {/* CTA Buttons */}
         {selectedDocument && (
-          <nav
-            aria-label="Grant actions"
-            className={`cta-buttons-container cta-nav${highlightCTAButtons ? " highlight cta-nav--highlighted" : ""}`}
-          >
-            <button ref={firstCTAButtonRef} className="cta-btn" onClick={handleViewRequirements}>
-              View Key Requirements
-            </button>
-            <button className="cta-btn" onClick={handleWriteNarrative}>
-              Write Project Narrative
-            </button>
-            <button className="cta-btn" onClick={handleGetHelp}>
-              Get Grant Help
-            </button>
-          </nav>
+          <div className="cta-block">
+            <p className="cta-selected">
+              Selected:{" "}
+              <strong className="cta-selected__name">{selectedDocument.label}</strong>
+            </p>
+            <nav
+              aria-label={`Actions for ${selectedDocument.label}`}
+              className={`cta-buttons-container cta-nav${highlightCTAButtons ? " highlight cta-nav--highlighted" : ""}`}
+            >
+              <button ref={firstCTAButtonRef} className="cta-btn" onClick={handleViewRequirements}>
+                View Key Requirements
+              </button>
+              <button className="cta-btn" onClick={handleWriteNarrative}>
+                Write Project Narrative
+              </button>
+              <button className="cta-btn" onClick={handleGetHelp}>
+                Get Grant Help
+              </button>
+            </nav>
+          </div>
         )}
 
         {/* Grants Table */}
@@ -364,7 +372,6 @@ export default function HomePage() {
               nofos={tableNofos}
               loading={loading}
               onSelectDocument={handleSelectDocument}
-              onSearchTermChange={setSearchTerm}
               searchTerm={searchTerm}
               searchResults={canUseAIGrantSearch ? aiSearch.results : null}
               isSearching={canUseAIGrantSearch ? aiSearch.isSearching : false}

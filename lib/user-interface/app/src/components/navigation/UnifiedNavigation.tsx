@@ -1,40 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation, useParams, useSearchParams } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation, useSearchParams } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
-import { LuHouse, LuMessageSquare, LuMessagesSquare, LuFileText, LuSquareCheckBig, LuUpload, LuLayoutDashboard, LuUser } from "react-icons/lu";
+import {
+  LuHouse,
+  LuMessageSquare,
+  LuMessagesSquare,
+  LuFileText,
+  LuSquareCheckBig,
+  LuUpload,
+  LuLayoutDashboard,
+  LuMenu,
+  LuX,
+  LuChevronLeft,
+  LuChevronRight,
+  LuPencilLine,
+  LuListChecks,
+  LuFilePlus2,
+  LuFileCheck2,
+} from "react-icons/lu";
 import Modal from "../common/Modal";
 import { useAdminCheck } from "../../hooks/use-admin-check";
-import { useInert } from "../../hooks/use-inert";
+import { useFocusTrap } from "../../hooks/use-focus-trap";
+import {
+  NavigationRegistration,
+  useNavigationChrome,
+} from "./navigation-context";
 
-interface UnifiedNavigationProps {
-  documentIdentifier?: string;
-  currentStep?: string;
-  onNavigate?: (step: string) => void;
-}
+export const SIDEBAR_ID = "gw-app-sidebar";
 
-const useViewportWidth = () => {
-  const [width, setWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return width;
-};
+const EXPANDED_WIDTH = "240px";
+const COLLAPSED_WIDTH = "60px";
+const DRAWER_WIDTH = "280px";
 
 const groupHeadingStyle: React.CSSProperties = {
   margin: 0,
   padding: "0 16px 8px 16px",
-  fontSize: "14px",
+  fontSize: "var(--gw-font-size-sm, 14px)",
   fontWeight: 600,
-  color: "#e2e8f0",
+  color: "#a0aec0",
   textTransform: "uppercase",
   letterSpacing: "1px",
-  fontFamily: "'Noto Sans', sans-serif",
+  fontFamily: "var(--gw-font-family, 'Noto Sans', sans-serif)",
 };
+
+const itemStyle = (active: boolean): React.CSSProperties => ({
+  width: "100%",
+  display: "flex",
+  alignItems: "center",
+  padding: "12px 16px",
+  borderRadius: "var(--gw-radius-lg, 8px)",
+  marginBottom: "8px",
+  background: active ? "var(--gw-color-primary, #23776C)" : "none",
+  color: active ? "#ffffff" : "#e2e8f0",
+  border: "none",
+  fontSize: "var(--gw-font-size-base, 16px)",
+  cursor: "pointer",
+  transition: "background 0.2s, color 0.2s",
+  textAlign: "left",
+  fontFamily: "var(--gw-font-family, 'Noto Sans', sans-serif)",
+});
 
 const NavItem: React.FC<{
   onClick: () => void;
@@ -42,156 +67,209 @@ const NavItem: React.FC<{
   icon: React.ReactNode;
   active: boolean;
   expanded: boolean;
-}> = ({ onClick, label, icon, active, expanded }) => (
+  currentKind?: "page" | "step";
+}> = ({ onClick, label, icon, active, expanded, currentKind = "page" }) => (
   <button
+    type="button"
     onClick={onClick}
-    aria-label={label}
-    aria-current={active ? "page" : undefined}
-    style={{
-      width: "100%",
-      display: "flex",
-      alignItems: "center",
-      padding: "12px 16px",
-      borderRadius: "8px",
-      marginBottom: "8px",
-      background: active ? "#23776C" : "none",
-      color: active ? "white" : "#e2e8f0",
-      border: "none",
-      fontSize: "16px",
-      cursor: "pointer",
-      transition: "background 0.2s, color 0.2s",
-      textAlign: "left",
-      fontFamily: "'Noto Sans', sans-serif",
+    aria-label={expanded ? undefined : label}
+    aria-current={active ? currentKind : undefined}
+    style={itemStyle(active)}
+    onMouseEnter={(e) => {
+      if (!active) e.currentTarget.style.background = "#2d3748";
     }}
-    onMouseEnter={(e) =>
-      (e.currentTarget.style.background = active ? "#23776C" : "#2d3748")
-    }
-    onMouseLeave={(e) =>
-      (e.currentTarget.style.background = active ? "#23776C" : "none")
-    }
+    onMouseLeave={(e) => {
+      if (!active) e.currentTarget.style.background = "none";
+    }}
   >
     {icon}
     {expanded && <span style={{ marginLeft: "12px" }}>{label}</span>}
   </button>
 );
 
-const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
-  documentIdentifier,
-  currentStep,
-  onNavigate,
-}) => {
+const STEP_ITEMS: { step: string; label: string; icon: React.ReactNode }[] = [
+  {
+    step: "projectBasics",
+    label: "Project Basics",
+    icon: <LuPencilLine size={20} aria-hidden="true" />,
+  },
+  {
+    step: "questionnaire",
+    label: "Questionnaire",
+    icon: <LuListChecks size={20} aria-hidden="true" />,
+  },
+  {
+    step: "uploadDocuments",
+    label: "Additional Information",
+    icon: <LuFilePlus2 size={20} aria-hidden="true" />,
+  },
+  {
+    step: "sectionEditor",
+    label: "Section Editor",
+    icon: <LuFileText size={20} aria-hidden="true" />,
+  },
+  {
+    step: "reviewApplication",
+    label: "Review",
+    icon: <LuFileCheck2 size={20} aria-hidden="true" />,
+  },
+];
+
+const grantFromPath = (pathname: string): string | null => {
+  const match = pathname.match(/^\/requirements\/([^/]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+};
+
+export const AppSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams();
   const [searchParams] = useSearchParams();
-  const viewportWidth = useViewportWidth();
-  const isNarrowViewport = viewportWidth <= 320;
-  const [isOpen, setIsOpen] = useState(true);
-  const [showNofoRequiredModal, setShowNofoRequiredModal] = useState(false);
+  const chrome = useNavigationChrome();
   const { isAdmin } = useAdminCheck();
-  // At <=320px the closed drawer collapses to zero width, so its links are
-  // clipped but still focusable until they are made inert.
-  const isDrawerCollapsed = isNarrowViewport && !isOpen;
-  const inertDrawerRef = useInert<HTMLDivElement>(isDrawerCollapsed);
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [showNofoRequiredModal, setShowNofoRequiredModal] = useState(false);
+  const [fallbackChecked, setFallbackChecked] = useState(false);
 
-  // Determine current page/route
+  const isDocked = chrome?.isDocked ?? true;
+  const isDrawerOpen = chrome?.isDrawerOpen ?? false;
+  const closeDrawer = chrome?.closeDrawer;
+  const openDrawer = chrome?.openDrawer;
+  const currentStep = chrome?.currentStep;
+  const hasStepNav = chrome?.hasStepNav ?? false;
+  const furthestStepIndex =
+    chrome?.furthestStepIndex ??
+    STEP_ITEMS.findIndex((item) => item.step === currentStep);
+  const goToStep = chrome?.goToStep;
+
+  const drawerRef = useFocusTrap<HTMLDivElement>({
+    isOpen: !isDocked && isDrawerOpen,
+    onEscape: () => closeDrawer?.(),
+  });
+
+  useEffect(() => {
+    const id = setTimeout(() => setFallbackChecked(true), 0);
+    return () => clearTimeout(id);
+  }, []);
+
   const currentPath = location.pathname;
-  const isDocumentEditor = currentPath.startsWith('/document-editor') && currentPath !== '/document-editor/drafts';
-  const isRequirements = currentPath.startsWith('/requirements');
-  const isChat = currentPath.startsWith('/chat');
-  const isDrafts = currentPath === '/document-editor/drafts';
-  const isDashboard = currentPath.startsWith('/admin');
-  const isProfile = currentPath.startsWith('/profile');
-  const isHome = currentPath.startsWith('/home');
-  const isChatSessions = currentPath === '/chat/sessions';
-  const isChatActive = isChat && !isDrafts && !isChatSessions;
+  const isDrafts = currentPath === "/document-editor/drafts";
+  const isDocumentEditor =
+    currentPath.startsWith("/document-editor") && !isDrafts;
+  const isRequirements = currentPath.startsWith("/requirements");
+  const isChatSessions = currentPath === "/chat/sessions";
+  const isChatActive = currentPath.startsWith("/chat") && !isChatSessions;
+  const isDashboard = currentPath.startsWith("/admin");
+  const isHome = currentPath === "/" || currentPath.startsWith("/home");
 
-  // Get documentIdentifier from various sources
-  const docId = documentIdentifier || params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo');
-
-  const requiresNofoSelection = () => !docId;
-
-  // Handle NOFO required modal - show alert and redirect to homepage
-  const handleNofoRequired = () => {
-    setShowNofoRequiredModal(true);
-  };
+  const docId =
+    chrome?.documentIdentifier ||
+    grantFromPath(currentPath) ||
+    searchParams.get("folder") ||
+    searchParams.get("nofo");
 
   const handleNofoRequiredModalClose = () => {
     setShowNofoRequiredModal(false);
     navigate("/home?message=Please select a NOFO first to access this feature.");
   };
 
-  // Handle chat navigation
-  const handleChatNavigation = () => {
-    if (requiresNofoSelection()) {
-      handleNofoRequired();
-      return;
-    }
-    const newSessionId = uuidv4();
-    const queryParams = docId
-      ? `?folder=${encodeURIComponent(docId)}`
-      : "";
-    navigate(`/chat/${newSessionId}${queryParams}`);
+  const go = (action: () => void) => () => {
+    action();
+    closeDrawer?.();
   };
 
-  // Handle drafts navigation — list view, NOFO not required
+  const requireGrant = (action: () => void) => () => {
+    if (!docId) {
+      setShowNofoRequiredModal(true);
+      return;
+    }
+    action();
+  };
+
+  const handleChatNavigation = requireGrant(() => {
+    navigate(
+      `/chat/${uuidv4()}${docId ? `?folder=${encodeURIComponent(docId)}` : ""}`
+    );
+  });
+
   const handleDraftsNavigation = () => {
-    if (docId) {
-      navigate(`/document-editor/drafts?nofo=${encodeURIComponent(docId)}`);
-    } else {
-      navigate(`/document-editor/drafts`);
-    }
+    navigate(
+      docId
+        ? `/document-editor/drafts?nofo=${encodeURIComponent(docId)}`
+        : "/document-editor/drafts"
+    );
   };
 
-  // Handle requirements navigation
-  const handleRequirementsNavigation = () => {
-    if (requiresNofoSelection()) {
-      handleNofoRequired();
-      return;
-    }
-    if (docId) {
-      addToRecentlyViewed({
-        label: docId.replace("/", ""),
-        value: docId,
-      });
-      navigate(
-        `/requirements/${encodeURIComponent(docId)}?folder=${encodeURIComponent(docId)}`
-      );
-    } else {
-      navigate("/home");
-    }
-  };
+  const handleRequirementsNavigation = requireGrant(() => {
+    if (!docId) return;
+    addToRecentlyViewed({ label: docId.replace("/", ""), value: docId });
+    navigate(
+      `/requirements/${encodeURIComponent(docId)}?folder=${encodeURIComponent(docId)}`
+    );
+  });
 
-  // Handle document editor navigation
-  const handleDocumentEditorNavigation = () => {
-    if (requiresNofoSelection()) {
-      handleNofoRequired();
-      return;
-    }
-    if (docId) {
-      navigate(`/document-editor?nofo=${encodeURIComponent(docId)}`);
-    } else {
-      navigate(`/document-editor`);
-    }
-  };
+  const handleDocumentEditorNavigation = requireGrant(() => {
+    navigate(
+      docId ? `/document-editor?nofo=${encodeURIComponent(docId)}` : "/document-editor"
+    );
+  });
 
-  // Handle chat sessions navigation — list view, NOFO not required
   const handleChatSessionsNavigation = () => {
-    const queryParams = docId
-      ? `?folder=${encodeURIComponent(docId)}`
-      : "";
-    navigate(`/chat/sessions${queryParams}`);
+    navigate(
+      `/chat/sessions${docId ? `?folder=${encodeURIComponent(docId)}` : ""}`
+    );
   };
 
-  useEffect(() => {
-    if (isNarrowViewport && isOpen) {
-      setIsOpen(false);
-    }
-  }, [isNarrowViewport, isOpen]);
+  const showLabels = isDocked ? isExpanded : true;
+  const drawerHidden = !isDocked && !isDrawerOpen;
+
+  const panelStyle: React.CSSProperties = {
+    background: "#1a202c",
+    color: "#ffffff",
+    // The inline display would win over the `hidden` attribute's UA rule, so drop it explicitly.
+    display: drawerHidden ? "none" : "flex",
+    flexDirection: "column",
+    borderRight: "1px solid #23272f",
+    overflow: "hidden",
+    flexShrink: 0,
+    ...(!isDocked
+      ? {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: DRAWER_WIDTH,
+          maxWidth: "85vw",
+          height: "100vh",
+          zIndex: "calc(var(--gw-z-drawer, 900) + 1)",
+          boxShadow: "var(--gw-shadow-xl, 0 10px 25px rgba(0, 0, 0, 0.2))",
+        }
+      : {
+          width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
+          transition: "width 0.3s ease",
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          alignSelf: "flex-start",
+          overflowY: "auto",
+        }),
+  };
+
+  const iconButtonStyle: React.CSSProperties = {
+    background: "none",
+    border: "none",
+    color: "#ffffff",
+    cursor: "pointer",
+    opacity: 0.8,
+    transition: "opacity 0.2s",
+    padding: "4px",
+    borderRadius: "var(--gw-radius-sm, 4px)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
 
   return (
     <>
-      {/* NOFO Required Modal */}
       <Modal
         isOpen={showNofoRequiredModal}
         onClose={handleNofoRequiredModalClose}
@@ -199,28 +277,40 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
         hideCloseButton={false}
       >
         <div style={{ padding: "10px 0" }}>
-          <p style={{ marginBottom: "20px", fontSize: "16px", color: "#333" }}>
-            You need to select a Notice of Funding Opportunity (NOFO) before accessing this feature.
+          <p
+            style={{
+              marginBottom: "20px",
+              fontSize: "var(--gw-font-size-base, 16px)",
+              color: "var(--gw-color-text, #333333)",
+            }}
+          >
+            You need to select a Notice of Funding Opportunity (NOFO) before
+            accessing this feature.
           </p>
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+          <div
+            style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
+          >
             <button
+              type="button"
               onClick={handleNofoRequiredModalClose}
               style={{
-                backgroundColor: "#23776C",
-                color: "white",
+                backgroundColor: "var(--gw-color-primary, #23776C)",
+                color: "#ffffff",
                 border: "none",
-                borderRadius: "6px",
+                borderRadius: "var(--gw-radius-md, 6px)",
                 padding: "10px 20px",
-                fontSize: "14px",
+                fontSize: "var(--gw-font-size-sm, 14px)",
                 fontWeight: 500,
                 cursor: "pointer",
                 transition: "background-color 0.2s",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#195C53";
+                e.currentTarget.style.backgroundColor =
+                  "var(--gw-color-primary-hover, #195C53)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#23776C";
+                e.currentTarget.style.backgroundColor =
+                  "var(--gw-color-primary, #23776C)";
               }}
             >
               Go to Homepage
@@ -229,88 +319,58 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
         </div>
       </Modal>
 
-      {isNarrowViewport && !isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          style={{
-            position: 'fixed',
-            top: '8px',
-            left: '8px',
-            zIndex: 1001,
-            background: '#1a202c',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            padding: '8px',
-            cursor: 'pointer',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-          }}
-          aria-label="Open navigation menu"
-        >
-          <svg
-            viewBox="0 0 24 24"
+      {!isDocked &&
+        !isDrawerOpen &&
+        fallbackChecked &&
+        !chrome?.hasExternalMenuButton && (
+          <button
+            type="button"
+            onClick={() => openDrawer?.()}
+            aria-label="Open main menu"
+            aria-expanded={false}
+            aria-controls={SIDEBAR_ID}
+            data-dark-bg="true"
             style={{
-              width: "20px",
-              height: "20px",
-              stroke: "currentColor",
-              fill: "none",
-              strokeWidth: 2,
+              position: "fixed",
+              top: "8px",
+              left: "8px",
+              zIndex: "var(--gw-z-sticky, 200)",
+              background: "#1a202c",
+              color: "#ffffff",
+              border: "none",
+              borderRadius: "var(--gw-radius-sm, 4px)",
+              padding: "8px",
+              cursor: "pointer",
+              display: "flex",
+              boxShadow: "var(--gw-shadow-lg, 0 4px 6px rgba(0, 0, 0, 0.1))",
             }}
           >
-            <path d="M9 18l6-6-6-6"></path>
-          </svg>
-        </button>
-      )}
+            <LuMenu size={20} aria-hidden="true" />
+          </button>
+        )}
 
-      {/* Overlay backdrop for mobile sidebar */}
-      {isNarrowViewport && isOpen && (
+      {!isDocked && isDrawerOpen && (
         <div
-          onClick={() => setIsOpen(false)}
+          onClick={() => closeDrawer?.()}
           style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 1000,
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: "var(--gw-z-drawer, 900)",
           }}
           aria-hidden="true"
         />
       )}
 
       <div
+        ref={drawerRef}
+        id={SIDEBAR_ID}
         data-dark-bg="true"
-        style={{
-          width: isNarrowViewport
-            ? (isOpen ? "100%" : "0")
-            : (isOpen ? "240px" : "60px"),
-          background: "#1a202c",
-          color: "white",
-          display: "flex",
-          flexDirection: "column",
-          borderRight: "1px solid #23272f",
-          transition: "width 0.3s ease, transform 0.3s ease",
-          overflow: "hidden",
-          ...(isNarrowViewport && {
-            position: isOpen ? 'fixed' : 'relative',
-            top: isOpen ? 0 : 'auto',
-            left: isOpen ? 0 : 'auto',
-            right: isOpen ? 0 : 'auto',
-            bottom: isOpen ? 0 : 'auto',
-            zIndex: isOpen ? 1001 : 'auto',
-            maxWidth: isOpen ? '280px' : '0',
-            height: isOpen ? '100vh' : '100%',
-          }),
-          ...(!isNarrowViewport && {
-            position: 'sticky',
-            top: 0,
-            height: "100vh",
-            alignSelf: "flex-start",
-            overflowY: "auto",
-          }),
-          flexShrink: 0,
-        }}
+        hidden={drawerHidden}
+        {...(!isDocked && isDrawerOpen
+          ? { role: "dialog", "aria-modal": true, "aria-label": "Main menu" }
+          : {})}
+        style={panelStyle}
       >
         <div
           style={{
@@ -318,416 +378,159 @@ const UnifiedNavigation: React.FC<UnifiedNavigationProps> = ({
             borderBottom: "1px solid #2d3748",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: !isDocked || isExpanded ? "flex-end" : "center",
+            flexShrink: 0,
           }}
         >
-          {isOpen && (
-            <h2 style={{ margin: 0, fontWeight: "bold", fontSize: "1.2rem", fontFamily: "'Noto Sans', sans-serif" }}>
-              Navigation
-            </h2>
-          )}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Collapse navigation" : "Expand navigation"}
-            aria-expanded={isOpen}
-            style={{
-              background: "none",
-              border: "none",
-              color: "white",
-              cursor: "pointer",
-              opacity: 0.8,
-              transition: "opacity 0.2s",
-              padding: "4px",
-              borderRadius: "4px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.8")}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              style={{
-                width: "20px",
-                height: "20px",
-                stroke: "currentColor",
-                fill: "none",
-                strokeWidth: 2,
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-              }}
+          {!isDocked ? (
+            <button
+              type="button"
+              onClick={() => closeDrawer?.()}
+              aria-label="Close main menu"
+              aria-expanded
+              aria-controls={SIDEBAR_ID}
+              style={iconButtonStyle}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.8")}
             >
-              {isOpen ? (
-                <path d="M15 18l-6-6 6-6"></path>
+              <LuX size={20} aria-hidden="true" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsExpanded((open) => !open)}
+              aria-label={
+                isExpanded ? "Collapse navigation" : "Expand navigation"
+              }
+              aria-expanded={isExpanded}
+              aria-controls={SIDEBAR_ID}
+              style={iconButtonStyle}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.8")}
+            >
+              {isExpanded ? (
+                <LuChevronLeft size={20} aria-hidden="true" />
               ) : (
-                <path d="M9 18l6-6-6-6"></path>
+                <LuChevronRight size={20} aria-hidden="true" />
               )}
-            </svg>
-          </button>
+            </button>
+          )}
         </div>
 
-        <div
-          ref={inertDrawerRef}
-          aria-hidden={isDrawerCollapsed}
-          style={{
-            flex: 1,
-            padding: "16px 0",
-            overflowY: "auto",
-          }}
+        <nav
+          aria-label="Main"
+          style={{ flex: 1, padding: "16px 0", overflowY: "auto" }}
         >
-          <div>
-            {isOpen && (
-              <h2 style={groupHeadingStyle}>Menu</h2>
-            )}
+          <NavItem
+            onClick={go(() => navigate("/home"))}
+            label="Home"
+            icon={<LuHouse size={20} aria-hidden="true" />}
+            active={isHome}
+            expanded={showLabels}
+          />
 
+          <NavItem
+            onClick={go(handleChatSessionsNavigation)}
+            label="Chat Sessions"
+            icon={<LuMessagesSquare size={20} aria-hidden="true" />}
+            active={isChatSessions}
+            expanded={showLabels}
+          />
+
+          <NavItem
+            onClick={go(handleDraftsNavigation)}
+            label="Applications"
+            icon={<LuFileText size={20} aria-hidden="true" />}
+            active={isDrafts}
+            expanded={showLabels}
+          />
+
+          {isAdmin && (
             <NavItem
-              onClick={() => navigate("/home")}
-              label="Home"
-              icon={<LuHouse size={20} />}
-              active={isHome}
-              expanded={isOpen}
+              onClick={go(() => navigate("/admin"))}
+              label="Admin Dashboard"
+              icon={<LuLayoutDashboard size={20} aria-hidden="true" />}
+              active={isDashboard}
+              expanded={showLabels}
             />
-
-            <NavItem
-              onClick={handleChatSessionsNavigation}
-              label="Chat Sessions"
-              icon={<LuMessagesSquare size={20} />}
-              active={isChatSessions}
-              expanded={isOpen}
-            />
-
-            <NavItem
-              onClick={handleDraftsNavigation}
-              label="Drafts"
-              icon={<LuFileText size={20} />}
-              active={isDrafts}
-              expanded={isOpen}
-            />
-
-            <NavItem
-              onClick={() => navigate("/profile")}
-              label="Profile"
-              icon={<LuUser size={20} />}
-              active={isProfile}
-              expanded={isOpen}
-            />
-
-            {isAdmin && (
-              <NavItem
-                onClick={() => navigate("/admin")}
-                label="Admin Dashboard"
-                icon={<LuLayoutDashboard size={20} />}
-                active={isDashboard}
-                expanded={isOpen}
-              />
-            )}
-          </div>
+          )}
 
           {docId && (
             <div style={{ marginTop: "24px" }}>
-              {isOpen && (
-                <h3 style={{ ...groupHeadingStyle, color: "#a0aec0" }}>
-                  This Grant
-                </h3>
-              )}
+              {showLabels && <h2 style={groupHeadingStyle}>This Grant</h2>}
 
               <NavItem
-                onClick={handleRequirementsNavigation}
+                onClick={go(handleRequirementsNavigation)}
                 label="Requirements"
-                icon={<LuSquareCheckBig size={20} />}
+                icon={<LuSquareCheckBig size={20} aria-hidden="true" />}
                 active={isRequirements}
-                expanded={isOpen}
+                expanded={showLabels}
               />
 
               <NavItem
-                onClick={handleChatNavigation}
+                onClick={go(handleChatNavigation)}
                 label="Chat with AI"
-                icon={<LuMessageSquare size={20} />}
+                icon={<LuMessageSquare size={20} aria-hidden="true" />}
                 active={isChatActive}
-                expanded={isOpen}
+                expanded={showLabels}
               />
 
               <NavItem
-                onClick={handleDocumentEditorNavigation}
+                onClick={go(handleDocumentEditorNavigation)}
                 label="Write Application"
-                icon={<LuUpload size={20} />}
+                icon={<LuUpload size={20} aria-hidden="true" />}
                 active={isDocumentEditor}
-                expanded={isOpen}
+                expanded={showLabels}
               />
             </div>
           )}
 
-          {/* Document Editor specific steps */}
-          {isDocumentEditor && currentStep && onNavigate && currentStep !== "drafts" && currentStep !== "welcome" && (
-            <div style={{ marginTop: "24px" }}>
-              {isOpen && (
-                <h3
-                  style={{
-                    margin: 0,
-                    padding: "0 16px 8px 16px",
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    color: "#a0aec0",
-                    textTransform: "uppercase",
-                    letterSpacing: "1px",
-                    fontFamily: "'Noto Sans', sans-serif",
-                  }}
-                >
-                  Current Document
-                </h3>
-              )}
+          {isDocumentEditor &&
+            hasStepNav &&
+            currentStep &&
+            currentStep !== "drafts" &&
+            currentStep !== "welcome" && (
+              <div style={{ marginTop: "24px" }}>
+                {showLabels && (
+                  <h2 style={groupHeadingStyle}>Current Application</h2>
+                )}
 
-              <button
-                onClick={() => onNavigate("projectBasics")}
-                aria-label="Project Basics"
-                aria-current={currentStep === "projectBasics" ? "step" : undefined}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "12px 16px",
-                  borderRadius: "8px",
-                  marginBottom: "8px",
-                  background: currentStep === "projectBasics" ? "#23776C" : "none",
-                  color: currentStep === "projectBasics" ? "white" : "#e2e8f0",
-                  border: "none",
-                  fontSize: "16px",
-                  cursor: "pointer",
-                  transition: "background 0.2s, color 0.2s",
-                  textAlign: "left",
-                  fontFamily: "'Noto Sans', sans-serif",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background =
-                    currentStep === "projectBasics" ? "#23776C" : "#2d3748")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background =
-                    currentStep === "projectBasics" ? "#23776C" : "none")
-                }
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    stroke: "currentColor",
-                    fill: "none",
-                    strokeWidth: 2,
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                  }}
-                >
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-                {isOpen && <span style={{ marginLeft: "12px" }}>Project Basics</span>}
-              </button>
-
-              {["questionnaire", "uploadDocuments", "draftCreated", "sectionEditor", "reviewApplication"].includes(currentStep) && (
-                <button
-                  onClick={() => onNavigate("questionnaire")}
-                  aria-label="Questionnaire"
-                  aria-current={currentStep === "questionnaire" ? "step" : undefined}
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "12px 16px",
-                    borderRadius: "8px",
-                    marginBottom: "8px",
-                    background: currentStep === "questionnaire" ? "#23776C" : "none",
-                    color: currentStep === "questionnaire" ? "white" : "#e2e8f0",
-                    border: "none",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    transition: "background 0.2s, color 0.2s",
-                    textAlign: "left",
-                    fontFamily: "'Noto Sans', sans-serif",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background =
-                      currentStep === "questionnaire" ? "#23776C" : "#2d3748")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                      currentStep === "questionnaire" ? "#23776C" : "none")
-                  }
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      stroke: "currentColor",
-                      fill: "none",
-                      strokeWidth: 2,
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                    }}
-                  >
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
-                  {isOpen && <span style={{ marginLeft: "12px" }}>Questionnaire</span>}
-                </button>
-              )}
-
-              {["uploadDocuments", "draftCreated", "sectionEditor", "reviewApplication"].includes(currentStep) && (
-                <button
-                  onClick={() => onNavigate("uploadDocuments")}
-                  aria-label="Additional Information"
-                  aria-current={currentStep === "uploadDocuments" ? "step" : undefined}
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "12px 16px",
-                    borderRadius: "8px",
-                    marginBottom: "8px",
-                    background: currentStep === "uploadDocuments" ? "#23776C" : "none",
-                    color: currentStep === "uploadDocuments" ? "white" : "#cbd5e1",
-                    border: "none",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    transition: "background 0.2s, color 0.2s",
-                    textAlign: "left",
-                    fontFamily: "'Noto Sans', sans-serif",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background =
-                      currentStep === "uploadDocuments" ? "#23776C" : "#2d3748")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                      currentStep === "uploadDocuments" ? "#23776C" : "none")
-                  }
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      stroke: "currentColor",
-                      fill: "none",
-                      strokeWidth: 2,
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                    }}
-                  >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="12" y1="18" x2="12" y2="12"></line>
-                    <line x1="9" y1="15" x2="15" y2="15"></line>
-                  </svg>
-                  {isOpen && <span style={{ marginLeft: "12px" }}>Additional Information</span>}
-                </button>
-              )}
-
-              {["sectionEditor", "reviewApplication"].includes(currentStep) && (
-                <button
-                  onClick={() => onNavigate("sectionEditor")}
-                  aria-label="Section Editor"
-                  aria-current={currentStep === "sectionEditor" ? "step" : undefined}
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "12px 16px",
-                    borderRadius: "8px",
-                    marginBottom: "8px",
-                    background: currentStep === "sectionEditor" ? "#23776C" : "none",
-                    color: currentStep === "sectionEditor" ? "white" : "#e2e8f0",
-                    border: "none",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    transition: "background 0.2s, color 0.2s",
-                    textAlign: "left",
-                    fontFamily: "'Noto Sans', sans-serif",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background =
-                      currentStep === "sectionEditor" ? "#23776C" : "#2d3748")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                      currentStep === "sectionEditor" ? "#23776C" : "none")
-                  }
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      stroke: "currentColor",
-                      fill: "none",
-                      strokeWidth: 2,
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                    }}
-                  >
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
-                  {isOpen && <span style={{ marginLeft: "12px" }}>Section Editor</span>}
-                </button>
-              )}
-
-              {currentStep === "reviewApplication" && (
-                <button
-                  onClick={() => onNavigate("reviewApplication")}
-                  aria-label="Review"
-                  aria-current={currentStep === "reviewApplication" ? "step" : undefined}
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "12px 16px",
-                    borderRadius: "8px",
-                    marginBottom: "8px",
-                    background: currentStep === "reviewApplication" ? "#23776C" : "none",
-                    color: currentStep === "reviewApplication" ? "white" : "#cbd5e1",
-                    border: "none",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    transition: "background 0.2s, color 0.2s",
-                    textAlign: "left",
-                    fontFamily: "'Noto Sans', sans-serif",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background =
-                      currentStep === "reviewApplication" ? "#23776C" : "#2d3748")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                      currentStep === "reviewApplication" ? "#23776C" : "none")
-                  }
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      stroke: "currentColor",
-                      fill: "none",
-                      strokeWidth: 2,
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                    }}
-                  >
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
-                  {isOpen && <span style={{ marginLeft: "12px" }}>Review</span>}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+                {STEP_ITEMS.filter((_, index) => index <= furthestStepIndex).map((item) => (
+                  <NavItem
+                    key={item.step}
+                    onClick={go(() => goToStep?.(item.step))}
+                    label={item.label}
+                    icon={item.icon}
+                    active={currentStep === item.step}
+                    expanded={showLabels}
+                    currentKind="step"
+                  />
+                ))}
+              </div>
+            )}
+        </nav>
       </div>
     </>
   );
+};
+
+const UnifiedNavigation: React.FC<NavigationRegistration> = ({
+  documentIdentifier,
+  currentStep,
+  furthestStepIndex,
+  onNavigate,
+}) => {
+  const chrome = useNavigationChrome();
+  const register = chrome?.register;
+  const unregister = chrome?.unregister;
+
+  useEffect(() => {
+    register?.({ documentIdentifier, currentStep, furthestStepIndex, onNavigate });
+  }, [register, documentIdentifier, currentStep, furthestStepIndex, onNavigate]);
+
+  useEffect(() => () => unregister?.(), [unregister]);
+
+  return null;
 };
 
 export default UnifiedNavigation;
