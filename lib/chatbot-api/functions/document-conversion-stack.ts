@@ -8,6 +8,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
 
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
@@ -134,8 +135,21 @@ export class DocumentConversionStack extends cdk.NestedStack {
     props.analyticsTable.grantWriteData(applicationPdfGeneratorFunction);
     applicationExportsBucket.grantPut(applicationPdfGeneratorFunction);
     props.draftGenerationJobsTable.grantWriteData(applicationPdfGeneratorFunction);
-    // Self-invoke: a start request hands the work to a second invocation.
-    applicationPdfGeneratorFunction.grantInvoke(applicationPdfGeneratorFunction);
+    // Self-invoke: a start request hands the work to a second invocation. The grant sits in its own
+    // policy because in the role's default policy it would point at the function while the function
+    // already depends on that policy — CloudFormation rejects the loop.
+    new iam.Policy(this, "ApplicationPdfGeneratorSelfInvokePolicy", {
+      roles: [applicationPdfGeneratorFunction.role!],
+      statements: [
+        new iam.PolicyStatement({
+          actions: ["lambda:InvokeFunction"],
+          resources: [
+            applicationPdfGeneratorFunction.functionArn,
+            `${applicationPdfGeneratorFunction.functionArn}:*`,
+          ],
+        }),
+      ],
+    });
 
     this.applicationPdfGeneratorFunction = applicationPdfGeneratorFunction;
 
