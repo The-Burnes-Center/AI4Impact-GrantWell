@@ -120,9 +120,8 @@ export class LambdaFunctionStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
 
-    // Centralized Bedrock model IDs — update here to change everywhere
-    const SONNET_MODEL_ID = "global.anthropic.claude-sonnet-4-6";
-    const HAIKU_MODEL_ID = "global.anthropic.claude-haiku-4-5-20251001-v1:0";
+    const SONNET_MODEL_ID = "us.anthropic.claude-sonnet-5";
+    const HAIKU_MODEL_ID = "us.anthropic.claude-haiku-4-5-20251001-v1:0";
     const TITAN_MODEL_ID = "amazon.titan-embed-text-v2:0";
 
     const region = cdk.Stack.of(this).region;
