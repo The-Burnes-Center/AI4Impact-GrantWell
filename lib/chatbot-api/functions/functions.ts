@@ -123,6 +123,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     const SONNET_MODEL_ID = "us.anthropic.claude-sonnet-5";
     const HAIKU_MODEL_ID = "us.anthropic.claude-haiku-4-5-20251001-v1:0";
     const TITAN_MODEL_ID = "amazon.titan-embed-text-v2:0";
+    const RERANK_MODEL_ID = "cohere.rerank-v3-5:0";
 
     const region = cdk.Stack.of(this).region;
     const account = cdk.Stack.of(this).account;
@@ -1311,6 +1312,16 @@ export class LambdaFunctionStack extends cdk.Stack {
         resources: [
           `arn:aws:bedrock:${stack.region}::foundation-model/${TITAN_MODEL_ID}`,
           titanSearchProfile.attrInferenceProfileArn,
+        ],
+      })
+    );
+
+    aiGrantSearchFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:Rerank", "bedrock:InvokeModel"],
+        resources: [
+          `arn:aws:bedrock:${stack.region}::foundation-model/${RERANK_MODEL_ID}`,
         ],
       })
     );
