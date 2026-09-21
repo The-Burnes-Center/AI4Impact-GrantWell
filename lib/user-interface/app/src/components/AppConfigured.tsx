@@ -24,6 +24,7 @@ import MaintenanceGate from "./MaintenanceGate";
 import { NavigationProvider } from "./navigation/NavigationProvider";
 import { AppSidebar } from "./navigation/UnifiedNavigation";
 import ProfileGate from "./profile-gate/ProfileGate";
+import MfaPrompt from "./auth/MfaPrompt";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
 import {
@@ -257,6 +258,7 @@ function AppLayoutContent({
             <div className="marketing__app-main">
               <ProfileGate>
                 <MaintenanceGate>
+                  <MfaPrompt />
                   <App />
                 </MaintenanceGate>
               </ProfileGate>

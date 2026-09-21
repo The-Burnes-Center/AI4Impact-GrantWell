@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchAuthSession, signOut, updatePassword } from "aws-amplify/auth";
+import {
+  fetchAuthSession,
+  fetchMFAPreference,
+  signOut,
+  updateMFAPreference,
+  updatePassword,
+} from "aws-amplify/auth";
 import { useNavigate } from "react-router";
 import { LuCalendar } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
@@ -8,6 +14,8 @@ import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import TableScrollRegion from "../../components/ui/TableScrollRegion";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
+import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
+import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { stateNameFromCode } from "../../common/generated/states";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
@@ -670,6 +678,90 @@ function ActivityList({
   );
 }
 
+function MfaSection() {
+  const [status, setStatus] = useState<"loading" | "on" | "off">("loading");
+  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
+  const [enrolling, setEnrolling] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = async () => {
+    try {
+      const session = await fetchAuthSession();
+      const claims = session.tokens?.idToken?.payload ?? {};
+      setEmail(typeof claims.email === "string" ? claims.email : "");
+      setUserId(typeof claims.sub === "string" ? claims.sub : "");
+      const pref = await fetchMFAPreference();
+      setStatus(pref.enabled?.includes("TOTP") || pref.preferred === "TOTP" ? "on" : "off");
+    } catch (err) {
+      console.error("Could not read MFA preference", err);
+      setStatus("off");
+    }
+  };
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  const turnOff = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await updateMFAPreference({ totp: "DISABLED" });
+      setStatus("off");
+    } catch (err) {
+      console.error("Could not disable MFA", err);
+      setError("Could not turn off two-step verification. Try again in a moment.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (status === "loading") return null;
+
+  return (
+    <div className="profile-section">
+      <span className="profile-field-label">Two-step verification</span>
+      {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
+
+      {status === "on" ? (
+        <>
+          <p className="profile-hint">
+            On. You are asked for a code from your authenticator app when you sign in.
+          </p>
+          <div className="profile-actions">
+            <Button type="button" variant="secondary" onClick={turnOff} loading={busy}>
+              Turn off
+            </Button>
+          </div>
+        </>
+      ) : enrolling ? (
+        <MfaSetupPanel
+          email={email}
+          onEnrolled={() => {
+            setEnrolling(false);
+            clearMfaPromptSnooze(userId);
+            setStatus("on");
+          }}
+          onCancel={() => setEnrolling(false)}
+        />
+      ) : (
+        <>
+          <p className="profile-hint">
+            Off. Recommended — it keeps your account safe if your password is ever exposed.
+          </p>
+          <div className="profile-actions">
+            <Button type="button" onClick={() => setEnrolling(true)}>
+              Set up two-step verification
+            </Button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
   const [showPw, setShowPw] = useState(false);
   const [oldPw, setOldPw] = useState("");
@@ -727,6 +819,8 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
 
   return (
     <Card header="Account security">
+      <MfaSection />
+
       {pwError && <div className="profile-alert profile-alert--error" role="alert">{pwError}</div>}
       {pwOk && <div className="profile-alert profile-alert--success" role="status">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
 

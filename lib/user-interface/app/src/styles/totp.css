@@ -105,3 +105,29 @@
 .otp-input-label {
   display: block;
 }
+
+.mfa-prompt {
+  border: 1px solid var(--gw-color-border);
+  border-left: 4px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-md);
+  background: var(--gw-color-background-alt);
+  padding: 16px 20px;
+  margin: 0 0 20px;
+}
+
+.mfa-prompt--success {
+  border-left-color: var(--gw-color-success);
+}
+
+.mfa-prompt-title {
+  font-weight: 600;
+  color: var(--gw-color-heading);
+  margin: 0 0 4px;
+}
+
+.mfa-prompt-body {
+  margin: 0 0 12px;
+  max-width: 62ch;
+  color: var(--gw-color-text-secondary);
+  line-height: 1.5;
+}
