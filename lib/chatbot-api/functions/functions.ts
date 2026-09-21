@@ -1319,10 +1319,18 @@ export class LambdaFunctionStack extends cdk.Stack {
     aiGrantSearchFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Rerank", "bedrock:InvokeModel"],
+        actions: ["bedrock:InvokeRerank", "bedrock:InvokeModel"],
         resources: [
           `arn:aws:bedrock:${stack.region}::foundation-model/${RERANK_MODEL_ID}`,
         ],
+      })
+    );
+
+    aiGrantSearchFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:Rerank"],
+        resources: ["*"],
       })
     );
 
