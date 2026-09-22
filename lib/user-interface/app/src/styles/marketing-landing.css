@@ -154,13 +154,6 @@
   min-width: 0;
 }
 
-.marketing__nav-account {
-  display: flex;
-  align-items: center;
-  gap: var(--gw-spacing-md, 12px);
-  flex-shrink: 0;
-}
-
 .marketing__nav-menu {
   display: inline-flex;
   align-items: center;
@@ -196,34 +189,6 @@
 
 .marketing__skip-nav:focus {
   left: 10px;
-}
-
-.marketing__nav-signout {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 50px;
-  background-color: transparent;
-  color: var(--mk-green-deepest);
-  border: 1px solid var(--mk-green-deepest);
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-  flex-shrink: 0;
-}
-
-.marketing__nav-signout:hover {
-  background-color: var(--mk-green-deepest);
-  color: var(--mk-white);
-}
-
-.marketing__nav-signout-icon {
-  flex-shrink: 0;
 }
 
 .marketing__app-shell {
@@ -761,8 +726,6 @@
   .marketing__omni-link { padding: 4px 0; }
   .marketing__nav--app { height: auto; padding: 8px 16px; flex-wrap: nowrap; gap: 12px; }
   .marketing__nav-wordmark { height: 28px; width: auto; }
-  .marketing__nav-account .marketing__nav-link { padding: 8px 14px; font-size: 12px; letter-spacing: 1.2px; }
-  .marketing__nav-signout { padding: 8px 14px; font-size: 12px; letter-spacing: 1.2px; }
   .marketing__hero-row { padding: 0 24px 40px; }
   .marketing__hero-spacer { display: none; }
   .marketing__hero-content { max-width: 100%; gap: 32px; }

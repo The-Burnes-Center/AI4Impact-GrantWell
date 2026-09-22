@@ -47,9 +47,9 @@ function ScrollToTop(): null {
         "/home": "Home",
         "/admin": "Admin Dashboard",
         "/profile": "Your Profile",
-        "/chat/sessions": "Chat Sessions",
+        "/chat/sessions": "My Chats",
         "/document-editor": "Document Editor",
-        "/document-editor/drafts": "Applications",
+        "/document-editor/drafts": "My Applications",
       };
 
       if (exactMatches[path]) {

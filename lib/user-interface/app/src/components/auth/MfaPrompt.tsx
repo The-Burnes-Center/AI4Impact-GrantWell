@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchAuthSession, fetchMFAPreference } from "aws-amplify/auth";
 import Button from "../ui/Button";
+import Modal from "../common/Modal";
 import MfaSetupPanel from "./MfaSetupPanel";
 import { isMfaPromptSnoozed, snoozeMfaPrompt } from "../../common/mfa-snooze";
 import "../../styles/totp.css";
@@ -8,8 +9,9 @@ import "../../styles/totp.css";
 /**
  * Recommends two-step verification to signed-in users who have not enrolled.
  *
- * MFA is OPTIONAL in Cognito, so nothing here blocks access — dismissing snoozes the
- * prompt for 30 days. Enrolment stays available from the profile page either way.
+ * MFA is OPTIONAL in Cognito, so nothing here blocks access — every way of closing the
+ * dialog snoozes the prompt for 30 days. Enrolment stays available from the profile page
+ * either way.
  */
 export default function MfaPrompt() {
   const [visible, setVisible] = useState(false);
@@ -49,6 +51,7 @@ export default function MfaPrompt() {
 
   if (!visible) return null;
 
+  // Escape, the overlay and the X all land here, so they read as "Not now".
   const dismiss = () => {
     snoozeMfaPrompt(userId);
     setVisible(false);
@@ -56,25 +59,32 @@ export default function MfaPrompt() {
 
   if (done) {
     return (
-      <div className="mfa-prompt mfa-prompt--success" role="status">
-        <p className="mfa-prompt-title">Two-step verification is on.</p>
+      <Modal
+        isOpen
+        onClose={() => setVisible(false)}
+        title="Two-step verification is on"
+        maxWidth="480px"
+      >
         <p className="mfa-prompt-body">
-          You will be asked for a code from your authenticator app the next time you sign in.
+          You will be asked for a code from your authenticator app the next time you sign
+          in.
         </p>
         <div className="profile-actions">
-          <Button type="button" variant="secondary" onClick={() => setVisible(false)}>
-            Close
+          <Button type="button" onClick={() => setVisible(false)}>
+            Done
           </Button>
         </div>
-      </div>
+      </Modal>
     );
   }
 
   return (
-    <section className="mfa-prompt" aria-labelledby="mfa-prompt-title">
-      <p className="mfa-prompt-title" id="mfa-prompt-title">
-        Add two-step verification
-      </p>
+    <Modal
+      isOpen
+      onClose={dismiss}
+      title="Add two-step verification"
+      maxWidth={expanded ? "560px" : "480px"}
+    >
       <p className="mfa-prompt-body">
         Recommended. It protects your grant drafts if your password is ever guessed or
         reused. Takes about a minute with an authenticator app.
@@ -97,6 +107,6 @@ export default function MfaPrompt() {
           </Button>
         </div>
       )}
-    </section>
+    </Modal>
   );
 }

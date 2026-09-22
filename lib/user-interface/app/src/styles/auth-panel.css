@@ -110,6 +110,11 @@
   width: 100%;
 }
 
+.turnstile-widget {
+  display: flex;
+  justify-content: center;
+}
+
 .show-password-checkbox {
   margin: 0;
   display: inline-flex;
@@ -125,7 +130,7 @@
 .show-password-checkbox .form-check-input {
   float: none;
   margin-top: 0;
-  margin-right: 0;
+  margin-right: 8px;
   margin-left: 0;
   cursor: pointer;
   width: 20px;

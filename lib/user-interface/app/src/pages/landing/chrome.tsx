@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router";
-import { signOut } from "aws-amplify/auth";
 import { LuMenu } from "react-icons/lu";
 import { AiForImpactWordmark } from "./featureIllustrations";
 import { useBranding } from "../../common/branding";
@@ -100,35 +99,11 @@ export function LandingNavbar() {
   );
 }
 
-const SignOutIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    aria-hidden="true"
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="14"
-    viewBox="0 0 20 16"
-    fill="currentColor"
-  >
-    <path d="M6.67 5.6V2.4L13.33 8l-6.66 5.6v-3.2H0V5.6zM8.33 0v1.6h10v12.8h-10V16H20V0z" />
-  </svg>
-);
-
 export function AppNavbar() {
   const navigate = useNavigate();
   const branding = useBranding();
   const { showMenuButton, isDrawerOpen, toggleDrawer } =
     useNavigationMenuButton();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error("Error signing out:", error);
-    } finally {
-      navigate("/");
-    }
-  };
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
@@ -147,11 +122,8 @@ export function AppNavbar() {
     }
   };
 
-  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    "marketing__nav-link" + (isActive ? " marketing__nav-link--active" : "");
-
   return (
-    <nav className="marketing__nav marketing__nav--app" aria-label="Account">
+    <nav className="marketing__nav marketing__nav--app" aria-label="Site header">
       <a
         href="#main-content"
         onClick={handleSkipNavClick}
@@ -183,19 +155,6 @@ export function AppNavbar() {
             className="marketing__nav-wordmark"
           />
         </a>
-      </div>
-      <div className="marketing__nav-account">
-        <NavLink to="/profile" className={navLinkClass}>
-          Profile
-        </NavLink>
-        <button
-          type="button"
-          onClick={handleSignOut}
-          className="marketing__nav-signout"
-        >
-          <SignOutIcon className="marketing__nav-signout-icon" />
-          <span>Sign out</span>
-        </button>
       </div>
     </nav>
   );

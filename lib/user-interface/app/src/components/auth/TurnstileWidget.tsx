@@ -102,8 +102,8 @@ export default function TurnstileWidget({
   if (!TURNSTILE_SITE_KEY) return null;
 
   return (
-    <div className="mb-3">
-      <div ref={containerRef} />
+    <div className="turnstile-field mb-3">
+      <div className="turnstile-widget" ref={containerRef} />
       <div aria-live="polite" aria-atomic="true">
         {failed && (
           <Alert variant="danger" className="mb-0 mt-2">

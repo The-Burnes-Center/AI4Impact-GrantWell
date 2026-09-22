@@ -18,8 +18,13 @@ import {
   LuListChecks,
   LuFilePlus2,
   LuFileCheck2,
+  LuCircleHelp,
+  LuUser,
+  LuLogOut,
 } from "react-icons/lu";
-import Modal from "../common/Modal";
+import { signOut } from "aws-amplify/auth";
+import { useBranding } from "../../common/branding";
+import FeedbackModal from "../common/FeedbackModal";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import {
@@ -126,8 +131,9 @@ export const AppSidebar: React.FC = () => {
   const [searchParams] = useSearchParams();
   const chrome = useNavigationChrome();
   const { isAdmin } = useAdminCheck();
+  const branding = useBranding();
   const [isExpanded, setIsExpanded] = useState(true);
-  const [showNofoRequiredModal, setShowNofoRequiredModal] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
   const [fallbackChecked, setFallbackChecked] = useState(false);
 
   const isDocked = chrome?.isDocked ?? true;
@@ -160,6 +166,7 @@ export const AppSidebar: React.FC = () => {
   const isChatActive = currentPath.startsWith("/chat") && !isChatSessions;
   const isDashboard = currentPath.startsWith("/admin");
   const isHome = currentPath === "/" || currentPath.startsWith("/home");
+  const isProfile = currentPath.startsWith("/profile");
 
   const docId =
     chrome?.documentIdentifier ||
@@ -167,29 +174,16 @@ export const AppSidebar: React.FC = () => {
     searchParams.get("folder") ||
     searchParams.get("nofo");
 
-  const handleNofoRequiredModalClose = () => {
-    setShowNofoRequiredModal(false);
-    navigate("/home?message=Please select a NOFO first to access this feature.");
-  };
-
   const go = (action: () => void) => () => {
     action();
     closeDrawer?.();
   };
 
-  const requireGrant = (action: () => void) => () => {
-    if (!docId) {
-      setShowNofoRequiredModal(true);
-      return;
-    }
-    action();
-  };
-
-  const handleChatNavigation = requireGrant(() => {
+  const handleChatNavigation = () => {
     navigate(
       `/chat/${uuidv4()}${docId ? `?folder=${encodeURIComponent(docId)}` : ""}`
     );
-  });
+  };
 
   const handleDraftsNavigation = () => {
     navigate(
@@ -199,24 +193,34 @@ export const AppSidebar: React.FC = () => {
     );
   };
 
-  const handleRequirementsNavigation = requireGrant(() => {
+  const handleRequirementsNavigation = () => {
     if (!docId) return;
     addToRecentlyViewed({ label: docId.replace("/", ""), value: docId });
     navigate(
       `/requirements/${encodeURIComponent(docId)}?folder=${encodeURIComponent(docId)}`
     );
-  });
+  };
 
-  const handleDocumentEditorNavigation = requireGrant(() => {
+  const handleDocumentEditorNavigation = () => {
     navigate(
       docId ? `/document-editor?nofo=${encodeURIComponent(docId)}` : "/document-editor"
     );
-  });
+  };
 
   const handleChatSessionsNavigation = () => {
     navigate(
       `/chat/sessions${docId ? `?folder=${encodeURIComponent(docId)}` : ""}`
     );
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    } finally {
+      navigate("/");
+    }
   };
 
   const showLabels = isDocked ? isExpanded : true;
@@ -270,55 +274,6 @@ export const AppSidebar: React.FC = () => {
 
   return (
     <>
-      <Modal
-        isOpen={showNofoRequiredModal}
-        onClose={handleNofoRequiredModalClose}
-        title="NOFO Selection Required"
-        hideCloseButton={false}
-      >
-        <div style={{ padding: "10px 0" }}>
-          <p
-            style={{
-              marginBottom: "20px",
-              fontSize: "var(--gw-font-size-base, 16px)",
-              color: "var(--gw-color-text, #333333)",
-            }}
-          >
-            You need to select a Notice of Funding Opportunity (NOFO) before
-            accessing this feature.
-          </p>
-          <div
-            style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
-          >
-            <button
-              type="button"
-              onClick={handleNofoRequiredModalClose}
-              style={{
-                backgroundColor: "var(--gw-color-primary, #23776C)",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "var(--gw-radius-md, 6px)",
-                padding: "10px 20px",
-                fontSize: "var(--gw-font-size-sm, 14px)",
-                fontWeight: 500,
-                cursor: "pointer",
-                transition: "background-color 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  "var(--gw-color-primary-hover, #195C53)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  "var(--gw-color-primary, #23776C)";
-              }}
-            >
-              Go to Homepage
-            </button>
-          </div>
-        </div>
-      </Modal>
-
       {!isDocked &&
         !isDrawerOpen &&
         fallbackChecked &&
@@ -375,13 +330,44 @@ export const AppSidebar: React.FC = () => {
         <div
           style={{
             padding: "16px",
-            borderBottom: "1px solid #2d3748",
             display: "flex",
             alignItems: "center",
-            justifyContent: !isDocked || isExpanded ? "flex-end" : "center",
+            gap: "8px",
+            justifyContent: showLabels ? "space-between" : "center",
             flexShrink: 0,
           }}
         >
+          {showLabels && (
+            <a
+              href="/home"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+                e.preventDefault();
+                navigate("/home");
+                closeDrawer?.();
+              }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                minWidth: 0,
+                textDecoration: "none",
+              }}
+            >
+              <img
+                // footer.wordmark is the light-on-dark variant; branding.logo is dark green
+                // and disappears against the sidebar's #1a202c.
+                src={branding.footer.wordmark ?? branding.logo}
+                alt={branding.appName}
+                style={{
+                  display: "block",
+                  height: "28px",
+                  width: "auto",
+                  maxWidth: "100%",
+                  objectFit: "contain",
+                }}
+              />
+            </a>
+          )}
           {!isDocked ? (
             <button
               type="button"
@@ -431,7 +417,7 @@ export const AppSidebar: React.FC = () => {
 
           <NavItem
             onClick={go(handleChatSessionsNavigation)}
-            label="Chat Sessions"
+            label="My Chats"
             icon={<LuMessagesSquare size={20} aria-hidden="true" />}
             active={isChatSessions}
             expanded={showLabels}
@@ -439,7 +425,7 @@ export const AppSidebar: React.FC = () => {
 
           <NavItem
             onClick={go(handleDraftsNavigation)}
-            label="Applications"
+            label="My Applications"
             icon={<LuFileText size={20} aria-hidden="true" />}
             active={isDrafts}
             expanded={showLabels}
@@ -509,7 +495,44 @@ export const AppSidebar: React.FC = () => {
               </div>
             )}
         </nav>
+
+        <div
+          style={{
+            padding: "16px 0 8px 0",
+            borderTop: "1px solid #2d3748",
+            flexShrink: 0,
+          }}
+        >
+          <NavItem
+            onClick={go(() => setShowFeedback(true))}
+            label="Help & feedback"
+            icon={<LuCircleHelp size={20} aria-hidden="true" />}
+            active={false}
+            expanded={showLabels}
+          />
+
+          <NavItem
+            onClick={go(() => navigate("/profile"))}
+            label="Profile"
+            icon={<LuUser size={20} aria-hidden="true" />}
+            active={isProfile}
+            expanded={showLabels}
+          />
+
+          <NavItem
+            onClick={go(handleSignOut)}
+            label="Sign out"
+            icon={<LuLogOut size={20} aria-hidden="true" />}
+            active={false}
+            expanded={showLabels}
+          />
+        </div>
       </div>
+
+      <FeedbackModal
+        isOpen={showFeedback}
+        onClose={() => setShowFeedback(false)}
+      />
     </>
   );
 };
