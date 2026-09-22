@@ -54,6 +54,11 @@ jobs:
       - name: Bootstrap AWS environment
         run: cdk bootstrap
 
-      - name: Deploy CDK stacks to GrantWell staging
+      # TEMPORARY: the app stack still imports the DraftTable stream ARN that this branch no
+      # longer exports, and CloudFormation will not delete an export while it is imported. The
+      # --exclusively pass drops the import first so the table stack can then drop the export.
+      # Revert to the single deploy once this has run.
+      - name: Deploy CDK stacks to Production
         run: |
+          cdk deploy ${{ env.STACK_NAME }} --exclusively --require-approval never
           cdk deploy ${{ env.STACK_NAME }} --require-approval never
