@@ -1,10 +1,6 @@
 import { createContext, useContext, useLayoutEffect, ReactNode } from "react";
 
 /**
- * Frontend branding surface. Mirrors BrandingConfig from the shared InstanceConfig contract
- * (lib/shared/config.ts) — kept as a local type so the app has no build-time dependency on the
- * infra source tree. Each deployment injects its own value.
- *
  * `defaultBranding` is the NEUTRAL core default — no partners, placeholder wordmark. Real
  * instances supply their own value from `config/instances/<id>.ts`, selected at build time and
  * injected via BrandingProvider. Nothing instance-specific is baked into the core.

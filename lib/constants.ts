@@ -3,18 +3,12 @@
  * These constants include configuration settings for authentication, Cognito domain name, OIDC integration name, and stack name.
  */
 
-import { resolveInstanceInfra } from "./shared/instance-infra";
-
 export const AUTHENTICATION = true;
 const ENVIRONMENT = process.env.ENVIRONMENT;
 
-// When GRANTWELL_INSTANCE names a config-driven instance, its infra config wins; otherwise the
-// ENVIRONMENT switch below runs unchanged (so MA/generic deploys are byte-identical).
-const instanceInfra = resolveInstanceInfra();
-
 // Per-environment resource names, keyed by the ENVIRONMENT env var. These must be globally unique
 // per account (Cognito domains especially). To add an environment, add one row here — every derived
-// name below reads from it. A config-driven GRANTWELL_INSTANCE overrides this map entirely.
+// name below reads from it.
 interface EnvNames {
   cognitoDomainName: string;
   stackName: string;
@@ -37,12 +31,11 @@ const ENV_CONFIG: Record<string, EnvNames> = {
   },
 };
 
-// A config-driven instance (GRANTWELL_INSTANCE) wins; otherwise resolve by ENVIRONMENT. There is no
-// fallback — an unknown ENVIRONMENT fails loudly instead of silently deploying wrong-named resources.
-const envNames = instanceInfra ?? (ENVIRONMENT ? ENV_CONFIG[ENVIRONMENT] : undefined);
+// No fallback — an unknown ENVIRONMENT fails loudly instead of silently deploying wrong-named resources.
+const envNames = ENVIRONMENT ? ENV_CONFIG[ENVIRONMENT] : undefined;
 if (!envNames) {
   throw new Error(
-    `No config for ENVIRONMENT="${ENVIRONMENT ?? ''}". Expected one of: ${Object.keys(ENV_CONFIG).join(', ')} (or set GRANTWELL_INSTANCE).`
+    `No config for ENVIRONMENT="${ENVIRONMENT ?? ''}". Expected one of: ${Object.keys(ENV_CONFIG).join(', ')}.`
   );
 }
 
@@ -88,9 +81,6 @@ const getEmailConfig = () => {
   const deploymentUrl = process.env.DEPLOYMENT_URL;
   if (deploymentUrl) {
     return { deploymentUrl: stripTrailingSlash(deploymentUrl) };
-  }
-  if (instanceInfra?.deploymentUrl) {
-    return { deploymentUrl: stripTrailingSlash(instanceInfra.deploymentUrl) };
   }
   const envDeploymentUrl = ENVIRONMENT ? ENV_CONFIG[ENVIRONMENT]?.deploymentUrl : undefined;
   if (envDeploymentUrl) {
