@@ -51,6 +51,20 @@
   --gw-color-warning-light: #fff3cd;
   --gw-color-danger: #CD0D0D;
   --gw-color-danger-light: #ffebee;
+  --gw-color-danger-text: #b42318;
+  --gw-color-danger-icon: #EF4444;
+
+  /* Unviewed-sections callout on the review step */
+  --gw-color-warning-callout-bg: #fffbeb;
+  --gw-color-warning-callout-border: #f59e0b;
+  --gw-color-warning-callout-accent: #92400e;
+  --gw-color-warning-callout-text: #78350f;
+
+  /* Version diff */
+  --gw-color-diff-added-bg: #e7f6ec;
+  --gw-color-diff-added-text: #054f31;
+  --gw-color-diff-removed-bg: #fdeceb;
+  --gw-color-diff-removed-text: #7a271a;
 
   /* ==============================
    * Focus Colors
@@ -70,18 +84,43 @@
   /* Form-control boundaries only. WCAG 1.4.11 needs 3:1 where the border is the
      sole boundary of a control; --gw-color-border is 1.23:1 and is decorative. */
   --gw-color-border-input: #767676;
+  --gw-color-border-input-hover: #4b5563;
 
   --gw-color-text: #333333;
   --gw-color-text-secondary: #5a5a5a;
   --gw-color-text-muted: #6b7280;
   --gw-color-heading: #244140;
+  --gw-color-text-strong: #111827;
+  --gw-color-text-control: #374151;
+  --gw-color-text-status: #4b5563;
+  --gw-color-text-input: #334155;
 
   /* Disabled state */
   --gw-color-disabled-bg: #F0F0F0;
   --gw-color-disabled-text: #707070;
+  --gw-color-input-disabled-bg: #f1f5f9;
+  --gw-color-input-disabled-text: #94a3b8;
+
+  /* Help & feedback dialog */
+  --gw-color-dialog-text: #2d3748;
+  --gw-color-dialog-text-secondary: #4a5568;
+  --gw-color-dialog-error: #c53030;
 
   /* Overlay */
   --gw-color-overlay: rgba(0, 0, 0, 0.6);
+  --gw-color-overlay-sidebar: rgba(0, 0, 0, 0.5);
+  --gw-color-overlay-panel: rgba(17, 24, 39, 0.4);
+
+  /* ==============================
+   * Navigation Sidebar (dark)
+   * ============================== */
+
+  --gw-color-nav-bg: #1a202c;
+  --gw-color-nav-bg-hover: #2d3748;
+  --gw-color-nav-border: #23272f;
+  --gw-color-nav-divider: #2d3748;
+  --gw-color-nav-text: #e2e8f0;
+  --gw-color-nav-heading: #a0aec0;
 
   /* ==============================
    * Spacing
@@ -121,6 +160,7 @@
   --gw-shadow-md: 0 1px 3px rgba(0, 0, 0, 0.1);
   --gw-shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1);
   --gw-shadow-xl: 0 10px 25px rgba(0, 0, 0, 0.2);
+  --gw-shadow-drawer: -4px 0 16px rgba(0, 0, 0, 0.12);
 
   /* ==============================
    * Typography

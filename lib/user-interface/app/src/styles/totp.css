@@ -38,7 +38,7 @@
 
 .totp-enrollment-secret code {
   padding: 4px 8px;
-  background: var(--gw-color-background-alt);
+  background: transparent;
   border: 1px solid var(--gw-color-border);
   border-radius: var(--gw-radius-sm);
   color: var(--gw-color-text);
@@ -73,28 +73,28 @@
   font-weight: 600;
   line-height: 1.2;
   text-align: center;
-  color: #334155;
-  background: #fff;
-  border: 1px solid #767676;
+  color: var(--gw-color-text-input);
+  background: var(--gw-color-white);
+  border: 1px solid var(--gw-color-border-input);
   border-radius: 8px;
   transition: border-color 0.2s, background-color 0.2s;
 }
 
 .otp-input__box:hover:not(:disabled) {
-  border-color: #4b5563;
+  border-color: var(--gw-color-border-input-hover);
 }
 
 /* Matches .form-input:focus in auth-panel.css — a real outline, since the
    border-colour change alone is only a 1.18:1 luminance shift. */
 .otp-input__box:focus {
-  border-color: #23776C;
-  outline: 3px solid #23776C;
+  border-color: var(--gw-color-focus-light);
+  outline: 3px solid var(--gw-color-focus-light);
   outline-offset: 2px;
 }
 
 .otp-input__box:disabled {
-  background: #f1f5f9;
-  color: #94a3b8;
+  background: var(--gw-color-input-disabled-bg);
+  color: var(--gw-color-input-disabled-text);
 }
 
 .otp-input__box[aria-invalid="true"] {

@@ -672,7 +672,7 @@
   color: var(--gw-color-warning-text);
   margin: 8px 0 0;
   padding: 10px 14px;
-  background-color: rgba(246, 182, 34, 0.12);
+  background-color: color-mix(in srgb, var(--gw-color-warning) 12%, transparent);
   border-left: 3px solid var(--gw-color-warning);
   border-radius: 6px;
 }

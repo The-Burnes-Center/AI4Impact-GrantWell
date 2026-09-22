@@ -30,8 +30,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
@@ -44,24 +42,20 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            lib/user-interface/app/package-lock.json
 
       - name: Install backend dependencies
-        run: npm install
-
-      - name: Install frontend dependencies
-        run: |
-          cd lib/user-interface/app
-          npm install --legacy-peer-deps
-          npm install -g aws-cdk
+        run: npm ci
 
       - name: Check for off-palette colors (warn only)
         run: |
+          git fetch --depth=1 origin main:refs/remotes/origin/main
           cd lib/user-interface/app
           npm run lint:colors -- --base origin/main --warn
 
-      - name: Bootstrap AWS environment
-        run: cdk bootstrap
-
       - name: Deploy CDK stacks to staging
         run: |
-          cdk deploy ${{ env.STACK_NAME }} --require-approval never
+          npx cdk deploy ${{ env.STACK_NAME }} --require-approval never

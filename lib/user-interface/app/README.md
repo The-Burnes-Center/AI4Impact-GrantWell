@@ -12,44 +12,60 @@ A React-based user interface for the GrantWell grant application management syst
 - [State Management](#state-management)
 - [API Integration](#api-integration)
 - [Contributing](#contributing)
+- [Accessibility](#accessibility)
+- [Support](#support)
 
 ---
 
 ## Project Structure
 
 ```
+config/                    # Instance seam: branding + chrome selection (see config/README.md)
+├── instances/            # neutral.ts (default), generic.ts
+├── active-instance.ts
+└── chrome.ts             # Default page chrome barrel
+
 src/
-├── app.tsx                 # Main application with routing
-├── main.tsx               # Application entry point
-├── global.d.ts            # TypeScript declarations
+├── App.tsx                # Authenticated routes
+├── main.tsx               # Entry point (mounts AppConfigured)
+├── global.d.ts            # Build-time globals (__TURNSTILE_SITE_KEY__, etc.)
 │
-├── components/            # Reusable components
+├── components/
+│   ├── AppConfigured.tsx # Loads aws-exports.json, configures Amplify, app shell + unauthenticated routes
+│   ├── MaintenanceGate.tsx
 │   ├── ui/               # Shared UI primitives (Button, Card, etc.)
-│   ├── auth/             # Authentication components
-│   ├── chatbot/          # AI chatbot components
-│   ├── common/           # Common utilities (Modal, etc.)
-│   ├── document-editor/  # Document editing components
-│   └── search/           # Search functionality
+│   ├── auth/             # Sign-in/sign-up/MFA panel and steps, Turnstile
+│   ├── chat/             # AI chatbot components
+│   ├── common/           # Modals, Breadcrumbs, ErrorBoundary, FeedbackModal
+│   ├── document-editor/  # Version history, diff, progress stepper
+│   ├── navigation/       # AppSidebar, UnifiedNavigation, NavigationProvider
+│   ├── notifications/    # NotificationProvider, NotificationBar
+│   ├── access-denied/
+│   ├── profile-gate/
+│   └── search/
 │
-├── pages/                 # Page-level components
-│   ├── auth/             # Login/signup pages
-│   ├── chatbot/          # Chatbot interface pages
-│   ├── Dashboard/        # Main dashboard
+├── layouts/               # ChatLayout
+│
+├── pages/
+│   ├── chat/             # playground/, sessions/
+│   ├── dashboard/        # Admin dashboard (/admin)
 │   ├── document-editor/  # Grant application editor
-│   ├── landing-page/     # Home/landing page
-│   └── requirements-gathering/  # Requirements checklists
+│   ├── home/             # Grant finder (/home)
+│   ├── landing/          # Public landing + login, default chrome.tsx
+│   ├── maintenance/
+│   ├── profile/
+│   └── requirements/     # Requirements checklists
 │
-├── common/                # Shared utilities and types
+├── common/
 │   ├── api-client/       # API client classes
 │   ├── helpers/          # Helper functions
-│   └── *.ts              # Shared types, constants, contexts
+│   ├── types/
+│   ├── generated/        # states.ts copied from lib/shared (gitignored)
+│   └── *.ts / *.tsx      # Contexts, branding, constants
 │
 ├── hooks/                 # Custom React hooks
 │
-├── styles/               # Global and shared stylesheets
-│   ├── app.scss          # Main application styles
-│   └── *.css             # Component-specific styles
-│
+└── styles/               # tokens.css, app.scss, bootstrap-subset.scss, *.css
 ```
 
 ---
@@ -58,8 +74,8 @@ src/
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- Node.js 24 (matches CI; react-router 7 requires 20+)
+- npm
 
 ### Installation
 
@@ -67,20 +83,28 @@ src/
 # Install dependencies
 npm install
 
-# Build theme components
-npm run build:theme
-
-# Start development server
+# Start development server (http://localhost:3000)
 npm run dev
 ```
+
+`npm run dev` needs an `aws-exports.json` in this directory (gitignored). Copy it from a deployed
+site (`https://<site>/aws-exports.json`) and set `oauth.redirectSignIn`/`redirectSignOut` to
+`http://localhost:3000/`.
 
 ### Scripts
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
+| `npm run dev` | Start development server (port 3000) |
+| `npm run build` | Type-check (`tsc`) and build for production |
+| `npm run build:dev` | Same, with `NODE_ENV=development` |
 | `npm run preview` | Preview production build |
+| `npm run lint` | ESLint (incl. jsx-a11y strict) |
+| `npm run lint:strict` | ESLint, fails on any warning |
+| `npm run lint:fix` | ESLint with autofix |
+| `npm run lint:colors` | Flag new off-palette colors (`-- --base origin/main` checks what CI checks) |
+| `npm run format` | Prettier over tsx/js/ts/json |
+| `npm run copy-shared` | Copy `lib/shared/states.ts` into `src/common/generated/` (runs automatically before dev/build/build:dev/preview) |
 
 ---
 
@@ -89,46 +113,65 @@ npm run dev
 ### Component Hierarchy
 
 ```
-AppConfigured (global chrome: OmniHeader, AppNavbar, LandingFooter)
-├── App (authenticated routes)
-│   ├── UnifiedNavigation
-│   └── Page Content
-│       ├── Dashboard
-│       ├── DocumentEditor
-│       ├── Chatbot (layouts/ChatLayout, whose default export is named BaseAppLayout)
-│       └── ...
-└── Auth Pages (unauthenticated routes)
+AppConfigured (loads aws-exports.json, BrandingProvider, router)
+├── Authenticated shell (NavigationProvider)
+│   ├── AppNavbar                (@chrome)
+│   ├── AppSidebar               (components/navigation/UnifiedNavigation)
+│   ├── ProfileGate → MaintenanceGate
+│   │   ├── MfaPrompt
+│   │   └── App (routes)
+│   │       ├── HomePage, Checklists, DocumentEditor, Dashboard, ProfilePage, ...
+│   │       └── Playground (layouts/ChatLayout, whose default export is named BaseAppLayout)
+│   ├── LandingFooter            (@chrome)
+│   └── OmniHeader position="bottom" (@chrome)
+└── Unauthenticated routes: LandingPage, LoginPage (render their own @chrome header/footer)
 ```
+
+Pages render `<UnifiedNavigation ... />`, which renders nothing; it registers the page's step state
+with the sidebar through `NavigationProvider`.
 
 ### Routing
 
-Routes are defined in `app.tsx`. The application uses React Router v6:
+The application uses React Router v7. Unauthenticated routes live in
+`components/AppConfigured.tsx`, authenticated ones in `App.tsx`.
+
+Unauthenticated:
 
 - `/` - Landing page
-- `/dashboard` - Main dashboard
-- `/chatbot/*` - AI chatbot interface
-- `/document-editor/*` - Grant application editor
-- `/login`, `/signup` - Authentication
+- `/login` - Sign in / sign up / MFA (`components/auth/AuthPanel`)
+
+Authenticated:
+
+- `/home` - Grant finder (`/` redirects here)
+- `/requirements/:documentIdentifier` - Requirements checklist
+- `/chat/:sessionId`, `/chat/sessions` - AI chatbot and chat history
+- `/document-editor`, `/document-editor/:sessionId`, `/document-editor/drafts` - Grant application editor and drafts
+- `/profile` - User profile
+- `/admin` - Admin dashboard
 
 ### Authentication
 
-Authentication is handled via AWS Amplify:
+Authentication uses AWS Amplify v6 (Cognito). `AppConfigured` loads `/aws-exports.json` at runtime
+and calls `Amplify.configure`; the sign-in UI is the custom `components/auth/AuthPanel`.
 
 ```tsx
-import { Auth, Hub } from 'aws-amplify';
+import { getCurrentUser } from 'aws-amplify/auth';
+import { Hub } from 'aws-amplify/utils';
 
 // Check auth state
-const user = await Auth.currentAuthenticatedUser();
+const user = await getCurrentUser();
 
 // Listen for auth events
-Hub.listen('auth', (data) => {
-  switch (data.payload.event) {
-    case 'signIn':
-    case 'signOut':
+Hub.listen('auth', ({ payload }) => {
+  switch (payload.event) {
+    case 'signedIn':
+    case 'signedOut':
       // Handle auth changes
   }
 });
 ```
+
+API calls get their bearer token from `Utils.authenticate()` (`common/utils.ts`).
 
 ---
 
@@ -139,7 +182,8 @@ Hub.listen('auth', (data) => {
 Always use components from `src/components/ui/` for consistency:
 
 ```tsx
-import { Button, Card, LoadingSpinner, NavigationButtons } from '../components/ui';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
 
 // Example usage
 <Card header="Project Details">
@@ -192,10 +236,19 @@ export default ComponentName;
 
 ### Design Tokens
 
-Use centralized design tokens from `src/components/ui/styles.ts`:
+Colors and other design values are CSS custom properties in `src/styles/tokens.css`. Use them in
+stylesheets:
+
+```css
+.thing {
+  color: var(--gw-color-primary);
+}
+```
+
+For unavoidable inline styles, `src/components/ui/styles.ts` mirrors the same values:
 
 ```tsx
-import { colors, typography, spacing, borderRadius, shadows } from '../components/ui';
+import { colors, typography, spacing, borderRadius, shadows } from '../components/ui/styles';
 
 const style = {
   color: colors.primary,
@@ -219,10 +272,13 @@ const style = {
 
 Global styles are in `src/styles/`:
 
-- `app.scss` - Main application styles
-- `auth-page.css` - Authentication pages
-- `base-page.css` - Landing page base styles
+- `tokens.css` - Design tokens (colors, etc.); the only place new color literals belong
+- `bootstrap-subset.scss` - Selective Bootstrap build (loaded in `main.tsx`)
+- `app.scss` - Main app styles; imports `tokens.css`, `utilities.css`, `gw-marketing-system.css`
+- `marketing-landing.css` - Landing/login pages and the app shell chrome
+- `auth-panel.css`, `totp.css` - Sign-in and MFA
 - `document-editor.css` - Editor-specific styles
+- Page styles: `landing-page.css`/`base-page.css` (home), `dashboard.css`, `checklists.css`, `playground.css`, ...
 
 
 ## State Management
@@ -242,27 +298,21 @@ For shared state, use React Context:
 
 ```tsx
 import { AppContext } from '../common/app-context';
-import { SessionRefreshContext } from '../common/session-refresh-context';
+import { useBranding } from '../common/branding';
+import { useNotifications } from '../components/notifications/NotificationManager';
 
 // In component
-const appContext = useContext(AppContext);
-const { refreshSession } = useContext(SessionRefreshContext);
+const appConfig = useContext(AppContext);   // loaded aws-exports config
+const { appName } = useBranding();          // active instance branding
+const { addNotification } = useNotifications();
 ```
 
 ### Data Persistence
 
-For form data persistence:
-
-```tsx
-// Auto-save pattern
-const autoSave = useCallback((data) => {
-  // Save to localStorage immediately
-  localStorage.setItem('formKey', JSON.stringify(data));
-  
-  // Also save to backend
-  await onUpdateData({ formData: data });
-}, [onUpdateData]);
-```
+Draft data is saved with `useDraftSave` (`hooks/use-draft-save.ts`): debounced (via `useAutoSave`),
+revision-checked (a concurrent writer gets a 409 and is merged per section), flushed on page exit,
+and mirrored to a per-session localStorage cache. Don't hand-roll localStorage + fetch saves.
+Use `useAutoSave` directly for other forms that need debounced saving with a status indicator.
 
 ---
 
@@ -270,30 +320,34 @@ const autoSave = useCallback((data) => {
 
 ### API Client
 
-API calls are centralized in `src/common/api-client/`:
+API calls are centralized in `src/common/api-client/`. Components get a memoized client from the
+`useApiClient` hook:
 
 ```tsx
-import { ApiClient } from '../common/api-client/api-client';
+import { useApiClient } from '../hooks/use-api-client';
 
-const appContext = useContext(AppContext);
-const apiClient = new ApiClient(appContext);
+const apiClient = useApiClient();
 
 // Example: Fetch NOFO data
 const result = await apiClient.landingPage.getNOFOQuestions(nofoId);
 
 // Example: Save draft
-await apiClient.drafts.saveDraft(sessionId, draftData);
+await apiClient.drafts.updateDraft(draft);
 ```
 
 ### Client Modules
 
 | Client | Purpose |
 |--------|---------|
-| `landingPage` | NOFO and grant listings |
-| `drafts` | Draft management |
-| `sessions` | Session management |
-| `knowledgeManagement` | Document/knowledge base |
-| `userManagement` | User operations |
+| `landingPage` | NOFOs, summaries, questions, admin review/processing |
+| `drafts` | Drafts, versions, generation, DOCX/PDF export |
+| `sessions` | Chat sessions |
+| `userDocuments` | User-uploaded supporting documents |
+| `kbSync` | Knowledge base sync |
+| `userManagement` | Admin user operations |
+| `userProfile` | Current user's profile |
+| `notifications` | In-app notifications |
+| `analytics` | Admin analytics |
 
 ---
 
@@ -302,7 +356,7 @@ await apiClient.drafts.saveDraft(sessionId, draftData);
 ### Code Style
 
 - Use TypeScript for all new code
-- Follow ESLint/Prettier configuration
+- Run `npm run lint` (ESLint with jsx-a11y strict) and `npm run lint:colors` before pushing
 - Use meaningful variable and function names
 - Add JSDoc comments for public APIs
 

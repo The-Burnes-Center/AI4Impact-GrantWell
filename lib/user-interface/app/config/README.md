@@ -12,8 +12,8 @@ config/
   instances/
     neutral.ts    the core default (no partners, placeholder wordmark) — re-exports defaultBranding
     generic.ts    the Burnes-owned multi-state product (InnovateUS / Burnes / GovLab footer, GA id)
-  active-instance.ts  picks the instance from GRANTWELL_INSTANCE (build-time)
+  active-instance.ts  re-exports the instance vite aliases in as `@active-instance` (build-time)
 ```
 
-Add a state: drop `instances/<state>.ts`, add it to the map in `active-instance.ts`, build with
-`GRANTWELL_INSTANCE=<state>`.
+Add a state: drop `instances/<state>.ts` and build with `GRANTWELL_INSTANCE=<state>`. The vite alias
+resolves the instance by filename, so nothing else needs registering.

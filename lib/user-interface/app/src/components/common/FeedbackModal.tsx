@@ -15,7 +15,7 @@ const fieldLabelStyle: React.CSSProperties = {
   display: "block",
   marginBottom: "8px",
   fontWeight: 600,
-  color: "#2d3748",
+  color: "var(--gw-color-dialog-text, #2d3748)",
   fontSize: "var(--gw-font-size-base, 16px)",
 };
 
@@ -67,7 +67,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     >
       {submitted ? (
         <div>
-          <p style={{ margin: "0 0 20px 0", color: "#2d3748" }}>
+          <p style={{ margin: "0 0 20px 0", color: "var(--gw-color-dialog-text, #2d3748)" }}>
             Thanks — your feedback has been sent to the {appName} team.
           </p>
           <div className="modal-actions">
@@ -95,7 +95,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     alignItems: "center",
                     gap: "8px",
                     cursor: "pointer",
-                    color: "#2d3748",
+                    color: "var(--gw-color-dialog-text, #2d3748)",
                   }}
                 >
                   <input
@@ -127,7 +127,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                 boxSizing: "border-box",
                 padding: "10px 12px",
                 borderRadius: "var(--gw-radius-md, 6px)",
-                border: "1px solid #cbd5e0",
+                border: "1px solid var(--gw-color-border-input, #767676)",
                 fontFamily: "inherit",
                 fontSize: "var(--gw-font-size-base, 16px)",
                 resize: "vertical",
@@ -138,7 +138,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           <p
             role="status"
             aria-live="polite"
-            style={{ margin: "0 0 16px 0", color: "#c53030" }}
+            style={{ margin: "0 0 16px 0", color: "var(--gw-color-dialog-error, #c53030)" }}
           >
             {error}
           </p>
@@ -161,7 +161,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           </div>
 
           {supportEmail && (
-            <p style={{ margin: "20px 0 0 0", color: "#4a5568" }}>
+            <p style={{ margin: "20px 0 0 0", color: "var(--gw-color-dialog-text-secondary, #4a5568)" }}>
               Need help with something urgent? Email{" "}
               <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
             </p>

@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     env:
@@ -44,19 +45,14 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            lib/user-interface/app/package-lock.json
 
       - name: Install backend dependencies
-        run: npm install
-
-      - name: Install frontend dependencies
-        run: |
-          cd lib/user-interface/app
-          npm install --legacy-peer-deps
-          npm install -g aws-cdk
-
-      - name: Bootstrap AWS environment
-        run: cdk bootstrap
+        run: npm ci
 
       - name: Deploy CDK stacks to GrantWell staging
         run: |
-          cdk deploy ${{ env.STACK_NAME }} --require-approval never
+          npx cdk deploy ${{ env.STACK_NAME }} --require-approval never

@@ -17,10 +17,9 @@
 
     /* Build-time instance alias — vite swaps the real module per GRANTWELL_INSTANCE; tsc
        type-checks against the neutral default (all instances share the Branding shape). */
-    "baseUrl": ".",
     "paths": {
-      "@active-instance": ["config/instances/neutral.ts"],
-      "@chrome": ["config/chrome.ts"]
+      "@active-instance": ["./config/instances/neutral.ts"],
+      "@chrome": ["./config/chrome.ts"]
     },
 
     /* Linting */

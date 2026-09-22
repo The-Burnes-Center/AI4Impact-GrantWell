@@ -43,7 +43,7 @@ const groupHeadingStyle: React.CSSProperties = {
   padding: "0 16px 8px 16px",
   fontSize: "var(--gw-font-size-sm, 14px)",
   fontWeight: 600,
-  color: "#a0aec0",
+  color: "var(--gw-color-nav-heading, #a0aec0)",
   textTransform: "uppercase",
   letterSpacing: "1px",
   fontFamily: "var(--gw-font-family, 'Noto Sans', sans-serif)",
@@ -57,7 +57,7 @@ const itemStyle = (active: boolean): React.CSSProperties => ({
   borderRadius: "var(--gw-radius-lg, 8px)",
   marginBottom: "8px",
   background: active ? "var(--gw-color-primary, #23776C)" : "none",
-  color: active ? "#ffffff" : "#e2e8f0",
+  color: active ? "var(--gw-color-white, #ffffff)" : "var(--gw-color-nav-text, #e2e8f0)",
   border: "none",
   fontSize: "var(--gw-font-size-base, 16px)",
   cursor: "pointer",
@@ -81,7 +81,7 @@ const NavItem: React.FC<{
     aria-current={active ? currentKind : undefined}
     style={itemStyle(active)}
     onMouseEnter={(e) => {
-      if (!active) e.currentTarget.style.background = "#2d3748";
+      if (!active) e.currentTarget.style.background = "var(--gw-color-nav-bg-hover, #2d3748)";
     }}
     onMouseLeave={(e) => {
       if (!active) e.currentTarget.style.background = "none";
@@ -227,12 +227,12 @@ export const AppSidebar: React.FC = () => {
   const drawerHidden = !isDocked && !isDrawerOpen;
 
   const panelStyle: React.CSSProperties = {
-    background: "#1a202c",
-    color: "#ffffff",
+    background: "var(--gw-color-nav-bg, #1a202c)",
+    color: "var(--gw-color-white, #ffffff)",
     // The inline display would win over the `hidden` attribute's UA rule, so drop it explicitly.
     display: drawerHidden ? "none" : "flex",
     flexDirection: "column",
-    borderRight: "1px solid #23272f",
+    borderRight: "1px solid var(--gw-color-nav-border, #23272f)",
     overflow: "hidden",
     flexShrink: 0,
     ...(!isDocked
@@ -261,7 +261,7 @@ export const AppSidebar: React.FC = () => {
   const iconButtonStyle: React.CSSProperties = {
     background: "none",
     border: "none",
-    color: "#ffffff",
+    color: "var(--gw-color-white, #ffffff)",
     cursor: "pointer",
     opacity: 0.8,
     transition: "opacity 0.2s",
@@ -290,8 +290,8 @@ export const AppSidebar: React.FC = () => {
               top: "8px",
               left: "8px",
               zIndex: "var(--gw-z-sticky, 200)",
-              background: "#1a202c",
-              color: "#ffffff",
+              background: "var(--gw-color-nav-bg, #1a202c)",
+              color: "var(--gw-color-white, #ffffff)",
               border: "none",
               borderRadius: "var(--gw-radius-sm, 4px)",
               padding: "8px",
@@ -310,7 +310,7 @@ export const AppSidebar: React.FC = () => {
           style={{
             position: "fixed",
             inset: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: "var(--gw-color-overlay-sidebar, rgba(0, 0, 0, 0.5))",
             zIndex: "var(--gw-z-drawer, 900)",
           }}
           aria-hidden="true"
@@ -330,11 +330,18 @@ export const AppSidebar: React.FC = () => {
         <div
           style={{
             padding: "16px",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            justifyContent: showLabels ? "space-between" : "center",
             flexShrink: 0,
+            ...(showLabels
+              ? {
+                  display: "grid",
+                  gridTemplateColumns: "1fr auto 1fr",
+                  alignItems: "center",
+                }
+              : {
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }),
           }}
         >
           {showLabels && (
@@ -347,6 +354,7 @@ export const AppSidebar: React.FC = () => {
                 closeDrawer?.();
               }}
               style={{
+                gridColumn: 2,
                 display: "inline-flex",
                 alignItems: "center",
                 minWidth: 0,
@@ -355,7 +363,7 @@ export const AppSidebar: React.FC = () => {
             >
               <img
                 // footer.wordmark is the light-on-dark variant; branding.logo is dark green
-                // and disappears against the sidebar's #1a202c.
+                // and disappears against the dark sidebar.
                 src={branding.footer.wordmark ?? branding.logo}
                 alt={branding.appName}
                 style={{
@@ -375,7 +383,7 @@ export const AppSidebar: React.FC = () => {
               aria-label="Close main menu"
               aria-expanded
               aria-controls={SIDEBAR_ID}
-              style={iconButtonStyle}
+              style={{ ...iconButtonStyle, gridColumn: 3, justifySelf: "end" }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.8")}
             >
@@ -390,7 +398,7 @@ export const AppSidebar: React.FC = () => {
               }
               aria-expanded={isExpanded}
               aria-controls={SIDEBAR_ID}
-              style={iconButtonStyle}
+              style={{ ...iconButtonStyle, gridColumn: 3, justifySelf: "end" }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.8")}
             >
@@ -499,7 +507,7 @@ export const AppSidebar: React.FC = () => {
         <div
           style={{
             padding: "16px 0 8px 0",
-            borderTop: "1px solid #2d3748",
+            borderTop: "1px solid var(--gw-color-nav-divider, #2d3748)",
             flexShrink: 0,
           }}
         >
