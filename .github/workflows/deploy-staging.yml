@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
@@ -51,6 +53,11 @@ jobs:
           cd lib/user-interface/app
           npm install --legacy-peer-deps
           npm install -g aws-cdk
+
+      - name: Check for off-palette colors (warn only)
+        run: |
+          cd lib/user-interface/app
+          npm run lint:colors -- --base origin/main --warn
 
       - name: Bootstrap AWS environment
         run: cdk bootstrap

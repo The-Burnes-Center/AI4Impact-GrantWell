@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import UnifiedNavigation from "../components/navigation/UnifiedNavigation";
 import { useInert } from "../hooks/use-inert";
+import { useNavigationChrome } from "../components/navigation/navigation-context";
 
-const TOP_CHROME_HEIGHT = 60;
+const DRAWER_NAVBAR_HEIGHT = 60;
 
 const useViewportWidth = () => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -144,6 +145,7 @@ export default function BaseAppLayout({
   // Callers render their modals as siblings of this layout, so everything the
   // layout owns is background while one is open.
   const inertRootRef = useInert<HTMLDivElement>(modalOpen);
+  const topChromeHeight = useNavigationChrome()?.isDocked === false ? DRAWER_NAVBAR_HEIGHT : 0;
 
   return (
     <div
@@ -151,8 +153,8 @@ export default function BaseAppLayout({
       aria-hidden={modalOpen || undefined}
       style={{
         ...styles.container,
-        height: `calc(100vh - ${TOP_CHROME_HEIGHT}px)`,
-        maxHeight: `calc(100vh - ${TOP_CHROME_HEIGHT}px)`,
+        height: `calc(100vh - ${topChromeHeight}px)`,
+        maxHeight: `calc(100vh - ${topChromeHeight}px)`,
         width: "100%",
         margin: 0,
         padding: 0,

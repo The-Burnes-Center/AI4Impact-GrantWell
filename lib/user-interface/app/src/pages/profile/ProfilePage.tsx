@@ -7,12 +7,10 @@ import {
   updatePassword,
 } from "aws-amplify/auth";
 import { useNavigate } from "react-router";
-import { LuCalendar } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
-import TableScrollRegion from "../../components/ui/TableScrollRegion";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
@@ -20,43 +18,8 @@ import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { stateNameFromCode } from "../../common/generated/states";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
-import type { DocumentDraft } from "../../common/api-client/drafts-client";
-import type { SessionListItem } from "../../common/api-client/sessions-client";
-import {
-  getRecentlyViewed,
-  fetchRecentlyViewed,
-  formatLastViewed,
-  type RecentlyViewedNOFO,
-} from "../../common/helpers/recently-viewed-nofos";
 import "../../styles/dashboard.css";
 import "./profile.css";
-
-const ACTIVITY_LIMIT = 5;
-
-// Matches the link-styled title button used in the Drafts/Sessions tables.
-const titleLinkStyle: React.CSSProperties = {
-  color: "#195C53",
-  background: "none",
-  border: "none",
-  padding: 0,
-  cursor: "pointer",
-  textAlign: "left",
-  fontSize: "14px",
-  textDecoration: "underline",
-};
-
-function formatWhen(value?: string): string {
-  if (!value) return "—";
-  const d = new Date(value);
-  if (isNaN(d.getTime())) return value;
-  return d.toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
 
 const FREQUENCIES: { value: DigestFrequency; label: string }[] = [
   { value: "off", label: "Off" },
@@ -99,43 +62,6 @@ export default function ProfilePage() {
       active = false;
     };
   }, []);
-
-  useEffect(() => {
-    setRecentNofos(getRecentlyViewed());
-    let active = true;
-    fetchRecentlyViewed().then((items) => {
-      if (active) setRecentNofos(items);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  // Drafts + chat sessions are keyed by cognito:username (the UUID from useAdminCheck).
-  useEffect(() => {
-    if (!username) return;
-    let active = true;
-    (async () => {
-      try {
-        const [d, s] = await Promise.all([
-          apiClient.drafts.getDrafts(username, null, true),
-          apiClient.sessions.getSessions(username, null, true),
-        ]);
-        if (!active) return;
-        setDrafts(
-          [...d].sort((a, b) => (b.lastModified || "").localeCompare(a.lastModified || ""))
-        );
-        setSessions(
-          [...s].sort((a, b) => (b.time_stamp || "").localeCompare(a.time_stamp || ""))
-        );
-      } catch {
-        // Activity summaries are best-effort; leave them empty on failure.
-      }
-    })();
-    return () => {
-      active = false;
-    };
-  }, [apiClient, username]);
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
@@ -205,11 +131,6 @@ export default function ProfilePage() {
       setOrgSaving(false);
     }
   };
-
-  // "My activity" — read-only summaries linking to each item's detail page.
-  const [drafts, setDrafts] = useState<DocumentDraft[]>([]);
-  const [sessions, setSessions] = useState<SessionListItem[]>([]);
-  const [recentNofos, setRecentNofos] = useState<RecentlyViewedNOFO[]>([]);
 
   // Baseline = last persisted prefs, so we can detect unsaved changes.
   const [baseline, setBaseline] = useState({
@@ -329,351 +250,237 @@ export default function ProfilePage() {
             <div>
               <h1>Your Profile</h1>
               <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
-                Your account, notifications, and recent activity
+                Your account, sign-in security, and notification preferences
               </p>
             </div>
           </div>
 
+          <nav className="profile-jump-links" aria-label="Profile sections">
+            <a href="#profile-account">Account</a>
+            <a href="#profile-security">Sign-in &amp; security</a>
+            <a href="#profile-notifications">Notifications</a>
+          </nav>
+
           <div className="profile-card-stack">
-            <Card header="Account">
-              <dl className="profile-identity">
-                <dt>Email</dt>
-                <dd>{email || username || "—"}</dd>
-                <dt>Role</dt>
-                <dd>{roles.length ? roles.join(", ") : "User"}</dd>
-                <dt>State</dt>
-                <dd>{stateLabel}</dd>
-              </dl>
-            </Card>
+            <div id="profile-account" className="profile-anchor">
+              <Card header="Account" headerStyle="default">
+                <dl className="profile-identity profile-section">
+                  <dt>Email</dt>
+                  <dd>{email || username || "—"}</dd>
+                  <dt>Access level</dt>
+                  <dd>{roles.length ? roles.join(", ") : "User"}</dd>
+                  <dt>State</dt>
+                  <dd>{stateLabel}</dd>
+                </dl>
 
-            <Card header="Organization details">
-              <p className="profile-hint">
-                Your agency, organization, and role. Used to understand who&apos;s
-                using GrantWell.
-              </p>
-              {orgError && (
-                <div className="profile-alert profile-alert--error" role="alert">
-                  {orgError}
-                </div>
-              )}
-              {orgSaved && (
-                <div className="profile-alert profile-alert--success" role="status">
-                  Organization details saved.
-                </div>
-              )}
-              <form onSubmit={onSaveOrg}>
-                <div className="profile-section">
-                  <label className="profile-field-label" htmlFor="profile-agency">
-                    Agency
-                  </label>
-                  <input
-                    id="profile-agency"
-                    type="text"
-                    value={orgAgency}
-                    onChange={(e) => {
-                      setOrgAgency(e.target.value);
-                      setOrgSaved(false);
-                    }}
-                    style={{ width: "100%", maxWidth: 420 }}
-                  />
-                </div>
-                <div className="profile-section">
-                  <label className="profile-field-label" htmlFor="profile-org">
-                    Organization
-                  </label>
-                  <input
-                    id="profile-org"
-                    type="text"
-                    value={orgOrganization}
-                    onChange={(e) => {
-                      setOrgOrganization(e.target.value);
-                      setOrgSaved(false);
-                    }}
-                    style={{ width: "100%", maxWidth: 420 }}
-                  />
-                </div>
-                <div className="profile-section">
-                  <label className="profile-field-label" htmlFor="profile-title">
-                    Role / Title
-                  </label>
-                  <input
-                    id="profile-title"
-                    type="text"
-                    value={orgJobTitle}
-                    onChange={(e) => {
-                      setOrgJobTitle(e.target.value);
-                      setOrgSaved(false);
-                    }}
-                    style={{ width: "100%", maxWidth: 420 }}
-                  />
-                </div>
-                <div className="profile-actions">
-                  <Button type="submit" loading={orgSaving} disabled={!orgDirty}>
-                    {orgDirty ? "Save changes" : "Saved"}
-                  </Button>
-                </div>
-              </form>
-            </Card>
-
-        <Card header="Notification preferences">
-          <p className="profile-hint">
-            Get an email digest of new grant opportunities that match what you care about.
-            Leave every filter empty to be notified of all new opportunities.
-          </p>
-
-          {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
-          {saved && <div className="profile-alert profile-alert--success" role="status">Preferences saved.</div>}
-
-          {loading ? (
-            <p role="status">Loading…</p>
-          ) : (
-            <form onSubmit={onSave}>
-              <div className="profile-section">
-                <h3>Email frequency</h3>
-                <div className="profile-frequency">
-                  {FREQUENCIES.map((f) => (
-                    <label key={f.value}>
-                      <input
-                        type="radio"
-                        name="frequency"
-                        value={f.value}
-                        checked={frequency === f.value}
-                        onChange={() => {
-                          setFrequency(f.value);
-                          setSaved(false);
-                        }}
-                      />
-                      {f.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <fieldset className="profile-fieldset" disabled={frequency === "off"}>
-                <div className="profile-section">
-                  <h3>State</h3>
-                  <p className="profile-hint">
-                    Digests cover grant opportunities for {stateLabel === "—" ? "your assigned state" : stateLabel}.
-                  </p>
-                </div>
-
-                <div className="profile-section">
-                  <h3>Categories</h3>
-                  <div className="profile-chip-toolbar">
-                    <input
-                      type="search"
-                      className="profile-chip-search"
-                      value={categoryQuery}
-                      onChange={(e) => setCategoryQuery(e.target.value)}
-                      placeholder="Search categories"
-                      aria-label="Search categories"
-                    />
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setVisibleSelected(true)}
-                      disabled={allVisibleSelected}
-                    >
-                      {categoryQuery.trim()
-                        ? `Select all ${visibleCategories.length} shown`
-                        : "Select all"}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setVisibleSelected(false)}
-                      disabled={!someVisibleSelected}
-                    >
-                      Clear
-                    </Button>
-                    {/* Not a live region: each checkbox already announces its own
-                        state, and this count would talk over that. */}
-                    <span className="profile-chip-count">
-                      {categories.length} of {GRANT_CATEGORIES.length} selected
-                    </span>
+                <h3 className="profile-subheading">Organization details</h3>
+                <p className="profile-hint">
+                  Your agency, organization, and role. Used to understand who&apos;s
+                  using GrantWell.
+                </p>
+                {orgError && (
+                  <div className="profile-alert profile-alert--error" role="alert">
+                    {orgError}
                   </div>
-                  {visibleCategories.length === 0 ? (
-                    <p className="profile-hint">
-                      No categories match “{categoryQuery.trim()}”.
-                    </p>
-                  ) : (
-                    <div className="profile-chip-grid">
-                      {visibleCategories.map((c) => (
-                        <label key={c} className="profile-chip">
-                          <input
-                            type="checkbox"
-                            checked={categories.includes(c)}
-                            onChange={() => toggle(categories, setCategories, c)}
-                          />
-                          {c}
-                        </label>
-                      ))}
+                )}
+                {orgSaved && (
+                  <div className="profile-alert profile-alert--success" role="status">
+                    Organization details saved.
+                  </div>
+                )}
+                <form onSubmit={onSaveOrg}>
+                  <div className="profile-section">
+                    <label className="profile-field-label" htmlFor="profile-agency">
+                      Agency
+                    </label>
+                    <input
+                      id="profile-agency"
+                      type="text"
+                      value={orgAgency}
+                      onChange={(e) => {
+                        setOrgAgency(e.target.value);
+                        setOrgSaved(false);
+                      }}
+                      className="profile-input"
+                      placeholder="e.g. Department of Transportation"
+                    />
+                  </div>
+                  <div className="profile-section">
+                    <label className="profile-field-label" htmlFor="profile-org">
+                      Organization
+                    </label>
+                    <input
+                      id="profile-org"
+                      type="text"
+                      value={orgOrganization}
+                      onChange={(e) => {
+                        setOrgOrganization(e.target.value);
+                        setOrgSaved(false);
+                      }}
+                      className="profile-input"
+                      placeholder="e.g. Planning Division"
+                    />
+                  </div>
+                  <div className="profile-section">
+                    <label className="profile-field-label" htmlFor="profile-title">
+                      Role / Title
+                    </label>
+                    <input
+                      id="profile-title"
+                      type="text"
+                      value={orgJobTitle}
+                      onChange={(e) => {
+                        setOrgJobTitle(e.target.value);
+                        setOrgSaved(false);
+                      }}
+                      className="profile-input"
+                      placeholder="e.g. Grants Manager"
+                    />
+                  </div>
+                  <div className="profile-actions">
+                    <Button type="submit" loading={orgSaving} disabled={!orgDirty}>
+                      Save changes
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+            </div>
+
+            <div id="profile-security" className="profile-anchor">
+              <AccountActionsCard onSignedOut={() => navigate("/")} />
+            </div>
+
+            <div id="profile-notifications" className="profile-anchor">
+              <Card header="Notification preferences" headerStyle="default">
+                <p className="profile-hint">
+                  Get an email digest of new grant opportunities that match what you care about.
+                  Leave every filter empty to be notified of all new opportunities.
+                </p>
+
+                {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
+                {saved && <div className="profile-alert profile-alert--success" role="status">Preferences saved.</div>}
+
+                {loading ? (
+                  <p role="status">Loading…</p>
+                ) : (
+                  <form onSubmit={onSave}>
+                    <div className="profile-section">
+                      <h3>Email frequency</h3>
+                      <div className="profile-frequency">
+                        {FREQUENCIES.map((f) => (
+                          <label key={f.value}>
+                            <input
+                              type="radio"
+                              name="frequency"
+                              value={f.value}
+                              checked={frequency === f.value}
+                              onChange={() => {
+                                setFrequency(f.value);
+                                setSaved(false);
+                              }}
+                            />
+                            {f.label}
+                          </label>
+                        ))}
+                      </div>
                     </div>
-                  )}
-                </div>
 
-                <div className="profile-section">
-                  <h3>Keywords</h3>
-                  <label className="profile-field-label" htmlFor="profile-keywords">
-                    Comma-separated
-                  </label>
-                  <input
-                    id="profile-keywords"
-                    type="text"
-                    value={keywords}
-                    onChange={(e) => {
-                      setKeywords(e.target.value);
-                      setSaved(false);
-                    }}
-                    placeholder="e.g. broadband, workforce"
-                    style={{ width: "100%", maxWidth: 420 }}
-                  />
-                </div>
-              </fieldset>
+                    <fieldset className="profile-fieldset" disabled={frequency === "off"}>
+                      <div className="profile-section">
+                        <h3>State</h3>
+                        <p className="profile-hint">
+                          Digests cover grant opportunities for {stateLabel === "—" ? "your assigned state" : stateLabel}.
+                        </p>
+                      </div>
 
-              <div className="profile-actions">
-                <Button type="submit" loading={saving} disabled={!dirty}>
-                  {dirty ? "Save preferences" : "Saved"}
-                </Button>
-              </div>
-            </form>
-          )}
-        </Card>
+                      <div className="profile-section">
+                        <h3>Categories</h3>
+                        <div className="profile-chip-toolbar">
+                          <input
+                            type="search"
+                            className="profile-chip-search"
+                            value={categoryQuery}
+                            onChange={(e) => setCategoryQuery(e.target.value)}
+                            placeholder="Search categories"
+                            aria-label="Search categories"
+                          />
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setVisibleSelected(true)}
+                            disabled={allVisibleSelected}
+                          >
+                            {categoryQuery.trim()
+                              ? `Select all ${visibleCategories.length} shown`
+                              : "Select all"}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setVisibleSelected(false)}
+                            disabled={!someVisibleSelected}
+                          >
+                            Clear
+                          </Button>
+                          {/* Not a live region: each checkbox already announces its own
+                              state, and this count would talk over that. */}
+                          <span className="profile-chip-count">
+                            {categories.length} of {GRANT_CATEGORIES.length} selected
+                          </span>
+                        </div>
+                        {visibleCategories.length === 0 ? (
+                          <p className="profile-hint">
+                            No categories match “{categoryQuery.trim()}”.
+                          </p>
+                        ) : (
+                          <div className="profile-chip-grid">
+                            {visibleCategories.map((c) => (
+                              <label key={c} className="profile-chip">
+                                <input
+                                  type="checkbox"
+                                  checked={categories.includes(c)}
+                                  onChange={() => toggle(categories, setCategories, c)}
+                                />
+                                {c}
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
 
-            <Card header="Recent activity">
-              <ActivityList
-                title="My drafts"
-                emptyText="No drafts yet."
-                timeHeader="Last modified"
-                viewAll={drafts.length > ACTIVITY_LIMIT ? {
-                  label: `View all ${drafts.length} drafts`,
-                  onClick: () => navigate("/document-editor/drafts"),
-                } : undefined}
-                rows={drafts.slice(0, ACTIVITY_LIMIT).map((d) => ({
-                  key: d.sessionId,
-                  title: d.title || "Untitled draft",
-                  when: d.lastModified,
-                  onOpen: () =>
-                    navigate(
-                      `/document-editor/${d.sessionId}?nofo=${encodeURIComponent(
-                        d.documentIdentifier || ""
-                      )}`
-                    ),
-                }))}
-              />
+                      <div className="profile-section">
+                        <h3>Keywords</h3>
+                        <label className="profile-field-label" htmlFor="profile-keywords">
+                          Comma-separated
+                        </label>
+                        <input
+                          id="profile-keywords"
+                          type="text"
+                          value={keywords}
+                          onChange={(e) => {
+                            setKeywords(e.target.value);
+                            setSaved(false);
+                          }}
+                          placeholder="e.g. broadband, workforce"
+                          className="profile-input"
+                        />
+                      </div>
+                    </fieldset>
 
-              <ActivityList
-                title="My chat sessions"
-                emptyText="No sessions yet."
-                timeHeader="Last used"
-                viewAll={sessions.length > ACTIVITY_LIMIT ? {
-                  label: `View all ${sessions.length} sessions`,
-                  onClick: () => navigate("/chat/sessions"),
-                } : undefined}
-                rows={sessions.slice(0, ACTIVITY_LIMIT).map((s) => ({
-                  key: s.session_id,
-                  title: s.title || "Untitled session",
-                  when: s.time_stamp,
-                  onOpen: () => navigate(`/chat/${s.session_id}`),
-                }))}
-              />
-
-              <ActivityList
-                title="Recently viewed grants"
-                emptyText="No recently viewed grants."
-                timeHeader="Viewed"
-                rows={recentNofos.slice(0, ACTIVITY_LIMIT).map((n) => ({
-                  key: n.value,
-                  title: n.label,
-                  when: formatLastViewed(n.lastViewed),
-                  onOpen: () =>
-                    navigate(`/requirements/${encodeURIComponent(n.value)}`),
-                }))}
-              />
-            </Card>
-
-            <AccountActionsCard onSignedOut={() => navigate("/")} />
+                    <div className="profile-actions">
+                      <Button type="submit" loading={saving} disabled={!dirty}>
+                        Save preferences
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </Card>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-interface ActivityRow {
-  key: string;
-  title: string;
-  when?: string;
-  onOpen: () => void;
-}
-
-function ActivityList({
-  title,
-  emptyText,
-  timeHeader,
-  rows,
-  viewAll,
-}: {
-  title: string;
-  emptyText: string;
-  timeHeader: string;
-  rows: ActivityRow[];
-  viewAll?: { label: string; onClick: () => void };
-}) {
-  const gridCols = "2.5fr 1fr";
-  return (
-    <div className="profile-section">
-      <h3>{title}</h3>
-      {rows.length === 0 ? (
-        <p className="profile-hint" style={{ marginBottom: 0 }}>
-          {emptyText}
-        </p>
-      ) : (
-        <TableScrollRegion
-          label={`${title} table`}
-          minWidth={420}
-          className="table-scroll table-scroll--flush"
-        >
-        <div className="table-container" role="table" aria-label={title} style={{ marginBottom: 0 }}>
-          <div role="rowgroup">
-            <div className="table-header" role="row" style={{ gridTemplateColumns: gridCols }}>
-              <div className="header-cell" role="columnheader">Title</div>
-              <div className="header-cell" role="columnheader">{timeHeader}</div>
-            </div>
-          </div>
-          <div className="table-body" role="rowgroup">
-            {rows.map((r) => (
-              <div key={r.key} className="table-row" role="row" style={{ gridTemplateColumns: gridCols }}>
-                <div className="row-cell" role="cell">
-                  <button type="button" onClick={r.onOpen} style={titleLinkStyle}>
-                    {r.title}
-                  </button>
-                </div>
-                <div className="row-cell" role="cell" style={{ justifyContent: "flex-end" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
-                    <LuCalendar size={16} aria-hidden="true" />
-                    <time dateTime={r.when}>{formatWhen(r.when)}</time>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        </TableScrollRegion>
-      )}
-
-      {viewAll && (
-        <button
-          type="button"
-          className="action-button refresh-button"
-          onClick={viewAll.onClick}
-          style={{ alignSelf: "flex-start", marginTop: rows.length ? "12px" : 0 }}
-        >
-          {viewAll.label}
-        </button>
-      )}
     </div>
   );
 }
@@ -818,7 +625,7 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
   };
 
   return (
-    <Card header="Account security">
+    <Card header="Sign-in & security" headerStyle="default">
       <MfaSection />
 
       {pwError && <div className="profile-alert profile-alert--error" role="alert">{pwError}</div>}
@@ -828,15 +635,15 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
         <form onSubmit={changePassword}>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-old">Current password</label>
-            <input id="pw-old" type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required style={{ width: "100%", maxWidth: 420 }} />
+            <input id="pw-old" type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="profile-input" />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-new">New password</label>
-            <input id="pw-new" type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} required style={{ width: "100%", maxWidth: 420 }} />
+            <input id="pw-new" type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} required className="profile-input" />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-confirm">Confirm new password</label>
-            <input id="pw-confirm" type="password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required style={{ width: "100%", maxWidth: 420 }} />
+            <input id="pw-confirm" type="password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required className="profile-input" />
           </div>
           <div className="profile-actions">
             <Button type="submit" loading={busy}>Update password</Button>

@@ -99,20 +99,7 @@ export function LandingNavbar() {
   );
 }
 
-export function AppNavbar() {
-  const navigate = useNavigate();
-  const branding = useBranding();
-  const { showMenuButton, isDrawerOpen, toggleDrawer } =
-    useNavigationMenuButton();
-
-  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
-      return;
-    }
-    e.preventDefault();
-    navigate("/home");
-  };
-
+function AppSkipLink() {
   const handleSkipNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const mainContent = document.getElementById("main-content");
@@ -123,27 +110,47 @@ export function AppNavbar() {
   };
 
   return (
+    <a
+      href="#main-content"
+      onClick={handleSkipNavClick}
+      className="marketing__skip-nav"
+    >
+      Skip to main content
+    </a>
+  );
+}
+
+export function AppNavbar() {
+  const navigate = useNavigate();
+  const branding = useBranding();
+  const { showMenuButton, isDrawerOpen, toggleDrawer } =
+    useNavigationMenuButton();
+
+  // The docked sidebar carries its own logo, so the bar is only needed as the drawer's toggle.
+  if (!showMenuButton) return <AppSkipLink />;
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
+      return;
+    }
+    e.preventDefault();
+    navigate("/home");
+  };
+
+  return (
     <nav className="marketing__nav marketing__nav--app" aria-label="Site header">
-      <a
-        href="#main-content"
-        onClick={handleSkipNavClick}
-        className="marketing__skip-nav"
-      >
-        Skip to main content
-      </a>
+      <AppSkipLink />
       <div className="marketing__nav-lead">
-        {showMenuButton && (
-          <button
-            type="button"
-            className="marketing__nav-menu"
-            onClick={toggleDrawer}
-            aria-label={isDrawerOpen ? "Close main menu" : "Open main menu"}
-            aria-expanded={isDrawerOpen}
-            aria-controls={SIDEBAR_ID}
-          >
-            <LuMenu size={22} aria-hidden="true" />
-          </button>
-        )}
+        <button
+          type="button"
+          className="marketing__nav-menu"
+          onClick={toggleDrawer}
+          aria-label={isDrawerOpen ? "Close main menu" : "Open main menu"}
+          aria-expanded={isDrawerOpen}
+          aria-controls={SIDEBAR_ID}
+        >
+          <LuMenu size={22} aria-hidden="true" />
+        </button>
         <a
           href="/home"
           onClick={handleLogoClick}

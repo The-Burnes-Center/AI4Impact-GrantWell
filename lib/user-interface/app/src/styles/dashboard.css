@@ -3249,9 +3249,9 @@ select.form-input {
 .digest-toolbar {
   display: flex;
   align-items: center;
-  gap: var(--gw-space-sm, 8px);
+  gap: var(--gw-spacing-sm, 8px);
   flex-wrap: wrap;
-  margin-bottom: var(--gw-space-md, 16px);
+  margin-bottom: var(--gw-spacing-lg, 16px);
 }
 /* Segmented control — one setting, joined options */
 .digest-segment {
@@ -3265,7 +3265,7 @@ select.form-input {
   appearance: none;
   border: none;
   background: transparent;
-  padding: var(--gw-space-sm, 8px) var(--gw-space-md, 16px);
+  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
   font-size: var(--gw-font-size-sm, 14px);
   color: var(--gw-color-text, #333);
   cursor: pointer;

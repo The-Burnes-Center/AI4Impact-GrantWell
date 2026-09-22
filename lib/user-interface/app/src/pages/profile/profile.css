@@ -1,27 +1,31 @@
 .profile-card-stack {
   display: flex;
   flex-direction: column;
-  gap: var(--gw-space-lg, 24px);
+  gap: var(--gw-spacing-2xl, 24px);
 }
 
-/* The shared .table-container carries margin-bottom:80px for standalone list pages;
-   inside the profile stack the flex gap handles spacing, so cancel it to keep the
-   rhythm even between sections. */
-.profile-card-stack .table-container {
-  margin-bottom: 0;
+/* Clears the page top when jumped to from the section links. */
+.profile-anchor {
+  scroll-margin-top: var(--gw-spacing-lg, 16px);
 }
 
-/* Activity section header reuses .dashboard-header (space-between); with a single
-   title and no action buttons that leaves it left-aligned, which is what we want. */
-.profile-card-stack .dashboard-content .dashboard-header {
-  margin-top: 0;
+.profile-jump-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gw-spacing-lg, 16px);
+  margin: 0 0 var(--gw-spacing-2xl, 24px);
+  font-size: var(--gw-font-size-sm, 14px);
+}
+.profile-jump-links a {
+  color: var(--gw-color-primary-active, #244140);
+  text-decoration: underline;
 }
 
 /* Account identity list */
 .profile-identity {
   display: grid;
   grid-template-columns: 140px 1fr;
-  row-gap: var(--gw-space-sm, 8px);
+  row-gap: var(--gw-spacing-sm, 8px);
   margin: 0;
 }
 .profile-identity dt {
@@ -37,29 +41,69 @@
   display: block;
   font-weight: var(--gw-font-weight-medium, 500);
   color: var(--gw-color-text, #333);
-  margin-bottom: var(--gw-space-xs, 4px);
+  margin-bottom: var(--gw-spacing-xs, 4px);
+}
+
+.profile-subheading {
+  font-size: var(--gw-font-size-lg, 18px);
+  font-weight: var(--gw-font-weight-semibold, 600);
+  color: var(--gw-color-text, #333333);
+  margin: 0 0 var(--gw-spacing-xs, 4px);
+  padding-top: var(--gw-spacing-2xl, 24px);
+  border-top: 1px solid var(--gw-color-border, #e2e8f0);
+}
+
+/* Login .form-input sizing, on palette tokens. */
+.profile-input {
+  width: 100%;
+  max-width: 420px;
+  height: 44px;
+  padding: 0 var(--gw-spacing-lg, 16px);
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--gw-color-text, #333333);
+  background: var(--gw-color-background, #f9fafb);
+  border: 1px solid var(--gw-color-border-input, #767676);
+  border-radius: var(--gw-radius-lg, 8px);
+  appearance: none;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.profile-input:hover {
+  border-color: var(--gw-color-text-secondary, #5a5a5a);
+  background: var(--gw-color-white, #ffffff);
+}
+.profile-input:focus {
+  border-color: var(--gw-color-focus-light, #23776C);
+  outline: 3px solid var(--gw-color-focus-light, #23776C);
+  outline-offset: 2px;
+  background: var(--gw-color-white, #ffffff);
+}
+.profile-input:disabled {
+  color: var(--gw-color-disabled-text, #707070);
+  background: var(--gw-color-disabled-bg, #F0F0F0);
 }
 
 .profile-hint {
   color: var(--gw-color-text-muted, #6b7280);
   font-size: var(--gw-font-size-sm, 14px);
-  margin: 0 0 var(--gw-space-md, 16px);
+  margin: 0 0 var(--gw-spacing-lg, 16px);
 }
 
 /* Frequency segmented options */
 .profile-frequency {
   display: flex;
-  gap: var(--gw-space-sm, 8px);
+  gap: var(--gw-spacing-sm, 8px);
   flex-wrap: wrap;
 }
 .profile-frequency label {
   border: 1px solid var(--gw-color-border, #e2e8f0);
   border-radius: var(--gw-radius-md, 6px);
-  padding: var(--gw-space-sm, 8px) var(--gw-space-md, 16px);
+  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: var(--gw-space-xs, 6px);
+  gap: var(--gw-spacing-xs, 4px);
 }
 .profile-frequency label:has(input:checked) {
   border-color: var(--gw-color-primary, #23776C);
@@ -73,14 +117,14 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--gw-space-sm, 8px);
-  margin-bottom: var(--gw-space-sm, 12px);
+  gap: var(--gw-spacing-sm, 8px);
+  margin-bottom: var(--gw-spacing-md, 12px);
 }
 .profile-chip-search {
   flex: 1 1 220px;
   min-width: 0;
   max-width: 320px;
-  padding: var(--gw-space-xs, 6px) var(--gw-space-sm, 8px);
+  padding: var(--gw-spacing-xs, 4px) var(--gw-spacing-sm, 8px);
   border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: var(--gw-radius-md, 6px);
   font-size: var(--gw-font-size-sm, 14px);
@@ -101,13 +145,13 @@
 .profile-chip-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--gw-space-xs, 6px);
+  gap: var(--gw-spacing-xs, 4px);
 }
 .profile-chip {
   display: flex;
   align-items: center;
-  gap: var(--gw-space-xs, 6px);
-  padding: var(--gw-space-xs, 6px) var(--gw-space-sm, 8px);
+  gap: var(--gw-spacing-xs, 4px);
+  padding: var(--gw-spacing-xs, 4px) var(--gw-spacing-sm, 8px);
   border-radius: var(--gw-radius-sm, 4px);
   cursor: pointer;
 }
@@ -116,7 +160,7 @@
 }
 
 .profile-section {
-  margin-bottom: var(--gw-space-lg, 24px);
+  margin-bottom: var(--gw-spacing-2xl, 24px);
 }
 .profile-section:last-child {
   margin-bottom: 0;
@@ -124,7 +168,7 @@
 .profile-section > h3 {
   font-size: var(--gw-font-size-lg, 18px);
   font-weight: var(--gw-font-weight-semibold, 600);
-  margin: 0 0 var(--gw-space-sm, 8px);
+  margin: 0 0 var(--gw-spacing-sm, 8px);
   color: var(--gw-color-text, #333);
 }
 
@@ -139,8 +183,8 @@
 
 .profile-alert {
   border-radius: var(--gw-radius-md, 6px);
-  padding: var(--gw-space-sm, 8px) var(--gw-space-md, 16px);
-  margin-bottom: var(--gw-space-md, 16px);
+  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
+  margin-bottom: var(--gw-spacing-lg, 16px);
 }
 .profile-alert--error {
   background: var(--gw-color-danger-light, #ffebee);
@@ -153,8 +197,8 @@
 
 .profile-actions {
   display: flex;
-  gap: var(--gw-space-sm, 12px);
+  gap: var(--gw-spacing-md, 12px);
   flex-wrap: wrap;
-  margin-top: var(--gw-space-md, 16px);
+  margin-top: var(--gw-spacing-lg, 16px);
 }
 

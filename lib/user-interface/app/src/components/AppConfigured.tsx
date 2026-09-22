@@ -251,7 +251,6 @@ function AppLayoutContent({
     return (
       <NavigationProvider>
         <div className="marketing marketing__app-shell">
-          <OmniHeader />
           <AppNavbar />
           <div className="marketing__app-body">
             <AppSidebar />
