@@ -42,8 +42,7 @@ export class DocumentConversionStack extends cdk.NestedStack {
   ) {
     super(scope, id, props);
 
-    // Pinned: @sparticuz/chromium picks its tarball by runtime string; past 22.x Chromium won't start.
-    const puppeteerRuntime = lambda.Runtime.NODEJS_22_X;
+    const puppeteerRuntime = lambda.Runtime.NODEJS_24_X;
 
     // Create Puppeteer Core Lambda Layer for HTML to PDF conversion
     // Note: @sparticuz/chromium v131+ bundles all required dependencies, so no separate Chromium layer is needed

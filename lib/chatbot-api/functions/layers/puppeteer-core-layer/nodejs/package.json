@@ -11,8 +11,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@sparticuz/chromium": "^131.0.0",
-    "puppeteer-core": "^23.10.4"
+    "@sparticuz/chromium": "^153.0.0",
+    "puppeteer-core": "^25.11.0"
   },
   "overrides": {
     "basic-ftp": "^5.3.1",

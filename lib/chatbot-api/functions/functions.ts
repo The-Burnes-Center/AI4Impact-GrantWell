@@ -183,8 +183,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const jsSharedLayer = new lambda.LayerVersion(scope, "JsSharedLayer", {
       layerVersionName: `${stackName}-js-shared-layer`,
-      // 22.x for the puppeteer functions pinned in document-conversion-stack.ts, which carry this layer.
-      compatibleRuntimes: [lambda.Runtime.NODEJS_22_X, lambda.Runtime.NODEJS_24_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_24_X],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/js-shared-layer")
       ),
