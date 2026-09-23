@@ -112,8 +112,11 @@ jobs:
             packages/core/package-lock.json
             instances/generic/package-lock.json
 
+      - name: Generic's scripts/ matches template/
+        run: diff -r template/scripts instances/generic/scripts
+
       - name: vendor/ matches the lockfile
-        run: node scripts/check-vendor.mjs instances/generic
+        run: node instances/generic/scripts/check-vendor.mjs
 
       - name: Install Generic from vendor/
         working-directory: instances/generic

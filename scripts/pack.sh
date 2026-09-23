@@ -42,5 +42,5 @@ done
 # Plain `npm install` keeps a stale lockfile integrity for a same-version tarball; naming the files refreshes it.
 if [ "$dest" = "$generic/vendor" ]; then
   (cd "$generic" && npm install --no-audit --no-fund --loglevel=error ./vendor/grantwell-core-*.tgz ./vendor/grantwell-ui-*.tgz >/dev/null)
-  node "$repo/scripts/check-vendor.mjs" "$generic"
+  node "$generic/scripts/check-vendor.mjs"
 fi

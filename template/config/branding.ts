@@ -1,6 +1,6 @@
 import type { Branding } from "grantwell-core";
 
-// Image paths are site-root URLs served by the GrantWell UI.
+// Image paths are site-root URLs: a file the GrantWell UI ships, or one of yours in public/.
 export const branding: Branding = {
   appName: "GrantWell",
   orgName: "Example State Agency",

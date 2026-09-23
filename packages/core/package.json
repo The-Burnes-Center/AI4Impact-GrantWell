@@ -1,6 +1,6 @@
 {
   "name": "grantwell-core",
-  "version": "3.0.0-dev.0",
+  "version": "3.0.0-rc.1",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "projectId": "apck1608",

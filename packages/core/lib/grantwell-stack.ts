@@ -15,6 +15,8 @@ export interface GrantWellStackProps extends cdk.StackProps {
   readonly config: InstanceConfig;
   /** UI project directory; copied before building, never written to. */
   readonly uiSourceDir: string;
+  /** The instance's own public files, added to the UI's public/. */
+  readonly publicDir?: string;
 }
 
 export class GrantWellStack extends cdk.Stack {
@@ -53,6 +55,7 @@ export class GrantWellStack extends cdk.Stack {
     const userInterface = new UserInterface(this, "UserInterface", {
       config: props.config,
       uiSourceDir: props.uiSourceDir,
+      publicDir: props.publicDir,
       userPoolId: authentication.userPool.userPoolId,
       userPoolClientId: authentication.userPoolClient.userPoolClientId,
       cognitoDomain: props.config.aws.cognitoDomainPrefix,

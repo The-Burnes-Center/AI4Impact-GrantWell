@@ -83,8 +83,19 @@ npm run dev
 | `template/` | Starting repo for a state: config plus the two .tgz files in `vendor/` |
 | `instances/generic` | grantwell.us, built from `template/` |
 | `scripts/pack.sh` | Builds both .tgz files into `instances/generic/vendor/` (or a given folder) |
+| `scripts/release.sh` | Stamps a release version (`prepare`) and builds the release files from a tag (`build`, run by `release.yml`) |
 
 After changing `packages/`, run `scripts/pack.sh`. It rebuilds `instances/generic/vendor/` and refreshes that folder's lockfile. Commit both.
+
+### Releasing
+
+Releases are GitHub Releases on this repo, versioned `X.Y.Z` from `main` and `X.Y.Z-rc.N` from `staging`.
+
+1. On a clean checkout of the branch, run `scripts/release.sh prepare <version>`. It stamps the version into `packages/core`, `packages/ui` and `template/package.json`, and re-packs `instances/generic/vendor/`.
+2. Commit and push. Wait for CI to pass.
+3. Tag the commit `v<version>` and push the tag. `release.yml` runs CI, checks the commit is on `staging` (rc) or `main`, rebuilds both .tgz files, fails unless they equal the committed `vendor/`, and publishes them with a CycloneDX SBOM each and `SHA256SUMS`.
+
+States upgrade with `scripts/upgrade.sh <version>` in their own repo (see `template/README.md`).
 
 ## Core Modules
 

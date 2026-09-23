@@ -1,4 +1,5 @@
 import 'source-map-support/register';
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as cdk from 'aws-cdk-lib';
 import { AwsSolutionsChecks } from 'cdk-nag';
@@ -9,6 +10,8 @@ import { featureFlags } from './feature-flags';
 export interface RunGrantWellAppOptions {
   /** UI project to build. Defaults to the `grantwell-ui` package installed next to the app. */
   readonly uiSourceDir?: string;
+  /** The instance's own public files. Defaults to `public/` in the app directory, when it exists. */
+  readonly publicDir?: string;
 }
 
 /** Synthesises the deployment whose `aws.environment` matches the ENVIRONMENT env var. */
@@ -31,6 +34,7 @@ export function runGrantWellApp(instances: InstanceConfig[], options: RunGrantWe
   new GrantWellStack(app, config.aws.stackName, {
     config,
     uiSourceDir: options.uiSourceDir ?? installedUiSourceDir(),
+    publicDir: options.publicDir ?? instancePublicDir(),
   });
 
   // CI only: nag findings are error annotations, which would fail `cdk deploy`.
@@ -39,6 +43,11 @@ export function runGrantWellApp(instances: InstanceConfig[], options: RunGrantWe
   }
 
   return app;
+}
+
+function instancePublicDir(): string | undefined {
+  const dir = path.join(process.cwd(), 'public');
+  return fs.existsSync(dir) ? dir : undefined;
 }
 
 function installedUiSourceDir(): string {

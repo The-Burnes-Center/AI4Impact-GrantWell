@@ -14,6 +14,7 @@ import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
 import { InstanceConfig } from "../config/instance-config";
+import { applyPublicOverlay, checkBrandingImages } from "./public-overlay";
 
 // .gitignore because npm pack drops it: a source build and a packaged build must hash the same.
 const UI_COPY_EXCLUDES = new Set(["node_modules", "dist", ".gitignore", path.join("src", "common", "generated")]);
@@ -21,6 +22,8 @@ const UI_COPY_EXCLUDES = new Set(["node_modules", "dist", ".gitignore", path.joi
 export interface UserInterfaceProps {
   readonly config: InstanceConfig;
   readonly uiSourceDir: string;
+  /** The instance's own public files (logos, favicon), added to the UI's public/. */
+  readonly publicDir?: string;
   readonly userPoolId: string;
   readonly userPoolClientId: string;
   readonly api: ChatBotApi;
@@ -40,6 +43,10 @@ export class UserInterface extends Construct {
       recursive: true,
       filter: (src) => !UI_COPY_EXCLUDES.has(path.relative(props.uiSourceDir, src)),
     });
+    if (props.publicDir) {
+      applyPublicOverlay(appPath, props.publicDir);
+    }
+    checkBrandingImages(appPath, props.config.branding);
     const buildPath = path.join(appPath, "dist");
 
     const uploadLogsBucket = new s3.Bucket(this, "WebsiteLogsBucket", {
