@@ -1,7 +1,7 @@
 {
-  "name": "grantwell-web",
+  "name": "grantwell-ui",
   "private": true,
-  "version": "3.0.0",
+  "version": "3.0.0-dev.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

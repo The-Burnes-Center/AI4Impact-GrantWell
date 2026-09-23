@@ -94,3 +94,56 @@ jobs:
           name: cdk-nag-reports
           path: packages/core/cdk.out/ci-*/AwsSolutions-*-NagReport.csv
           if-no-files-found: error
+
+  instance:
+    name: Generic instance from vendor/ (templates, logical-ID guard, parity with core)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            packages/core/package-lock.json
+            instances/generic/package-lock.json
+
+      - name: vendor/ matches the lockfile
+        run: node scripts/check-vendor.mjs instances/generic
+
+      - name: Install Generic from vendor/
+        working-directory: instances/generic
+        run: npm ci
+
+      - name: Typecheck Generic config
+        working-directory: instances/generic
+        run: npm run typecheck
+
+      - name: Install core (synth and guard tooling)
+        working-directory: packages/core
+        run: npm ci
+
+      - name: Generate Generic templates (dev + prod)
+        working-directory: packages/core
+        run: npm run synth:ci
+        env:
+          SYNTH_APP_DIR: ../../instances/generic
+
+      - name: Logical-ID guard (Generic)
+        working-directory: packages/core
+        run: npm test
+        env:
+          SYNTH_APP_DIR: ../../instances/generic
+          REUSE_SYNTH: '1'
+
+      - name: Generate core app templates (dev + prod)
+        working-directory: packages/core
+        run: npm run synth:ci
+
+      - name: Generic and core app templates are identical
+        working-directory: packages/core
+        run: node scripts/compare-templates.mjs . ../../instances/generic

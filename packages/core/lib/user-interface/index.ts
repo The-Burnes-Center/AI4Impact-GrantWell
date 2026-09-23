@@ -14,8 +14,12 @@ import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
 import { InstanceConfig } from "../config/instance-config";
 
+// .gitignore because npm pack drops it: a source build and a packaged build must hash the same.
+const UI_COPY_EXCLUDES = new Set(["node_modules", "dist", ".gitignore", path.join("src", "common", "generated")]);
+
 export interface UserInterfaceProps {
   readonly config: InstanceConfig;
+  readonly uiSourceDir: string;
   readonly userPoolId: string;
   readonly userPoolClientId: string;
   readonly api: ChatBotApi;
@@ -26,7 +30,13 @@ export class UserInterface extends Construct {
   constructor(scope: Construct, id: string, props: UserInterfaceProps) {
     super(scope, id);
 
-    const appPath = path.join(__dirname, "..", "..", "..", "ui");
+    // A fresh copy per synth, so the asset hash sees only the package's files and parallel synths never share a dir.
+    const appPath = path.join(cdk.Stage.of(this)!.outdir, "ui-build");
+    fs.rmSync(appPath, { recursive: true, force: true });
+    fs.cpSync(props.uiSourceDir, appPath, {
+      recursive: true,
+      filter: (src) => !UI_COPY_EXCLUDES.has(path.relative(props.uiSourceDir, src)),
+    });
     const buildPath = path.join(appPath, "dist");
 
     const uploadLogsBucket = new s3.Bucket(this, "WebsiteLogsBucket", {

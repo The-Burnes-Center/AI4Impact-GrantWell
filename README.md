@@ -74,6 +74,18 @@ npm run dev
 - AWS CLI configured with appropriate credentials
 - AWS CDK installed globally (`npm install -g aws-cdk`)
 
+### Repository layout
+
+| Path | Contents |
+|---|---|
+| `packages/core` | CDK constructs, Lambdas and step functions, packed as `grantwell-core-<version>.tgz` |
+| `packages/ui` | React app source, packed as `grantwell-ui-<version>.tgz` |
+| `template/` | Starting repo for a state: config plus the two .tgz files in `vendor/` |
+| `instances/generic` | grantwell.us, built from `template/` |
+| `scripts/pack.sh` | Builds both .tgz files into `instances/generic/vendor/` (or a given folder) |
+
+After changing `packages/`, run `scripts/pack.sh`. It rebuilds `instances/generic/vendor/` and refreshes that folder's lockfile. Commit both.
+
 ## Core Modules
 
 | Module              | Description                                                                 |

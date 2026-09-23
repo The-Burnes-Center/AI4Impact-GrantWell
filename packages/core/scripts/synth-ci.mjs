@@ -2,13 +2,15 @@
 // Generates CloudFormation templates for both environments without the CDK CLI:
 // bundling needs Docker, and the CLI both rejects and overwrites `aws:cdk:bundling-stacks`.
 // Logical IDs and resource types are exact; asset hashes are placeholders.
-// Usage: node scripts/synth-ci.mjs [dev|prod ...]   (default: both)
+// Usage: [SYNTH_APP_DIR=<cdk app dir>] node scripts/synth-ci.mjs [dev|prod ...]   (default: both)
+// SYNTH_APP_DIR defaults to this package; point it at an instance to synth that app instead.
 import { spawn } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+export const appDir = path.resolve(process.env.SYNTH_APP_DIR ?? root);
 
 // ENVIRONMENT selects the instance config in bin/instances.ts, as in the deploy workflows.
 export const ENVS = {
@@ -16,14 +18,14 @@ export const ENVS = {
   prod: { ENVIRONMENT: "grantwell-staging", STACK_NAME: "grantwell-staging" },
 };
 
-export const outDir = (env) => path.join(root, "cdk.out", `ci-${env}`);
+export const outDir = (env) => path.join(appDir, "cdk.out", `ci-${env}`);
 
 export function synth(env) {
-  const context = JSON.parse(fs.readFileSync(path.join(root, "cdk.json"), "utf8")).context;
+  const cdkJson = JSON.parse(fs.readFileSync(path.join(appDir, "cdk.json"), "utf8"));
   const childEnv = {
     ...process.env,
     ...ENVS[env],
-    CDK_CONTEXT_JSON: JSON.stringify({ ...context, "aws:cdk:bundling-stacks": [] }),
+    CDK_CONTEXT_JSON: JSON.stringify({ ...cdkJson.context, "aws:cdk:bundling-stacks": [] }),
     CDK_OUTDIR: outDir(env),
     CDK_NAG: "warn",
     GRANTS_GOV_API_KEY: "REDACTED-GRANTS_GOV_API_KEY",
@@ -32,8 +34,9 @@ export function synth(env) {
   };
   fs.rmSync(outDir(env), { recursive: true, force: true });
   return new Promise((resolve, reject) => {
-    const child = spawn("npx", ["ts-node", "--prefer-ts-exts", "bin/grantwell.ts"], {
-      cwd: root,
+    const child = spawn(cdkJson.app, {
+      shell: true,
+      cwd: appDir,
       env: childEnv,
       stdio: "inherit",
     });

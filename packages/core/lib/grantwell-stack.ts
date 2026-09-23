@@ -12,6 +12,8 @@ import { InstanceConfig } from "./config/instance-config";
 
 export interface GrantWellStackProps extends cdk.StackProps {
   readonly config: InstanceConfig;
+  /** UI project directory; copied before building, never written to. */
+  readonly uiSourceDir: string;
 }
 
 export class GrantWellStack extends cdk.Stack {
@@ -49,6 +51,7 @@ export class GrantWellStack extends cdk.Stack {
     // Create the user interface and pass necessary properties
     new UserInterface(this, "UserInterface", {
       config: props.config,
+      uiSourceDir: props.uiSourceDir,
       userPoolId: authentication.userPool.userPoolId,
       userPoolClientId: authentication.userPoolClient.userPoolClientId,
       cognitoDomain: props.config.aws.cognitoDomainPrefix,
