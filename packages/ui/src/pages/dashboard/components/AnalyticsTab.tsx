@@ -17,7 +17,7 @@ import type {
   AnalyticsWindow,
   RankedItem,
 } from "../../../common/api-client/analytics-client";
-import { SUPPORTED_STATES, stateNameFromCode } from "../../../common/generated/states";
+import { SUPPORTED_STATES, stateNameFromCode } from "../../../common/states";
 import "../../../styles/analytics.css";
 
 interface AnalyticsTabProps {

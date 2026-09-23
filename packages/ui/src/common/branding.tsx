@@ -1,13 +1,16 @@
 import { createContext, useContext, useLayoutEffect, ReactNode } from "react";
 
 /**
- * `defaultBranding` is the NEUTRAL core default — no partners, placeholder wordmark. Real
- * instances supply their own value from `config/instances/<id>.ts`, selected at build time and
- * injected via BrandingProvider. Nothing instance-specific is baked into the core.
+ * Copy of the Branding contract in packages/core/lib/config/instance-config.ts; keep the two in
+ * step. The deployed value is staged by core at synth (see common/instance.ts); `defaultBranding`
+ * is the neutral fallback for builds with nothing staged.
  */
-export interface FooterLink {
+export interface Link {
   label: string;
   href: string;
+}
+
+export interface LogoLink extends Link {
   logo?: string;
   /** Optional CSS modifier class for per-partner styling (e.g. layout tweaks). */
   className?: string;
@@ -16,6 +19,8 @@ export interface FooterLink {
 export interface Branding {
   appName: string;
   orgName: string;
+  postalAddress: string;
+  supportEmail: string;
   colors: {
     primary: string;
     primaryHover?: string;
@@ -30,23 +35,24 @@ export interface Branding {
     /** Footer wordmark image; omit to fall back to `logo`. */
     wordmark?: string;
     /** "Made by" attribution (e.g. ai4impact), if any. */
-    madeBy?: { label: string; href: string; logo?: string };
+    madeBy?: LogoLink;
     /** Partner/consortium links + logos. Empty for neutral core. */
-    partners: FooterLink[];
+    partners: LogoLink[];
   };
   /**
    * Text links for the "This is a tool by:" strip (OmniHeader) on landing/login. Distinct from
    * footer.partners (text, not logos). Empty for neutral core — the strip renders nothing.
    */
-  omniPartners: { label: string; href: string }[];
+  omniPartners: Link[];
   analyticsId?: string;
-  supportEmail?: string;
 }
 
 /** Neutral core default — no instance identity. Real look comes from an injected config. */
 export const defaultBranding: Branding = {
   appName: "GrantWell",
   orgName: "",
+  postalAddress: "",
+  supportEmail: "",
   colors: {
     primary: "#23776C",
     primaryHover: "#195C53",

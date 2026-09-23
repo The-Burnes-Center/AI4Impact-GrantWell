@@ -11,7 +11,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cr from 'aws-cdk-lib/custom-resources';
 import { Construct } from "constructs";
 import { aws_opensearchserverless as opensearchserverless } from 'aws-cdk-lib';
-import { stackName, knowledgeBaseIndexName } from "../../constants";
+import { InstanceConfig } from "../../config/instance-config";
 
 type OssPolicyNames = { enc: string; network: string; access: string };
 
@@ -42,7 +42,9 @@ function ossPolicyNamesFor(name: string): OssPolicyNames {
   };
 }
 
-export interface OpenSearchStackProps {}
+export interface OpenSearchStackProps {
+  readonly config: InstanceConfig;
+}
 
 export class OpenSearchStack extends cdk.Stack {
   public readonly openSearchCollection: opensearchserverless.CfnCollection;
@@ -50,8 +52,11 @@ export class OpenSearchStack extends cdk.Stack {
   public readonly knowledgeBaseRole: iam.Role;
   public readonly lambdaCustomResource: cdk.CustomResource;
 
-  constructor(scope: Construct, id: string, _props: OpenSearchStackProps) {
+  constructor(scope: Construct, id: string, props: OpenSearchStackProps) {
     super(scope, id);
+
+    const stackName = props.config.aws.stackName;
+    const knowledgeBaseIndexName = props.config.aws.knowledgeBaseIndexName;
 
     this.collectionName = `${stackName.toLowerCase()}-oss-collection`;
     const openSearchCollection = new opensearchserverless.CfnCollection(scope, 'OpenSearchCollection', {

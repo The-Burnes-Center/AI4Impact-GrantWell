@@ -12,7 +12,7 @@ import {
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
-import { stateNameFromCode } from "../../common/generated/states";
+import { stateNameFromCode } from "../../common/states";
 import Button from "../ui/Button";
 import "./profile-gate.css";
 

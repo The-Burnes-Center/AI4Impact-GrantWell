@@ -6,8 +6,8 @@ export {
   stateNameFromCode,
   stateCodeFromName,
   isSupportedStateCode,
-} from "../generated/states";
-export type { SupportedStateCode } from "../generated/states";
+} from "../states";
+export type { SupportedStateCode } from "../states";
 
 export interface ManagedUser {
   username: string;

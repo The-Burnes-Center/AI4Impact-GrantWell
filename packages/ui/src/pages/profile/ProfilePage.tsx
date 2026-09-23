@@ -15,7 +15,7 @@ import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
-import { stateNameFromCode } from "../../common/generated/states";
+import { stateNameFromCode } from "../../common/states";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
 import "../../styles/dashboard.css";

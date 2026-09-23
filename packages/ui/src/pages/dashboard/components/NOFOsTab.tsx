@@ -13,7 +13,7 @@ import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId, CustomQuestion } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
-import { SUPPORTED_STATES } from "../../../common/generated/states";
+import { SUPPORTED_STATES } from "../../../common/states";
 
 function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback;

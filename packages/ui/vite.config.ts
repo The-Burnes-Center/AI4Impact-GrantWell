@@ -5,17 +5,11 @@ import react from "@vitejs/plugin-react";
 
 const isDev = process.env.NODE_ENV === "staging";
 
-// Build-time instance selection: `@active-instance` resolves to the one selected instance's
-// branding module, so no other instance's identity enters the bundle. Default: neutral core.
-const instance = process.env.GRANTWELL_INSTANCE || "neutral";
-const activeInstancePath = path.resolve(__dirname, `config/instances/${instance}.ts`);
-
-// Page chrome (header/nav/footer) is swappable per deliverable via `@chrome`. Defaults to the
-// neutral core barrel; a deliverable with its own design system sets GRANTWELL_CHROME to its
-// chrome barrel path (must export the same OmniHeader/LandingNavbar/AppNavbar/LandingFooter).
-const chromePath = process.env.GRANTWELL_CHROME
-  ? path.resolve(__dirname, process.env.GRANTWELL_CHROME)
-  : path.resolve(__dirname, "config/chrome.ts");
+// Staged by core at synth; see src/common/instance.ts. Same fallback as defaultBranding.
+const stagedInstancePath = path.resolve(__dirname, "src/common/generated/instance.json");
+const favicon = fs.existsSync(stagedInstancePath)
+  ? JSON.parse(fs.readFileSync(stagedInstancePath, "utf8")).branding.favicon
+  : "/images/marketing/favicon.svg";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,16 +17,8 @@ export default defineConfig({
     "process.env": {},
     // Inject ENVIRONMENT variable for use in client-side code
     "__ENVIRONMENT__": JSON.stringify(process.env.ENVIRONMENT),
-    // Build-time instance id — informational (the actual module is chosen by the resolve alias).
-    "__GRANTWELL_INSTANCE__": JSON.stringify(instance),
     // Turnstile site key is public by design (it ships in the page); only the secret key is secret.
     "__TURNSTILE_SITE_KEY__": JSON.stringify(process.env.TURNSTILE_SITE_KEY || ""),
-  },
-  resolve: {
-    alias: {
-      "@active-instance": activeInstancePath,
-      "@chrome": chromePath,
-    },
   },
   plugins: [
     // Plugin to inject ENVIRONMENT variable into HTML
@@ -40,10 +26,12 @@ export default defineConfig({
       name: "inject-environment",
       transformIndexHtml(html) {
         const environment = process.env.ENVIRONMENT;
-        return html.replace(
-          '<head>',
-          `<head>\n    <script>window.__ENVIRONMENT__ = ${JSON.stringify(environment)};</script>`
-        );
+        return html
+          .replace(
+            '<head>',
+            `<head>\n    <script>window.__ENVIRONMENT__ = ${JSON.stringify(environment)};</script>`
+          )
+          .replace("%GRANTWELL_FAVICON%", favicon);
       },
     },
     isDev && {

@@ -1,25 +1,15 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { cognitoDomainName, emailConfig, MFA_REQUIRED, stackName } from '../constants';
 import { UserPool, UserPoolClient, FeaturePlan} from 'aws-cdk-lib/aws-cognito';
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ses from 'aws-cdk-lib/aws-ses';
 import * as path from 'path';
-import { SUPPORTED_STATES } from '../shared/states';
-import { genericBrandingData } from '../shared/generic-branding';
-
-const SUPPORTED_STATES_ENV: string = JSON.stringify(
-  SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
-);
-
-const verificationSender =
-  process.env.NOTIFICATION_SENDER || genericBrandingData.senderEmail;
-const verificationSenderDomain =
-  verificationSender.split('@')[1] || genericBrandingData.senderEmail.split('@')[1];
+import { InstanceConfig, supportedStatesEnv } from '../config/instance-config';
 
 export interface AuthorizationStackProps {
+  readonly config: InstanceConfig;
   readonly turnstileSecretKey: string;
 }
 
@@ -31,9 +21,13 @@ export class AuthorizationStack extends Construct {
   constructor(scope: Construct, id: string, props: AuthorizationStackProps) {
     super(scope, id);
 
+    const { config } = props;
+    const verificationSender = config.email.sender;
+    const verificationSenderDomain = verificationSender.split('@')[1];
+
     // Suppression stays off: one bounce would suppress the address and lock the user out of password reset.
     const authEmailConfigurationSet = new ses.ConfigurationSet(this, 'AuthEmailConfigurationSet', {
-      configurationSetName: `${process.env.ENVIRONMENT || stackName}-auth`,
+      configurationSetName: `${config.aws.environment}-auth`,
       disableSuppressionList: true,
       reputationMetrics: true,
     });
@@ -43,7 +37,7 @@ export class AuthorizationStack extends Construct {
         {
           source: ses.CloudWatchDimensionSource.MESSAGE_TAG,
           name: 'ses:configuration-set',
-          defaultValue: `${process.env.ENVIRONMENT || stackName}-auth`,
+          defaultValue: `${config.aws.environment}-auth`,
         },
       ]),
       events: [
@@ -64,7 +58,7 @@ export class AuthorizationStack extends Construct {
     const userPool = new UserPool(this, 'UserPool', {
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       selfSignUpEnabled: true,
-      mfa: MFA_REQUIRED ? cognito.Mfa.REQUIRED : cognito.Mfa.OPTIONAL,
+      mfa: config.auth.mfaRequired ? cognito.Mfa.REQUIRED : cognito.Mfa.OPTIONAL,
       // No phone number is collected, so SMS would leave MFA unenrollable.
       mfaSecondFactor: { sms: false, otp: true },
       featurePlan: FeaturePlan.PLUS,
@@ -81,7 +75,7 @@ export class AuthorizationStack extends Construct {
         emailBody:
           'Hello,<br><br>' +
           'An account has been created for you on GrantWell.<br><br>' +
-          '<strong>Sign in:</strong> <a href="' + emailConfig.deploymentUrl + '/">' + emailConfig.deploymentUrl + '</a><br>' +
+          '<strong>Sign in:</strong> <a href="' + config.siteUrl + '/">' + config.siteUrl + '</a><br>' +
           '<strong>Username:</strong> {username}<br>' +
           '<strong>Temporary password:</strong> {####}<br><br>' +
           'You will be asked to choose your own password the first time you sign in. The temporary password above can only be used once.<br><br>' +
@@ -101,7 +95,7 @@ export class AuthorizationStack extends Construct {
       email: cognito.UserPoolEmail.withSES({
         fromEmail: verificationSender,
         fromName: 'GrantWell',
-        replyTo: genericBrandingData.supportEmail,
+        replyTo: config.branding.supportEmail,
         sesRegion,
         sesVerifiedDomain: verificationSenderDomain,
         configurationSetName: authEmailConfigurationSet.configurationSetName,
@@ -116,7 +110,7 @@ export class AuthorizationStack extends Construct {
       code: lambda.Code.fromAsset(path.join(__dirname, 'signup-triggers')),
       handler: 'index.handler',
       environment: {
-        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        SUPPORTED_STATES: supportedStatesEnv(config),
         TURNSTILE_SECRET_KEY: props.turnstileSecretKey,
       },
       timeout: cdk.Duration.seconds(5),
@@ -150,7 +144,7 @@ export class AuthorizationStack extends Construct {
 
     userPool.addDomain('CognitoDomain', {
       cognitoDomain: {
-        domainPrefix: cognitoDomainName,
+        domainPrefix: config.aws.cognitoDomainPrefix,
       },
     });
 

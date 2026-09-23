@@ -22,8 +22,7 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { SnsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 
-import { emailConfig } from "../../constants";
-import { genericBrandingData } from "../../shared/generic-branding";
+import { Branding } from "../../config/instance-config";
 import { sesSendEmailPolicy } from "./shared-policies";
 
 export interface NotificationsStackProps extends cdk.NestedStackProps {
@@ -46,6 +45,8 @@ export interface NotificationsStackProps extends cdk.NestedStackProps {
   readonly unsubscribeSecret: secretsmanager.ISecret;
   readonly notificationSender: string;
   readonly supportedStatesEnv: string;
+  readonly siteUrl: string;
+  readonly branding: Branding;
 }
 
 export class NotificationsStack extends cdk.NestedStack {
@@ -59,14 +60,15 @@ export class NotificationsStack extends cdk.NestedStack {
     super(scope, id, props);
 
     const notificationSender = props.notificationSender;
+    const { siteUrl, branding } = props;
 
     const digestBrandEnv = {
-      DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
-      DIGEST_LOGO_URL: `${emailConfig.deploymentUrl}${genericBrandingData.footerLogo}`,
-      DIGEST_APP_NAME: genericBrandingData.appName,
-      DIGEST_ORG_NAME: genericBrandingData.orgName,
-      DIGEST_POSTAL_ADDRESS: genericBrandingData.postalAddress,
-      DIGEST_SUPPORT_EMAIL: genericBrandingData.supportEmail,
+      DIGEST_BRAND_COLOR: branding.colors.primary,
+      DIGEST_LOGO_URL: `${siteUrl}${branding.footer.wordmark ?? branding.logo}`,
+      DIGEST_APP_NAME: branding.appName,
+      DIGEST_ORG_NAME: branding.orgName,
+      DIGEST_POSTAL_ADDRESS: branding.postalAddress,
+      DIGEST_SUPPORT_EMAIL: branding.supportEmail,
     };
 
     const notificationDigestFunction = new lambda.Function(
@@ -83,7 +85,7 @@ export class NotificationsStack extends cdk.NestedStack {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           USER_POOL_ID: props.userPool.userPoolId,
           NOTIFICATION_SENDER: notificationSender,
-          DEPLOYMENT_URL: emailConfig.deploymentUrl,
+          DEPLOYMENT_URL: siteUrl,
           UNSUBSCRIBE_SECRET_ARN: props.unsubscribeSecret.secretArn,
           DIGEST_SEND_LOG_TABLE_NAME: props.digestSendLogTable.tableName,
           DIGEST_SUPPRESSION_TABLE_NAME: props.digestSuppressionTable.tableName,
@@ -124,7 +126,7 @@ export class NotificationsStack extends cdk.NestedStack {
           USER_NOTIFICATION_PREFS_TABLE_NAME:
             props.userNotificationPrefsTable.tableName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          DEPLOYMENT_URL: emailConfig.deploymentUrl,
+          DEPLOYMENT_URL: siteUrl,
           NOTIFICATION_SENDER: notificationSender,
           SES_CONFIGURATION_SET: props.sesConfigurationSet.configurationSetName,
           SUPPORTED_STATES: props.supportedStatesEnv,
@@ -180,8 +182,8 @@ export class NotificationsStack extends cdk.NestedStack {
           USER_NOTIFICATION_PREFS_TABLE_NAME:
             props.userNotificationPrefsTable.tableName,
           UNSUBSCRIBE_SECRET_ARN: props.unsubscribeSecret.secretArn,
-          DIGEST_APP_NAME: genericBrandingData.appName,
-          DIGEST_BRAND_COLOR: genericBrandingData.colors.primary,
+          DIGEST_APP_NAME: branding.appName,
+          DIGEST_BRAND_COLOR: branding.colors.primary,
         },
         timeout: cdk.Duration.seconds(15),
       }

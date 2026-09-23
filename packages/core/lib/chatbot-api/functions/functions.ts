@@ -6,8 +6,7 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
-import { stackName, emailConfig } from "../../constants";
-import { genericBrandingData } from "../../shared/generic-branding";
+import { InstanceConfig, supportedStatesEnv } from "../../config/instance-config";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -24,8 +23,6 @@ import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
-import { knowledgeBaseIndexName } from "../../constants";
-import { SUPPORTED_STATES } from "../../shared/states";
 import { DocumentConversionStack } from "./document-conversion-stack";
 import { NotificationsStack } from "./notifications-stack";
 import { ScraperStack } from "./scraper-stack";
@@ -38,11 +35,6 @@ import {
   s3ReadWritePolicy,
 } from "./shared-policies";
 
-// [{code,name}] so handlers get both membership checks and display names from one env var.
-const SUPPORTED_STATES_ENV = JSON.stringify(
-  SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
-);
-
 // Platform authority is the explicit PlatformAdmin role. While this is "true", a legacy
 // stateless Admin still resolves to platform-wide — the pre-migration form. Flip to "false"
 // only after every stateless admin in the pool has been migrated to PlatformAdmin, or they
@@ -50,6 +42,7 @@ const SUPPORTED_STATES_ENV = JSON.stringify(
 const LEGACY_STATELESS_ADMIN_IS_PLATFORM = "true";
 
 interface LambdaFunctionStackProps {
+  readonly config: InstanceConfig;
   readonly wsApiEndpoint: string;
   readonly sessionTable: Table;
   readonly draftTable: Table;
@@ -119,6 +112,11 @@ export class LambdaFunctionStack extends cdk.Stack {
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
+
+    const { config } = props;
+    const stackName = config.aws.stackName;
+    const knowledgeBaseIndexName = config.aws.knowledgeBaseIndexName;
+    const SUPPORTED_STATES_ENV = supportedStatesEnv(config);
 
     const SONNET_MODEL_ID = "us.anthropic.claude-sonnet-5";
     const HAIKU_MODEL_ID = "us.anthropic.claude-haiku-4-5-20251001-v1:0";
@@ -629,6 +627,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // the 500-resource CloudFormation limit. The queues, the NOFO bucket, the metadata/review
     // tables, the inference profiles and the KB sync Lambda stay here and are passed in.
     const nofoPipeline = new NofoPipelineStack(scope, "NofoPipelineStack", {
+      stackName,
       ffioNofosBucket: props.ffioNofosBucket,
       nofoMetadataTable: props.nofoMetadataTable,
       nofoProcessingReviewTable: props.nofoProcessingReviewTable,
@@ -1119,6 +1118,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // queue, the NOFO bucket, the metadata table and the Bedrock inference profile stay
     // here and are passed in.
     const scraper = new ScraperStack(scope, "ScraperStack", {
+      dailySchedule: config.scraper.dailySchedule,
       ffioNofosBucket: props.ffioNofosBucket,
       nofoMetadataTable: props.nofoMetadataTable,
       jsSharedLayer: jsSharedLayer,
@@ -1162,17 +1162,11 @@ export class LambdaFunctionStack extends cdk.Stack {
     const stack = cdk.Stack.of(this);
 
     // --- NOFO notification digest ------------------------------------------------
-    // SES verified sender for digest emails. Branding config is the source of truth for the From
-    // address so a new instance doesn't silently send as GrantWell; env is the per-deploy override.
-    const notificationSender =
-      process.env.NOTIFICATION_SENDER || genericBrandingData.senderEmail;
-    const senderDomain =
-      notificationSender.split("@")[1] ||
-      genericBrandingData.senderEmail.split("@")[1];
-    // SES identities are account+region scoped: the generic stack already owns the grantwell.us
-    // identity, so a second stack in the same account (burnes-staging) must reuse it, not re-create
-    // it. Both still send as the same address; only the primary stack manages the identity.
-    const managesSenderIdentity = process.env.ENVIRONMENT !== "grantwell-burnes-staging";
+    const notificationSender = config.email.sender;
+    const senderDomain = notificationSender.split("@")[1];
+    // SES identities are account+region scoped: a second deployment in the same account must reuse
+    // the identity the first one owns, not re-create it.
+    const managesSenderIdentity = config.email.manageSenderIdentity;
     // Easy DKIM's three CNAME tokens must reach the sender domain's DNS before the identity
     // verifies. They're emitted as this stack's NotificationSenderDkim* outputs.
     const notificationEmailIdentity = managesSenderIdentity
@@ -1208,7 +1202,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "NotificationDigestConfigurationSet",
       {
-        configurationSetName: `${process.env.ENVIRONMENT || stackName}-digest`,
+        configurationSetName: `${config.aws.environment}-digest`,
         suppressionReasons: ses.SuppressionReasons.BOUNCES_AND_COMPLAINTS,
       }
     );
@@ -1241,6 +1235,8 @@ export class LambdaFunctionStack extends cdk.Stack {
     // keep the main app stack under the 500-resource CloudFormation limit. The SES identity,
     // configuration set, feedback topic and unsubscribe secret stay here and are passed in.
     const notifications = new NotificationsStack(scope, "NotificationsStack", {
+      siteUrl: config.siteUrl,
+      branding: config.branding,
       userNotificationPrefsTable: props.userNotificationPrefsTable,
       nofoMetadataTable: props.nofoMetadataTable,
       digestSendLogTable: props.digestSendLogTable,

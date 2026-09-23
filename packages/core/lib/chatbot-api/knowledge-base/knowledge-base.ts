@@ -11,10 +11,11 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { aws_bedrock as bedrock } from 'aws-cdk-lib';
 
 import { Construct } from "constructs";
-import { stackName, knowledgeBaseIndexName } from "../../constants"
+import { InstanceConfig } from "../../config/instance-config"
 import { OpenSearchStack } from "../opensearch/opensearch"
 
 export interface KnowledgeBaseStackProps {
+  readonly config: InstanceConfig,
   readonly openSearch: OpenSearchStack,
   readonly s3bucket : s3.Bucket,
   readonly userDocumentsBucket?: s3.Bucket
@@ -28,6 +29,9 @@ export class KnowledgeBaseStack extends cdk.Stack {
 
   constructor(scope: Construct, id: string, props: KnowledgeBaseStackProps) {
     super(scope, id);
+
+    const stackName = props.config.aws.stackName;
+    const knowledgeBaseIndexName = props.config.aws.knowledgeBaseIndexName;
 
     // add AOSS access to the role
     props.openSearch.knowledgeBaseRole.addToPolicy(

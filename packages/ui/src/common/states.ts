@@ -1,18 +1,14 @@
-export const SUPPORTED_STATES = [
-  { code: "CA", name: "California" },
-  { code: "CO", name: "Colorado" },
-  { code: "MA", name: "Massachusetts" },
-  { code: "NC", name: "North Carolina" },
-  { code: "RI", name: "Rhode Island" },
-] as const;
+import { SUPPORTED_STATES } from "./instance";
 
-export type SupportedStateCode = typeof SUPPORTED_STATES[number]["code"];
+export { SUPPORTED_STATES };
+
+export type SupportedStateCode = string;
 
 export const SUPPORTED_STATE_CODES: readonly SupportedStateCode[] =
   SUPPORTED_STATES.map((s) => s.code);
 
 export function isSupportedStateCode(value: string): value is SupportedStateCode {
-  return (SUPPORTED_STATE_CODES as readonly string[]).includes(value);
+  return SUPPORTED_STATE_CODES.includes(value);
 }
 
 export function stateNameFromCode(code: string): string | undefined {

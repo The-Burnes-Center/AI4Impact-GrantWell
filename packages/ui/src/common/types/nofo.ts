@@ -5,7 +5,7 @@
  * the dashboard, landing page, and grants table.
  */
 
-import { stateNameFromCode } from "../generated/states";
+import { stateNameFromCode } from "../states";
 
 export type GrantTypeId = "federal" | "state" | "quasi" | "philanthropic";
 

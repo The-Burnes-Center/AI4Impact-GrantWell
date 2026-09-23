@@ -2,7 +2,7 @@ import type { FormEvent, ReactNode } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import PasswordRequirementsList from "../PasswordRequirementsList";
 import { PasswordRequirements } from "../auth-types";
-import { SUPPORTED_STATES } from "../../../common/generated/states";
+import { SUPPORTED_STATES } from "../../../common/states";
 
 interface SignUpStepProps {
   email: string;

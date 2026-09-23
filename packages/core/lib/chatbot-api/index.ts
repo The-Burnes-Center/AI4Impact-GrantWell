@@ -26,18 +26,14 @@ import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
-import { SUPPORTED_STATES } from "../shared/states";
-
-// [{code,name}] so handlers get both membership checks and display names from one env var.
-const SUPPORTED_STATES_ENV: string = JSON.stringify(
-  SUPPORTED_STATES.map((s) => ({ code: s.code, name: s.name }))
-);
+import { InstanceConfig, supportedStatesEnv } from "../config/instance-config";
 
 // See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
 // still resolves to platform-wide. Flip both to "false" only after migrating every pool.
 const LEGACY_STATELESS_ADMIN_IS_PLATFORM = "true";
 
 export interface ChatbotAPIProps {
+  readonly config: InstanceConfig;
   readonly authentication: AuthorizationStack;
   readonly grantsGovApiKey: string;
 }
@@ -49,10 +45,12 @@ export class ChatBotApi extends Construct {
   constructor(scope: Construct, id: string, props: ChatbotAPIProps) {
     super(scope, id);
 
+    const SUPPORTED_STATES_ENV = supportedStatesEnv(props.config);
     const tables = new TableStack(this, "TableStack");
     const buckets = new S3BucketStack(this, "BucketStack");
-    const openSearch = new OpenSearchStack(this, "OpenSearchStack", {});
+    const openSearch = new OpenSearchStack(this, "OpenSearchStack", { config: props.config });
     const knowledgeBase = new KnowledgeBaseStack(this, "KnowledgeBaseStack", {
+      config: props.config,
       openSearch: openSearch,
       s3bucket: buckets.ffioNofosBucket,
       userDocumentsBucket: buckets.userDocumentsBucket,
@@ -67,6 +65,7 @@ export class ChatBotApi extends Construct {
     this.wsAPI = websocketBackend;
 
     const lambdaFunctions = new LambdaFunctionStack(this, "LambdaFunctions", {
+      config: props.config,
       wsApiEndpoint: websocketBackend.wsAPIStage.url,
       sessionTable: tables.historyTable,
       draftTable: tables.draftTable,
@@ -620,7 +619,7 @@ export class ChatBotApi extends Construct {
     // Still the raw execute-api host, which doesn't match the From domain. Branding it needs a
     // `/unsubscribe*` behavior on the app's CloudFront distribution, but that is built by
     // UserInterface after (and from) ChatBotApi and exposes no handle upward, so it has to be added
-    // in lib/user-interface/generate-app.ts before this can use emailConfig.deploymentUrl.
+    // in lib/user-interface/generate-app.ts before this can use config.siteUrl.
     lambdaFunctions.notificationDigestFunction.addEnvironment(
       "UNSUBSCRIBE_URL_BASE",
       `${restBackend.restAPI.apiEndpoint}/unsubscribe`

@@ -21,7 +21,6 @@ const PALETTE_FILES = [
   TOKENS_FILE,
   "src/components/ui/styles.ts",
   "src/common/branding.tsx",
-  "config/instances/",
 ];
 
 const EXTENSIONS = [".css", ".scss", ".ts", ".tsx"];

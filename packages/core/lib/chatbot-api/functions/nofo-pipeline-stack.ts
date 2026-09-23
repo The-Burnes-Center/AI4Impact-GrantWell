@@ -27,7 +27,6 @@ import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 
-import { stackName } from "../../constants";
 import { NofoProcessingStateMachine } from "../step-functions/nofo-processing";
 import {
   bedrockInvokePolicy,
@@ -62,6 +61,7 @@ export interface NofoPipelineStackProps extends cdk.NestedStackProps {
   readonly scraperDownloadDlqUrl: string;
   readonly supportedStatesEnv: string;
   readonly legacyStatelessAdminIsPlatform: string;
+  readonly stackName: string;
 }
 
 export class NofoPipelineStack extends cdk.NestedStack {
@@ -136,7 +136,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+        SYNC_KB_FUNCTION_NAME: `${props.stackName}-syncKBFunction`,
       },
       timeout: cdk.Duration.minutes(2),
       memorySize: 256,

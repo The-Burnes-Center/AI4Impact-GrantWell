@@ -10,8 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-// Mirrors the env blocks of deploy-staging.yml and deploy-production.yml. CI has no prod domain or
-// certificate; prod logical IDs, types and exports are the same without them.
+// ENVIRONMENT selects the instance config in bin/instances.ts, as in the deploy workflows.
 export const ENVS = {
   dev: { ENVIRONMENT: "grantwell-burnes-staging", STACK_NAME: "grantwell-burnes-staging" },
   prod: { ENVIRONMENT: "grantwell-staging", STACK_NAME: "grantwell-staging" },
@@ -27,16 +26,10 @@ export function synth(env) {
     CDK_CONTEXT_JSON: JSON.stringify({ ...context, "aws:cdk:bundling-stacks": [] }),
     CDK_OUTDIR: outDir(env),
     CDK_NAG: "warn",
-    MFA_REQUIRED: "false",
-    GRANTWELL_INSTANCE: "generic",
     GRANTS_GOV_API_KEY: "REDACTED-GRANTS_GOV_API_KEY",
     TURNSTILE_SECRET_KEY: "REDACTED-TURNSTILE_SECRET_KEY",
     TURNSTILE_SITE_KEY: "REDACTED-TURNSTILE_SITE_KEY",
   };
-  for (const key of ["CLOUDFRONT_CUSTOM_DOMAIN", "CLOUDFRONT_CERTIFICATE_ARN", "DEPLOYMENT_URL", "GRANTWELL_CHROME"]) {
-    delete childEnv[key];
-  }
-
   fs.rmSync(outDir(env), { recursive: true, force: true });
   return new Promise((resolve, reject) => {
     const child = spawn("npx", ["ts-node", "--prefer-ts-exts", "bin/grantwell.ts"], {

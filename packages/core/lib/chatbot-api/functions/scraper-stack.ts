@@ -35,6 +35,8 @@ export interface ScraperStackProps extends cdk.NestedStackProps {
   /** Shared with functions outside this stack, so it stays in the parent. */
   readonly jsSharedLayer: lambda.ILayerVersion;
   readonly grantsGovApiKey: string;
+  /** Runs the coordinator daily at 9 AM UTC. */
+  readonly dailySchedule: boolean;
   /** Bedrock application inference profile owned by the parent. */
   readonly haikuScraperProfileArn: string;
   /**
@@ -135,9 +137,7 @@ export class ScraperStack extends cdk.NestedStack {
     this.opportunityProcessorFunction = opportunityProcessorFunction;
 
     // EventBridge rule to run the coordinator daily at 9 AM UTC.
-    // The grantwell-staging environment powers the generic deployment.
-    const environment = process.env.ENVIRONMENT;
-    if (environment === 'production' || environment === 'grantwell-staging') {
+    if (props.dailySchedule) {
       const scraperRule = new events.Rule(this, 'AutomatedNofoScraperRule', {
         schedule: events.Schedule.cron({
           minute: '0',

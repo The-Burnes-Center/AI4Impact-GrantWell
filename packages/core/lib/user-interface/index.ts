@@ -12,9 +12,10 @@ import { ChatBotApi } from "../chatbot-api";
 import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
-import { OIDCIntegrationName, customDomainConfig } from "../constants";
+import { InstanceConfig } from "../config/instance-config";
 
 export interface UserInterfaceProps {
+  readonly config: InstanceConfig;
   readonly userPoolId: string;
   readonly userPoolClientId: string;
   readonly api: ChatBotApi;
@@ -52,8 +53,8 @@ export class UserInterface extends Construct {
     const publicWebsite = new Website(this, "Website", { 
       ...props, 
       websiteBucket: websiteBucket,
-      customDomain: customDomainConfig.domain,
-      certificateArn: customDomainConfig.certificateArn
+      customDomain: props.config.customDomain?.domainName,
+      certificateArn: props.config.customDomain?.certificateArn
     });
     distribution = publicWebsite.distribution
     
@@ -75,15 +76,16 @@ export class UserInterface extends Construct {
       },
       httpEndpoint : props.api.httpAPI.restAPI.url,
       wsEndpoint : props.api.wsAPI.wsAPIStage.url,
-      federatedSignInProvider : OIDCIntegrationName
+      federatedSignInProvider : props.config.auth.oidcProviderName ?? ""
     });
 
-    // The Docker fallback mounts only appPath, so the app's prebuild cannot reach
-    // lib/shared/states.ts. Stage it into the asset input instead.
-    const sharedStates = path.join(__dirname, "..", "shared", "states.ts");
+    // Staged inside appPath so it is part of the asset hash and visible to the Docker fallback.
     const generatedDir = path.join(appPath, "src", "common", "generated");
     fs.mkdirSync(generatedDir, { recursive: true });
-    fs.copyFileSync(sharedStates, path.join(generatedDir, "states.ts"));
+    fs.writeFileSync(
+      path.join(generatedDir, "instance.json"),
+      JSON.stringify({ branding: props.config.branding, states: props.config.states }, null, 2) + "\n"
+    );
 
     const asset = s3deploy.Source.asset(appPath, {
       bundling: {
@@ -95,9 +97,7 @@ export class UserInterface extends Construct {
           "-c",
           [
             "npm --cache /tmp/.npm install",
-            // Forward the instance selectors into the container so the Docker fallback brands the
-            // build like the local path does (the local tryBundle below already inherits them).
-            `GRANTWELL_INSTANCE="${process.env.GRANTWELL_INSTANCE ?? ""}" GRANTWELL_CHROME="${process.env.GRANTWELL_CHROME ?? ""}" TURNSTILE_SITE_KEY="${process.env.TURNSTILE_SITE_KEY ?? ""}" npm --cache /tmp/.npm run build`,
+            `ENVIRONMENT="${props.config.aws.environment}" TURNSTILE_SITE_KEY="${process.env.TURNSTILE_SITE_KEY ?? ""}" npm --cache /tmp/.npm run build`,
             "cp -aur /asset-input/dist/* /asset-output/",
           ].join(" && "),
         ],
@@ -106,11 +106,10 @@ export class UserInterface extends Construct {
             try {
               const options: ExecSyncOptionsWithBufferEncoding = {
                 stdio: "inherit",
-                // Explicit: npm 11.19 stopped running lifecycle scripts in --prefix, so the
-                // app's prebuild resolved ../core/lib/shared/states.ts from the wrong directory.
                 cwd: appPath,
                 env: {
                   ...process.env,
+                  ENVIRONMENT: props.config.aws.environment,
                 },
               };
 

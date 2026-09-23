@@ -20,11 +20,6 @@ A React-based user interface for the GrantWell grant application management syst
 ## Project Structure
 
 ```
-config/                    # Instance seam: branding + chrome selection (see config/README.md)
-├── instances/            # neutral.ts (default), generic.ts
-├── active-instance.ts
-└── chrome.ts             # Default page chrome barrel
-
 src/
 ├── App.tsx                # Authenticated routes
 ├── main.tsx               # Entry point (mounts AppConfigured)
@@ -51,7 +46,7 @@ src/
 │   ├── dashboard/        # Admin dashboard (/admin)
 │   ├── document-editor/  # Grant application editor
 │   ├── home/             # Grant finder (/home)
-│   ├── landing/          # Public landing + login, default chrome.tsx
+│   ├── landing/          # Public landing + login, chrome.tsx (header/nav/footer)
 │   ├── maintenance/
 │   ├── profile/
 │   └── requirements/     # Requirements checklists
@@ -60,7 +55,7 @@ src/
 │   ├── api-client/       # API client classes
 │   ├── helpers/          # Helper functions
 │   ├── types/
-│   ├── generated/        # states.ts copied from packages/core/lib/shared (gitignored)
+│   ├── generated/        # instance.json (branding + states) staged by packages/core at synth (gitignored)
 │   └── *.ts / *.tsx      # Contexts, branding, constants
 │
 ├── hooks/                 # Custom React hooks
@@ -104,7 +99,6 @@ site (`https://<site>/aws-exports.json`) and set `oauth.redirectSignIn`/`redirec
 | `npm run lint:fix` | ESLint with autofix |
 | `npm run lint:colors` | Flag new off-palette colors (`-- --base origin/main` checks what CI checks) |
 | `npm run format` | Prettier over tsx/js/ts/json |
-| `npm run copy-shared` | Copy `packages/core/lib/shared/states.ts` into `src/common/generated/` (runs automatically before dev/build/build:dev/preview) |
 
 ---
 
@@ -115,16 +109,16 @@ site (`https://<site>/aws-exports.json`) and set `oauth.redirectSignIn`/`redirec
 ```
 AppConfigured (loads aws-exports.json, BrandingProvider, router)
 ├── Authenticated shell (NavigationProvider)
-│   ├── AppNavbar                (@chrome)
+│   ├── AppNavbar                (pages/landing/chrome)
 │   ├── AppSidebar               (components/navigation/UnifiedNavigation)
 │   ├── ProfileGate → MaintenanceGate
 │   │   ├── MfaPrompt
 │   │   └── App (routes)
 │   │       ├── HomePage, Checklists, DocumentEditor, Dashboard, ProfilePage, ...
 │   │       └── Playground (layouts/ChatLayout, whose default export is named BaseAppLayout)
-│   ├── LandingFooter            (@chrome)
-│   └── OmniHeader position="bottom" (@chrome)
-└── Unauthenticated routes: LandingPage, LoginPage (render their own @chrome header/footer)
+│   ├── LandingFooter            (pages/landing/chrome)
+│   └── OmniHeader position="bottom" (pages/landing/chrome)
+└── Unauthenticated routes: LandingPage, LoginPage (render their own chrome header/footer)
 ```
 
 Pages render `<UnifiedNavigation ... />`, which renders nothing; it registers the page's step state

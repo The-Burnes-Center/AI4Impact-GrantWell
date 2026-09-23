@@ -5,9 +5,6 @@ declare module "*.module.css";
 declare module "*.module.scss";
 declare module "react-speech-recognition";
 
-// Build-time instance id, injected by vite `define` from the GRANTWELL_INSTANCE env var.
-declare const __GRANTWELL_INSTANCE__: string;
-
 // Cloudflare Turnstile site key, injected by vite `define`. Empty string when unconfigured.
 declare const __TURNSTILE_SITE_KEY__: string;
 

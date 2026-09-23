@@ -6,12 +6,16 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { ChatBotApi } from "./chatbot-api";
-import { cognitoDomainName } from "./constants";
 import { AuthorizationStack } from "./authorization";
 import { UserInterface } from "./user-interface";
+import { InstanceConfig } from "./config/instance-config";
+
+export interface GrantWellStackProps extends cdk.StackProps {
+  readonly config: InstanceConfig;
+}
 
 export class GrantWellStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: GrantWellStackProps) {
     super(scope, id, props);
 
     // Set environment variable for Grants.gov API key
@@ -31,20 +35,23 @@ export class GrantWellStack extends cdk.Stack {
 
     // Create the authorization stack
     const authentication = new AuthorizationStack(this, "Authorization", {
+      config: props.config,
       turnstileSecretKey,
     });
 
     // Create the chatbot API and pass the authentication stack
     const chatbotAPI = new ChatBotApi(this, "ChatbotAPI", { 
+      config: props.config,
       authentication,
       grantsGovApiKey 
     });
 
     // Create the user interface and pass necessary properties
     new UserInterface(this, "UserInterface", {
+      config: props.config,
       userPoolId: authentication.userPool.userPoolId,
       userPoolClientId: authentication.userPoolClient.userPoolClientId,
-      cognitoDomain: cognitoDomainName,
+      cognitoDomain: props.config.aws.cognitoDomainPrefix,
       api: chatbotAPI
     });
   }

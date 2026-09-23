@@ -18,7 +18,7 @@ import App from "../App";
 import { AppConfig } from "../common/types/app";
 import { AppContext } from "../common/app-context";
 import { BrandingProvider, useBranding } from "../common/branding";
-import { activeBranding } from "../../config/active-instance";
+import { activeBranding } from "../common/instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import MaintenanceGate from "./MaintenanceGate";
 import { NavigationProvider } from "./navigation/NavigationProvider";
@@ -31,7 +31,7 @@ import {
   AppNavbar,
   LandingFooter,
   OmniHeader,
-} from "@chrome";
+} from "../pages/landing/chrome";
 import "../styles/marketing-landing.css";
 
 async function getInitialAuthState() {
