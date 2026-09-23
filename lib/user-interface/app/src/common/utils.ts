@@ -2,10 +2,6 @@ import { fetchAuthSession } from 'aws-amplify/auth'
 import { DateTime } from "luxon";
 
 export class Utils {
-  static isFunction(value: unknown): value is Function {
-    return typeof value === "function";
-  }
-
   static classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
   }

@@ -1,0 +1,96 @@
+name: CI
+
+# Both deploy workflows run this first (needs: ci), so no deploy can run on a commit that fails
+# here, including workflow_dispatch deploys. No AWS credentials: templates are generated offline.
+on:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# github.workflow is the caller's name when this runs via workflow_call, so a deploy's CI never
+# shares a group with (or cancels) a PR's CI.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui:
+    name: UI typecheck, lint and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: lib/user-interface/app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: lib/user-interface/app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # src/common/generated/states.ts is gitignored and copied in from lib/shared.
+      - name: Typecheck
+        run: |
+          npm run copy-shared
+          npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          ENVIRONMENT: grantwell-burnes-staging
+          GRANTWELL_INSTANCE: generic
+
+  infra:
+    name: CDK typecheck, templates, logical-ID guard and cdk-nag
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Generate templates (dev + prod)
+        id: synth
+        run: npm run synth:ci
+
+      - name: Logical-ID guard
+        run: npm test
+        env:
+          REUSE_SYNTH: '1'
+
+      - name: cdk-nag report (warn only)
+        if: always() && steps.synth.outcome == 'success'
+        run: npm run nag:report
+
+      - name: Upload cdk-nag reports
+        if: always() && steps.synth.outcome == 'success'
+        uses: actions/upload-artifact@v7
+        with:
+          name: cdk-nag-reports
+          path: cdk.out/ci-*/AwsSolutions-*-NagReport.csv
+          if-no-files-found: error
