@@ -108,11 +108,14 @@ jobs:
       - name: Build Generic from source (build/generic)
         run: scripts/pack.sh --dev
 
+      # Output is printed and kept even when cdk diff fails, so the error is visible.
       - name: Diff against live prod
+        id: diff
         working-directory: build/generic
         shell: bash
         run: |
           set -o pipefail
+          status=0
           npx cdk diff --method template --no-color 2>&1 |
             node -e '
               let text = require("fs").readFileSync(0, "utf8");
@@ -121,23 +124,36 @@ jobs:
                 if (value) text = text.split(value).join(`<${key}>`);
               }
               process.stdout.write(text);
-            ' > "$RUNNER_TEMP/prod-diff.txt"
+            ' > "$RUNNER_TEMP/prod-diff.txt" || status=$?
           cat "$RUNNER_TEMP/prod-diff.txt"
+          exit $status
 
       # The full diff can pass the 1 MiB summary limit, so the summary lists stacks and resources only.
       - name: Summarize
+        if: always() && steps.diff.outcome != 'skipped'
+        env:
+          DIFF_OUTCOME: ${{ steps.diff.outcome }}
         run: |
           {
             echo "## Prod diff: live grantwell-staging vs this commit"
             echo
-            echo "Stacks and resource-level changes. Full redacted diff: artifact \`prod-diff\`."
-            echo
-            echo '```'
-            grep -E '^(Stack |\[[-+~]\] |✨)' "$RUNNER_TEMP/prod-diff.txt" | head -c 900000
-            echo '```'
+            if [ "$DIFF_OUTCOME" != success ]; then
+              echo "cdk diff failed. Last 60 lines of its output:"
+              echo
+              echo '```'
+              tail -n 60 "$RUNNER_TEMP/prod-diff.txt"
+              echo '```'
+            else
+              echo "Stacks and resource-level changes. Full redacted diff: artifact \`prod-diff\`."
+              echo
+              echo '```'
+              grep -E '^(Stack |\[[-+~]\] |✨)' "$RUNNER_TEMP/prod-diff.txt" | head -c 900000
+              echo '```'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload prod diff
+        if: always() && steps.diff.outcome != 'skipped'
         uses: actions/upload-artifact@v7
         with:
           name: prod-diff
