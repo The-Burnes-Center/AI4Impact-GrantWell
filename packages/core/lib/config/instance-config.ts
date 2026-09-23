@@ -42,8 +42,9 @@ export interface UsState {
 }
 
 interface InstanceConfigBase {
-  /** Readable ID, e.g. "generic-prod". Never part of an AWS name. */
+  /** Readable ID, e.g. "generic-prod", lowercase-kebab. Frozen AWS names never use it; monitoring names do (`grantwell-<id>`). */
   id: string;
+  stage: "prod" | "dev";
   /** Frozen once deployed. Core derives every other physical name from these. */
   aws: {
     stackName: string;
@@ -63,6 +64,8 @@ interface InstanceConfigBase {
     manageSenderIdentity: boolean;
   };
   scraper: { dailySchedule: boolean };
+  /** Alarms always ship; this adds the once-a-day health brief to the alerts topic. */
+  monitoring: { dailyBrief: boolean };
   tags: Record<string, string>;
   branding: Branding;
 }
@@ -72,6 +75,7 @@ export type InstanceConfig = InstanceConfigBase &
 
 export function validateInstanceConfig(config: InstanceConfig): void {
   const problems: string[] = [];
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(config.id)) problems.push("id must be lowercase-kebab");
   if (config.states.length === 0) problems.push("states is empty");
   if (config.tenancy === "single" && config.states.length !== 1) {
     problems.push(`tenancy "single" needs exactly one state, got ${config.states.length}`);
@@ -84,6 +88,11 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (problems.length) {
     throw new Error(`Invalid instance config "${config.id}": ${problems.join("; ")}`);
   }
+}
+
+/** Prefix for monitoring names. The AWS account may be shared, so every one starts with "grantwell-". */
+export function monitoringPrefix(config: InstanceConfig): string {
+  return `grantwell-${config.id}`;
 }
 
 /** [{code,name}] so handlers get both membership checks and display names from one env var. */

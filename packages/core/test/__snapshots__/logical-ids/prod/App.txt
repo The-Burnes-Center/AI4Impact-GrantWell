@@ -82,6 +82,7 @@ ChatbotAPIKnowledgeBaseRoleDefaultPolicyE47AA304	AWS::IAM::Policy
 ChatbotAPIManageUsersFunctionDDED609F	AWS::Lambda::Function
 ChatbotAPIManageUsersFunctionServiceRoleD537318E	AWS::IAM::Role
 ChatbotAPIManageUsersFunctionServiceRoleDefaultPolicy2026B947	AWS::IAM::Policy
+ChatbotAPIMonitoringStackNestedStackMonitoringStackNestedStackResource8C9EF984	AWS::CloudFormation::Stack
 ChatbotAPINOFOProcessingDLQ283C8086	AWS::SQS::Queue
 ChatbotAPINOFOProcessingQueue319369F1	AWS::SQS::Queue
 ChatbotAPINOFOProcessingQueuePolicy45DD529C	AWS::SQS::QueuePolicy

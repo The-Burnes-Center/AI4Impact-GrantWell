@@ -9,6 +9,7 @@ import { ChatBotApi } from "./chatbot-api";
 import { AuthorizationStack } from "./authorization";
 import { UserInterface } from "./user-interface";
 import { InstanceConfig } from "./config/instance-config";
+import { MonitoringStack } from "./monitoring/monitoring-stack";
 
 export interface GrantWellStackProps extends cdk.StackProps {
   readonly config: InstanceConfig;
@@ -49,13 +50,37 @@ export class GrantWellStack extends cdk.Stack {
     });
 
     // Create the user interface and pass necessary properties
-    new UserInterface(this, "UserInterface", {
+    const userInterface = new UserInterface(this, "UserInterface", {
       config: props.config,
       uiSourceDir: props.uiSourceDir,
       userPoolId: authentication.userPool.userPoolId,
       userPoolClientId: authentication.userPoolClient.userPoolClientId,
       cognitoDomain: props.config.aws.cognitoDomainPrefix,
       api: chatbotAPI
+    });
+
+    // Under ChatbotAPI like the other nested stacks; the root stack is too close to 500 resources.
+    const fns = chatbotAPI.lambdaFunctions;
+    new MonitoringStack(chatbotAPI, "MonitoringStack", {
+      config: props.config,
+      httpApi: chatbotAPI.httpAPI.restAPI,
+      distribution: userInterface.distribution,
+      chatFunction: fns.chatFunction,
+      websocketAuthorizerFunction: authentication.lambdaAuthorizer,
+      signupTriggerFunction: authentication.signupTriggerFunction,
+      createMetadataFunction: fns.createMetadataFunction,
+      syncKBFunction: fns.syncKBFunction,
+      draftVersionWriterFunction: fns.draftVersionWriterFunction,
+      aiGrantSearchFunction: fns.aiGrantSearchFunction,
+      applicationPdfGeneratorFunction: fns.applicationPdfGeneratorFunction,
+      nofoPipeline: { stateMachine: fns.nofoProcessingStateMachine, ...fns.nofoPipelineFunctions },
+      draftGeneration: {
+        stateMachine: fns.draftGenerationStateMachine,
+        generateSection: fns.draftGenerateSectionFunction,
+      },
+      scraperCoordinatorFunction: fns.scraperCoordinatorFunction,
+      notificationDigestFunction: fns.notificationDigestFunction,
+      autoArchiveFunction: fns.autoArchiveExpiredNofosFunction,
     });
   }
 }

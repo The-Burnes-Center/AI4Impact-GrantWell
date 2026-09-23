@@ -45,6 +45,7 @@ export interface DraftGenerationStackProps extends cdk.NestedStackProps {
 
 export class DraftGenerationStack extends cdk.NestedStack {
   public readonly draftGenerationStateMachine: sfn.StateMachine;
+  public readonly draftGenerateSectionFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: DraftGenerationStackProps) {
     super(scope, id, props);
@@ -159,5 +160,6 @@ export class DraftGenerationStack extends cdk.NestedStack {
     );
 
     this.draftGenerationStateMachine = draftGenerationPipeline.stateMachine;
+    this.draftGenerateSectionFunction = draftGenerateSectionFunction;
   }
 }

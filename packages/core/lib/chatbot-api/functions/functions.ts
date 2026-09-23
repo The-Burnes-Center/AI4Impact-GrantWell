@@ -81,6 +81,15 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly getNOFOQuestions: lambda.Function;
   public readonly nofoProcessingStateMachine: sfn.StateMachine;
   public readonly nofoAdminFunction: lambda.Function;
+  public readonly nofoPipelineFunctions: {
+    extractText: lambda.Function;
+    extractAndAnalyze: lambda.Function;
+    synthesize: lambda.Function;
+    contentCheck: lambda.Function;
+    dispatcher: lambda.Function;
+    dlqProcessor: lambda.Function;
+  };
+  public readonly draftGenerateSectionFunction: lambda.Function;
   public readonly nofoReprocessFunction: lambda.Function;
   public readonly nofoStatusFunction: lambda.Function;
   public readonly nofoRenameFunction: lambda.Function;
@@ -647,6 +656,14 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.nofoProcessingStateMachine = nofoPipeline.nofoProcessingStateMachine;
     this.nofoAdminFunction = nofoPipeline.nofoAdminFunction;
+    this.nofoPipelineFunctions = {
+      extractText: nofoPipeline.extractTextFunction,
+      extractAndAnalyze: nofoPipeline.extractAndAnalyzeFunction,
+      synthesize: nofoPipeline.synthesizeFunction,
+      contentCheck: nofoPipeline.validateFunction,
+      dispatcher: nofoPipeline.dispatcherFunction,
+      dlqProcessor: nofoPipeline.dlqProcessorFunction,
+    };
 
     // S3 → SQS notifications (same as before)
     props.ffioNofosBucket.addEventNotification(
@@ -1112,6 +1129,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     });
 
     this.draftGenerationStateMachine = draftGeneration.draftGenerationStateMachine;
+    this.draftGenerateSectionFunction = draftGeneration.draftGenerateSectionFunction;
 
     // Scraper fan-out and NOFO lifecycle functions live in their own NestedStack to
     // keep the main app stack under the 500-resource CloudFormation limit. The download

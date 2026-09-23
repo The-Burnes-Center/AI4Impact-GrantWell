@@ -15,6 +15,7 @@ const tags = { Environment: "DEV", Project: "GrantWell" };
 export const instances: InstanceConfig[] = [
   {
     id: "generic-prod",
+    stage: "prod",
     tenancy: "multi",
     states,
     aws: {
@@ -31,11 +32,13 @@ export const instances: InstanceConfig[] = [
     auth: { mfaRequired: false },
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: true },
     scraper: { dailySchedule: true },
+    monitoring: { dailyBrief: true },
     tags,
     branding,
   },
   {
     id: "generic-dev",
+    stage: "dev",
     tenancy: "multi",
     states,
     aws: {
@@ -48,6 +51,7 @@ export const instances: InstanceConfig[] = [
     auth: { mfaRequired: false },
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: false },
     scraper: { dailySchedule: false },
+    monitoring: { dailyBrief: false },
     tags,
     branding,
   },

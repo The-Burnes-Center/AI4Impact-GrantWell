@@ -67,6 +67,12 @@ export interface NofoPipelineStackProps extends cdk.NestedStackProps {
 export class NofoPipelineStack extends cdk.NestedStack {
   public readonly nofoProcessingStateMachine: sfn.StateMachine;
   public readonly nofoAdminFunction: lambda.Function;
+  public readonly extractTextFunction: lambda.Function;
+  public readonly extractAndAnalyzeFunction: lambda.Function;
+  public readonly synthesizeFunction: lambda.Function;
+  public readonly validateFunction: lambda.Function;
+  public readonly dispatcherFunction: lambda.Function;
+  public readonly dlqProcessorFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: NofoPipelineStackProps) {
     super(scope, id, props);
@@ -303,5 +309,11 @@ export class NofoPipelineStack extends cdk.NestedStack {
     );
 
     this.nofoAdminFunction = nofoAdminFunction;
+    this.extractTextFunction = extractTextFunction;
+    this.extractAndAnalyzeFunction = extractAndAnalyzeFunction;
+    this.synthesizeFunction = synthesizeFunction;
+    this.validateFunction = validateFunction;
+    this.dispatcherFunction = dispatcherFunction;
+    this.dlqProcessorFunction = dlqProcessorFunction;
   }
 }

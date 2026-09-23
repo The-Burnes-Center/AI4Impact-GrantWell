@@ -1,6 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
+import * as cf from "aws-cdk-lib/aws-cloudfront";
 import { Construct } from "constructs";
 import {
   ExecSyncOptionsWithBufferEncoding,
@@ -27,6 +28,8 @@ export interface UserInterfaceProps {
 }
 
 export class UserInterface extends Construct {
+  public readonly distribution: cf.Distribution;
+
   constructor(scope: Construct, id: string, props: UserInterfaceProps) {
     super(scope, id);
 
@@ -67,6 +70,7 @@ export class UserInterface extends Construct {
       certificateArn: props.config.customDomain?.certificateArn
     });
     distribution = publicWebsite.distribution
+    this.distribution = publicWebsite.distribution;
     
     // Use custom domain if configured, otherwise use CloudFront domain
     const frontendDomain = publicWebsite.domainName;

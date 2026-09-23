@@ -11,6 +11,7 @@
     "lint:strict": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "lint:colors": "node scripts/check-colors.mjs",
+    "stage-instance": "node scripts/stage-instance.mjs",
     "preview": "vite preview",
     "format": "npx prettier --ignore-path .gitignore --write \"**/*.+(tsx|js|ts|json)\""
   },

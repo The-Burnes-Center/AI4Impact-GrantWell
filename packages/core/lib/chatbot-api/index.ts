@@ -41,6 +41,7 @@ export interface ChatbotAPIProps {
 export class ChatBotApi extends Construct {
   public readonly httpAPI: RestBackendAPI;
   public readonly wsAPI: WebsocketBackendAPI;
+  public readonly lambdaFunctions: LambdaFunctionStack;
 
   constructor(scope: Construct, id: string, props: ChatbotAPIProps) {
     super(scope, id);
@@ -88,6 +89,7 @@ export class ChatBotApi extends Construct {
       openSearchCollection: openSearch.openSearchCollection,
       userPool: props.authentication.userPool,
     });
+    this.lambdaFunctions = lambdaFunctions;
 
     const wsAuthorizer = new WebSocketLambdaAuthorizer(
       "WebSocketAuthorizer",

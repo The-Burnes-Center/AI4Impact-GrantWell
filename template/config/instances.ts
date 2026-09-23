@@ -6,6 +6,7 @@ import { branding } from "./branding";
 export const instances: InstanceConfig[] = [
   {
     id: "example-prod",
+    stage: "prod",
     tenancy: "single",
     states: [{ code: "XX", name: "Example State" }],
     aws: {
@@ -22,6 +23,7 @@ export const instances: InstanceConfig[] = [
     auth: { mfaRequired: true },
     email: { sender: "no-reply@grants.example.gov", manageSenderIdentity: true },
     scraper: { dailySchedule: true },
+    monitoring: { dailyBrief: true },
     tags: { Project: "GrantWell" },
     branding,
   },

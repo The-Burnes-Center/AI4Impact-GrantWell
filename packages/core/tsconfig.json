@@ -32,7 +32,6 @@
   ],
   "exclude": [
     "node_modules",
-    "cdk.out",
-    "lib/user-interface"
+    "cdk.out"
   ]
 }

@@ -15,6 +15,8 @@ export interface AuthorizationStackProps {
 
 export class AuthorizationStack extends Construct {
   public readonly lambdaAuthorizer: lambda.Function;
+  /** PreSignUp, PostConfirmation and PreAuthentication share this one function. */
+  public readonly signupTriggerFunction: lambda.Function;
   public readonly userPool: UserPool;
   public readonly userPoolClient: UserPoolClient;
 
@@ -116,6 +118,7 @@ export class AuthorizationStack extends Construct {
       timeout: cdk.Duration.seconds(5),
     });
 
+    this.signupTriggerFunction = signupTriggerFunction;
     userPool.addTrigger(cognito.UserPoolOperation.PRE_SIGN_UP, signupTriggerFunction);
     userPool.addTrigger(
       cognito.UserPoolOperation.POST_CONFIRMATION,
