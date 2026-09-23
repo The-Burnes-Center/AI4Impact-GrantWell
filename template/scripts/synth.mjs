@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Generates CloudFormation templates for every deployment in config/instances.ts, offline: no AWS
 // credentials, no Docker (asset bundling is skipped) and placeholder secrets, so nothing real is
-// written to disk. Used by upgrade.sh to show what an upgrade changes.
+// written to disk. Used by install.sh (first install) and upgrade.sh (what an upgrade changes).
 // Usage: node scripts/synth.mjs synth <out dir>
 //        node scripts/synth.mjs compare <before dir> <after dir>
 import { execFileSync, spawnSync } from "node:child_process";

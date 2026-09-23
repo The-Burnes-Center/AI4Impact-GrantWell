@@ -81,11 +81,17 @@ npm run dev
 | `packages/core` | CDK constructs, Lambdas and step functions, packed as `grantwell-core-<version>.tgz` |
 | `packages/ui` | React app source, packed as `grantwell-ui-<version>.tgz` |
 | `template/` | Starting repo for a state: config plus the two .tgz files in `vendor/` |
-| `instances/generic` | grantwell.us, built from `template/` |
-| `scripts/pack.sh` | Builds both .tgz files into `instances/generic/vendor/` (or a given folder) |
+| `instances/generic` | grantwell.us, built from `template/`; its `vendor/` holds the last release |
+| `scripts/pack.sh` | Builds both .tgz files; `--dev` builds Generic from source in `build/generic/` (gitignored) |
 | `scripts/release.sh` | Stamps a release version (`prepare`) and builds the release files from a tag (`build`, run by `release.yml`) |
 
-After changing `packages/`, run `scripts/pack.sh`. It rebuilds `instances/generic/vendor/` and refreshes that folder's lockfile. Commit both.
+### Working on `packages/`
+
+Dev (`grantwell-burnes-staging`) runs source, prod runs releases. Every push to `staging` runs CI, then deploys dev from `scripts/pack.sh --dev` (Generic's config with vendor/ packed from that commit) and posts a read-only diff against live prod in the run summary. `instances/generic/vendor/` only changes when a release is prepared.
+
+To synth or test locally, run `scripts/pack.sh --dev`, then `npm run synth:ci` and `npm test` in `packages/core`. Never commit `build/`.
+
+Prod deploys from `main` use the committed `instances/generic/vendor/`, and fail unless it equals a fresh pack of that commit's source: merge to `main` only a commit where a release was prepared.
 
 ### Releasing
 
@@ -132,7 +138,7 @@ Please contact the administrators for access and contribution guidelines.
 
 ## License
 
-MIT License – see `LICENSE.md` for details.
+Apache License 2.0: see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 ## Authors & Acknowledgements
 

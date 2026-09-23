@@ -48,10 +48,9 @@ jobs:
         run: npm run build
         env:
           ENVIRONMENT: grantwell-burnes-staging
-          GRANTWELL_INSTANCE: generic
 
   infra:
-    name: CDK typecheck, templates, logical-ID guard and cdk-nag
+    name: CDK typecheck, Generic from source, logical-ID guard and cdk-nag
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
@@ -66,7 +65,9 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-          cache-dependency-path: packages/core/package-lock.json
+          cache-dependency-path: |
+            packages/core/package-lock.json
+            instances/generic/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -74,11 +75,16 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
+      # What dev deploys: Generic's config with vendor/ packed from this commit's source.
+      - name: Build Generic from source (build/generic)
+        working-directory: .
+        run: scripts/pack.sh --dev
+
       - name: Generate templates (dev + prod)
         id: synth
         run: npm run synth:ci
 
-      - name: Logical-ID guard
+      - name: Logical-ID guard and tests
         run: npm test
         env:
           REUSE_SYNTH: '1'
@@ -92,11 +98,11 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cdk-nag-reports
-          path: packages/core/cdk.out/ci-*/AwsSolutions-*-NagReport.csv
+          path: build/generic/cdk.out/ci-*/AwsSolutions-*-NagReport.csv
           if-no-files-found: error
 
   instance:
-    name: Generic instance from vendor/ (templates, logical-ID guard, parity with core)
+    name: Committed Generic release (vendor/, typecheck, templates)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -126,27 +132,13 @@ jobs:
         working-directory: instances/generic
         run: npm run typecheck
 
-      - name: Install core (synth and guard tooling)
+      - name: Install core (synth tooling)
         working-directory: packages/core
         run: npm ci
 
+      # No logical-ID guard here: the snapshots follow source, which may be ahead of the last release.
       - name: Generate Generic templates (dev + prod)
         working-directory: packages/core
         run: npm run synth:ci
         env:
           SYNTH_APP_DIR: ../../instances/generic
-
-      - name: Logical-ID guard (Generic)
-        working-directory: packages/core
-        run: npm test
-        env:
-          SYNTH_APP_DIR: ../../instances/generic
-          REUSE_SYNTH: '1'
-
-      - name: Generate core app templates (dev + prod)
-        working-directory: packages/core
-        run: npm run synth:ci
-
-      - name: Generic and core app templates are identical
-        working-directory: packages/core
-        run: node scripts/compare-templates.mjs . ../../instances/generic

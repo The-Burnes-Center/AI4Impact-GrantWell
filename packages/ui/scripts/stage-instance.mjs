@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Copies the instance.json (branding + states) from packages/core's last `npm run synth:ci` into
+// Copies the instance.json (branding + states) from the last `npm run synth:ci` (packages/core) into
 // src/common/generated/, so `npm run dev` shows that deployment's branding instead of the neutral default.
 //
 //   npm run stage-instance dev
@@ -15,9 +15,9 @@ if (env !== "dev" && env !== "prod") {
   process.exit(2);
 }
 
-const source = path.join(appDir, "..", "core", "cdk.out", `ci-${env}`, "ui-build", "src", "common", "generated", "instance.json");
+const source = path.join(appDir, "..", "..", "build", "generic", "cdk.out", `ci-${env}`, "ui-build", "src", "common", "generated", "instance.json");
 if (!existsSync(source)) {
-  console.error(`No ${env} synth output at ${path.relative(appDir, source)}. Run \`npm run synth:ci ${env}\` in packages/core first.`);
+  console.error(`No ${env} synth output at ${path.relative(appDir, source)}. Run scripts/pack.sh --dev (repo root), then \`npm run synth:ci ${env}\` in packages/core.`);
   process.exit(1);
 }
 

@@ -21,7 +21,7 @@ const COMMON_ALARMS: [string, string, number][] = [
   ["chat throttled", "critical", 1],
   ["sign-up bot check unreachable", "critical", 3],
   ["sign-up bot check not configured", "critical", 1],
-  ["sign-in slow: trigger nearing Cognito's 5-second limit", "critical", 4000],
+  ["sign-in slow: trigger nearing Cognito's 5-second limit", "critical", 3000],
   ["sign-ups being rejected in bulk", "medium", 10],
   ["account setup step failed", "medium", 1],
   ["sign-in emails not delivered", "medium", 3],

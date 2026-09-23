@@ -115,7 +115,8 @@ export class AuthorizationStack extends Construct {
         SUPPORTED_STATES: supportedStatesEnv(config),
         TURNSTILE_SECRET_KEY: props.turnstileSecretKey,
       },
-      timeout: cdk.Duration.seconds(5),
+      // Under Cognito's fixed 5 s budget, so the Lambda times out (and reports it) before Cognito gives up.
+      timeout: cdk.Duration.seconds(4),
     });
 
     this.signupTriggerFunction = signupTriggerFunction;

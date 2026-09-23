@@ -85,8 +85,8 @@ npm run dev
 `npm run dev` needs an `aws-exports.json` in this directory (gitignored). Copy it from a deployed
 site (`https://<site>/aws-exports.json`) and set `oauth.redirectSignIn`/`redirectSignOut` to
 `http://localhost:3000/`. Without a staged `src/common/generated/instance.json` it shows neutral
-branding; `npm run stage-instance dev` (or `prod`) copies the one from packages/core's last
-`npm run synth:ci`.
+branding; `npm run stage-instance dev` (or `prod`) copies the one from the last `npm run synth:ci`
+in packages/core (after `scripts/pack.sh --dev` at the repo root).
 
 ### Scripts
 
@@ -100,7 +100,7 @@ branding; `npm run stage-instance dev` (or `prod`) copies the one from packages/
 | `npm run lint:strict` | ESLint, fails on any warning |
 | `npm run lint:fix` | ESLint with autofix |
 | `npm run lint:colors` | Flag new off-palette colors (`-- --base origin/main` checks what CI checks) |
-| `npm run stage-instance <dev\|prod>` | Copy that deployment's `instance.json` from packages/core's last `synth:ci` into `src/common/generated/` |
+| `npm run stage-instance <dev\|prod>` | Copy that deployment's `instance.json` from the last `synth:ci` into `src/common/generated/` |
 | `npm run format` | Prettier over tsx/js/ts/json |
 
 ---

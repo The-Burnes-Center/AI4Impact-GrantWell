@@ -308,13 +308,13 @@ export class MonitoringStack extends cdk.NestedStack {
       threshold: 1,
     });
 
-    // Past Cognito's fixed budget the sign-in fails even though the Lambda reports success.
+    // The trigger's Lambda timeout sits 1 s under Cognito's budget; this fires a second before that.
     this.alarm("SignInTriggerSlowAlarm", {
       severity: "critical",
       name: "sign-in slow: trigger nearing Cognito's 5-second limit",
       description: "The sign-up and sign-in trigger is running long enough that Cognito may be abandoning the call and failing the sign-in.",
       metric: trigger.metricDuration({ period: cdk.Duration.minutes(5), statistic: "Maximum" }),
-      threshold: COGNITO_TRIGGER_BUDGET_MS * 0.8,
+      threshold: COGNITO_TRIGGER_BUDGET_MS - 2_000,
     });
 
     this.alarm("SignUpRejectionsAlarm", {

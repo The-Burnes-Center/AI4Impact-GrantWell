@@ -8,12 +8,12 @@ import os
 def lambda_handler(event, context):
     token = event['queryStringParameters']['Authorization']
     user_pool_id = os.environ.get('USER_POOL_ID')
-    region = 'us-east-1'
+    region = os.environ['AWS_REGION']
     app_client_id = os.environ.get('APP_CLIENT_ID')
     keys_url = f'https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json'
 
     # Download JWKs and transform them to a key dictionary
-    response = requests.get(keys_url)
+    response = requests.get(keys_url, timeout=(3, 5))
     keys = response.json()['keys']
     key_dict = {key['kid']: json.dumps(key) for key in keys}
 

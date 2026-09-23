@@ -14,17 +14,16 @@ jobs:
   ci:
     uses: ./.github/workflows/ci.yml
 
+  # Dev runs this commit's source: Generic's config with vendor/ packed in the runner, never committed.
   deploy:
     needs: ci
     runs-on: ubuntu-latest
 
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
-      MFA_REQUIRED: "false"
       TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
       TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
       ENVIRONMENT: grantwell-burnes-staging
-      GRANTWELL_INSTANCE: generic
       STACK_NAME: grantwell-burnes-staging
 
     permissions:
@@ -50,10 +49,7 @@ jobs:
           cache-dependency-path: |
             packages/core/package-lock.json
             packages/ui/package-lock.json
-
-      - name: Install backend dependencies
-        working-directory: packages/core
-        run: npm ci
+            instances/generic/package-lock.json
 
       - name: Check for off-palette colors (warn only)
         run: |
@@ -61,7 +57,89 @@ jobs:
           cd packages/ui
           npm run lint:colors -- --base origin/main --warn
 
+      - name: Build Generic from source (build/generic)
+        run: scripts/pack.sh --dev
+
       - name: Deploy CDK stacks to staging
-        working-directory: packages/core
+        working-directory: build/generic
         run: |
           npx cdk deploy ${{ env.STACK_NAME }} --require-approval never
+
+  # What prod would get from this commit, diffed against live prod. The role can only read the prod
+  # stacks' CloudFormation templates and can't assume the CDK deploy role, so this job can't deploy.
+  prod-diff:
+    name: Prod diff (read-only)
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      # Real values, so unchanged secret env vars don't show as changes; the output is redacted below.
+      GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
+      TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
+      TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
+      ENVIRONMENT: grantwell-staging
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Configure AWS credentials (read-only)
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.PROD_DIFF_ROLE_ARN }}
+          role-session-name: ${{ github.actor }}-grantwell-prod-diff
+          aws-region: us-east-1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            packages/core/package-lock.json
+            packages/ui/package-lock.json
+            instances/generic/package-lock.json
+
+      - name: Build Generic from source (build/generic)
+        run: scripts/pack.sh --dev
+
+      - name: Diff against live prod
+        working-directory: build/generic
+        shell: bash
+        run: |
+          set -o pipefail
+          npx cdk diff --method template --no-color 2>&1 |
+            node -e '
+              let text = require("fs").readFileSync(0, "utf8");
+              for (const key of ["GRANTS_GOV_API_KEY", "TURNSTILE_SECRET_KEY", "TURNSTILE_SITE_KEY"]) {
+                const value = process.env[key];
+                if (value) text = text.split(value).join(`<${key}>`);
+              }
+              process.stdout.write(text);
+            ' > "$RUNNER_TEMP/prod-diff.txt"
+          cat "$RUNNER_TEMP/prod-diff.txt"
+
+      # The full diff can pass the 1 MiB summary limit, so the summary lists stacks and resources only.
+      - name: Summarize
+        run: |
+          {
+            echo "## Prod diff: live grantwell-staging vs this commit"
+            echo
+            echo "Stacks and resource-level changes. Full redacted diff: artifact \`prod-diff\`."
+            echo
+            echo '```'
+            grep -E '^(Stack |\[[-+~]\] |✨)' "$RUNNER_TEMP/prod-diff.txt" | head -c 900000
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload prod diff
+        uses: actions/upload-artifact@v7
+        with:
+          name: prod-diff
+          path: ${{ runner.temp }}/prod-diff.txt
+          if-no-files-found: error

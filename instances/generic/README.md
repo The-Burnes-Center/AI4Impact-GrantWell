@@ -1,6 +1,6 @@
 # GrantWell instance: Generic (grantwell.us)
 
-Generic's prod (`grantwell-staging`) and dev (`grantwell-burnes-staging`) deployments, built from `template/` like any state. `vendor/` is rebuilt from `packages/` with `scripts/pack.sh`.
+Generic's prod (`grantwell-staging`) and dev (`grantwell-burnes-staging`) deployments, built from `template/` like any state. Prod deploys this folder as committed; dev deploys it with vendor/ rebuilt from source (see the root README).
 
 | Path | What it is |
 |---|---|
@@ -10,15 +10,12 @@ Generic's prod (`grantwell-staging`) and dev (`grantwell-burnes-staging`) deploy
 | `config/branding.ts` | Name, colors, logos, footer links |
 | `public/` | Your own images (logo, favicon, partner logos), served from the site root |
 | `bin/app.ts` | CDK entry point. Don't edit it. |
-| `scripts/` | `upgrade.sh` and its helpers. Don't edit them. |
+| `scripts/` | `install.sh`, `upgrade.sh` and their helpers. Don't edit them. |
 
 Commit `vendor/`. The .tgz files are your exact deployed version.
 
 ## Set up
-1. Put both .tgz files from a GrantWell release into `vendor/`. Make sure the versions in `package.json` match them.
-2. Run `npm install`. This writes `package-lock.json`, so commit it.
-3. Edit `config/instances.ts` and `config/branding.ts`.
-4. Run `npm run typecheck`.
+Generic is already installed. `vendor/` holds the last GrantWell release: `scripts/release.sh prepare` rewrites it; dev deploys a source build instead (`scripts/pack.sh --dev`).
 
 ## Images
 Put your own images in `public/` and point `config/branding.ts` at them by their site-root path: `public/brand/logo.svg` is `/brand/logo.svg`. A file can't replace one the GrantWell UI already ships (the synth fails on a clash), and the synth also fails if a branding image path doesn't exist.
@@ -29,7 +26,7 @@ Run `scripts/upgrade.sh <version>`, for example `scripts/upgrade.sh 3.0.0`. It d
 Downloads need no GitHub account. If the source repo is ever private, set `GITHUB_TOKEN` to a token with read access to it.
 
 ## Deploy
-Deploys need Docker, AWS credentials for the target account, and these environment variables:
+The source repo's `deploy-staging.yml` (dev) and `deploy-production.yml` (prod) deploy Generic. By hand, deploys need Docker, AWS credentials for the target account, and these environment variables:
 
 - `ENVIRONMENT`: the `aws.environment` of the deployment to deploy
 - `GRANTS_GOV_API_KEY`

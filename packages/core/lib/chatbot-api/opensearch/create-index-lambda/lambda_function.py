@@ -6,11 +6,16 @@ It defines the index settings and mappings, obtains AWS credentials, and signs t
 import os
 import boto3
 from opensearchpy import OpenSearch, RequestsHttpConnection, AWSV4SignerAuth
+from opensearchpy.exceptions import RequestError
 from botocore.awsrequest import AWSRequest
 import json
 import time
 
 def lambda_handler(event, context):
+    # The index lives and dies with the collection, so only Create has work to do.
+    if event.get("RequestType") != "Create":
+        return None
+
     # 1. Defining the request body for the index and field creation
     host = os.environ["COLLECTION_ENDPOINT"]
     print(f"Collection Endpoint: {host}")
@@ -61,11 +66,13 @@ def lambda_handler(event, context):
         pool_maxsize=20,
     )
     
+    # Raising makes the Provider report FAILED, so a stack never goes up without its index.
     try:
-        response = client.indices.create(index=index_name, body=payload_json)  
-        time.sleep(60)   
-        return response
-    except Exception as e:
-        print("Index creation failed! It most likely already exists!")
-        print(e)
-        return False
+        client.indices.create(index=index_name, body=payload_json)
+    except RequestError as e:
+        if e.error != "resource_already_exists_exception":
+            raise
+        print(f"Index {index_name} already exists")
+        return None
+    time.sleep(60)
+    return None

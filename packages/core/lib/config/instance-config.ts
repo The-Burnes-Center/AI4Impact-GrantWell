@@ -66,6 +66,8 @@ interface InstanceConfigBase {
   scraper: { dailySchedule: boolean };
   /** Alarms always ship; this adds the once-a-day health brief to the alerts topic. */
   monitoring: { dailyBrief: boolean };
+  /** https URL the in-app feedback form is forwarded to; unset, feedback is only logged. */
+  feedbackFormUrl?: string;
   tags: Record<string, string>;
   branding: Branding;
 }
@@ -85,6 +87,9 @@ export function validateInstanceConfig(config: InstanceConfig): void {
     problems.push(`siteUrl must be https://${config.customDomain.domainName} when customDomain is set`);
   }
   if (!config.email.sender.includes("@")) problems.push("email.sender is not an address");
+  if (config.feedbackFormUrl !== undefined && !config.feedbackFormUrl.startsWith("https://")) {
+    problems.push("feedbackFormUrl must start with https://");
+  }
   if (problems.length) {
     throw new Error(`Invalid instance config "${config.id}": ${problems.join("; ")}`);
   }

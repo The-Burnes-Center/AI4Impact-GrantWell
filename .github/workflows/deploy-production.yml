@@ -14,6 +14,7 @@ jobs:
   ci:
     uses: ./.github/workflows/ci.yml
 
+  # Prod runs the committed Generic release (instances/generic/vendor/), never an unreleased build.
   deploy:
     needs: ci
     if: github.ref == 'refs/heads/main'
@@ -21,14 +22,10 @@ jobs:
 
     env:
       GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
-      MFA_REQUIRED: "false"
       TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
       TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
       ENVIRONMENT: grantwell-staging
-      GRANTWELL_INSTANCE: generic
       STACK_NAME: grantwell-staging
-      CLOUDFRONT_CERTIFICATE_ARN: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_STAGING }}
-      CLOUDFRONT_CUSTOM_DOMAIN: ${{ secrets.CLOUDFRONT_CUSTOM_DOMAIN_STAGING }}
 
     permissions:
       id-token: write
@@ -38,13 +35,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          role-to-assume: ${{ secrets.SERVICE_ROLE_ARN_GRANTWELL_STAGING }}
-          role-session-name: ${{ github.actor }}-grantwell
-          aws-region: us-east-1
-
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
@@ -53,12 +43,35 @@ jobs:
           cache-dependency-path: |
             packages/core/package-lock.json
             packages/ui/package-lock.json
+            instances/generic/package-lock.json
 
-      - name: Install backend dependencies
-        working-directory: packages/core
+      # A commit whose source is ahead of vendor/ would ship stale code: main must sit on a prepared release.
+      - name: Committed vendor/ is this commit's source
+        run: |
+          scripts/pack.sh "$RUNNER_TEMP/fresh"
+          for tgz in "$RUNNER_TEMP"/fresh/*.tgz; do
+            name=$(basename "$tgz")
+            if ! cmp -s "$tgz" "instances/generic/vendor/$name"; then
+              echo "::error::instances/generic/vendor/$name is missing or differs from this commit's source. Run scripts/release.sh prepare <version> and commit."
+              exit 1
+            fi
+          done
+
+      - name: vendor/ matches the lockfile
+        run: node instances/generic/scripts/check-vendor.mjs
+
+      - name: Install Generic from vendor/
+        working-directory: instances/generic
         run: npm ci
 
-      - name: Deploy CDK stacks to GrantWell staging
-        working-directory: packages/core
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.SERVICE_ROLE_ARN_GRANTWELL_STAGING }}
+          role-session-name: ${{ github.actor }}-grantwell
+          aws-region: us-east-1
+
+      - name: Deploy CDK stacks to GrantWell
+        working-directory: instances/generic
         run: |
           npx cdk deploy ${{ env.STACK_NAME }} --require-approval never

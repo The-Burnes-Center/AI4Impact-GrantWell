@@ -1403,7 +1403,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     this.analyticsFunction = analyticsFunction;
 
     // Feedback proxy Lambda — optionally forwards user feedback to an external form.
-    // If FEEDBACK_FORM_URL is unset, the Lambda logs the feedback and returns success.
+    // If feedbackFormUrl is unset, the Lambda logs the feedback and returns success.
     const feedbackProxyFunction = new lambda.Function(
       scope,
       "FeedbackProxyFunction",
@@ -1415,7 +1415,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         timeout: cdk.Duration.seconds(15),
         environment: {
-          FEEDBACK_FORM_URL: process.env.FEEDBACK_FORM_URL || "",
+          FEEDBACK_FORM_URL: config.feedbackFormUrl ?? "",
         },
       }
     );

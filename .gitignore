@@ -6,6 +6,9 @@ node_modules
 !packages/core/lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/**
 *.pyc
 
+# Generic built from source by scripts/pack.sh --dev
+/build/
+
 # CDK asset staging directory
 .cdk.staging
 cdk.out

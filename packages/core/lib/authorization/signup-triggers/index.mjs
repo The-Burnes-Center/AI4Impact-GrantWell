@@ -5,8 +5,11 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 import { assertTurnstileToken } from "./turnstile.mjs";
 
+// Bounded so a slow Cognito call ends inside the trigger's 4 s Lambda timeout.
 const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION || "us-east-1",
+  maxAttempts: 2,
+  requestHandler: { connectionTimeout: 1000, requestTimeout: 2000 },
 });
 
 const SUPPORTED_STATE_CODES = new Set(

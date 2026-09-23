@@ -30,5 +30,5 @@
   "description": "AWS CDK infrastructure for GrantWell: auth, chatbot API, and web app deployment.",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "Apache-2.0"
 }
