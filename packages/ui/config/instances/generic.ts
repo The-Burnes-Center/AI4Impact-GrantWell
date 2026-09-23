@@ -1,5 +1,5 @@
 import { Branding } from "../../src/common/branding";
-import { genericBrandingData } from "../../../../shared/generic-branding";
+import { genericBrandingData } from "../../../core/lib/shared/generic-branding";
 
 // The Burnes-owned multi-state product ("generic" instance). Moved out of core (branding.tsx)
 // so the core carries no instance identity. This IS the instance-specific value the picker

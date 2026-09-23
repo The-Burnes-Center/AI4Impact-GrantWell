@@ -4,7 +4,7 @@
   "version": "3.0.0",
   "type": "module",
   "scripts": {
-    "copy-shared": "mkdir -p src/common/generated && (cp ../../shared/states.ts src/common/generated/states.ts 2>/dev/null || test -f src/common/generated/states.ts)",
+    "copy-shared": "mkdir -p src/common/generated && (cp ../core/lib/shared/states.ts src/common/generated/states.ts 2>/dev/null || test -f src/common/generated/states.ts)",
     "predev": "npm run copy-shared",
     "prebuild": "npm run copy-shared",
     "prebuild:dev": "npm run copy-shared",

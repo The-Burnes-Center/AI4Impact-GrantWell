@@ -25,7 +25,7 @@ export class UserInterface extends Construct {
   constructor(scope: Construct, id: string, props: UserInterfaceProps) {
     super(scope, id);
 
-    const appPath = path.join(__dirname, "app");
+    const appPath = path.join(__dirname, "..", "..", "..", "ui");
     const buildPath = path.join(appPath, "dist");
 
     const uploadLogsBucket = new s3.Bucket(this, "WebsiteLogsBucket", {
@@ -107,7 +107,7 @@ export class UserInterface extends Construct {
               const options: ExecSyncOptionsWithBufferEncoding = {
                 stdio: "inherit",
                 // Explicit: npm 11.19 stopped running lifecycle scripts in --prefix, so the
-                // app's prebuild resolved ../../shared/states.ts from the wrong directory.
+                // app's prebuild resolved ../core/lib/shared/states.ts from the wrong directory.
                 cwd: appPath,
                 env: {
                   ...process.env,

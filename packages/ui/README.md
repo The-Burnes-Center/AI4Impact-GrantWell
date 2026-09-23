@@ -60,7 +60,7 @@ src/
 │   ├── api-client/       # API client classes
 │   ├── helpers/          # Helper functions
 │   ├── types/
-│   ├── generated/        # states.ts copied from lib/shared (gitignored)
+│   ├── generated/        # states.ts copied from packages/core/lib/shared (gitignored)
 │   └── *.ts / *.tsx      # Contexts, branding, constants
 │
 ├── hooks/                 # Custom React hooks
@@ -104,7 +104,7 @@ site (`https://<site>/aws-exports.json`) and set `oauth.redirectSignIn`/`redirec
 | `npm run lint:fix` | ESLint with autofix |
 | `npm run lint:colors` | Flag new off-palette colors (`-- --base origin/main` checks what CI checks) |
 | `npm run format` | Prettier over tsx/js/ts/json |
-| `npm run copy-shared` | Copy `lib/shared/states.ts` into `src/common/generated/` (runs automatically before dev/build/build:dev/preview) |
+| `npm run copy-shared` | Copy `packages/core/lib/shared/states.ts` into `src/common/generated/` (runs automatically before dev/build/build:dev/preview) |
 
 ---
 

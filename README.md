@@ -11,27 +11,27 @@ The application features multiple interactive interfaces including a landing pag
 - **Smart Grant Matching**  
   AI-powered system that analyzes and matches grants to user needs, providing personalized recommendations based on project requirements.
 
-  <img src="lib/user-interface/app/public/images/Landing Page.png" alt="Landing page" width="500">
+  <img src="packages/ui/public/images/Landing Page.png" alt="Landing page" width="500">
 
 - **Requirements Analysis**  
   Automatically scans and summarizes Notices of Funding Opportunities (NOFOs), presenting key information about eligibility, required documents, narrative sections, and deadlines.
 
-  <img src="lib/user-interface/app/public/images/Req Page.png" alt="Requirements page" width="500">
+  <img src="packages/ui/public/images/Req Page.png" alt="Requirements page" width="500">
 
 - **AI-Powered Writing Assistant**  
   Interactive chatbot that assists in drafting grant narratives by prompting for organization details and incorporating information from uploaded documents.
   
-  <img src="lib/user-interface/app/public/images/Chatbot Page.png" alt="Chatbot interface" width="500">
+  <img src="packages/ui/public/images/Chatbot Page.png" alt="Chatbot interface" width="500">
 
 - **Document Editor**  
   Section-based editor for drafting and refining grant narratives with AI assistance, progress tracking, and export capabilities.
 
-  <img src="lib/user-interface/app/public/images/Writing Page.png" alt="Document editor page" width="500">
+  <img src="packages/ui/public/images/Writing Page.png" alt="Document editor page" width="500">
 
 - **Dashboard**  
   Administrative dashboard for managing NOFOs, automated NOFO scraping, and inviting new users.
 
-  <img src="lib/user-interface/app/public/images/Dashboard Page.png" alt="Dashboard page" width="500">
+  <img src="packages/ui/public/images/Dashboard Page.png" alt="Dashboard page" width="500">
 
 ## Architecture
 
@@ -58,10 +58,11 @@ git clone https://github.com/The-Burnes-Center/AI4Impact-GrantWell.git
 cd AI4Impact-GrantWell
 
 # Install dependencies
+cd packages/core
 npm install
 
 # For frontend development, navigate to the app directory
-cd lib/user-interface/app
+cd ../ui
 npm install
 npm run dev
 ```

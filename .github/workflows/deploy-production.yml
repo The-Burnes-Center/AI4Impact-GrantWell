@@ -51,12 +51,14 @@ jobs:
           node-version: '24'
           cache: npm
           cache-dependency-path: |
-            package-lock.json
-            lib/user-interface/app/package-lock.json
+            packages/core/package-lock.json
+            packages/ui/package-lock.json
 
       - name: Install backend dependencies
+        working-directory: packages/core
         run: npm ci
 
       - name: Deploy CDK stacks to GrantWell staging
+        working-directory: packages/core
         run: |
           npx cdk deploy ${{ env.STACK_NAME }} --require-approval never
