@@ -323,7 +323,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SESSION_HANDLER: this.sessionFunction.functionName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
-          SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
+          SONNET_MODEL_ID: "e2e-check-deliberately-invalid-model-id",
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
