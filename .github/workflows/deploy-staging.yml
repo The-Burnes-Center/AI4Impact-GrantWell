@@ -65,6 +65,14 @@ jobs:
         run: |
           npx cdk deploy ${{ env.STACK_NAME }} --require-approval never
 
+  e2e:
+    needs: deploy
+    uses: ./.github/workflows/e2e-dev.yml
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+
   # What prod would get from this commit, diffed against live prod. The role can only read the prod
   # stacks' CloudFormation templates and can't assume the CDK deploy role, so this job can't deploy.
   prod-diff:

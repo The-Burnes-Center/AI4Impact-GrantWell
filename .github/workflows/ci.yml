@@ -49,6 +49,34 @@ jobs:
         env:
           ENVIRONMENT: grantwell-burnes-staging
 
+  e2e:
+    name: E2E suite typecheck and listing
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: e2e
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      # Loads every spec and the config without a browser or AWS, so a broken spec fails before deploy.
+      - name: List tests
+        run: npx playwright test --list
+
   infra:
     name: CDK typecheck, Generic from source, logical-ID guard and cdk-nag
     runs-on: ubuntu-latest

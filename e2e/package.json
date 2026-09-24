@@ -1,0 +1,23 @@
+{
+  "name": "grantwell-e2e",
+  "private": true,
+  "description": "Playwright journeys against the deployed dev site (see README.md)",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "list": "playwright test --list",
+    "typecheck": "tsc --noEmit",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-ssm": "3.1139.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.13.6",
+    "jszip": "3.10.2",
+    "otplib": "13.5.0",
+    "typescript": "5.9.3"
+  }
+}

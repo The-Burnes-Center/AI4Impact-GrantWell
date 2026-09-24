@@ -3,6 +3,7 @@ import {
   AdminUserGlobalSignOutCommand,
   CognitoIdentityProviderClient,
 } from "@aws-sdk/client-cognito-identity-provider";
+import { isE2EBypass } from "./e2e-bypass.mjs";
 import { assertTurnstileToken } from "./turnstile.mjs";
 
 // Bounded so a slow Cognito call ends inside the trigger's 4 s Lambda timeout.
@@ -46,6 +47,9 @@ export const handler = async (event) => {
   }
 
   if (event.triggerSource === "PreAuthentication_Authentication") {
+    if (await isE2EBypass(event.request.validationData, event.request.userAttributes?.email)) {
+      return event;
+    }
     await assertTurnstileToken(
       event.request.validationData,
       event.request.userContextData?.ipAddress

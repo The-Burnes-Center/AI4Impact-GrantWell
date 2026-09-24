@@ -72,6 +72,8 @@ interface InstanceConfigBase {
   monitoring: { dailyBrief: boolean };
   /** https URL the in-app feedback form is forwarded to; unset, feedback is only logged. */
   feedbackFormUrl?: string;
+  /** Dev only. These accounts may sign in past Turnstile with the token in SSM at `e2eBypassParameter(config)`. */
+  e2e?: { testEmails: string[] };
   /** Extra tags for every resource except the vector collection. Project, Instance and Stage come from core. */
   tags: Record<string, string>;
   branding: Branding;
@@ -98,9 +100,23 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (config.feedbackFormUrl !== undefined && !config.feedbackFormUrl.startsWith("https://")) {
     problems.push("feedbackFormUrl must start with https://");
   }
+  if (config.e2e) {
+    if (config.stage === "prod") problems.push("e2e must not be set on a prod deployment");
+    if (config.e2e.testEmails.length === 0) problems.push("e2e.testEmails is empty");
+    const outside = config.e2e.testEmails.filter((e) => !e.endsWith(E2E_TEST_EMAIL_DOMAIN));
+    if (outside.length) problems.push(`e2e.testEmails must end in ${E2E_TEST_EMAIL_DOMAIN}: ${outside.join(", ")}`);
+  }
   if (problems.length) {
     throw new Error(`Invalid instance config "${config.id}": ${problems.join("; ")}`);
   }
+}
+
+/** Reserved (RFC 2606), so no real person can hold an e2e account. The trigger Lambda re-checks it. */
+export const E2E_TEST_EMAIL_DOMAIN = "@grantwell.invalid";
+
+/** SecureString created out of band; only deployments with `e2e` can read it. */
+export function e2eBypassParameter(config: InstanceConfig): string {
+  return `/${monitoringPrefix(config)}/e2e/turnstile-bypass`;
 }
 
 /** Tags core puts on every stack and resource. None of them may change for a deployed stack; see collectionTags. */

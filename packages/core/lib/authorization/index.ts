@@ -6,7 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ses from 'aws-cdk-lib/aws-ses';
 import * as path from 'path';
-import { InstanceConfig, supportedStatesEnv } from '../config/instance-config';
+import { InstanceConfig, e2eBypassParameter, supportedStatesEnv } from '../config/instance-config';
 
 export interface AuthorizationStackProps {
   readonly config: InstanceConfig;
@@ -145,6 +145,25 @@ export class AuthorizationStack extends Construct {
         ],
       })
     );
+
+    if (config.e2e) {
+      const parameterName = e2eBypassParameter(config);
+      signupTriggerFunction.addEnvironment('E2E_BYPASS_PARAM', parameterName);
+      signupTriggerFunction.addEnvironment('E2E_TEST_EMAILS', config.e2e.testEmails.join(','));
+      signupTriggerFunction.addToRolePolicy(
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['ssm:GetParameter'],
+          resources: [
+            cdk.Stack.of(this).formatArn({
+              service: 'ssm',
+              resource: 'parameter',
+              resourceName: parameterName.slice(1),
+            }),
+          ],
+        })
+      );
+    }
 
     userPool.addDomain('CognitoDomain', {
       cognitoDomain: {

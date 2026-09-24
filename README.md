@@ -82,12 +82,13 @@ npm run dev
 | `packages/ui` | React app source, packed as `grantwell-ui-<version>.tgz` |
 | `template/` | Starting repo for a state: config plus the two .tgz files in `vendor/` |
 | `instances/generic` | grantwell.us, built from `template/`; its `vendor/` holds the last release |
+| `e2e/` | Playwright journeys against the deployed dev site (see `e2e/README.md`) |
 | `scripts/pack.sh` | Builds both .tgz files; `--dev` builds Generic from source in `build/generic/` (gitignored) |
 | `scripts/release.sh` | Stamps a release version (`prepare`) and builds the release files from a tag (`build`, run by `release.yml`) |
 
 ### Working on `packages/`
 
-Dev (`grantwell-burnes-staging`) runs source, prod runs releases. Every push to `staging` runs CI, then deploys dev from `scripts/pack.sh --dev` (Generic's config with vendor/ packed from that commit) and posts a read-only diff against live prod in the run summary. `instances/generic/vendor/` only changes when a release is prepared.
+Dev (`grantwell-burnes-staging`) runs source, prod runs releases. Every push to `staging` runs CI, then deploys dev from `scripts/pack.sh --dev` (Generic's config with vendor/ packed from that commit) and posts a read-only diff against live prod in the run summary. After the deploy, the `e2e/` journeys run against dev. `instances/generic/vendor/` only changes when a release is prepared.
 
 To synth or test locally, run `scripts/pack.sh --dev`, then `npm run synth:ci` and `npm test` in `packages/core`. Never commit `build/`.
 

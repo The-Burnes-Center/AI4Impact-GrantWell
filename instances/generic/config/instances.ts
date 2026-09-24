@@ -56,6 +56,7 @@ export const instances: InstanceConfig[] = [
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: false },
     scraper: { dailySchedule: false },
     monitoring: { dailyBrief: false },
+    e2e: { testEmails: ["e2e-dev@grantwell.invalid"] },
     tags: {},
     branding,
   },

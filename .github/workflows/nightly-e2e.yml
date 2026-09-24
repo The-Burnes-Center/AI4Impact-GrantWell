@@ -1,0 +1,22 @@
+name: Nightly E2E (dev)
+
+# Catches dev breaking without a deploy. GitHub runs schedules (and offers manual dispatch) only
+# for workflows on the default branch, so this starts once it is on main.
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    uses: ./.github/workflows/e2e-dev.yml
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      # Dev runs staging's code, so the suite has to come from staging too, not from main.
+      ref: staging

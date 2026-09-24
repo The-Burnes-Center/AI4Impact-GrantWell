@@ -7,8 +7,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "grantwell-core": "file:vendor/grantwell-core-3.0.0-rc.2.tgz",
-    "grantwell-ui": "file:vendor/grantwell-ui-3.0.0-rc.2.tgz"
+    "grantwell-core": "file:vendor/grantwell-core-3.0.0-rc.3.tgz",
+    "grantwell-ui": "file:vendor/grantwell-ui-3.0.0-rc.3.tgz"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
