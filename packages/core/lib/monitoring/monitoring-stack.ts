@@ -26,6 +26,7 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
+import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
 import * as cr from "aws-cdk-lib/custom-resources";
@@ -67,6 +68,7 @@ export interface MonitoringStackProps extends cdk.NestedStackProps {
   readonly createMetadataFunction: lambda.IFunction;
   readonly syncKBFunction: lambda.IFunction;
   readonly draftVersionWriterFunction: lambda.IFunction;
+  readonly draftVersionWriterFailures: sqs.IQueue;
   readonly aiGrantSearchFunction: lambda.IFunction;
   readonly applicationPdfGeneratorFunction: lambda.IFunction;
   readonly nofoPipeline: {
@@ -414,12 +416,21 @@ export class MonitoringStack extends cdk.NestedStack {
       threshold: 3,
     });
 
-    // Failures are reported per record, so Errors stays flat; after 3 retries the records are dropped.
+    // Failures are reported per record, so Errors stays flat; after 3 retries the batch goes to the failure queue.
     this.alarm("DraftHistoryFailingAlarm", {
       severity: "medium",
       name: "draft history not being saved",
       description: "Draft versions aren't being recorded, so users lose the history they would restore from.",
       metric: this.markerMetric("DraftVersionWriteFailed", props.draftVersionWriterFunction, LOG_MARKERS.draftVersionWriteFailed, cdk.Duration.minutes(15)),
+      threshold: 1,
+    });
+
+    // Stays in alarm until someone drains the queue.
+    this.alarm("DraftHistoryLostAlarm", {
+      severity: "medium",
+      name: "draft history records lost",
+      description: "Draft changes failed every retry and were skipped, so those versions are missing. The failure queue says which; the stream keeps them for 24 h.",
+      metric: props.draftVersionWriterFailures.metricApproximateNumberOfMessagesVisible({ period: cdk.Duration.minutes(5), statistic: "Maximum" }),
       threshold: 1,
     });
   }

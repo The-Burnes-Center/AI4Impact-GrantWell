@@ -38,6 +38,7 @@ DigestSendFailedLogGroupExistsCustomResourcePolicy5B429FB4	AWS::IAM::Policy
 DigestStoppedAlarm988F0AF4	AWS::CloudWatch::Alarm
 DraftGenerationFailingAlarmFB5C20C8	AWS::CloudWatch::Alarm
 DraftHistoryFailingAlarmA5E37DCA	AWS::CloudWatch::Alarm
+DraftHistoryLostAlarmE399E8F1	AWS::CloudWatch::Alarm
 DraftSectionsFailingAlarmD2FA0BDA	AWS::CloudWatch::Alarm
 DraftVersionWriteFailedFilterE60A1D94	AWS::Logs::MetricFilter
 DraftVersionWriteFailedLogGroupExists019768D0	Custom::AWS

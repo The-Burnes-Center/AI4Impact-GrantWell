@@ -50,6 +50,7 @@ ChatbotAPIDraftJobStatusFunctionCBBE68CE	AWS::Lambda::Function
 ChatbotAPIDraftJobStatusFunctionLogGroup8CFEE122	AWS::Logs::LogGroup
 ChatbotAPIDraftJobStatusFunctionServiceRoleDDD4D07B	AWS::IAM::Role
 ChatbotAPIDraftJobStatusFunctionServiceRoleDefaultPolicyA2E1AAC9	AWS::IAM::Policy
+ChatbotAPIDraftVersionWriterFailures62B5BCC3	AWS::SQS::Queue
 ChatbotAPIDraftVersionWriterFunction1206ED30	AWS::Lambda::Function
 ChatbotAPIDraftVersionWriterFunctionDynamoDBEventSourcegrantwellburnesstagingChatbotAPITableStackDraftTableD35939603E8C9819	AWS::Lambda::EventSourceMapping
 ChatbotAPIDraftVersionWriterFunctionServiceRole4397BAF4	AWS::IAM::Role

@@ -66,9 +66,10 @@ export default class ClaudeModel {
    * 
    * @param {string} system - The system prompt.
    * @param {Array} history - The chat history.
+   * @param {object} [toolChoice] - Anthropic tool_choice, e.g. { type: "none" }.
    * @returns {ReadableStream} - The response stream.
    */
-  async getStreamedResponse(system, history) {
+  async getStreamedResponse(system, history, toolChoice) {
     const payload = {
       "anthropic_version": "bedrock-2023-05-31",
       "system": system,
@@ -94,14 +95,11 @@ export default class ClaudeModel {
         }
       ],
     };
+    if (toolChoice) payload.tool_choice = toolChoice;
 
-    try {
-      const command = new InvokeModelWithResponseStreamCommand({ body: JSON.stringify(payload), contentType: 'application/json', modelId: this.modelId });
-      const apiResponse = await this.client.send(command);
-      return apiResponse.body;
-    } catch (e) {
-      console.error("Caught error: model invoke error", e);
-    }
+    const command = new InvokeModelWithResponseStreamCommand({ body: JSON.stringify(payload), contentType: 'application/json', modelId: this.modelId });
+    const apiResponse = await this.client.send(command);
+    return apiResponse.body;
   }
 
   /**

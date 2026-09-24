@@ -18,7 +18,7 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
-import { DynamoEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { DynamoEventSource, SqsDlq } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
@@ -96,6 +96,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoDeleteFunction: lambda.Function;
   public readonly draftFunction: lambda.Function;
   public readonly draftVersionWriterFunction: lambda.Function;
+  public readonly draftVersionWriterFailures: sqs.Queue;
   public readonly draftGenerationStateMachine: sfn.StateMachine;
   public readonly scraperCoordinatorFunction: lambda.Function;
   public readonly opportunityProcessorFunction: lambda.Function;
@@ -257,16 +258,22 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     props.draftVersionTable.grantReadWriteData(draftVersionWriterFunction);
+    // Holds batch metadata (shard + sequence range), not the records; the stream keeps those for 24 h.
+    const draftVersionWriterFailures = new sqs.Queue(scope, "DraftVersionWriterFailures", {
+      retentionPeriod: cdk.Duration.days(14),
+    });
     draftVersionWriterFunction.addEventSource(
       new DynamoEventSource(props.draftTable, {
         startingPosition: lambda.StartingPosition.TRIM_HORIZON,
         batchSize: 10,
         retryAttempts: 3,
         reportBatchItemFailures: true,
+        onFailure: new SqsDlq(draftVersionWriterFailures),
       })
     );
 
     this.draftVersionWriterFunction = draftVersionWriterFunction;
+    this.draftVersionWriterFailures = draftVersionWriterFailures;
 
     const sessionAPIHandlerFunction = new lambda.Function(
       scope,

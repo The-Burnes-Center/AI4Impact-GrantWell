@@ -30,6 +30,7 @@ const COMMON_ALARMS: [string, string, number][] = [
   ["uploaded documents not indexed", "medium", 1],
   ["document index sync failing", "medium", 3],
   ["draft history not being saved", "medium", 1],
+  ["draft history records lost", "medium", 1],
   ["NOFO processing failed outright", "medium", 1],
   ["NOFO processing timed out", "medium", 1],
   // One failing NOFO is 1 + retries Errors (ExtractText retries TaskFailed twice), so these mean more than one NOFO.

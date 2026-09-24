@@ -184,5 +184,6 @@ def lambda_handler(event, context):
             process(record)
         except Exception as error:  # noqa: BLE001 - one bad record must not block the shard
             print(f"draft-version-writer failed on {record.get('eventID')}: {error}")
-            failures.append({"itemIdentifier": record.get("eventID")})
+            # Stream checkpoints are by sequence number; an eventID fails the whole batch.
+            failures.append({"itemIdentifier": (record.get("dynamodb") or {}).get("SequenceNumber")})
     return {"batchItemFailures": failures}

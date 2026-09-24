@@ -35,6 +35,8 @@ const STATE_NAME_BY_CODE = Object.fromEntries(SUPPORTED_STATES.map((s) => [s.cod
 
 const NOFO_STATE_FILTER_ENABLED = process.env.NOFO_STATE_FILTER_ENABLED === "true";
 
+const MAX_MODEL_CALLS = 5;
+
 // Platform authority comes from the explicit PlatformAdmin role; this flag keeps pre-migration
 // stateless admins working and must stay on until every pool is migrated.
 const LEGACY_STATELESS_ADMIN_IS_PLATFORM =
@@ -380,12 +382,16 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     
     let history = claude.assembleHistory(lastFiveMessages, "Please use your search tool one or more times based on this latest prompt: ".concat(userMessage));
     let fullDocs = { content: "", uris: [] };
-    
+    let modelCalls = 0;
+
     while (!stopLoop) {
       history.forEach((historyItem) => {});
+      modelCalls += 1;
+      const lastCall = modelCalls >= MAX_MODEL_CALLS;
       const updatedSystemPrompt = `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}\n\n${getPromptText(userState)}`;
-      const stream = await claude.getStreamedResponse(updatedSystemPrompt, history);
       try {
+        // tools stay defined on the last call because the history already holds tool_use blocks.
+        const stream = await claude.getStreamedResponse(updatedSystemPrompt, history, lastCall ? { type: "none" } : undefined);
         let toolInput = "";
         let currentTool = null;
         const collectedTools = [];
@@ -479,13 +485,17 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
         }
       } catch (error) {
         console.error("Stream processing error:", error);
-        let responseParams = {
-          ConnectionId: id,
-          Data: `<!ERROR!>: ${error}`
-        };
-        let command = new PostToConnectionCommand(responseParams);
-        await wsConnectionClient.send(command);
+        try {
+          await wsConnectionClient.send(new PostToConnectionCommand({
+            ConnectionId: id,
+            Data: `<!ERROR!>: ${error}`
+          }));
+        } catch (e) {
+          console.error("Error sending stream error:", e);
+        }
+        return;
       }
+      if (lastCall) stopLoop = true;
     }
 
     let command;

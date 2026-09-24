@@ -75,6 +75,9 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
+      - name: Python handler tests
+        run: python3 -m unittest discover -s test/python -v
+
       # What dev deploys: Generic's config with vendor/ packed from this commit's source.
       - name: Build Generic from source (build/generic)
         working-directory: .
