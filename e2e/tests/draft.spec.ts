@@ -16,7 +16,8 @@ const PROJECT_BASICS: Record<string, string> = {
   requestedAmount: "50000",
   location: "Boston, MA",
   zipCode: "02115",
-  contactName: "E2E Test Contact",
+  // Letters and name punctuation only; the form rejects digits here.
+  contactName: "Test Contact",
   contactEmail: USER_EMAIL,
 };
 const GENERATION_TIMEOUT_MS = 15 * 60_000;

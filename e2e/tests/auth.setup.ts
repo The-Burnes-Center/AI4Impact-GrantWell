@@ -19,7 +19,11 @@ setup.describe.configure({ mode: "serial" });
 
 setup("signs in with email, password and TOTP past the dev Turnstile bypass", async ({ page }, testInfo) => {
   await signIn(page, testInfo.retry > 0);
-  await page.evaluate(() => localStorage.setItem("playgroundHelpSeen", "true"));
+  // First-visit help modals hide the page behind them.
+  await page.evaluate(() => {
+    localStorage.setItem("playgroundHelpSeen", "true");
+    localStorage.setItem("checklistsHelpSeen", "true");
+  });
   await page.context().storageState({ path: AUTH_FILE });
 });
 
