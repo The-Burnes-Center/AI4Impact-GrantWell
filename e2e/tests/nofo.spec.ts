@@ -28,7 +28,7 @@ test("shows the NOFO's requirements in four tabs, one entry per summary item", a
 
   for (const [label, field] of TABS) {
     await tablist.getByRole("tab", { name: label }).click();
-    const items = page.getByRole("tabpanel", { name: label }).locator(".checklist-tabs__markdown > ul > li");
+    const items = page.getByRole("tabpanel", { name: label }).locator(".checklist-tabs__markdown > .custom-markdown > ul > li");
     await expect(items, `${label} entries`).toHaveCount((summary[field] ?? []).length);
     for (const text of await items.allInnerTexts()) expect(text.trim(), `${label} entry`).not.toBe("");
   }
