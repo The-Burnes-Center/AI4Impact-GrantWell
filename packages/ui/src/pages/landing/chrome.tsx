@@ -4,6 +4,7 @@ import { AiForImpactWordmark } from "./featureIllustrations";
 import { useBranding } from "../../common/branding";
 import { useNavigationMenuButton } from "../../components/navigation/navigation-context";
 import { SIDEBAR_ID } from "../../components/navigation/UnifiedNavigation";
+import { BrandLogo } from "../../components/common/BrandLogo";
 
 const ArrowUpRight = ({ className }: { className?: string }) => (
   <svg
@@ -156,7 +157,7 @@ export function AppNavbar() {
           onClick={handleLogoClick}
           className="marketing__nav-brand"
         >
-          <img
+          <BrandLogo
             src={branding.logo}
             alt={branding.appName}
             className="marketing__nav-wordmark"
@@ -174,7 +175,7 @@ export function LandingFooter() {
   return (
     <footer className="marketing__footer">
       <div className="marketing__footer-brand">
-        <img
+        <BrandLogo
           className="marketing__footer-wordmark"
           src={footer.wordmark ?? logo}
           alt=""

@@ -18,7 +18,7 @@ import App from "../App";
 import { AppConfig } from "../common/types/app";
 import { AppContext } from "../common/app-context";
 import { BrandingProvider, useBranding } from "../common/branding";
-import { activeBranding } from "../common/instance";
+import { activeBranding, IS_PROD } from "../common/instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import MaintenanceGate from "./MaintenanceGate";
 import { NavigationProvider } from "./navigation/NavigationProvider";
@@ -217,7 +217,7 @@ export default function AppConfigured() {
 
   return (
     <AppContext.Provider value={config}>
-      <BrandingProvider value={activeBranding}>
+      <BrandingProvider value={activeBranding} analytics={IS_PROD}>
         <ThemeProvider
           theme={{
             name: "default-theme",

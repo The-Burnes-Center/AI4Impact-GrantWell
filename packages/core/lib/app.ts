@@ -4,8 +4,10 @@ import * as path from 'node:path';
 import * as cdk from 'aws-cdk-lib';
 import { AwsSolutionsChecks } from 'cdk-nag';
 import { GrantWellStack } from './grantwell-stack';
-import { InstanceConfig, validateInstanceConfig } from './config/instance-config';
+import { InstanceConfig, coreTags, validateInstanceConfig } from './config/instance-config';
 import { featureFlags } from './feature-flags';
+import { COLLECTION_RESOURCE_TYPE } from './chatbot-api/opensearch/opensearch';
+import { describeStacks } from './stack-descriptions';
 
 export interface RunGrantWellAppOptions {
   /** UI project to build. Defaults to the `grantwell-ui` package installed next to the app. */
@@ -27,15 +29,17 @@ export function runGrantWellApp(instances: InstanceConfig[], options: RunGrantWe
 
   const app = new cdk.App({ context: featureFlags });
 
-  for (const [key, value] of Object.entries(config.tags)) {
-    cdk.Tags.of(app).add(key, value);
+  // The collection's tags are create-only; OpenSearchStack sets them itself.
+  for (const [key, value] of Object.entries({ ...config.tags, ...coreTags(config) })) {
+    cdk.Tags.of(app).add(key, value, { excludeResourceTypes: [COLLECTION_RESOURCE_TYPE] });
   }
 
-  new GrantWellStack(app, config.aws.stackName, {
+  const stack = new GrantWellStack(app, config.aws.stackName, {
     config,
     uiSourceDir: options.uiSourceDir ?? installedUiSourceDir(),
     publicDir: options.publicDir ?? instancePublicDir(),
   });
+  describeStacks(stack, config);
 
   // CI only: nag findings are error annotations, which would fail `cdk deploy`.
   if (process.env.CDK_NAG === 'warn') {

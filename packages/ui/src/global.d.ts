@@ -34,9 +34,8 @@ interface Window {
       page_title?: string;
       page_path?: string;
       page_location?: string;
-      [key: string]: string | undefined;
+      [key: string]: string | boolean | undefined;
     }
   ) => void;
-  __ENVIRONMENT__?: string;
   turnstile?: TurnstileApi;
 }

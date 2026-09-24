@@ -6,6 +6,7 @@ import { branding } from "./branding";
 export const instances: InstanceConfig[] = [
   {
     id: "example-prod",
+    instance: "example",
     stage: "prod",
     tenancy: "single",
     states: [{ code: "XX", name: "Example State" }],
@@ -24,7 +25,7 @@ export const instances: InstanceConfig[] = [
     email: { sender: "no-reply@grants.example.gov", manageSenderIdentity: true },
     scraper: { dailySchedule: true },
     monitoring: { dailyBrief: true },
-    tags: { Project: "GrantWell" },
+    tags: {},
     branding,
   },
 ];

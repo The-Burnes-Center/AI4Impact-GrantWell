@@ -10,6 +10,7 @@ import { NotificationProvider } from "./components/notifications/NotificationMan
 import NotificationBar from "./components/notifications/NotificationBar";
 import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
 import { useBranding } from "./common/branding";
+import { IS_PROD } from "./common/instance";
 import "./styles/app.scss";
 
 const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
@@ -83,12 +84,7 @@ function ScrollToTop(): null {
     if (routeChanged) {
       prevPathRef.current = fullPath;
       
-      const environment = typeof window !== "undefined" && window.__ENVIRONMENT__ 
-        ? window.__ENVIRONMENT__ 
-        : 'staging';
-      const isProduction = environment === 'production';
-      
-      if (isProduction && analyticsId && typeof window !== "undefined" && window.gtag) {
+      if (IS_PROD && analyticsId && typeof window !== "undefined" && window.gtag) {
         window.gtag("config", analyticsId, {
           page_title: baseTitle,
           page_path: fullPath,

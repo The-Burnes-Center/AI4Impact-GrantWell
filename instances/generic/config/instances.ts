@@ -9,12 +9,13 @@ const states: UsState[] = [
   { code: "RI", name: "Rhode Island" },
 ];
 
-// Environment=DEV on prod too: that is what the live stacks carry.
-const tags = { Environment: "DEV", Project: "GrantWell" };
+// What both live collections were created with; their tags can't change.
+const collectionTags = { Environment: "DEV", Project: "GrantWell" };
 
 export const instances: InstanceConfig[] = [
   {
     id: "generic-prod",
+    instance: "generic",
     stage: "prod",
     tenancy: "multi",
     states,
@@ -23,6 +24,7 @@ export const instances: InstanceConfig[] = [
       environment: "grantwell-staging",
       cognitoDomainPrefix: "gw-auth-grantwell-staging",
       knowledgeBaseIndexName: "knowledge-base-index-grantwell-staging",
+      collectionTags,
     },
     siteUrl: "https://grantwell.us",
     customDomain: {
@@ -33,11 +35,12 @@ export const instances: InstanceConfig[] = [
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: true },
     scraper: { dailySchedule: true },
     monitoring: { dailyBrief: true },
-    tags,
+    tags: {},
     branding,
   },
   {
     id: "generic-dev",
+    instance: "generic",
     stage: "dev",
     tenancy: "multi",
     states,
@@ -46,13 +49,14 @@ export const instances: InstanceConfig[] = [
       environment: "grantwell-burnes-staging",
       cognitoDomainPrefix: "gw-auth-grantwell-burnes-staging",
       knowledgeBaseIndexName: "knowledge-base-index-grantwell-burnes-staging",
+      collectionTags,
     },
     siteUrl: "https://dghmgwzg4jiug.cloudfront.net",
     auth: { mfaRequired: false },
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: false },
     scraper: { dailySchedule: false },
     monitoring: { dailyBrief: false },
-    tags,
+    tags: {},
     branding,
   },
 ];

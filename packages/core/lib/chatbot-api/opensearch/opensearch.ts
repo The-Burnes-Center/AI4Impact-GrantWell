@@ -11,7 +11,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cr from 'aws-cdk-lib/custom-resources';
 import { Construct } from "constructs";
 import { aws_opensearchserverless as opensearchserverless } from 'aws-cdk-lib';
-import { InstanceConfig } from "../../config/instance-config";
+import { InstanceConfig, coreTags } from "../../config/instance-config";
 
 type OssPolicyNames = { enc: string; network: string; access: string };
 
@@ -42,6 +42,8 @@ function ossPolicyNamesFor(name: string): OssPolicyNames {
   };
 }
 
+export const COLLECTION_RESOURCE_TYPE = 'AWS::OpenSearchServerless::Collection';
+
 export interface OpenSearchStackProps {
   readonly config: InstanceConfig;
 }
@@ -64,6 +66,10 @@ export class OpenSearchStack extends cdk.Stack {
       description: `OpenSearch Serverless Collection for ${stackName}`,
       standbyReplicas: 'DISABLED',
       type: 'VECTORSEARCH',
+      // Changing these replaces the collection, which fails under its fixed name.
+      tags: Object.entries(props.config.aws.collectionTags ?? coreTags(props.config))
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([key, value]) => ({ key, value })),
     });
 
     // Per-stack, collision-free policy names. See ossPolicyNamesFor: live stacks pinned to their

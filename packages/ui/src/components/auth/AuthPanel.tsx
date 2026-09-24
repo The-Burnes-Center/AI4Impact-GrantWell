@@ -43,6 +43,7 @@ import {
   turnstileClientMetadata,
 } from "./auth-utils";
 import "../../styles/auth-panel.css";
+import { BrandLogo } from "../common/BrandLogo";
 
 interface AuthPanelProps {
   onAuthenticated: () => void;
@@ -802,7 +803,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
 
   return (
     <div className="auth-login-card">
-      <img
+      <BrandLogo
         className="auth-card-logo"
         src={branding.logo}
         alt={branding.appName}

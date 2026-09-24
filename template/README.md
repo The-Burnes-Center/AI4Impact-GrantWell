@@ -21,7 +21,7 @@ Commit `vendor/`. The .tgz files are your exact deployed version.
 3. Commit `vendor/`, `package.json` and `package-lock.json`.
 
 ## Images
-Put your own images in `public/` and point `config/branding.ts` at them by their site-root path: `public/brand/logo.svg` is `/brand/logo.svg`. A file can't replace one the GrantWell UI already ships (the synth fails on a clash), and the synth also fails if a branding image path doesn't exist.
+Put your own images in `public/` and point `config/branding.ts` at them by their site-root path: `public/images/brand/logo.svg` is `/images/brand/logo.svg`. A file can't replace one the GrantWell UI already ships (the synth fails on a clash), and the synth also fails if a branding image path doesn't exist. The example branding points at placeholders in `public/images/brand/`; replace them with your own.
 
 ## Upgrade
 Run `scripts/upgrade.sh <version>`, for example `scripts/upgrade.sh 3.0.0`. It downloads that release, checks its SHA256SUMS, swaps `vendor/`, reinstalls, typechecks, and lists which generated templates the upgrade changes (templates in `cdk.out/upgrade/`). If a step fails, it restores `vendor/`, `package.json` and `package-lock.json`. Review `git diff`, then commit those three.
@@ -46,4 +46,5 @@ npx cdk deploy <aws.stackName> --require-approval never
 
 ## Rules
 - Never change an `aws.*` value after the first deploy. Those values name real AWS resources, so changing one replaces them and loses data.
+- Never change `instance` or `stage` after the first deploy either. Core tags every resource with `Project`, `Instance` and `Stage`, and the vector collection's tags can't change once it exists. Put any extra tags in `tags`.
 - Keep secrets in environment variables only, never in `config/`.

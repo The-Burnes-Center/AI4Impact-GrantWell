@@ -23,6 +23,7 @@ import type { RawNOFOData } from "../../common/types/document";
 import type { RecentlyViewedNOFO } from "../../common/helpers/recently-viewed-nofos";
 import "../../styles/base-page.css";
 import "../../styles/landing-page.css";
+import { BrandLogo } from "../../components/common/BrandLogo";
 
 interface SelectableDocument {
   label: string;
@@ -251,7 +252,7 @@ export default function HomePage() {
         <h1 className="visually-hidden">GrantWell — Free AI powered tool for finding and writing grants</h1>
         {/* Header */}
         <div className="landing-header">
-          <img
+          <BrandLogo
             className="landing-header__wordmark"
             src={branding.logo}
             alt=""

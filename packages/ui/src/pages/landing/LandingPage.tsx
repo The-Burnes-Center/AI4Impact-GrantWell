@@ -11,6 +11,7 @@ import {
   LandingNavbar,
   OmniHeader,
 } from "./chrome";
+import { BrandLogo } from "../../components/common/BrandLogo";
 
 const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => (
   <svg
@@ -50,7 +51,7 @@ export default function LandingPage() {
         <div className="marketing__hero-row">
           <div className="marketing__hero-content">
             <h1 className="marketing__hero-title" id="hero-title">
-              <img
+              <BrandLogo
                 className="marketing__hero-wordmark"
                 src={branding.logo}
                 alt={branding.appName}

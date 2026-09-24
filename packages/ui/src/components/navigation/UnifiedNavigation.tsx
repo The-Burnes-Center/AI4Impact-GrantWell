@@ -31,6 +31,7 @@ import {
   NavigationRegistration,
   useNavigationChrome,
 } from "./navigation-context";
+import { BrandLogo } from "../common/BrandLogo";
 
 export const SIDEBAR_ID = "gw-app-sidebar";
 
@@ -361,7 +362,7 @@ export const AppSidebar: React.FC = () => {
                 textDecoration: "none",
               }}
             >
-              <img
+              <BrandLogo
                 // footer.wordmark is the light-on-dark variant; branding.logo is dark green
                 // and disappears against the dark sidebar.
                 src={branding.footer.wordmark ?? branding.logo}

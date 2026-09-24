@@ -9,8 +9,8 @@ export const branding: Branding = {
   colors: {
     primary: "#23776C",
   },
-  logo: "/images/marketing/grantwell-wordmark-dark.svg",
-  favicon: "/images/marketing/favicon.svg",
+  logo: "/images/brand/logo.svg",
+  favicon: "/images/brand/favicon.svg",
   footer: {
     partners: [],
   },

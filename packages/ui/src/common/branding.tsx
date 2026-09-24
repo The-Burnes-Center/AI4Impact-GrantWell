@@ -61,8 +61,9 @@ export const defaultBranding: Branding = {
     accent: "#388557",
     accentHover: "#32784E",
   },
-  logo: "/images/marketing/grantwell-wordmark-dark.svg",
-  favicon: "/images/marketing/favicon.svg",
+  // No images: every instance brings its own. BrandLogo shows appName as text.
+  logo: "",
+  favicon: "",
   footer: {
     partners: [],
   },
@@ -133,9 +134,12 @@ const COLOR_VARS: Record<BrandColor, string> = {
 
 export function BrandingProvider({
   value = defaultBranding,
+  analytics = false,
   children,
 }: {
   value?: Branding;
+  /** Load Google Analytics (when branding has an id). */
+  analytics?: boolean;
   children: ReactNode;
 }) {
   // Push brand colors onto the CSS variables so token-based styles rebrand without
@@ -158,11 +162,11 @@ export function BrandingProvider({
     );
   }, [value]);
 
-  // Load Google Analytics from branding.analyticsId — only when configured, so neutral core
-  // (and any instance without an id) ships no analytics. Replaces the old static gtag script.
+  // Load Google Analytics from branding.analyticsId — only when enabled and configured, so dev,
+  // neutral core and any instance without an id ship no analytics.
   useLayoutEffect(() => {
     const id = value.analyticsId;
-    if (!id || document.getElementById("ga-gtag")) return;
+    if (!analytics || !id || document.getElementById("ga-gtag")) return;
     const s = document.createElement("script");
     s.id = "ga-gtag";
     s.async = true;
@@ -170,13 +174,13 @@ export function BrandingProvider({
     document.head.appendChild(s);
     window.dataLayer = window.dataLayer || [];
     // gtag pushes its raw arguments onto dataLayer; the typed window.gtag wrapper is used
-    // elsewhere for page-view config calls (see App.tsx).
+    // elsewhere for page-view config calls (see App.tsx), which send every page view, the first included.
     const push = (...args: unknown[]) => window.dataLayer.push(args as unknown as Record<string, unknown>);
     window.gtag = ((command: string, targetId: string, config?: unknown) =>
       push(command, targetId, config)) as typeof window.gtag;
     push("js", new Date());
-    push("config", id);
-  }, [value.analyticsId]);
+    push("config", id, { send_page_view: false });
+  }, [value.analyticsId, analytics]);
 
   return (
     <BrandingContext.Provider value={value}>

@@ -105,7 +105,7 @@ export class UserInterface extends Construct {
     fs.mkdirSync(generatedDir, { recursive: true });
     fs.writeFileSync(
       path.join(generatedDir, "instance.json"),
-      JSON.stringify({ branding: props.config.branding, states: props.config.states }, null, 2) + "\n"
+      JSON.stringify({ stage: props.config.stage, branding: props.config.branding, states: props.config.states }, null, 2) + "\n"
     );
 
     const asset = s3deploy.Source.asset(appPath, {
@@ -118,7 +118,7 @@ export class UserInterface extends Construct {
           "-c",
           [
             "npm --cache /tmp/.npm install",
-            `ENVIRONMENT="${props.config.aws.environment}" TURNSTILE_SITE_KEY="${process.env.TURNSTILE_SITE_KEY ?? ""}" npm --cache /tmp/.npm run build`,
+            `TURNSTILE_SITE_KEY="${process.env.TURNSTILE_SITE_KEY ?? ""}" npm --cache /tmp/.npm run build`,
             "cp -aur /asset-input/dist/* /asset-output/",
           ].join(" && "),
         ],
@@ -128,10 +128,6 @@ export class UserInterface extends Construct {
               const options: ExecSyncOptionsWithBufferEncoding = {
                 stdio: "inherit",
                 cwd: appPath,
-                env: {
-                  ...process.env,
-                  ENVIRONMENT: props.config.aws.environment,
-                },
               };
 
               execSync(`npm --silent --prefix "${appPath}" install`, options);

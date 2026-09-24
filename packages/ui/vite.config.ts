@@ -7,31 +7,23 @@ const isDev = process.env.NODE_ENV === "staging";
 
 // Staged by core at synth; see src/common/instance.ts. Same fallback as defaultBranding.
 const stagedInstancePath = path.resolve(__dirname, "src/common/generated/instance.json");
+// "data:," asks the browser for no favicon at all, instead of a /favicon.ico 404.
 const favicon = fs.existsSync(stagedInstancePath)
   ? JSON.parse(fs.readFileSync(stagedInstancePath, "utf8")).branding.favicon
-  : "/images/marketing/favicon.svg";
+  : "data:,";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
     "process.env": {},
-    // Inject ENVIRONMENT variable for use in client-side code
-    "__ENVIRONMENT__": JSON.stringify(process.env.ENVIRONMENT),
     // Turnstile site key is public by design (it ships in the page); only the secret key is secret.
     "__TURNSTILE_SITE_KEY__": JSON.stringify(process.env.TURNSTILE_SITE_KEY || ""),
   },
   plugins: [
-    // Plugin to inject ENVIRONMENT variable into HTML
     {
-      name: "inject-environment",
+      name: "inject-favicon",
       transformIndexHtml(html) {
-        const environment = process.env.ENVIRONMENT;
-        return html
-          .replace(
-            '<head>',
-            `<head>\n    <script>window.__ENVIRONMENT__ = ${JSON.stringify(environment)};</script>`
-          )
-          .replace("%GRANTWELL_FAVICON%", favicon);
+        return html.replace("%GRANTWELL_FAVICON%", favicon);
       },
     },
     isDev && {

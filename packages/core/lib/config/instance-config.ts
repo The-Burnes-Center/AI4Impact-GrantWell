@@ -44,6 +44,8 @@ export interface UsState {
 interface InstanceConfigBase {
   /** Readable ID, e.g. "generic-prod", lowercase-kebab. Frozen AWS names never use it; monitoring names do (`grantwell-<id>`). */
   id: string;
+  /** The instance this deployment belongs to, lowercase-kebab, e.g. "generic". Tagged as Instance. */
+  instance: string;
   stage: "prod" | "dev";
   /** Frozen once deployed. Core derives every other physical name from these. */
   aws: {
@@ -52,6 +54,8 @@ interface InstanceConfigBase {
     environment: string;
     cognitoDomainPrefix: string;
     knowledgeBaseIndexName: string;
+    /** The vector collection's tags can't change after creation; set this to what a deployed one carries. Defaults to coreTags. */
+    collectionTags?: Record<string, string>;
   };
   /** Public site URL, no trailing slash. */
   siteUrl: string;
@@ -68,6 +72,7 @@ interface InstanceConfigBase {
   monitoring: { dailyBrief: boolean };
   /** https URL the in-app feedback form is forwarded to; unset, feedback is only logged. */
   feedbackFormUrl?: string;
+  /** Extra tags for every resource except the vector collection. Project, Instance and Stage come from core. */
   tags: Record<string, string>;
   branding: Branding;
 }
@@ -78,6 +83,9 @@ export type InstanceConfig = InstanceConfigBase &
 export function validateInstanceConfig(config: InstanceConfig): void {
   const problems: string[] = [];
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(config.id)) problems.push("id must be lowercase-kebab");
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(config.instance)) problems.push("instance must be lowercase-kebab");
+  const reserved = Object.keys(config.tags).filter((k) => k in coreTags(config));
+  if (reserved.length) problems.push(`tags must not set ${reserved.join(", ")} (core sets them)`);
   if (config.states.length === 0) problems.push("states is empty");
   if (config.tenancy === "single" && config.states.length !== 1) {
     problems.push(`tenancy "single" needs exactly one state, got ${config.states.length}`);
@@ -93,6 +101,11 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (problems.length) {
     throw new Error(`Invalid instance config "${config.id}": ${problems.join("; ")}`);
   }
+}
+
+/** Tags core puts on every stack and resource. None of them may change for a deployed stack; see collectionTags. */
+export function coreTags(config: InstanceConfig): Record<string, string> {
+  return { Project: "GrantWell", Instance: config.instance, Stage: config.stage };
 }
 
 /** Prefix for monitoring names. The AWS account may be shared, so every one starts with "grantwell-". */
