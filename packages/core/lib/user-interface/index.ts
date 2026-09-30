@@ -192,8 +192,12 @@ export class UserInterface extends Construct {
       retainOnDelete: false
     });
 
-    // Last, so a new index.html never points at chunks that aren't uploaded yet.
-    entryDeployment.node.addDependency(assetsDeployment, publicDeployment);
+    // Last, so a new index.html never points at chunks that aren't uploaded yet. Only on the custom
+    // resource: on the whole construct it also lands on this deployment's CLI layer, which the shared
+    // handler uses, and the other two deployments need that handler (a cycle).
+    const upload = (d: s3deploy.BucketDeployment) =>
+      d.node.children.find((c): c is cdk.CustomResource => c instanceof cdk.CustomResource)!;
+    upload(entryDeployment).node.addDependency(upload(assetsDeployment), upload(publicDeployment));
 
 
     /**
