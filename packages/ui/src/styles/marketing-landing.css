@@ -234,7 +234,16 @@
 .marketing__hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/marketing/hero-bridge.jpg');
+  /* Variants come from vite/hero-images.ts; the plain url() is for browsers without image-set(). */
+  background-image: url('/images/marketing/hero/hero-bridge-1920.jpg');
+  background-image: image-set(
+    url('/images/marketing/hero/hero-bridge-1920.avif') type('image/avif') 1x,
+    url('/images/marketing/hero/hero-bridge-2560.avif') type('image/avif') 2x,
+    url('/images/marketing/hero/hero-bridge-1920.webp') type('image/webp') 1x,
+    url('/images/marketing/hero/hero-bridge-2560.webp') type('image/webp') 2x,
+    url('/images/marketing/hero/hero-bridge-1920.jpg') type('image/jpeg') 1x,
+    url('/images/marketing/hero/hero-bridge-2560.jpg') type('image/jpeg') 2x
+  );
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -727,6 +736,17 @@
   .marketing__nav--app { height: auto; padding: 8px 16px; flex-wrap: nowrap; gap: 12px; }
   .marketing__nav-wordmark { height: 28px; width: auto; }
   .marketing__hero-row { padding: 0 24px 40px; }
+  .marketing__hero-bg {
+    background-image: url('/images/marketing/hero/hero-bridge-1280.jpg');
+    background-image: image-set(
+      url('/images/marketing/hero/hero-bridge-1280.avif') type('image/avif') 1x,
+      url('/images/marketing/hero/hero-bridge-1920.avif') type('image/avif') 2x,
+      url('/images/marketing/hero/hero-bridge-1280.webp') type('image/webp') 1x,
+      url('/images/marketing/hero/hero-bridge-1920.webp') type('image/webp') 2x,
+      url('/images/marketing/hero/hero-bridge-1280.jpg') type('image/jpeg') 1x,
+      url('/images/marketing/hero/hero-bridge-1920.jpg') type('image/jpeg') 2x
+    );
+  }
   .marketing__hero-spacer { display: none; }
   .marketing__hero-content { max-width: 100%; gap: 32px; }
   .marketing__hero-tagline { font-size: 20px; line-height: 28px; }

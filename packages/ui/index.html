@@ -6,30 +6,78 @@
     <!-- Analytics is initialized at runtime from branding.analyticsId (see common/branding.tsx). -->
     <link
       rel="icon"
-      href="%GRANTWELL_FAVICON%"
+      href="%GW_FAVICON%"
       type="image/svg+xml"
     />
-    <meta name="description" content="GrantWell: AI Grants Assistant" />
     <link rel="manifest" href="/manifest.json" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Sans:wght@400;500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Public+Sans:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <title>GrantWell: AI Grants Assistant</title>
+    <!-- %GW_HEAD% -->
     <script>
       const global = window.global || window;
     </script>
   </head>
   <body>
-    <noscript>
-      <div style="padding: 24px; font-family: sans-serif; max-width: 600px; margin: 40px auto; line-height: 1.5;">
-        <h1>JavaScript Required</h1>
-        <p>GrantWell requires JavaScript to run. Please enable JavaScript in your browser settings, then reload this page.</p>
+    <!-- Crawler and pre-JS view of the landing page; React replaces it. Copy and box sizes match pages/landing/. -->
+    <div id="root">
+      <div class="marketing">
+        %GW_OMNI%
+        <main id="main-content" tabindex="-1">
+          <section class="marketing__hero" aria-labelledby="hero-title">
+            <div class="marketing__hero-bg" aria-hidden="true"></div>
+            <nav class="marketing__nav" aria-label="Primary">
+              <div class="marketing__nav-links">
+                <a class="marketing__nav-link marketing__nav-link--active" href="/">Home</a>
+                <a class="marketing__nav-link" href="/login">Login</a>
+              </div>
+            </nav>
+            <div class="marketing__hero-row">
+              <div class="marketing__hero-content">
+                <h1 class="marketing__hero-title" id="hero-title">%GW_HERO_LOGO%</h1>
+                <p class="marketing__hero-tagline">An AI tool for municipalities and community organizations that want to go after federal grants without eating up weeks of staff time.</p>
+                <noscript><p>%GW_APP_NAME% needs JavaScript to sign in. Please enable it and reload this page.</p></noscript>
+                <div class="marketing__hero-actions">
+                  <a class="mk-btn mk-btn--primary" href="/login"><span>Get Started</span></a>
+                  <a class="mk-btn mk-btn--outline" href="#features"><span>Learn More</span></a>
+                </div>
+              </div>
+              <div class="marketing__hero-spacer" aria-hidden="true"></div>
+            </div>
+          </section>
+          <section id="features" class="marketing__features">
+            <article class="marketing__feature">
+              <div class="marketing__illu" style="width: 200px; height: 200px" aria-hidden="true"></div>
+              <div class="marketing__feature-text">
+                <h2 class="marketing__feature-title">Find the right grants</h2>
+                <p class="marketing__feature-body">Search for relevant state and federal funding opportunities aligned with your community needs.</p>
+              </div>
+            </article>
+            <article class="marketing__feature">
+              <div class="marketing__illu" style="width: 306px; height: 180px" aria-hidden="true"></div>
+              <div class="marketing__feature-text">
+                <h2 class="marketing__feature-title">Understand what's required</h2>
+                <p class="marketing__feature-body">Extract key grant information and use chat to ask questions about eligibility and requirements.</p>
+              </div>
+            </article>
+            <article class="marketing__feature">
+              <div class="marketing__illu" style="width: 165px; height: 180px" aria-hidden="true"></div>
+              <div class="marketing__feature-text">
+                <h2 class="marketing__feature-title">Draft your application</h2>
+                <p class="marketing__feature-body">Get step-by-step guidance to help draft your grant applications with AI-powered assistance.</p>
+              </div>
+            </article>
+          </section>
+          <section class="marketing__band" aria-labelledby="band-title">
+            <div class="marketing__band-content">
+              <h2 class="marketing__band-title" id="band-title">AI-Powered, Human-Reviewed</h2>
+              <p class="marketing__band-body">GrantWell uses AI as a support tool, not a decision-maker. AI responses are grounded in official Notice of Funding Opportunity documents. The system is designed not to invent requirements or facts. All drafts require human review before submission. Users retain full control and professional judgment.</p>
+            </div>
+          </section>
+        </main>
       </div>
-    </noscript>
-    <div id="root"></div>
+    </div>
+    <script>
+      // Only "/" is the landing page; any other route would flash it before React mounts.
+      if (location.pathname !== "/") document.getElementById("root").replaceChildren();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

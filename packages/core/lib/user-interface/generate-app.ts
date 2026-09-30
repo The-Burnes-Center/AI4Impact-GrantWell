@@ -6,6 +6,7 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { ChatBotApi } from "../chatbot-api";
 import { NagSuppressions } from "cdk-nag";
+import { SPA_ROUTING_CODE } from "./spa-routing";
 
 
 export interface WebsiteProps {  
@@ -13,6 +14,7 @@ export interface WebsiteProps {
   readonly userPoolClientId: string;
   readonly api: ChatBotApi;
   readonly websiteBucket: s3.Bucket;
+  readonly spaRoutingFunctionName: string;
   readonly customDomain?: string;
   readonly certificateArn?: string;
 }
@@ -75,6 +77,13 @@ export class Website extends Construct {
       }
     );
 
+    const spaRouting = new cf.Function(this, "SpaRoutingFunction", {
+      functionName: props.spaRoutingFunctionName,
+      comment: "App routes to /index.html; missing files stay 404",
+      runtime: cf.FunctionRuntime.JS_2_0,
+      code: cf.FunctionCode.fromInline(SPA_ROUTING_CODE),
+    });
+
     const distribution = new cf.Distribution(this, "Distribution", {
       domainNames: certificate && props.customDomain ? [props.customDomain] : undefined,
       certificate,
@@ -88,6 +97,9 @@ export class Website extends Construct {
         origin: s3Origin,
         viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: cf.CachePolicy.CACHING_OPTIMIZED,
+        functionAssociations: [
+          { function: spaRouting, eventType: cf.FunctionEventType.VIEWER_REQUEST },
+        ],
       },
       additionalBehaviors: {
         "/chatbot/files/*": {
@@ -100,8 +112,8 @@ export class Website extends Construct {
       errorResponses: [
         {
           httpStatus: 404,
-          responseHttpStatus: 200,
-          responsePagePath: "/index.html",
+          responseHttpStatus: 404,
+          responsePagePath: "/404.html",
           ttl: cdk.Duration.seconds(0),
         },
       ],

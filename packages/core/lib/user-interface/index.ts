@@ -15,6 +15,7 @@ import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
 import { InstanceConfig } from "../config/instance-config";
 import { applyPublicOverlay, checkBrandingImages } from "./public-overlay";
+import { resolveSeo, writeSeoFiles } from "./seo-files";
 
 // .gitignore because npm pack drops it: a source build and a packaged build must hash the same.
 const UI_COPY_EXCLUDES = new Set(["node_modules", "dist", ".gitignore", path.join("src", "common", "generated")]);
@@ -47,6 +48,7 @@ export class UserInterface extends Construct {
       applyPublicOverlay(appPath, props.publicDir);
     }
     checkBrandingImages(appPath, props.config.branding);
+    writeSeoFiles(appPath, props.config);
     const buildPath = path.join(appPath, "dist");
 
     const uploadLogsBucket = new s3.Bucket(this, "WebsiteLogsBucket", {
@@ -73,6 +75,7 @@ export class UserInterface extends Construct {
     const publicWebsite = new Website(this, "Website", { 
       ...props, 
       websiteBucket: websiteBucket,
+      spaRoutingFunctionName: `grantwell-${props.config.id}-spa-routing`,
       customDomain: props.config.customDomain?.domainName,
       certificateArn: props.config.customDomain?.certificateArn
     });
@@ -105,7 +108,17 @@ export class UserInterface extends Construct {
     fs.mkdirSync(generatedDir, { recursive: true });
     fs.writeFileSync(
       path.join(generatedDir, "instance.json"),
-      JSON.stringify({ stage: props.config.stage, branding: props.config.branding, states: props.config.states }, null, 2) + "\n"
+      JSON.stringify(
+        {
+          stage: props.config.stage,
+          siteUrl: props.config.siteUrl,
+          seo: resolveSeo(props.config),
+          branding: props.config.branding,
+          states: props.config.states,
+        },
+        null,
+        2
+      ) + "\n"
     );
 
     const asset = s3deploy.Source.asset(appPath, {
@@ -144,14 +157,43 @@ export class UserInterface extends Construct {
       },
     });
 
-    new s3deploy.BucketDeployment(this, "UserInterfaceDeployment", {
+    // One Cache-Control per deployment, so one deployment per cache class over the same asset.
+    // Built first: the shared handler Lambda takes the first deployment's CLI layer, and this one owned it before.
+    const entryDeployment = new s3deploy.BucketDeployment(this, "UserInterfaceDeployment", {
       prune: false,
       sources: [asset, exportsAsset],
+      exclude: ["*"],
+      include: ["index.html", "aws-exports.json"],
+      cacheControl: [s3deploy.CacheControl.noCache()],
       destinationBucket: websiteBucket,
       distribution: distribution,
       memoryLimit: 2048,
       retainOnDelete: false
     });
+
+    const assetsDeployment = new s3deploy.BucketDeployment(this, "UserInterfaceAssetsDeployment", {
+      prune: false,
+      sources: [asset],
+      exclude: ["*"],
+      include: ["assets/*"],
+      cacheControl: [s3deploy.CacheControl.fromString("public, max-age=31536000, immutable")],
+      destinationBucket: websiteBucket,
+      memoryLimit: 2048,
+      retainOnDelete: false
+    });
+
+    const publicDeployment = new s3deploy.BucketDeployment(this, "UserInterfacePublicDeployment", {
+      prune: false,
+      sources: [asset],
+      exclude: ["assets/*", "index.html"],
+      cacheControl: [s3deploy.CacheControl.fromString("public, max-age=86400")],
+      destinationBucket: websiteBucket,
+      memoryLimit: 2048,
+      retainOnDelete: false
+    });
+
+    // Last, so a new index.html never points at chunks that aren't uploaded yet.
+    entryDeployment.node.addDependency(assetsDeployment, publicDeployment);
 
 
     /**

@@ -58,7 +58,7 @@ export default function LandingPage() {
               />
             </h1>
             <p className="marketing__hero-tagline">
-              A free AI tool for municipalities and community organizations
+              An AI tool for municipalities and community organizations
               that want to go after federal grants without eating up weeks of
               staff time.
             </p>
@@ -123,7 +123,7 @@ export default function LandingPage() {
       <section className="marketing__band" aria-labelledby="band-title">
         <div className="marketing__band-content">
           <h2 className="marketing__band-title" id="band-title">
-            Free and AI-Powered
+            AI-Powered, Human-Reviewed
           </h2>
           <p className="marketing__band-body">
             GrantWell uses AI as a support tool, not a decision-maker. AI

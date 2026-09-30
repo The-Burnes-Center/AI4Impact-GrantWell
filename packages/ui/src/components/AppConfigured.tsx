@@ -18,7 +18,7 @@ import App from "../App";
 import { AppConfig } from "../common/types/app";
 import { AppContext } from "../common/app-context";
 import { BrandingProvider, useBranding } from "../common/branding";
-import { activeBranding, IS_PROD } from "../common/instance";
+import { activeBranding, IS_PROD, SEO_TITLE } from "../common/instance";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import MaintenanceGate from "./MaintenanceGate";
 import { NavigationProvider } from "./navigation/NavigationProvider";
@@ -72,8 +72,7 @@ function UnauthenticatedPageTitle(): null {
   const { appName } = useBranding();
 
   useEffect(() => {
-    document.title =
-      pathname === "/login" ? `Sign In - ${appName}` : `${appName} - Home`;
+    document.title = pathname === "/login" ? `Sign In - ${appName}` : SEO_TITLE;
   }, [pathname, appName]);
 
   return null;
@@ -178,6 +177,17 @@ export default function AppConfigured() {
     };
   }, [theme]);
 
+  // The page's static fallback already shows the landing; keep it on screen instead of a spinner.
+  if (!config && !error && window.location.pathname === "/") {
+    return (
+      <BrandingProvider value={activeBranding}>
+        <BrowserRouter>
+          <LandingPage />
+        </BrowserRouter>
+      </BrandingProvider>
+    );
+  }
+
   if (!config) {
     // One region across both boot states, so the swap to the failure message is an
     // update to a region the screen reader is already watching.
@@ -247,6 +257,8 @@ function AppLayoutContent({
   configured: boolean;
   onAuthenticated: () => void;
 }) {
+  const { pathname } = useLocation();
+
   if (authenticated) {
     return (
       <NavigationProvider>
@@ -268,6 +280,10 @@ function AppLayoutContent({
         </div>
       </NavigationProvider>
     );
+  }
+
+  if (!configured && pathname === "/") {
+    return <LandingPage />;
   }
 
   if (!configured) {

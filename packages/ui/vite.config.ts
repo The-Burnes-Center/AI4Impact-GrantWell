@@ -2,15 +2,13 @@ import { defineConfig } from "vite";
 import fs from "fs";
 import path from "path";
 import react from "@vitejs/plugin-react";
+import { heroImages } from "./vite/hero-images";
+import { instanceHtml } from "./vite/instance-html";
 
 const isDev = process.env.NODE_ENV === "staging";
 
-// Staged by core at synth; see src/common/instance.ts. Same fallback as defaultBranding.
+// Staged by core at synth; see src/common/instance.ts.
 const stagedInstancePath = path.resolve(__dirname, "src/common/generated/instance.json");
-// "data:," asks the browser for no favicon at all, instead of a /favicon.ico 404.
-const favicon = fs.existsSync(stagedInstancePath)
-  ? JSON.parse(fs.readFileSync(stagedInstancePath, "utf8")).branding.favicon
-  : "data:,";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,12 +18,8 @@ export default defineConfig({
     "__TURNSTILE_SITE_KEY__": JSON.stringify(process.env.TURNSTILE_SITE_KEY || ""),
   },
   plugins: [
-    {
-      name: "inject-favicon",
-      transformIndexHtml(html) {
-        return html.replace("%GRANTWELL_FAVICON%", favicon);
-      },
-    },
+    instanceHtml(stagedInstancePath),
+    heroImages(),
     isDev && {
       name: "aws-exports",
       writeBundle() {

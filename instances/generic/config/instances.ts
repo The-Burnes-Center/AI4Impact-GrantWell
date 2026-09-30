@@ -35,6 +35,7 @@ export const instances: InstanceConfig[] = [
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: true },
     scraper: { dailySchedule: true },
     monitoring: { dailyBrief: true },
+    seo: { indexable: true },
     tags: {},
     branding,
   },

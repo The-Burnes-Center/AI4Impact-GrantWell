@@ -45,6 +45,11 @@ export interface Branding {
    */
   omniPartners: Link[];
   analyticsId?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: { path: string; alt: string };
+  };
 }
 
 /** Neutral core default — no instance identity. Real look comes from an injected config. */

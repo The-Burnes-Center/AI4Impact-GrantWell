@@ -34,6 +34,14 @@ export interface Branding {
   };
   omniPartners: Link[];
   analyticsId?: string;
+  seo?: {
+    /** Home page <title>, at most 60 characters. Defaults to appName. */
+    title?: string;
+    /** Meta description, about 150 characters. */
+    description?: string;
+    /** 1200×630 share image, a site-root path like logo. No og:image when unset. */
+    ogImage?: { path: string; alt: string };
+  };
 }
 
 export interface UsState {
@@ -70,6 +78,8 @@ interface InstanceConfigBase {
   scraper: { dailySchedule: boolean };
   /** Alarms always ship; this adds the once-a-day health brief to the alerts topic. */
   monitoring: { dailyBrief: boolean };
+  /** Search engines may index the home page. Off unless set; never on a dev stage. */
+  seo?: { indexable: boolean };
   /** https URL the in-app feedback form is forwarded to; unset, feedback is only logged. */
   feedbackFormUrl?: string;
   /** Dev only. These accounts may sign in past Turnstile with the token in SSM at `e2eBypassParameter(config)`. */
@@ -100,6 +110,7 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (config.feedbackFormUrl !== undefined && !config.feedbackFormUrl.startsWith("https://")) {
     problems.push("feedbackFormUrl must start with https://");
   }
+  if (config.seo?.indexable && config.stage === "dev") problems.push("seo.indexable must not be set on a dev deployment");
   if (config.e2e) {
     if (config.stage === "prod") problems.push("e2e must not be set on a prod deployment");
     if (config.e2e.testEmails.length === 0) problems.push("e2e.testEmails is empty");

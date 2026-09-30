@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import AppConfigured from "./components/AppConfigured";
 import { StorageHelper } from "./common/helpers/storage-helper";
+import "./styles/fonts.css";
 import "./styles/bootstrap-subset.scss";
 
 const root = ReactDOM.createRoot(

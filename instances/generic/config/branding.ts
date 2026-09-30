@@ -37,4 +37,13 @@ export const branding: Branding = {
     { label: "Community-Centered AI", href: "https://communitycentered.ai/" },
   ],
   analyticsId: "G-K27MB9Y26C",
+  seo: {
+    title: "GrantWell | AI Tool to Find and Write Federal Grants",
+    description:
+      "GrantWell is an AI tool that helps municipalities and community organizations find federal grants, understand requirements and draft applications.",
+    ogImage: {
+      path: "/images/marketing/og-image.jpg",
+      alt: "GrantWell wordmark beside an illustrated cable-stayed bridge",
+    },
+  },
 };

@@ -40,6 +40,7 @@ export function checkBrandingImages(appPath: string, branding: Branding): void {
     ["favicon", branding.favicon],
     ["footer.wordmark", branding.footer.wordmark],
     ["footer.madeBy.logo", branding.footer.madeBy?.logo],
+    ["seo.ogImage.path", branding.seo?.ogImage?.path],
     ...branding.footer.partners.map((p, i): [string, string | undefined] => [`footer.partners[${i}].logo`, p.logo]),
   ];
   const publicRoot = path.join(appPath, "public");

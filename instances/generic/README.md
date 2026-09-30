@@ -20,6 +20,9 @@ Generic is already installed. `vendor/` holds the last GrantWell release: `scrip
 ## Images
 Put your own images in `public/` and point `config/branding.ts` at them by their site-root path: `public/images/brand/logo.svg` is `/images/brand/logo.svg`. A file can't replace one the GrantWell UI already ships (the synth fails on a clash), and the synth also fails if a branding image path doesn't exist.
 
+## Search engines
+Only prod (`seo: { indexable: true }` in `config/instances.ts`) is open to search engines; dev is always hidden. The home page title, description and share image are under `seo` in `config/branding.ts`. GrantWell generates `robots.txt`, `sitemap.xml`, `manifest.json` and `llms.txt` from the config, so don't put those in `public/`.
+
 ## Upgrade
 Run `scripts/upgrade.sh <version>`, for example `scripts/upgrade.sh 3.0.0`. It downloads that release, checks its SHA256SUMS, swaps `vendor/`, reinstalls, typechecks, and lists which generated templates the upgrade changes (templates in `cdk.out/upgrade/`). If a step fails, it restores `vendor/`, `package.json` and `package-lock.json`. Review `git diff`, then commit those three.
 
