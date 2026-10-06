@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import Modal from "../common/Modal";
 import Button from "../ui/Button";
 import { LATEST_RELEASE } from "../../common/release-notes";
-import { currentSignIn, markSignInDialogUsed, signInDialogUsed } from "../../common/sign-in-dialog";
+import { currentSignIn } from "../../common/sign-in-dialog";
 import { notesMarkdown } from "./notes-markdown";
 import "./whats-new.css";
 
@@ -25,7 +25,7 @@ function markSeen(userId: string, version: string): void {
   }
 }
 
-/** The newest release's highlights, once per browser, on a sign-in with no other dialog. */
+/** The newest release's highlights, once per browser. */
 export default function WhatsNewDialog() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
@@ -38,8 +38,7 @@ export default function WhatsNewDialog() {
       try {
         const signIn = await currentSignIn();
         if (!active || !signIn) return;
-        if (seenVersion(signIn.userId) === release.version || signInDialogUsed(signIn)) return;
-        markSignInDialogUsed(signIn);
+        if (seenVersion(signIn.userId) === release.version) return;
         setUserId(signIn.userId);
       } catch (err) {
         console.error("Could not check What's new", err);

@@ -14,7 +14,6 @@ import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { stateNameFromCode } from "../../common/states";
 import Button from "../ui/Button";
-import { markCurrentSignInDialogUsed } from "../../common/sign-in-dialog";
 import "./profile-gate.css";
 
 interface ProfileGateProps {
@@ -95,7 +94,6 @@ export default function ProfileGate({ children }: ProfileGateProps) {
         });
         setProfileState(profile.state || "");
         setNeedsProfile(!profile.profileComplete);
-        if (!profile.profileComplete) void markCurrentSignInDialogUsed();
       } catch {
         // Fail open: don't trap the user behind a gate we can't evaluate.
         if (active) setNeedsProfile(false);

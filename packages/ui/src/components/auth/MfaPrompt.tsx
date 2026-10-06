@@ -12,7 +12,6 @@ import {
   markDeadlinePromptSeen,
   mfaDeadlinePhase,
 } from "../../common/mfa-deadline";
-import { markSignInDialogUsed } from "../../common/sign-in-dialog";
 import "../../styles/totp.css";
 
 /**
@@ -23,7 +22,8 @@ import "../../styles/totp.css";
  * either way. On a deployment with an MFA deadline the prompt names the date and returns at
  * every sign-in instead; from the deadline MfaGate takes over.
  */
-export default function MfaPrompt({ onSettled }: { onSettled?: (shown: boolean) => void }) {
+/** onDone fires once: when the prompt decides not to show, or when it is closed. */
+export default function MfaPrompt({ onDone }: { onDone?: () => void }) {
   const [visible, setVisible] = useState(false);
   const [userId, setUserId] = useState("");
   const [expanded, setExpanded] = useState(false);
@@ -31,8 +31,8 @@ export default function MfaPrompt({ onSettled }: { onSettled?: (shown: boolean) 
   const [done, setDone] = useState(false);
   const [authTime, setAuthTime] = useState(0);
   const [phase] = useState(() => mfaDeadlinePhase());
-  const onSettledRef = useRef(onSettled);
-  onSettledRef.current = onSettled;
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
 
   useEffect(() => {
     let cancelled = false;
@@ -56,14 +56,13 @@ export default function MfaPrompt({ onSettled }: { onSettled?: (shown: boolean) 
         setUserId(sub);
         setEmail(mail);
         setAuthTime(signedInAt);
-        markSignInDialogUsed({ userId: sub, authTime: signedInAt });
         setVisible(true);
         shown = true;
       } catch (err) {
         // Never let this block the app.
         console.error("Could not check MFA status", err);
       } finally {
-        if (!cancelled) onSettledRef.current?.(shown);
+        if (!cancelled && !shown) onDoneRef.current?.();
       }
     })();
 
@@ -74,18 +73,23 @@ export default function MfaPrompt({ onSettled }: { onSettled?: (shown: boolean) 
 
   if (!visible) return null;
 
+  const close = () => {
+    setVisible(false);
+    onDoneRef.current?.();
+  };
+
   // Escape, the overlay and the X all land here, so they read as "Not now".
   const dismiss = () => {
     if (phase === "before") markDeadlinePromptSeen(userId, authTime);
     else snoozeMfaPrompt(userId);
-    setVisible(false);
+    close();
   };
 
   if (done) {
     return (
       <Modal
         isOpen
-        onClose={() => setVisible(false)}
+        onClose={close}
         title="Two-step verification is on"
         maxWidth="480px"
       >
@@ -94,7 +98,7 @@ export default function MfaPrompt({ onSettled }: { onSettled?: (shown: boolean) 
           in.
         </p>
         <div className="profile-actions">
-          <Button type="button" onClick={() => setVisible(false)}>
+          <Button type="button" onClick={close}>
             Done
           </Button>
         </div>

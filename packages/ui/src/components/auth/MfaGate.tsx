@@ -7,7 +7,6 @@ import MfaRecoveryNote from "./MfaRecoveryNote";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { MFA_DEADLINE_ISO } from "../../common/instance";
 import { deadlineDateText, mfaDeadlinePhase } from "../../common/mfa-deadline";
-import { markCurrentSignInDialogUsed } from "../../common/sign-in-dialog";
 import "../profile-gate/profile-gate.css";
 import "../../styles/totp.css";
 
@@ -34,7 +33,6 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
         if (!active || enrolled) return;
         setEmail(typeof claims.email === "string" ? claims.email : "");
         setBlocked(true);
-        void markCurrentSignInDialogUsed();
       } catch (err) {
         console.error("Could not check MFA status", err);
       }

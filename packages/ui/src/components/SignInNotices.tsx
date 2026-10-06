@@ -2,13 +2,13 @@ import { useState } from "react";
 import MfaPrompt from "./auth/MfaPrompt";
 import WhatsNewDialog from "./whats-new/WhatsNewDialog";
 
-/** The MFA prompt gets first claim on a sign-in; What's new waits until it has decided not to show. */
+/** One dialog at a time: the MFA prompt first, then What's new once it is done. */
 export default function SignInNotices() {
-  const [mfaShown, setMfaShown] = useState<boolean | null>(null);
+  const [mfaDone, setMfaDone] = useState(false);
   return (
     <>
-      <MfaPrompt onSettled={setMfaShown} />
-      {mfaShown === false && <WhatsNewDialog />}
+      <MfaPrompt onDone={() => setMfaDone(true)} />
+      {mfaDone && <WhatsNewDialog />}
     </>
   );
 }
