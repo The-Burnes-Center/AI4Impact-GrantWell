@@ -14,6 +14,8 @@ import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
+import { MFA_DEADLINE_ISO } from "../../common/instance";
+import { deadlineDateText } from "../../common/mfa-deadline";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { stateNameFromCode } from "../../common/states";
 import { roleLabel } from "../../common/helpers/auth-roles";
@@ -535,14 +537,23 @@ function MfaSection() {
 
       {status === "on" ? (
         <>
-          <p className="profile-hint">
-            On. You are asked for a code from your authenticator app when you sign in.
-          </p>
-          <div className="profile-actions">
-            <Button type="button" variant="secondary" onClick={turnOff} loading={busy}>
-              Turn off
-            </Button>
-          </div>
+          {MFA_DEADLINE_ISO ? (
+            <p className="profile-hint">
+              Two-step verification is on. GrantWell requires it from{" "}
+              {deadlineDateText(MFA_DEADLINE_ISO, true)}, so it can&apos;t be turned off.
+            </p>
+          ) : (
+            <>
+              <p className="profile-hint">
+                On. You are asked for a code from your authenticator app when you sign in.
+              </p>
+              <div className="profile-actions">
+                <Button type="button" variant="secondary" onClick={turnOff} loading={busy}>
+                  Turn off
+                </Button>
+              </div>
+            </>
+          )}
         </>
       ) : enrolling ? (
         <MfaSetupPanel
@@ -557,7 +568,9 @@ function MfaSection() {
       ) : (
         <>
           <p className="profile-hint">
-            Off. Recommended — it keeps your account safe if your password is ever exposed.
+            {MFA_DEADLINE_ISO
+              ? `Off. GrantWell requires it from ${deadlineDateText(MFA_DEADLINE_ISO, true)}.`
+              : "Off. Recommended — it keeps your account safe if your password is ever exposed."}
           </p>
           <div className="profile-actions">
             <Button type="button" onClick={() => setEnrolling(true)}>

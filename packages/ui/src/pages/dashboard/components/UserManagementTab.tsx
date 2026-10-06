@@ -79,6 +79,8 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   const [deleteTarget, setDeleteTarget] = useState<ManagedUser | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [mfaResetTarget, setMfaResetTarget] = useState<ManagedUser | null>(null);
+  const [isResettingMfa, setIsResettingMfa] = useState(false);
 
   const loadUsers = useCallback(async (
     page: number,
@@ -245,6 +247,26 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
     }
   }, [deleteTarget, apiClient, addNotification, reloadCurrentPage]);
 
+  const handleMfaReset = useCallback(async () => {
+    if (!mfaResetTarget) {
+      return;
+    }
+
+    try {
+      setIsResettingMfa(true);
+      await apiClient.userManagement.resetUserMfa(mfaResetTarget.username);
+      addNotification("success", `Two-step verification reset for ${mfaResetTarget.email}.`);
+      setMfaResetTarget(null);
+    } catch (error) {
+      addNotification(
+        "error",
+        error instanceof Error ? error.message : "Failed to reset two-step verification"
+      );
+    } finally {
+      setIsResettingMfa(false);
+    }
+  }, [mfaResetTarget, apiClient, addNotification]);
+
   if (loading) {
     return (
       <div className="feature-rollouts-panel" aria-busy="true">
@@ -389,6 +411,17 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         {!isSelf && (
                           <button
                             type="button"
+                            className="feature-rollouts-secondary-button"
+                            onClick={() => setMfaResetTarget(user)}
+                            disabled={isSaving}
+                            aria-label={`Reset two-step verification for ${user.email}`}
+                          >
+                            Reset two-step verification
+                          </button>
+                        )}
+                        {!isSelf && (
+                          <button
+                            type="button"
                             className="user-management-delete-button"
                             onClick={() => setDeleteTarget(user)}
                             disabled={isSaving}
@@ -510,6 +543,39 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               disabled={isDeleting}
             >
               {isDeleting ? "Deleting..." : "Delete User"}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={Boolean(mfaResetTarget)}
+        onClose={() => {
+          if (!isResettingMfa) {
+            setMfaResetTarget(null);
+          }
+        }}
+        title="Reset two-step verification"
+      >
+        <div className="modal-form">
+          <p className="modal-description">
+            <strong>{mfaResetTarget?.email}</strong> will set up a new authenticator app the next
+            time they sign in.
+          </p>
+          <div className="modal-actions">
+            <button
+              className="modal-button secondary"
+              onClick={() => setMfaResetTarget(null)}
+              disabled={isResettingMfa}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-button danger"
+              onClick={() => void handleMfaReset()}
+              disabled={isResettingMfa}
+            >
+              {isResettingMfa ? "Resetting..." : "Reset"}
             </button>
           </div>
         </div>

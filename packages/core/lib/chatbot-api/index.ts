@@ -453,7 +453,9 @@ export class ChatBotApi extends Construct {
       "cognito-idp:AdminGetUser",
       "cognito-idp:AdminCreateUser",
       "cognito-idp:AdminUpdateUserAttributes",
-      "cognito-idp:AdminDeleteUser"
+      "cognito-idp:AdminDeleteUser",
+      "cognito-idp:AdminDeleteSoftwareToken",
+      "cognito-idp:AdminUserGlobalSignOut"
     );
 
     const manageUsersIntegration = new HttpLambdaIntegration(
@@ -475,6 +477,12 @@ export class ChatBotApi extends Construct {
     restBackend.restAPI.addRoutes({
       path: "/user-management/users/{username}/roles",
       methods: [apigwv2.HttpMethod.PATCH],
+      integration: manageUsersIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
+      path: "/user-management/users/{username}/mfa-reset",
+      methods: [apigwv2.HttpMethod.POST],
       integration: manageUsersIntegration,
       authorizer: httpAuthorizer,
     });

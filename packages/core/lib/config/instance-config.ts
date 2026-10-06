@@ -68,7 +68,12 @@ interface InstanceConfigBase {
   /** Public site URL, no trailing slash. */
   siteUrl: string;
   customDomain?: { domainName: string; certificateArn: string };
-  auth: { mfaRequired: boolean; oidcProviderName?: string };
+  auth: {
+    mfaRequired: boolean;
+    oidcProviderName?: string;
+    /** ISO timestamp with offset. Until then the UI urges MFA at each sign-in; from then it blocks the app until the user enrolls. */
+    mfaDeadline?: string;
+  };
   email: {
     /** Its domain is the SES identity auth and digest mail send from. */
     sender: string;
@@ -109,6 +114,10 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (!config.email.sender.includes("@")) problems.push("email.sender is not an address");
   if (config.feedbackFormUrl !== undefined && !config.feedbackFormUrl.startsWith("https://")) {
     problems.push("feedbackFormUrl must start with https://");
+  }
+  const deadline = config.auth.mfaDeadline;
+  if (deadline !== undefined && !(/(Z|[+-]\d{2}:\d{2})$/.test(deadline) && Number.isFinite(Date.parse(deadline)))) {
+    problems.push("auth.mfaDeadline must be an ISO timestamp with an offset, e.g. 2026-11-02T00:00:00-05:00");
   }
   if (config.seo?.indexable && config.stage === "dev") problems.push("seo.indexable must not be set on a dev deployment");
   if (config.e2e) {

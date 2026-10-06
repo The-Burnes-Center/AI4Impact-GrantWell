@@ -115,6 +115,7 @@ export class UserInterface extends Construct {
           seo: resolveSeo(props.config),
           branding: props.config.branding,
           states: props.config.states,
+          ...(props.config.auth.mfaDeadline && { mfaDeadline: props.config.auth.mfaDeadline }),
         },
         null,
         2

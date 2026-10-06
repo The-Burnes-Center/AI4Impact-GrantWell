@@ -199,3 +199,16 @@
   justify-content: center;
   gap: 8px;
 }
+
+/* MfaGate: the authenticator QR needs more room than the profile form. */
+.profile-gate__panel--wide {
+  max-width: 560px;
+}
+
+/* profile.css only loads with the profile page, so the gate carries its own button row. */
+.profile-gate .profile-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}

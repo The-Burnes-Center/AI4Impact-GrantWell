@@ -1,7 +1,7 @@
 {
   "name": "grantwell-ui",
   "private": true,
-  "version": "3.0.0-rc.4",
+  "version": "3.0.0-rc.5",
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
     "lint:strict": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "lint:colors": "node scripts/check-colors.mjs",
+    "test": "vitest run",
     "stage-instance": "node scripts/stage-instance.mjs",
     "preview": "vite preview",
     "format": "npx prettier --ignore-path .gitignore --write \"**/*.+(tsx|js|ts|json)\""
@@ -59,7 +60,8 @@
     "sass": "^1.65.1",
     "sharp": "^0.35.5",
     "typescript": "5.8.3",
-    "vite": "^6.2.3"
+    "vite": "^6.2.3",
+    "vitest": "^5.0.3"
   },
   "overrides": {
     "sass": "^1.65.1"

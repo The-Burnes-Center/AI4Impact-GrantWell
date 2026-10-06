@@ -1,8 +1,10 @@
 import {
   AdminCreateUserCommand,
+  AdminDeleteSoftwareTokenCommand,
   AdminDeleteUserCommand,
   AdminGetUserCommand,
   AdminUpdateUserAttributesCommand,
+  AdminUserGlobalSignOutCommand,
   CognitoIdentityProviderClient,
   ListUsersCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
@@ -79,6 +81,9 @@ export const handler = async (event) => {
 
     if (method === "GET") {
       return await handleList(scope, event);
+    }
+    if (method === "POST" && event.routeKey?.endsWith("/mfa-reset")) {
+      return await handleMfaReset(scope, actor, event);
     }
     if (method === "POST") {
       return await handleCreate(scope, parseBody(event.body));
@@ -269,6 +274,35 @@ async function handleDelete(scope, actor, event) {
   );
 
   return respond(200, { username, deleted: true });
+}
+
+// AdminSetUserMFAPreference alone leaves the authenticator registered, and a pool that
+// requires MFA would keep asking for its codes; deleting it makes the next sign-in enroll anew.
+async function handleMfaReset(scope, actor, event) {
+  const username = decodeURIComponent(event.pathParameters?.username || "").trim();
+  if (!username) {
+    return respond(400, { message: "Username is required" });
+  }
+  if (isSelf(actor, username)) {
+    return respond(403, {
+      message: "You cannot reset your own two-step verification. Ask another administrator.",
+    });
+  }
+
+  const target = await getTargetUser(username);
+  if (!target) {
+    return respond(404, { message: "User not found" });
+  }
+  assertCanManageTarget(scope, target);
+
+  await cognitoClient.send(
+    new AdminDeleteSoftwareTokenCommand({ UserPoolId: USER_POOL_ID, Username: username })
+  );
+  await cognitoClient.send(
+    new AdminUserGlobalSignOutCommand({ UserPoolId: USER_POOL_ID, Username: username })
+  );
+
+  return respond(200, { username, mfaReset: true });
 }
 
 function parseBody(body) {

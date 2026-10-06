@@ -4,6 +4,14 @@ import Button from "../ui/Button";
 import Modal from "../common/Modal";
 import MfaSetupPanel from "./MfaSetupPanel";
 import { isMfaPromptSnoozed, snoozeMfaPrompt } from "../../common/mfa-snooze";
+import { MFA_DEADLINE, MFA_DEADLINE_ISO } from "../../common/instance";
+import {
+  daysLeftText,
+  deadlineDateText,
+  deadlinePromptSeen,
+  markDeadlinePromptSeen,
+  mfaDeadlinePhase,
+} from "../../common/mfa-deadline";
 import "../../styles/totp.css";
 
 /**
@@ -11,7 +19,8 @@ import "../../styles/totp.css";
  *
  * MFA is OPTIONAL in Cognito, so nothing here blocks access — every way of closing the
  * dialog snoozes the prompt for 30 days. Enrolment stays available from the profile page
- * either way.
+ * either way. On a deployment with an MFA deadline the prompt names the date and returns at
+ * every sign-in instead; from the deadline MfaGate takes over.
  */
 export default function MfaPrompt() {
   const [visible, setVisible] = useState(false);
@@ -19,6 +28,8 @@ export default function MfaPrompt() {
   const [expanded, setExpanded] = useState(false);
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [authTime, setAuthTime] = useState(0);
+  const [phase] = useState(() => mfaDeadlinePhase());
 
   useEffect(() => {
     let cancelled = false;
@@ -29,7 +40,10 @@ export default function MfaPrompt() {
         const claims = session.tokens?.idToken?.payload ?? {};
         const sub = typeof claims.sub === "string" ? claims.sub : "";
         const mail = typeof claims.email === "string" ? claims.email : "";
-        if (!sub || isMfaPromptSnoozed(sub)) return;
+        const signedInAt = typeof claims.auth_time === "number" ? claims.auth_time : 0;
+        if (!sub || phase === "after") return;
+        if (phase === "none" && isMfaPromptSnoozed(sub)) return;
+        if (phase === "before" && deadlinePromptSeen(sub, signedInAt)) return;
 
         const pref = await fetchMFAPreference();
         const enrolled = pref.enabled?.includes("TOTP") || pref.preferred === "TOTP";
@@ -37,6 +51,7 @@ export default function MfaPrompt() {
 
         setUserId(sub);
         setEmail(mail);
+        setAuthTime(signedInAt);
         setVisible(true);
       } catch (err) {
         // Never let this block the app.
@@ -47,13 +62,14 @@ export default function MfaPrompt() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [phase]);
 
   if (!visible) return null;
 
   // Escape, the overlay and the X all land here, so they read as "Not now".
   const dismiss = () => {
-    snoozeMfaPrompt(userId);
+    if (phase === "before") markDeadlinePromptSeen(userId, authTime);
+    else snoozeMfaPrompt(userId);
     setVisible(false);
   };
 
@@ -82,13 +98,25 @@ export default function MfaPrompt() {
     <Modal
       isOpen
       onClose={dismiss}
-      title="Add two-step verification"
+      title={
+        phase === "before" && MFA_DEADLINE_ISO
+          ? `Two-step verification is required from ${deadlineDateText(MFA_DEADLINE_ISO, false)}`
+          : "Add two-step verification"
+      }
       maxWidth={expanded ? "560px" : "480px"}
     >
-      <p className="mfa-prompt-body">
-        Recommended. It protects your grant drafts if your password is ever guessed or
-        reused. Takes about a minute with an authenticator app.
-      </p>
+      {phase === "before" && MFA_DEADLINE_ISO && MFA_DEADLINE !== null ? (
+        <p className="mfa-prompt-body">
+          Starting {deadlineDateText(MFA_DEADLINE_ISO, true)}, you&apos;ll need a code from an
+          authenticator app to sign in to GrantWell. Setting it up takes about a minute.{" "}
+          <strong>{daysLeftText(Date.now(), MFA_DEADLINE)}</strong>
+        </p>
+      ) : (
+        <p className="mfa-prompt-body">
+          Recommended. It protects your grant drafts if your password is ever guessed or
+          reused. Takes about a minute with an authenticator app.
+        </p>
+      )}
 
       {expanded ? (
         <MfaSetupPanel
