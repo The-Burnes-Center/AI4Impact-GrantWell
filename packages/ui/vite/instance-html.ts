@@ -2,6 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import type { Plugin } from "vite";
+import { renderToStaticMarkup } from "react-dom/server";
+import { parseReleaseNotes } from "../src/common/release-notes-parse";
+import { notesMarkdown } from "../src/components/whats-new/notes-markdown";
 import type { Branding } from "../src/common/branding";
 import type { Seo } from "../src/common/instance";
 
@@ -104,13 +107,62 @@ function heroLogo(branding: PageBranding): string {
     : `<span class="marketing__hero-wordmark">${attr(branding.appName)}</span>`;
 }
 
+const WHATS_NEW_TITLE = "What's new - GrantWell";
+const WHATS_NEW_DESCRIPTION = "New features and improvements in each GrantWell release.";
+const LANDING_ONLY_SCRIPT = '// Only "/" is the landing page';
+
+/**
+ * index.html retitled for /whats-new, with its own canonical and the release notes pre-rendered
+ * into #root, so crawlers index the notes rather than a copy of the home page.
+ */
+export function whatsNewHtml(indexHtml: string, releaseNotes: string, siteUrl?: string, omni = ""): string {
+  const rootStart = indexHtml.indexOf('<div id="root">');
+  const marker = indexHtml.indexOf(LANDING_ONLY_SCRIPT);
+  if (rootStart < 0 || marker < 0) throw new Error("whats-new.html: index.html no longer has the #root fallback");
+  const scriptEnd = indexHtml.indexOf("</script>", marker) + "</script>".length;
+  const notes = parseReleaseNotes(releaseNotes)
+    .map((r) => `<section>${renderToStaticMarkup(notesMarkdown(r.markdown))}</section>`)
+    .join("");
+  const body =
+    `<div id="root"><div class="marketing">${omni}<main id="main-content" tabindex="-1">` +
+    `<div class="whats-new"><h1>What&#x27;s new</h1>${notes}</div></main></div></div>\n    <script>\n` +
+    `      // whats-new.html is only served for /whats-new; any other route would flash these notes.\n` +
+    `      if (location.pathname !== "/whats-new") document.getElementById("root").replaceChildren();\n    </script>`;
+  const url = siteUrl ? `${siteUrl}/whats-new` : undefined;
+  let html = indexHtml.slice(0, rootStart) + body + indexHtml.slice(scriptEnd);
+  html = html
+    .replace(/<title>[^<]*<\/title>/, `<title>${attr(WHATS_NEW_TITLE)}</title>`)
+    .replace(/(<meta name="description" content=")[^"]*"/, `$1${attr(WHATS_NEW_DESCRIPTION)}"`)
+    .replace(/(<meta property="og:title" content=")[^"]*"/, `$1${attr(WHATS_NEW_TITLE)}"`)
+    .replace(/(<meta property="og:description" content=")[^"]*"/, `$1${attr(WHATS_NEW_DESCRIPTION)}"`)
+    .replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/, "");
+  if (url) {
+    html = html
+      .replace(/(<link rel="canonical" href=")[^"]*"/, `$1${attr(url)}"`)
+      .replace(/(<meta property="og:url" content=")[^"]*"/, `$1${attr(url)}"`);
+  }
+  return html;
+}
+
 /** Fills index.html from the instance core staged at synth: favicon, head tags, JSON-LD and the static landing fallback. */
 export function instanceHtml(stagedInstancePath: string): Plugin {
   let publicDir = "";
+  let root = "";
+  let outDir = "";
   return {
     name: "instance-html",
     configResolved(config) {
       publicDir = config.publicDir;
+      root = config.root;
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    writeBundle() {
+      const staged: Staged | undefined = fs.existsSync(stagedInstancePath)
+        ? JSON.parse(fs.readFileSync(stagedInstancePath, "utf8"))
+        : undefined;
+      const index = fs.readFileSync(path.join(outDir, "index.html"), "utf8");
+      const notes = fs.readFileSync(path.join(root, "RELEASE_NOTES.md"), "utf8");
+      fs.writeFileSync(path.join(outDir, "whats-new.html"), whatsNewHtml(index, notes, staged?.siteUrl, omniHeader(staged?.branding ?? UNSTAGED)));
     },
     async transformIndexHtml(html) {
       const staged: Staged | undefined = fs.existsSync(stagedInstancePath)

@@ -49,6 +49,11 @@ prepare() {
     echo "The working tree has uncommitted changes; commit or stash them first." >&2
     exit 1
   fi
+  # A final minor or major release shows its highlights in the app's What's new dialog.
+  if [[ "$version" =~ ^[0-9]+\.[0-9]+\.0$ ]] && ! grep -qx "# GrantWell v$version" "$repo/packages/ui/RELEASE_NOTES.md"; then
+    echo "packages/ui/RELEASE_NOTES.md has no '# GrantWell v$version' entry; add it before preparing a final release." >&2
+    exit 1
+  fi
   for pkg in core ui; do
     (cd "$repo/packages/$pkg" && npm version "$version" --no-git-tag-version --allow-same-version --ignore-scripts >/dev/null)
   done

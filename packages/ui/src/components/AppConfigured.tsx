@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import {
   ThemeProvider,
   defaultDarkModeOverride,
@@ -24,8 +24,8 @@ import MaintenanceGate from "./MaintenanceGate";
 import { NavigationProvider } from "./navigation/NavigationProvider";
 import { AppSidebar } from "./navigation/UnifiedNavigation";
 import ProfileGate from "./profile-gate/ProfileGate";
-import MfaPrompt from "./auth/MfaPrompt";
 import MfaGate from "./auth/MfaGate";
+import SignInNotices from "./SignInNotices";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
 import {
@@ -34,6 +34,8 @@ import {
   OmniHeader,
 } from "../pages/landing/chrome";
 import "../styles/marketing-landing.css";
+
+const WhatsNewPage = lazy(() => import("../pages/whats-new/WhatsNewPage"));
 
 async function getInitialAuthState() {
   try {
@@ -275,7 +277,7 @@ function AppLayoutContent({
               <MfaGate>
                 <ProfileGate>
                   <MaintenanceGate>
-                    <MfaPrompt />
+                    <SignInNotices />
                     <App />
                   </MaintenanceGate>
                 </ProfileGate>
@@ -320,6 +322,14 @@ function AppLayoutContent({
         <Route
           path="/login"
           element={<LoginPage onAuthenticated={onAuthenticated} />}
+        />
+        <Route
+          path="/whats-new"
+          element={
+            <Suspense fallback={null}>
+              <WhatsNewPage />
+            </Suspense>
+          }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

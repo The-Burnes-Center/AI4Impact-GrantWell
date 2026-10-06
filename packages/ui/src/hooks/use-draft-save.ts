@@ -180,7 +180,7 @@ export function useDraftSave({
         saved = await attempt(merged, remote.rev);
         addNotification(
           "info",
-          "This draft was also edited in another tab or window. Your changes were merged with the newer version — please review the sections you were not editing."
+          "This application was also edited in another tab or window. Your changes were merged with the newer version — please review the sections you were not editing."
         );
       }
 

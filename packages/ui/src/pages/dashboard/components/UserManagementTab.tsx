@@ -559,7 +559,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       >
         <div className="modal-form">
           <p className="modal-description">
-            <strong>{mfaResetTarget?.email}</strong> will set up a new authenticator app the next
+            <strong>{mfaResetTarget?.email}</strong> can set up a new authenticator app the next
             time they sign in.
           </p>
           <div className="modal-actions">

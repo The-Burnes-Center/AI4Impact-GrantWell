@@ -164,7 +164,7 @@ export class UserInterface extends Construct {
       prune: false,
       sources: [asset, exportsAsset],
       exclude: ["*"],
-      include: ["index.html", "aws-exports.json"],
+      include: ["index.html", "whats-new.html", "aws-exports.json"],
       cacheControl: [s3deploy.CacheControl.noCache()],
       destinationBucket: websiteBucket,
       distribution: distribution,
@@ -186,14 +186,14 @@ export class UserInterface extends Construct {
     const publicDeployment = new s3deploy.BucketDeployment(this, "UserInterfacePublicDeployment", {
       prune: false,
       sources: [asset],
-      exclude: ["assets/*", "index.html"],
+      exclude: ["assets/*", "index.html", "whats-new.html"],
       cacheControl: [s3deploy.CacheControl.fromString("public, max-age=86400")],
       destinationBucket: websiteBucket,
       memoryLimit: 2048,
       retainOnDelete: false
     });
 
-    // Last, so a new index.html never points at chunks that aren't uploaded yet. Only on the custom
+    // Last, so a new index.html (or whats-new.html) never points at chunks that aren't uploaded yet. Only on the custom
     // resource: on the whole construct it also lands on this deployment's CLI layer, which the shared
     // handler uses, and the other two deployments need that handler (a cycle).
     const upload = (d: s3deploy.BucketDeployment) =>

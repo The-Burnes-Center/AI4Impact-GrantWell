@@ -32,10 +32,11 @@ const xmlEscape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").
 
 function robotsTxt(config: InstanceConfig, seo: ResolvedSeo): string {
   if (!seo.indexable) return "User-agent: *\nDisallow: /\n";
-  // Longest match wins, so these beat "Disallow: /": crawlers need the JS/CSS to render "/", and share previews need /images/.
+  // Longest match wins, so these beat "Disallow: /": crawlers need the JS/CSS to render "/" and /whats-new, and share previews need /images/.
   return [
     "User-agent: *",
     "Allow: /$",
+    "Allow: /whats-new$",
     "Allow: /assets/",
     "Allow: /images/",
     "Allow: /llms.txt",
@@ -51,6 +52,7 @@ function sitemapXml(config: InstanceConfig): string {
     `<?xml version="1.0" encoding="UTF-8"?>`,
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
     `  <url><loc>${xmlEscape(config.siteUrl)}/</loc></url>`,
+    `  <url><loc>${xmlEscape(config.siteUrl)}/whats-new</loc></url>`,
     `</urlset>`,
     "",
   ].join("\n");

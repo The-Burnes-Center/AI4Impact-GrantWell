@@ -62,10 +62,19 @@ export async function signIn(page: Page, isRetry: boolean): Promise<void> {
   const gate = page.getByRole("dialog", { name: "Complete your profile" });
   const home = page.getByRole("searchbox");
   await expect(gate.or(home)).toBeVisible({ timeout: 45_000 });
-  if (await gate.isVisible()) {
+  const gated = await gate.isVisible();
+  if (gated) {
     for (const [label, value] of Object.entries(PROFILE)) await gate.getByLabel(label).fill(value);
     await gate.getByRole("button", { name: "Save and continue" }).click();
     await expect(gate).toBeHidden();
+  }
+  // Each run starts with empty storage and the account has TOTP, so the newest release's What's
+  // new is this sign-in's one dialog, unless the profile gate already used it.
+  if (!gated) {
+    const whatsNew = page.getByRole("dialog", { name: "What's new in GrantWell" });
+    await expect(whatsNew).toBeVisible();
+    await whatsNew.getByRole("button", { name: "Got it" }).click();
+    await expect(whatsNew).toBeHidden();
   }
   await expect(page).toHaveURL(/\/home/);
 }

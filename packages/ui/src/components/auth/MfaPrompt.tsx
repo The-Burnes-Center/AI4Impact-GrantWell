@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchAuthSession, fetchMFAPreference } from "aws-amplify/auth";
 import Button from "../ui/Button";
 import Modal from "../common/Modal";
@@ -12,6 +12,7 @@ import {
   markDeadlinePromptSeen,
   mfaDeadlinePhase,
 } from "../../common/mfa-deadline";
+import { markSignInDialogUsed } from "../../common/sign-in-dialog";
 import "../../styles/totp.css";
 
 /**
@@ -22,7 +23,7 @@ import "../../styles/totp.css";
  * either way. On a deployment with an MFA deadline the prompt names the date and returns at
  * every sign-in instead; from the deadline MfaGate takes over.
  */
-export default function MfaPrompt() {
+export default function MfaPrompt({ onSettled }: { onSettled?: (shown: boolean) => void }) {
   const [visible, setVisible] = useState(false);
   const [userId, setUserId] = useState("");
   const [expanded, setExpanded] = useState(false);
@@ -30,11 +31,14 @@ export default function MfaPrompt() {
   const [done, setDone] = useState(false);
   const [authTime, setAuthTime] = useState(0);
   const [phase] = useState(() => mfaDeadlinePhase());
+  const onSettledRef = useRef(onSettled);
+  onSettledRef.current = onSettled;
 
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
+      let shown = false;
       try {
         const session = await fetchAuthSession();
         const claims = session.tokens?.idToken?.payload ?? {};
@@ -52,10 +56,14 @@ export default function MfaPrompt() {
         setUserId(sub);
         setEmail(mail);
         setAuthTime(signedInAt);
+        markSignInDialogUsed({ userId: sub, authTime: signedInAt });
         setVisible(true);
+        shown = true;
       } catch (err) {
         // Never let this block the app.
         console.error("Could not check MFA status", err);
+      } finally {
+        if (!cancelled) onSettledRef.current?.(shown);
       }
     })();
 

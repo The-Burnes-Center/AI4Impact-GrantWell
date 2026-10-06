@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { appDir } from "../scripts/synth-ci.mjs";
+import { ENVS, appDir, outDir } from "../scripts/synth-ci.mjs";
 import { validateInstanceConfig, type InstanceConfig } from "../lib/config/instance-config";
 import { seoFiles, writeSeoFiles } from "../lib/user-interface/seo-files";
 import { SPA_ROUTING_CODE } from "../lib/user-interface/spa-routing";
@@ -23,6 +23,7 @@ describe("generated site files", () => {
       [
         "User-agent: *",
         "Allow: /$",
+        "Allow: /whats-new$",
         "Allow: /assets/",
         "Allow: /images/",
         "Allow: /llms.txt",
@@ -33,6 +34,7 @@ describe("generated site files", () => {
       ].join("\n")
     );
     expect(files["sitemap.xml"]).toContain("<url><loc>https://grantwell.us/</loc></url>");
+    expect(files["sitemap.xml"]).toContain("<url><loc>https://grantwell.us/whats-new</loc></url>");
     expect(files["llms.txt"]).toMatch(/^# GrantWell\n\n> GrantWell is an AI tool/);
     expect(files["llms.txt"]).toContain("- [Sign in](https://grantwell.us/login)");
     expect(files["llms.txt"]).not.toMatch(/\bfree\b/i);
@@ -88,7 +90,16 @@ describe("SPA routing function", () => {
     expect(routed(uri)).toBe("/index.html");
   });
 
+  it.each(["/whats-new", "/whats-new/"])("sends %s to the pre-rendered /whats-new.html", (uri) => {
+    expect(routed(uri)).toBe("/whats-new.html");
+  });
+
+  it("leaves other paths under /whats-new to the app", () => {
+    expect(routed("/whats-new/extra")).toBe("/index.html");
+  });
+
   it.each([
+    "/whats-new.html",
     "/robots.txt",
     "/missing.txt",
     "/wp-login.php",
@@ -98,5 +109,25 @@ describe("SPA routing function", () => {
     "/.well-known/security.txt",
   ])("leaves file %s alone", (uri) => {
     expect(routed(uri)).toBe(uri);
+  });
+});
+
+describe("whats-new.html upload", () => {
+  const deployments = (env: keyof typeof ENVS) =>
+    fs
+      .readdirSync(outDir(env))
+      .filter((f) => f.endsWith(".template.json"))
+      .flatMap((f) => Object.values(JSON.parse(fs.readFileSync(path.join(outDir(env), f), "utf8")).Resources ?? {}) as any[])
+      .filter((r) => r.Type === "Custom::CDKBucketDeployment");
+
+  it.each(["prod", "dev"] as const)("ships with index.html under no-cache on %s, never under the 1-day rule", (env) => {
+    const all = deployments(env);
+    const entry = all.filter((d) => d.Properties.Include?.includes("whats-new.html"));
+    expect(entry).toHaveLength(1);
+    expect(entry[0].Properties.Include).toContain("index.html");
+    expect(entry[0].Properties.SystemMetadata["cache-control"]).toBe("no-cache");
+    const daily = all.filter((d) => d.Properties.SystemMetadata?.["cache-control"] === "public, max-age=86400");
+    expect(daily).toHaveLength(1);
+    expect(daily[0].Properties.Exclude).toContain("whats-new.html");
   });
 });
