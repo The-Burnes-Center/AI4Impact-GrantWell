@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { setUpTOTP, verifyTOTPSetup, updateMFAPreference } from "aws-amplify/auth";
 import Button from "../ui/Button";
 import OtpInput from "./OtpInput";
@@ -17,7 +17,8 @@ interface MfaSetupPanelProps {
  * Self-service TOTP enrolment, for use outside the sign-in challenge.
  *
  * The sign-in flow receives totpSetupDetails from Cognito when MFA is REQUIRED. With MFA
- * OPTIONAL that challenge never fires, so we start the enrolment ourselves via setUpTOTP.
+ * OPTIONAL that challenge never fires, so we start the enrolment ourselves via setUpTOTP, as soon
+ * as the panel opens: whatever opened it was already the "set it up" click.
  */
 export default function MfaSetupPanel({
   email,
@@ -30,9 +31,11 @@ export default function MfaSetupPanel({
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [starting, setStarting] = useState(true);
+  const started = useRef(false);
 
   const begin = async () => {
-    setBusy(true);
+    setStarting(true);
     setError(null);
     try {
       const details = await setUpTOTP();
@@ -44,9 +47,17 @@ export default function MfaSetupPanel({
       console.error("Could not start TOTP setup", err);
       setError("Could not start two-step verification setup. Try again in a moment.");
     } finally {
-      setBusy(false);
+      setStarting(false);
     }
   };
+
+  useEffect(() => {
+    // StrictMode mounts twice in development; one setUpTOTP per panel, or the first secret is void.
+    if (started.current) return;
+    started.current = true;
+    void begin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const confirm = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -73,17 +84,23 @@ export default function MfaSetupPanel({
   if (!setup) {
     return (
       <div>
-        {error && (
+        {error ? (
           <div className="profile-alert profile-alert--error" role="alert">
             {error}
           </div>
+        ) : (
+          <p className="profile-hint" role="status">
+            Starting setup…
+          </p>
         )}
         <div className="profile-actions">
-          <Button type="button" onClick={begin} loading={busy}>
-            Set up two-step verification
-          </Button>
+          {error && (
+            <Button type="button" onClick={begin} loading={starting}>
+              Try again
+            </Button>
+          )}
           {onCancel && (
-            <Button type="button" variant="ghost" onClick={onCancel} disabled={busy}>
+            <Button type="button" variant="ghost" onClick={onCancel} disabled={starting}>
               {cancelLabel}
             </Button>
           )}
