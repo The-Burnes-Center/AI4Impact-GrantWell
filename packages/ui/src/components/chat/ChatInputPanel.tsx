@@ -395,7 +395,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     if (!props.documentIdentifier) {
       addNotification(
         "error",
-        "No Document selected. Please select a document to proceed."
+        "No grant selected. Please select a grant to continue."
       );
       return;
     }

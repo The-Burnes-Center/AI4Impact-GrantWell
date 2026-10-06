@@ -35,7 +35,7 @@ export default function TotpEnrollment({ setupUri, secret }: TotpEnrollmentProps
         <QRCodeSVG
           value={setupUri}
           size={168}
-          title="Two-step verification setup code"
+          title="Setup key"
         />
       </div>
       <div className="totp-enrollment-secret">

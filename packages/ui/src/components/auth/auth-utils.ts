@@ -79,15 +79,18 @@ export function getPasswordValidationError(password: string) {
   return null;
 }
 
-export function getVerificationCodeValidationError(verificationCode: string) {
+export function getVerificationCodeValidationError(
+  verificationCode: string,
+  codeLabel = "verification code",
+) {
   const normalizedCode = verificationCode.trim();
 
   if (!normalizedCode) {
-    return "Enter the verification code.";
+    return `Enter the ${codeLabel}.`;
   }
 
   if (!/^\d{6}$/.test(normalizedCode)) {
-    return "Enter the 6-digit verification code.";
+    return `Enter the 6-digit ${codeLabel}.`;
   }
 
   return null;
@@ -177,6 +180,10 @@ export function mapAuthError(error: unknown, context: AuthErrorContext) {
   const authError = error as AuthErrorShape | null;
   const code = getAuthErrorCode(error);
   const message = authError?.message?.toLowerCase() || "";
+  const codeLabel =
+    context === "mfa" || context === "mfa-setup"
+      ? "authentication code"
+      : "verification code";
 
   if (message.includes("pending sign in attempt")) {
     return "Please wait for the current sign-in attempt to finish.";
@@ -202,9 +209,9 @@ export function mapAuthError(error: unknown, context: AuthErrorContext) {
     case "SignInException":
       return "Your sign-in session expired. Sign in again to continue.";
     case "CodeMismatchException":
-      return "The verification code is incorrect.";
+      return `The ${codeLabel} is incorrect.`;
     case "ExpiredCodeException":
-      return "The verification code has expired. Request a new code and try again.";
+      return `The ${codeLabel} has expired. Request a new code and try again.`;
     case "LimitExceededException":
     case "TooManyFailedAttemptsException":
     case "TooManyRequestsException":
@@ -238,7 +245,7 @@ export function mapAuthError(error: unknown, context: AuthErrorContext) {
     case "resend-sign-up":
       return "We could not verify your email right now. Try again.";
     case "forgot-password":
-      return "We could not send a reset code right now. Try again.";
+      return "We could not send a verification code right now. Try again.";
     case "reset-password":
       return "We could not reset your password right now. Try again.";
     case "new-password":

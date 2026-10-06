@@ -172,6 +172,7 @@ export const AppSidebar: React.FC = () => {
   const docId =
     chrome?.documentIdentifier ||
     grantFromPath(currentPath) ||
+    searchParams.get("grant") ||
     searchParams.get("folder") ||
     searchParams.get("nofo");
 
@@ -182,14 +183,14 @@ export const AppSidebar: React.FC = () => {
 
   const handleChatNavigation = () => {
     navigate(
-      `/chat/${uuidv4()}${docId ? `?folder=${encodeURIComponent(docId)}` : ""}`
+      `/chat/${uuidv4()}${docId ? `?grant=${encodeURIComponent(docId)}` : ""}`
     );
   };
 
   const handleDraftsNavigation = () => {
     navigate(
       docId
-        ? `/document-editor/drafts?nofo=${encodeURIComponent(docId)}`
+        ? `/document-editor/drafts?grant=${encodeURIComponent(docId)}`
         : "/document-editor/drafts"
     );
   };
@@ -198,19 +199,19 @@ export const AppSidebar: React.FC = () => {
     if (!docId) return;
     addToRecentlyViewed({ label: docId.replace("/", ""), value: docId });
     navigate(
-      `/requirements/${encodeURIComponent(docId)}?folder=${encodeURIComponent(docId)}`
+      `/requirements/${encodeURIComponent(docId)}?grant=${encodeURIComponent(docId)}`
     );
   };
 
   const handleDocumentEditorNavigation = () => {
     navigate(
-      docId ? `/document-editor?nofo=${encodeURIComponent(docId)}` : "/document-editor"
+      docId ? `/document-editor?grant=${encodeURIComponent(docId)}` : "/document-editor"
     );
   };
 
   const handleChatSessionsNavigation = () => {
     navigate(
-      `/chat/sessions${docId ? `?folder=${encodeURIComponent(docId)}` : ""}`
+      `/chat/sessions${docId ? `?grant=${encodeURIComponent(docId)}` : ""}`
     );
   };
 

@@ -2,9 +2,11 @@ import React from "react";
 import { Modal } from "../../../components/common/Modal";
 
 const WELCOME_STEPS = [
-  { num: 1, title: "Answer Simple Questions", text: "We'll guide you through key questions about your project to gather the essential information needed for your grant application." },
-  { num: 2, title: "Provide Additional Information", text: "Share any additional context or information that will help our AI understand your project better and generate more accurate content." },
-  { num: 3, title: "Review & Edit AI-Generated Content", text: "Our AI will generate high-quality content that you can review, refine, and perfect for your grant application. As you work, your progress will be saved." },
+  { num: 1, title: "Project Basics", text: "Enter your project name, organization, requested amount, location, and contact details." },
+  { num: 2, title: "Questionnaire", text: "Answer a few questions about your project, tailored to the grant you're applying for." },
+  { num: 3, title: "Additional Information", text: "Upload supporting documents and share any extra context that will help the AI write a stronger first draft." },
+  { num: 4, title: "Section Editor", text: "Review and refine each AI-generated section. You can rewrite sections or edit them directly." },
+  { num: 5, title: "Review", text: "Check that every section is complete, then export your application as PDF or Word." },
 ];
 
 interface WelcomeModalProps {
@@ -29,10 +31,10 @@ const WelcomeModal = React.memo(function WelcomeModal({
     hideCloseButton
   >
     <div className="welcome-modal-intro">
-      <h3 className="welcome-modal-subtitle">AI-Powered Grant Writing Assistant</h3>
+      <h3 className="welcome-modal-subtitle">Write Application</h3>
       <p className="welcome-modal-desc">
-        GrantWell uses AI to help you create grant applications. We&#39;ll guide you through
-        three simple steps to get started.
+        GrantWell uses AI to help you write your grant application. We&#39;ll guide you through
+        these five steps, and your progress is saved as you go.
       </p>
     </div>
 
@@ -53,7 +55,7 @@ const WelcomeModal = React.memo(function WelcomeModal({
         Get Started
       </button>
       <button className="welcome-modal-btn welcome-modal-btn--secondary" onClick={onViewDrafts}>
-        View Existing Applications
+        View My Applications
       </button>
     </div>
   </Modal>

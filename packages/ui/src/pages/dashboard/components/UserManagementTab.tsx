@@ -368,7 +368,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         }
                         disabled={isSaving || isStateAdmin}
                       >
-                        <option value="">None</option>
+                        <option value="">Not assigned</option>
                         {SUPPORTED_STATES.map((s) => (
                           <option key={s.code} value={s.code}>
                             {s.name}
@@ -451,7 +451,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               onChange={(e) => setAddState(e.target.value)}
               disabled={isStateAdmin}
             >
-              {!isStateAdmin && <option value="">None</option>}
+              {!isStateAdmin && <option value="">Not assigned</option>}
               {SUPPORTED_STATES.map((s) => (
                 <option key={s.code} value={s.code}>
                   {s.name}

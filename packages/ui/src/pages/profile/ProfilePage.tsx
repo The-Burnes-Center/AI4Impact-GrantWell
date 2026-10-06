@@ -16,6 +16,7 @@ import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { stateNameFromCode } from "../../common/states";
+import { roleLabel } from "../../common/helpers/auth-roles";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
 import "../../styles/dashboard.css";
@@ -227,7 +228,7 @@ export default function ProfilePage() {
     }
   };
 
-  const stateLabel = userState ? stateNameFromCode(userState) || userState : "—";
+  const stateLabel = userState ? stateNameFromCode(userState) || userState : "Not assigned";
 
   // Hold rendering until identity (email, state, roles) resolves.
   if (identityLoading) {
@@ -248,7 +249,7 @@ export default function ProfilePage() {
         <div className="dashboard-main-content">
           <div className="dashboard-header">
             <div>
-              <h1>Your Profile</h1>
+              <h1>Profile</h1>
               <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
                 Your account, sign-in security, and notification preferences
               </p>
@@ -268,14 +269,14 @@ export default function ProfilePage() {
                   <dt>Email</dt>
                   <dd>{email || username || "—"}</dd>
                   <dt>Access level</dt>
-                  <dd>{roles.length ? roles.join(", ") : "User"}</dd>
+                  <dd>{roles.length ? roles.map(roleLabel).join(", ") : "User"}</dd>
                   <dt>State</dt>
                   <dd>{stateLabel}</dd>
                 </dl>
 
                 <h3 className="profile-subheading">Organization details</h3>
                 <p className="profile-hint">
-                  Your agency, organization, and role. Used to understand who&apos;s
+                  Your department, organization, and role. Used to understand who&apos;s
                   using GrantWell.
                 </p>
                 {orgError && (
@@ -291,7 +292,7 @@ export default function ProfilePage() {
                 <form onSubmit={onSaveOrg}>
                   <div className="profile-section">
                     <label className="profile-field-label" htmlFor="profile-agency">
-                      Agency
+                      Department
                     </label>
                     <input
                       id="profile-agency"
@@ -353,8 +354,8 @@ export default function ProfilePage() {
             <div id="profile-notifications" className="profile-anchor">
               <Card header="Notification preferences" headerStyle="default">
                 <p className="profile-hint">
-                  Get an email digest of new grant opportunities that match what you care about.
-                  Leave every filter empty to be notified of all new opportunities.
+                  Get an email digest of new grants that match what you care about.
+                  Leave every filter empty to be notified of all new grants.
                 </p>
 
                 {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
@@ -389,7 +390,7 @@ export default function ProfilePage() {
                       <div className="profile-section">
                         <h3>State</h3>
                         <p className="profile-hint">
-                          Digests cover grant opportunities for {stateLabel === "—" ? "your assigned state" : stateLabel}.
+                          Digests cover grants for {userState ? stateLabel : "your state"}.
                         </p>
                       </div>
 

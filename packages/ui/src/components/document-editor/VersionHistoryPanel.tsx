@@ -13,7 +13,7 @@ import type { DraftVersionDetail, DraftVersionMeta } from "../../common/api-clie
 
 /** A row's source is the write that produced its content. */
 const SOURCE_LABELS: Record<string, string> = {
-  initial: "Blank draft",
+  initial: "Blank application",
   autosave: "Your edit",
   manual: "Your edit",
   ai_generated: "AI generated",
@@ -24,8 +24,8 @@ const SOURCE_LABELS: Record<string, string> = {
 };
 
 const EMPTY_CHANGE_NOTES: Record<string, string> = {
-  initial: "Start of the draft — no section text yet",
-  manual_snapshot: "Snapshot of the whole draft",
+  initial: "Start of the application — no section text yet",
+  manual_snapshot: "Snapshot of the whole application",
   status_change: "Step change only — no section text changed",
   autosave: "Project details only — no section text changed",
   manual: "Project details only — no section text changed",
@@ -35,7 +35,7 @@ const EMPTY_CHANGE_NOTES: Record<string, string> = {
 };
 
 const LABEL_VARIANTS: Record<string, "current" | "user" | "ai"> = {
-  "Current draft": "current",
+  "Current version": "current",
   "Your edit": "user",
   "Saved version": "user",
   "AI generated": "ai",
@@ -223,7 +223,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
             <p className="vh-status" role="status">Loading versions...</p>
           ) : versions.length === 0 ? (
             <p className="vh-status">
-              No earlier versions yet. One is kept automatically whenever your draft changes.
+              No earlier versions yet. One is kept automatically whenever your application changes.
             </p>
           ) : (
             <ul className="vh-list" aria-label={`${versions.length} versions`}>
@@ -231,7 +231,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                 const delta = (version.total_word_count ?? 0) - currentTotal;
                 const badgeLabel =
                   version.rev === currentRev
-                    ? "Current draft"
+                    ? "Current version"
                     : SOURCE_LABELS[version.source || ""] || "Earlier version";
                 return (
                   <li key={version.rev}>
@@ -266,7 +266,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                         {version.oversize
                           ? "Too large to store — cannot be restored"
                           : (version.total_word_count ?? 0) === 0
-                            ? "No narrative text in this version"
+                            ? "No text in this version"
                             : delta === 0
                               ? "Same length as now"
                               : delta > 0
@@ -323,7 +323,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
               </div>
 
               {isCurrent && (
-                <p className="vh-status">This is your draft as it stands now, so there is nothing to restore.</p>
+                <p className="vh-status">This is your application as it stands now, so there is nothing to restore.</p>
               )}
             </div>
           )}
@@ -333,7 +333,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
           <div className="vh-footer">
             {!versionHasText && (
               <p className="vh-status">
-                This version was saved before any narrative text existed.
+                This version was saved before any section text existed.
                 {draftHasText ? " Restoring it would erase your sections, so it is disabled." : ""}
               </p>
             )}
@@ -364,7 +364,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                 onClick={() => setRestoreScope("all")}
                 disabled={wouldEraseDraft}
               >
-                Restore whole draft
+                Restore whole application
               </button>
             </div>
           </div>
@@ -376,7 +376,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
         onClose={() => setRestoreScope(null)}
         onConfirm={handleRestore}
         confirming={restoring}
-        title={restoreScope === "section" ? "Restore this section" : "Restore whole draft"}
+        title={restoreScope === "section" ? "Restore this section" : "Restore whole application"}
         confirmLabel="Restore"
         message={
           restoreScope === "section"

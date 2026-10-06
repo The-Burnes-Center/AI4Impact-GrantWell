@@ -25,6 +25,14 @@
   overflow-wrap: break-word;
 }
 
+.pg-header-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--gw-font-size-sm, 14px);
+  font-weight: var(--gw-font-weight-semibold, 600);
+  color: var(--gw-color-text-secondary);
+}
+
 .pg-header-actions {
   display: flex;
   gap: 12px;

@@ -120,7 +120,7 @@ export const handler = async (event) => {
         return {
           statusCode: 404,
           headers: { 'Access-Control-Allow-Origin': '*' },
-          body: JSON.stringify({ message: `No summary.json found for '${nofoName}'` }),
+          body: JSON.stringify({ message: `No requirements found for '${nofoName}'` }),
         };
       }
       throw error;
@@ -175,7 +175,7 @@ export const handler = async (event) => {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({
-        message: `Summary for '${nofoName}' updated successfully`,
+        message: `Requirements for '${nofoName}' updated successfully`,
         data: existingSummary,
       }),
     };
@@ -186,7 +186,7 @@ export const handler = async (event) => {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({
-        message: 'Failed to update NOFO summary. Internal Server Error.',
+        message: 'Failed to update grant requirements. Internal Server Error.',
         error: error.message,
       }),
     };

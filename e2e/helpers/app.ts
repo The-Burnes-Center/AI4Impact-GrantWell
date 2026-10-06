@@ -40,7 +40,7 @@ export async function totpCode(isRetry: boolean): Promise<string> {
   return generate({ secret });
 }
 
-const PROFILE = { Agency: "GrantWell E2E", Organization: "GrantWell E2E Test Organization", "Role / Title": "Automated test" };
+const PROFILE = { Department: "GrantWell E2E", Organization: "GrantWell E2E Test Organization", "Role / Title": "Automated test" };
 
 /** Signs in through the real form: email + password, the bypass, then the TOTP challenge. */
 export async function signIn(page: Page, isRetry: boolean): Promise<void> {

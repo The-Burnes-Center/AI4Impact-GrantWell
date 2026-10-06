@@ -755,7 +755,7 @@ export const handler = async (event) => {
         'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
-        message: 'Automated NOFO scraping completed',
+        message: 'Grant scraping completed',
         totalChecked: totalOpportunities,
         processed: processedOpportunities.length,
         errors: errors.length,
@@ -774,7 +774,7 @@ export const handler = async (event) => {
         'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
-        message: 'Error in automated NOFO scraping',
+        message: 'Error scraping grants',
         error: error.message,
         errorType: error.constructor.name
       }),

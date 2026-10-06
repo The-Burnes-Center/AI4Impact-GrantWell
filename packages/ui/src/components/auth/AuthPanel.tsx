@@ -240,12 +240,12 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
       case "mfa-setup":
         return {
           title: "Set up two-step verification",
-          subtitle: "Register an authenticator app to finish signing in.",
+          subtitle: "Set up an authenticator app to finish signing in.",
         };
       default:
         return {
           title: "Sign in",
-          subtitle: "Sign in to GrantWell.",
+          subtitle: "Use the email address you created your account with.",
         };
     }
   }, [view]);
@@ -577,7 +577,10 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
     event.preventDefault();
     if (loading) return;
 
-    const validationError = getVerificationCodeValidationError(verificationCode);
+    const validationError = getVerificationCodeValidationError(
+      verificationCode,
+      "authentication code",
+    );
     if (validationError) {
       setStepError(validationError, ["verificationCode"]);
       setSuccess(null);
@@ -818,7 +821,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             }
             onClick={() => switchToSignIn()}
           >
-            Sign In
+            Sign in
           </button>
           <button
             type="button"
@@ -828,7 +831,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             }
             onClick={switchToSignUp}
           >
-            Sign Up
+            Create account
           </button>
         </div>
       )}

@@ -123,7 +123,7 @@ async function updateDynamoDB(tableName, nofoName, status, isPinned, expirationD
       // Note: category can be undefined if we're just updating other fields and the entry doesn't exist yet
       // In that case, we'll skip creating the DynamoDB entry (S3 is source of truth)
       if (!category) {
-        throw new Error('Category is required when creating a new NOFO entry. Please provide a category.');
+        throw new Error('Category is required when creating a new grant entry. Please provide a category.');
       }
       
       const item = {
@@ -325,7 +325,7 @@ export const handler = async (event) => {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({
-        message: `NOFO '${nofoName}' updated successfully`,
+        message: `Grant '${nofoName}' updated successfully`,
         status: summaryObject.status,
         isPinned: summaryObject.isPinned,
         grantType: summaryObject.grant_type,
@@ -338,7 +338,7 @@ export const handler = async (event) => {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({
-        message: 'Failed to update NOFO. Internal Server Error.',
+        message: 'Failed to update grant. Internal Server Error.',
         error: error.message,
       }),
     };

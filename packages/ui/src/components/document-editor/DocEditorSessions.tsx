@@ -7,6 +7,10 @@ import { useNavigate } from "react-router";
 import { Utils } from "../../common/utils";
 import { DraftStatus } from "../../common/api-client/drafts-client";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
+import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
+import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
+import { useStartDraft } from "../../hooks/use-start-draft";
+import { useNotifications } from "../notifications/NotificationManager";
 import TableScrollRegion from "../ui/TableScrollRegion";
 import "../../styles/dashboard.css";
 
@@ -36,6 +40,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const [pageSize, setPageSize] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [showModalDelete, setShowModalDelete] = useState(false);
+  const [showGrantPicker, setShowGrantPicker] = useState(false);
+  const [startingDraft, setStartingDraft] = useState(false);
+  const startDraft = useStartDraft();
+  const { addNotification } = useNotifications();
   const [sortField, setSortField] = useState<"title" | "last_modified">("last_modified");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const pageSizeSelectId = useId();
@@ -169,13 +177,13 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       case 'questionnaire':
         return 'Questionnaire';
       case 'uploading_documents':
-        return 'Uploading Documents';
+        return 'Additional Information';
       case 'generating_draft':
         return 'Generating Draft';
       case 'editing_sections':
-        return 'Editing Sections';
+        return 'Section Editor';
       case 'reviewing':
-        return 'Reviewing';
+        return 'Review';
       case 'submitted':
         return 'Submitted';
       default:
@@ -221,14 +229,37 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     };
   };
 
+  const handleGrantPicked = async (grant: PickedGrant) => {
+    setStartingDraft(true);
+    try {
+      const url = await startDraft(grant.value);
+      addToRecentlyViewed(grant);
+      setShowGrantPicker(false);
+      navigate(url);
+    } catch (err) {
+      console.error("Failed to start new application:", err);
+      addNotification("error", "Failed to start a new application. Please try again.");
+    } finally {
+      setStartingDraft(false);
+    }
+  };
+
   return (
     <div className="dashboard-content">
+      <GrantPickerModal
+        isOpen={showGrantPicker}
+        onClose={() => setShowGrantPicker(false)}
+        onSelect={handleGrantPicked}
+        title="Start a new application"
+        description="Choose the grant you want to apply for."
+        busy={startingDraft}
+      />
       <DeleteConfirmationModal
         isOpen={showModalDelete}
         onClose={() => setShowModalDelete(false)}
         onConfirm={deleteSelectedSessions}
         title={`Delete application${selectedItems.length > 1 ? "s" : ""}`}
-        itemName={selectedItems.length === 1 ? selectedItems[0].draft_id : undefined}
+        itemName={selectedItems.length === 1 ? selectedItems[0].title : undefined}
         itemCount={selectedItems.length > 1 ? selectedItems.length : undefined}
         itemLabel="application"
       />
@@ -236,7 +267,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       {/* Header section */}
       <div className="dashboard-header">
         <div>
-          <h1>Applications</h1>
+          <h1>My Applications</h1>
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
             Manage and continue your saved grant applications
           </p>
@@ -245,11 +276,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           <button
             className="action-button add-button"
             onClick={() => {
-              // If documentIdentifier is available, pass it as NOFO parameter
               if (props.documentIdentifier) {
-                navigate(`/document-editor?nofo=${encodeURIComponent(props.documentIdentifier)}`);
+                navigate(`/document-editor?grant=${encodeURIComponent(props.documentIdentifier)}`);
               } else {
-                navigate(`/document-editor`);
+                setShowGrantPicker(true);
               }
             }}
             aria-label="Create new application"
@@ -261,11 +291,11 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             <button
               className="action-button invite-button"
               onClick={onToggleShowAllNOFOs}
-              aria-label="Show All NOFOs — include applications for other NOFOs"
+              aria-label="Show all grants — include applications for other grants"
               aria-pressed={showAllNOFOs}
             >
               {showAllNOFOs && <LuCheck size={16} className="button-icon" aria-hidden="true" />}
-              <span>Show All NOFOs</span>
+              <span>Show All Grants</span>
             </button>
           )}
           <button
@@ -347,7 +377,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                 Last Modified {!isLoading && getSortIcon("last_modified")}
               </button>
             </div>
-            <div className="header-cell" role="columnheader">NOFO</div>
+            <div className="header-cell" role="columnheader">Grant</div>
             <div className="header-cell" role="columnheader" style={{ textAlign: 'center' }}>Status</div>
           </div>
         </div>
@@ -409,13 +439,13 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   </div>
                 </div>
                 <div className="row-cell" role="cell">
-                  <span aria-label={`NOFO: ${item.document_identifier || 'Not specified'}`}>
+                  <span aria-label={`Grant: ${item.document_identifier || 'Not specified'}`}>
                     {item.document_identifier || '—'}
                   </span>
                 </div>
                 <div className="row-cell" role="cell" style={{ justifyContent: 'center' }}>
                   <span
-                    aria-label={`Draft status: ${getStatusLabel(item.status)}`}
+                    aria-label={`Application status: ${getStatusLabel(item.status)}`}
                     style={statusBadgeStyle(item.status)}
                   >
                     {getStatusLabel(item.status)}

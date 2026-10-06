@@ -47,9 +47,9 @@ function ScrollToTop(): null {
         "/": "Home",
         "/home": "Home",
         "/admin": "Admin Dashboard",
-        "/profile": "Your Profile",
+        "/profile": "Profile",
         "/chat/sessions": "My Chats",
-        "/document-editor": "Document Editor",
+        "/document-editor": "Write Application",
         "/document-editor/drafts": "My Applications",
       };
 
@@ -58,13 +58,13 @@ function ScrollToTop(): null {
       }
 
       if (path.startsWith("/chat/") && path !== "/chat/sessions") {
-        return "Chatbot Playground";
+        return "Chat with AI";
       }
       if (path.startsWith("/document-editor/") && path !== "/document-editor/drafts") {
-        return "Document Editor Session";
+        return "Write Application";
       }
       if (path.startsWith("/requirements/")) {
-        return "Requirements Checklist";
+        return "Requirements";
       }
 
       return null;

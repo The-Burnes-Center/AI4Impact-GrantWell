@@ -806,23 +806,6 @@
   padding: 20px 0;
 }
 
-/* Pause/resume control for the rotating search examples (.search-tip lives in
-   landing-page-table.css) */
-.search-tip-toggle {
-  padding: 0;
-  border: none;
-  background: none;
-  font: inherit;
-  color: var(--mk-green);
-  text-decoration: underline;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.search-tip-toggle:hover {
-  color: var(--mk-green-dark);
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .history-panel {

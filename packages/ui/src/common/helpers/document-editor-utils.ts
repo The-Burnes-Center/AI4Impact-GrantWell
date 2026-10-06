@@ -33,8 +33,8 @@ export const statusToStep = (status: string): string => {
 /** The ordered list of step IDs used by the document editor flow. */
 export const EDITOR_STEPS = [
   { id: "projectBasics", label: "Project Basics", description: "Basic information", tooltip: "Enter your project name, organization details, requested amount, location, and contact information." },
-  { id: "questionnaire", label: "Questionnaire", description: "Answer questions", tooltip: "Answer NOFO-specific questions about your project. These responses will help generate your grant application." },
-  { id: "uploadDocuments", label: "Additional Information", description: "Additional context", tooltip: "Share any additional context or information that will help generate your grant application." },
+  { id: "questionnaire", label: "Questionnaire", description: "Answer questions", tooltip: "Answer grant-specific questions about your project. These responses will help generate your grant application." },
+  { id: "uploadDocuments", label: "Additional Information", description: "Additional context", tooltip: "Upload supporting documents and share any additional context that will help generate your grant application." },
   { id: "sectionEditor", label: "Section Editor", description: "Edit sections", tooltip: "Review and edit AI-generated narrative sections. You can regenerate individual sections or edit them directly." },
   { id: "reviewApplication", label: "Review", description: "Final review", tooltip: "Review your complete application, check completeness, and export as PDF when ready." },
 ] as const;

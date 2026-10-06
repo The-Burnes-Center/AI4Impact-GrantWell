@@ -41,7 +41,7 @@ const KB_INDEXING_MESSAGE = "Your documents are being indexed and will be availa
 // must never reach a live region.
 const DRAFT_PHASE_MESSAGES: Record<string, string> = {
   preparing: "Preparing your draft.",
-  planning: "Retrieving NOFO requirements and planning sections.",
+  planning: "Retrieving grant requirements and planning sections.",
   generating: "Writing your draft sections. This may take a few minutes.",
 };
 
@@ -234,7 +234,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     setUploading(true);
     setUploadProgress(0);
     setUploadError(null);
-    setUploadAnnouncement("Uploading files");
+    setUploadAnnouncement("Uploading documents");
 
     const uploader = new FileUploader();
     const nofoName = extractNofoName(selectedNofo);
@@ -336,7 +336,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       const draftToUse = await apiClient.drafts.getDraft({ sessionId, userId: username });
 
       if (!draftToUse) {
-        throw new Error("Draft not found. Please start a new document first.");
+        throw new Error("Application not found. Please start a new application first.");
       }
 
       const uploadedFileInfo = files.map((f) => ({
@@ -352,7 +352,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       );
 
       setGeneratingDraft(true);
-      setDraftProgress("Analyzing your NOFO and preparing sections...");
+      setDraftProgress("Analyzing your grant and preparing sections...");
       setGenerationPhase("preparing");
       setIsLoading(false);
 
@@ -365,7 +365,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         sessionId,
       });
       console.log('Draft generation job started:', jobId);
-      setDraftProgress("Retrieving NOFO requirements and planning sections...");
+      setDraftProgress("Retrieving grant requirements and planning sections...");
       setGenerationPhase("planning");
 
       let pollCount = 0;
@@ -490,7 +490,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         >
           <span style={{ fontSize: "18px", flexShrink: 0 }}>&#10003;</span>
           <span>
-            Your progress is automatically saved. You can close this page and come back anytime — your draft will be here.
+            Your progress is automatically saved. You can close this page and come back anytime — your application will be here.
           </span>
         </div>
 
@@ -521,7 +521,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       {draftPhaseRegion}
 
       <Card
-        header="Upload & Additional Info"
+        header="Additional Information"
         headerActions={<AutoSaveIndicator status={draftSave.saveStatus} onRetry={draftSave.retry} />}
       >
         <p style={{ color: colors.textSecondary, marginBottom: spacing["2xl"], fontFamily: typography.fontFamily }}>
@@ -604,7 +604,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                 marginBottom: spacing.md,
                 fontFamily: typography.fontFamily,
               }}>
-                Selected Files ({files.length})
+                Selected Documents ({files.length})
               </p>
               {files.map((file, index) => (
                 <div
@@ -840,7 +840,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             <button
               type="button"
               onClick={() => onNavigate("sectionEditor")}
-              aria-label="Skip to section editor"
+              aria-label="Skip to Section Editor"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -893,7 +893,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             ? `Uploading... ${uploadProgress}%`
             : files.length === 1
               ? `"${files[0].name}" has been selected but not uploaded yet.`
-              : `${files.length} selected files have not been uploaded yet.`
+              : `${files.length} selected documents have not been uploaded yet.`
         }
         warning="Leaving without uploading discards the selection, and you will need to pick the files again."
         confirmLabel="Upload now and continue"

@@ -98,7 +98,7 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
           color: "var(--gw-color-heading)",
         }}
       >
-        Summary Changes
+        Requirements Changes
       </h3>
       {renderScalarDiff("Grant Name", "GrantName")}
       {renderScalarDiff("Agency", "Agency")}

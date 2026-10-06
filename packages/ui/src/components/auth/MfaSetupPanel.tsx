@@ -102,7 +102,7 @@ export default function MfaSetupPanel({
       <TotpEnrollment setupUri={setup.uri} secret={setup.secret} />
       <div className="profile-section">
         <span className="profile-field-label" id="mfa-panel-code-label">
-          Verification code
+          Authentication code
         </span>
         <OtpInput
           value={code}

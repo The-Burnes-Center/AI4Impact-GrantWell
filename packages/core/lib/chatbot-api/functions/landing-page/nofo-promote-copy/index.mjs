@@ -34,15 +34,15 @@ export const handler = async (event) => {
     // no single target state — they should create state NOFOs through the normal upload flow.
     if (callerScope.role !== "stateAdmin") {
       return jsonResponse(400, {
-        message: "Only a state admin can promote a federal NOFO to their state's copy.",
+        message: "Only a state admin can promote a federal grant to their state's copy.",
       });
     }
     const targetState = callerScope.state;
 
     const sourceRow = await readMetadataRow(nofoName);
-    if (!sourceRow) return jsonResponse(404, { message: `NOFO "${nofoName}" not found.` });
+    if (!sourceRow) return jsonResponse(404, { message: `Grant "${nofoName}" not found.` });
     if (sourceRow.scope && sourceRow.scope !== "federal") {
-      return jsonResponse(400, { message: "Only federal NOFOs can be promoted to a state copy." });
+      return jsonResponse(400, { message: "Only federal grants can be promoted to a state copy." });
     }
 
     // Suffix the copy so it's distinguishable and won't collide with the federal original.
@@ -57,7 +57,7 @@ export const handler = async (event) => {
     return jsonResponse(200, { newName, state: targetState });
   } catch (error) {
     console.error("Promote-copy error:", error);
-    return jsonResponse(500, { message: error?.message || "Failed to promote NOFO." });
+    return jsonResponse(500, { message: error?.message || "Failed to promote grant." });
   }
 };
 
@@ -91,7 +91,7 @@ async function copyS3Folder(oldName, newName) {
   } while (continuationToken);
 
   if (copied === 0) {
-    const err = new Error(`Source NOFO "${oldName}" has no files to copy.`);
+    const err = new Error(`Source grant "${oldName}" has no files to copy.`);
     err.statusCode = 404;
     throw err;
   }

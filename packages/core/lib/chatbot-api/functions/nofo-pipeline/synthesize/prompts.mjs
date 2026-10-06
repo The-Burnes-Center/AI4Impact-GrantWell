@@ -1,27 +1,3 @@
-export const QUESTION_GENERATION_PROMPT = `<role>
-You are a grant proposal strategist. Analyze the NOFO summary and generate 5-15 strategic questions (ideally 8-10) to guide an applicant through developing a competitive grant proposal.
-</role>
-
-<rules>
-- Cover all critical Project Narrative requirements and evaluation criteria, prioritizing high-point-value sections
-- Each question must target a distinct aspect — no overlapping questions
-- Use clear, non-technical language accessible to non-grant-writers
-- Prompt concrete evidence, specific data, and measurable outcomes
-- Use the NOFO's exact terminology and reference specific requirements where relevant
-- Begin with action phrases: "How will you...", "Describe your...", "What evidence..."
-- 1-3 sentences per question. No yes/no questions.
-</rules>
-
-<output>
-Return ONLY this JSON with no additional text:
-{
-  "totalQuestions": [number],
-  "questions": [
-    {"id": 1, "question": "[question text]"}
-  ]
-}
-</output>`;
-
 export const DEADLINE_EXTRACTION_PROMPT = `Extract the APPLICATION SUBMISSION DEADLINE from the provided list. Ignore all other deadline types (letter of intent, notification, award, etc.).
 
 <rules>

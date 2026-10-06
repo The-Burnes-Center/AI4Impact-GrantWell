@@ -59,7 +59,7 @@ test("generates every narrative section and exports the application as Word and 
   const { nofoName, narrativeSections } = runInfo();
 
   const actions = await selectNofo(page, nofoName);
-  await actions.getByRole("button", { name: "Write Project Narrative" }).click();
+  await actions.getByRole("button", { name: "Write Application", exact: true }).click();
   await page.getByRole("button", { name: "Get Started" }).click();
   await expect(page).toHaveURL(/\/document-editor\/[0-9a-f-]{36}\?.*step=projectBasics/);
   sessionId = new URL(page.url()).pathname.split("/").pop();

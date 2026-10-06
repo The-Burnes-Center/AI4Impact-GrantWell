@@ -370,7 +370,10 @@ export class LandingPageClient {
         }
       );
 
-      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || data.message || `Error: ${response.status}`);
+      }
     } catch (error) {
       console.error("Error approving review:", error);
       throw error;

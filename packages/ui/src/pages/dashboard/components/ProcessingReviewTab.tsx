@@ -156,7 +156,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     }
 
     if (errored === 0) {
-      addNotification("success", `Reprocessing triggered for ${succeeded} NOFO${succeeded === 1 ? "" : "s"}`);
+      addNotification("success", `Reprocessing triggered for ${succeeded} grant${succeeded === 1 ? "" : "s"}`);
     } else {
       addNotification("warning", `Reprocessed ${succeeded}, ${errored} failed to trigger`);
     }
@@ -185,7 +185,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     }
 
     if (errored === 0) {
-      addNotification("success", `${succeeded} NOFO${succeeded === 1 ? "" : "s"} marked as needs re-upload`);
+      addNotification("success", `${succeeded} grant${succeeded === 1 ? "" : "s"} marked as needs re-upload`);
     } else {
       addNotification("warning", `Marked ${succeeded}, ${errored} failed`);
     }
@@ -269,7 +269,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               className="review-btn review-btn--bulk-reprocess"
               onClick={() => void handleBulkReprocess()}
               disabled={!canReprocess || bulkAction !== null}
-              aria-label={`Reprocess Selected — ${selected.size} NOFO${selected.size === 1 ? "" : "s"}`}
+              aria-label={`Reprocess Selected — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
             >
               <LuRefreshCw size={14} className={bulkAction === "reprocess" ? "refresh-icon" : ""} />
               <span>{bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"}</span>
@@ -278,7 +278,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               className="review-btn review-btn--needs-reupload"
               onClick={() => void handleBulkNeedsReupload()}
               disabled={!canMarkReupload || bulkAction !== null}
-              aria-label={`Mark ${selected.size} selected NOFOs as needs re-upload`}
+              aria-label={`Mark ${selected.size} selected grants as needs re-upload`}
             >
               <LuUpload size={14} />
               <span>{bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"}</span>
@@ -307,7 +307,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                   disabled={reviews.length === 0}
                 />
               </div>
-              <div className="header-cell" role="columnheader">NOFO Name</div>
+              <div className="header-cell" role="columnheader">Grant Name</div>
               <div className="header-cell" role="columnheader">Reason</div>
               <div className="header-cell" role="columnheader">Status</div>
               <div className="header-cell" role="columnheader">Date</div>
@@ -321,7 +321,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                   <LuFileX size={24} className="no-data-icon" />
                   <p>
                     {statusFilter === "pending_review"
-                      ? "No NOFOs pending review"
+                      ? "No grants pending review"
                       : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
                   </p>
                 </div>

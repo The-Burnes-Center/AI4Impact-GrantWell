@@ -22,3 +22,14 @@ export function parseRoleClaim(rawRoleClaim: unknown): string[] {
 export function hasRole(roles: string[], role: string): boolean {
   return roles.includes(role);
 }
+
+const ROLE_LABELS: Record<string, string> = {
+  PlatformAdmin: "Platform Admin",
+  Admin: "Admin",
+  Developer: "Developer",
+  User: "User",
+};
+
+export function roleLabel(role: string): string {
+  return ROLE_LABELS[role] ?? role;
+}

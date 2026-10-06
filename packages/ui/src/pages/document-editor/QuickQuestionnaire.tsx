@@ -1,5 +1,5 @@
 /**
- * NOFO-specific questions, loaded from the API. Saving is owned by the parent's
+ * Grant-specific questions, loaded from the API. Saving is owned by the parent's
  * useDraftSave; this component only reports changes.
  */
 import React, { useState, useEffect, useRef, useCallback } from "react";
@@ -85,40 +85,26 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
       try {
         if (!selectedNofo) {
           setNoQuestionsFound(true);
-          setLoading(false);
           return;
         }
 
-        if (selectedNofo) {
-          try {
-            const result = await apiClient.landingPage.getNOFOQuestions(selectedNofo);
+        const result = await apiClient.landingPage.getNOFOQuestions(selectedNofo);
+        const fetched = result?.data?.questions;
+        if (Array.isArray(fetched) && fetched.length > 0) {
+          setQuestions(fetched);
 
-            if (
-              result?.data?.questions &&
-              Array.isArray(result.data.questions) &&
-              result.data.questions.length > 0
-            ) {
-              setQuestions(result.data.questions);
-              
-              if (Object.keys(formData).length === 0 && !hasLoadedFromDocumentData.current) {
-                const initialFormData: QuestionnaireFormData = {};
-                result.data.questions.forEach((q: { id: string | number }) => {
-                  initialFormData[`question_${q.id}`] = "";
-                });
-                setFormData(initialFormData);
-              }
-            } else {
-              setNoQuestionsFound(true);
-            }
-          } catch (error) {
-            console.error("Error fetching questions from API:", error);
-            setNoQuestionsFound(true);
+          if (Object.keys(formData).length === 0 && !hasLoadedFromDocumentData.current) {
+            const initialFormData: QuestionnaireFormData = {};
+            fetched.forEach((q: { id: string | number }) => {
+              initialFormData[`question_${q.id}`] = "";
+            });
+            setFormData(initialFormData);
           }
         } else {
           setNoQuestionsFound(true);
         }
       } catch (error) {
-        console.error("Error in fetchQuestions:", error);
+        console.error("Error fetching questions:", error);
         setError("Failed to load questions. Please try again later.");
       } finally {
         setLoading(false);
@@ -188,12 +174,12 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
         <Card>
           <p role="status" style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
-            No questions found for this NOFO. You can continue to the next step.
+            This grant has no questions yet. You can continue to the next step.
           </p>
         </Card>
         <NavigationButtons
           onBack={() => onNavigate("projectBasics")}
-          showContinue={false}
+          onContinue={onContinue}
         />
       </div>
     );
@@ -241,7 +227,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                       color: colors.textSecondary,
                     }}
                   >
-                    (Added by your agency)
+                    (Added by your state)
                   </span>
                 )}
               </label>
@@ -274,7 +260,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   fontFamily: typography.fontFamily,
                 }}
               >
-                {questionItem.helpText || "Provide a detailed answer. You can edit this later in the document editor."}
+                {questionItem.helpText || "Provide a detailed answer. You can edit this later in the Section Editor."}
               </span>
             </div>
           ))}

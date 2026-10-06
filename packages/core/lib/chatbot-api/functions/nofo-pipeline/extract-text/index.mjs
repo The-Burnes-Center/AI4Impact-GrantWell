@@ -61,7 +61,7 @@ export const handler = async (event) => {
     ).toLowerCase();
     const matchCount = grantKeywords.filter((kw) => lowerSample.includes(kw)).length;
     if (matchCount < 2) {
-      qualityIssues.push("Document does not appear to be a grant/NOFO (missing key terms)");
+      qualityIssues.push("Document does not appear to be a grant document (missing key terms)");
     }
   }
   const sourceQualityFailed = qualityIssues.length > 0;

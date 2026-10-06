@@ -201,7 +201,7 @@ export default function Chat(props: {
 
           const initialMessage = {
             type: ChatBotMessageType.AI,
-            content: `Hello! I see that you are working on the ${grantName} grant. Could you please tell me which agency, municipality, or tribe we are building this narrative for?`,
+            content: `Hello! I see that you are working on the ${grantName} grant. Could you please tell me which agency, municipality, or tribe we are preparing this application for?`,
             metadata: {},
           };
           setMessageHistory([initialMessage]);
@@ -344,7 +344,7 @@ export default function Chat(props: {
           {session?.loading && (
             <li style={styles.loadingContainer}>
               <div style={styles.spinner} aria-hidden="true"></div>
-              <span>Loading session</span>
+              <span>Loading chat</span>
             </li>
           )}
         </ul>
@@ -376,14 +376,14 @@ export default function Chat(props: {
 
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {session?.loading
-          ? "Loading chat session"
+          ? "Loading chat"
           : running
           ? "Assistant is replying"
           : replyStatus}
       </div>
 
       <div role="status" aria-live="polite" className="visually-hidden">
-        {props.kbSyncing ? "Indexing your documents. You can keep chatting." : ""}
+        {props.kbSyncing ? "Indexing your supporting documents. You can keep chatting." : ""}
       </div>
 
       {/* KB indexing banner */}
@@ -407,8 +407,9 @@ export default function Chat(props: {
             aria-hidden="true"
             style={{ animation: "spin 1s linear infinite" }}
           />
-          Your documents are being indexed. Newly added documents will appear in
-          results once indexing completes — you can keep chatting in the meantime.
+          Your supporting documents are being indexed. Newly added documents will
+          appear in results once indexing completes — you can keep chatting in the
+          meantime.
         </div>
       )}
 

@@ -15,7 +15,7 @@ interface LoginPageProps {
 export default function LoginPage({ onAuthenticated }: LoginPageProps) {
   const { appName } = useBranding();
   useEffect(() => {
-    document.title = `Sign In - ${appName}`;
+    document.title = `Sign in - ${appName}`;
   }, [appName]);
 
   return (

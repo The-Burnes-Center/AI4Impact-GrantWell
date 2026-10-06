@@ -6,7 +6,6 @@ import { searchContainerStyle } from "./styles/searchStyles";
 
 const SEARCH_DEBOUNCE_MS = 400;
 const MIN_QUERY_LENGTH = 3;
-const TIP_ROTATE_MS = 5000;
 
 const SEARCH_TIPS = [
   "grants for youth mental health services",
@@ -32,11 +31,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   searchAriaLabel,
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
-  const [tipIndex, setTipIndex] = useState(0);
-  // A deliberate pause must survive mouseleave/blur, so it is tracked apart
-  // from the transient hover/focus pause.
-  const [tipsUserPaused, setTipsUserPaused] = useState(false);
-  const [tipsHoverFocusPaused, setTipsHoverFocusPaused] = useState(false);
+  const [tip] = useState(() => SEARCH_TIPS[Math.floor(Math.random() * SEARCH_TIPS.length)]);
   const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
   const setSearchTerm = onSearchTermChange || setInternalSearchTerm;
 
@@ -137,27 +132,8 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const queryWordCount = trimmedTerm.split(/\s+/).filter(Boolean).length;
   const showSuggestion = onSearch && trimmedTerm.length > 0 && queryWordCount <= 3;
 
-  useEffect(() => {
-    if (!showSuggestion) return;
-    // WCAG 2.2.2: don't auto-rotate for users who prefer reduced motion
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-    if (tipsUserPaused || tipsHoverFocusPaused) return;
-    const interval = setInterval(() => {
-      setTipIndex((prev) => (prev + 1) % SEARCH_TIPS.length);
-    }, TIP_ROTATE_MS);
-    return () => clearInterval(interval);
-  }, [showSuggestion, tipsUserPaused, tipsHoverFocusPaused]);
-
   return (
-    <div
-      style={searchContainerStyle}
-      ref={searchRef}
-      role="presentation"
-      onMouseEnter={() => setTipsHoverFocusPaused(true)}
-      onMouseLeave={() => setTipsHoverFocusPaused(false)}
-      onFocus={() => setTipsHoverFocusPaused(true)}
-      onBlur={() => setTipsHoverFocusPaused(false)}
-    >
+    <div style={searchContainerStyle} ref={searchRef}>
       <SearchInput
         ref={inputRef}
         searchTerm={searchTerm}
@@ -174,15 +150,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
       {showSuggestion && (
         <p className="search-tip">
           Tip: Try a full sentence for more precise results, e.g.,{" "}
-          <em key={tipIndex}>&ldquo;{SEARCH_TIPS[tipIndex]}&rdquo;</em>{" "}
-          <button
-            type="button"
-            className="search-tip-toggle"
-            aria-pressed={tipsUserPaused}
-            onClick={() => setTipsUserPaused((prev) => !prev)}
-          >
-            {tipsUserPaused ? "Resume examples" : "Pause examples"}
-          </button>
+          <em>&ldquo;{tip}&rdquo;</em>
         </p>
       )}
     </div>

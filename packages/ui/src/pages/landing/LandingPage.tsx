@@ -91,7 +91,7 @@ export default function LandingPage() {
           <div className="marketing__feature-text">
             <h2 className="marketing__feature-title">Find the right grants</h2>
             <p className="marketing__feature-body">
-              Search for relevant state and federal funding opportunities
+              Search for relevant state and federal grants
               aligned with your community needs.
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function LandingPage() {
           </h2>
           <p className="marketing__band-body">
             GrantWell uses AI as a support tool, not a decision-maker. AI
-            responses are grounded in official Notice of Funding Opportunity
+            responses are grounded in official grant
             documents. The system is designed not to invent requirements or
             facts. All drafts require human review before submission. Users
             retain full control and professional judgment.

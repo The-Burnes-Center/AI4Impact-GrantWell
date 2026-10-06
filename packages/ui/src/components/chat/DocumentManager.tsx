@@ -172,19 +172,19 @@ export default function DocumentManager({
         setExistingFiles(files);
         setFileListAnnouncement(
           files.length === 0
-            ? "No files uploaded"
-            : `${files.length} file${files.length === 1 ? "" : "s"} listed`
+            ? "No supporting documents uploaded"
+            : `${files.length} document${files.length === 1 ? "" : "s"} listed`
         );
         onFileCountChange?.(files.length);
       } else {
         setExistingFiles([]);
-        setFileListAnnouncement("No files uploaded");
+        setFileListAnnouncement("No supporting documents uploaded");
         onFileCountChange?.(0);
       }
     } catch (err) {
       console.error("Error fetching existing files:", err);
       setFileListAnnouncement("");
-      setError("Failed to load existing files. Please try again.");
+      setError("Failed to load supporting documents. Please try again.");
     } finally {
       setLoadingFiles(false);
     }
@@ -298,7 +298,7 @@ export default function DocumentManager({
     setPendingUploadFiles([]);
 
     if (nonDupes.length === 0) {
-      setError("All selected files already exist. No files to upload.");
+      setError("All selected documents already exist. Nothing to upload.");
       return;
     }
 
@@ -316,7 +316,7 @@ export default function DocumentManager({
 
     setUploading(true);
     setError(null);
-    setUploadStatusAnnouncement("Uploading files");
+    setUploadStatusAnnouncement("Uploading documents");
 
     const initialStatuses: Record<string, FileStatus> = {};
     for (const file of filesToUpload) {
@@ -373,14 +373,14 @@ export default function DocumentManager({
 
     if (completedCount > 0) {
       setUploadStatusAnnouncement(
-        `${completedCount} file${completedCount !== 1 ? "s" : ""} uploaded.${failedCount > 0 ? ` ${failedCount} failed.` : " Indexing documents."}`
+        `${completedCount} document${completedCount !== 1 ? "s" : ""} uploaded.${failedCount > 0 ? ` ${failedCount} failed.` : " Indexing documents."}`
       );
 
       onSyncStarted?.();
 
       const toastMsg = failedCount > 0
-        ? `${completedCount} file${completedCount !== 1 ? "s" : ""} uploaded. ${failedCount} failed.`
-        : `${completedCount} file${completedCount !== 1 ? "s" : ""} uploaded. Documents will be available in chat shortly.`;
+        ? `${completedCount} document${completedCount !== 1 ? "s" : ""} uploaded. ${failedCount} failed.`
+        : `${completedCount} document${completedCount !== 1 ? "s" : ""} uploaded. Documents will be available in chat shortly.`;
       setToastMessage(toastMsg);
     }
 
@@ -395,7 +395,7 @@ export default function DocumentManager({
       }, 1500);
     } else {
       setUploading(false);
-      setUploadStatusAnnouncement(`${failedCount} file${failedCount !== 1 ? "s" : ""} failed. Use retry to try again.`);
+      setUploadStatusAnnouncement(`${failedCount} document${failedCount !== 1 ? "s" : ""} failed. Use retry to try again.`);
     }
   };
 
@@ -605,9 +605,9 @@ export default function DocumentManager({
     fetchExistingFiles();
 
     if (failCount > 0) {
-      setError(`Failed to delete ${failCount} of ${names.length} files.`);
+      setError(`Failed to delete ${failCount} of ${names.length} documents.`);
     } else {
-      setToastMessage(`${names.length} file${names.length > 1 ? "s" : ""} deleted.`);
+      setToastMessage(`${names.length} document${names.length > 1 ? "s" : ""} deleted.`);
     }
   };
 
@@ -668,8 +668,8 @@ export default function DocumentManager({
         )}
 
         <div className="dm-header">
-          <h2 id={titleId} className="dm-title">Document Manager</h2>
-          <button className="dm-close-btn" onClick={onClose} aria-label="Close document manager">
+          <h2 id={titleId} className="dm-title">Supporting Documents</h2>
+          <button className="dm-close-btn" onClick={onClose} aria-label="Close supporting documents">
             <LuX size={20} />
           </button>
         </div>
@@ -678,7 +678,7 @@ export default function DocumentManager({
           className="dm-tab-container"
           role="tablist"
           tabIndex={-1}
-          aria-label="Document manager tabs"
+          aria-label="Supporting documents tabs"
           onKeyDown={(e) => {
             const tabs = ["upload", "view"] as const;
             const currentIdx = tabs.indexOf(activeTab as typeof tabs[number]);
@@ -711,7 +711,7 @@ export default function DocumentManager({
             aria-controls="upload-panel"
             id="upload-tab"
           >
-            Upload New Files
+            Upload New Documents
           </button>
           <button
             className="dm-tab"
@@ -722,7 +722,7 @@ export default function DocumentManager({
             aria-controls="view-panel"
             id="view-tab"
           >
-            View Existing Files
+            View Existing Documents
           </button>
         </div>
 
@@ -777,7 +777,7 @@ export default function DocumentManager({
               {selectedFiles.length > 0 && (
                 <div className="dm-file-list">
                   <p className="dm-file-list-header">
-                    Selected Files ({selectedFiles.length})
+                    Selected Documents ({selectedFiles.length})
                   </p>
                   {selectedFiles.map((file, index) => (
                     <div key={`${file.name}-${index}`} className="dm-file-item">
@@ -807,11 +807,11 @@ export default function DocumentManager({
                       aria-label={
                         uploading
                           ? "Upload in progress"
-                          : `Upload Files — ${selectedFiles.length} selected`
+                          : `Upload Documents — ${selectedFiles.length} selected`
                       }
                     >
                       <LuUpload size={16} aria-hidden="true" />
-                      {uploading ? "Uploading..." : "Upload Files"}
+                      {uploading ? "Uploading..." : "Upload Documents"}
                     </button>
 
                     {hasFailedFiles && !uploading && (
@@ -827,12 +827,12 @@ export default function DocumentManager({
           ) : (
             <div className="dm-file-list" role="tabpanel" aria-labelledby="view-tab" id="view-panel">
               <div className="dm-file-list-header">
-                <p>Current Files</p>
+                <p>Current Documents</p>
                 <button
                   className="dm-refresh-btn"
                   onClick={fetchExistingFiles}
                   disabled={loadingFiles || !isOpen}
-                  aria-label="Refresh file list"
+                  aria-label="Refresh document list"
                 >
                   <LuRefreshCw size={14} />
                   {loadingFiles ? "Loading..." : "Refresh"}
@@ -843,18 +843,18 @@ export default function DocumentManager({
                 <div className="dm-toolbar">
                   <div className="dm-search-wrapper">
                     <LuSearch size={14} className="dm-search-icon" aria-hidden="true" />
-                    <label htmlFor="dm-search-input" className="sr-only">Search files</label>
+                    <label htmlFor="dm-search-input" className="sr-only">Search documents</label>
                     <input
                       id="dm-search-input"
                       type="text"
                       className="dm-search-input"
-                      placeholder="Search files..."
+                      placeholder="Search documents..."
                       value={searchFilter}
                       onChange={(e) => setSearchFilter(e.target.value)}
                     />
                   </div>
 
-                  <div className="dm-sort-controls" role="group" aria-label="Sort files">
+                  <div className="dm-sort-controls" role="group" aria-label="Sort documents">
                     <button
                       className={`dm-sort-btn${sortBy === "name" ? " dm-sort-active" : ""}`}
                       onClick={() => handleSortToggle("name")}
@@ -883,7 +883,7 @@ export default function DocumentManager({
                       className="dm-bulk-delete-btn"
                       onClick={executeBulkDelete}
                       disabled={bulkDeleting}
-                      aria-label={`Delete ${selectedForDelete.size} selected files`}
+                      aria-label={`Delete ${selectedForDelete.size} selected documents`}
                     >
                       <LuTrash2 size={14} aria-hidden="true" />
                       {bulkDeleting ? "Deleting..." : `Delete (${selectedForDelete.size})`}
@@ -908,7 +908,7 @@ export default function DocumentManager({
               )}
 
               <div role="status" aria-live="polite" className="sr-only">
-                {loadingFiles ? "Loading files" : fileListAnnouncement}
+                {loadingFiles ? "Loading documents" : fileListAnnouncement}
               </div>
 
               {loadingFiles ? (
@@ -917,11 +917,11 @@ export default function DocumentManager({
                 </div>
               ) : existingFiles.length === 0 ? (
                 <div className="dm-empty-state">
-                  <p>No files have been uploaded yet.</p>
+                  <p>No supporting documents uploaded yet.</p>
                 </div>
               ) : filteredAndSortedFiles.length === 0 ? (
                 <div className="dm-empty-state">
-                  <p>No files match &ldquo;{searchFilter}&rdquo;</p>
+                  <p>No documents match &ldquo;{searchFilter}&rdquo;</p>
                 </div>
               ) : (
                 filteredAndSortedFiles.map((file, index) => (
@@ -987,7 +987,7 @@ export default function DocumentManager({
         </div>
 
         <div className="dm-footer">
-          <button className="dm-footer-close-btn" onClick={onClose} aria-label="Close document manager">
+          <button className="dm-footer-close-btn" onClick={onClose} aria-label="Close supporting documents">
             Close
           </button>
         </div>
@@ -1013,7 +1013,7 @@ export default function DocumentManager({
             <h3 id={confirmTitleId} className="dm-confirm-title">Delete File</h3>
             <p className="dm-confirm-message">
               Are you sure you want to delete <strong>{fileToDelete}</strong>?
-              This will remove it from your uploaded documents and it will no
+              This will remove it from your supporting documents and it will no
               longer be available in chat.
             </p>
             <div className="dm-confirm-actions">

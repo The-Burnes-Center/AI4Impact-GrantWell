@@ -212,7 +212,7 @@ export class DraftsClient {
         const draft = await this.getDraft(params);
         if (draft) {
           if (params.onProgress && attempt > 1) {
-            params.onProgress('Draft loaded successfully!', attempt, maxAttempts);
+            params.onProgress('Application loaded.', attempt, maxAttempts);
           }
           return draft;
         }

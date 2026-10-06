@@ -150,7 +150,7 @@ export const handler = async (event) => {
     }
 
     return response(500, {
-      message: 'Failed to rename NOFO folder. Internal Server Error.',
+      message: 'Failed to rename grant. Internal Server Error.',
       error: error.message,
     });
   }

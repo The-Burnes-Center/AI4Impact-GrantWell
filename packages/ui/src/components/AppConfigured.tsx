@@ -67,13 +67,17 @@ function toResourcesConfig(awsExports: AppConfig) {
   };
 }
 
-function UnauthenticatedPageTitle(): null {
-  const { pathname } = useLocation();
+function UnauthenticatedRouteEffects(): null {
+  const { pathname, hash } = useLocation();
   const { appName } = useBranding();
 
   useEffect(() => {
-    document.title = pathname === "/login" ? `Sign In - ${appName}` : SEO_TITLE;
+    document.title = pathname === "/login" ? `Sign in - ${appName}` : SEO_TITLE;
   }, [pathname, appName]);
+
+  useEffect(() => {
+    if (!hash) window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname, hash]);
 
   return null;
 }
@@ -307,7 +311,7 @@ function AppLayoutContent({
 
   return (
     <>
-      <UnauthenticatedPageTitle />
+      <UnauthenticatedRouteEffects />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route

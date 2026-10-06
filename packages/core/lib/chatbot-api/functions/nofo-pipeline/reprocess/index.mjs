@@ -46,7 +46,7 @@ export const handler = async (event) => {
   );
 
   if (!nofoFile) {
-    return httpResponse(404, { error: `No NOFO file found for "${nofoName}"` });
+    return httpResponse(404, { error: `No grant document found for "${nofoName}"` });
   }
 
   // Send message to the processing queue (mimics S3 event format)

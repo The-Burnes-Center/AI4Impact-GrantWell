@@ -93,7 +93,7 @@ export function LandingNavbar() {
             (isActive ? " marketing__nav-link--active" : "")
           }
         >
-          Login
+          Sign in
         </NavLink>
       </div>
     </nav>

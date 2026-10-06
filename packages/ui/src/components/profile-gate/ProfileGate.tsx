@@ -30,7 +30,7 @@ const FIELDS: {
 }[] = [
   {
     key: "agency",
-    label: "Agency",
+    label: "Department",
     placeholder: "e.g. Department of Transportation",
     Icon: LuLandmark,
   },
@@ -265,7 +265,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                       value={effectiveState}
                       disabled
                       aria-readonly="true"
-                      title="Your state is assigned by an administrator"
+                      title="Contact your administrator to change your state."
                     >
                       {effectiveState ? (
                         <option value={effectiveState}>{stateLabel}</option>
@@ -275,7 +275,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                     </select>
                   </div>
                   <p className="profile-gate__hint">
-                    Assigned by your administrator.
+                    Contact your administrator to change your state.
                   </p>
                 </div>
 

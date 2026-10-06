@@ -94,7 +94,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       setOriginalSummary(JSON.parse(JSON.stringify(data)));
       setEditedSummary(data);
     } catch {
-      addNotification("error", "Failed to load grant summary. Please try again.");
+      addNotification("error", "Failed to load grant requirements. Please try again.");
       setSummaryModalOpen(false);
     } finally {
       setSummaryLoading(false);
@@ -115,13 +115,13 @@ const NOFOsTab = React.memo(function NOFOsTab({
     setSummarySaving(true);
     try {
       await apiClient.landingPage.updateNOFOSummary(selectedNofo.name, editedSummary);
-      addNotification("success", `Summary for "${selectedNofo.name}" updated successfully`);
+      addNotification("success", `Requirements for "${selectedNofo.name}" updated successfully`);
       setSummaryModalOpen(false);
       setSelectedNofo(null);
       setOriginalSummary(null);
       setEditedSummary({});
     } catch {
-      addNotification("error", "Failed to save summary changes. Please try again.");
+      addNotification("error", "Failed to save requirements changes. Please try again.");
     } finally {
       setSummarySaving(false);
     }
@@ -621,22 +621,22 @@ const NOFOsTab = React.memo(function NOFOsTab({
       <Modal
         isOpen={summaryModalOpen}
         onClose={closeSummaryModal}
-        title={`Edit Summary — ${selectedNofo?.name || ""}`}
+        title={`Edit Requirements — ${selectedNofo?.name || ""}`}
         maxWidth="800px"
       >
         <div className="modal-form" style={{ maxHeight: "70vh", overflowY: "auto" }}>
           <div role="status" aria-live="polite" className="visually-hidden">
-            {summaryLoading ? "Loading grant summary" : ""}
+            {summaryLoading ? "Loading grant requirements" : ""}
           </div>
           {summaryLoading ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: "12px", color: "var(--gw-color-text-secondary)" }}>
               <LuLoader size={20} className="spin-animation" aria-hidden="true" />
-              <span>Loading summary...</span>
+              <span>Loading requirements...</span>
             </div>
           ) : (
             <>
               <p className="modal-description" style={{ marginBottom: "16px" }}>
-                Review and correct the extracted grant summary below. Changes will take effect immediately for all users.
+                Review and correct the extracted grant requirements below. Changes will take effect immediately for all users.
               </p>
               <SummaryEditor
                 editedSummary={editedSummary}
@@ -720,7 +720,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
           ) : (
             <>
               <p className="modal-description" style={{ marginBottom: "16px" }}>
-                Add questions applicants answer in the application writer, alongside any questions from the grant document. Useful when the grant doesn&apos;t spell out what your agency wants to ask.
+                Add questions applicants answer in Write Application, alongside any questions from the grant document. Useful when the grant doesn&apos;t spell out what your state wants to ask.
               </p>
               {customQuestions.length === 0 ? (
                 <p style={{ color: "var(--gw-color-text-secondary)", marginBottom: "16px" }}>
@@ -787,10 +787,10 @@ const NOFOsTab = React.memo(function NOFOsTab({
       <Modal
         isOpen={uploadNofoModalOpen}
         onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(""); setUploadCategory(""); setUploadAgency(""); }}
-        title="Upload Grant"
+        title="Add Grant"
       >
         <div className="modal-form">
-          <p className="modal-description">Upload a new grant file in PDF, TXT, or DOCX format.</p>
+          <p className="modal-description">Upload a grant document in PDF, TXT, or DOCX format.</p>
           <div className="info-box">
             <LuInfo size={18} className="info-icon" />
             <span>After you upload, the grant appears in the list above and processes automatically (about 5&ndash;7 minutes). You can watch each stage on its row &mdash; most grants publish on their own, and only ones that need a closer look are flagged for review.</span>
@@ -852,7 +852,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                       ))}
                     </select>
                   </div>
-                  <div className="field-note">Required for state grants. Users from this state will see it in chat and grant writer.</div>
+                  <div className="field-note">Required for state grants. Users from this state will see it in Chat with AI and Write Application.</div>
                 </div>
               )}
               <div className="form-group">

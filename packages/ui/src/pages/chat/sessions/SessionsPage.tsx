@@ -11,7 +11,7 @@ import "../../../styles/dashboard.css";
 export default function SessionPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const documentIdentifier = searchParams.get("folder");
+  const documentIdentifier = searchParams.get("grant") ?? searchParams.get("folder") ?? searchParams.get("nofo");
   const apiClient = useApiClient();
   const [, setLatestSessionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +64,7 @@ export default function SessionPage() {
 
     // Navigate to the chatbot playground with the selected session ID and document identifier
     const queryParams = documentIdentifier
-      ? `?folder=${encodeURIComponent(documentIdentifier)}`
+      ? `?grant=${encodeURIComponent(documentIdentifier)}`
       : "";
     navigate(`/chat/${sessionId}${queryParams}`);
   };
@@ -80,14 +80,14 @@ export default function SessionPage() {
         <Breadcrumbs
           items={[
             { label: "Home", onClick: handleHomeClick },
-            { label: "Sessions" },
+            { label: "My Chats" },
           ]}
         />
 
         <div className="dashboard-main-content">
           {isLoading ? (
-            <div style={{ display: "flex", justifyContent: "center", padding: "48px" }} role="status" aria-label="Loading sessions">
-              <p style={{ color: "#6b7280" }}>Loading sessions...</p>
+            <div style={{ display: "flex", justifyContent: "center", padding: "48px" }} role="status" aria-label="Loading chats">
+              <p style={{ color: "var(--gw-color-text-secondary)" }}>Loading chats...</p>
             </div>
           ) : (
             <Sessions

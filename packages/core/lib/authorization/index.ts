@@ -78,7 +78,7 @@ export class AuthorizationStack extends Construct {
           'Hello,<br><br>' +
           'An account has been created for you on GrantWell.<br><br>' +
           '<strong>Sign in:</strong> <a href="' + config.siteUrl + '/">' + config.siteUrl + '</a><br>' +
-          '<strong>Username:</strong> {username}<br>' +
+          '<strong>Email address:</strong> {username}<br>' +
           '<strong>Temporary password:</strong> {####}<br><br>' +
           'You will be asked to choose your own password the first time you sign in. The temporary password above can only be used once.<br><br>' +
           'If you were not expecting this invitation, you can ignore this email.<br><br>' +

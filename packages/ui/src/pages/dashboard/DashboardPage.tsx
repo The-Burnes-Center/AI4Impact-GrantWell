@@ -18,7 +18,7 @@ import {
 } from "react-icons/lu";
 import { Modal } from "../../components/common/Modal";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
-import type { NOFO, GrantTypeId } from "../../common/types/nofo";
+import { GRANT_TYPES, type NOFO, type GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
 import "../../styles/dashboard.css";
 
@@ -114,11 +114,11 @@ const Dashboard: React.FC = () => {
       }
 
       if (showRefreshNotification) {
-        addNotification("success", "Dashboard refreshed successfully");
+        addNotification("success", "Admin Dashboard refreshed successfully");
       }
     } catch {
       if (showRefreshNotification) {
-        addNotification("error", "Failed to refresh dashboard data");
+        addNotification("error", "Failed to refresh Admin Dashboard data");
       }
     } finally {
       if (!background) setIsRefreshing(false);
@@ -275,7 +275,7 @@ const Dashboard: React.FC = () => {
     setScrapeConfirmModalOpen(false);
     try {
       setIsScraping(true);
-      addNotification("info", "Starting automated NOFO scraping...");
+      addNotification("info", "Starting automated grant scraping...");
       const response = await apiClient.landingPage.triggerAutomatedScraper();
       const result = response.result ?? response;
       const newCount = result.newQueued ?? result.processed ?? 0;
@@ -288,10 +288,10 @@ const Dashboard: React.FC = () => {
         addNotification("success", `Queued ${parts.join(" and ")} grant${total === 1 ? "" : "s"} for processing!`);
         await fetchNofos();
       } else {
-        addNotification("info", "No new or updated NOFOs found.");
+        addNotification("info", "No new or updated grants found.");
       }
     } catch {
-      addNotification("error", "Failed to run automated NOFO scraper. Please try again.");
+      addNotification("error", "Failed to run automated grant scraper. Please try again.");
     } finally {
       setIsScraping(false);
     }
@@ -410,7 +410,7 @@ const Dashboard: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [filterMenuOpen]);
 
-  if (loading || roleLoading) return <div className="loading" role="status">Loading Dashboard...</div>;
+  if (loading || roleLoading) return <div className="loading" role="status">Loading Admin Dashboard...</div>;
   if (!isAdmin) return <Navigate to="/home" replace />;
 
   const filterCount = getActiveFilterCount();
@@ -422,7 +422,7 @@ const Dashboard: React.FC = () => {
         <Breadcrumbs
           items={[
             { label: "Home", onClick: () => navigate("/") },
-            { label: "Dashboard" },
+            { label: "Admin Dashboard" },
           ]}
         />
 
@@ -446,7 +446,7 @@ const Dashboard: React.FC = () => {
                 ) : (
                   <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
                 )}
-                <span className="visually-hidden"> dashboard</span>
+                <span className="visually-hidden"> Admin Dashboard</span>
               </button>
               {hasProcessingNofos && (
                 <button
@@ -470,7 +470,7 @@ const Dashboard: React.FC = () => {
             </div>
           )}
 
-          <div className="tab-controls" role="tablist" aria-label="Dashboard sections">
+          <div className="tab-controls" role="tablist" aria-label="Admin Dashboard sections">
             <button
               id="dashboard-tab-grants"
               ref={grantsTabRef}
@@ -691,7 +691,7 @@ const Dashboard: React.FC = () => {
                                   tabIndex={focusedFilterIndex === index ? 0 : -1}>
                                   <div className="filter-option-content">
                                     <span className="filter-option-check">{grantTypeFilter === type ? "✓" : ""}</span>
-                                    {type === "all" ? "All Types" : type.charAt(0).toUpperCase() + type.slice(1)}
+                                    {type === "all" ? "All Types" : GRANT_TYPES[type].label}
                                   </div>
                                 </button>
                               );
@@ -706,8 +706,8 @@ const Dashboard: React.FC = () => {
                     <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
                       <LuUpload size={16} className="button-icon" /><span>Add Grant</span>
                     </button>
-                    <button className="action-button scraper-button" onClick={() => setScrapeConfirmModalOpen(true)} disabled={isScraping} aria-label="Auto-scrape NOFOs from grants.gov" aria-busy={isScraping}>
-                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape NOFOs"}</span>
+                    <button className="action-button scraper-button" onClick={() => setScrapeConfirmModalOpen(true)} disabled={isScraping} aria-label="Auto-scrape grants from grants.gov" aria-busy={isScraping}>
+                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span>
                     </button>
                   </div>
                 </div>
@@ -716,7 +716,7 @@ const Dashboard: React.FC = () => {
                   <div className="modal-form">
                     <div className="delete-confirmation">
                       <LuInfo size={32} className="warning-icon dashboard-info-icon" />
-                      <p>Are you sure you want to scrape NOFOs now?</p>
+                      <p>Are you sure you want to scrape grants now?</p>
                     </div>
                     <p className="warning-text">This will search for new grants on grants.gov and add them to the system. This process may take a few minutes.</p>
                     <div className="modal-actions">

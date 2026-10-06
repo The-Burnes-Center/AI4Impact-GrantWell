@@ -63,7 +63,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
 
         <div id={descriptionId} className="help-modal__body">
           <p className="help-modal__text">
-            Grantwell uses generative AI to extract and summarize the key
+            GrantWell uses generative AI to extract and summarize the key
             elements of the grant.
           </p>
 
@@ -80,7 +80,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
           {[
             { title: "Have a question?", text: 'Use "Chat with AI" in the left sidebar to get help understanding the grant requirements.' },
             { title: "Ready to start writing?", text: 'Click "Write Application" in the left sidebar to begin drafting.' },
-            { title: "Want a different grant?", text: "Use Recent Grants to access other recently viewed grants, or select Home to return to the main page." },
+            { title: "Want a different grant?", text: 'Use "Recently viewed grants" on the Home page to return to a grant you viewed before, or choose a new grant from the list there.' },
           ].map((section) => (
             <div key={section.title} style={{ marginBottom: 20 }}>
               <h3 className="help-modal__section-title">{section.title}</h3>

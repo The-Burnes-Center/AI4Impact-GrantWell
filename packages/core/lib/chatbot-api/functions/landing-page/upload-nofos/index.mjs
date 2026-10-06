@@ -124,13 +124,13 @@ function assertCanUpload(callerScope, scope, state) {
     if (scope === "state" && state === callerScope.state) return;
     const err = new Error(
       scope === "federal"
-        ? "State admins cannot upload federal NOFOs."
-        : "State admins can only upload NOFOs for their own state."
+        ? "State admins cannot upload federal grants."
+        : "State admins can only upload grants for their own state."
     );
     err.statusCode = 403;
     throw err;
   }
-  const err = new Error("Not authorized to upload NOFOs.");
+  const err = new Error("Not authorized to upload grants.");
   err.statusCode = 403;
   throw err;
 }

@@ -10,10 +10,10 @@
  */
 export const PROCESSING_STAGES = [
   { key: "uploading", label: "Uploaded", description: "File received and queued for processing." },
-  { key: "extracting_text", label: "Extracting text", description: "Reading the document and pulling out its raw text." },
+  { key: "extracting_text", label: "Extracting text", description: "Reading the grant document and pulling out its raw text." },
   { key: "extracting", label: "Analyzing", description: "Identifying grant requirements, eligibility, and key sections." },
-  { key: "synthesizing", label: "Synthesizing", description: "Assembling the structured grant summary." },
-  { key: "validating", label: "Validating", description: "Checking the summary is complete before publishing." },
+  { key: "synthesizing", label: "Synthesizing", description: "Assembling the structured grant requirements." },
+  { key: "validating", label: "Validating", description: "Checking the requirements are complete before publishing." },
 ] as const;
 
 export type ProcessingStageKey = (typeof PROCESSING_STAGES)[number]["key"];

@@ -85,7 +85,7 @@ export const handler = async (event) => {
       });
     }
     if (scope && scope !== "federal") {
-      return jsonResponse(400, { message: "Guidance overlays apply only to federal NOFOs." });
+      return jsonResponse(400, { message: "State guidance applies only to federal grants." });
     }
 
     if (method === "GET") {
@@ -117,7 +117,7 @@ export const handler = async (event) => {
 async function handleCustomQuestionsPut(nofoName, scope, nofoState, callerScope, body) {
   // Custom questions layer onto a state NOFO; a federal NOFO gets its questions from its document.
   if (scope !== "state" || !nofoState) {
-    return jsonResponse(400, { message: "Custom questions apply only to state NOFOs." });
+    return jsonResponse(400, { message: "Custom questions apply only to state grants." });
   }
   // Throws a 403-bearing error (caught by the handler) when the caller can't edit this state's NOFO.
   assertCanEditNofo(callerScope, "state", nofoState);

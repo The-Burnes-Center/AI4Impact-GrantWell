@@ -197,7 +197,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 role="menuitem"
               >
                 <LuFilePen size={16} className="menu-icon" />
-                <span>Edit Summary</span>
+                <span>Edit Requirements</span>
               </button>
               <button
                 onClick={() => { onDelete(); closeMenu(); }}
@@ -214,7 +214,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
               onClick={() => { onEditCustomQuestions?.(); closeMenu(); }}
               className="dropdown-menu-item"
               role="menuitem"
-              title="Add questions applicants answer in the application writer"
+              title="Add questions applicants answer in Write Application"
             >
               <LuListChecks size={16} className="menu-icon" />
               <span>Custom questions</span>
@@ -238,7 +238,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 title="Create your state's own editable copy of this federal grant"
               >
                 <LuCopy size={16} className="menu-icon" />
-                <span>Promote to my state copy</span>
+                <span>Create state copy</span>
               </button>
             </>
           )}

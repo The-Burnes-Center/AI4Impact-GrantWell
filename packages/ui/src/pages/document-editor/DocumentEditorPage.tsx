@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
-import { v4 as uuidv4 } from "uuid";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
 import { useDraftSave } from "../../hooks/use-draft-save";
+import { useStartDraft } from "../../hooks/use-start-draft";
 import {
   stepToStatus,
   statusToStep,
   EDITOR_STEPS,
   stepToIndex,
   readDraftCache,
-  clearDraftCache,
   sweepLegacyDraftCache,
 } from "../../common/helpers/document-editor-utils";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
@@ -20,17 +19,18 @@ import SectionEditor from "./SectionsEditor";
 import ReviewApplication from "./ReviewApplication";
 import UploadDocuments, { type StepLeaveGuard } from "./UploadDocuments";
 import WelcomeModal from "./components/WelcomeModal";
+import GrantPickerModal, { type PickedGrant } from "../../components/common/GrantPickerModal";
+import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
-import { Utils } from "../../common/utils";
 import "../../styles/document-editor.css";
 
 const ERROR_MESSAGES = {
-  LOAD_FAILED: "Failed to load document data",
-  SAVE_FAILED: "Failed to save document data",
-  START_FAILED: "Failed to start new document",
+  LOAD_FAILED: "Failed to load application",
+  SAVE_FAILED: "Failed to save application",
+  START_FAILED: "Failed to start new application",
 } as const;
 
 const FIRST_SECTION_STEP_INDEX = stepToIndex("sectionEditor");
@@ -40,7 +40,7 @@ const useDocumentStorage = (nofoId: string | null) => {
   const [documentData, setDocumentData] = useState<DocumentData | null>(null);
   const [loadedDraft, setLoadedDraft] = useState<DocumentDraft | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("Loading document editor...");
+  const [loadingMessage, setLoadingMessage] = useState("Loading application...");
   const [error, setError] = useState<string | null>(null);
   const { sessionId } = useParams();
   const draftsClient = useDraftsClient();
@@ -49,7 +49,7 @@ const useDocumentStorage = (nofoId: string | null) => {
     if (!nofoId || !sessionId) return;
     setIsLoading(true);
     setError(null);
-    setLoadingMessage("Loading document editor...");
+    setLoadingMessage("Loading application...");
 
     try {
       const username = (await getCurrentUser()).username;
@@ -100,6 +100,7 @@ const DocumentEditor: React.FC = () => {
   const [nofoName, setNofoName] = useState("");
   const [isNofoLoading, setIsNofoLoading] = useState(false);
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
+  const [grantPickerOpen, setGrantPickerOpen] = useState(false);
   const [activeJobId, setActiveJobId] = useState<string | undefined>(undefined);
   const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
   const navigate = useNavigate();
@@ -110,6 +111,7 @@ const DocumentEditor: React.FC = () => {
 
   const apiClient = useApiClient();
   const draftsClient = useDraftsClient();
+  const startDraft = useStartDraft();
 
   const { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError } =
     useDocumentStorage(selectedNofo);
@@ -129,7 +131,7 @@ const DocumentEditor: React.FC = () => {
 
   // Extract NOFO and step from URL
   useEffect(() => {
-    const nofo = searchParams.get("nofo");
+    const nofo = searchParams.get("grant") ?? searchParams.get("folder") ?? searchParams.get("nofo");
     const stepFromUrl = searchParams.get("step");
     if (nofo) setSelectedNofo(decodeURIComponent(nofo));
     if (stepFromUrl && EDITOR_STEPS.some((s) => s.id === stepFromUrl)) {
@@ -156,6 +158,10 @@ const DocumentEditor: React.FC = () => {
     if (urlStep) {
       const corrected = new URLSearchParams(searchParams);
       corrected.set("step", statusStep);
+      const legacyGrant = corrected.get("folder") ?? corrected.get("nofo");
+      if (legacyGrant && !corrected.has("grant")) corrected.set("grant", legacyGrant);
+      corrected.delete("folder");
+      corrected.delete("nofo");
       navigate({ search: `?${corrected.toString()}` }, { replace: true });
     }
   }, [sessionId, loadedDraft, searchParams, navigate]);
@@ -202,46 +208,40 @@ const DocumentEditor: React.FC = () => {
     setIsNofoLoading(true);
     apiClient.landingPage
       .getNOFOSummary(selectedNofo)
-      .then((result) => setNofoName(result?.data?.GrantName || "Grant Application"))
-      .catch(() => setNofoName("Grant Application"))
+      .then((result) => setNofoName(result?.data?.GrantName || "Write Application"))
+      .catch(() => setNofoName("Write Application"))
       .finally(() => setIsNofoLoading(false));
   }, [selectedNofo, apiClient]);
 
-  const startNewDocument = useCallback(async () => {
-    if (!selectedNofo) return;
+  const startNewDocument = useCallback(async (nofo: string) => {
     try {
-      const newSessionId = uuidv4();
-      const username = (await getCurrentUser()).username;
-      if (username) {
-        await draftsClient.createDraft({
-          sessionId: newSessionId, userId: username,
-          title: `Application for ${selectedNofo}`, documentIdentifier: selectedNofo,
-          sections: {}, projectBasics: {}, questionnaire: {},
-          status: "project_basics", reachedSteps: ["projectBasics"],
-          lastModified: Utils.getCurrentTimestamp(),
-        });
-      }
-      clearDraftCache(newSessionId);
+      const url = await startDraft(nofo);
       setCurrentStep("projectBasics");
-      navigate(`/document-editor/${newSessionId}?step=projectBasics&nofo=${encodeURIComponent(selectedNofo)}`);
+      navigate(url);
     } catch (err) {
       console.error("Failed to start new document:", err);
       setError(ERROR_MESSAGES.START_FAILED);
     }
-  }, [selectedNofo, draftsClient, navigate, setError]);
+  }, [startDraft, navigate, setError]);
+
+  const handleGrantPicked = useCallback(async (grant: PickedGrant) => {
+    addToRecentlyViewed(grant);
+    setGrantPickerOpen(false);
+    await startNewDocument(grant.value);
+  }, [startNewDocument]);
 
   const navigateToSectionEditor = useCallback((jobId: string) => {
     setActiveJobId(jobId);
     setIsGeneratingDraft(true);
     setCurrentStep("sectionEditor");
     recordStepReached("sectionEditor");
-    const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : "";
+    const nofoParam = selectedNofo ? `&grant=${encodeURIComponent(selectedNofo)}` : "";
     navigate(`/document-editor/${sessionId}?step=sectionEditor${nofoParam}`);
   }, [selectedNofo, sessionId, navigate, recordStepReached]);
 
   const performStepNavigation = useCallback(async (step: string) => {
     const go = () => {
-      const nofoParam = selectedNofo ? `&nofo=${encodeURIComponent(selectedNofo)}` : "";
+      const nofoParam = selectedNofo ? `&grant=${encodeURIComponent(selectedNofo)}` : "";
       navigate(`/document-editor/${sessionId}?step=${step}${nofoParam}`);
     };
 
@@ -326,7 +326,7 @@ const DocumentEditor: React.FC = () => {
             <div className="document-editor-header" style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 101, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
               <div style={{ padding: 16 }}>
                 <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", fontWeight: 600, lineHeight: 1.4, wordBreak: "break-word" }}>
-                  {isNofoLoading ? "Loading..." : nofoName || "Grant Application"}
+                  {isNofoLoading ? "Loading..." : nofoName || "Write Application"}
                 </h1>
               </div>
             </div>
@@ -348,7 +348,7 @@ const DocumentEditor: React.FC = () => {
             <div className="document-editor-workspace" style={{ flex: 1, padding: 20 }}>
               {/* Outlives the loading view, so both the wait and its end are announced. */}
               <div role="status" aria-live="polite" className="visually-hidden">
-                {isLoading ? loadingMessage : documentData ? "Document editor ready." : ""}
+                {isLoading ? loadingMessage : documentData ? "Application ready." : ""}
               </div>
 
               {isLoading ? (
@@ -374,13 +374,23 @@ const DocumentEditor: React.FC = () => {
         onClose={() => setWelcomeModalOpen(false)}
         onGetStarted={() => {
           setWelcomeModalOpen(false);
-          if (selectedNofo) startNewDocument();
-          else navigate("/");
+          if (selectedNofo) startNewDocument(selectedNofo);
+          else setGrantPickerOpen(true);
         }}
         onViewDrafts={() => {
           setWelcomeModalOpen(false);
-          navigate(selectedNofo ? `/document-editor/drafts?nofo=${encodeURIComponent(selectedNofo)}` : "/document-editor/drafts");
+          navigate(selectedNofo ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}` : "/document-editor/drafts");
         }}
+      />
+      <GrantPickerModal
+        isOpen={grantPickerOpen}
+        onClose={() => {
+          setGrantPickerOpen(false);
+          setWelcomeModalOpen(true);
+        }}
+        onSelect={handleGrantPicked}
+        title="Start a new application"
+        description="Choose the grant you want to apply for."
       />
     </div>
   );

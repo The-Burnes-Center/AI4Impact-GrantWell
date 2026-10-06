@@ -18,7 +18,7 @@ export default function DocEditorSessionsPage() {
   const [showAllNOFOs, setShowAllNOFOs] = useState(false);
 
   // Get documentIdentifier from URL params or query params
-  const docId = params.documentIdentifier || searchParams.get('folder') || searchParams.get('nofo') || null;
+  const docId = params.documentIdentifier || searchParams.get('grant') || searchParams.get('folder') || searchParams.get('nofo') || null;
 
   useEffect(() => {
     const fetchLatestDraft = async () => {
@@ -73,7 +73,7 @@ export default function DocEditorSessionsPage() {
         const status = selectedDraft.status || 'project_basics';
         const step = statusToStep(status);
         
-        const queryParams = `?step=${step}&nofo=${encodeURIComponent(selectedDraft.documentIdentifier)}`;
+        const queryParams = `?step=${step}&grant=${encodeURIComponent(selectedDraft.documentIdentifier)}`;
         navigate(`/document-editor/${draftId}${queryParams}`);
       }
     } catch (e) {
@@ -83,7 +83,7 @@ export default function DocEditorSessionsPage() {
 
   const breadcrumbItems = [
     { label: "Home", onClick: () => navigate("/") },
-    { label: "Applications" },
+    { label: "My Applications" },
   ];
 
   return (

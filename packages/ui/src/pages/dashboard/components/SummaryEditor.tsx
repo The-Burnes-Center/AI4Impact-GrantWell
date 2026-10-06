@@ -109,7 +109,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
           color: "var(--gw-color-heading)",
         }}
       >
-        Extracted Summary (Editable)
+        Extracted Requirements (Editable)
       </h3>
 
       <div style={{ marginBottom: "12px" }}>

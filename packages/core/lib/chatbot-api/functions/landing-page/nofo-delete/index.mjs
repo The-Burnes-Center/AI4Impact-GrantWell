@@ -139,7 +139,7 @@ export const handler = async (event) => {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({
-        message: 'Failed to delete NOFO folder. Internal Server Error.',
+        message: 'Failed to delete grant. Internal Server Error.',
         error: error.message,
       }),
     };

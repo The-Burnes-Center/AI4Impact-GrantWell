@@ -20,7 +20,7 @@ test("shows the NOFO's requirements in four tabs, one entry per summary item", a
   const summary = await nofoSummary(nofoName);
 
   const actions = await selectNofo(page, nofoName);
-  await actions.getByRole("button", { name: "View Key Requirements" }).click();
+  await actions.getByRole("button", { name: "Requirements", exact: true }).click();
   await expect(page).toHaveURL(/\/requirements\//);
 
   const tablist = page.getByRole("tablist", { name: "Grant requirements" });

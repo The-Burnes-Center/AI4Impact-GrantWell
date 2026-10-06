@@ -16,6 +16,8 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { safeJsonParse, httpResponse } from "../shared/json.mjs";
+import { readS3Text } from "../shared/s3.mjs";
+import { documentSampleOf, generateQuestions, hasQuestions } from "../shared/questions.mjs";
 import { requireAdmin, assertCanEditNofoOr403, resolveCallerScope, readNofoScope } from "grantwell-shared";
 
 const dynamoClient = new DynamoDBClient();
@@ -231,8 +233,21 @@ async function approveReview(nofoName, event) {
 
   if (!extractedSummary) {
     return httpResponse(400, {
-      error: `Review for "${nofoName}" has no extracted summary (duplicate or failed extraction) — approving it would publish an empty NOFO. Reprocess it instead.`,
+      error: `Review for "${nofoName}" has no extracted requirements (duplicate or failed extraction) — approving it would publish an empty grant. Reprocess it instead.`,
     });
+  }
+
+  let questionsData = extractedQuestions;
+  if (!hasQuestions(questionsData)) {
+    questionsData = await regenerateQuestions(
+      corrections ? { ...extractedSummary, ...corrections } : extractedSummary,
+      review.s3RawTextKey
+    );
+    if (!hasQuestions(questionsData)) {
+      return httpResponse(500, {
+        error: "Could not generate application questions for this grant. Try Reprocess.",
+      });
+    }
   }
 
   // Invoke the publish Lambda with the (corrected) data
@@ -241,7 +256,7 @@ async function approveReview(nofoName, event) {
     s3Bucket: process.env.BUCKET,
     documentKey: review.s3DocumentKey,
     mergedSummary: extractedSummary,
-    questionsData: extractedQuestions,
+    questionsData,
     applicationDeadline: extractedSummary?.application_deadline || null,
     agency: extractedSummary?.Agency || null,
     category: extractedSummary?.Category || null,
@@ -286,6 +301,18 @@ async function approveReview(nofoName, event) {
   );
 
   return httpResponse(200, { message: `Review approved for "${nofoName}"` });
+}
+
+async function regenerateQuestions(summary, rawTextKey) {
+  let documentSample = "";
+  if (rawTextKey) {
+    try {
+      documentSample = documentSampleOf(await readS3Text(process.env.BUCKET, rawTextKey));
+    } catch (error) {
+      console.warn(`Could not read ${rawTextKey}, generating questions from the summary only:`, error.message);
+    }
+  }
+  return generateQuestions(summary, documentSample);
 }
 
 async function rejectReview(nofoName, event) {

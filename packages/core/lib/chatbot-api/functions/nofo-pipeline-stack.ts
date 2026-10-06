@@ -275,6 +275,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         BUCKET: props.ffioNofosBucket.bucketName,
         PUBLISH_FUNCTION_NAME: publishFunction.functionName,
+        HAIKU_MODEL_ID: props.haikuNofoProfileArn,
         SUPPORTED_STATES: props.supportedStatesEnv,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
       },
@@ -283,6 +284,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
     });
     nofoAdminFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     nofoAdminFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
+    nofoAdminFunction.addToRolePolicy(bedrockInvokePolicy());
     nofoAdminFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -293,7 +295,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
     nofoAdminFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:ListBucket", "s3:DeleteObject", "s3:PutObject"],
+        actions: ["s3:ListBucket", "s3:GetObject", "s3:DeleteObject", "s3:PutObject"],
         resources: [
           props.ffioNofosBucket.bucketArn,
           props.ffioNofosBucket.bucketArn + "/*",

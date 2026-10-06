@@ -60,7 +60,7 @@ export class SessionsClient {
     let output;
     let runs = 0;
     const limit = 3;
-    let errorMessage = "Could not load session";
+    let errorMessage = "Could not load chat";
 
     while (!validData && runs < limit) {
       runs += 1;

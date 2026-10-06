@@ -13,6 +13,8 @@ import { DateTime } from "luxon";
 import { useNavigate } from "react-router";
 import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
+import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
+import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import TableScrollRegion from "../ui/TableScrollRegion";
 import { v4 as uuidv4 } from "uuid";
 import "../../styles/dashboard.css";
@@ -33,6 +35,7 @@ export default function Sessions(props: SessionsProps) {
   const [pageSize, setPageSize] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [showModalDelete, setShowModalDelete] = useState(false);
+  const [showGrantPicker, setShowGrantPicker] = useState(false);
   const [sortField, setSortField] = useState<"title" | "time_stamp">(
     "time_stamp"
   );
@@ -157,24 +160,41 @@ export default function Sessions(props: SessionsProps) {
     );
   };
 
+  const startChat = (documentIdentifier: string) => {
+    navigate(`/chat/${uuidv4()}?grant=${encodeURIComponent(documentIdentifier)}`);
+  };
+
+  const handleGrantPicked = (grant: PickedGrant) => {
+    addToRecentlyViewed(grant);
+    setShowGrantPicker(false);
+    startChat(grant.value);
+  };
+
   return (
     <div className="dashboard-content">
+      <GrantPickerModal
+        isOpen={showGrantPicker}
+        onClose={() => setShowGrantPicker(false)}
+        onSelect={handleGrantPicked}
+        title="Start a new chat"
+        description="Choose the grant you want to ask about."
+      />
       <DeleteConfirmationModal
         isOpen={showModalDelete}
         onClose={() => setShowModalDelete(false)}
         onConfirm={deleteSelectedSessions}
-        title={`Delete session${selectedItems.length > 1 ? "s" : ""}`}
-        itemName={selectedItems.length === 1 ? selectedItems[0].session_id : undefined}
+        title={`Delete chat${selectedItems.length > 1 ? "s" : ""}`}
+        itemName={selectedItems.length === 1 ? selectedItems[0].title : undefined}
         itemCount={selectedItems.length > 1 ? selectedItems.length : undefined}
-        itemLabel="session"
+        itemLabel="chat"
       />
 
       {/* Header section */}
       <div className="dashboard-header">
         <div>
-          <h1>Sessions</h1>
+          <h1>My Chats</h1>
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
-            Manage and access your previous chat conversations
+            Manage and access your previous chats
           </p>
         </div>
         <div className="dashboard-actions">
@@ -182,19 +202,14 @@ export default function Sessions(props: SessionsProps) {
             className="action-button add-button"
             onClick={() => {
               if (props.documentIdentifier) {
-                const newSessionId = uuidv4();
-                navigate(
-                  `/chat/${newSessionId}?folder=${encodeURIComponent(
-                    props.documentIdentifier
-                  )}`
-                );
+                startChat(props.documentIdentifier);
               } else {
-                navigate(`/home`);
+                setShowGrantPicker(true);
               }
             }}
           >
             <LuPlus size={16} className="button-icon" />
-            <span>New Session</span>
+            <span>New Chat</span>
           </button>
           <button
             className="action-button danger-button"
@@ -217,7 +232,7 @@ export default function Sessions(props: SessionsProps) {
               setIsLoading(false);
             }}
             disabled={isLoading}
-            aria-label="Refresh sessions list"
+            aria-label="Refresh chats list"
             aria-busy={isLoading}
           >
             {isLoading ? (
@@ -233,9 +248,9 @@ export default function Sessions(props: SessionsProps) {
       </div>
 
       {/* Table section */}
-      <TableScrollRegion label="Chat sessions table" minWidth={520}>
+      <TableScrollRegion label="Chats table" minWidth={520}>
       <div className="table-container">
-        <div role="table" aria-label="Chat sessions">
+        <div role="table" aria-label="Chats">
           <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
             <div role="row" style={{ display: "contents" }}>
               <div className="header-cell" role="columnheader">
@@ -246,7 +261,7 @@ export default function Sessions(props: SessionsProps) {
                     selectedItems.length === paginatedItems.length
                   }
                   onChange={handleSelectAll}
-                  aria-label="Select all sessions"
+                  aria-label="Select all chats"
                   style={{ cursor: "pointer" }}
                   disabled={isLoading || sortedSessions.length === 0}
                 />
@@ -304,7 +319,7 @@ export default function Sessions(props: SessionsProps) {
               {sortedSessions.length === 0 ? (
                 <div className="no-data">
                   <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
-                    No sessions
+                    No chats
                   </div>
                 </div>
               ) : (
@@ -329,7 +344,7 @@ export default function Sessions(props: SessionsProps) {
                           }
 
                           const queryParam = item.document_identifier
-                            ? `?folder=${encodeURIComponent(
+                            ? `?grant=${encodeURIComponent(
                                 item.document_identifier
                               )}`
                             : "";
@@ -376,10 +391,10 @@ export default function Sessions(props: SessionsProps) {
 
       <div role="status" aria-live="polite" className="visually-hidden">
         {isLoading
-          ? "Loading sessions"
+          ? "Loading chats"
           : sortedSessions.length === 0
-          ? "No sessions"
-          : `${sortedSessions.length} session${
+          ? "No chats"
+          : `${sortedSessions.length} chat${
               sortedSessions.length === 1 ? "" : "s"
             } loaded`}
       </div>
@@ -390,7 +405,7 @@ export default function Sessions(props: SessionsProps) {
           <div className="pagination-info">
             Showing {(currentPage - 1) * pageSize + 1} to{" "}
             {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
-            {sortedSessions.length} sessions
+            {sortedSessions.length} chats
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
             <div className="pagination-controls">

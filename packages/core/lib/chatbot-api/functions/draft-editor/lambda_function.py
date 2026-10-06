@@ -351,7 +351,7 @@ def mark_step_reached(session_id, user_id, reached_step):
         )
     except ClientError as error:
         if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
-            return _json_response(404, {"error": "no such draft"})
+            return _json_response(404, {"error": "Application not found"})
         print(f"Caught error: could not mark step reached - {error}")
         return _json_response(500, {"error": "could not record reached step"})
     return _json_response(200, {"reachedStep": reached_step})
@@ -589,7 +589,7 @@ def list_draft_versions(session_id, user_id, limit=None):
         return _json_response(200, {'versions': response.get('Items', [])})
     except ClientError as error:
         print(f"Caught error: could not list draft versions - {error}")
-        return _json_response(500, {'error': 'Failed to list draft versions'})
+        return _json_response(500, {'error': 'Failed to list versions'})
 
 
 def get_draft_version(session_id, user_id, rev):
@@ -601,7 +601,7 @@ def get_draft_version(session_id, user_id, rev):
         ).get('Item')
     except ClientError as error:
         print(f"Caught error: could not get draft version - {error}")
-        return _json_response(500, {'error': 'Failed to read draft version'})
+        return _json_response(500, {'error': 'Failed to read this version'})
 
     if not item:
         return _json_response(404, {'error': f'No version {rev} for session {session_id}'})
@@ -638,7 +638,7 @@ def restore_draft_version(session_id, user_id, rev, sections_only=None):
         ).get('Item')
     except ClientError as error:
         print(f"Caught error: could not read version for restore - {error}")
-        return _json_response(500, {'error': 'Failed to read draft version'})
+        return _json_response(500, {'error': 'Failed to read this version'})
 
     if not version:
         return _json_response(404, {'error': f'No version {rev} for session {session_id}'})
@@ -660,7 +660,7 @@ def restore_draft_version(session_id, user_id, rev, sections_only=None):
         current = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item") or {}
     except ClientError as error:
         print(f"Caught error: could not read draft for restore - {error}")
-        return _json_response(500, {'error': 'Failed to read draft'})
+        return _json_response(500, {'error': 'Failed to read application'})
 
     current_sections = current.get('sections') or {}
 
@@ -695,8 +695,8 @@ def restore_draft_version(session_id, user_id, rev, sections_only=None):
             return _json_response(422, {
                 'error': 'empty_version',
                 'message': (
-                    'This version was saved before any narrative text existed, so restoring '
-                    'it would erase every section of your draft. Choose a version that has '
+                    'This version was saved before any section text existed, so restoring '
+                    'it would erase every section of your application. Choose a version that has '
                     'content.'
                 ),
             })
@@ -753,7 +753,7 @@ def label_draft_version(session_id, user_id, rev, label):
         if error.response['Error']['Code'] == 'ConditionalCheckFailedException':
             return _json_response(404, {'error': f'No version {rev} for session {session_id}'})
         print(f"Caught error: could not label draft version - {error}")
-        return _json_response(500, {'error': 'Failed to label draft version'})
+        return _json_response(500, {'error': 'Failed to label this version'})
 
     return _json_response(200, {'rev': int(rev), 'label': label or None})
 
@@ -769,7 +769,7 @@ def create_draft_version(session_id, user_id, label=None):
         item = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item")
     except ClientError as error:
         print(f"Caught error: could not read draft for snapshot - {error}")
-        return _json_response(500, {'error': 'Failed to read draft'})
+        return _json_response(500, {'error': 'Failed to read application'})
 
     if not item:
         return _json_response(404, {'error': f'No record found with session id: {session_id}'})

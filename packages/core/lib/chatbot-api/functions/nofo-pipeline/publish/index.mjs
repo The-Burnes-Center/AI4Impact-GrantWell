@@ -4,6 +4,7 @@ import { DynamoDBClient, UpdateItemCommand, GetItemCommand } from "@aws-sdk/clie
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { updateProcessingStatus } from "../shared/status.mjs";
+import { hasQuestions } from "../shared/questions.mjs";
 
 // scope/state are written by upload-nofos / scraper; publish reads them so
 // the late-stage sidecar overwrite doesn't drop these fields.
@@ -51,7 +52,13 @@ export const handler = async (event) => {
 
   if (!mergedSummary || typeof mergedSummary !== "object") {
     throw new Error(
-      `Refusing to publish "${nofoName}": summary is empty. Duplicate/failed reviews have no extracted data — reprocess the NOFO instead.`
+      `Refusing to publish "${nofoName}": extracted requirements are empty. Duplicate/failed reviews have no extracted data — reprocess the grant instead.`
+    );
+  }
+
+  if (!hasQuestions(questionsData)) {
+    throw new Error(
+      `Refusing to publish "${nofoName}": no application questions. Reprocess the grant to regenerate them.`
     );
   }
 
@@ -67,10 +74,7 @@ export const handler = async (event) => {
   // Upload summary.json
   await uploadJson(bucket, `${folderPath}summary.json`, finalSummary);
 
-  // Upload questions.json
-  if (questionsData) {
-    await uploadJson(bucket, `${folderPath}questions.json`, questionsData);
-  }
+  await uploadJson(bucket, `${folderPath}questions.json`, questionsData);
 
   const docKey = documentKey || `${nofoName}/NOFO-File-PDF`;
   const { scope: ddbScope, state: ddbState } = await readScopeFromMetadataTable(nofoName);

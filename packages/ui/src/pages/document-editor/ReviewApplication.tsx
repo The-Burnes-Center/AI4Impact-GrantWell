@@ -208,7 +208,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
     try {
       const { draftData, grantName } = await fetchDraftForExport();
-      if (!draftData) throw new Error("No draft data available for export.");
+      if (!draftData) throw new Error("No application data available for export.");
 
       const payload = {
         title: draftData.title,
@@ -259,11 +259,11 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
   return (
     <div className="ra-container">
-      {/* Application Summary Section */}
+      {/* Review Section */}
       <div className="ra-card">
         <div className="ra-header">
           <LuFileText className="ra-header__icon" aria-hidden="true" />
-          <h2 className="ra-header__title">Application Summary</h2>
+          <h2 className="ra-header__title">Review</h2>
         </div>
 
         <div className="ra-stats-grid">
@@ -306,7 +306,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             </h3>
             <p className="ra-compliance__text">
               {completenessPassed
-                ? "All required sections have been completed. Review your content for accuracy and alignment with NOFO requirements before exporting."
+                ? "All required sections have been completed. Review your content for accuracy and alignment with the grant requirements before exporting."
                 : "Please complete all required sections before exporting your application."}
             </p>
           </div>
@@ -352,7 +352,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <button
             onClick={() => onNavigate("sectionEditor")}
             className="ra-edit-btn"
-            aria-label="Make final edits - return to section editor"
+            aria-label="Make final edits - return to the Section Editor"
           >
             <div className="ra-edit-btn__icon-wrapper">
               <LuSquarePen className="ra-edit-btn__icon" aria-hidden="true" />
@@ -360,7 +360,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div className="ra-edit-btn__text">
               <div className="ra-edit-btn__title">Make Final Edits</div>
               <div className="ra-edit-btn__subtitle">
-                Return to section editor
+                Return to Section Editor
               </div>
             </div>
           </button>

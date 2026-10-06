@@ -102,8 +102,9 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       );
       addNotification("success", `"${review.nofo_name}" approved and published`);
       onActionComplete();
-    } catch {
-      addNotification("error", "Failed to approve review");
+    } catch (err) {
+      const detail = err instanceof Error && !err.message.startsWith("Error: ") ? err.message : null;
+      addNotification("error", detail ? `Failed to approve review: ${detail}` : "Failed to approve review");
     } finally {
       setActionInProgress(null);
     }
@@ -275,7 +276,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
         <div className="review-dlq-alert" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
           <strong>Awaiting Document Re-upload</strong>
           <p style={{ margin: "8px 0 0" }}>
-            This NOFO has been marked as needing a new document upload. Upload a corrected document to trigger reprocessing.
+            This grant has been marked as needing a new document upload. Upload a corrected grant document to trigger reprocessing.
           </p>
         </div>
       )}
@@ -285,13 +286,13 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           {review.source === "dlq" && (
             <>
               <strong>Processing Failed (Dead Letter Queue)</strong>
-              <p style={{ margin: "8px 0 0" }}>This NOFO failed processing and was moved to the Dead Letter Queue.</p>
+              <p style={{ margin: "8px 0 0" }}>This grant failed processing and was moved to the Dead Letter Queue.</p>
               <div className="review-dlq-guidance">
                 <strong>What to do:</strong>
                 <ol>
                   <li>Check the error details below to identify the failure reason.</li>
                   <li>Reject this entry to clean up the failed attempt.</li>
-                  <li>Re-upload the NOFO document using the same grant name in the dashboard.</li>
+                  <li>Re-upload the grant document using the same grant name in the Admin Dashboard.</li>
                 </ol>
               </div>
             </>
@@ -299,7 +300,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           {review.source === "duplicate" && (
             <>
               <strong>Duplicate Document Detected</strong>
-              <p style={{ margin: "8px 0 0" }}>This NOFO was flagged as a duplicate of an existing document already in the system.</p>
+              <p style={{ margin: "8px 0 0" }}>This grant was flagged as a duplicate of an existing document already in the system.</p>
               <div className="review-dlq-guidance">
                 <strong>What to do:</strong>
                 <ol>
@@ -313,11 +314,11 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           {review.source === "quality" && (
             <>
               <strong>Source Document Quality Check Failed</strong>
-              <p style={{ margin: "8px 0 0" }}>The uploaded file did not pass the quality check. This usually means the document is not a valid grant/NOFO, is corrupted, or contains mostly non-text content (e.g., scanned images without OCR).</p>
+              <p style={{ margin: "8px 0 0" }}>The uploaded file did not pass the quality check. This usually means the document is not a valid grant document, is corrupted, or contains mostly non-text content (e.g., scanned images without OCR).</p>
               <div className="review-dlq-guidance">
                 <strong>What to do:</strong>
                 <ol>
-                  <li>Go to the original source (e.g., Grants.gov or the agency website) and download a clean copy of the NOFO document.</li>
+                  <li>Go to the original source (e.g., Grants.gov or the agency website) and download a clean copy of the grant document.</li>
                   <li>Make sure the file is a text-based PDF (not a scanned image). If the PDF is image-based, use an OCR tool to convert it first.</li>
                   <li>Reject this entry to clean it up.</li>
                   <li>Re-upload the corrected document using the <strong>exact same grant name</strong> so it replaces this failed attempt.</li>
@@ -328,7 +329,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           {review.source === "pipeline" && detail.errorMessage && (
             <>
               <strong>Processing Error</strong>
-              <p style={{ margin: "8px 0 0" }}>This NOFO encountered an error during pipeline processing.</p>
+              <p style={{ margin: "8px 0 0" }}>This grant encountered an error during pipeline processing.</p>
               <div className="review-dlq-guidance">
                 <strong>What to do:</strong>
                 <ol>
@@ -460,7 +461,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                 </p>
               </div>
               <p className="warning-text">
-                This will permanently delete the NOFO file and all processed data. This action cannot be
+                This will permanently delete the grant document and all processed data. This action cannot be
                 undone.
               </p>
               {adminNotes && (
@@ -490,7 +491,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                 <button
                   className="modal-button danger"
                   onClick={confirmReject}
-                  aria-label="Reject and delete this NOFO"
+                  aria-label="Reject and delete this grant"
                 >
                   Reject and Delete
                 </button>
@@ -504,7 +505,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             accept=".pdf,.txt"
             style={{ display: "none" }}
             onChange={handleFileSelected}
-            aria-label="Select replacement NOFO file"
+            aria-label="Select replacement grant document"
           />
           <ReviewActions
             actionInProgress={actionInProgress}

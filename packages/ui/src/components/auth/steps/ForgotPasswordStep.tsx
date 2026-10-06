@@ -20,7 +20,7 @@ export default function ForgotPasswordStep({
 }: ForgotPasswordStepProps) {
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
-      <Form onSubmit={onSubmit} aria-label="Forgot password form" noValidate>
+      <Form onSubmit={onSubmit} aria-label="Reset password form" noValidate>
         <Form.Group className="mb-3">
           <Form.Label className="form-label" htmlFor="forgot-email-input">
             Email address <span aria-hidden="true">*</span>
@@ -55,7 +55,7 @@ export default function ForgotPasswordStep({
                 Sending...
               </>
             ) : (
-              "Send reset code"
+              "Send verification code"
             )}
           </Button>
         </div>

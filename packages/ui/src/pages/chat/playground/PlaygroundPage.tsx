@@ -12,8 +12,8 @@ import "../../../styles/playground.css";
 export default function Playground() {
   const { sessionId } = useParams();
   const [searchParams] = useSearchParams();
-  const documentIdentifier = searchParams.get("folder");
-  const [nofoName, setNofoName] = useState("New NOFO");
+  const documentIdentifier = searchParams.get("grant") ?? searchParams.get("folder") ?? searchParams.get("nofo");
+  const [nofoName, setNofoName] = useState("New grant");
   const [isLoading, setIsLoading] = useState(false);
   const apiClient = useApiClient();
   const [helpOpen, setHelpOpen] = useState(false);
@@ -54,11 +54,11 @@ export default function Playground() {
         if (summaryResult?.data?.GrantName) {
           setNofoName(summaryResult.data.GrantName);
         } else {
-          setNofoName(documentIdentifier.split("/").pop() || "NOFO");
+          setNofoName(documentIdentifier.split("/").pop() || "Grant");
         }
       } catch (error) {
         console.error("Error fetching NOFO name:", error);
-        setNofoName(documentIdentifier.split("/").pop() || "NOFO");
+        setNofoName(documentIdentifier.split("/").pop() || "Grant");
       } finally {
         setIsLoading(false);
       }
@@ -119,6 +119,7 @@ export default function Playground() {
         header={
           <div className="pg-header">
             <h1 className="pg-header-title">
+              <span className="pg-header-eyebrow">Chat with AI</span>
               {isLoading ? "Loading..." : nofoName}
             </h1>
             <div className="pg-header-actions">
@@ -126,7 +127,7 @@ export default function Playground() {
                 <button
                   className="pg-upload-btn"
                   onClick={() => setUploadModalOpen(true)}
-                  aria-label={`Upload Documents — supporting documents for this grant${uploadedFileCount > 0 ? `. ${uploadedFileCount} files uploaded.` : ""}`}
+                  aria-label={`Upload Documents — supporting documents for this grant${uploadedFileCount > 0 ? `. ${uploadedFileCount} supporting document${uploadedFileCount === 1 ? "" : "s"} uploaded.` : ""}`}
                 >
                   <LuUpload size={16} aria-hidden="true" /> Upload Documents
                   {uploadedFileCount > 0 && (
@@ -183,7 +184,7 @@ export default function Playground() {
             {/* Header */}
             <div className="pg-modal-header">
               <h2 id={titleId} className="pg-modal-title">
-                Welcome to GrantWell Chatbot!
+                Welcome to Chat with AI
               </h2>
               <button
                 onClick={handleCloseModal}
@@ -207,15 +208,14 @@ export default function Playground() {
                 <ul className="pg-highlight-list">
                   <li>
                     Explain specific grant requirements, eligibility criteria,
-                    and NOFO sections
+                    and grant sections
                   </li>
                   <li>
-                    Review your draft grant narratives and applications for
-                    completeness based on evaluation criteria
+                    Review your applications for completeness based on
+                    evaluation criteria
                   </li>
                   <li>
-                    Assess your organization's eligibility for specific funding
-                    opportunities
+                    Assess your organization's eligibility for specific grants
                   </li>
                   <li>
                     Explain deadlines, submission requirements, budget rules, and
@@ -227,17 +227,17 @@ export default function Playground() {
               <div className="pg-info-section">
                 <h3 className="pg-info-heading">Sources</h3>
                 <p className="pg-info-text">
-                  If the chatbot references any files from the knowledge base,
-                  they will show up underneath the relevant message.
+                  If the assistant references the grant or your supporting
+                  documents, they will show up underneath the relevant message.
                 </p>
               </div>
 
               <div className="pg-info-section">
-                <h3 className="pg-info-heading">Session History</h3>
+                <h3 className="pg-info-heading">My Chats</h3>
                 <p className="pg-info-text">
-                  All conversations are saved and can be accessed later via the{" "}
+                  All chats are saved and can be accessed later via the{" "}
                   <Link to="/chat/sessions" className="pg-info-link">
-                    Sessions
+                    My Chats
                   </Link>{" "}
                   page.
                 </p>

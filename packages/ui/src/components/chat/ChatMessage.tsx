@@ -415,7 +415,7 @@ function ChatMessage(props: ChatMessageProps) {
                             )}
 
                             {uploadedFiles.length > 0 && (
-                              <div role="group" aria-label="Your Uploaded Documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
+                              <div role="group" aria-label="Your Supporting Documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
@@ -424,7 +424,7 @@ function ChatMessage(props: ChatMessageProps) {
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
                                 }}>
-                                  Your Uploaded Documents
+                                  Your Supporting Documents
                                 </div>
                                 <div role="list">
                                 {uploadedFiles.map((file, idx) => (

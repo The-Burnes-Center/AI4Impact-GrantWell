@@ -54,12 +54,12 @@ const GRID = "#e1e0d9";
 const WINDOWS: AnalyticsWindow[] = [7, 30, 90];
 
 const STAGE_LABELS: Record<string, string> = {
-  project_basics: "Project basics",
+  project_basics: "Project Basics",
   questionnaire: "Questionnaire",
-  uploading_documents: "Uploading docs",
+  uploading_documents: "Additional Information",
   generating_draft: "Generating draft",
-  editing_sections: "Editing sections",
-  reviewing: "Reviewing",
+  editing_sections: "Section Editor",
+  reviewing: "Review",
   submitted: "Submitted",
 };
 
@@ -351,8 +351,8 @@ const RankedTable: React.FC<{
 const UsageByAgencyTable: React.FC<{ data: AnalyticsData }> = ({ data }) => (
   <section className="analytics__card">
     <div className="analytics__card-head">
-      <h3 className="analytics__card-title">Usage by agency</h3>
-      <p className="analytics__card-sub">Activity volume, grouped by user agency</p>
+      <h3 className="analytics__card-title">Usage by department</h3>
+      <p className="analytics__card-sub">Activity volume, grouped by user department</p>
     </div>
     {data.usageByAgency.length === 0 ? (
       <div className="no-data">No data yet.</div>
@@ -360,7 +360,7 @@ const UsageByAgencyTable: React.FC<{ data: AnalyticsData }> = ({ data }) => (
       <table className="analytics__table">
         <thead>
           <tr>
-            <th scope="col">Agency</th>
+            <th scope="col">Department</th>
             <th scope="col">State</th>
             <th scope="col" className="analytics__num">
               Events
@@ -371,7 +371,7 @@ const UsageByAgencyTable: React.FC<{ data: AnalyticsData }> = ({ data }) => (
           {data.usageByAgency.map((a) => (
             <tr key={`${a.state}-${a.agency}`}>
               <td>{a.agency}</td>
-              <td>{a.state || "—"}</td>
+              <td>{a.state || "Not assigned"}</td>
               <td className="analytics__num">{a.events.toLocaleString()}</td>
             </tr>
           ))}

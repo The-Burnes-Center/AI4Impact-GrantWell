@@ -23,7 +23,7 @@ const HistoryPanel = React.memo(function HistoryPanel({
   return (
   <div className="history-panel">
     <h2 className="history-panel__heading">
-      Recently viewed funding calls (NOFOs)
+      Recently viewed grants
     </h2>
     {recentlyViewedNOFOs.length > 0 ? (
       recentlyViewedNOFOs.slice(0, MAX_RECENTLY_VIEWED).map((nofo, index) => (
@@ -46,7 +46,7 @@ const HistoryPanel = React.memo(function HistoryPanel({
       ))
     ) : (
       <p className="history-panel__empty">
-        You haven&apos;t viewed any NOFOs recently.
+        You haven&apos;t viewed any grants recently.
       </p>
     )}
   </div>

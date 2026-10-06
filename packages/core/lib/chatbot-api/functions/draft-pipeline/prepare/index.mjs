@@ -23,7 +23,7 @@ export const handler = async (event) => {
   // 1. Fetch NOFO summary from S3
   const summary = await getSummaryFile(documentIdentifier);
   if (!summary || !summary.ProjectNarrativeSections || summary.ProjectNarrativeSections.length === 0) {
-    throw new Error('Failed to get NOFO sections from summary — ProjectNarrativeSections missing or empty');
+    throw new Error('Failed to get grant sections from requirements — ProjectNarrativeSections missing or empty');
   }
 
   // 2. Retrieve relevant docs from Knowledge Base (filtered by document)

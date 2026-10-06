@@ -382,7 +382,7 @@ export const handler = async (event) => {
         'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
-        message: 'Failed to retrieve NOFO data. Internal Server Error.',
+        message: 'Failed to retrieve grant data. Internal Server Error.',
         error: error.message,
       }),
     };

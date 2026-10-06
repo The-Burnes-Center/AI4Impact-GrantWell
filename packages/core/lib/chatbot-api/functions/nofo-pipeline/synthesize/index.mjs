@@ -1,14 +1,11 @@
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import {
-  QUESTION_GENERATION_PROMPT,
-  DEADLINE_EXTRACTION_PROMPT,
-} from "./prompts.mjs";
+import { DEADLINE_EXTRACTION_PROMPT } from "./prompts.mjs";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { readS3Text } from "../shared/s3.mjs";
-import { invokeBedrockWithRetry, invokeStructuredOutput } from "../shared/bedrock.mjs";
-import { validateQuestions, countItems } from "../shared/json.mjs";
-import { QUESTIONS_SCHEMA } from "../shared/schemas.mjs";
+import { invokeBedrockWithRetry } from "../shared/bedrock.mjs";
+import { countItems } from "../shared/json.mjs";
+import { documentSampleOf, generateQuestionsWithRetry } from "../shared/questions.mjs";
 
 const dynamoClient = new DynamoDBClient();
 
@@ -43,17 +40,13 @@ export const handler = async (event) => {
     }
   }
 
-  const rawText = await readS3Text(s3Bucket, rawTextKey);
-  const documentSample =
-    rawText.length > 30000
-      ? rawText.substring(0, 30000) + "\n\n[Truncated...]"
-      : rawText;
+  const documentSample = documentSampleOf(await readS3Text(s3Bucket, rawTextKey));
 
   // Run deadline extraction and question generation in parallel
   const needsDeadline = !existingExpirationDate && mergedSummary.KeyDeadlines?.length > 0;
   const [applicationDeadline, questionsData] = await Promise.all([
     needsDeadline ? extractDeadline(mergedSummary.KeyDeadlines) : Promise.resolve(null),
-    generateQuestions(mergedSummary, documentSample),
+    generateQuestionsWithRetry(mergedSummary, documentSample),
   ]);
 
   mergedSummary.GrantName = nofoName;
@@ -121,38 +114,3 @@ async function extractDeadline(keyDeadlines) {
     return null;
   }
 }
-
-async function generateQuestions(mergedSummary, documentSample) {
-  try {
-    // Generate questions if we have any extracted content (not just narratives)
-    const hasContent = ["EligibilityCriteria", "RequiredDocuments", "ProjectNarrativeSections", "KeyDeadlines"]
-      .some((cat) => mergedSummary[cat]?.length > 0);
-    if (!hasContent) return null;
-
-    const prompt = `${QUESTION_GENERATION_PROMPT}\n\n<summary>\n${JSON.stringify(mergedSummary, null, 2)}\n</summary>\n\n<nofo_sample>\n${documentSample}\n</nofo_sample>`;
-
-    const parsed = await invokeStructuredOutput({
-      modelId: HAIKU_MODEL,
-      prompt,
-      schema: QUESTIONS_SCHEMA,
-      toolName: "save_questions",
-      toolDescription: "Save the generated strategic questions for the NOFO",
-      maxTokens: 2000,
-      temperature: 0.1,
-    });
-
-    const validation = validateQuestions(parsed);
-
-    if (validation.data?.questions?.length > 0) {
-      if (validation.errors.length > 0) {
-        console.warn("Questions validation issues:", validation.errors);
-      }
-      return validation.data;
-    }
-    return null;
-  } catch (error) {
-    console.error("Error generating questions:", error);
-    return null;
-  }
-}
-

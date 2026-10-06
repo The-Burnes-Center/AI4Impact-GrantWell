@@ -198,7 +198,7 @@ export default function HomePage() {
     ) {
       setHighlightCTAButtons(true);
       setSrAnnouncement(
-        `${selectedDocument.label} selected. Choose an action: View Key Requirements, Write Project Narrative, or Get Grant Help.`
+        `${selectedDocument.label} selected. Choose an action: Requirements, Write Application, or Chat with AI.`
       );
       const focusTimer = setTimeout(() => firstCTAButtonRef.current?.focus(), 300);
       const highlightTimer = setTimeout(() => setHighlightCTAButtons(false), 2000);
@@ -236,20 +236,20 @@ export default function HomePage() {
   const handleWriteNarrative = useCallback(() => {
     if (!selectedDocument) return;
     addToRecentlyViewed(selectedDocument);
-    navigate(`/document-editor?nofo=${encodeURIComponent(selectedDocument.value)}`);
+    navigate(`/document-editor?grant=${encodeURIComponent(selectedDocument.value)}`);
   }, [selectedDocument, navigate]);
 
   const handleGetHelp = useCallback(() => {
     if (!selectedDocument) return;
     addToRecentlyViewed(selectedDocument);
     const newSessionId = uuidv4();
-    navigate(`/chat/${newSessionId}?folder=${encodeURIComponent(selectedDocument.value)}`);
+    navigate(`/chat/${newSessionId}?grant=${encodeURIComponent(selectedDocument.value)}`);
   }, [selectedDocument, navigate]);
 
   return (
     <>
       <div className="landing-page">
-        <h1 className="visually-hidden">GrantWell — Free AI powered tool for finding and writing grants</h1>
+        <h1 className="visually-hidden">GrantWell — AI powered tool for finding grants and writing applications</h1>
         {/* Header */}
         <div className="landing-header">
           <BrandLogo
@@ -258,7 +258,7 @@ export default function HomePage() {
             alt=""
           />
           <p className="landing-header__subtitle">
-            Free AI powered tool designed for finding and writing grants
+            AI powered tool designed for finding grants and writing applications
           </p>
         </div>
 
@@ -301,13 +301,13 @@ export default function HomePage() {
                 ? " Or use AI search to describe what you need. "
                 : " Or use the search to find specific grants in the table. "
               : " Or use the search to find the grants you need. "}
-            Click a grant&apos;s name to select it, then choose an action:{" "}
-            <strong className="how-it-works__action-label">View Key Requirements</strong>{" "}
-            to see eligibility and NOFO requirements,{" "}
-            <strong className="how-it-works__action-label">Write Project Narrative</strong>{" "}
-            to draft your proposal, or{" "}
-            <strong className="how-it-works__action-label">Get Grant Help</strong>{" "}
-            to chat with our AI assistant.
+            Click a grant&apos;s name to select it, then select{" "}
+            <strong className="how-it-works__action-label">Requirements</strong>{" "}
+            to see the grant&apos;s eligibility and requirements,{" "}
+            <strong className="how-it-works__action-label">Write Application</strong>{" "}
+            to start your application, or{" "}
+            <strong className="how-it-works__action-label">Chat with AI</strong>{" "}
+            to ask questions about the grant.
           </p>
           <div className="visually-hidden" role="note" aria-label="Screen reader navigation note">
             Screen-reader note: Use the search bar below to filter grants by name, agency, or category.
@@ -351,13 +351,13 @@ export default function HomePage() {
               className={`cta-buttons-container cta-nav${highlightCTAButtons ? " highlight cta-nav--highlighted" : ""}`}
             >
               <button ref={firstCTAButtonRef} className="cta-btn" onClick={handleViewRequirements}>
-                View Key Requirements
+                Requirements
               </button>
               <button className="cta-btn" onClick={handleWriteNarrative}>
-                Write Project Narrative
+                Write Application
               </button>
               <button className="cta-btn" onClick={handleGetHelp}>
-                Get Grant Help
+                Chat with AI
               </button>
             </nav>
           </div>

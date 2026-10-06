@@ -28,7 +28,7 @@ test("answers a question about the NOFO, with sources, and keeps it after a relo
   const { nofoName } = runInfo();
 
   const actions = await selectNofo(page, nofoName);
-  await actions.getByRole("button", { name: "Get Grant Help" }).click();
+  await actions.getByRole("button", { name: "Chat with AI", exact: true }).click();
   await expect(page).toHaveURL(/\/chat\/[0-9a-f-]{36}/);
   sessionId = new URL(page.url()).pathname.split("/").pop();
 

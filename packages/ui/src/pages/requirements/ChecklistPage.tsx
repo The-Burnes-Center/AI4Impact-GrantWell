@@ -33,7 +33,8 @@ const Checklists: React.FC = () => {
   const location = useLocation();
   const { documentIdentifier } = useParams<{ documentIdentifier: string }>();
   const [searchParams] = useSearchParams();
-  const folderParam = searchParams.get("folder") || documentIdentifier;
+  const folderParam =
+    searchParams.get("grant") ?? searchParams.get("folder") ?? searchParams.get("nofo") ?? documentIdentifier;
   const apiClient = useApiClient();
 
   const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: "", documents: "", narrative: "", deadlines: "" });
@@ -134,8 +135,8 @@ const Checklists: React.FC = () => {
 
   const tabContents: Record<TabId, { title: string; content: string }> = {
     eligibility: { title: "Ensure you adhere to the extracted eligibility criteria before continuing with your application.", content: llmData.eligibility },
-    documents: { title: "Include the following documents in your proposal.", content: llmData.documents },
-    narrative: { title: "The following sections must be included in the project narrative.", content: llmData.narrative },
+    documents: { title: "Include the following documents in your application.", content: llmData.documents },
+    narrative: { title: "The following sections must be included in your application.", content: llmData.narrative },
     deadlines: { title: "Note the following key deadlines for this grant.", content: llmData.deadlines },
   };
 
@@ -148,7 +149,7 @@ const Checklists: React.FC = () => {
           {isLoading ? (
             <div className="checklist-loading" role="status" aria-live="polite">
               <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
-              <h2 className="checklist-loading__title">Loading NOFO Data</h2>
+              <h2 className="checklist-loading__title">Loading Requirements</h2>
               <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
               <div className="checklist-loading__tip">
                 <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
@@ -170,7 +171,7 @@ const Checklists: React.FC = () => {
               <div className="checklist-content__header">
                 <div className="checklist-content__header-inner">
                   <h1 className="checklist-content__heading">
-                    <span>Application Requirements for </span>
+                    <span>Requirements for </span>
                     <span className="checklist-content__heading-accent">{llmData.grantName}</span>
                     {grantType && GRANT_TYPES[grantType] && (
                       <span
@@ -186,7 +187,7 @@ const Checklists: React.FC = () => {
                     )}
                   </h1>
                   <p className="checklist-content__description">
-                    Key requirement checkpoints for this Notice of Funding Opportunity (NOFO). Review these
+                    Key requirement checkpoints for this grant. Review these
                     requirements to ensure eligibility and understand what documents and narrative sections
                     you&#39;ll need to prepare.
                   </p>
@@ -272,8 +273,8 @@ const Checklists: React.FC = () => {
                           <div>
                             <p className="checklist-info-box__title">Not sure if your organization qualifies?</p>
                             <p className="checklist-info-box__text">
-                              Our AI-powered chatbot can help assess your organization&#39;s eligibility based on
-                              these criteria. Click the &quot;Chat with AI&quot; button in the navigation panel
+                              Chat with AI can help assess your organization&#39;s eligibility based on
+                              these criteria. Click &quot;Chat with AI&quot; in the navigation panel
                               and ask: &quot;Is my organization eligible for this grant?&quot;
                             </p>
                           </div>
@@ -285,7 +286,7 @@ const Checklists: React.FC = () => {
               </div>
 
               <p className="checklist-content__note">
-                Note: Always refer to the official NOFO documentation for final requirements and details.
+                Note: Always refer to the official grant documentation for final requirements and details.
               </p>
             </div>
           )}
