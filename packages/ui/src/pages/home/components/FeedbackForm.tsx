@@ -1,0 +1,296 @@
+import React, { useState, useRef, useEffect, useId } from "react";
+
+const MAX_CHARS = 500;
+
+const GOOGLE_FORM_ACTION =
+  "https://docs.google.com/forms/d/e/1FAIpQLSd--dd1rQF1z9TDWcIJ5640CvgLLLGsl4tM6Cq8IbFbqi9Hhg/formResponse";
+const GOOGLE_FORM_FIELD_FOUND = "entry.1768889284";
+const GOOGLE_FORM_FIELD_COMMENT = "entry.1810624973";
+
+const looksLikeContactInfo = (text: string): boolean => {
+  if (/[^\s@]+@[^\s@]+\.[a-z]{2,}/i.test(text)) return true;
+  return (text.match(/\+?\d[\d ().-]{7,}\d/g) ?? []).some((run) => {
+    const digits = run.replace(/\D/g, "").length;
+    return digits >= 10 && digits <= 15;
+  });
+};
+
+const FeedbackForm = React.memo(function FeedbackForm() {
+  const [selectedOption, setSelectedOption] = useState<"yes" | "no" | null>(
+    null
+  );
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showInfoTooltip, setShowInfoTooltip] = useState(false);
+  const [showContactWarning, setShowContactWarning] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const infoButtonRef = useRef<HTMLButtonElement>(null);
+  const errorId = useId();
+  const warningId = useId();
+
+  useEffect(() => {
+    if (selectedOption && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [selectedOption]);
+
+  const handleOptionChange = (option: "yes" | "no") => {
+    setSelectedOption(option);
+    setFeedbackText("");
+    setFeedbackError(null);
+    setShowContactWarning(false);
+  };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (value.length <= MAX_CHARS) {
+      setFeedbackText(value);
+    }
+  };
+
+  const handleTextBlur = () => {
+    setShowContactWarning(looksLikeContactInfo(feedbackText));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!selectedOption) return;
+
+    if (selectedOption === "no" && feedbackText.trim().length === 0) {
+      setFeedbackError("Please tell us how we can improve the page.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFeedbackError(null);
+
+    try {
+      const data = new FormData();
+      data.append(GOOGLE_FORM_FIELD_FOUND, selectedOption === "yes" ? "Yes" : "No");
+      data.append(GOOGLE_FORM_FIELD_COMMENT, feedbackText);
+
+      await fetch(GOOGLE_FORM_ACTION, {
+        method: "POST",
+        mode: "no-cors",
+        body: data,
+      });
+      setFeedbackSubmitted(true);
+    } catch {
+      setFeedbackError(
+        "There was a problem submitting your feedback. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const charsRemaining = MAX_CHARS - feedbackText.length;
+  const textareaDescribedBy = [
+    feedbackError ? errorId : null,
+    showContactWarning ? warningId : null,
+    "feedback-char-count",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const textInvalid =
+    feedbackError !== null &&
+    selectedOption === "no" &&
+    feedbackText.trim().length === 0;
+
+  return (
+    <div
+      id="feedback-form"
+      className="feedback-form-container ma__feedback-form"
+      data-mass-feedback-form="true"
+    >
+      {/* Success replaces the whole form, so the visible panel is created together
+          with its text. This region is mounted from the start and fills instead. */}
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {feedbackSubmitted
+          ? "Thank you for your feedback! Your response has been submitted successfully."
+          : ""}
+      </div>
+      {feedbackSubmitted ? (
+        <div className="feedback-success">
+          <p style={{ margin: 0 }}>
+            Thank you for your feedback! Your response has been submitted
+            successfully.
+          </p>
+        </div>
+      ) : (
+        <form
+          noValidate
+          style={{ margin: 0 }}
+          onSubmit={handleSubmit}
+        >
+          <h2 className="feedback-heading">Help Us Improve GrantWell</h2>
+
+          <div className="feedback-divider" />
+
+          <fieldset className="feedback-fieldset">
+            <legend className="feedback-legend">
+              Did you find what you were looking for on this webpage?
+            </legend>
+            <div className="feedback-radio-group">
+              <span className="feedback-radio">
+                <input
+                  id="feedback-found-yes"
+                  name="found_what_looking_for"
+                  type="radio"
+                  value="Yes"
+                  checked={selectedOption === "yes"}
+                  onChange={() => handleOptionChange("yes")}
+                />
+                <label htmlFor="feedback-found-yes">Yes</label>
+              </span>
+              <span className="feedback-radio">
+                <input
+                  id="feedback-found-no"
+                  name="found_what_looking_for"
+                  type="radio"
+                  value="No"
+                  checked={selectedOption === "no"}
+                  onChange={() => handleOptionChange("no")}
+                />
+                <label htmlFor="feedback-found-no">No</label>
+              </span>
+            </div>
+          </fieldset>
+
+          {selectedOption && (
+            <div className="feedback-expanded" role="region">
+              <div className="feedback-divider" />
+
+              {selectedOption === "yes" ? (
+                <p className="feedback-prompt">
+                  If you have any suggestions for the website, please let us
+                  know.
+                </p>
+              ) : (
+                <p className="feedback-prompt">
+                  How can we improve the page?{" "}
+                  <span className="feedback-required" aria-hidden="true">
+                    *
+                  </span>
+                  <span className="visually-hidden">required</span>
+                </p>
+              )}
+
+              <p className="feedback-notice">
+                Please do not include personal or contact information.
+              </p>
+
+              <div className="feedback-no-response">
+                <span className="feedback-no-response__text">
+                  You will not get a response
+                </span>
+                <span className="feedback-info-wrapper">
+                  <button
+                    ref={infoButtonRef}
+                    type="button"
+                    className="feedback-info-button"
+                    aria-expanded={showInfoTooltip}
+                    aria-controls="feedback-info-tooltip"
+                    onClick={() => setShowInfoTooltip((prev) => !prev)}
+                  >
+                    <span aria-hidden="true">&#9432;</span>
+                    <span className="visually-hidden">
+                      More information about responses
+                    </span>
+                  </button>
+                  {showInfoTooltip && (
+                    <div
+                      id="feedback-info-tooltip"
+                      className="feedback-info-tooltip"
+                      role="status"
+                    >
+                      <p className="feedback-info-tooltip__text">
+                        The feedback will only be used for improving the website.
+                      </p>
+                      <button
+                        type="button"
+                        className="feedback-info-tooltip__close"
+                        aria-label="Close info"
+                        onClick={() => {
+                          setShowInfoTooltip(false);
+                          infoButtonRef.current?.focus();
+                        }}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  )}
+                </span>
+              </div>
+
+              <div className="feedback-textarea-wrapper">
+                <label htmlFor="feedback-text" className="visually-hidden">
+                  {selectedOption === "yes"
+                    ? "Suggestions for the website"
+                    : "How can we improve the page"}
+                </label>
+                <textarea
+                  ref={textareaRef}
+                  id="feedback-text"
+                  className="feedback-textarea"
+                  maxLength={MAX_CHARS}
+                  value={feedbackText}
+                  onChange={handleTextChange}
+                  onBlur={handleTextBlur}
+                  rows={5}
+                  aria-describedby={textareaDescribedBy}
+                  aria-required={selectedOption === "no" ? "true" : "false"}
+                  aria-invalid={textInvalid ? true : undefined}
+                />
+                {/* Not a live region: it is reachable through the textarea's
+                    aria-describedby, and announcing it would fire per keystroke. */}
+                <span id="feedback-char-count" className="feedback-char-count">
+                  {charsRemaining}/{MAX_CHARS}
+                </span>
+              </div>
+
+              <div role="status" aria-live="polite">
+                {showContactWarning && (
+                  <p id={warningId} className="feedback-warning">
+                    This looks like it contains an email address or phone number. You
+                    can still send your feedback &mdash; we just can&rsquo;t reply to
+                    it, so please remove personal contact details if you can.
+                  </p>
+                )}
+              </div>
+
+              <p className="feedback-attribution">
+                Your feedback helps improve GrantWell.
+              </p>
+
+              {feedbackError && (
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="feedback-error-container"
+                >
+                  <p className="feedback-error" id={errorId}>
+                    {feedbackError}
+                  </p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="feedback-submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Send Feedback"}
+              </button>
+            </div>
+          )}
+        </form>
+      )}
+    </div>
+  );
+});
+
+export default FeedbackForm;

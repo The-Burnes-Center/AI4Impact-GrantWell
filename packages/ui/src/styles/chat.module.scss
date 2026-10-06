@@ -1,0 +1,45 @@
+/* GrantWell design tokens (replaces Cloudscape) */
+
+.codeMarkdown {
+  background-color: #e8e8e8;
+  text-overflow: ellipsis;
+  overflow: scroll;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.markdownTableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+
+.markdownTableScroll:focus-visible {
+  outline: 3px solid var(--gw-color-primary, #23776c);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.markdownTable {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  margin-top: 1em;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.markdownTable th,
+.markdownTable td {
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  text-align: left;
+}
+
+.markdownTable th {
+  background-color: #DFECE0;
+}
+
+.markdownTable tr:nth-child(even) {
+  background-color: #ffffff;
+}

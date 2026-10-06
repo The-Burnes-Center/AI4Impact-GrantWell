@@ -1,0 +1,465 @@
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useId,
+  useMemo,
+} from "react";
+import { getCurrentUser } from "aws-amplify/auth";
+import { ApiClient } from "../../common/api-client/api-client";
+import { AppContext } from "../../common/app-context";
+import { DateTime } from "luxon";
+import { useNavigate } from "react-router";
+import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
+import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
+import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
+import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
+import TableScrollRegion from "../ui/TableScrollRegion";
+import { v4 as uuidv4 } from "uuid";
+import "../../styles/dashboard.css";
+
+export interface SessionsProps {
+  readonly toolsOpen: boolean;
+  readonly documentIdentifier: string | null;
+  onSessionSelect?: (sessionId: string) => void;
+}
+
+type Session = import("../../common/api-client/sessions-client").SessionListItem;
+
+export default function Sessions(props: SessionsProps) {
+  const appContext = useContext(AppContext);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedItems, setSelectedItems] = useState<Session[]>([]);
+  const [pageSize, setPageSize] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [showGrantPicker, setShowGrantPicker] = useState(false);
+  const [sortField, setSortField] = useState<"title" | "time_stamp">(
+    "time_stamp"
+  );
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const pageSizeSelectId = useId();
+  const navigate = useNavigate();
+
+  const { documentIdentifier } = props;
+
+  const getSessions = useCallback(async () => {
+    if (!appContext) return;
+
+    try {
+      const apiClient = new ApiClient(appContext);
+      const username = (await getCurrentUser()).username;
+
+      if (username) {
+        const result = await apiClient.sessions.getSessions(
+          username,
+          documentIdentifier,
+          true
+        );
+        setSessions(result);
+      }
+    } catch (e) {
+      console.error("Error fetching sessions:", e);
+      setSessions([]);
+    }
+  }, [appContext, documentIdentifier]);
+
+  useEffect(() => {
+    if (!appContext) return;
+
+    const loadSessions = async () => {
+      setIsLoading(true);
+      await getSessions();
+      setIsLoading(false);
+    };
+
+    loadSessions();
+  }, [appContext, getSessions, props.toolsOpen, documentIdentifier]);
+
+
+  const deleteSelectedSessions = async () => {
+    if (!appContext || selectedItems.length === 0) return;
+
+    try {
+      setIsLoading(true);
+      const apiClient = new ApiClient(appContext);
+      const username = (await getCurrentUser()).username;
+
+      await Promise.all(
+        selectedItems.map((session) =>
+          apiClient.sessions.deleteSession(session.session_id, username)
+        )
+      );
+
+      setSelectedItems([]);
+      setShowModalDelete(false);
+      await getSessions();
+    } catch (e) {
+      console.error("Error deleting sessions:", e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedItems(e.target.checked ? paginatedItems : []);
+  };
+
+  const handleSelectItem = (
+    item: Session,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.checked) {
+      setSelectedItems((prev) => [...prev, item]);
+    } else {
+      setSelectedItems((prev) =>
+        prev.filter((i) => i.session_id !== item.session_id)
+      );
+    }
+  };
+
+  const handleSort = (field: "title" | "time_stamp") => {
+    setSortDirection((prev) =>
+      sortField === field ? (prev === "asc" ? "desc" : "asc") : "asc"
+    );
+    setSortField(field);
+  };
+
+  const sortedSessions = useMemo(() => {
+    return [...sessions].sort((a, b) => {
+      const sortMultiplier = sortDirection === "asc" ? 1 : -1;
+
+      if (sortField === "title") {
+        return sortMultiplier * a.title.localeCompare(b.title);
+      } else {
+        return (
+          sortMultiplier *
+          (new Date(a.time_stamp).getTime() - new Date(b.time_stamp).getTime())
+        );
+      }
+    });
+  }, [sessions, sortField, sortDirection]);
+
+  const totalPages = Math.ceil(sortedSessions.length / pageSize);
+
+  const paginatedItems = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedSessions.slice(startIndex, startIndex + pageSize);
+  }, [sortedSessions, currentPage, pageSize]);
+
+  const getSortIcon = (field: "title" | "time_stamp") => {
+    if (sortField !== field) return <LuArrowUpDown size={14} />;
+    return sortDirection === "asc" ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />;
+  };
+
+  const formatSessionTime = (timestamp: string) => {
+    return DateTime.fromISO(new Date(timestamp).toISOString()).toLocaleString(
+      DateTime.DATETIME_SHORT
+    );
+  };
+
+  const startChat = (documentIdentifier: string) => {
+    navigate(`/chat/${uuidv4()}?grant=${encodeURIComponent(documentIdentifier)}`);
+  };
+
+  const handleGrantPicked = (grant: PickedGrant) => {
+    addToRecentlyViewed(grant);
+    setShowGrantPicker(false);
+    startChat(grant.value);
+  };
+
+  return (
+    <div className="dashboard-content">
+      <GrantPickerModal
+        isOpen={showGrantPicker}
+        onClose={() => setShowGrantPicker(false)}
+        onSelect={handleGrantPicked}
+        title="Start a new chat"
+        description="Choose the grant you want to ask about."
+      />
+      <DeleteConfirmationModal
+        isOpen={showModalDelete}
+        onClose={() => setShowModalDelete(false)}
+        onConfirm={deleteSelectedSessions}
+        title={`Delete chat${selectedItems.length > 1 ? "s" : ""}`}
+        itemName={selectedItems.length === 1 ? selectedItems[0].title : undefined}
+        itemCount={selectedItems.length > 1 ? selectedItems.length : undefined}
+        itemLabel="chat"
+      />
+
+      {/* Header section */}
+      <div className="dashboard-header">
+        <div>
+          <h1>My Chats</h1>
+          <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+            Manage and access your previous chats
+          </p>
+        </div>
+        <div className="dashboard-actions">
+          <button
+            className="action-button add-button"
+            onClick={() => {
+              if (props.documentIdentifier) {
+                startChat(props.documentIdentifier);
+              } else {
+                setShowGrantPicker(true);
+              }
+            }}
+          >
+            <LuPlus size={16} className="button-icon" />
+            <span>New Chat</span>
+          </button>
+          <button
+            className="action-button danger-button"
+            onClick={() => setShowModalDelete(true)}
+            disabled={selectedItems.length === 0}
+            style={{
+              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#cd0d0d",
+              color: selectedItems.length === 0 ? "#9ca3af" : "white",
+              cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
+            }}
+          >
+            <LuTrash size={16} className="button-icon" />
+            <span>Delete</span>
+          </button>
+          <button
+            className="action-button refresh-button"
+            onClick={async () => {
+              setIsLoading(true);
+              await getSessions();
+              setIsLoading(false);
+            }}
+            disabled={isLoading}
+            aria-label="Refresh chats list"
+            aria-busy={isLoading}
+          >
+            {isLoading ? (
+              <span className="refresh-loading">Refreshing...</span>
+            ) : (
+              <>
+                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <span>Refresh</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Table section */}
+      <TableScrollRegion label="Chats table" minWidth={520}>
+      <div className="table-container">
+        <div role="table" aria-label="Chats">
+          <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+            <div role="row" style={{ display: "contents" }}>
+              <div className="header-cell" role="columnheader">
+                <input
+                  type="checkbox"
+                  checked={
+                    paginatedItems.length > 0 &&
+                    selectedItems.length === paginatedItems.length
+                  }
+                  onChange={handleSelectAll}
+                  aria-label="Select all chats"
+                  style={{ cursor: "pointer" }}
+                  disabled={isLoading || sortedSessions.length === 0}
+                />
+              </div>
+              <div
+                className="header-cell"
+                role="columnheader"
+                aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
+              >
+                <button
+                  onClick={() => !isLoading && handleSort("title")}
+                  disabled={isLoading}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "none",
+                    border: "none",
+                    cursor: isLoading ? "default" : "pointer",
+                    padding: "4px 2px",
+                    font: "inherit",
+                    color: "inherit",
+                  }}
+                >
+                  Title {!isLoading && getSortIcon("title")}
+                </button>
+              </div>
+              <div
+                className="header-cell"
+                role="columnheader"
+                aria-sort={sortField === "time_stamp" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
+              >
+                <button
+                  onClick={() => !isLoading && handleSort("time_stamp")}
+                  disabled={isLoading}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "none",
+                    border: "none",
+                    cursor: isLoading ? "default" : "pointer",
+                    padding: "4px 2px",
+                    font: "inherit",
+                    color: "inherit",
+                  }}
+                >
+                  Time {!isLoading && getSortIcon("time_stamp")}
+                </button>
+              </div>
+            </div>
+          </div>
+          {!isLoading && (
+            <div className="table-body" role={sortedSessions.length === 0 ? undefined : "rowgroup"}>
+              {sortedSessions.length === 0 ? (
+                <div className="no-data">
+                  <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
+                    No chats
+                  </div>
+                </div>
+              ) : (
+                paginatedItems.map((item) => (
+                  <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+                    <div className="row-cell" role="cell">
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.some(
+                          (i) => i.session_id === item.session_id
+                        )}
+                        onChange={(e) => handleSelectItem(item, e)}
+                        aria-label={`Select ${item.title}`}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </div>
+                    <div className="row-cell" role="cell">
+                      <button
+                        onClick={() => {
+                          if (props.onSessionSelect) {
+                            props.onSessionSelect(item.session_id);
+                          }
+
+                          const queryParam = item.document_identifier
+                            ? `?grant=${encodeURIComponent(
+                                item.document_identifier
+                              )}`
+                            : "";
+
+                          navigate(
+                            `/chat/${item.session_id}${queryParam}`
+                          );
+                        }}
+                        style={{
+                          color: "#195C53",
+                          background: "none",
+                          border: "none",
+                          padding: "4px 2px",
+                          cursor: "pointer",
+                          textAlign: "left",
+                          fontSize: "inherit",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {item.title}
+                      </button>
+                    </div>
+                    <div className="row-cell" role="cell">
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                        <LuCalendar size={16} aria-hidden="true" />
+                        <time dateTime={item.time_stamp}>
+                          {formatSessionTime(item.time_stamp)}
+                        </time>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
+        {isLoading && (
+          <div className="table-loading" aria-hidden="true">
+            <div className="table-loading-spinner"></div>
+          </div>
+        )}
+      </div>
+      </TableScrollRegion>
+
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {isLoading
+          ? "Loading chats"
+          : sortedSessions.length === 0
+          ? "No chats"
+          : `${sortedSessions.length} chat${
+              sortedSessions.length === 1 ? "" : "s"
+            } loaded`}
+      </div>
+
+      {/* Pagination */}
+      {!isLoading && sortedSessions.length > 0 && (
+        <div className="pagination-container">
+          <div className="pagination-info">
+            Showing {(currentPage - 1) * pageSize + 1} to{" "}
+            {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
+            {sortedSessions.length} chats
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div className="pagination-controls">
+              <button
+                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(1)}
+              >
+                First
+              </button>
+              <button
+                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Previous
+              </button>
+              <button
+                className={`pagination-button ${currentPage === totalPages ? "disabled" : ""}`}
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </button>
+              <button
+                className={`pagination-button ${currentPage === totalPages ? "disabled" : ""}`}
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(totalPages)}
+              >
+                Last
+              </button>
+            </div>
+            <div className="items-per-page">
+              <label htmlFor={pageSizeSelectId} style={{ marginRight: "8px" }}>
+                Show:
+              </label>
+              <select
+                id={pageSizeSelectId}
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                aria-label="Items per page"
+                className="form-input"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

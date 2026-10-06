@@ -1,0 +1,587 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { LuUserPlus } from "react-icons/lu";
+import type { ApiClient } from "../../../common/api-client/api-client";
+import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
+import { SUPPORTED_STATES } from "../../../common/types/user-management";
+import { Modal } from "../../../components/common/Modal";
+import PaginationControls from "./PaginationControls";
+
+interface UserManagementTabProps {
+  apiClient: ApiClient;
+  addNotification: (type: "success" | "error" | "info" | "warning", message: string) => void;
+  canAssignDeveloper: boolean;
+  isStateAdmin: boolean;
+  userState: string;
+  currentUsername: string;
+}
+
+const EMAIL_PATTERN = /\S+@\S+\.\S+/;
+
+const allRoleOptions: Array<{
+  value: UserRolePreset;
+  label: string;
+  requiresDeveloper?: boolean;
+}> = [
+  { value: "user", label: "User" },
+  { value: "admin", label: "Admin" },
+  { value: "platformadmin", label: "Platform Admin", requiresDeveloper: true },
+  { value: "developer", label: "Developer", requiresDeveloper: true },
+];
+
+const ROLE_DEFINITIONS: Record<UserRolePreset, string> = {
+  user: "Browse grants, view requirements, and draft applications. No admin access.",
+  admin: "Everything a User can do, plus the Admin Dashboard: manage grants, review processing, and manage user roles (User or Admin only). Scoped to their assigned state.",
+  platformadmin: "An Admin with no state restriction: manages grants and users across every state. Cannot be scoped to a state.",
+  developer: "Everything a Platform Admin can do, plus manage feature rollouts and assign any role, including Developer.",
+};
+
+function getRolePreset(roles: string[]): UserRolePreset {
+  const normalizedRoles = roles.map((role) => role.toLowerCase());
+  const isAdmin = normalizedRoles.includes("admin");
+  const isPlatformAdmin = normalizedRoles.includes("platformadmin");
+  const isDeveloper = normalizedRoles.includes("developer");
+
+  if (isDeveloper) {
+    return "developer";
+  }
+  if (isPlatformAdmin) {
+    return "platformadmin";
+  }
+  if (isAdmin) {
+    return "admin";
+  }
+  return "user";
+}
+
+const UserManagementTab: React.FC<UserManagementTabProps> = ({
+  apiClient,
+  addNotification,
+  canAssignDeveloper,
+  isStateAdmin,
+  userState,
+  currentUsername,
+}) => {
+  const [users, setUsers] = useState<ManagedUser[]>([]);
+  const [draftRoles, setDraftRoles] = useState<Record<string, UserRolePreset>>({});
+  const [draftStates, setDraftStates] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [savingUsername, setSavingUsername] = useState<string | null>(null);
+  const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
+  const [pageSize, setPageSize] = useState(25);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageTokens, setPageTokens] = useState<Array<string | null>>([null]);
+  const [nextPaginationToken, setNextPaginationToken] = useState<string | null>(null);
+
+  const [addUserModalOpen, setAddUserModalOpen] = useState(false);
+  const [addEmail, setAddEmail] = useState("");
+  const [addState, setAddState] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const [deleteTarget, setDeleteTarget] = useState<ManagedUser | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [mfaResetTarget, setMfaResetTarget] = useState<ManagedUser | null>(null);
+  const [isResettingMfa, setIsResettingMfa] = useState(false);
+
+  const loadUsers = useCallback(async (
+    page: number,
+    nextPageSize: number,
+    tokens: Array<string | null>
+  ) => {
+    try {
+      setLoading(true);
+      const response = await apiClient.userManagement.listUsers({
+        limit: nextPageSize,
+        paginationToken: tokens[page - 1] ?? null,
+      });
+      setUsers(response.users);
+      setDraftRoles(
+        Object.fromEntries(
+          response.users.map((user) => [user.username, getRolePreset(user.roles)])
+        )
+      );
+      setDraftStates(
+        Object.fromEntries(
+          response.users.map((user) => [user.username, user.state || ""])
+        )
+      );
+      setNextPaginationToken(response.nextPaginationToken);
+      setPageTokens(() => {
+        const nextTokens = tokens.slice(0, page);
+        if (response.nextPaginationToken) {
+          nextTokens[page] = response.nextPaginationToken;
+        }
+        return nextTokens;
+      });
+    } catch (error) {
+      console.error("Error loading users:", error);
+      addNotification("error", "Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  }, [apiClient, addNotification]);
+
+  useEffect(() => {
+    void loadUsers(1, pageSize, [null]);
+  }, [loadUsers, pageSize]);
+
+  const reloadCurrentPage = useCallback(() => {
+    void loadUsers(currentPage, pageSize, pageTokens);
+  }, [loadUsers, currentPage, pageSize, pageTokens]);
+
+  const handlePageChange = useCallback((nextPage: number) => {
+    if (nextPage < 1) {
+      return;
+    }
+    if (nextPage > currentPage && !nextPaginationToken) {
+      return;
+    }
+    if (nextPage > pageTokens.length) {
+      return;
+    }
+
+    setCurrentPage(nextPage);
+    void loadUsers(nextPage, pageSize, pageTokens);
+  }, [currentPage, loadUsers, nextPaginationToken, pageSize, pageTokens]);
+
+  const handlePageSizeChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextPageSize = Number.parseInt(event.target.value, 10);
+    setCurrentPage(1);
+    setPageTokens([null]);
+    setNextPaginationToken(null);
+    setPageSize(nextPageSize);
+  }, []);
+
+  const handleSave = useCallback(
+    async (user: ManagedUser) => {
+      const nextRole = draftRoles[user.username];
+      const nextState = draftStates[user.username] ?? "";
+      const currentRole = getRolePreset(user.roles);
+      const currentState = user.state || "";
+      const roleChanged = Boolean(nextRole) && nextRole !== currentRole;
+      const stateChanged = nextState !== currentState;
+
+      if (!roleChanged && !stateChanged) {
+        return;
+      }
+
+      try {
+        setSavingUsername(user.username);
+        setRowErrors((current) => {
+          if (!(user.username in current)) return current;
+          const rest = { ...current };
+          delete rest[user.username];
+          return rest;
+        });
+        let updatedRoles = user.roles;
+        let updatedState = currentState;
+
+        if (roleChanged) {
+          const updated = await apiClient.userManagement.updateUserRole(user.username, nextRole);
+          updatedRoles = updated.roles;
+        }
+        if (stateChanged) {
+          const updated = await apiClient.userManagement.updateUserState(user.username, nextState);
+          updatedState = typeof updated.state === "string" ? updated.state : nextState;
+        }
+
+        setUsers((current) =>
+          current.map((item) =>
+            item.username === user.username
+              ? { ...item, roles: updatedRoles, state: updatedState }
+              : item
+          )
+        );
+        addNotification("success", `Updated ${user.email}`);
+      } catch (error) {
+        console.error("Error updating user:", error);
+        const message = error instanceof Error ? error.message : `Failed to update ${user.email}`;
+        setRowErrors((current) => ({ ...current, [user.username]: message }));
+        addNotification("error", message);
+      } finally {
+        setSavingUsername(null);
+      }
+    },
+    [apiClient, addNotification, draftRoles, draftStates]
+  );
+
+  const handleCreateUser = useCallback(async () => {
+    const email = addEmail.trim();
+    if (!email || !EMAIL_PATTERN.test(email)) {
+      addNotification("error", "Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setIsCreating(true);
+      await apiClient.userManagement.createUser({
+        email,
+        state: isStateAdmin ? undefined : addState || undefined,
+      });
+      addNotification("success", `User ${email} created. An invitation email has been sent.`);
+      setAddUserModalOpen(false);
+      setAddEmail("");
+      setAddState("");
+      reloadCurrentPage();
+    } catch (error) {
+      addNotification("error", error instanceof Error ? error.message : "Failed to create user");
+    } finally {
+      setIsCreating(false);
+    }
+  }, [addEmail, addState, isStateAdmin, apiClient, addNotification, reloadCurrentPage]);
+
+  const handleDeleteUser = useCallback(async () => {
+    if (!deleteTarget) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      await apiClient.userManagement.deleteUser(deleteTarget.username);
+      addNotification("success", `Deleted ${deleteTarget.email}`);
+      setDeleteTarget(null);
+      reloadCurrentPage();
+    } catch (error) {
+      addNotification("error", error instanceof Error ? error.message : "Failed to delete user");
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [deleteTarget, apiClient, addNotification, reloadCurrentPage]);
+
+  const handleMfaReset = useCallback(async () => {
+    if (!mfaResetTarget) {
+      return;
+    }
+
+    try {
+      setIsResettingMfa(true);
+      await apiClient.userManagement.resetUserMfa(mfaResetTarget.username);
+      addNotification("success", `Two-step verification reset for ${mfaResetTarget.email}.`);
+      setMfaResetTarget(null);
+    } catch (error) {
+      addNotification(
+        "error",
+        error instanceof Error ? error.message : "Failed to reset two-step verification"
+      );
+    } finally {
+      setIsResettingMfa(false);
+    }
+  }, [mfaResetTarget, apiClient, addNotification]);
+
+  if (loading) {
+    return (
+      <div className="feature-rollouts-panel" aria-busy="true">
+        <span role="status">Loading users...</span>
+      </div>
+    );
+  }
+
+  const addEmailValid = addEmail.trim().length > 0 && EMAIL_PATTERN.test(addEmail);
+
+  return (
+    <div className="user-management-panel">
+      <div className="feature-rollouts-card">
+        <div className="feature-rollouts-card__header">
+          <div>
+            <span className="feature-rollouts-eyebrow">
+              {isStateAdmin ? "State Administration" : "Developer Controls"}
+            </span>
+            <h2>User Management</h2>
+            <p>
+              {isStateAdmin
+                ? `Manage users in ${userState}. You can add users, change roles between User and Admin, and remove users — all scoped to ${userState}.`
+                : `Edit user roles directly from the table below.${
+                    canAssignDeveloper
+                      ? " Developers can assign all roles."
+                      : " Admins can assign User or Admin roles only."
+                  }`}
+            </p>
+            <dl className="user-management-role-legend" aria-label="Role definitions">
+              {(Object.keys(ROLE_DEFINITIONS) as UserRolePreset[]).map((role) => (
+                <div key={role} className="user-management-role-legend__item">
+                  <dt>{allRoleOptions.find((opt) => opt.value === role)?.label ?? role}</dt>
+                  <dd>{ROLE_DEFINITIONS[role]}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <button
+            type="button"
+            className="feature-rollouts-primary-button"
+            onClick={() => setAddUserModalOpen(true)}
+          >
+            <LuUserPlus size={16} aria-hidden="true" /> Add User
+          </button>
+        </div>
+
+        <div className="user-management-table-wrapper">
+          <table className="user-management-table">
+            <thead>
+              <tr>
+                <th scope="col">User</th>
+                <th scope="col">Status</th>
+                <th scope="col">Role</th>
+                <th scope="col">State</th>
+                <th scope="col" className="user-management-table__actions">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => {
+                const currentRole = getRolePreset(user.roles);
+                const draftRole = draftRoles[user.username] || currentRole;
+                const currentState = user.state || "";
+                const draftState = draftStates[user.username] ?? currentState;
+                const isSaving = savingUsername === user.username;
+                const hasChanges = draftRole !== currentRole || draftState !== currentState;
+                const isSelf = user.username === currentUsername;
+
+                return (
+                  <tr key={user.username}>
+                    <td>
+                      <div className="user-management-user-cell">
+                        <span className="user-management-user-email">{user.email}</span>
+                        <span className="user-management-user-username">{user.username}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`user-management-status-pill ${user.enabled ? "is-enabled" : "is-disabled"}`}>
+                        {user.enabled ? user.status : "DISABLED"}
+                      </span>
+                    </td>
+                    <td>
+                      <label className="visually-hidden" htmlFor={`role-select-${user.username}`}>
+                        Role for {user.email}
+                      </label>
+                      <select
+                        id={`role-select-${user.username}`}
+                        className="user-management-role-select"
+                        value={draftRole}
+                        onChange={(event) =>
+                          setDraftRoles((current) => ({
+                            ...current,
+                            [user.username]: event.target.value as UserRolePreset,
+                          }))
+                        }
+                        disabled={isSaving}
+                      >
+                        {allRoleOptions.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                            disabled={Boolean(option.requiresDeveloper && !canAssignDeveloper)}
+                          >
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <label className="visually-hidden" htmlFor={`state-select-${user.username}`}>
+                        State for {user.email}
+                      </label>
+                      <select
+                        id={`state-select-${user.username}`}
+                        className="user-management-role-select"
+                        value={draftState}
+                        onChange={(event) =>
+                          setDraftStates((current) => ({
+                            ...current,
+                            [user.username]: event.target.value,
+                          }))
+                        }
+                        disabled={isSaving || isStateAdmin}
+                      >
+                        <option value="">Not assigned</option>
+                        {SUPPORTED_STATES.map((s) => (
+                          <option key={s.code} value={s.code}>
+                            {s.name}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="user-management-table__actions">
+                      <div className="user-management-actions-cell">
+                        <button
+                          type="button"
+                          className="feature-rollouts-primary-button"
+                          onClick={() => void handleSave(user)}
+                          disabled={!hasChanges || isSaving}
+                        >
+                          {isSaving ? "Saving..." : "Save"}
+                        </button>
+                        {!isSelf && (
+                          <button
+                            type="button"
+                            className="feature-rollouts-secondary-button"
+                            onClick={() => setMfaResetTarget(user)}
+                            disabled={isSaving}
+                            aria-label={`Reset two-step verification for ${user.email}`}
+                          >
+                            Reset two-step verification
+                          </button>
+                        )}
+                        {!isSelf && (
+                          <button
+                            type="button"
+                            className="user-management-delete-button"
+                            onClick={() => setDeleteTarget(user)}
+                            disabled={isSaving}
+                            aria-label={`Delete ${user.email}`}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                      {rowErrors[user.username] && (
+                        <p className="user-management-row-error" role="alert">
+                          {rowErrors[user.username]}
+                        </p>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <PaginationControls
+          mode="token"
+          currentPage={currentPage}
+          pageItemCount={users.length}
+          hasNextPage={Boolean(nextPaginationToken)}
+          itemsPerPage={pageSize}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handlePageSizeChange}
+          itemsPerPageOptions={[25, 50, 60]}
+          itemLabel="users"
+          selectId="user-management-page-size"
+        />
+      </div>
+
+      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Add New User">
+        <div className="modal-form">
+          <p className="modal-description">
+            Enter the email address of the user to add. They will receive an email with instructions to set up their account.
+          </p>
+          <div className="form-group">
+            <label htmlFor="add-user-email">Email Address</label>
+            <input
+              type="email"
+              id="add-user-email"
+              value={addEmail}
+              onChange={(e) => setAddEmail(e.target.value)}
+              className="form-input"
+              placeholder="user@example.com"
+              autoComplete="email"
+              aria-invalid={addEmail.length > 0 && !EMAIL_PATTERN.test(addEmail)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="add-user-state">{isStateAdmin ? "State" : "State (optional)"}</label>
+            <select
+              id="add-user-state"
+              className="form-input"
+              value={isStateAdmin ? userState : addState}
+              onChange={(e) => setAddState(e.target.value)}
+              disabled={isStateAdmin}
+            >
+              {!isStateAdmin && <option value="">Not assigned</option>}
+              {SUPPORTED_STATES.map((s) => (
+                <option key={s.code} value={s.code}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+            {isStateAdmin && (
+              <p className="modal-description">
+                New users are added to your state ({userState}) and cannot be changed.
+              </p>
+            )}
+          </div>
+          <div className="modal-actions">
+            <button
+              className="modal-button secondary"
+              onClick={() => setAddUserModalOpen(false)}
+              disabled={isCreating}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-button primary"
+              onClick={() => void handleCreateUser()}
+              disabled={isCreating || !addEmailValid}
+            >
+              {isCreating ? "Adding..." : "Add User"}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => {
+          if (!isDeleting) {
+            setDeleteTarget(null);
+          }
+        }}
+        title="Delete User"
+      >
+        <div className="modal-form">
+          <p className="modal-description">
+            Permanently delete <strong>{deleteTarget?.email}</strong>? This removes their account and cannot be undone.
+          </p>
+          <div className="modal-actions">
+            <button
+              className="modal-button secondary"
+              onClick={() => setDeleteTarget(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-button danger"
+              onClick={() => void handleDeleteUser()}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete User"}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={Boolean(mfaResetTarget)}
+        onClose={() => {
+          if (!isResettingMfa) {
+            setMfaResetTarget(null);
+          }
+        }}
+        title="Reset two-step verification"
+      >
+        <div className="modal-form">
+          <p className="modal-description">
+            <strong>{mfaResetTarget?.email}</strong> can set up a new authenticator app the next
+            time they sign in.
+          </p>
+          <div className="modal-actions">
+            <button
+              className="modal-button secondary"
+              onClick={() => setMfaResetTarget(null)}
+              disabled={isResettingMfa}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-button danger"
+              onClick={() => void handleMfaReset()}
+              disabled={isResettingMfa}
+            >
+              {isResettingMfa ? "Resetting..." : "Reset"}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+export default UserManagementTab;

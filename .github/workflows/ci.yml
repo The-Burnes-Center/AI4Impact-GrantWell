@@ -1,0 +1,178 @@
+name: CI
+
+# Both deploy workflows run this first (needs: ci), so no deploy can run on a commit that fails
+# here, including workflow_dispatch deploys. No AWS credentials: templates are generated offline.
+on:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# github.workflow is the caller's name when this runs via workflow_call, so a deploy's CI never
+# shares a group with (or cancels) a PR's CI.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui:
+    name: UI typecheck, lint and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: packages/ui
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: packages/ui/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          ENVIRONMENT: grantwell-burnes-staging
+
+  e2e:
+    name: E2E suite typecheck and listing
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: e2e
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      # Loads every spec and the config without a browser or AWS, so a broken spec fails before deploy.
+      - name: List tests
+        run: npx playwright test --list
+
+  infra:
+    name: CDK typecheck, Generic from source, logical-ID guard and cdk-nag
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: packages/core
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            packages/core/package-lock.json
+            instances/generic/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Python handler tests
+        run: python3 -m unittest discover -s test/python -v
+
+      # What dev deploys: Generic's config with vendor/ packed from this commit's source.
+      - name: Build Generic from source (build/generic)
+        working-directory: .
+        run: scripts/pack.sh --dev
+
+      - name: Generate templates (dev + prod)
+        id: synth
+        run: npm run synth:ci
+
+      - name: Logical-ID guard and tests
+        run: npm test
+        env:
+          REUSE_SYNTH: '1'
+
+      - name: cdk-nag report (warn only)
+        if: always() && steps.synth.outcome == 'success'
+        run: npm run nag:report
+
+      - name: Upload cdk-nag reports
+        if: always() && steps.synth.outcome == 'success'
+        uses: actions/upload-artifact@v7
+        with:
+          name: cdk-nag-reports
+          path: build/generic/cdk.out/ci-*/AwsSolutions-*-NagReport.csv
+          if-no-files-found: error
+
+  instance:
+    name: Committed Generic release (vendor/, typecheck, templates)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            packages/core/package-lock.json
+            instances/generic/package-lock.json
+
+      - name: Generic's scripts/ matches template/
+        run: diff -r template/scripts instances/generic/scripts
+
+      - name: vendor/ matches the lockfile
+        run: node instances/generic/scripts/check-vendor.mjs
+
+      - name: Install Generic from vendor/
+        working-directory: instances/generic
+        run: npm ci
+
+      - name: Typecheck Generic config
+        working-directory: instances/generic
+        run: npm run typecheck
+
+      - name: Install core (synth tooling)
+        working-directory: packages/core
+        run: npm ci
+
+      # No logical-ID guard here: the snapshots follow source, which may be ahead of the last release.
+      - name: Generate Generic templates (dev + prod)
+        working-directory: packages/core
+        run: npm run synth:ci
+        env:
+          SYNTH_APP_DIR: ../../instances/generic

@@ -1,0 +1,98 @@
+name: Deploy
+
+# Checks every push and pull request; deploys only when run by hand (Actions > Deploy > Run workflow).
+#
+# Each deployment in config/instances.ts needs a GitHub Environment named after its aws.environment
+# (Settings > Environments), holding:
+#   secrets    AWS_ROLE_ARN          IAM role this workflow assumes through GitHub OIDC
+#              GRANTS_GOV_API_KEY
+#              TURNSTILE_SECRET_KEY
+#              TURNSTILE_SITE_KEY
+#   variables  AWS_REGION            region the deployment lives in
+# Add required reviewers to an Environment to make its deploys wait for approval.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      deployment:
+        description: Deployment to deploy (its aws.environment)
+        type: choice
+        # One entry per deployment in config/instances.ts.
+        options:
+          - grantwell-example
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check vendor/, config and templates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: vendor/ matches the lockfile
+        run: node scripts/check-vendor.mjs
+
+      - name: Install from vendor/
+        run: npm ci
+
+      - name: Typecheck config
+        run: npm run typecheck
+
+      - name: Generate templates for every deployment
+        run: node scripts/synth.mjs synth cdk.out/check
+
+  deploy:
+    name: Deploy ${{ inputs.deployment }}
+    if: github.event_name == 'workflow_dispatch'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: ${{ inputs.deployment }}
+    concurrency:
+      group: deploy-${{ inputs.deployment }}
+      cancel-in-progress: false
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      ENVIRONMENT: ${{ inputs.deployment }}
+      GRANTS_GOV_API_KEY: ${{ secrets.GRANTS_GOV_API_KEY }}
+      TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
+      TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: vendor/ matches the lockfile
+        run: node scripts/check-vendor.mjs
+
+      - name: Install from vendor/
+        run: npm ci
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: ${{ github.actor }}-grantwell-deploy
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # ENVIRONMENT selects one deployment, so --all is that deployment's stacks only.
+      - name: Deploy
+        run: npx cdk deploy --all --require-approval never

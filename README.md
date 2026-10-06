@@ -11,27 +11,27 @@ The application features multiple interactive interfaces including a landing pag
 - **Smart Grant Matching**  
   AI-powered system that analyzes and matches grants to user needs, providing personalized recommendations based on project requirements.
 
-  <img src="lib/user-interface/app/public/images/Landing Page.png" alt="Landing page" width="500">
+  <img src="packages/ui/public/images/Landing Page.png" alt="Landing page" width="500">
 
 - **Requirements Analysis**  
   Automatically scans and summarizes Notices of Funding Opportunities (NOFOs), presenting key information about eligibility, required documents, narrative sections, and deadlines.
 
-  <img src="lib/user-interface/app/public/images/Req Page.png" alt="Requirements page" width="500">
+  <img src="packages/ui/public/images/Req Page.png" alt="Requirements page" width="500">
 
 - **AI-Powered Writing Assistant**  
   Interactive chatbot that assists in drafting grant narratives by prompting for organization details and incorporating information from uploaded documents.
   
-  <img src="lib/user-interface/app/public/images/Chatbot Page.png" alt="Chatbot interface" width="500">
+  <img src="packages/ui/public/images/Chatbot Page.png" alt="Chatbot interface" width="500">
 
 - **Document Editor**  
   Section-based editor for drafting and refining grant narratives with AI assistance, progress tracking, and export capabilities.
 
-  <img src="lib/user-interface/app/public/images/Writing Page.png" alt="Document editor page" width="500">
+  <img src="packages/ui/public/images/Writing Page.png" alt="Document editor page" width="500">
 
 - **Dashboard**  
   Administrative dashboard for managing NOFOs, automated NOFO scraping, and inviting new users.
 
-  <img src="lib/user-interface/app/public/images/Dashboard Page.png" alt="Dashboard page" width="500">
+  <img src="packages/ui/public/images/Dashboard Page.png" alt="Dashboard page" width="500">
 
 ## Architecture
 
@@ -58,10 +58,11 @@ git clone https://github.com/The-Burnes-Center/AI4Impact-GrantWell.git
 cd AI4Impact-GrantWell
 
 # Install dependencies
+cd packages/core
 npm install
 
 # For frontend development, navigate to the app directory
-cd lib/user-interface/app
+cd ../ui
 npm install
 npm run dev
 ```
@@ -72,6 +73,36 @@ npm run dev
 - Node.js (Latest LTS version recommended)
 - AWS CLI configured with appropriate credentials
 - AWS CDK installed globally (`npm install -g aws-cdk`)
+
+### Repository layout
+
+| Path | Contents |
+|---|---|
+| `packages/core` | CDK constructs, Lambdas and step functions, packed as `grantwell-core-<version>.tgz` |
+| `packages/ui` | React app source, packed as `grantwell-ui-<version>.tgz` |
+| `template/` | Starting repo for a state: config plus the two .tgz files in `vendor/` |
+| `instances/generic` | grantwell.us, built from `template/`; its `vendor/` holds the last release |
+| `e2e/` | Playwright journeys against the deployed dev site (see `e2e/README.md`) |
+| `scripts/pack.sh` | Builds both .tgz files; `--dev` builds Generic from source in `build/generic/` (gitignored) |
+| `scripts/release.sh` | Stamps a release version (`prepare`) and builds the release files from a tag (`build`, run by `release.yml`) |
+
+### Working on `packages/`
+
+Dev (`grantwell-burnes-staging`) runs source, prod runs releases. Every push to `staging` runs CI, then deploys dev from `scripts/pack.sh --dev` (Generic's config with vendor/ packed from that commit) and posts a read-only diff against live prod in the run summary. After the deploy, the `e2e/` journeys run against dev. `instances/generic/vendor/` only changes when a release is prepared.
+
+To synth or test locally, run `scripts/pack.sh --dev`, then `npm run synth:ci` and `npm test` in `packages/core`. Never commit `build/`.
+
+Prod deploys from `main` use the committed `instances/generic/vendor/`, and fail unless it equals a fresh pack of that commit's source: merge to `main` only a commit where a release was prepared.
+
+### Releasing
+
+Releases are GitHub Releases on this repo, versioned `X.Y.Z` from `main` and `X.Y.Z-rc.N` from `staging`.
+
+1. On a clean checkout of the branch, run `scripts/release.sh prepare <version>`. It stamps the version into `packages/core`, `packages/ui` and `template/package.json`, and re-packs `instances/generic/vendor/`.
+2. Commit and push. Wait for CI to pass.
+3. Tag the commit `v<version>` and push the tag. `release.yml` runs CI, checks the commit is on `staging` (rc) or `main`, rebuilds both .tgz files, fails unless they equal the committed `vendor/`, and publishes them with a CycloneDX SBOM each and `SHA256SUMS`.
+
+States upgrade with `scripts/upgrade.sh <version>` in their own repo (see `template/README.md`).
 
 ## Core Modules
 
@@ -108,7 +139,7 @@ Please contact the administrators for access and contribution guidelines.
 
 ## License
 
-MIT License – see `LICENSE.md` for details.
+Apache License 2.0: see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 ## Authors & Acknowledgements
 

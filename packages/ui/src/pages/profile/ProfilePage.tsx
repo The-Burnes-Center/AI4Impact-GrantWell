@@ -1,0 +1,675 @@
+import { useEffect, useMemo, useState } from "react";
+import {
+  fetchAuthSession,
+  fetchMFAPreference,
+  signOut,
+  updateMFAPreference,
+  updatePassword,
+} from "aws-amplify/auth";
+import { useNavigate } from "react-router";
+import { useApiClient } from "../../hooks/use-api-client";
+import { useAdminCheck } from "../../hooks/use-admin-check";
+import Card from "../../components/ui/Card";
+import Button from "../../components/ui/Button";
+import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
+import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
+import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
+import { MFA_DEADLINE_ISO } from "../../common/instance";
+import { deadlineDateText } from "../../common/mfa-deadline";
+import Breadcrumbs from "../../components/common/Breadcrumbs";
+import { stateNameFromCode } from "../../common/states";
+import { roleLabel } from "../../common/helpers/auth-roles";
+import { GRANT_CATEGORIES } from "../../common/types/nofo";
+import type { DigestFrequency } from "../../common/api-client/notifications-client";
+import "../../styles/dashboard.css";
+import "./profile.css";
+
+const FREQUENCIES: { value: DigestFrequency; label: string }[] = [
+  { value: "off", label: "Off" },
+  { value: "daily", label: "Daily digest" },
+  { value: "weekly", label: "Weekly digest" },
+];
+
+function toList(text: string): string[] {
+  return text.split(",").map((s) => s.trim()).filter(Boolean);
+}
+
+function sameSet(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  const set = new Set(a);
+  return b.every((v) => set.has(v));
+}
+
+export default function ProfilePage() {
+  const apiClient = useApiClient();
+  const navigate = useNavigate();
+  const {
+    username,
+    userState,
+    roles,
+    loading: identityLoading,
+  } = useAdminCheck();
+
+  // useAdminCheck exposes cognito:username (a UUID here), not the email claim, so
+  // read the email attribute directly for display.
+  useEffect(() => {
+    let active = true;
+    fetchAuthSession()
+      .then((session) => {
+        if (!active) return;
+        const payload = session.tokens?.idToken?.payload ?? {};
+        setEmail(String(payload.email || ""));
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+
+  // Organization details (agency / org / title) — same fields as the profile-completion gate.
+  const [orgAgency, setOrgAgency] = useState("");
+  const [orgOrganization, setOrgOrganization] = useState("");
+  const [orgJobTitle, setOrgJobTitle] = useState("");
+  const [orgBaseline, setOrgBaseline] = useState({ agency: "", organization: "", jobTitle: "" });
+  const [orgSaving, setOrgSaving] = useState(false);
+  const [orgError, setOrgError] = useState<string | null>(null);
+  const [orgSaved, setOrgSaved] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    apiClient.userProfile
+      .getProfile()
+      .then((p) => {
+        if (!active) return;
+        setOrgAgency(p.agency || "");
+        setOrgOrganization(p.organization || "");
+        setOrgJobTitle(p.jobTitle || "");
+        setOrgBaseline({
+          agency: p.agency || "",
+          organization: p.organization || "",
+          jobTitle: p.jobTitle || "",
+        });
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [apiClient]);
+
+  const orgDirty =
+    orgAgency.trim() !== orgBaseline.agency.trim() ||
+    orgOrganization.trim() !== orgBaseline.organization.trim() ||
+    orgJobTitle.trim() !== orgBaseline.jobTitle.trim();
+
+  const onSaveOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!orgAgency.trim() || !orgOrganization.trim() || !orgJobTitle.trim()) {
+      setOrgError("Please complete all three fields.");
+      return;
+    }
+    setOrgSaving(true);
+    setOrgError(null);
+    setOrgSaved(false);
+    try {
+      await apiClient.userProfile.updateProfile({
+        agency: orgAgency.trim(),
+        organization: orgOrganization.trim(),
+        jobTitle: orgJobTitle.trim(),
+      });
+      setOrgBaseline({
+        agency: orgAgency.trim(),
+        organization: orgOrganization.trim(),
+        jobTitle: orgJobTitle.trim(),
+      });
+      setOrgSaved(true);
+    } catch {
+      setOrgError("Could not save your organization details.");
+    } finally {
+      setOrgSaving(false);
+    }
+  };
+
+  // Baseline = last persisted prefs, so we can detect unsaved changes.
+  const [baseline, setBaseline] = useState({
+    frequency: "off" as DigestFrequency,
+    categories: [] as string[],
+    keywords: "",
+  });
+  const [frequency, setFrequency] = useState<DigestFrequency>("off");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [keywords, setKeywords] = useState("");
+  const [categoryQuery, setCategoryQuery] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const prefs = await apiClient.notifications.getPrefs();
+        if (!active) return;
+        const loaded = {
+          frequency: prefs.frequency,
+          categories: prefs.categories,
+          keywords: prefs.keywords.join(", "),
+        };
+        setBaseline(loaded);
+        setFrequency(loaded.frequency);
+        setCategories(loaded.categories);
+        setKeywords(loaded.keywords);
+      } catch {
+        if (active) setError("Could not load your notification preferences.");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [apiClient]);
+
+  const dirty = useMemo(
+    () =>
+      frequency !== baseline.frequency ||
+      !sameSet(categories, baseline.categories) ||
+      keywords.trim() !== baseline.keywords.trim(),
+    [frequency, categories, keywords, baseline]
+  );
+
+  const toggle = (list: string[], set: (v: string[]) => void, code: string) => {
+    set(list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
+    setSaved(false);
+  };
+
+  const visibleCategories = useMemo<string[]>(() => {
+    const q = categoryQuery.trim().toLowerCase();
+    if (!q) return [...GRANT_CATEGORIES];
+    return GRANT_CATEGORIES.filter((c) => c.toLowerCase().includes(q));
+  }, [categoryQuery]);
+
+  const allVisibleSelected =
+    visibleCategories.length > 0 &&
+    visibleCategories.every((c) => categories.includes(c));
+  const someVisibleSelected = visibleCategories.some((c) =>
+    categories.includes(c)
+  );
+
+  // Bulk actions apply to the filtered set only, so they never silently touch
+  // selections the user can't currently see.
+  const setVisibleSelected = (selected: boolean) => {
+    setCategories(
+      selected
+        ? Array.from(new Set([...categories, ...visibleCategories]))
+        : categories.filter((c) => !visibleCategories.includes(c))
+    );
+    setSaved(false);
+  };
+
+  const onSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError(null);
+    setSaved(false);
+    try {
+      const payload = {
+        frequency,
+        categories,
+        keywords: toList(keywords),
+      };
+      await apiClient.notifications.updatePrefs(payload);
+      setBaseline({ frequency, categories, keywords });
+      setSaved(true);
+    } catch {
+      setError("Could not save your preferences. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const stateLabel = userState ? stateNameFromCode(userState) || userState : "Not assigned";
+
+  // Hold rendering until identity (email, state, roles) resolves.
+  if (identityLoading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  return (
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <UnifiedNavigation />
+      <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Breadcrumbs
+          items={[
+            { label: "Home", onClick: () => navigate("/") },
+            { label: "Profile" },
+          ]}
+        />
+
+        <div className="dashboard-main-content">
+          <div className="dashboard-header">
+            <div>
+              <h1>Profile</h1>
+              <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+                Your account, sign-in security, and notification preferences
+              </p>
+            </div>
+          </div>
+
+          <nav className="profile-jump-links" aria-label="Profile sections">
+            <a href="#profile-account">Account</a>
+            <a href="#profile-security">Sign-in &amp; security</a>
+            <a href="#profile-notifications">Notifications</a>
+          </nav>
+
+          <div className="profile-card-stack">
+            <div id="profile-account" className="profile-anchor">
+              <Card header="Account" headerStyle="default">
+                <dl className="profile-identity profile-section">
+                  <dt>Email</dt>
+                  <dd>{email || username || "—"}</dd>
+                  <dt>Access level</dt>
+                  <dd>{roles.length ? roles.map(roleLabel).join(", ") : "User"}</dd>
+                  <dt>State</dt>
+                  <dd>{stateLabel}</dd>
+                </dl>
+
+                <h3 className="profile-subheading">Organization details</h3>
+                <p className="profile-hint">
+                  Your department, organization, and role. Used to understand who&apos;s
+                  using GrantWell.
+                </p>
+                {orgError && (
+                  <div className="profile-alert profile-alert--error" role="alert">
+                    {orgError}
+                  </div>
+                )}
+                {orgSaved && (
+                  <div className="profile-alert profile-alert--success" role="status">
+                    Organization details saved.
+                  </div>
+                )}
+                <form onSubmit={onSaveOrg}>
+                  <div className="profile-section">
+                    <label className="profile-field-label" htmlFor="profile-agency">
+                      Department
+                    </label>
+                    <input
+                      id="profile-agency"
+                      type="text"
+                      value={orgAgency}
+                      onChange={(e) => {
+                        setOrgAgency(e.target.value);
+                        setOrgSaved(false);
+                      }}
+                      className="profile-input"
+                      placeholder="e.g. Department of Transportation"
+                    />
+                  </div>
+                  <div className="profile-section">
+                    <label className="profile-field-label" htmlFor="profile-org">
+                      Organization
+                    </label>
+                    <input
+                      id="profile-org"
+                      type="text"
+                      value={orgOrganization}
+                      onChange={(e) => {
+                        setOrgOrganization(e.target.value);
+                        setOrgSaved(false);
+                      }}
+                      className="profile-input"
+                      placeholder="e.g. Planning Division"
+                    />
+                  </div>
+                  <div className="profile-section">
+                    <label className="profile-field-label" htmlFor="profile-title">
+                      Role / Title
+                    </label>
+                    <input
+                      id="profile-title"
+                      type="text"
+                      value={orgJobTitle}
+                      onChange={(e) => {
+                        setOrgJobTitle(e.target.value);
+                        setOrgSaved(false);
+                      }}
+                      className="profile-input"
+                      placeholder="e.g. Grants Manager"
+                    />
+                  </div>
+                  <div className="profile-actions">
+                    <Button type="submit" loading={orgSaving} disabled={!orgDirty}>
+                      Save changes
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+            </div>
+
+            <div id="profile-security" className="profile-anchor">
+              <AccountActionsCard onSignedOut={() => navigate("/")} />
+            </div>
+
+            <div id="profile-notifications" className="profile-anchor">
+              <Card header="Notification preferences" headerStyle="default">
+                <p className="profile-hint">
+                  Get an email digest of new grants that match what you care about.
+                  Leave every filter empty to be notified of all new grants.
+                </p>
+
+                {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
+                {saved && <div className="profile-alert profile-alert--success" role="status">Preferences saved.</div>}
+
+                {loading ? (
+                  <p role="status">Loading…</p>
+                ) : (
+                  <form onSubmit={onSave}>
+                    <div className="profile-section">
+                      <h3>Email frequency</h3>
+                      <div className="profile-frequency">
+                        {FREQUENCIES.map((f) => (
+                          <label key={f.value}>
+                            <input
+                              type="radio"
+                              name="frequency"
+                              value={f.value}
+                              checked={frequency === f.value}
+                              onChange={() => {
+                                setFrequency(f.value);
+                                setSaved(false);
+                              }}
+                            />
+                            {f.label}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <fieldset className="profile-fieldset" disabled={frequency === "off"}>
+                      <div className="profile-section">
+                        <h3>State</h3>
+                        <p className="profile-hint">
+                          Digests cover grants for {userState ? stateLabel : "your state"}.
+                        </p>
+                      </div>
+
+                      <div className="profile-section">
+                        <h3>Categories</h3>
+                        <div className="profile-chip-toolbar">
+                          <input
+                            type="search"
+                            className="profile-chip-search"
+                            value={categoryQuery}
+                            onChange={(e) => setCategoryQuery(e.target.value)}
+                            placeholder="Search categories"
+                            aria-label="Search categories"
+                          />
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setVisibleSelected(true)}
+                            disabled={allVisibleSelected}
+                          >
+                            {categoryQuery.trim()
+                              ? `Select all ${visibleCategories.length} shown`
+                              : "Select all"}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setVisibleSelected(false)}
+                            disabled={!someVisibleSelected}
+                          >
+                            Clear
+                          </Button>
+                          {/* Not a live region: each checkbox already announces its own
+                              state, and this count would talk over that. */}
+                          <span className="profile-chip-count">
+                            {categories.length} of {GRANT_CATEGORIES.length} selected
+                          </span>
+                        </div>
+                        {visibleCategories.length === 0 ? (
+                          <p className="profile-hint">
+                            No categories match “{categoryQuery.trim()}”.
+                          </p>
+                        ) : (
+                          <div className="profile-chip-grid">
+                            {visibleCategories.map((c) => (
+                              <label key={c} className="profile-chip">
+                                <input
+                                  type="checkbox"
+                                  checked={categories.includes(c)}
+                                  onChange={() => toggle(categories, setCategories, c)}
+                                />
+                                {c}
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="profile-section">
+                        <h3>Keywords</h3>
+                        <label className="profile-field-label" htmlFor="profile-keywords">
+                          Comma-separated
+                        </label>
+                        <input
+                          id="profile-keywords"
+                          type="text"
+                          value={keywords}
+                          onChange={(e) => {
+                            setKeywords(e.target.value);
+                            setSaved(false);
+                          }}
+                          placeholder="e.g. broadband, workforce"
+                          className="profile-input"
+                        />
+                      </div>
+                    </fieldset>
+
+                    <div className="profile-actions">
+                      <Button type="submit" loading={saving} disabled={!dirty}>
+                        Save preferences
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MfaSection() {
+  const [status, setStatus] = useState<"loading" | "on" | "off">("loading");
+  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
+  const [enrolling, setEnrolling] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = async () => {
+    try {
+      const session = await fetchAuthSession();
+      const claims = session.tokens?.idToken?.payload ?? {};
+      setEmail(typeof claims.email === "string" ? claims.email : "");
+      setUserId(typeof claims.sub === "string" ? claims.sub : "");
+      const pref = await fetchMFAPreference();
+      setStatus(pref.enabled?.includes("TOTP") || pref.preferred === "TOTP" ? "on" : "off");
+    } catch (err) {
+      console.error("Could not read MFA preference", err);
+      setStatus("off");
+    }
+  };
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  const turnOff = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await updateMFAPreference({ totp: "DISABLED" });
+      setStatus("off");
+    } catch (err) {
+      console.error("Could not disable MFA", err);
+      setError("Could not turn off two-step verification. Try again in a moment.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (status === "loading") return null;
+
+  return (
+    <div className="profile-section">
+      <span className="profile-field-label">Two-step verification</span>
+      {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
+
+      {status === "on" ? (
+        <>
+          {MFA_DEADLINE_ISO ? (
+            <p className="profile-hint">
+              Two-step verification is on. GrantWell requires it from{" "}
+              {deadlineDateText(MFA_DEADLINE_ISO, true)}, so it can&apos;t be turned off.
+            </p>
+          ) : (
+            <>
+              <p className="profile-hint">
+                On. You are asked for a code from your authenticator app when you sign in.
+              </p>
+              <div className="profile-actions">
+                <Button type="button" variant="secondary" onClick={turnOff} loading={busy}>
+                  Turn off
+                </Button>
+              </div>
+            </>
+          )}
+        </>
+      ) : enrolling ? (
+        <MfaSetupPanel
+          email={email}
+          onEnrolled={() => {
+            setEnrolling(false);
+            clearMfaPromptSnooze(userId);
+            setStatus("on");
+          }}
+          onCancel={() => setEnrolling(false)}
+        />
+      ) : (
+        <>
+          <p className="profile-hint">
+            {MFA_DEADLINE_ISO
+              ? `Off. GrantWell requires it from ${deadlineDateText(MFA_DEADLINE_ISO, true)}.`
+              : "Off. Recommended — it keeps your account safe if your password is ever exposed."}
+          </p>
+          <div className="profile-actions">
+            <Button type="button" onClick={() => setEnrolling(true)}>
+              Set up two-step verification
+            </Button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
+  const [showPw, setShowPw] = useState(false);
+  const [oldPw, setOldPw] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [pwError, setPwError] = useState<string | null>(null);
+  const [pwOk, setPwOk] = useState(false);
+
+  const changePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwError(null);
+    setPwOk(false);
+    if (newPw !== confirmPw) {
+      setPwError("New passwords do not match.");
+      return;
+    }
+    setBusy(true);
+    try {
+      await updatePassword({ oldPassword: oldPw, newPassword: newPw });
+      setOldPw("");
+      setNewPw("");
+      setConfirmPw("");
+      setShowPw(false);
+      // Cognito's ChangePassword leaves existing refresh tokens valid; only a global sign-out revokes them.
+      try {
+        await signOut({ global: true });
+        setPwOk(true);
+        onSignedOut();
+      } catch (signOutError) {
+        console.error("Could not revoke other sessions after password change:", signOutError);
+        setPwError(
+          'Your password was changed, but we could not sign out your other devices. Use "Sign out of all devices" to finish.'
+        );
+      }
+    } catch (err) {
+      setPwError(
+        err instanceof Error ? err.message : "Could not change password."
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const signOutEverywhere = async () => {
+    setBusy(true);
+    try {
+      await signOut({ global: true });
+    } catch (err) {
+      console.error("Global sign-out failed:", err);
+    } finally {
+      onSignedOut();
+    }
+  };
+
+  return (
+    <Card header="Sign-in & security" headerStyle="default">
+      <MfaSection />
+
+      {pwError && <div className="profile-alert profile-alert--error" role="alert">{pwError}</div>}
+      {pwOk && <div className="profile-alert profile-alert--success" role="status">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
+
+      {showPw ? (
+        <form onSubmit={changePassword}>
+          <div className="profile-section">
+            <label className="profile-field-label" htmlFor="pw-old">Current password</label>
+            <input id="pw-old" type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="profile-input" />
+          </div>
+          <div className="profile-section">
+            <label className="profile-field-label" htmlFor="pw-new">New password</label>
+            <input id="pw-new" type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} required className="profile-input" />
+          </div>
+          <div className="profile-section">
+            <label className="profile-field-label" htmlFor="pw-confirm">Confirm new password</label>
+            <input id="pw-confirm" type="password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required className="profile-input" />
+          </div>
+          <div className="profile-actions">
+            <Button type="submit" loading={busy}>Update password</Button>
+            <Button type="button" variant="ghost" onClick={() => setShowPw(false)} disabled={busy}>Cancel</Button>
+          </div>
+        </form>
+      ) : (
+        <div className="profile-actions">
+          <Button type="button" variant="secondary" onClick={() => setShowPw(true)}>Change password</Button>
+          <Button type="button" variant="danger" onClick={signOutEverywhere} loading={busy}>Sign out of all devices</Button>
+        </div>
+      )}
+    </Card>
+  );
+}

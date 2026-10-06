@@ -1,11 +1,13 @@
 *.js
-!jest.config.js
 *.d.ts
 !global.d.ts
 node_modules
-!lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/
-!lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/**
+!packages/core/lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/
+!packages/core/lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/**
 *.pyc
+
+# Generic built from source by scripts/pack.sh --dev
+/build/
 
 # CDK asset staging directory
 .cdk.staging

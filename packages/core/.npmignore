@@ -1,0 +1,9 @@
+*.ts
+!*.d.ts
+/test/
+/scripts/
+/tsconfig.json
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out

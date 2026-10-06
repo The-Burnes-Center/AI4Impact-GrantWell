@@ -1,0 +1,16 @@
+DraftAssembleFunction983A0391	AWS::Lambda::Function
+DraftAssembleFunctionLogGroup0638310D	AWS::Logs::LogGroup
+DraftAssembleFunctionServiceRole713497C8	AWS::IAM::Role
+DraftAssembleFunctionServiceRoleDefaultPolicy8EC3AFE0	AWS::IAM::Policy
+DraftGenerateSectionFunctionD231AA15	AWS::Lambda::Function
+DraftGenerateSectionFunctionLogGroup4A9AFAFD	AWS::Logs::LogGroup
+DraftGenerateSectionFunctionServiceRoleDADEB160	AWS::IAM::Role
+DraftGenerateSectionFunctionServiceRoleDefaultPolicy54ECFC4B	AWS::IAM::Policy
+DraftGenerationPipelineDraftGenerationLogsC18817E6	AWS::Logs::LogGroup
+DraftGenerationPipelineDraftGenerationSFN97618535	AWS::StepFunctions::StateMachine
+DraftGenerationPipelineDraftGenerationSFNRoleA49E730D	AWS::IAM::Role
+DraftGenerationPipelineDraftGenerationSFNRoleDefaultPolicyF402B29F	AWS::IAM::Policy
+DraftPrepareFunction3F257E32	AWS::Lambda::Function
+DraftPrepareFunctionLogGroupFB085A77	AWS::Logs::LogGroup
+DraftPrepareFunctionServiceRoleB84500BB	AWS::IAM::Role
+DraftPrepareFunctionServiceRoleDefaultPolicyDCB39376	AWS::IAM::Policy

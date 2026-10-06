@@ -1,0 +1,159 @@
+import React, { Suspense, useEffect, useRef } from "react";
+import {
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+} from "react-router";
+import { ErrorBoundary } from "./components/common/ErrorBoundary";
+import { NotificationProvider } from "./components/notifications/NotificationManager";
+import NotificationBar from "./components/notifications/NotificationBar";
+import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
+import { useBranding } from "./common/branding";
+import { IS_PROD } from "./common/instance";
+import "./styles/app.scss";
+
+const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
+const SessionPage = React.lazy(() => import("./pages/chat/sessions/SessionsPage"));
+const HomePage = React.lazy(() => import("./pages/home/HomePage"));
+const Checklists = React.lazy(() => import("./pages/requirements/ChecklistPage"));
+const DocumentEditor = React.lazy(() => import("./pages/document-editor/DocumentEditorPage"));
+const DocEditorSessionsPage = React.lazy(() => import("./pages/document-editor/DocEditorSessionsPage"));
+const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
+const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
+const WhatsNewContent = React.lazy(() =>
+  import("./pages/whats-new/WhatsNewPage").then((m) => ({ default: m.WhatsNewContent }))
+);
+
+function ScrollToTop(): null {
+  const { pathname, search, hash } = useLocation();
+  const prevPathRef = useRef<string>("");
+  const { appName, analyticsId } = useBranding();
+
+  useEffect(() => {
+    const mainContent = document.getElementById("main-content");
+    if (mainContent) {
+      mainContent.focus({ preventScroll: true });
+    }
+
+    const fullPath = pathname + search;
+    const routeChanged = prevPathRef.current !== fullPath;
+
+    // Wizard steps navigate by query string only, so the browser keeps the previous offset.
+    if (routeChanged && !hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+
+    // Page label per route; the app name is appended from branding.
+    const getPageLabel = (path: string): string | null => {
+      const exactMatches: { [key: string]: string } = {
+        "/": "Home",
+        "/home": "Home",
+        "/admin": "Admin Dashboard",
+        "/profile": "Profile",
+        "/chat/sessions": "My Chats",
+        "/document-editor": "Write Application",
+        "/document-editor/drafts": "My Applications",
+      };
+
+      if (exactMatches[path]) {
+        return exactMatches[path];
+      }
+
+      if (path.startsWith("/chat/") && path !== "/chat/sessions") {
+        return "Chat with AI";
+      }
+      if (path.startsWith("/document-editor/") && path !== "/document-editor/drafts") {
+        return "Write Application";
+      }
+      if (path.startsWith("/requirements/")) {
+        return "Requirements";
+      }
+
+      return null;
+    };
+
+    const label = getPageLabel(pathname);
+    const home = pathname === "/" || pathname === "/home";
+    const baseTitle = !label
+      ? appName
+      : home
+      ? `${appName} - ${label}`
+      : `${label} - ${appName}`;
+    document.title = baseTitle;
+
+    const fullUrl = window.location.origin + fullPath;
+
+    if (routeChanged) {
+      prevPathRef.current = fullPath;
+      
+      if (IS_PROD && analyticsId && typeof window !== "undefined" && window.gtag) {
+        window.gtag("config", analyticsId, {
+          page_title: baseTitle,
+          page_path: fullPath,
+          page_location: fullUrl,
+        });
+      }
+    }
+  }, [pathname, search, hash, appName, analyticsId]);
+
+  return null;
+}
+
+function App() {
+  return <AppContent />;
+}
+
+function AppContent() {
+  return (
+    <NotificationProvider>
+      <AccessDeniedProvider>
+      <ScrollToTop />
+      {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
+      <main id="main-content" tabIndex={-1}>
+        <NotificationBar />
+        <ErrorBoundary>
+          <Suspense fallback={<div className="lazy-loading-fallback" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>Loading...</div>}>
+            <Routes>
+            <Route
+              index
+              path="/"
+              element={<Navigate to={`/home`} replace />}
+            />
+            <Route path="/home" element={<HomePage />} />
+            <Route
+              path="/requirements/:documentIdentifier"
+              element={<Checklists />}
+            />
+            <Route path="/chat/:sessionId" element={<Playground />} />
+            <Route path="/chat/sessions" element={<SessionPage />} />
+            <Route path="/document-editor" element={<DocumentEditor />} />
+            <Route
+              path="/document-editor/:sessionId"
+              element={<DocumentEditor />}
+            />
+            <Route
+              path="/document-editor/drafts"
+              element={<DocEditorSessionsPage />}
+            />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/whats-new" element={<WhatsNewContent />} />
+            <Route path="/admin" element={<Dashboard />} />
+            <Route
+              path="/admin/dashboard"
+              element={<Navigate to="/admin" replace />}
+            />
+            <Route
+              path="*"
+              element={<Navigate to={`/home`} replace />}
+            />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
+      </main>
+      </AccessDeniedProvider>
+    </NotificationProvider>
+  );
+}
+
+export default App;

@@ -1,0 +1,301 @@
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useLocation, useNavigate, useSearchParams } from "react-router";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
+import { useApiClient } from "../../hooks/use-api-client";
+import { useInert } from "../../hooks/use-inert";
+import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
+import HelpModal from "./components/HelpModal";
+import { GRANT_TYPES, type GrantTypeId } from "../../common/types/nofo";
+import "../../styles/checklists.css";
+
+interface LlmData {
+  grantName: string;
+  eligibility: string;
+  documents: string;
+  narrative: string;
+  deadlines: string;
+}
+
+const TAB_IDS = ["eligibility", "documents", "narrative", "deadlines"] as const;
+type TabId = typeof TAB_IDS[number];
+
+const TAB_CONFIG: { id: TabId; label: string; icon: React.ReactNode }[] = [
+  { id: "eligibility", label: "Eligibility", icon: <LuUser size={18} /> },
+  { id: "documents", label: "Required Documents", icon: <LuFileText size={18} /> },
+  { id: "narrative", label: "Narrative Sections", icon: <LuList size={18} /> },
+  { id: "deadlines", label: "Key Deadlines", icon: <LuClock size={18} /> },
+];
+
+const Checklists: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { documentIdentifier } = useParams<{ documentIdentifier: string }>();
+  const [searchParams] = useSearchParams();
+  const folderParam =
+    searchParams.get("grant") ?? searchParams.get("folder") ?? searchParams.get("nofo") ?? documentIdentifier;
+  const apiClient = useApiClient();
+
+  const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: "", documents: "", narrative: "", deadlines: "" });
+  const [grantType, setGrantType] = useState<GrantTypeId | null>(null);
+  const [stateGuidance, setStateGuidance] = useState<{ stateName: string; note: string } | null>(null);
+  const [isLoading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTabId, setActiveTabId] = useState<TabId>("eligibility");
+  const [showHelp, setShowHelp] = useState(false);
+  const inertMainRef = useInert<HTMLDivElement>(showHelp);
+
+  // Show help modal automatically on first visit
+  useEffect(() => {
+    if (!isLoading && !localStorage.getItem("checklistsHelpSeen")) {
+      setShowHelp(true);
+    }
+  }, [isLoading]);
+
+  // Handle URL hash for direct tab access
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "") as TabId;
+    if (TAB_IDS.includes(hash)) setActiveTabId(hash);
+  }, [location]);
+
+  // Fetch NOFO summary data
+  useEffect(() => {
+    if (!documentIdentifier) return;
+
+    const processApiItems = (items: Array<{ item?: unknown; description?: unknown }>) => {
+      if (!items || !Array.isArray(items)) return "";
+      return items
+        .map((section) => {
+          const itemText = section.item !== undefined
+            ? (typeof section.item === "object" ? JSON.stringify(section.item) : String(section.item))
+            : "Unknown";
+          const descText = section.description !== undefined
+            ? (typeof section.description === "object" ? JSON.stringify(section.description) : String(section.description))
+            : "No description";
+          return `- **${itemText}**: ${descText}`;
+        })
+        .join("\n");
+    };
+
+    const fetchData = async () => {
+      try {
+        const result = await apiClient.landingPage.getNOFOSummary(documentIdentifier);
+
+        try {
+          const nofoResult = await apiClient.landingPage.getNOFOs();
+          if (nofoResult.nofoData) {
+            const match = nofoResult.nofoData.find((n: { name: string; grant_type?: string }) => n.name === documentIdentifier);
+            if (match) setGrantType(match.grant_type || null);
+          }
+        } catch { /* grant type is optional */ }
+
+        setLlmData({
+          grantName: result.data.GrantName || "Grant",
+          eligibility: processApiItems(result.data.EligibilityCriteria),
+          documents: processApiItems(result.data.RequiredDocuments),
+          narrative: processApiItems(result.data.ProjectNarrativeSections),
+          deadlines: processApiItems(result.data.KeyDeadlines),
+        });
+
+        // Server merges the viewer's own state's overlay onto federal grants (if any).
+        const guidance = (result.data as { stateGuidance?: { stateName?: string; note?: string } }).stateGuidance;
+        setStateGuidance(guidance?.note ? { stateName: guidance.stateName || "your state", note: guidance.note } : null);
+      } catch (err) {
+        console.error("Error loading NOFO summary:", err);
+        setError("Failed to load grant requirements. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [documentIdentifier, apiClient]);
+
+  // Redirect if no NOFO selected
+  useEffect(() => {
+    if (!isLoading && !folderParam && !documentIdentifier) {
+      navigate("/");
+    }
+  }, [isLoading, folderParam, documentIdentifier, navigate]);
+
+  const handleTabClick = useCallback((tabId: TabId) => {
+    setActiveTabId(tabId);
+    window.location.hash = tabId;
+    setTimeout(() => document.getElementById(`tab-${tabId}`)?.focus(), 0);
+  }, []);
+
+  const handleTabsKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const idx = TAB_IDS.indexOf(activeTabId);
+    if (e.key === "ArrowRight") { e.preventDefault(); handleTabClick(TAB_IDS[(idx + 1) % TAB_IDS.length]); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); handleTabClick(TAB_IDS[(idx - 1 + TAB_IDS.length) % TAB_IDS.length]); }
+    else if (e.key === "Home") { e.preventDefault(); handleTabClick(TAB_IDS[0]); }
+    else if (e.key === "End") { e.preventDefault(); handleTabClick(TAB_IDS[TAB_IDS.length - 1]); }
+  }, [activeTabId, handleTabClick]);
+
+  const tabContents: Record<TabId, { title: string; content: string }> = {
+    eligibility: { title: "Ensure you adhere to the extracted eligibility criteria before continuing with your application.", content: llmData.eligibility },
+    documents: { title: "Include the following documents in your application.", content: llmData.documents },
+    narrative: { title: "The following sections must be included in your application.", content: llmData.narrative },
+    deadlines: { title: "Note the following key deadlines for this grant.", content: llmData.deadlines },
+  };
+
+  return (
+    <div className="checklist-layout" style={{ flex: "1 0 auto" }}>
+      <UnifiedNavigation documentIdentifier={folderParam} />
+
+      <div ref={inertMainRef} className="checklist-main" aria-hidden={showHelp}>
+        <div className="checklist-main-container">
+          {isLoading ? (
+            <div className="checklist-loading" role="status" aria-live="polite">
+              <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
+              <h2 className="checklist-loading__title">Loading Requirements</h2>
+              <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
+              <div className="checklist-loading__tip">
+                <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
+                <p className="checklist-loading__tip-text">
+                  Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.
+                </p>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="checklist-error" role="alert">
+              <h2 className="checklist-error__title">Unable to Load Requirements</h2>
+              <p className="checklist-error__text">{error}</p>
+              <button className="checklist-error__btn" onClick={() => window.location.reload()}>
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <div className="checklist-content">
+              <div className="checklist-content__header">
+                <div className="checklist-content__header-inner">
+                  <h1 className="checklist-content__heading">
+                    <span>Requirements for </span>
+                    <span className="checklist-content__heading-accent">{llmData.grantName}</span>
+                    {grantType && GRANT_TYPES[grantType] && (
+                      <span
+                        className="checklist-grant-badge"
+                        style={{
+                          backgroundColor: `${GRANT_TYPES[grantType].color}15`,
+                          color: GRANT_TYPES[grantType].color,
+                          border: `1px solid ${GRANT_TYPES[grantType].color}40`,
+                        }}
+                      >
+                        {GRANT_TYPES[grantType].label}
+                      </span>
+                    )}
+                  </h1>
+                  <p className="checklist-content__description">
+                    Key requirement checkpoints for this grant. Review these
+                    requirements to ensure eligibility and understand what documents and narrative sections
+                    you&#39;ll need to prepare.
+                  </p>
+                </div>
+                <button className="checklist-help-btn" onClick={() => setShowHelp(true)}>
+                  <LuInfo size={16} aria-hidden="true" /> Help
+                </button>
+              </div>
+
+              {stateGuidance && (
+                <div
+                  role="note"
+                  className="checklist-state-guidance"
+                  style={{
+                    margin: "0 0 20px",
+                    padding: "14px 16px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--gw-color-border, #d0d7de)",
+                    borderLeft: "4px solid var(--gw-color-primary, #195C53)",
+                    background: "var(--gw-color-surface-subtle, #f6f8fa)",
+                  }}
+                >
+                  <strong style={{ display: "block", marginBottom: "6px" }}>
+                    Additional guidance for {stateGuidance.stateName}
+                  </strong>
+                  <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{stateGuidance.note}</p>
+                </div>
+              )}
+
+              <div className="checklist-tabs">
+                <div className="checklist-tabs__header" role="tablist" tabIndex={-1} aria-label="Grant requirements" onKeyDown={handleTabsKeyDown}>
+                  {TAB_CONFIG.map((tab) => {
+                    const isActive = tab.id === activeTabId;
+                    return (
+                      <button
+                        key={tab.id}
+                        className={`checklist-tab${isActive ? " checklist-tab--active" : ""}`}
+                        onClick={() => handleTabClick(tab.id)}
+                        role="tab"
+                        tabIndex={isActive ? 0 : -1}
+                        aria-selected={isActive}
+                        aria-controls={`tabpanel-${tab.id}`}
+                        id={`tab-${tab.id}`}
+                      >
+                        {tab.icon} {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {TAB_IDS.map((tabId) => (
+                  <div
+                    key={tabId}
+                    className="checklist-tabs__content"
+                    style={{ display: tabId === activeTabId ? "block" : "none" }}
+                    role="tabpanel"
+                    id={`tabpanel-${tabId}`}
+                    aria-labelledby={`tab-${tabId}`}
+                    hidden={tabId !== activeTabId}
+                    tabIndex={0}
+                  >
+                    <p className="checklist-content__description">{tabContents[tabId].title}</p>
+                    <div className="checklist-tabs__markdown">
+                      <ReactMarkdown
+                        className="custom-markdown"
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          a({ href, children, ...rest }) {
+                            return (
+                              <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>
+                                {children}
+                              </a>
+                            );
+                          },
+                        }}
+                      >
+                        {tabContents[tabId].content}
+                      </ReactMarkdown>
+
+                      {tabId === "eligibility" && (
+                        <div className="checklist-info-box">
+                          <LuInfo size={22} color="#23776C" />
+                          <div>
+                            <p className="checklist-info-box__title">Not sure if your organization qualifies?</p>
+                            <p className="checklist-info-box__text">
+                              Chat with AI can help assess your organization&#39;s eligibility based on
+                              these criteria. Click &quot;Chat with AI&quot; in the navigation panel
+                              and ask: &quot;Is my organization eligible for this grant?&quot;
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="checklist-content__note">
+                Note: Always refer to the official grant documentation for final requirements and details.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <HelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
+    </div>
+  );
+};
+
+export default Checklists;

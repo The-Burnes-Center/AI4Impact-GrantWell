@@ -1,0 +1,78 @@
+name: Release
+
+# A version tag publishes the tagged commit's grantwell-core and grantwell-ui as a GitHub Release.
+# `scripts/release.sh prepare <version>` must have stamped and committed that version first.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    name: Build and publish
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      TAG: ${{ github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: packages/core/package-lock.json
+
+      # rc tags ship what dev runs; final tags ship what prod runs.
+      - name: Tagged commit is on its release branch
+        run: |
+          case "$TAG" in
+            *-rc.*) branch=staging ;;
+            *) branch=main ;;
+          esac
+          status=$(gh api "repos/$GITHUB_REPOSITORY/compare/$GITHUB_SHA...$branch" --jq .status)
+          if [ "$status" != identical ] && [ "$status" != ahead ]; then
+            echo "::error::$TAG ($GITHUB_SHA) is not on $branch (compare status: $status)"
+            exit 1
+          fi
+
+      - name: Build artifacts, SBOMs and SHA256SUMS
+        run: scripts/release.sh build "$TAG" dist
+
+      - name: Create GitHub Release
+        run: |
+          version=${TAG#v}
+          {
+            echo "Upgrade an instance repo:"
+            echo
+            echo '```'
+            echo "scripts/upgrade.sh $version"
+            echo '```'
+            echo
+            echo "SHA256SUMS:"
+            echo
+            echo '```'
+            cat dist/SHA256SUMS
+            echo '```'
+          } > notes.md
+          case "$TAG" in
+            *-rc.*) flags=(--prerelease --latest=false) ;;
+            *) flags=(--latest) ;;
+          esac
+          gh release create "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --verify-tag --title "GrantWell $version" --notes-file notes.md "${flags[@]}"

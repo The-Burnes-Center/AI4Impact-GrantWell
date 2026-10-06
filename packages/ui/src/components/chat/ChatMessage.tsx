@@ -1,0 +1,523 @@
+import * as React from "react";
+import { useState, useEffect, useContext } from "react";
+import ReactMarkdown from "react-markdown";
+import TableScrollRegion from "../ui/TableScrollRegion";
+import remarkGfm from "remark-gfm";
+import styles from "../../styles/chat.module.scss";
+import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
+import { AppContext } from "../../common/app-context";
+import { ApiClient } from "../../common/api-client/api-client";
+
+// Import icons
+import {
+  FaCopy,
+  FaFileAlt,
+  FaCheck,
+  FaChevronDown,
+  FaChevronRight,
+  FaRegStopCircle,
+} from "react-icons/fa";
+
+import "react-json-view-lite/dist/index.css";
+import "../../styles/app.scss";
+
+export interface ChatMessageProps {
+  message: ChatBotHistoryItem;
+  documentIdentifier?: string;
+}
+
+function ChatMessage(props: ChatMessageProps) {
+  const [copied, setCopied] = useState<boolean>(false);
+  const [grantName, setGrantName] = useState<string>("");
+  const [sourcesExpanded, setSourcesExpanded] = useState<boolean>(false);
+  const sourceListId = React.useId();
+  const appContext = useContext(AppContext);
+
+
+
+  // Styles for the components
+  const containerStyle: React.CSSProperties = {
+    padding: "4px 16px",
+    borderRadius: "8px",
+    backgroundColor: "transparent",
+    marginBottom: "4px",
+    position: "relative",
+    display: "flex",
+    flexDirection:
+      props.message?.type === ChatBotMessageType.Human ? "row-reverse" : "row",
+    alignItems: "flex-end",
+    gap: "12px",
+  };
+
+  const avatarStyle: React.CSSProperties = {
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "18px",
+    fontWeight: "600",
+    flexShrink: 0,
+    backgroundColor:
+      props.message?.type === ChatBotMessageType.Human ? "#244140" : "#23776C",
+    color: "white",
+  };
+
+  const aiContainerStyle = {
+    display: "flex",
+    flexDirection: "row" as const,
+    flex: 1,
+    alignItems: "flex-end",
+    gap: "8px",
+  };
+
+  const messageWrapperStyle = {
+    display: "flex",
+    flexDirection: "column" as const,
+    flex: 1,
+  };
+
+  const copyButtonContainerStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    paddingBottom: "4px",
+    position: "relative",
+  };
+
+  const copyButtonStyle: React.CSSProperties = {
+    backgroundColor: "transparent",
+    border: "none",
+    cursor: "pointer",
+    padding: "6px",
+    minWidth: "32px",
+    minHeight: "32px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#6b7280",
+    borderRadius: "4px",
+    transition: "all 0.2s ease",
+  };
+
+  const messageBubbleStyle = {
+    padding: "12px 16px",
+    borderRadius:
+      props.message?.type === ChatBotMessageType.Human
+        ? "18px 18px 4px 18px"
+        : "18px 18px 18px 4px",
+    backgroundColor:
+      props.message?.type === ChatBotMessageType.Human ? "#23776C" : "#e8eef1",
+    color:
+      props.message?.type === ChatBotMessageType.Human ? "white" : "#2d3748",
+    wordWrap: "break-word" as const,
+    boxShadow:
+      props.message?.type === ChatBotMessageType.Human
+        ? "0 1px 3px rgba(0, 0, 0, 0.1)"
+        : "0 2px 4px rgba(0, 0, 0, 0.15)",
+    position: "relative" as const,
+  };
+
+  const messageContentStyle = {
+    wordBreak: "break-word" as const,
+    overflowWrap: "break-word" as const,
+    width: "100%",
+    lineHeight:
+      props.message?.type === ChatBotMessageType.AI ? "1.6" : "inherit",
+    fontSize:
+      props.message?.type === ChatBotMessageType.AI ? "15px" : "inherit",
+  };
+
+  const spinnerStyle = {
+    display: "inline-block",
+    width: "20px",
+    height: "20px",
+    border: "3px solid rgba(0, 0, 0, 0.1)",
+    borderRadius: "50%",
+    borderTopColor: "#23776C",
+    animation: "spin 1s linear infinite",
+  };
+
+  // Keyframes for spinner animation
+  useEffect(() => {
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
+
+  if (props.message.content === "undefined") {
+    return null;
+  }
+
+  const content =
+    typeof props.message.content === "string" &&
+    props.message.content.length > 0
+      ? props.message.content
+      : "";
+
+  const showSources =
+    Array.isArray(props.message.metadata?.Sources) &&
+    props.message.metadata.Sources.length > 0;
+
+  const stopped = props.message.metadata?.stopped === true;
+
+  // Fetch grant name if documentIdentifier is provided
+  useEffect(() => {
+    const fetchGrantName = async () => {
+      if (!props.documentIdentifier || !appContext || !showSources) return;
+      
+      try {
+        const apiClient = new ApiClient(appContext);
+        const summaryResult = await apiClient.landingPage.getNOFOSummary(
+          props.documentIdentifier
+        );
+        if (summaryResult?.data?.GrantName) {
+          setGrantName(summaryResult.data.GrantName);
+        }
+      } catch (error) {
+        console.error("Error fetching grant name:", error);
+        // Fallback to documentIdentifier name
+        const folderName = props.documentIdentifier.split("/").pop();
+        setGrantName(folderName || "Grant");
+      }
+    };
+
+    fetchGrantName();
+  }, [props.documentIdentifier, appContext, showSources]);
+
+  const cleanSourceTitle = (title: string) => {
+    return title
+      .replace(/\s*\(Bedrock Knowledge Base\)\s*$/i, "")
+      .replace(/\+/g, " ");
+  };
+
+  const sources = showSources ? (props.message.metadata.Sources as Array<{ title: string; uri: string }>) : [];
+  const grantSources = sources.filter((source) => 
+    source.uri && !source.uri.includes("userDocuments")
+  );
+  const uploadedFiles = sources.filter((source) => 
+    source.uri && source.uri.includes("userDocuments")
+  );
+  const totalSourceCount = grantSources.length + uploadedFiles.length;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(props.message.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <article
+      aria-label={
+        props.message?.type === ChatBotMessageType.AI
+          ? "Assistant message"
+          : "Your message"
+      }
+    >
+      <div style={containerStyle}>
+        {props.message?.type === ChatBotMessageType.AI ? (
+          <>
+            {/* Avatar for AI */}
+            <div style={avatarStyle} role="img" aria-label="GrantWell assistant">
+              G
+            </div>
+            {/* Wrapper for message and copy button */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-end",
+                gap: "8px",
+                flex: 1,
+                maxWidth: "80%",
+              }}
+            >
+              <div style={aiContainerStyle}>
+                <div style={messageWrapperStyle}>
+                  <div style={messageBubbleStyle}>
+                    <span className="sr-only">Assistant replied: </span>
+                    <div style={messageContentStyle}>
+                      {content?.length === 0 ? (
+                        <div style={spinnerStyle}></div>
+                      ) : null}
+
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          h1(props) {
+                            const { children, ...rest } = props;
+                            return <h3 {...rest}>{children}</h3>;
+                          },
+                          h2(props) {
+                            const { children, ...rest } = props;
+                            return <h4 {...rest}>{children}</h4>;
+                          },
+                          h3(props) {
+                            const { children, ...rest } = props;
+                            return <h5 {...rest}>{children}</h5>;
+                          },
+                          h4(props) {
+                            const { children, ...rest } = props;
+                            return <h6 {...rest}>{children}</h6>;
+                          },
+                          h5(props) {
+                            const { children, ...rest } = props;
+                            return <h6 {...rest}>{children}</h6>;
+                          },
+                          h6(props) {
+                            const { children, ...rest } = props;
+                            return <h6 {...rest}>{children}</h6>;
+                          },
+                          pre(props) {
+                            const { children, ...rest } = props;
+                            return (
+                              <pre {...rest} className={styles.codeMarkdown}>
+                                {children}
+                              </pre>
+                            );
+                          },
+                          table(props) {
+                            const { children, ...rest } = props;
+                            return (
+                              <TableScrollRegion
+                                label="Table in this answer"
+                                className={styles.markdownTableScroll}
+                              >
+                                <table {...rest} className={styles.markdownTable}>
+                                  {children}
+                                </table>
+                              </TableScrollRegion>
+                            );
+                          },
+                          th(props) {
+                            const { children, ...rest } = props;
+                            return (
+                              <th scope="col" {...rest}>
+                                {children}
+                              </th>
+                            );
+                          },
+                          td(props) {
+                            const { children, ...rest } = props;
+                            return <td {...rest}>{children}</td>;
+                          },
+                        }}
+                      >
+                        {content}
+                      </ReactMarkdown>
+                    </div>
+
+                    {stopped && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          marginTop: "8px",
+                          fontSize: "12px",
+                          fontStyle: "italic",
+                          color: "#565d6b",
+                        }}
+                      >
+                        <FaRegStopCircle size={12} aria-hidden="true" />
+                        Response stopped
+                      </div>
+                    )}
+
+                    {/* Collapsible sources section */}
+                    {showSources && (
+                      <div
+                        style={{
+                          borderTop: "1px solid #e0e0e0",
+                          marginTop: "12px",
+                          paddingTop: "8px",
+                        }}
+                      >
+                        <button
+                          onClick={() => setSourcesExpanded(!sourcesExpanded)}
+                          aria-expanded={sourcesExpanded}
+                          aria-controls={sourcesExpanded ? sourceListId : undefined}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: "4px 0",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#374151",
+                            width: "100%",
+                            textAlign: "left",
+                            minHeight: "32px",
+                          }}
+                        >
+                          {sourcesExpanded
+                            ? <FaChevronDown size={10} aria-hidden="true" />
+                            : <FaChevronRight size={10} aria-hidden="true" />}
+                          Sources ({totalSourceCount})
+                        </button>
+
+                        {sourcesExpanded && (
+                          <div
+                            id={sourceListId}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "6px",
+                              paddingTop: "4px",
+                              paddingLeft: "4px",
+                            }}
+                          >
+                            {grantSources.length > 0 && (
+                              <div role="group" aria-label={grantName || "Grant Document"}>
+                                <div aria-hidden="true" style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: "#6b7280",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.5px",
+                                  marginBottom: "4px",
+                                }}>
+                                  {grantName || "Grant Document"}
+                                </div>
+                                <div role="list">
+                                {grantSources.map((source, idx) => (
+                                  <div
+                                    key={idx}
+                                    role="listitem"
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "6px",
+                                      fontSize: "13px",
+                                      color: "#374151",
+                                      padding: "3px 0",
+                                    }}
+                                  >
+                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "#6b7280" }} />
+                                    <span style={{ wordBreak: "break-word" }}>
+                                      {cleanSourceTitle(source.title)}
+                                    </span>
+                                  </div>
+                                ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {uploadedFiles.length > 0 && (
+                              <div role="group" aria-label="Your Supporting Documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
+                                <div aria-hidden="true" style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: "#6b7280",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.5px",
+                                  marginBottom: "4px",
+                                }}>
+                                  Your Supporting Documents
+                                </div>
+                                <div role="list">
+                                {uploadedFiles.map((file, idx) => (
+                                  <div
+                                    key={idx}
+                                    role="listitem"
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "6px",
+                                      fontSize: "13px",
+                                      color: "#374151",
+                                      padding: "3px 0",
+                                    }}
+                                  >
+                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "#388557" }} />
+                                    <span style={{ wordBreak: "break-word", flex: 1 }}>
+                                      {cleanSourceTitle(file.title)}
+                                    </span>
+                                  </div>
+                                ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Copy button - now next to the bubble */}
+              {props.message.content.length > 0 && (
+                <div style={copyButtonContainerStyle}>
+                  <button
+                    style={copyButtonStyle}
+                    onClick={handleCopy}
+                    onMouseEnter={(e) => {
+                      if (!copied) {
+                        e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        e.currentTarget.style.color = "#23776C";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!copied) {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                        e.currentTarget.style.color = "#6b7280";
+                      }
+                    }}
+                    onFocus={(e) => {
+                      if (!copied) {
+                        e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        e.currentTarget.style.color = "#23776C";
+                      }
+                      e.currentTarget.style.outline = "2px solid #23776C";
+                      e.currentTarget.style.outlineOffset = "2px";
+                    }}
+                    onBlur={(e) => {
+                      if (!copied) {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                        e.currentTarget.style.color = "#6b7280";
+                      }
+                      e.currentTarget.style.outline = "none";
+                      e.currentTarget.style.outlineOffset = "0";
+                    }}
+                    aria-label={copied ? "Copied to clipboard" : "Copy message to clipboard"}
+                  >
+                    {copied ? (
+                      <FaCheck size={14} aria-hidden="true" style={{ color: "#059669" }} />
+                    ) : (
+                      <FaCopy size={14} aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Avatar for User */}
+            <div style={avatarStyle} role="img" aria-label="User">
+              U
+            </div>
+            <div style={messageBubbleStyle}>
+              <span className="sr-only">You said: </span>
+              <div style={messageContentStyle}>{props.message.content}</div>
+            </div>
+          </>
+        )}
+      </div>
+    </article>
+  );
+}
+
+export default React.memo(ChatMessage);
