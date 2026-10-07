@@ -2,17 +2,18 @@
 # First install of GrantWell into an instance repo made from template/: downloads a release, verifies its
 # checksums, fills vendor/, installs, checks, and generates templates for every deployment in config/.
 # Later versions go through upgrade.sh.
-# Usage: scripts/install.sh <version>        e.g. scripts/install.sh 3.0.0
+# Usage: scripts/install.sh [version]        default: the version package.json points at
 # Env:   GRANTWELL_REPO, GITHUB_TOKEN (see fetch-release.sh)
 set -euo pipefail
 
-version=${1:-}
-if ! [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$ ]]; then
-  echo "Usage: scripts/install.sh <version>   (e.g. 3.0.0 or 3.0.0-rc.1)" >&2
-  exit 2
-fi
 root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$root"
+
+version=${1:-$(node -p 'require("./package.json").dependencies["grantwell-core"].replace(/^file:vendor\/grantwell-core-(.+)\.tgz$/, "$1")')}
+if ! [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$ ]]; then
+  echo "Usage: scripts/install.sh [version]   (e.g. 3.0.0 or 3.0.0-rc.1; default: package.json's)" >&2
+  exit 2
+fi
 
 if [ -f package-lock.json ] || ls vendor/grantwell-*.tgz >/dev/null 2>&1; then
   echo "A GrantWell release is already installed here: use scripts/upgrade.sh <version>." >&2

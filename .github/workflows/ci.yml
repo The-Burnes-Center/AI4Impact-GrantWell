@@ -135,6 +135,39 @@ jobs:
           path: build/generic/cdk.out/ci-*/AwsSolutions-*-NagReport.csv
           if-no-files-found: error
 
+  template:
+    name: template/ with this commit's source (typecheck, example templates)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: packages/core/package-lock.json
+
+      # What a repo made from the template gets, with vendor/ packed from this commit instead of a release.
+      - name: Build template/ from source (build/template)
+        run: |
+          mkdir -p build/template
+          git archive HEAD:template | tar -x -C build/template
+          scripts/pack.sh build/template/vendor
+          cd build/template
+          npm install --no-audit --no-fund ./vendor/grantwell-core-*.tgz ./vendor/grantwell-ui-*.tgz
+          node scripts/check-vendor.mjs
+
+      - name: Typecheck template config
+        working-directory: build/template
+        run: npm run typecheck
+
+      - name: Generate example templates
+        working-directory: build/template
+        run: node scripts/synth.mjs synth cdk.out/ci
+
   instance:
     name: Committed Generic release (vendor/, typecheck, templates)
     runs-on: ubuntu-latest

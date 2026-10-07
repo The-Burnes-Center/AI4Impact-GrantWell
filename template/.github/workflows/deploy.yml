@@ -1,6 +1,8 @@
 name: Deploy
 
 # Checks every push and pull request; deploys only when run by hand (Actions > Deploy > Run workflow).
+# Until vendor/ is committed (a repo just made from the template), the check runs scripts/install.sh
+# instead, so you can see whether your config installs and synths; it commits nothing.
 #
 # Each deployment in config/instances.ts needs a GitHub Environment named after its aws.environment
 # (Settings > Environments), holding:
@@ -20,6 +22,7 @@ on:
         type: choice
         # One entry per deployment in config/instances.ts.
         options:
+          - grantwell-example-staging
           - grantwell-example
 
 permissions:
@@ -38,19 +41,41 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '24'
-          cache: npm
+          cache: ${{ hashFiles('package-lock.json') != '' && 'npm' || '' }}
+
+      - name: Is a release installed?
+        id: installed
+        run: |
+          if ls vendor/grantwell-*.tgz >/dev/null 2>&1; then
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          elif [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            echo "::error::Nothing to deploy yet: run scripts/install.sh, then commit vendor/, package.json and package-lock.json."
+            exit 1
+          else
+            echo "value=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: vendor/ matches the lockfile
+        if: steps.installed.outputs.value == 'true'
         run: node scripts/check-vendor.mjs
 
       - name: Install from vendor/
+        if: steps.installed.outputs.value == 'true'
         run: npm ci
 
       - name: Typecheck config
+        if: steps.installed.outputs.value == 'true'
         run: npm run typecheck
 
       - name: Generate templates for every deployment
+        if: steps.installed.outputs.value == 'true'
         run: node scripts/synth.mjs synth cdk.out/check
+
+      - name: Trial install (nothing committed)
+        if: steps.installed.outputs.value == 'false'
+        run: |
+          scripts/install.sh
+          echo "::notice::Install and synth passed. Run scripts/install.sh yourself and commit vendor/, package.json and package-lock.json before deploying."
 
   deploy:
     name: Deploy ${{ inputs.deployment }}
