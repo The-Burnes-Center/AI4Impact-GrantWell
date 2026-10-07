@@ -76,3 +76,62 @@ jobs:
             *) flags=(--latest) ;;
           esac
           gh release create "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --verify-tag --title "GrantWell $version" --notes-file notes.md "${flags[@]}"
+
+  # The template repo only gets what prod runs: a final tag whose commit prod deployed, and only after a
+  # repo made from the template installs this release and synths. rc tags stop before the push.
+  template:
+    name: Sync grantwell-template
+    needs: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Holds TEMPLATE_DEPLOY_KEY (write deploy key on the template repo); limited to v* tags.
+    environment: template-sync
+    permissions:
+      contents: read
+      actions: read
+    env:
+      TAG: ${{ github.ref_name }}
+      TEMPLATE_REPO: The-Burnes-Center/grantwell-template
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      # Tagging before prod's deploy finishes fails here; re-run this job once it has.
+      - name: Prod deployed this commit
+        if: ${{ !contains(github.ref_name, '-rc.') }}
+        run: |
+          runs=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/deploy-production.yml/runs?head_sha=$GITHUB_SHA&event=push&status=success" --jq .total_count)
+          if [ "$runs" -eq 0 ]; then
+            echo "::error::No successful Deploy to GrantWell run for $GITHUB_SHA on main; the template repo only gets what prod runs."
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Trial install of this release from template/
+        run: |
+          trial="$RUNNER_TEMP/trial"
+          mkdir -p "$trial"
+          git archive HEAD:template | tar -x -C "$trial"
+          GRANTWELL_REPO="$GITHUB_REPOSITORY" "$trial/scripts/install.sh"
+
+      - name: Checkout grantwell-template
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.TEMPLATE_REPO }}
+          ssh-key: ${{ secrets.TEMPLATE_DEPLOY_KEY }}
+          path: grantwell-template
+          fetch-depth: 0
+
+      - name: Sync template/ (push for final tags only)
+        run: |
+          git -C grantwell-template config user.name 'github-actions[bot]'
+          git -C grantwell-template config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          case "$TAG" in
+            *-rc.*) scripts/sync-template.sh grantwell-template ;;
+            *) scripts/sync-template.sh grantwell-template --push ;;
+          esac

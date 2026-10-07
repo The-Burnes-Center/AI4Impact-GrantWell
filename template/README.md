@@ -6,18 +6,29 @@ This repo deploys one GrantWell instance: your configuration plus two release ar
 |---|---|
 | `vendor/grantwell-core-<version>.tgz` | Infrastructure (CDK), Lambdas and step functions |
 | `vendor/grantwell-ui-<version>.tgz` | Web app source, built with your branding at deploy time |
-| `config/instances.ts` | One entry per deployment (for example prod and dev) |
+| `config/instances.ts` | One entry per deployment (for example staging and prod) |
 | `config/branding.ts` | Name, colors, logos, footer links |
 | `public/` | Your own images (logo, favicon, partner logos), served from the site root |
 | `bin/app.ts` | CDK entry point. Don't edit it. |
 | `scripts/` | `install.sh`, `upgrade.sh` and their helpers. Don't edit them. |
 | `.github/workflows/deploy.yml` | Checks every push; deploys when you run it by hand |
+| `.github/workflows/upgrade.yml` | Weekly: opens a pull request when a newer GrantWell release is out |
 
 Commit `vendor/`. The .tgz files are your exact deployed version.
 
+## Start a new instance
+1. On the template repo, click **Use this template** > **Create a new repository**. Make it private, in your own organization. Don't fork the template: your repo is yours, and updates arrive as releases (see Upgrade).
+2. Use two AWS accounts, one for staging and one for prod. In each, run `cdk bootstrap` once for your region.
+3. In each account, create an IAM role that GitHub OIDC may assume, trusting only your repo and that deployment's Environment (`repo:<org>/<repo>:environment:<aws.environment>`). The role needs to assume the CDK bootstrap roles.
+4. Edit `config/instances.ts` (one entry per deployment; the example has `example-staging` and `example-prod`) and `config/branding.ts`. List your deployments in `.github/workflows/deploy.yml`.
+5. Set up GitHub Environments and secrets (see Deploy), then follow Set up below.
+6. Deploy staging first, and deploy prod once staging works.
+
+Until you commit `vendor/`, each push runs a trial install in Actions. It shows whether your config installs and synths.
+
 ## Set up
 1. Edit `config/instances.ts` and `config/branding.ts`.
-2. Run `scripts/install.sh <version>`, for example `scripts/install.sh 3.0.0`. It downloads that release, checks its SHA256SUMS, puts both .tgz files in `vendor/`, installs them (writing `package-lock.json`), typechecks your config and generates templates for every deployment (in `cdk.out/install/`).
+2. Run `scripts/install.sh`. It installs the release `package.json` points at (or pass a version, for example `scripts/install.sh 3.0.0`). It downloads that release, checks its SHA256SUMS, puts both .tgz files in `vendor/`, installs them (writing `package-lock.json`), typechecks your config and generates templates for every deployment (in `cdk.out/install/`).
 3. Commit `vendor/`, `package.json` and `package-lock.json`.
 
 ## Images
@@ -27,7 +38,9 @@ Put your own images in `public/` and point `config/branding.ts` at them by their
 Your site is hidden from search engines until you set `seo: { indexable: true }` on a prod deployment in `config/instances.ts`; dev deployments are always hidden. Set the home page title, description and a 1200×630 share image under `seo` in `config/branding.ts`. GrantWell generates `robots.txt`, `sitemap.xml`, `manifest.json` and `llms.txt` from your config, so don't put those in `public/` (the synth fails if you do).
 
 ## Upgrade
-Run `scripts/upgrade.sh <version>`, for example `scripts/upgrade.sh 3.0.0`. It downloads that release, checks its SHA256SUMS, swaps `vendor/`, reinstalls, typechecks, and lists which generated templates the upgrade changes (templates in `cdk.out/upgrade/`). If a step fails, it restores `vendor/`, `package.json` and `package-lock.json`. Review `git diff`, then commit those three.
+Once a week, `.github/workflows/upgrade.yml` runs `scripts/upgrade.sh` for the newest release and opens a pull request if it passes. Turn on Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests" for this. upgrade.sh only swaps the release; the PR links to what changed in the template's own files (scripts, workflows), which you copy by hand.
+
+To upgrade by hand, run `scripts/upgrade.sh <version>`, for example `scripts/upgrade.sh 3.0.0`. It downloads that release, checks its SHA256SUMS, swaps `vendor/`, reinstalls, typechecks, and lists which generated templates the upgrade changes (templates in `cdk.out/upgrade/`). If a step fails, it restores `vendor/`, `package.json` and `package-lock.json`. Review `git diff`, then commit those three.
 
 Downloads need no GitHub account. If the source repo is ever private, set `GITHUB_TOKEN` to a token with read access to it.
 

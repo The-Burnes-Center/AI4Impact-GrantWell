@@ -1,0 +1,103 @@
+name: Upgrade
+
+# Once a week, opens a pull request when a newer final GrantWell release exists. scripts/upgrade.sh is
+# the check: it downloads and verifies the release, reinstalls, typechecks and synths every deployment,
+# and the PR is opened only if it passes. Nothing deploys until you merge and run Deploy.
+# Needs Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests".
+on:
+  schedule:
+    - cron: '0 13 * * 1'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to upgrade to (default the latest final release)
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upgrade
+  cancel-in-progress: false
+
+env:
+  GRANTWELL_REPO: The-Burnes-Center/AI4Impact-GrantWell
+  TEMPLATE_REPO: The-Burnes-Center/grantwell-template
+
+jobs:
+  upgrade:
+    name: Open an upgrade PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Is a newer release out?
+        id: target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED: ${{ inputs.version }}
+        run: |
+          if ! ls vendor/grantwell-core-*.tgz >/dev/null 2>&1; then
+            echo "No release installed yet (run scripts/install.sh first); nothing to upgrade."
+            exit 0
+          fi
+          current=$(node -p 'require("./package.json").dependencies["grantwell-core"].replace(/^file:vendor\/grantwell-core-(.+)\.tgz$/, "$1")')
+          target=${REQUESTED:-$(gh api "repos/$GRANTWELL_REPO/releases/latest" --jq .tag_name)}
+          target=${target#v}
+          if [ "$target" = "$current" ] || [ "$(printf '%s\n%s\n' "$current" "$target" | sort -V | tail -1)" = "$current" ]; then
+            echo "On $current; the latest is $target. Nothing to do."
+            exit 0
+          fi
+          branch="grantwell-upgrade-$target"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+            echo "Branch $branch already exists; its PR is open or was closed by hand."
+            exit 0
+          fi
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "version=$target" >> "$GITHUB_OUTPUT"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node.js
+        if: steps.target.outputs.version
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Upgrade
+        if: steps.target.outputs.version
+        run: scripts/upgrade.sh "${{ steps.target.outputs.version }}" 2>&1 | tee "$RUNNER_TEMP/upgrade.log"
+
+      - name: Open the pull request
+        if: steps.target.outputs.version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT: ${{ steps.target.outputs.current }}
+          VERSION: ${{ steps.target.outputs.version }}
+          BRANCH: ${{ steps.target.outputs.branch }}
+          BASE: ${{ github.event.repository.default_branch }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b "$BRANCH"
+          git add vendor/ package.json package-lock.json
+          git commit -q -m "Upgrade GrantWell to $VERSION"
+          git push origin "$BRANCH"
+          {
+            echo "Upgrades GrantWell from $CURRENT to $VERSION: [release notes](https://github.com/$GRANTWELL_REPO/releases/tag/v$VERSION)."
+            echo
+            echo "\`scripts/upgrade.sh $VERSION\` passed: checksums, install, typecheck and a synth of every deployment."
+            echo "Generated templates this upgrade changes:"
+            echo
+            echo '```'
+            grep -E '(templates differ$|^  (added|removed|changed) )' "$RUNNER_TEMP/upgrade.log"
+            echo '```'
+            echo
+            echo "Template files (scripts, workflows, README) may have changed too; upgrade.sh doesn't touch them. Compare and copy by hand: https://github.com/$TEMPLATE_REPO/compare/v$CURRENT...v$VERSION"
+            echo
+            echo "Opened by GitHub Actions, so Deploy's check doesn't run on this PR; it runs on the merge. After merging, deploy staging first."
+          } > "$RUNNER_TEMP/body.md"
+          gh pr create --base "$BASE" --head "$BRANCH" --title "Upgrade GrantWell to $VERSION" --body-file "$RUNNER_TEMP/body.md"
