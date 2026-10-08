@@ -14,7 +14,7 @@ import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
-import { EMAIL_DIGEST, MFA_DEADLINE_ISO } from "../../common/instance";
+import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED } from "../../common/instance";
 import { deadlineDateText } from "../../common/mfa-deadline";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
@@ -646,7 +646,7 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
 
   return (
     <Card header="Sign-in & security" headerStyle="default">
-      <MfaSection />
+      {MFA_ENABLED && <MfaSection />}
 
       {pwError && <div className="profile-alert profile-alert--error" role="alert">{pwError}</div>}
       {pwOk && <div className="profile-alert profile-alert--success" role="status">Password changed. You have been signed out on every device — sign in again with your new password.</div>}

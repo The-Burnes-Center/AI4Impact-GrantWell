@@ -61,13 +61,13 @@ const styles: Record<string, React.CSSProperties> = {
     minWidth: 0,
   },
   sidebar: {
-    backgroundColor: "#244140",
+    backgroundColor: "var(--gw-color-primary-active)",
     color: "white",
     display: "flex",
     flexDirection: "column",
     transition: "width 0.3s ease",
     overflow: "hidden",
-    borderRight: "1px solid #3a5957",
+    borderRight: "1px solid var(--gw-color-primary-muted)",
     position: "static",
     flexShrink: 0,
   },
@@ -81,7 +81,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "16px",
     display: "flex",
     alignItems: "center",
-    borderBottom: "1px solid #3a5957",
+    borderBottom: "1px solid var(--gw-color-primary-muted)",
   },
   sidebarToggle: {
     background: "none",
@@ -121,7 +121,7 @@ const styles: Record<string, React.CSSProperties> = {
     textDecoration: "none",
   },
   navButtonActive: {
-    background: "#23776C",
+    background: "var(--gw-color-primary)",
     color: "white",
   },
   navLinkText: {

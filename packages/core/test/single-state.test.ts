@@ -11,7 +11,7 @@ beforeAll(async () => {
   const instances: InstanceConfig[] = (await import(path.join(appDir, "config", "instances.ts"))).instances;
   dev = instances.find((i) => i.id === "generic-dev")!;
   variantOut = synthVariant(
-    `(({ e2e, ...rest }) => ({ ...rest, tenancy: "single", states: [{ code: "MA", name: "Massachusetts" }], auth: { ...rest.auth, turnstile: false } }))(i as any)`,
+    `(({ e2e, ...rest }) => ({ ...rest, tenancy: "single", states: [{ code: "MA", name: "Massachusetts" }], auth: { mfaRequired: false, mfa: "off", turnstile: false } }))(i as any)`,
     { TURNSTILE_SECRET_KEY: undefined, TURNSTILE_SITE_KEY: undefined }
   );
 }, 300_000);
@@ -54,8 +54,8 @@ describe("tenancy: single", () => {
     ]);
   });
 
-  it("tells the UI it's single-state and has no bot check", () => {
-    expect(stagedInstance(variantOut)).toMatchObject({ tenancy: "single", turnstile: false });
+  it("tells the UI it's single-state, has no bot check and no MFA", () => {
+    expect(stagedInstance(variantOut)).toMatchObject({ tenancy: "single", turnstile: false, mfa: "off" });
   });
 
   it("changes nothing on multi-state Generic", () => {
@@ -64,3 +64,25 @@ describe("tenancy: single", () => {
     expect(functionsWith(outDir("dev"), "TURNSTILE_SECRET_KEY")).toHaveLength(1);
   });
 });
+
+describe('auth.mfa: "off"', () => {
+  it("turns the pool's MFA off", () => {
+    const pool = Object.values(resourcesIn(variantOut)).find((r) => r.Type === "AWS::Cognito::UserPool")!;
+    expect(pool.Properties.MfaConfiguration).toBe("OFF");
+    expect(pool.Properties.EnabledMfas).toBeUndefined();
+  });
+
+  it("can't be combined with required MFA or a deadline", () => {
+    const off = { ...dev, e2e: undefined, auth: { mfaRequired: false, mfa: "off" as const } };
+    expect(() => validateInstanceConfig(off)).not.toThrow();
+    expect(() => validateInstanceConfig({ ...off, auth: { ...off.auth, mfaRequired: true } })).toThrow(/mfa "off"/);
+    expect(() => validateInstanceConfig({ ...off, auth: { ...off.auth, mfaDeadline: "2026-11-02T00:00:00-05:00" } })).toThrow(/mfa "off"/);
+    expect(() => validateInstanceConfig({ ...off, auth: { ...off.auth, mfa: "on" as any } })).toThrow(/can only be "off"/);
+  });
+
+  it("leaves Generic's pool optional", () => {
+    const pool = Object.values(resourcesIn(outDir("dev"))).find((r) => r.Type === "AWS::Cognito::UserPool")!;
+    expect(pool.Properties.MfaConfiguration).toBe("OPTIONAL");
+  });
+});
+

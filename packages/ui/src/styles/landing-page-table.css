@@ -52,15 +52,15 @@
 }
 
 .landing-filter-dropdown:hover {
-  border-color: #23776C;
+  border-color: var(--gw-color-primary);
 }
 
 .landing-filter-dropdown:focus {
-  border-color: #23776C;
+  border-color: var(--gw-color-primary);
 }
 
 .landing-filter-dropdown:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 
@@ -72,7 +72,7 @@
 }
 
 .landing-table-scroll:focus-visible {
-  outline: 3px solid var(--gw-color-primary, #23776C);
+  outline: 3px solid var(--gw-color-primary);
   outline-offset: 3px;
   border-radius: 10px;
 }
@@ -128,13 +128,13 @@
 }
 
 .landing-table-row:hover:not(.archived) {
-  background-color: #DFECE0;
+  background-color: var(--gw-color-primary-light);
 }
 
 /* The row itself is not a tab stop; the grant-name button inside it is. Keep the
    whole-row highlight so the focused row still reads as one unit. */
 .landing-table-row:has(.landing-nofo-name-button:focus-visible) {
-  background-color: #DFECE0;
+  background-color: var(--gw-color-primary-light);
 }
 
 /* Stretched-link pattern: the button is the only control in the row, but its
@@ -160,7 +160,7 @@
 }
 
 .landing-nofo-name-button:focus-visible {
-  outline: 3px solid var(--gw-color-primary, #23776C);
+  outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -242,9 +242,9 @@
   font-size: 12px;
   font-weight: 500;
   border-radius: 12px;
-  border: 1px solid #23776C40;
-  background-color: #DFECE0;
-  color: #195C53;
+  border: 1px solid color-mix(in srgb, var(--gw-color-primary) 25.098%, transparent);
+  background-color: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
   white-space: nowrap;
 }
 
@@ -306,9 +306,9 @@
 }
 
 .landing-pagination-button:hover:not(:disabled) {
-  border-color: #195C53;
-  background-color: #DFECE0;
-  color: #195C53;
+  border-color: var(--gw-color-primary-hover);
+  background-color: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
 }
 
 .landing-pagination-button:disabled {
@@ -318,7 +318,7 @@
 
 .landing-show-more-button {
   padding: 10px 28px;
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: #fff;
   border: none;
   border-radius: 20px;
@@ -326,12 +326,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(35, 119, 108, 0.3);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--gw-color-primary) 30%, transparent);
 }
 
 .landing-show-more-button:hover {
-  background-color: #195C53;
-  box-shadow: 0 3px 10px rgba(35, 119, 108, 0.4);
+  background-color: var(--gw-color-primary-hover);
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--gw-color-primary) 40%, transparent);
 }
 
 .landing-pagination-pages {
@@ -357,21 +357,21 @@
 }
 
 .landing-pagination-page:hover {
-  border-color: #195C53;
-  background-color: #DFECE0;
-  color: #195C53;
+  border-color: var(--gw-color-primary-hover);
+  background-color: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
 }
 
 .landing-pagination-page.active {
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: white;
-  border-color: #23776C;
+  border-color: var(--gw-color-primary);
   font-weight: 600;
 }
 
 .landing-pagination-page.active:hover {
-  background-color: #195C53;
-  border-color: #195C53;
+  background-color: var(--gw-color-primary-hover);
+  border-color: var(--gw-color-primary-hover);
 }
 
 .landing-pagination-ellipsis {
@@ -391,7 +391,7 @@
   border: 1px solid #b3d9f2;
   border-radius: 8px;
   font-size: 14px;
-  color: #23776C;
+  color: var(--gw-color-primary);
   gap: 12px;
 }
 
@@ -406,10 +406,10 @@
   align-items: center;
   gap: 4px;
   padding: 6px 14px;
-  border: 1px solid #23776C;
+  border: 1px solid var(--gw-color-primary);
   border-radius: 6px;
   background-color: transparent;
-  color: #23776C;
+  color: var(--gw-color-primary);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -420,12 +420,12 @@
 }
 
 .search-clear-button:hover {
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: #fff;
 }
 
 .search-clear-button:focus-visible {
-  outline: 2px solid #23776C;
+  outline: 2px solid var(--gw-color-primary);
   outline-offset: 2px;
 }
 
@@ -458,7 +458,7 @@
 }
 
 .search-tip em {
-  color: #23776C;
+  color: var(--gw-color-primary);
   font-style: italic;
   display: inline-block;
   animation: tipFadeIn 0.4s ease-in-out;
@@ -516,7 +516,7 @@
   padding: 12px 16px;
   margin: 0;
   font-size: 14px;
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   font-style: normal;
   font-weight: 500;
 }
@@ -531,7 +531,7 @@
   width: 18px;
   height: 18px;
   border: 2px solid #d0e3f5;
-  border-top-color: var(--gw-color-primary, #23776C);
+  border-top-color: var(--gw-color-primary);
   border-radius: 50%;
   animation: search-spin 0.8s linear infinite;
   flex-shrink: 0;
@@ -563,17 +563,17 @@
 }
 
 .landing-header-cell--sortable:hover {
-  color: var(--gw-color-primary-hover, #195C53);
-  background-color: var(--gw-color-primary-light, #DFECE0);
+  color: var(--gw-color-primary-hover);
+  background-color: var(--gw-color-primary-light);
 }
 
 .landing-header-cell--sortable:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: -2px;
 }
 
 .landing-header-cell--active {
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
 }
 
 .landing-header-sort-icon {
@@ -593,17 +593,17 @@
   border: none;
   padding: 0;
   font: inherit;
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   text-decoration: underline;
   cursor: pointer;
 }
 
 .landing-sort-reset-link:hover {
-  color: var(--gw-color-primary-hover, #195C53);
+  color: var(--gw-color-primary-hover);
 }
 
 .landing-sort-reset-link:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -618,7 +618,7 @@
   border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: 6px;
   background-color: var(--gw-color-white, #fff);
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -627,13 +627,13 @@
 }
 
 .landing-clear-filters-button:hover {
-  background-color: var(--gw-color-primary, #23776C);
-  border-color: var(--gw-color-primary, #23776C);
+  background-color: var(--gw-color-primary);
+  border-color: var(--gw-color-primary);
   color: var(--gw-color-white, #fff);
 }
 
 .landing-clear-filters-button:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 

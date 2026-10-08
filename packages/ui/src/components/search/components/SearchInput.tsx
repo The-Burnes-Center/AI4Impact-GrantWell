@@ -51,7 +51,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         </span>
         <div style={inputContainerStyle}>
           <div style={searchIconStyle} aria-hidden="true">
-            <SearchIcon color="#23776C" />
+            <SearchIcon color="var(--gw-color-primary)" />
           </div>
           <input
             id="grant-search-input"
@@ -120,7 +120,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                 aria-hidden="true"
               />
               {isSearching && (
-                <span style={{ fontSize: "12px", color: "#23776C", whiteSpace: "nowrap" }}>
+                <span style={{ fontSize: "12px", color: "var(--gw-color-primary)", whiteSpace: "nowrap" }}>
                   Searching...
                 </span>
               )}

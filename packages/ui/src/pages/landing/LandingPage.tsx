@@ -7,12 +7,12 @@ import {
   FeatureWrite,
 } from "./featureIllustrations";
 import {
-  LandingFooter,
   LandingNavbar,
   OmniHeader,
 } from "./chrome";
 import { BrandLogo } from "../../components/common/BrandLogo";
-import { GovBanner } from "../../components/common/GovIdentity";
+import { PublicSiteHeader, SiteBanner, SiteFooter } from "../../components/common/ChromeSlots";
+import { HAS_CHROME_HEADER } from "../../common/chrome";
 
 const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => (
   <svg
@@ -43,13 +43,14 @@ export default function LandingPage() {
 
   return (
     <div className="marketing">
-      <GovBanner />
+      <SiteBanner />
+      <PublicSiteHeader />
       <OmniHeader />
 
       <main id="main-content" tabIndex={-1}>
       <section className="marketing__hero" aria-labelledby="hero-title">
         <div className="marketing__hero-bg" aria-hidden="true" />
-        <LandingNavbar />
+        {!HAS_CHROME_HEADER && <LandingNavbar />}
         <div className="marketing__hero-row">
           <div className="marketing__hero-content">
             <h1 className="marketing__hero-title" id="hero-title">
@@ -147,7 +148,7 @@ export default function LandingPage() {
       </section>
       </main>
 
-      <LandingFooter />
+      <SiteFooter signedIn={false} />
 
       <OmniHeader position="bottom" />
     </div>

@@ -354,7 +354,7 @@ export default function Sessions(props: SessionsProps) {
                           );
                         }}
                         style={{
-                          color: "#195C53",
+                          color: "var(--gw-color-primary-hover)",
                           background: "none",
                           border: "none",
                           padding: "4px 2px",

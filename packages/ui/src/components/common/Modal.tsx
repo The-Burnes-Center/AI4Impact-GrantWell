@@ -92,7 +92,7 @@ export const Modal = React.memo<ModalProps>(
               id={titleId}
               style={{
                 margin: 0,
-                color: "#23776C",
+                color: "var(--gw-color-primary)",
                 fontSize: "20px",
                 fontWeight: 600,
               }}

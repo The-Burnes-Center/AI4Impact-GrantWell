@@ -14,7 +14,7 @@ import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
 import { InstanceConfig, sesEmail, singleState, turnstileEnabled } from "../config/instance-config";
-import { applyPublicOverlay, checkBrandingImages } from "./public-overlay";
+import { applyChromeOverlay, applyPublicOverlay, checkBrandingImages } from "./public-overlay";
 import { resolveSeo, writeSeoFiles } from "./seo-files";
 
 // .gitignore because npm pack drops it: a source build and a packaged build must hash the same.
@@ -25,6 +25,8 @@ export interface UserInterfaceProps {
   readonly uiSourceDir: string;
   /** The instance's own public files (logos, favicon), added to the UI's public/. */
   readonly publicDir?: string;
+  /** The instance's own chrome components, copied to the UI's src/instance-chrome/. */
+  readonly chromeDir?: string;
   readonly userPoolId: string;
   readonly userPoolClientId: string;
   readonly api: ChatBotApi;
@@ -46,6 +48,9 @@ export class UserInterface extends Construct {
     });
     if (props.publicDir) {
       applyPublicOverlay(appPath, props.publicDir);
+    }
+    if (props.chromeDir) {
+      applyChromeOverlay(appPath, props.chromeDir);
     }
     checkBrandingImages(appPath, props.config.branding);
     writeSeoFiles(appPath, props.config);
@@ -119,6 +124,7 @@ export class UserInterface extends Construct {
           ...(!sesEmail(props.config) && { emailDigest: false }),
           ...(!turnstileEnabled(props.config) && { turnstile: false }),
           ...(singleState(props.config) && { tenancy: "single" }),
+          ...(props.config.auth.mfa === "off" && { mfa: "off" }),
         },
         null,
         2

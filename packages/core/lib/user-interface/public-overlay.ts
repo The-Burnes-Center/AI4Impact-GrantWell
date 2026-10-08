@@ -60,3 +60,14 @@ export function checkBrandingImages(appPath: string, branding: Branding): void {
     );
   }
 }
+
+/** Copies the instance's chrome/ into the UI as src/instance-chrome/, where the UI looks for it. */
+export function applyChromeOverlay(appPath: string, chromeDir: string): void {
+  if (!fs.existsSync(path.join(chromeDir, "index.tsx"))) {
+    throw new Error(`${chromeDir} needs an index.tsx that exports \`chrome\` (see the UI's src/common/chrome-api.ts).`);
+  }
+  if (fs.existsSync(path.join(chromeDir, "package.json"))) {
+    throw new Error(`${chromeDir} can't have its own package.json: chrome code may import only React, the chrome API and its own files.`);
+  }
+  fs.cpSync(chromeDir, path.join(appPath, "src", "instance-chrome"), { recursive: true });
+}

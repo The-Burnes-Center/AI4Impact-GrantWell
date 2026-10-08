@@ -14,6 +14,8 @@ export interface RunGrantWellAppOptions {
   readonly uiSourceDir?: string;
   /** The instance's own public files. Defaults to `public/` in the app directory, when it exists. */
   readonly publicDir?: string;
+  /** The instance's own banner, header, footer and public home (see the UI's chrome-api). Defaults to `chrome/`, when it exists. */
+  readonly chromeDir?: string;
 }
 
 /** Synthesises the deployment whose `aws.environment` matches the ENVIRONMENT env var. */
@@ -38,6 +40,7 @@ export function runGrantWellApp(instances: InstanceConfig[], options: RunGrantWe
     config,
     uiSourceDir: options.uiSourceDir ?? installedUiSourceDir(),
     publicDir: options.publicDir ?? instancePublicDir(),
+    chromeDir: options.chromeDir ?? instanceDir('chrome'),
   });
   describeStacks(stack, config);
 
@@ -50,7 +53,11 @@ export function runGrantWellApp(instances: InstanceConfig[], options: RunGrantWe
 }
 
 function instancePublicDir(): string | undefined {
-  const dir = path.join(process.cwd(), 'public');
+  return instanceDir('public');
+}
+
+function instanceDir(name: string): string | undefined {
+  const dir = path.join(process.cwd(), name);
   return fs.existsSync(dir) ? dir : undefined;
 }
 

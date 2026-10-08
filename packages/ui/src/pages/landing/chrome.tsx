@@ -6,6 +6,7 @@ import { useNavigationMenuButton } from "../../components/navigation/navigation-
 import { SIDEBAR_ID } from "../../components/navigation/UnifiedNavigation";
 import { BrandLogo } from "../../components/common/BrandLogo";
 import { GovSeal } from "../../components/common/GovIdentity";
+import { CHROME } from "../../common/chrome";
 
 const ArrowUpRight = ({ className }: { className?: string }) => (
   <svg
@@ -153,18 +154,20 @@ export function AppNavbar() {
         >
           <LuMenu size={22} aria-hidden="true" />
         </button>
-        <a
-          href="/home"
-          onClick={handleLogoClick}
-          className="marketing__nav-brand"
-        >
-          <GovSeal />
-          <BrandLogo
-            src={branding.logo}
-            alt={branding.appName}
-            className="marketing__nav-wordmark"
-          />
-        </a>
+        {!CHROME.Header && (
+          <a
+            href="/home"
+            onClick={handleLogoClick}
+            className="marketing__nav-brand"
+          >
+            <GovSeal />
+            <BrandLogo
+              src={branding.logo}
+              alt={branding.appName}
+              className="marketing__nav-wordmark"
+            />
+          </a>
+        )}
       </div>
     </nav>
   );

@@ -17,7 +17,7 @@
   font-size: var(--gw-font-size-sm, 14px);
 }
 .profile-jump-links a {
-  color: var(--gw-color-primary-active, #244140);
+  color: var(--gw-color-primary-active);
   text-decoration: underline;
 }
 
@@ -74,8 +74,8 @@
   background: var(--gw-color-white, #ffffff);
 }
 .profile-input:focus {
-  border-color: var(--gw-color-focus-light, #23776C);
-  outline: 3px solid var(--gw-color-focus-light, #23776C);
+  border-color: var(--gw-color-focus-light, var(--gw-color-primary));
+  outline: 3px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
   background: var(--gw-color-white, #ffffff);
 }
@@ -106,9 +106,9 @@
   gap: var(--gw-spacing-xs, 4px);
 }
 .profile-frequency label:has(input:checked) {
-  border-color: var(--gw-color-primary, #23776C);
-  background: var(--gw-color-primary-light, #DFECE0);
-  color: var(--gw-color-primary-active, #244140);
+  border-color: var(--gw-color-primary);
+  background: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-active);
   font-weight: var(--gw-font-weight-medium, 500);
 }
 
@@ -130,9 +130,9 @@
   font-size: var(--gw-font-size-sm, 14px);
 }
 .profile-chip-search:focus {
-  outline: 2px solid var(--gw-color-primary, #23776C);
+  outline: 2px solid var(--gw-color-primary);
   outline-offset: 1px;
-  border-color: var(--gw-color-primary, #23776C);
+  border-color: var(--gw-color-primary);
 }
 .profile-chip-count {
   margin-left: auto;

@@ -60,7 +60,7 @@ function ChatMessage(props: ChatMessageProps) {
     fontWeight: "600",
     flexShrink: 0,
     backgroundColor:
-      props.message?.type === ChatBotMessageType.Human ? "#244140" : "#23776C",
+      props.message?.type === ChatBotMessageType.Human ? "var(--gw-color-primary-active)" : "var(--gw-color-primary)",
     color: "white",
   };
 
@@ -107,7 +107,7 @@ function ChatMessage(props: ChatMessageProps) {
         ? "18px 18px 4px 18px"
         : "18px 18px 18px 4px",
     backgroundColor:
-      props.message?.type === ChatBotMessageType.Human ? "#23776C" : "#e8eef1",
+      props.message?.type === ChatBotMessageType.Human ? "var(--gw-color-primary)" : "var(--gw-color-message-bg)",
     color:
       props.message?.type === ChatBotMessageType.Human ? "white" : "#2d3748",
     wordWrap: "break-word" as const,
@@ -134,7 +134,7 @@ function ChatMessage(props: ChatMessageProps) {
     height: "20px",
     border: "3px solid rgba(0, 0, 0, 0.1)",
     borderRadius: "50%",
-    borderTopColor: "#23776C",
+    borderTopColor: "var(--gw-color-primary)",
     animation: "spin 1s linear infinite",
   };
 
@@ -440,7 +440,7 @@ function ChatMessage(props: ChatMessageProps) {
                                       padding: "3px 0",
                                     }}
                                   >
-                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "#388557" }} />
+                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "var(--gw-color-accent)" }} />
                                     <span style={{ wordBreak: "break-word", flex: 1 }}>
                                       {cleanSourceTitle(file.title)}
                                     </span>
@@ -466,7 +466,7 @@ function ChatMessage(props: ChatMessageProps) {
                     onMouseEnter={(e) => {
                       if (!copied) {
                         e.currentTarget.style.backgroundColor = "#f3f4f6";
-                        e.currentTarget.style.color = "#23776C";
+                        e.currentTarget.style.color = "var(--gw-color-primary)";
                       }
                     }}
                     onMouseLeave={(e) => {
@@ -478,9 +478,9 @@ function ChatMessage(props: ChatMessageProps) {
                     onFocus={(e) => {
                       if (!copied) {
                         e.currentTarget.style.backgroundColor = "#f3f4f6";
-                        e.currentTarget.style.color = "#23776C";
+                        e.currentTarget.style.color = "var(--gw-color-primary)";
                       }
-                      e.currentTarget.style.outline = "2px solid #23776C";
+                      e.currentTarget.style.outline = "2px solid var(--gw-color-primary)";
                       e.currentTarget.style.outlineOffset = "2px";
                     }}
                     onBlur={(e) => {

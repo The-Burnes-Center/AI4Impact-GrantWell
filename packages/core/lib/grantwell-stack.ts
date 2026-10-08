@@ -17,6 +17,8 @@ export interface GrantWellStackProps extends cdk.StackProps {
   readonly uiSourceDir: string;
   /** The instance's own public files, added to the UI's public/. */
   readonly publicDir?: string;
+  /** The instance's own chrome components, copied into the UI build. */
+  readonly chromeDir?: string;
 }
 
 export class GrantWellStack extends cdk.Stack {
@@ -57,6 +59,7 @@ export class GrantWellStack extends cdk.Stack {
       config: props.config,
       uiSourceDir: props.uiSourceDir,
       publicDir: props.publicDir,
+      chromeDir: props.chromeDir,
       userPoolId: authentication.userPool.userPoolId,
       userPoolClientId: authentication.userPoolClient.userPoolClientId,
       cognitoDomain: props.config.aws.cognitoDomainPrefix,

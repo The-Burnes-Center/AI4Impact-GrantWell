@@ -4,11 +4,11 @@ import AuthPanel from "../../components/auth/AuthPanel";
 import { clearSessionEndedNotice, hasSessionEndedNotice } from "../../common/session-ended";
 import { useBranding } from "../../common/branding";
 import {
-  LandingFooter,
   LandingNavbar,
   OmniHeader,
 } from "./chrome";
-import { GovBanner } from "../../components/common/GovIdentity";
+import { PublicSiteHeader, SiteBanner, SiteFooter } from "../../components/common/ChromeSlots";
+import { HAS_CHROME_HEADER } from "../../common/chrome";
 
 interface LoginPageProps {
   onAuthenticated: () => void;
@@ -22,11 +22,12 @@ export default function LoginPage({ onAuthenticated }: LoginPageProps) {
 
   return (
     <div className="marketing">
-      <GovBanner />
+      <SiteBanner />
+      <PublicSiteHeader />
       <OmniHeader />
 
       <main className="marketing__signin" id="main-content" tabIndex={-1}>
-        <LandingNavbar />
+        {!HAS_CHROME_HEADER && <LandingNavbar />}
         <div className="marketing__signin-inner">
           <AuthPanel
             onAuthenticated={onAuthenticated}
@@ -36,7 +37,7 @@ export default function LoginPage({ onAuthenticated }: LoginPageProps) {
         </div>
       </main>
 
-      <LandingFooter />
+      <SiteFooter signedIn={false} />
 
       <OmniHeader position="bottom" />
     </div>

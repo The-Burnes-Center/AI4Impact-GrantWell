@@ -222,7 +222,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               style={{
                 width: steps.length > 1 ? `${(activeStep / (steps.length - 1)) * 100}%` : "0%",
                 height: "100%",
-                backgroundColor: "#23776C",
+                backgroundColor: "var(--gw-color-primary)",
                 transition: "width 0.3s ease",
               }}
             />
@@ -266,8 +266,8 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                   width: "32px",
                   height: "32px",
                   borderRadius: "50%",
-                  border: `2px solid ${completed || active ? "#23776C" : "#6b7280"}`,
-                  backgroundColor: completed || active ? "#23776C" : "#ffffff",
+                  border: `2px solid ${completed || active ? "var(--gw-color-primary)" : "var(--gw-color-text-muted)"}`,
+                  backgroundColor: completed || active ? "var(--gw-color-primary)" : "var(--gw-color-white)",
                   color: completed || active ? "#ffffff" : "#4b5563",
                   display: "flex",
                   alignItems: "center",
@@ -297,7 +297,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                 onFocus={(e) => {
                   setTooltipDismissed(false);
                   if (clickable) {
-                    e.currentTarget.style.outline = "2px solid #23776C";
+                    e.currentTarget.style.outline = "2px solid var(--gw-color-primary)";
                     e.currentTarget.style.outlineOffset = "2px";
                   }
                 }}
@@ -325,7 +325,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                     fontFamily: "'Noto Sans', sans-serif",
                     fontSize: "15px",
                     fontWeight: active ? 600 : 500,
-                    color: active ? "#23776C" : completed ? "#6b7280" : "#4b5563",
+                    color: active ? "var(--gw-color-primary)" : completed ? "var(--gw-color-text-muted)" : "var(--gw-color-text-status)",
                     lineHeight: "1.4",
                     transition: "color 0.2s ease",
                     cursor: "default",

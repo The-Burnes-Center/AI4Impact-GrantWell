@@ -23,6 +23,7 @@ interface StagedInstance {
   emailDigest?: false;
   turnstile?: false;
   tenancy?: "single";
+  mfa?: "off";
 }
 
 // Written by core's UserInterface construct at synth; absent in standalone builds (neutral fallback).
@@ -46,4 +47,6 @@ export const EMAIL_DIGEST: boolean = staged?.emailDigest !== false;
 export const TURNSTILE_ENABLED: boolean = staged?.turnstile !== false;
 /** A single-state deployment's state: every user belongs to it and no state is ever chosen. */
 export const SINGLE_STATE: UsState | null = staged?.tenancy === "single" ? staged.states[0] ?? null : null;
+/** False when the deployment turns MFA off: no setup prompt, no two-step settings, no resets. */
+export const MFA_ENABLED: boolean = staged?.mfa !== "off";
 export const MFA_DEADLINE: number | null = MFA_DEADLINE_ISO ? Date.parse(MFA_DEADLINE_ISO) : null;

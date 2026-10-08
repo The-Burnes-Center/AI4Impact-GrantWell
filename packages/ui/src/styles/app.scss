@@ -40,7 +40,7 @@ body {
 
 /* Accessibility: Visible focus indicators */
 *:focus-visible {
-  outline: 3px solid #23776C;
+  outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
 }
 
@@ -54,7 +54,7 @@ textarea:focus-visible,
 [role="tab"]:focus-visible,
 [role="menuitem"]:focus-visible,
 [role="option"]:focus-visible {
-  outline: 3px solid #23776C;
+  outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
 }
 
@@ -67,19 +67,19 @@ main#main-content:focus-visible {
 
 /* Focus visible styles - WCAG 2.2 AA Compliance */
 *:focus-visible {
-  outline: 2px solid #23776C;
+  outline: 2px solid var(--gw-color-primary);
   outline-offset: 2px;
 }
 
 button:focus-visible {
-  outline: 2px solid #23776C;
+  outline: 2px solid var(--gw-color-primary);
   outline-offset: 2px;
 }
 
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid #23776C;
+  outline: 2px solid var(--gw-color-primary);
   outline-offset: 2px;
 }
 

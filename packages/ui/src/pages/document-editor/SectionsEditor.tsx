@@ -473,14 +473,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 aria-live="polite"
                 aria-atomic="true"
                 style={{
-                  background: '#DFECE0',
+                  background: 'var(--gw-color-primary-light)',
                   padding: '12px 16px',
                   borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
                   fontSize: '14px',
-                  color: '#195C53',
+                  color: 'var(--gw-color-primary-hover)',
                 }}
               >
                 <div
@@ -488,7 +488,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   style={{
                     width: '16px',
                     height: '16px',
-                    border: '2px solid #23776C',
+                    border: '2px solid var(--gw-color-primary)',
                     borderTopColor: 'transparent',
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite',
@@ -499,7 +499,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               </div>
               {/* Outside the atomic region: it never changes, so re-reading it on
                   every 2s poll would bury the count. */}
-              <p style={{ margin: 0, fontSize: '14px', color: '#195C53' }}>
+              <p style={{ margin: 0, fontSize: '14px', color: 'var(--gw-color-primary-hover)' }}>
                 You can edit completed sections while others are being written.
               </p>
               <div style={{

@@ -18,7 +18,7 @@ export default function MaintenancePage() {
             height="64"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#23776C"
+            style={{ stroke: "var(--gw-color-primary)" }}
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"

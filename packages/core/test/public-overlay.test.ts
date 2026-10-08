@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { applyPublicOverlay, checkBrandingImages } from "../lib/user-interface/public-overlay";
+import { applyChromeOverlay, applyPublicOverlay, checkBrandingImages } from "../lib/user-interface/public-overlay";
 import type { Branding } from "../lib/config/instance-config";
 
 let tmp: string;
@@ -95,5 +95,31 @@ describe("checkBrandingImages", () => {
 
   it("rejects a directory", () => {
     expect(() => checkBrandingImages(appPath, branding({ logo: "/images" }))).toThrow(/logo: \/images/);
+  });
+});
+
+describe("applyChromeOverlay", () => {
+  it("copies chrome/ into the UI as src/instance-chrome/", () => {
+    const chromeDir = path.join(tmp, "chrome");
+    write(path.join(chromeDir, "index.tsx"));
+    write(path.join(chromeDir, "theme.css"));
+    write(path.join(chromeDir, "mayflower", "header.css"));
+    applyChromeOverlay(appPath, chromeDir);
+    for (const f of ["index.tsx", "theme.css", path.join("mayflower", "header.css")]) {
+      expect(fs.existsSync(path.join(appPath, "src", "instance-chrome", f))).toBe(true);
+    }
+  });
+
+  it("needs an index.tsx", () => {
+    const chromeDir = path.join(tmp, "chrome");
+    write(path.join(chromeDir, "theme.css"));
+    expect(() => applyChromeOverlay(appPath, chromeDir)).toThrow(/needs an index\.tsx/);
+  });
+
+  it("refuses its own package.json", () => {
+    const chromeDir = path.join(tmp, "chrome");
+    write(path.join(chromeDir, "index.tsx"));
+    write(path.join(chromeDir, "package.json"));
+    expect(() => applyChromeOverlay(appPath, chromeDir)).toThrow(/package\.json/);
   });
 });

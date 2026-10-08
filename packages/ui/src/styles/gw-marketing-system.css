@@ -27,11 +27,11 @@
   justify-content: center;
   gap: 10px;
   padding: 13px 28px;
-  border-radius: 50px;
+  border-radius: var(--gw-radius-pill);
   background-color: var(--mk-green);
   color: #f9fbff;
   border: 1px solid var(--mk-green);
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
@@ -98,11 +98,11 @@
   justify-content: center;
   gap: 10px;
   padding: 12px 26px;
-  border-radius: 50px;
+  border-radius: var(--gw-radius-pill);
   background-color: transparent;
   color: var(--mk-green);
   border: 1px solid var(--mk-green);
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
@@ -144,8 +144,8 @@
 .marketing .gw-tabs {
   display: inline-flex;
   gap: 0;
-  background-color: rgba(35, 119, 108, 0.08);
-  border-radius: 50px;
+  background-color: color-mix(in srgb, var(--gw-color-primary) 8%, transparent);
+  border-radius: var(--gw-radius-pill);
   padding: 4px;
 }
 
@@ -156,12 +156,12 @@
   border: none;
   background: transparent;
   color: var(--mk-green-deepest);
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  border-radius: 50px;
+  border-radius: var(--gw-radius-pill);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
@@ -169,7 +169,7 @@
 .marketing .tab-button:hover,
 .marketing .checklist-tab:hover {
   color: var(--mk-green-dark);
-  background-color: rgba(35, 119, 108, 0.12);
+  background-color: color-mix(in srgb, var(--gw-color-primary) 12%, transparent);
 }
 
 .marketing .tab-button.active,
@@ -195,7 +195,7 @@
 .marketing .se-checklist-card {
   background-color: var(--mk-white);
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(36, 65, 64, 0.08);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--gw-color-primary-active) 8%, transparent);
   border: none;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
@@ -204,7 +204,7 @@
 .marketing .history-card:focus-visible,
 .marketing .resource-card:hover,
 .marketing .resource-card:focus-visible {
-  box-shadow: 0 8px 24px rgba(36, 65, 64, 0.12);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--gw-color-primary-active) 12%, transparent);
   transform: translateY(-2px);
 }
 
@@ -220,7 +220,7 @@
 .marketing .pg-highlight-title,
 .marketing .pg-info-heading,
 .marketing .se-suggestions-heading {
-  font-family: 'PT Serif', Georgia, serif;
+  font-family: var(--gw-font-serif);
   font-weight: 400;
   color: var(--mk-green-deepest);
   letter-spacing: 0;
@@ -228,7 +228,7 @@
 
 /* Modal title sits on the teal header, so keep the serif treatment but white text for contrast */
 .marketing .pg-modal-title {
-  font-family: 'PT Serif', Georgia, serif;
+  font-family: var(--gw-font-serif);
   letter-spacing: 0;
   color: var(--gw-color-white, #ffffff);
 }

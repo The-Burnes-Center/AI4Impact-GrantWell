@@ -40,9 +40,9 @@
 }
 
 .analytics__state-select:focus-visible {
-  outline: 2px solid var(--mk-green-dark, #195c53);
+  outline: 2px solid var(--mk-green-dark, var(--gw-color-primary-hover));
   outline-offset: 0;
-  border-color: var(--mk-green-dark, #195c53);
+  border-color: var(--mk-green-dark, var(--gw-color-primary-hover));
 }
 
 .analytics__window {
@@ -68,20 +68,20 @@
 }
 
 .analytics__window-btn:hover {
-  background: var(--mk-green-light, #dfece0);
+  background: var(--mk-green-light, var(--gw-color-primary-light));
 }
 
 .analytics__window-btn--active {
-  background: var(--mk-green, #23776c);
+  background: var(--mk-green, var(--gw-color-primary));
   color: #fff;
 }
 
 .analytics__window-btn--active:hover {
-  background: var(--mk-green-dark, #195c53);
+  background: var(--mk-green-dark, var(--gw-color-primary-hover));
 }
 
 .analytics__window-btn:focus-visible {
-  outline: 2px solid var(--mk-green-dark, #195c53);
+  outline: 2px solid var(--mk-green-dark, var(--gw-color-primary-hover));
   outline-offset: -2px;
 }
 

@@ -46,7 +46,7 @@ const styles = {
     padding: "8px 12px",
   },
   inputBorderFocused: {
-    borderColor: "#23776C",
+    borderColor: "var(--gw-color-primary)",
     boxShadow: "0 0 0 3px rgba(0, 115, 187, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.05)",
   },
   micButton: {
@@ -80,7 +80,7 @@ const styles = {
   },
   sendButton: {
     padding: "12px",
-    background: "linear-gradient(135deg, #23776C 0%, #244140 100%)",
+    background: "linear-gradient(135deg, var(--gw-color-primary) 0%, var(--gw-color-primary-active) 100%)",
     border: "none",
     cursor: "pointer",
     color: "white",
@@ -687,7 +687,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           style={{
             ...styles.micButton,
             ...(listening ? styles.micActive : {}),
-            ...(micHovered && !listening ? { backgroundColor: "#f3f4f6", color: "#23776C" } : {}),
+            ...(micHovered && !listening ? { backgroundColor: "var(--gw-color-border-light)", color: "var(--gw-color-primary)" } : {}),
             ...(micPermissionDenied ? { color: "#ef4444" } : {}),
           }}
           aria-label={
