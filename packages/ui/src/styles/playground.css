@@ -16,7 +16,7 @@
 .pg-header-title {
   font-size: 26px;
   font-weight: 600;
-  color: var(--gw-color-heading, #244140);
+  color: var(--gw-color-heading, var(--gw-color-primary-active));
   margin: 0;
   flex: 1;
   min-width: 0;
@@ -45,11 +45,11 @@
   align-items: center;
   gap: 8px;
   padding: 10px 22px;
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: #f9fbff;
-  border: 1px solid #23776C;
-  border-radius: 50px;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  border: 1px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-pill);
+  font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.3px;
@@ -60,8 +60,8 @@
 }
 
 .pg-upload-btn:hover {
-  background-color: #195C53;
-  border-color: #195C53;
+  background-color: var(--gw-color-primary-hover);
+  border-color: var(--gw-color-primary-hover);
 }
 
 .pg-upload-btn:active {
@@ -69,7 +69,7 @@
 }
 
 .pg-upload-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 
@@ -93,10 +93,10 @@
   gap: 8px;
   padding: 10px 22px;
   background-color: transparent;
-  color: #23776C;
-  border: 1px solid #23776C;
-  border-radius: 50px;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  color: var(--gw-color-primary);
+  border: 1px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-pill);
+  font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.3px;
@@ -107,7 +107,7 @@
 }
 
 .pg-help-btn:hover {
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: #f9fbff;
 }
 
@@ -116,7 +116,7 @@
 }
 
 .pg-help-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 
@@ -157,7 +157,7 @@
 
 /* ── Modal header ── */
 .pg-modal-header {
-  background-color: var(--gw-color-primary, #23776C);
+  background-color: var(--gw-color-primary);
   padding: 20px 24px;
   display: flex;
   justify-content: space-between;
@@ -194,7 +194,7 @@
 
 .pg-modal-close-btn:focus-visible {
   background: var(--gw-color-white, #ffffff);
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   outline: 2px solid var(--gw-color-white, #ffffff);
   outline-offset: 2px;
 }
@@ -215,8 +215,8 @@
 
 /* ── Highlighted box ── */
 .pg-highlight-box {
-  border-left: 4px solid var(--gw-color-primary, #23776C);
-  background-color: var(--gw-color-primary-light, #DFECE0);
+  border-left: 4px solid var(--gw-color-primary);
+  background-color: var(--gw-color-primary-light);
   padding: 16px 20px;
   margin-bottom: 24px;
   border-radius: 4px;
@@ -258,7 +258,7 @@
 .pg-info-heading {
   margin: 0 0 6px;
   font-size: 15px;
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   font-weight: 600;
 }
 
@@ -270,7 +270,7 @@
 }
 
 .pg-info-link {
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   font-weight: 500;
 }
 
@@ -287,7 +287,7 @@
   cursor: pointer;
   width: 20px;
   height: 20px;
-  accent-color: var(--gw-color-primary, #23776C);
+  accent-color: var(--gw-color-primary);
 }
 
 .pg-checkbox-label {
@@ -303,12 +303,12 @@
   justify-content: center;
   gap: 8px;
   padding: 14px 30px;
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: #f9fbff;
-  border: 1px solid #23776C;
-  border-radius: 50px;
+  border: 1px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-pill);
   cursor: pointer;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 1.4px;
@@ -319,8 +319,8 @@
 }
 
 .pg-got-it-btn:hover {
-  background-color: #195C53;
-  border-color: #195C53;
+  background-color: var(--gw-color-primary-hover);
+  border-color: var(--gw-color-primary-hover);
 }
 
 .pg-got-it-btn:active {
@@ -328,7 +328,7 @@
 }
 
 .pg-got-it-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 

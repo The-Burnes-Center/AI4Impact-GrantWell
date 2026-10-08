@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseReleaseNotes } from "../src/common/release-notes-parse";
-import { whatsNewHtml } from "./instance-html";
+import { whatsNewHtml, withoutLandingFallback } from "./instance-html";
 
 const notes = fs.readFileSync(path.join(__dirname, "..", "RELEASE_NOTES.md"), "utf8");
 const releases = parseReleaseNotes(notes);
@@ -47,5 +47,16 @@ describe("whatsNewHtml", () => {
 
   it("fails loudly if index.html loses the fallback it replaces", () => {
     expect(() => whatsNewHtml("<html></html>", notes)).toThrow(/#root fallback/);
+  });
+});
+
+describe("withoutLandingFallback", () => {
+  it("empties #root but keeps the route script whats-new.html relies on", () => {
+    const index = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+    const html = withoutLandingFallback(index);
+    expect(html).toContain('<div id="root"></div>');
+    expect(html).not.toContain("marketing__hero");
+    expect(html).toContain('// Only "/" is the landing page');
+    expect(html).toContain('<script type="module" src="/src/main.tsx"></script>');
   });
 });

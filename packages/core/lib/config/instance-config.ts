@@ -72,6 +72,8 @@ interface InstanceConfigBase {
   customDomain?: { domainName: string; certificateArn: string };
   auth: {
     mfaRequired: boolean;
+    /** "off" turns MFA off entirely (no authenticator setup); otherwise mfaRequired picks required or optional. */
+    mfa?: "off";
     oidcProviderName?: string;
     /** ISO timestamp with offset. Until then the UI urges MFA at each sign-in; from then it blocks the app until the user enrolls. */
     mfaDeadline?: string;
@@ -144,6 +146,10 @@ export function validateInstanceConfig(config: InstanceConfig): void {
     problems.push("auth.mfaDeadline must be an ISO timestamp with an offset, e.g. 2026-11-02T00:00:00-05:00");
   }
   if (config.seo?.indexable && config.stage === "dev") problems.push("seo.indexable must not be set on a dev deployment");
+  if (config.auth.mfa !== undefined && config.auth.mfa !== "off") problems.push('auth.mfa can only be "off"');
+  if (config.auth.mfa === "off" && (config.auth.mfaRequired || config.auth.mfaDeadline)) {
+    problems.push('auth.mfa "off" can\'t be combined with mfaRequired or mfaDeadline');
+  }
   if (config.auth.turnstile !== undefined && typeof config.auth.turnstile !== "boolean") {
     problems.push("auth.turnstile must be true or false");
   }

@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { RELEASES } from "../../common/release-notes";
 import { notesMarkdown } from "../../components/whats-new/notes-markdown";
-import { LandingFooter, LandingNavbar, OmniHeader } from "../landing/chrome";
+import { LandingNavbar, OmniHeader } from "../landing/chrome";
 import "../../components/whats-new/whats-new.css";
 import "../../styles/marketing-landing.css";
-import { GovBanner } from "../../components/common/GovIdentity";
+import { PublicSiteHeader, SiteBanner, SiteFooter } from "../../components/common/ChromeSlots";
+import { HAS_CHROME_HEADER } from "../../common/chrome";
 
 export function WhatsNewContent() {
   useEffect(() => {
@@ -25,13 +26,14 @@ export function WhatsNewContent() {
 export default function WhatsNewPage() {
   return (
     <div className="marketing">
-      <GovBanner />
+      <SiteBanner />
+      <PublicSiteHeader />
       <OmniHeader />
       <main id="main-content" tabIndex={-1}>
-        <LandingNavbar />
+        {!HAS_CHROME_HEADER && <LandingNavbar />}
         <WhatsNewContent />
       </main>
-      <LandingFooter />
+      <SiteFooter signedIn={false} />
       <OmniHeader position="bottom" />
     </div>
   );

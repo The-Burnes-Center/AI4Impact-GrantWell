@@ -15,7 +15,7 @@
 }
 
 .markdownTableScroll:focus-visible {
-  outline: 3px solid var(--gw-color-primary, #23776c);
+  outline: 3px solid var(--gw-color-primary);
   outline-offset: 3px;
   border-radius: 8px;
 }
@@ -37,7 +37,7 @@
 }
 
 .markdownTable th {
-  background-color: #DFECE0;
+  background-color: var(--gw-color-primary-light);
 }
 
 .markdownTable tr:nth-child(even) {

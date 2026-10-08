@@ -31,11 +31,12 @@ import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
 import {
   AppNavbar,
-  LandingFooter,
   OmniHeader,
 } from "../pages/landing/chrome";
 import "../styles/marketing-landing.css";
-import { GovBanner } from "./common/GovIdentity";
+import { AppSiteHeader, SiteBanner, SiteFooter } from "./common/ChromeSlots";
+import { CHROME } from "../common/chrome";
+import PublicHomePage from "../pages/landing/PublicHomePage";
 
 const WhatsNewPage = lazy(() => import("../pages/whats-new/WhatsNewPage"));
 
@@ -191,7 +192,8 @@ export default function AppConfigured() {
   }, [theme]);
 
   // The page's static fallback already shows the landing; keep it on screen instead of a spinner.
-  if (!config && !error && window.location.pathname === "/") {
+  // A deployment's own public home needs the config for its sign-in panel, so it waits instead.
+  if (!config && !error && window.location.pathname === "/" && !CHROME.PublicHome) {
     return (
       <BrandingProvider value={activeBranding}>
         <BrowserRouter>
@@ -276,7 +278,8 @@ function AppLayoutContent({
     return (
       <NavigationProvider>
         <div className="marketing marketing__app-shell">
-          <GovBanner />
+          <SiteBanner />
+          <AppSiteHeader />
           <AppNavbar />
           <div className="marketing__app-body">
             <AppSidebar />
@@ -291,14 +294,14 @@ function AppLayoutContent({
               </MfaGate>
             </div>
           </div>
-          <LandingFooter />
+          <SiteFooter signedIn />
           <OmniHeader position="bottom" />
         </div>
       </NavigationProvider>
     );
   }
 
-  if (!configured && pathname === "/") {
+  if (!configured && pathname === "/" && !CHROME.PublicHome) {
     return <LandingPage />;
   }
 
@@ -325,10 +328,15 @@ function AppLayoutContent({
     <>
       <UnauthenticatedRouteEffects />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/"
+          element={CHROME.PublicHome ? <PublicHomePage onAuthenticated={onAuthenticated} /> : <LandingPage />}
+        />
         <Route
           path="/login"
-          element={<LoginPage onAuthenticated={onAuthenticated} />}
+          element={
+            CHROME.PublicHome ? <PublicHomePage onAuthenticated={onAuthenticated} /> : <LoginPage onAuthenticated={onAuthenticated} />
+          }
         />
         <Route
           path="/whats-new"

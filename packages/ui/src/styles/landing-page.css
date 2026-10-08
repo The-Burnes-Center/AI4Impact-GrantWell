@@ -96,7 +96,7 @@
 }
 
 .landing-header__subtitle {
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 18px;
   color: var(--mk-green-dark);
   margin: 0;
@@ -222,7 +222,7 @@
 .cta-btn:focus-visible {
   outline: 2px solid var(--gw-color-focus-light);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(35, 119, 108, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gw-color-primary) 20%, transparent);
 }
 
 /* History Panel */
@@ -419,14 +419,14 @@
   background-color: var(--mk-white);
   border: none;
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(36, 65, 64, 0.08);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--gw-color-primary-active) 8%, transparent);
   max-width: 640px;
   margin: 0 auto;
   padding: 32px;
 }
 
 .feedback-heading {
-  font-family: 'PT Serif', Georgia, serif;
+  font-family: var(--gw-font-serif);
   font-size: 28px;
   line-height: 1.2;
   font-weight: 400;
@@ -446,7 +446,7 @@
 }
 
 .feedback-legend {
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 16px;
   font-weight: 500;
   color: var(--mk-black);
@@ -495,7 +495,7 @@
 }
 
 .feedback-prompt {
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 16px;
   font-weight: 500;
   color: var(--mk-black);
@@ -642,7 +642,7 @@
 
 .feedback-textarea:focus {
   border-color: var(--mk-green);
-  box-shadow: 0 0 0 3px rgba(35, 119, 108, 0.15);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary) 15%, transparent);
 }
 
 .feedback-textarea:focus-visible {
@@ -701,8 +701,8 @@
   color: #f9fbff;
   border: 1px solid var(--mk-green);
   padding: 13px 28px;
-  border-radius: 50px;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  border-radius: var(--gw-radius-pill);
+  font-family: var(--gw-font-button);
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
@@ -739,7 +739,7 @@
 .feedback-success {
   padding: 28px 24px;
   background-color: var(--mk-green-light);
-  border: 1px solid rgba(35, 119, 108, 0.18);
+  border: 1px solid color-mix(in srgb, var(--gw-color-primary) 18%, transparent);
   border-radius: 12px;
   color: var(--mk-green-deepest);
   font-size: 15px;

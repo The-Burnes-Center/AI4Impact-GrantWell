@@ -15,10 +15,10 @@
    * Available globally so any page can adopt them without re-importing.
    * ============================== */
 
-  --mk-green: #23776C;
-  --mk-green-dark: #195C53;
-  --mk-green-deepest: #244140;
-  --mk-green-light: #DFECE0;
+  --mk-green: var(--gw-color-primary);
+  --mk-green-dark: var(--gw-color-primary-hover);
+  --mk-green-deepest: var(--gw-color-primary-active);
+  --mk-green-light: var(--gw-color-primary-light);
   --mk-off-white: #F8F6F1;
   --mk-black: #282828;
   --mk-white: #ffffff;
@@ -35,6 +35,14 @@
   --gw-color-accent: #388557;
   /* Written by BrandingProvider (common/branding.tsx COLOR_VARS), not read by CSS yet. */
   --gw-color-accent-hover: #32784E;
+
+  /* Tints of the primary used in a few places; a theme can override them with the palette. */
+  --gw-color-primary-deep: #1B5D54;
+  --gw-color-primary-border: #C8D8D4;
+  --gw-color-primary-muted: #3A5957;
+  --gw-color-primary-alt: #227369;
+  --gw-color-primary-soft: #8CC0B7;
+  --gw-color-primary-mid: #5BA294;
 
   /* Highlight (use sparingly) */
   --gw-color-highlight: #F6C51B;
@@ -70,8 +78,8 @@
    * Focus Colors
    * ============================== */
 
-  --gw-color-focus-light: #23776C;
-  --gw-color-focus-dark: #DFECE0;
+  --gw-color-focus-light: var(--gw-color-primary);
+  --gw-color-focus-dark: var(--gw-color-primary-light);
 
   /* ==============================
    * Neutral / UI Colors
@@ -89,11 +97,12 @@
   --gw-color-text: #333333;
   --gw-color-text-secondary: #5a5a5a;
   --gw-color-text-muted: #6b7280;
-  --gw-color-heading: #244140;
+  --gw-color-heading: var(--gw-color-primary-active);
   --gw-color-text-strong: #111827;
   --gw-color-text-control: #374151;
   --gw-color-text-status: #4b5563;
   --gw-color-text-input: #334155;
+  --gw-color-message-bg: #e8eef1;
 
   /* Disabled state */
   --gw-color-disabled-bg: #F0F0F0;
@@ -151,6 +160,8 @@
   --gw-radius-lg: 8px;
   --gw-radius-xl: 12px;
   --gw-radius-full: 9999px;
+  --gw-radius-pill: 50px;
+  --gw-radius-round: 999px;
 
   /* ==============================
    * Shadows
@@ -167,6 +178,9 @@
    * ============================== */
 
   --gw-font-family: 'Noto Sans', sans-serif;
+  --gw-font-button: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  --gw-font-display: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  --gw-font-serif: 'PT Serif', Georgia, serif;
   --gw-font-size-xs: 12px;
   --gw-font-size-sm: 14px;
   --gw-font-size-base: 16px;

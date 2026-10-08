@@ -26,21 +26,21 @@
 
 .custom-markdown strong {
   font-weight: 600;
-  color: #23776C;
+  color: var(--gw-color-primary);
 }
 
 .custom-markdown a {
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   text-decoration: underline;
   word-break: break-all;
 }
 
 .custom-markdown a:hover {
-  color: var(--gw-color-primary-hover, #195C53);
+  color: var(--gw-color-primary-hover);
 }
 
 .custom-markdown a:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 
@@ -63,7 +63,7 @@
 .loading-spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
-  border-top: 4px solid var(--gw-color-primary, #23776C);
+  border-top: 4px solid var(--gw-color-primary);
   width: 50px;
   height: 50px;
   animation: spin 1s linear infinite;
@@ -84,7 +84,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--gw-color-primary, #23776C);
+  background-color: var(--gw-color-primary);
 }
 
 .custom-markdown li {
@@ -145,7 +145,7 @@
 .checklist-content__heading {
   font-family: 'Noto Sans', sans-serif;
   font-weight: 600;
-  color: #244140;
+  color: var(--gw-color-primary-active);
   letter-spacing: -0.01em;
   font-size: 32px;
   line-height: 1.4;
@@ -154,7 +154,7 @@
 }
 
 .checklist-content__heading-accent {
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
 }
 
 .checklist-content__description {
@@ -182,11 +182,11 @@
   gap: 8px;
   padding: 8px 18px;
   background-color: transparent;
-  color: #23776C;
-  border: 1px solid #23776C;
-  border-radius: 50px;
+  color: var(--gw-color-primary);
+  border: 1px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-pill);
   cursor: pointer;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-weight: 600;
   font-size: 12px;
   letter-spacing: 1.2px;
@@ -198,12 +198,12 @@
 }
 
 .checklist-help-btn:hover {
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: #ffffff;
 }
 
 .checklist-help-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 
@@ -239,14 +239,14 @@
 }
 
 .checklist-tab--active {
-  background-color: #DFECE0;
+  background-color: var(--gw-color-primary-light);
   font-weight: 600;
-  color: #244140;
-  border-bottom: 3px solid var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary-active);
+  border-bottom: 3px solid var(--gw-color-primary);
 }
 
 .checklist-tab:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 
@@ -268,7 +268,7 @@
   margin-left: 0;
   margin-right: auto;
   border-radius: 6px;
-  border: 1px solid var(--gw-color-primary, #23776C);
+  border: 1px solid var(--gw-color-primary);
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -278,7 +278,7 @@
   margin: 0 0 10px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #244140;
+  color: var(--gw-color-primary-active);
 }
 
 .checklist-info-box__text {
@@ -340,7 +340,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #DFECE0;
+  background-color: var(--gw-color-primary-light);
   padding: 16px 24px;
   border-radius: 8px;
   max-width: 600px;
@@ -348,7 +348,7 @@
 
 .checklist-loading__tip-text {
   font-size: 14px;
-  color: #1b5d54;
+  color: var(--gw-color-primary-deep);
   margin: 0;
   line-height: 1.5;
 }
@@ -382,12 +382,12 @@
   align-items: center;
   gap: 8px;
   padding: 10px 26px;
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: #f9fbff;
-  border: 1px solid #23776C;
-  border-radius: 50px;
+  border: 1px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-pill);
   cursor: pointer;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.3px;
@@ -396,8 +396,8 @@
 }
 
 .checklist-error__btn:hover {
-  background-color: #195C53;
-  border-color: #195C53;
+  background-color: var(--gw-color-primary-hover);
+  border-color: var(--gw-color-primary-hover);
 }
 
 .checklist-error__btn:active {
@@ -431,7 +431,7 @@
 }
 
 .help-modal__header {
-  background-color: var(--gw-color-primary, #23776C);
+  background-color: var(--gw-color-primary);
   padding: 20px 24px;
   display: flex;
   justify-content: space-between;
@@ -463,7 +463,7 @@
 
 .help-modal__close:focus-visible {
   background: #ffffff;
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
@@ -482,8 +482,8 @@
 }
 
 .help-modal__highlight {
-  border-left: 4px solid var(--gw-color-primary, #23776C);
-  background-color: #DFECE0;
+  border-left: 4px solid var(--gw-color-primary);
+  background-color: var(--gw-color-primary-light);
   padding: 16px 20px;
   margin-bottom: 24px;
   border-radius: 4px;
@@ -492,7 +492,7 @@
 .help-modal__section-title {
   margin: 0 0 6px 0;
   font-size: 15px;
-  color: var(--gw-color-primary, #23776C);
+  color: var(--gw-color-primary);
   font-weight: 600;
 }
 
@@ -515,7 +515,7 @@
   cursor: pointer;
   width: 20px;
   height: 20px;
-  accent-color: var(--gw-color-primary, #23776C);
+  accent-color: var(--gw-color-primary);
 }
 
 .help-modal__checkbox-label {
@@ -531,12 +531,12 @@
   justify-content: center;
   gap: 8px;
   padding: 14px 30px;
-  background-color: #23776C;
+  background-color: var(--gw-color-primary);
   color: #f9fbff;
-  border: 1px solid #23776C;
-  border-radius: 50px;
+  border: 1px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-pill);
   cursor: pointer;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 1.4px;
@@ -547,8 +547,8 @@
 }
 
 .help-modal__confirm-btn:hover {
-  background-color: #195C53;
-  border-color: #195C53;
+  background-color: var(--gw-color-primary-hover);
+  border-color: var(--gw-color-primary-hover);
 }
 
 .help-modal__confirm-btn:active {
@@ -556,6 +556,6 @@
 }
 
 .help-modal__confirm-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }

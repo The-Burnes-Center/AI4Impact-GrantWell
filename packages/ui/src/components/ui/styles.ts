@@ -10,14 +10,14 @@
 // Brand colors
 export const colors = {
   // Primary (GrantWell Green)
-  primary: "#23776C",
-  primaryHover: "#195C53",
-  primaryActive: "#244140",
-  primaryLight: "#DFECE0",
+  primary: "var(--gw-color-primary)",
+  primaryHover: "var(--gw-color-primary-hover)",
+  primaryActive: "var(--gw-color-primary-active)",
+  primaryLight: "var(--gw-color-primary-light)",
 
   // Accent
-  accent: "#388557",
-  accentHover: "#32784E",
+  accent: "var(--gw-color-accent)",
+  accentHover: "var(--gw-color-accent-hover)",
 
   // Status colors
   success: "#047857",
@@ -30,8 +30,8 @@ export const colors = {
   warningLight: "#fff3cd",
 
   // Focus
-  focusLight: "#23776C",
-  focusDark: "#DFECE0",
+  focusLight: "var(--gw-color-primary)",
+  focusDark: "var(--gw-color-primary-light)",
 
   // Neutral colors
   white: "#ffffff",
@@ -42,7 +42,7 @@ export const colors = {
   text: "#333333",
   textSecondary: "#5a5a5a",
   textMuted: "#6b7280",
-  heading: "#244140",
+  heading: "var(--gw-color-primary-active)",
 
   // Disabled state
   disabledBg: "#F0F0F0",

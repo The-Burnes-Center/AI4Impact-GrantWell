@@ -24,7 +24,8 @@ export const instances: InstanceConfig[] = [
       domainName: "staging.grants.example.gov",
       certificateArn: "arn:aws:acm:us-east-1:111111111111:certificate/replace-me",
     },
-    auth: { mfaRequired: true },
+    // MFA is your choice: mfaRequired true (every user sets up an authenticator app), false (optional), or add mfa: "off".
+    auth: { mfaRequired: false },
     email: { sender: "no-reply@staging.grants.example.gov", manageSenderIdentity: true },
     scraper: { dailySchedule: false },
     monitoring: { dailyBrief: false },
@@ -48,7 +49,8 @@ export const instances: InstanceConfig[] = [
       domainName: "grants.example.gov",
       certificateArn: "arn:aws:acm:us-east-1:000000000000:certificate/replace-me",
     },
-    auth: { mfaRequired: true },
+    // MFA is your choice: mfaRequired true (every user sets up an authenticator app), false (optional), or add mfa: "off".
+    auth: { mfaRequired: false },
     email: { sender: "no-reply@grants.example.gov", manageSenderIdentity: true },
     scraper: { dailySchedule: true },
     monitoring: { dailyBrief: true },

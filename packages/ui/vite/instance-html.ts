@@ -144,6 +144,14 @@ export function whatsNewHtml(indexHtml: string, releaseNotes: string, siteUrl?: 
   return html;
 }
 
+/** A deployment with its own public home (chrome/) must not flash GrantWell's landing before React mounts. */
+export function withoutLandingFallback(indexHtml: string): string {
+  const rootStart = indexHtml.indexOf('<div id="root">');
+  const scriptStart = indexHtml.lastIndexOf("<script>", indexHtml.indexOf(LANDING_ONLY_SCRIPT));
+  if (rootStart < 0 || scriptStart < 0) throw new Error("index.html no longer has the #root fallback");
+  return indexHtml.slice(0, rootStart) + '<div id="root"></div>\n    ' + indexHtml.slice(scriptStart);
+}
+
 /** Fills index.html from the instance core staged at synth: favicon, head tags, JSON-LD and the static landing fallback. */
 export function instanceHtml(stagedInstancePath: string): Plugin {
   let publicDir = "";
@@ -170,6 +178,7 @@ export function instanceHtml(stagedInstancePath: string): Plugin {
         : undefined;
       const branding: PageBranding = staged?.branding ?? UNSTAGED;
       const head = await headTags(staged, publicDir);
+      if (fs.existsSync(path.join(root, "src", "instance-chrome", "index.tsx"))) html = withoutLandingFallback(html);
       return html
         // "data:," asks the browser for no favicon at all, instead of a /favicon.ico 404.
         .replace("%GW_FAVICON%", attr(branding.favicon || "data:,"))

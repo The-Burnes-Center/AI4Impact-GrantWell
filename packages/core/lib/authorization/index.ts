@@ -59,7 +59,7 @@ export class AuthorizationStack extends Construct {
     const userPool = new UserPool(this, 'UserPool', {
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       selfSignUpEnabled: true,
-      mfa: config.auth.mfaRequired ? cognito.Mfa.REQUIRED : cognito.Mfa.OPTIONAL,
+      mfa: config.auth.mfa === 'off' ? cognito.Mfa.OFF : config.auth.mfaRequired ? cognito.Mfa.REQUIRED : cognito.Mfa.OPTIONAL,
       // No phone number is collected, so SMS would leave MFA unenrollable.
       mfaSecondFactor: { sms: false, otp: true },
       featurePlan: FeaturePlan.PLUS,

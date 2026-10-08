@@ -3,7 +3,7 @@ import { LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
-import { SINGLE_STATE } from "../../../common/instance";
+import { MFA_ENABLED, SINGLE_STATE } from "../../../common/instance";
 import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "./PaginationControls";
 
@@ -475,7 +475,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         >
                           {isSaving ? "Saving..." : "Save"}
                         </button>
-                        {!isSelf && (
+                        {!isSelf && MFA_ENABLED && (
                           <button
                             type="button"
                             className="feature-rollouts-secondary-button"

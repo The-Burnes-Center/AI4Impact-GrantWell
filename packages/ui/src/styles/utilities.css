@@ -41,7 +41,7 @@ textarea:focus-visible,
 [role="menuitemradio"]:focus-visible,
 [role="checkbox"]:focus-visible,
 [tabindex]:focus-visible:not([tabindex="-1"]) {
-  outline: 2px solid var(--gw-color-focus-light, #23776C);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 
@@ -50,7 +50,7 @@ textarea:focus-visible,
 .marketing__band a:focus-visible,
 .marketing__omni a:focus-visible,
 .marketing__footer a:focus-visible {
-  outline-color: var(--gw-color-focus-dark, #DFECE0);
+  outline-color: var(--gw-color-focus-dark, var(--gw-color-primary-light));
 }
 
 /* ==============================

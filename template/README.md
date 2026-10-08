@@ -36,6 +36,7 @@ Put your own images in `public/` and point `config/branding.ts` at them by their
 
 ## Sign-in options
 - **Single state:** with `tenancy: "single"`, every user belongs to that one state. Sign-up, Profile and User Management never offer a state choice, and there is no Platform Admin role. Users who already exist get the state at their next sign-in; to set it for everyone at once after the first deploy, run `node packages/core/scripts/backfill-single-state.mjs --user-pool-id <pool> --state <code>` from a GrantWell source checkout (dry run first, then `--apply`).
+- **Two-step verification (MFA):** your choice per deployment: `mfaRequired: true` makes every user set up an authenticator app, `false` leaves it optional, and `mfa: "off"` turns it off.
 - **Bot check:** sign-up and sign-in use Cloudflare Turnstile unless `auth: { turnstile: false }`. With it off, no Turnstile keys are needed.
 - **Email:** `email: { cognitoDefault: true }` sends sign-in mail from Cognito's own sender when your account has no SES set up (about 50 a day); grant digest emails are then off.
 

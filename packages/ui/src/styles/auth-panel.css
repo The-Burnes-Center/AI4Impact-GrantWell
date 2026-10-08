@@ -83,12 +83,12 @@
 }
 
 /* The base rule sets `box-shadow: none !important`, so a box-shadow ring here
-   would never paint; and #767676 -> #23776C is only a 1.18:1 luminance change.
+   would never paint; and var(--gw-color-border-input) -> var(--gw-color-primary) is only a 1.18:1 luminance change.
    Use a real outline (5.35:1 on the card) as the focus indicator. */
 .auth-login-card .form-input:focus,
 .auth-login-card .form-control.form-input:focus {
-  border-color: #23776C;
-  outline: 3px solid #23776C;
+  border-color: var(--gw-color-primary);
+  outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
   background: #fff;
 }
@@ -135,14 +135,14 @@
   cursor: pointer;
   width: 20px;
   height: 20px;
-  accent-color: #23776C;
+  accent-color: var(--gw-color-primary);
   flex-shrink: 0;
 }
 
 .show-password-checkbox .form-check-input:focus-visible {
-  outline: 3px solid #23776C;
+  outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
-  box-shadow: 0 0 0 3px rgba(35, 119, 108, 0.15);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary) 15%, transparent);
 }
 
 .show-password-checkbox .form-check-label {
@@ -161,7 +161,7 @@
   padding: 0;
   min-height: 24px;
   font-size: 14px;
-  color: #195C53;
+  color: var(--gw-color-primary-hover);
   text-decoration: none !important;
   border: 0;
   background: transparent;
@@ -189,7 +189,7 @@
 .create-account-link.btn-link:hover,
 .create-account-link.btn:active,
 .create-account-link.btn-link:active {
-  color: #244140;
+  color: var(--gw-color-primary-active);
   text-decoration: none !important;
   background: transparent !important;
   border-color: transparent !important;
@@ -205,7 +205,7 @@
 .create-account-link.btn:focus-visible,
 .create-account-link.btn-link:focus-visible,
 .login-submit-button:focus-visible {
-  outline: 3px solid #23776C;
+  outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
   border-radius: 2px;
   box-shadow: none !important;
@@ -223,7 +223,7 @@
   padding: 16px 24px;
   font-size: 16px;
   font-weight: 600;
-  background: linear-gradient(135deg, #23776C 0%, #195C53 100%);
+  background: linear-gradient(135deg, var(--gw-color-primary) 0%, var(--gw-color-primary-hover) 100%);
   border: none;
   border-radius: 10px;
   color: #fff;
@@ -233,12 +233,12 @@
   align-items: center;
   justify-content: center;
   gap: 14px;
-  box-shadow: 0 4px 14px rgba(35, 119, 108, 0.4);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--gw-color-primary) 40%, transparent);
 }
 
 .login-submit-button:hover {
-  background: linear-gradient(135deg, #195C53 0%, #244140 100%);
-  box-shadow: 0 6px 20px rgba(35, 119, 108, 0.5);
+  background: linear-gradient(135deg, var(--gw-color-primary-hover) 0%, var(--gw-color-primary-active) 100%);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--gw-color-primary) 50%, transparent);
   transform: translateY(-1px);
 }
 
@@ -277,7 +277,7 @@
   padding: 0;
   min-height: auto;
   font-size: 14px;
-  color: #195C53;
+  color: var(--gw-color-primary-hover);
   text-decoration: none !important;
   border: 0;
   background: transparent;

@@ -32,6 +32,7 @@ import {
   useNavigationChrome,
 } from "./navigation-context";
 import { BrandLogo } from "../common/BrandLogo";
+import { CHROME } from "../../common/chrome";
 import { GovSeal } from "../common/GovIdentity";
 
 export const SIDEBAR_ID = "gw-app-sidebar";
@@ -347,7 +348,7 @@ export const AppSidebar: React.FC = () => {
                 }),
           }}
         >
-          {showLabels && (
+          {showLabels && !CHROME.Header && (
             <a
               href="/home"
               onClick={(e) => {

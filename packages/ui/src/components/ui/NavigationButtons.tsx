@@ -74,8 +74,8 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     alignItems: "center",
     gap: "8px",
     padding: "10px 26px",
-    borderRadius: "50px",
-    fontFamily: "'Libre Franklin', 'Inter', system-ui, sans-serif",
+    borderRadius: "var(--gw-radius-pill)",
+    fontFamily: "var(--gw-font-button)",
     fontSize: "13px",
     lineHeight: "22px",
     fontWeight: 600,
@@ -96,9 +96,9 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
 
   const continueButtonStyle: React.CSSProperties = {
     ...pillBase,
-    background: continueDisabled ? "#c8d8d4" : colors.primary,
+    background: continueDisabled ? "var(--gw-color-primary-border)" : colors.primary,
     color: colors.white,
-    border: `1px solid ${continueDisabled ? "#c8d8d4" : colors.primary}`,
+    border: `1px solid ${continueDisabled ? "var(--gw-color-primary-border)" : colors.primary}`,
     cursor: continueDisabled ? "not-allowed" : "pointer",
   };
 

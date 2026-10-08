@@ -1,8 +1,8 @@
 .marketing {
-  --mk-green: #227369;
-  --mk-green-dark: #195C53;
-  --mk-green-deepest: #244140;
-  --mk-green-light: #DFECE0;
+  --mk-green: var(--gw-color-primary-alt);
+  --mk-green-dark: var(--gw-color-primary-hover);
+  --mk-green-deepest: var(--gw-color-primary-active);
+  --mk-green-light: var(--gw-color-primary-light);
   --mk-off-white: #F8F6F1;
   --mk-black: #282828;
   --mk-white: #ffffff;
@@ -85,11 +85,11 @@
   align-items: center;
   gap: 10px;
   padding: 10px 22px;
-  border-radius: 50px;
+  border-radius: var(--gw-radius-pill);
   background-color: transparent;
   color: var(--mk-green);
   border: 1px solid var(--mk-green);
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 14px;
   line-height: 22px;
   font-weight: 600;
@@ -127,7 +127,7 @@
   padding: 0 40px;
   height: 80px;
   background-color: var(--mk-white);
-  border-bottom: 1px solid rgba(35, 119, 108, 0.12);
+  border-bottom: 1px solid color-mix(in srgb, var(--gw-color-primary) 12%, transparent);
   gap: 24px;
 }
 
@@ -288,7 +288,7 @@
 }
 
 .marketing__hero-tagline {
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 26px;
   line-height: 32px;
   font-weight: 400;
@@ -307,8 +307,8 @@
   align-items: center;
   gap: 10px;
   padding: 15px 30px;
-  border-radius: 50px;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  border-radius: var(--gw-radius-pill);
+  font-family: var(--gw-font-button);
   font-size: 14px;
   line-height: 22px;
   font-weight: 600;
@@ -408,7 +408,7 @@
 }
 
 .marketing__feature-title {
-  font-family: 'PT Serif', Georgia, serif;
+  font-family: var(--gw-font-serif);
   font-size: 32px;
   line-height: 28px;
   font-weight: 400;
@@ -417,7 +417,7 @@
 }
 
 .marketing__feature-body {
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 21px;
   line-height: 26px;
   letter-spacing: -1.05px;
@@ -455,7 +455,7 @@
 }
 
 .marketing__band-title {
-  font-family: 'PT Serif', Georgia, serif;
+  font-family: var(--gw-font-serif);
   font-size: 32px;
   line-height: 28px;
   font-weight: 400;
@@ -464,7 +464,7 @@
 }
 
 .marketing__band-body {
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 21px;
   line-height: 26px;
   letter-spacing: -1.05px;
@@ -492,7 +492,7 @@
   background-color: var(--mk-white);
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 4px 16px rgba(36, 65, 64, 0.08);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--gw-color-primary-active) 8%, transparent);
   border: none;
 }
 
@@ -508,8 +508,8 @@
 .marketing__signin .auth-tabs {
   display: flex;
   gap: 0;
-  background-color: rgba(35, 119, 108, 0.08);
-  border-radius: 50px;
+  background-color: color-mix(in srgb, var(--gw-color-primary) 8%, transparent);
+  border-radius: var(--gw-radius-pill);
   padding: 4px;
   margin-bottom: 28px;
 }
@@ -520,12 +520,12 @@
   border: none;
   background: transparent;
   color: var(--mk-green-deepest);
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  border-radius: 50px;
+  border-radius: var(--gw-radius-pill);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
@@ -550,7 +550,7 @@
 }
 
 .marketing__signin .auth-card-title {
-  font-family: 'PT Serif', Georgia, serif;
+  font-family: var(--gw-font-serif);
   font-size: 28px;
   line-height: 1.2;
   font-weight: 400;
@@ -559,7 +559,7 @@
 }
 
 .marketing__signin .auth-card-subtitle {
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 16px;
   line-height: 1.4;
   color: var(--mk-black);
@@ -576,12 +576,12 @@
   background-color: var(--mk-green);
   border-color: var(--mk-green);
   color: #f9fbff;
-  font-family: 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-button);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 1.4px;
   text-transform: uppercase;
-  border-radius: 50px;
+  border-radius: var(--gw-radius-pill);
   padding: 12px 28px;
 }
 
@@ -596,7 +596,7 @@
 .marketing__signin button[type="submit"]:focus {
   background-color: var(--mk-green-dark);
   border-color: var(--mk-green-dark);
-  box-shadow: 0 0 0 3px rgba(35, 119, 108, 0.25);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary) 25%, transparent);
 }
 
 .marketing__signin a:not(.marketing__nav-link),
@@ -611,7 +611,7 @@
 
 .marketing__signin .form-control:focus {
   border-color: var(--mk-green);
-  box-shadow: 0 0 0 3px rgba(35, 119, 108, 0.15);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary) 15%, transparent);
 }
 
 .marketing__footer {
@@ -655,7 +655,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 21px;
   line-height: 26px;
   letter-spacing: -1.05px;
@@ -685,7 +685,7 @@
 }
 
 .marketing__footer-partners-label {
-  font-family: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-display);
   font-size: 21px;
   line-height: 26px;
   letter-spacing: -1.05px;
@@ -726,7 +726,7 @@
 }
 
 .marketing__partner-link:focus-visible {
-  outline: 2px solid var(--gw-color-focus-dark, #DFECE0);
+  outline: 2px solid var(--gw-color-focus-dark, var(--gw-color-primary-light));
   outline-offset: 4px;
 }
 

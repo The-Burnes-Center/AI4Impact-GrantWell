@@ -29,7 +29,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px 24px;
-  background: var(--mk-green, #23776c);
+  background: var(--mk-green, var(--gw-color-primary));
   color: #fff;
 }
 
@@ -88,7 +88,7 @@
 }
 
 .profile-gate__req {
-  color: var(--mk-green, #23776c);
+  color: var(--mk-green, var(--gw-color-primary));
 }
 
 /* Input with a leading icon */
@@ -104,8 +104,8 @@
 }
 
 .profile-gate__input-wrap:focus-within {
-  border-color: var(--mk-green-dark, #195c53);
-  box-shadow: 0 0 0 3px rgba(25, 92, 83, 0.14);
+  border-color: var(--mk-green-dark, var(--gw-color-primary-hover));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary-hover) 14%, transparent);
 }
 
 .profile-gate__input-wrap--error {
@@ -135,7 +135,7 @@
 
 .profile-gate__input-wrap input:focus-visible,
 .profile-gate__input-wrap select:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, #23776c);
+  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
   outline-offset: 2px;
 }
 

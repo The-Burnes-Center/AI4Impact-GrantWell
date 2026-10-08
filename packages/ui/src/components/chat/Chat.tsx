@@ -86,7 +86,7 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: "100%",
     zIndex: 100,
     boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.1)",
-    borderTop: "3px solid #23776C",
+    borderTop: "3px solid var(--gw-color-primary)",
     flexShrink: 0,
     display: "flex",
     flexDirection: "column",
@@ -97,7 +97,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: "absolute",
     bottom: "140px", // Increased from 100px to position it higher above the input container
     right: "20px",
-    backgroundColor: "#23776C",
+    backgroundColor: "var(--gw-color-primary)",
     color: "white",
     border: "none",
     borderRadius: "50%",
@@ -360,12 +360,12 @@ export default function Chat(props: {
             ...styles.scrollToBottomButtonVisible,
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#195C53";
+            e.currentTarget.style.backgroundColor = "var(--gw-color-primary-hover)";
             e.currentTarget.style.transform = "scale(1.05)";
             e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.25)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#23776C";
+            e.currentTarget.style.backgroundColor = "var(--gw-color-primary)";
             e.currentTarget.style.transform = "scale(1)";
             e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
           }}

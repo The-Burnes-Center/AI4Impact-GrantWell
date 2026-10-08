@@ -54,7 +54,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
           <LuLoader
             size={16}
             className="se-sidebar__spinner"
-            style={{ color: '#23776C', animation: 'spin 1s linear infinite' }}
+            style={{ color: 'var(--gw-color-primary)', animation: 'spin 1s linear infinite' }}
             aria-label={`${section.name}: generating`}
           />
         );

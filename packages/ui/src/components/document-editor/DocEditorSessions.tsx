@@ -196,7 +196,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       case 'project_basics':
         return '#4b5563';
       case 'questionnaire':
-        return '#195C53';
+        return 'var(--gw-color-primary-hover)';
       case 'uploading_documents':
         return '#0e7490';
       case 'generating_draft':
@@ -417,7 +417,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                     }}
                     aria-label={`Open application: ${item.title}`}
                     style={{
-                      color: "#195C53",
+                      color: "var(--gw-color-primary-hover)",
                       background: "none",
                       border: "none",
                       padding: 0,
