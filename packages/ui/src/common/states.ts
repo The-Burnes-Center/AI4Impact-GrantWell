@@ -1,6 +1,6 @@
-import { SUPPORTED_STATES } from "./instance";
+import { SINGLE_STATE, SUPPORTED_STATES } from "./instance";
 
-export { SUPPORTED_STATES };
+export { SINGLE_STATE, SUPPORTED_STATES };
 
 export type SupportedStateCode = string;
 

@@ -13,7 +13,7 @@ import { ChatBotApi } from "../chatbot-api";
 import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
-import { InstanceConfig, sesEmail } from "../config/instance-config";
+import { InstanceConfig, sesEmail, singleState, turnstileEnabled } from "../config/instance-config";
 import { applyPublicOverlay, checkBrandingImages } from "./public-overlay";
 import { resolveSeo, writeSeoFiles } from "./seo-files";
 
@@ -117,12 +117,15 @@ export class UserInterface extends Construct {
           states: props.config.states,
           ...(props.config.auth.mfaDeadline && { mfaDeadline: props.config.auth.mfaDeadline }),
           ...(!sesEmail(props.config) && { emailDigest: false }),
+          ...(!turnstileEnabled(props.config) && { turnstile: false }),
+          ...(singleState(props.config) && { tenancy: "single" }),
         },
         null,
         2
       ) + "\n"
     );
 
+    const turnstileSiteKey = turnstileEnabled(props.config) ? process.env.TURNSTILE_SITE_KEY ?? "" : "";
     const asset = s3deploy.Source.asset(appPath, {
       bundling: {
         image: cdk.DockerImage.fromRegistry(
@@ -133,7 +136,7 @@ export class UserInterface extends Construct {
           "-c",
           [
             "npm --cache /tmp/.npm install",
-            `TURNSTILE_SITE_KEY="${process.env.TURNSTILE_SITE_KEY ?? ""}" npm --cache /tmp/.npm run build`,
+            `TURNSTILE_SITE_KEY="${turnstileSiteKey}" npm --cache /tmp/.npm run build`,
             "cp -aur /asset-input/dist/* /asset-output/",
           ].join(" && "),
         ],
@@ -143,6 +146,7 @@ export class UserInterface extends Construct {
               const options: ExecSyncOptionsWithBufferEncoding = {
                 stdio: "inherit",
                 cwd: appPath,
+                env: { ...process.env, TURNSTILE_SITE_KEY: turnstileSiteKey },
               };
 
               execSync(`npm --silent --prefix "${appPath}" install`, options);

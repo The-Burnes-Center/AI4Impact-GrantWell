@@ -8,7 +8,7 @@ name: Deploy
 # (Settings > Environments), holding:
 #   secrets    AWS_ROLE_ARN          IAM role this workflow assumes through GitHub OIDC
 #              GRANTS_GOV_API_KEY
-#              TURNSTILE_SECRET_KEY
+#              TURNSTILE_SECRET_KEY  only when auth.turnstile is on (the default)
 #              TURNSTILE_SITE_KEY
 #   variables  AWS_REGION            region the deployment lives in
 # Add required reviewers to an Environment to make its deploys wait for approval.

@@ -44,6 +44,8 @@ import {
 } from "./auth-utils";
 import "../../styles/auth-panel.css";
 import { BrandLogo } from "../common/BrandLogo";
+import { TURNSTILE_SITE_KEY } from "./turnstile-config";
+import { SINGLE_STATE } from "../../common/instance";
 
 interface AuthPanelProps {
   onAuthenticated: () => void;
@@ -168,7 +170,7 @@ export default function AuthPanel({ onAuthenticated, notice: initialNotice, onNo
   const [newPassword, setNewPassword] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [signupState, setSignupState] = useState("");
+  const [signupState, setSignupState] = useState(SINGLE_STATE?.code ?? "");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -666,13 +668,14 @@ export default function AuthPanel({ onAuthenticated, notice: initialNotice, onNo
     }
   };
 
-  const turnstileSlot = (action: string) => (
-    <TurnstileWidget
-      action={action}
-      onToken={setTurnstileToken}
-      resetKey={turnstileResetKey}
-    />
-  );
+  const turnstileSlot = (action: string) =>
+    TURNSTILE_SITE_KEY ? (
+      <TurnstileWidget
+        action={action}
+        onToken={setTurnstileToken}
+        resetKey={turnstileResetKey}
+      />
+    ) : null;
 
   const renderStep = () => {
     switch (view) {

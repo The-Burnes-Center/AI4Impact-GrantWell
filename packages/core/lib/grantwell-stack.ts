@@ -8,7 +8,7 @@ import { Construct } from 'constructs';
 import { ChatBotApi } from "./chatbot-api";
 import { AuthorizationStack } from "./authorization";
 import { UserInterface } from "./user-interface";
-import { InstanceConfig } from "./config/instance-config";
+import { InstanceConfig, turnstileEnabled } from "./config/instance-config";
 import { MonitoringStack } from "./monitoring/monitoring-stack";
 
 export interface GrantWellStackProps extends cdk.StackProps {
@@ -29,13 +29,14 @@ export class GrantWellStack extends cdk.Stack {
       throw new Error('GRANTS_GOV_API_KEY environment variable is required');
     }
 
-    const turnstileSecretKey = process.env.TURNSTILE_SECRET_KEY;
-    if (!turnstileSecretKey) {
-      throw new Error('TURNSTILE_SECRET_KEY environment variable is required');
-    }
-
-    if (!process.env.TURNSTILE_SITE_KEY) {
-      throw new Error('TURNSTILE_SITE_KEY environment variable is required');
+    const turnstileSecretKey = turnstileEnabled(props.config) ? process.env.TURNSTILE_SECRET_KEY : undefined;
+    if (turnstileEnabled(props.config)) {
+      if (!turnstileSecretKey) {
+        throw new Error('TURNSTILE_SECRET_KEY environment variable is required');
+      }
+      if (!process.env.TURNSTILE_SITE_KEY) {
+        throw new Error('TURNSTILE_SITE_KEY environment variable is required');
+      }
     }
 
     // Create the authorization stack

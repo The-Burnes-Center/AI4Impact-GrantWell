@@ -117,3 +117,11 @@ describe("the dev-only Turnstile bypass on sign-in", () => {
     expect(aws.getParameter).not.toHaveBeenCalled();
   });
 });
+
+describe("without TURNSTILE_DISABLED", () => {
+  it("still rejects sign-in when the secret is missing (fails closed)", async () => {
+    delete process.env.TURNSTILE_SECRET_KEY;
+    await expect(handler(signIn("someone@example.com", "t"))).rejects.toThrow();
+    expect(siteverify).not.toHaveBeenCalled();
+  });
+});

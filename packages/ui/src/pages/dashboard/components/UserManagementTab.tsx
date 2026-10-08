@@ -3,6 +3,7 @@ import { LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
+import { SINGLE_STATE } from "../../../common/instance";
 import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "./PaginationControls";
 
@@ -17,16 +18,15 @@ interface UserManagementTabProps {
 
 const EMAIL_PATTERN = /\S+@\S+\.\S+/;
 
-const allRoleOptions: Array<{
-  value: UserRolePreset;
-  label: string;
-  requiresDeveloper?: boolean;
-}> = [
+type RoleOption = { value: UserRolePreset; label: string; requiresDeveloper?: boolean };
+
+// Platform Admin spans states, so a single-state deployment has none.
+const allRoleOptions: RoleOption[] = ([
   { value: "user", label: "User" },
   { value: "admin", label: "Admin" },
   { value: "platformadmin", label: "Platform Admin", requiresDeveloper: true },
   { value: "developer", label: "Developer", requiresDeveloper: true },
-];
+] as RoleOption[]).filter((option) => !(SINGLE_STATE && option.value === "platformadmin"));
 
 const ROLE_DEFINITIONS: Record<UserRolePreset, string> = {
   user: "Browse grants, view requirements, and draft applications. No admin access.",
@@ -319,7 +319,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                   }`}
             </p>
             <dl className="user-management-role-legend" aria-label="Role definitions">
-              {(Object.keys(ROLE_DEFINITIONS) as UserRolePreset[]).map((role) => (
+              {(Object.keys(ROLE_DEFINITIONS) as UserRolePreset[]).filter((role) => allRoleOptions.some((opt) => opt.value === role)).map((role) => (
                 <div key={role} className="user-management-role-legend__item">
                   <dt>{allRoleOptions.find((opt) => opt.value === role)?.label ?? role}</dt>
                   <dd>{ROLE_DEFINITIONS[role]}</dd>
@@ -378,14 +378,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 <th scope="col">User</th>
                 <th scope="col">Status</th>
                 <th scope="col">Role</th>
-                <th scope="col">State</th>
+                {!SINGLE_STATE && <th scope="col">State</th>}
                 <th scope="col" className="user-management-table__actions">Action</th>
               </tr>
             </thead>
             <tbody>
               {!loading && users.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="user-management-table__empty">
+                  <td colSpan={SINGLE_STATE ? 4 : 5} className="user-management-table__empty">
                     {hasActiveSearch ? "No matching users found." : "No users yet."}
                   </td>
                 </tr>
@@ -439,6 +439,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         ))}
                       </select>
                     </td>
+                    {!SINGLE_STATE && (
                     <td>
                       <label className="visually-hidden" htmlFor={`state-select-${user.username}`}>
                         State for {user.email}
@@ -463,6 +464,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         ))}
                       </select>
                     </td>
+                    )}
                     <td className="user-management-table__actions">
                       <div className="user-management-actions-cell">
                         <button
@@ -542,6 +544,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               aria-invalid={addEmail.length > 0 && !EMAIL_PATTERN.test(addEmail)}
             />
           </div>
+          {!SINGLE_STATE && (
           <div className="form-group">
             <label htmlFor="add-user-state">{isStateAdmin ? "State" : "State (optional)"}</label>
             <select
@@ -564,6 +567,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               </p>
             )}
           </div>
+          )}
           <div className="modal-actions">
             <button
               className="modal-button secondary"

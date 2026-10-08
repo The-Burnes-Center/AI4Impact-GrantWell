@@ -1,58 +1,16 @@
-import { spawnSync } from "node:child_process";
-import * as fs from "node:fs";
-import * as os from "node:os";
 import * as path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 import { ENVS, appDir, outDir } from "../scripts/synth-ci.mjs";
 import { validateInstanceConfig, type InstanceConfig } from "../lib/config/instance-config";
 import { ossPolicyNamesFor } from "../lib/chatbot-api/opensearch/opensearch";
-
-type Resource = { Type: string; Properties?: any };
-
-const resourcesIn = (dir: string): Record<string, Resource> =>
-  Object.assign(
-    {},
-    ...fs
-      .readdirSync(dir)
-      .filter((f) => f.endsWith(".template.json"))
-      .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")).Resources ?? {})
-  );
+import { resourcesIn, stagedInstance, synthVariant, type Resource } from "./variant-synth";
 
 // Generic dev, switched to Cognito's sender: the only difference from the dev synth the other tests use.
 let variantOut: string;
 let instances: InstanceConfig[];
 beforeAll(async () => {
   instances = (await import(path.join(appDir, "config", "instances.ts"))).instances;
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "gw-cognito-email-"));
-  // bin/ is copied: Node resolves a symlinked bin/app.ts to its real path and would load Generic's config.
-  fs.cpSync(path.join(appDir, "bin"), path.join(dir, "bin"), { recursive: true });
-  for (const f of ["cdk.json", "package.json", "tsconfig.json", "public", "node_modules"]) {
-    fs.symlinkSync(path.join(appDir, f), path.join(dir, f));
-  }
-  fs.mkdirSync(path.join(dir, "config"));
-  fs.writeFileSync(
-    path.join(dir, "config", "instances.ts"),
-    `import type { InstanceConfig } from "grantwell-core";\n` +
-      `import { instances as generic } from ${JSON.stringify(path.join(appDir, "config", "instances"))};\n` +
-      `export const instances: InstanceConfig[] = generic.map((i) => ({ ...i, email: { cognitoDefault: true } }));\n`
-  );
-  variantOut = path.join(dir, "cdk.out");
-  const cdkJson = JSON.parse(fs.readFileSync(path.join(appDir, "cdk.json"), "utf8"));
-  const result = spawnSync(cdkJson.app, {
-    shell: true,
-    cwd: dir,
-    stdio: ["ignore", "ignore", "inherit"],
-    env: {
-      ...process.env,
-      ENVIRONMENT: ENVS.dev.ENVIRONMENT,
-      CDK_OUTDIR: variantOut,
-      CDK_CONTEXT_JSON: JSON.stringify({ ...cdkJson.context, "aws:cdk:bundling-stacks": [] }),
-      GRANTS_GOV_API_KEY: "REDACTED-GRANTS_GOV_API_KEY",
-      TURNSTILE_SECRET_KEY: "REDACTED-TURNSTILE_SECRET_KEY",
-      TURNSTILE_SITE_KEY: "REDACTED-TURNSTILE_SITE_KEY",
-    },
-  });
-  expect(result.status).toBe(0);
+  variantOut = synthVariant("{ ...i, email: { cognitoDefault: true } }");
 }, 300_000);
 
 describe("email.cognitoDefault", () => {
@@ -105,11 +63,7 @@ describe("email.cognitoDefault", () => {
   });
 
   it("tells the UI to hide digest settings", () => {
-    const staged = fs
-      .readdirSync(variantOut, { recursive: true, encoding: "utf8" })
-      .find((f) => f.endsWith(path.join("generated", "instance.json")));
-    expect(staged).toBeDefined();
-    expect(JSON.parse(fs.readFileSync(path.join(variantOut, staged!), "utf8")).emailDigest).toBe(false);
+    expect(stagedInstance(variantOut).emailDigest).toBe(false);
   });
 });
 

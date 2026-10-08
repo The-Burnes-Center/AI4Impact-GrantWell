@@ -34,6 +34,11 @@ Until you commit `vendor/`, each push runs a trial install in Actions. It shows 
 ## Images
 Put your own images in `public/` and point `config/branding.ts` at them by their site-root path: `public/images/brand/logo.svg` is `/images/brand/logo.svg`. A file can't replace one the GrantWell UI already ships (the synth fails on a clash), and the synth also fails if a branding image path doesn't exist. The example branding points at placeholders in `public/images/brand/`; replace them with your own.
 
+## Sign-in options
+- **Single state:** with `tenancy: "single"`, every user belongs to that one state. Sign-up, Profile and User Management never offer a state choice, and there is no Platform Admin role. Users who already exist get the state at their next sign-in; to set it for everyone at once after the first deploy, run `node packages/core/scripts/backfill-single-state.mjs --user-pool-id <pool> --state <code>` from a GrantWell source checkout (dry run first, then `--apply`).
+- **Bot check:** sign-up and sign-in use Cloudflare Turnstile unless `auth: { turnstile: false }`. With it off, no Turnstile keys are needed.
+- **Email:** `email: { cognitoDefault: true }` sends sign-in mail from Cognito's own sender when your account has no SES set up (about 50 a day); grant digest emails are then off.
+
 ## Search engines
 Your site is hidden from search engines until you set `seo: { indexable: true }` on a prod deployment in `config/instances.ts`; dev deployments are always hidden. Set the home page title, description and a 1200×630 share image under `seo` in `config/branding.ts`. GrantWell generates `robots.txt`, `sitemap.xml`, `manifest.json` and `llms.txt` from your config, so don't put those in `public/` (the synth fails if you do).
 
@@ -45,14 +50,13 @@ To upgrade by hand, run `scripts/upgrade.sh <version>`, for example `scripts/upg
 Downloads need no GitHub account. If the source repo is ever private, set `GITHUB_TOKEN` to a token with read access to it.
 
 ## Deploy
-With GitHub Actions: in Settings > Environments, create one Environment per deployment, named after its `aws.environment`, holding the secrets `AWS_ROLE_ARN` (an IAM role GitHub OIDC may assume), `GRANTS_GOV_API_KEY`, `TURNSTILE_SECRET_KEY`, `TURNSTILE_SITE_KEY` and the variable `AWS_REGION`. List the deployments in `.github/workflows/deploy.yml`'s `deployment` options. Then Actions > Deploy > Run workflow. Add required reviewers to an Environment to make its deploys wait for approval.
+With GitHub Actions: in Settings > Environments, create one Environment per deployment, named after its `aws.environment`, holding the secrets `AWS_ROLE_ARN` (an IAM role GitHub OIDC may assume), `GRANTS_GOV_API_KEY`, `TURNSTILE_SECRET_KEY` and `TURNSTILE_SITE_KEY` (only when Turnstile is on, the default) and the variable `AWS_REGION`. List the deployments in `.github/workflows/deploy.yml`'s `deployment` options. Then Actions > Deploy > Run workflow. Add required reviewers to an Environment to make its deploys wait for approval.
 
 By hand, deploys need Docker, AWS credentials for the target account, and these environment variables:
 
 - `ENVIRONMENT`: the `aws.environment` of the deployment to deploy
 - `GRANTS_GOV_API_KEY`
-- `TURNSTILE_SECRET_KEY`
-- `TURNSTILE_SITE_KEY`
+- `TURNSTILE_SECRET_KEY` and `TURNSTILE_SITE_KEY`, unless the deployment sets `auth: { turnstile: false }`
 
 Then run:
 

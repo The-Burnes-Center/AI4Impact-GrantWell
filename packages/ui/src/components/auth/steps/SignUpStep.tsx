@@ -2,7 +2,7 @@ import type { FormEvent, ReactNode } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import PasswordRequirementsList from "../PasswordRequirementsList";
 import { PasswordRequirements } from "../auth-types";
-import { SUPPORTED_STATES } from "../../../common/states";
+import { SINGLE_STATE, SUPPORTED_STATES } from "../../../common/states";
 
 interface SignUpStepProps {
   email: string;
@@ -113,6 +113,7 @@ export default function SignUpStep({
             aria-describedby={confirmPasswordErrorId}
           />
         </Form.Group>
+        {!SINGLE_STATE && (
         <Form.Group className="mb-3">
           <Form.Label className="form-label" htmlFor="signup-state-select">
             State <span className="text-muted">(optional)</span>
@@ -134,6 +135,7 @@ export default function SignUpStep({
             Pick your state to see federal grants plus state-specific grants for that state.
           </Form.Text>
         </Form.Group>
+        )}
         <div className="login-form-options">
           <Form.Check
             type="checkbox"
