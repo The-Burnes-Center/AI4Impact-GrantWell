@@ -4,6 +4,7 @@ import { notesMarkdown } from "../../components/whats-new/notes-markdown";
 import { LandingFooter, LandingNavbar, OmniHeader } from "../landing/chrome";
 import "../../components/whats-new/whats-new.css";
 import "../../styles/marketing-landing.css";
+import { GovBanner } from "../../components/common/GovIdentity";
 
 export function WhatsNewContent() {
   useEffect(() => {
@@ -24,6 +25,7 @@ export function WhatsNewContent() {
 export default function WhatsNewPage() {
   return (
     <div className="marketing">
+      <GovBanner />
       <OmniHeader />
       <main id="main-content" tabIndex={-1}>
         <LandingNavbar />

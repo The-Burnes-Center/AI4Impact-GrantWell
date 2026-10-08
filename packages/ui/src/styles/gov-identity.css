@@ -1,0 +1,43 @@
+.gov-banner {
+  background-color: #ffffff;
+  border-bottom: 1px solid #d9d9d9;
+  width: 100%;
+  padding: 4px 60px;
+  font-family: 'Public Sans', 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.gov-banner__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gw-color-text);
+  text-decoration: none;
+}
+
+.gov-banner__link:hover,
+.gov-banner__link:focus-visible {
+  text-decoration: underline;
+}
+
+.gov-banner__logo {
+  height: 24px;
+  width: auto;
+}
+
+.gov-seal {
+  height: 32px;
+  width: 32px;
+  margin-right: 10px;
+  padding: 2px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .gov-banner {
+    padding: 4px 16px;
+  }
+}

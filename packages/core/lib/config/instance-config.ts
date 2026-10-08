@@ -33,6 +33,8 @@ export interface Branding {
     partners: LogoLink[];
   };
   omniPartners: Link[];
+  /** A government deployment's identity: a strip above every page (logo + label, linking to href) and the logo beside the app logo. */
+  govHeader?: { logo: string; label: string; href: string };
   analyticsId?: string;
   seo?: {
     /** Home page <title>, at most 60 characters. Defaults to appName. */
@@ -74,12 +76,8 @@ interface InstanceConfigBase {
     /** ISO timestamp with offset. Until then the UI urges MFA at each sign-in; from then it blocks the app until the user enrolls. */
     mfaDeadline?: string;
   };
-  email: {
-    /** Its domain is the SES identity auth and digest mail send from. */
-    sender: string;
-    /** False when another deployment in the same account and region already owns the identity. */
-    manageSenderIdentity: boolean;
-  };
+  /** SES, or Cognito's own sender for an account without SES; the digest needs SES and is off without it. */
+  email: SesEmail | { cognitoDefault: true };
   scraper: { dailySchedule: boolean };
   /** Alarms always ship; this adds the once-a-day health brief to the alerts topic. */
   monitoring: { dailyBrief: boolean };
@@ -92,6 +90,18 @@ interface InstanceConfigBase {
   /** Extra tags for every resource except the vector collection. Project, Instance and Stage come from core. */
   tags: Record<string, string>;
   branding: Branding;
+}
+
+export interface SesEmail {
+  /** Its domain is the SES identity auth and digest mail send from. */
+  sender: string;
+  /** False when another deployment in the same account and region already owns the identity. */
+  manageSenderIdentity: boolean;
+}
+
+/** Undefined when the deployment sends with Cognito's default sender. */
+export function sesEmail(config: InstanceConfig): SesEmail | undefined {
+  return "sender" in config.email ? config.email : undefined;
 }
 
 export type InstanceConfig = InstanceConfigBase &
@@ -111,7 +121,10 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (config.customDomain && config.siteUrl !== `https://${config.customDomain.domainName}`) {
     problems.push(`siteUrl must be https://${config.customDomain.domainName} when customDomain is set`);
   }
-  if (!config.email.sender.includes("@")) problems.push("email.sender is not an address");
+  const ses = sesEmail(config);
+  if (ses ? "cognitoDefault" in config.email : (config.email as { cognitoDefault?: unknown }).cognitoDefault !== true) {
+    problems.push("email must be either { sender, manageSenderIdentity } or { cognitoDefault: true }");
+  } else if (ses && !ses.sender.includes("@")) problems.push("email.sender is not an address");
   if (config.feedbackFormUrl !== undefined && !config.feedbackFormUrl.startsWith("https://")) {
     problems.push("feedbackFormUrl must start with https://");
   }

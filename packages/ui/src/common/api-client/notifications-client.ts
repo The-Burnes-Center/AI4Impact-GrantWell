@@ -1,5 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
+import { apiFetch } from "../session-ended";
 
 export type DigestFrequency = "off" | "daily" | "weekly";
 
@@ -21,7 +22,7 @@ export class NotificationsClient {
 
   async getPrefs(): Promise<NotificationPrefs> {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.API}/notification-prefs`, {
+    const response = await apiFetch(`${this.API}/notification-prefs`, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
     });
@@ -35,7 +36,7 @@ export class NotificationsClient {
     prefs: Pick<NotificationPrefs, "frequency" | "categories" | "keywords">
   ): Promise<NotificationPrefs> {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.API}/notification-prefs`, {
+    const response = await apiFetch(`${this.API}/notification-prefs`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: token },
       body: JSON.stringify(prefs),
@@ -54,7 +55,7 @@ export class NotificationsClient {
     const token = await Utils.authenticate();
     const url = new URL(`${this.API}/notification-digest/preview`);
     url.searchParams.append("frequency", frequency);
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
     });
@@ -75,7 +76,7 @@ export class NotificationsClient {
     const url = new URL(`${this.API}/notification-digest/broadcast`);
     url.searchParams.append("frequency", frequency);
     url.searchParams.append("scope", scope);
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: token },
     });

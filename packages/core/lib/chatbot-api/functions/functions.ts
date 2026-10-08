@@ -6,7 +6,7 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
-import { InstanceConfig, supportedStatesEnv } from "../../config/instance-config";
+import { InstanceConfig, sesEmail, supportedStatesEnv } from "../../config/instance-config";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -1187,16 +1187,17 @@ export class LambdaFunctionStack extends cdk.Stack {
     const stack = cdk.Stack.of(this);
 
     // --- NOFO notification digest ------------------------------------------------
-    const notificationSender = config.email.sender;
-    const senderDomain = notificationSender.split("@")[1];
+    const sesConfig = sesEmail(config);
+    const notificationSender = sesConfig?.sender;
+    const senderDomain = notificationSender?.split("@")[1];
     // SES identities are account+region scoped: a second deployment in the same account must reuse
     // the identity the first one owns, not re-create it.
-    const managesSenderIdentity = config.email.manageSenderIdentity;
+    const managesSenderIdentity = sesConfig?.manageSenderIdentity ?? false;
     // Easy DKIM's three CNAME tokens must reach the sender domain's DNS before the identity
     // verifies. They're emitted as this stack's NotificationSenderDkim* outputs.
     const notificationEmailIdentity = managesSenderIdentity
       ? new ses.EmailIdentity(scope, "NotificationSenderIdentity", {
-          identity: ses.Identity.domain(senderDomain),
+          identity: ses.Identity.domain(senderDomain!),
           dkimSigning: true,
           // No explicit easyDkim() key length: it renders DkimSigningAttributes, so every stack
           // update calls PutEmailIdentityDkimSigningAttributes and 400s with "key length

@@ -45,8 +45,8 @@ const LEGACY_NAME_TO_CODE = {
   "rhode island": "RI",
 };
 
-// ListUsers can't filter by custom attributes, so a state admin's view is built
-// by scanning pages and filtering in memory. Bound the scan to stay safe.
+// ListUsers can't filter by custom attributes or match substrings, so a state admin's view and
+// searches are built by scanning pages and filtering in memory. Bound the scan to stay safe.
 const MAX_LIST_PAGES = 50;
 
 function normalizeStoredStateCode(raw) {
@@ -105,8 +105,11 @@ export const handler = async (event) => {
 };
 
 async function handleList(scope, event) {
-  if (scope.kind === "stateAdmin") {
-    const users = await listUsersInState(scope.state);
+  const query = normalizeSearchQuery(event.queryStringParameters?.query);
+  if (scope.kind === "stateAdmin" || query) {
+    const users = await scanUsers(
+      (user) => (scope.kind !== "stateAdmin" || user.state === scope.state) && matchesSearchQuery(user, query)
+    );
     return respond(200, { users, nextPaginationToken: null, pageSize: users.length });
   }
 
@@ -527,7 +530,16 @@ async function listUsers(limit, paginationToken) {
   };
 }
 
-async function listUsersInState(stateCode) {
+function normalizeSearchQuery(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function matchesSearchQuery(user, query) {
+  if (!query) return true;
+  return user.email.toLowerCase().includes(query) || String(user.username || "").toLowerCase().includes(query);
+}
+
+async function scanUsers(include) {
   const collected = [];
   let paginationToken;
   let pages = 0;
@@ -542,7 +554,7 @@ async function listUsersInState(stateCode) {
     );
     for (const user of response.Users || []) {
       const mapped = mapCognitoUser(user);
-      if (mapped.email && mapped.state === stateCode) {
+      if (mapped.email && include(mapped)) {
         collected.push(mapped);
       }
     }
@@ -552,7 +564,7 @@ async function listUsersInState(stateCode) {
 
   if (paginationToken) {
     console.warn(
-      `listUsersInState hit the ${MAX_LIST_PAGES}-page cap for state ${stateCode}; results may be truncated.`
+      `scanUsers hit the ${MAX_LIST_PAGES}-page cap; results may be truncated.`
     );
   }
 

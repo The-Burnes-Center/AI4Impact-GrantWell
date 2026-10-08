@@ -2,6 +2,7 @@ import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 import type { ReviewItem, ReviewDetail, ProcessingMetrics } from "../types/processing-review";
 import type { CustomQuestion } from "../types/nofo";
+import { apiFetch } from "../session-ended";
 
 export class LandingPageClient {
   private readonly baseUrl: string;
@@ -16,7 +17,7 @@ export class LandingPageClient {
   async getNOFOs() {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.API}/s3-nofo-bucket-data`, {
+      const response = await apiFetch(`${this.API}/s3-nofo-bucket-data`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +43,7 @@ export class LandingPageClient {
       const url = new URL(`${this.API}/s3-nofo-summary`);
       url.searchParams.append("documentKey", documentKey);
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +85,7 @@ export class LandingPageClient {
       const url = new URL(`${this.API}/s3-nofo-questions`);
       url.searchParams.append("documentKey", documentKey);
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -115,7 +116,7 @@ export class LandingPageClient {
 
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.API}/test-url`, {
+      const response = await apiFetch(`${this.API}/test-url`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,7 +152,7 @@ export class LandingPageClient {
   // Uploads the file to S3 using the presigned URL provided by the backend
   async uploadFileToS3(url: string, file: File) {
     try {
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "PUT",
         body: file,
         headers: {
@@ -174,7 +175,7 @@ export class LandingPageClient {
   async renameNOFO(oldName: string, newName: string) {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.baseUrl}/s3-nofo-rename`, {
+      const response = await apiFetch(`${this.baseUrl}/s3-nofo-rename`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -203,7 +204,7 @@ export class LandingPageClient {
   async deleteNOFO(nofoName: string) {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.baseUrl}/s3-nofo-delete`, {
+      const response = await apiFetch(`${this.baseUrl}/s3-nofo-delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -238,7 +239,7 @@ export class LandingPageClient {
   ) {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.baseUrl}/s3-nofo-status`, {
+      const response = await apiFetch(`${this.baseUrl}/s3-nofo-status`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -263,7 +264,7 @@ export class LandingPageClient {
   async updateNOFOSummary(nofoName: string, summary: Record<string, unknown>) {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.baseUrl}/s3-nofo-summary-update`, {
+      const response = await apiFetch(`${this.baseUrl}/s3-nofo-summary-update`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -288,7 +289,7 @@ export class LandingPageClient {
   async submitFeedback(foundWhatLookingFor: "Yes" | "No", feedbackText: string) {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.API}/submit-feedback`, {
+      const response = await apiFetch(`${this.API}/submit-feedback`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -319,7 +320,7 @@ export class LandingPageClient {
       const url = new URL(`${this.API}/admin/processing-reviews`);
       if (status) url.searchParams.append("status", status);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "GET",
         headers: { "Content-Type": "application/json", Authorization: token },
       });
@@ -336,7 +337,7 @@ export class LandingPageClient {
   async getReviewDetail(nofoName: string): Promise<ReviewDetail> {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(
+      const response = await apiFetch(
         `${this.API}/admin/processing-reviews/${encodeURIComponent(nofoName)}`,
         {
           method: "GET",
@@ -361,7 +362,7 @@ export class LandingPageClient {
   ): Promise<void> {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(
+      const response = await apiFetch(
         `${this.API}/admin/processing-reviews/${encodeURIComponent(nofoName)}/approve`,
         {
           method: "POST",
@@ -383,7 +384,7 @@ export class LandingPageClient {
   async rejectReview(nofoName: string, reason: string, reviewId?: string): Promise<void> {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(
+      const response = await apiFetch(
         `${this.API}/admin/processing-reviews/${encodeURIComponent(nofoName)}/reject`,
         {
           method: "POST",
@@ -402,7 +403,7 @@ export class LandingPageClient {
   async markNeedsReupload(nofoName: string, notes: string, reviewId?: string): Promise<void> {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(
+      const response = await apiFetch(
         `${this.API}/admin/processing-reviews/${encodeURIComponent(nofoName)}/needs-reupload`,
         {
           method: "POST",
@@ -420,7 +421,7 @@ export class LandingPageClient {
   async getReuploadUrl(nofoName: string, fileType: string): Promise<{ signedUrl: string; objectKey: string }> {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.API}/admin/reupload-nofo`, {
+      const response = await apiFetch(`${this.API}/admin/reupload-nofo`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: token },
         body: JSON.stringify({ nofoName, fileType }),
@@ -437,7 +438,7 @@ export class LandingPageClient {
   async reprocessNofo(nofoName: string): Promise<void> {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.API}/admin/reprocess-nofo`, {
+      const response = await apiFetch(`${this.API}/admin/reprocess-nofo`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: token },
         body: JSON.stringify({ nofoName }),
@@ -453,7 +454,7 @@ export class LandingPageClient {
   async getProcessingMetrics(): Promise<ProcessingMetrics> {
     try {
       const token = await Utils.authenticate();
-      const response = await fetch(`${this.API}/admin/processing-metrics`, {
+      const response = await apiFetch(`${this.API}/admin/processing-metrics`, {
         method: "GET",
         headers: { "Content-Type": "application/json", Authorization: token },
       });
@@ -474,7 +475,7 @@ export class LandingPageClient {
       
       const url = `${this.baseUrl}/automated-nofo-scraper`;
       
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -498,7 +499,7 @@ export class LandingPageClient {
   // Get a NOFO's overlay row (guidance note and/or admin-authored custom questions).
   async getStateOverlay(nofoName: string): Promise<{ nofoName: string; state: string; note: string; customQuestions: CustomQuestion[]; updatedAt: string | null }> {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.baseUrl}/nofo-overlay?nofoName=${encodeURIComponent(nofoName)}`, {
+    const response = await apiFetch(`${this.baseUrl}/nofo-overlay?nofoName=${encodeURIComponent(nofoName)}`, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
     });
@@ -510,7 +511,7 @@ export class LandingPageClient {
   // Upsert the caller's-state guidance overlay (empty note clears it).
   async putStateOverlay(nofoName: string, note: string) {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.baseUrl}/nofo-overlay`, {
+    const response = await apiFetch(`${this.baseUrl}/nofo-overlay`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: token },
       body: JSON.stringify({ nofoName, note }),
@@ -525,7 +526,7 @@ export class LandingPageClient {
   // array clears them. Ids are server-controlled; new questions may omit `id`.
   async putCustomQuestions(nofoName: string, customQuestions: CustomQuestion[]) {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.baseUrl}/nofo-overlay`, {
+    const response = await apiFetch(`${this.baseUrl}/nofo-overlay`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: token },
       body: JSON.stringify({ nofoName, customQuestions }),
@@ -538,7 +539,7 @@ export class LandingPageClient {
   // Fork a federal NOFO into a state-owned copy the caller's state fully controls.
   async promoteToCopy(nofoName: string): Promise<{ newName: string; state: string }> {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.baseUrl}/nofo-promote-copy`, {
+    const response = await apiFetch(`${this.baseUrl}/nofo-promote-copy`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: token },
       body: JSON.stringify({ nofoName }),

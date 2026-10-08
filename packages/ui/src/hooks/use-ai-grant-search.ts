@@ -1,6 +1,7 @@
 import { useCallback, useState, useContext, useRef } from "react";
 import { fetchAuthSession } from "aws-amplify/auth";
 import { AppContext } from "../common/app-context";
+import { apiFetch } from "../common/session-ended";
 
 /**
  * Flag to distinguish intentional cancellation (e.g. user selected a NOFO)
@@ -103,7 +104,7 @@ export function useAIGrantSearch(): UseAIGrantSearchReturn {
         }
         const endpoint = appContext.httpEndpoint;
 
-        const response = await fetch(`${endpoint}/ai-grant-search`, {
+        const response = await apiFetch(`${endpoint}/ai-grant-search`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

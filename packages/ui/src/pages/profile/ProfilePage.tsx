@@ -14,7 +14,7 @@ import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
-import { MFA_DEADLINE_ISO } from "../../common/instance";
+import { EMAIL_DIGEST, MFA_DEADLINE_ISO } from "../../common/instance";
 import { deadlineDateText } from "../../common/mfa-deadline";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { stateNameFromCode } from "../../common/states";
@@ -147,6 +147,7 @@ export default function ProfilePage() {
   const [categoryQuery, setCategoryQuery] = useState("");
 
   useEffect(() => {
+    if (!EMAIL_DIGEST) return;
     let active = true;
     (async () => {
       try {
@@ -253,7 +254,9 @@ export default function ProfilePage() {
             <div>
               <h1>Profile</h1>
               <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
-                Your account, sign-in security, and notification preferences
+                {EMAIL_DIGEST
+                  ? "Your account, sign-in security, and notification preferences"
+                  : "Your account and sign-in security"}
               </p>
             </div>
           </div>
@@ -261,7 +264,7 @@ export default function ProfilePage() {
           <nav className="profile-jump-links" aria-label="Profile sections">
             <a href="#profile-account">Account</a>
             <a href="#profile-security">Sign-in &amp; security</a>
-            <a href="#profile-notifications">Notifications</a>
+            {EMAIL_DIGEST && <a href="#profile-notifications">Notifications</a>}
           </nav>
 
           <div className="profile-card-stack">
@@ -353,134 +356,136 @@ export default function ProfilePage() {
               <AccountActionsCard onSignedOut={() => navigate("/")} />
             </div>
 
-            <div id="profile-notifications" className="profile-anchor">
-              <Card header="Notification preferences" headerStyle="default">
-                <p className="profile-hint">
-                  Get an email digest of new grants that match what you care about.
-                  Leave every filter empty to be notified of all new grants.
-                </p>
+            {EMAIL_DIGEST && (
+              <div id="profile-notifications" className="profile-anchor">
+                <Card header="Notification preferences" headerStyle="default">
+                  <p className="profile-hint">
+                    Get an email digest of new grants that match what you care about.
+                    Leave every filter empty to be notified of all new grants.
+                  </p>
 
-                {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
-                {saved && <div className="profile-alert profile-alert--success" role="status">Preferences saved.</div>}
+                  {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
+                  {saved && <div className="profile-alert profile-alert--success" role="status">Preferences saved.</div>}
 
-                {loading ? (
-                  <p role="status">Loading…</p>
-                ) : (
-                  <form onSubmit={onSave}>
-                    <div className="profile-section">
-                      <h3>Email frequency</h3>
-                      <div className="profile-frequency">
-                        {FREQUENCIES.map((f) => (
-                          <label key={f.value}>
-                            <input
-                              type="radio"
-                              name="frequency"
-                              value={f.value}
-                              checked={frequency === f.value}
-                              onChange={() => {
-                                setFrequency(f.value);
-                                setSaved(false);
-                              }}
-                            />
-                            {f.label}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    <fieldset className="profile-fieldset" disabled={frequency === "off"}>
+                  {loading ? (
+                    <p role="status">Loading…</p>
+                  ) : (
+                    <form onSubmit={onSave}>
                       <div className="profile-section">
-                        <h3>State</h3>
-                        <p className="profile-hint">
-                          Digests cover grants for {userState ? stateLabel : "your state"}.
-                        </p>
-                      </div>
-
-                      <div className="profile-section">
-                        <h3>Categories</h3>
-                        <div className="profile-chip-toolbar">
-                          <input
-                            type="search"
-                            className="profile-chip-search"
-                            value={categoryQuery}
-                            onChange={(e) => setCategoryQuery(e.target.value)}
-                            placeholder="Search categories"
-                            aria-label="Search categories"
-                          />
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setVisibleSelected(true)}
-                            disabled={allVisibleSelected}
-                          >
-                            {categoryQuery.trim()
-                              ? `Select all ${visibleCategories.length} shown`
-                              : "Select all"}
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setVisibleSelected(false)}
-                            disabled={!someVisibleSelected}
-                          >
-                            Clear
-                          </Button>
-                          {/* Not a live region: each checkbox already announces its own
-                              state, and this count would talk over that. */}
-                          <span className="profile-chip-count">
-                            {categories.length} of {GRANT_CATEGORIES.length} selected
-                          </span>
+                        <h3>Email frequency</h3>
+                        <div className="profile-frequency">
+                          {FREQUENCIES.map((f) => (
+                            <label key={f.value}>
+                              <input
+                                type="radio"
+                                name="frequency"
+                                value={f.value}
+                                checked={frequency === f.value}
+                                onChange={() => {
+                                  setFrequency(f.value);
+                                  setSaved(false);
+                                }}
+                              />
+                              {f.label}
+                            </label>
+                          ))}
                         </div>
-                        {visibleCategories.length === 0 ? (
+                      </div>
+
+                      <fieldset className="profile-fieldset" disabled={frequency === "off"}>
+                        <div className="profile-section">
+                          <h3>State</h3>
                           <p className="profile-hint">
-                            No categories match “{categoryQuery.trim()}”.
+                            Digests cover grants for {userState ? stateLabel : "your state"}.
                           </p>
-                        ) : (
-                          <div className="profile-chip-grid">
-                            {visibleCategories.map((c) => (
-                              <label key={c} className="profile-chip">
-                                <input
-                                  type="checkbox"
-                                  checked={categories.includes(c)}
-                                  onChange={() => toggle(categories, setCategories, c)}
-                                />
-                                {c}
-                              </label>
-                            ))}
+                        </div>
+
+                        <div className="profile-section">
+                          <h3>Categories</h3>
+                          <div className="profile-chip-toolbar">
+                            <input
+                              type="search"
+                              className="profile-chip-search"
+                              value={categoryQuery}
+                              onChange={(e) => setCategoryQuery(e.target.value)}
+                              placeholder="Search categories"
+                              aria-label="Search categories"
+                            />
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => setVisibleSelected(true)}
+                              disabled={allVisibleSelected}
+                            >
+                              {categoryQuery.trim()
+                                ? `Select all ${visibleCategories.length} shown`
+                                : "Select all"}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => setVisibleSelected(false)}
+                              disabled={!someVisibleSelected}
+                            >
+                              Clear
+                            </Button>
+                            {/* Not a live region: each checkbox already announces its own
+                                state, and this count would talk over that. */}
+                            <span className="profile-chip-count">
+                              {categories.length} of {GRANT_CATEGORIES.length} selected
+                            </span>
                           </div>
-                        )}
-                      </div>
+                          {visibleCategories.length === 0 ? (
+                            <p className="profile-hint">
+                              No categories match “{categoryQuery.trim()}”.
+                            </p>
+                          ) : (
+                            <div className="profile-chip-grid">
+                              {visibleCategories.map((c) => (
+                                <label key={c} className="profile-chip">
+                                  <input
+                                    type="checkbox"
+                                    checked={categories.includes(c)}
+                                    onChange={() => toggle(categories, setCategories, c)}
+                                  />
+                                  {c}
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
 
-                      <div className="profile-section">
-                        <h3>Keywords</h3>
-                        <label className="profile-field-label" htmlFor="profile-keywords">
-                          Comma-separated
-                        </label>
-                        <input
-                          id="profile-keywords"
-                          type="text"
-                          value={keywords}
-                          onChange={(e) => {
-                            setKeywords(e.target.value);
-                            setSaved(false);
-                          }}
-                          placeholder="e.g. broadband, workforce"
-                          className="profile-input"
-                        />
-                      </div>
-                    </fieldset>
+                        <div className="profile-section">
+                          <h3>Keywords</h3>
+                          <label className="profile-field-label" htmlFor="profile-keywords">
+                            Comma-separated
+                          </label>
+                          <input
+                            id="profile-keywords"
+                            type="text"
+                            value={keywords}
+                            onChange={(e) => {
+                              setKeywords(e.target.value);
+                              setSaved(false);
+                            }}
+                            placeholder="e.g. broadband, workforce"
+                            className="profile-input"
+                          />
+                        </div>
+                      </fieldset>
 
-                    <div className="profile-actions">
-                      <Button type="submit" loading={saving} disabled={!dirty}>
-                        Save preferences
-                      </Button>
-                    </div>
-                  </form>
-                )}
-              </Card>
-            </div>
+                      <div className="profile-actions">
+                        <Button type="submit" loading={saving} disabled={!dirty}>
+                          Save preferences
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                </Card>
+              </div>
+            )}
           </div>
         </div>
       </div>

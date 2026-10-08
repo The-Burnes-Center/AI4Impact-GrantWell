@@ -1,5 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
+import { apiFetch } from "../session-ended";
 
 export type AnalyticsWindow = 7 | 30 | 90;
 
@@ -67,7 +68,7 @@ export class AnalyticsClient {
     if (state) {
       url.searchParams.append("state", state);
     }
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
     });

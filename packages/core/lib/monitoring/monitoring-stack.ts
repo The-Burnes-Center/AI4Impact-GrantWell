@@ -30,7 +30,7 @@ import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
 import * as cr from "aws-cdk-lib/custom-resources";
-import { InstanceConfig, monitoringPrefix } from "../config/instance-config";
+import { InstanceConfig, monitoringPrefix, sesEmail } from "../config/instance-config";
 
 /**
  * - `critical`: users can't use GrantWell right now. Red (prod only).
@@ -161,7 +161,9 @@ export class MonitoringStack extends cdk.NestedStack {
         { label: "failed-NOFO sweep", fn: props.nofoPipeline.dlqProcessor, purpose: "every 15 min, moves failed NOFOs into admin review" },
         { label: "draft section writer", fn: props.draftGeneration.generateSection, purpose: "writes each section of a generated draft" },
         { label: "grants.gov scrape", fn: props.scraperCoordinatorFunction, purpose: config.scraper.dailySchedule ? "runs daily at 09:00 UTC" : "runs only when started by hand" },
-        { label: "notification digest", fn: props.notificationDigestFunction, purpose: "daily and weekly NOFO emails at 14:00 Eastern" },
+        ...(sesEmail(config)
+          ? [{ label: "notification digest", fn: props.notificationDigestFunction, purpose: "daily and weekly NOFO emails at 14:00 Eastern" }]
+          : []),
         { label: "expired-NOFO archiving", fn: props.autoArchiveFunction, purpose: "runs daily at 02:00 UTC" },
       ]);
     }
@@ -337,6 +339,8 @@ export class MonitoringStack extends cdk.NestedStack {
   }
 
   private addEmailAlarms(config: InstanceConfig): void {
+    const ses = sesEmail(config);
+    if (!ses) return;
     const configurationSet = `${config.aws.environment}-auth`;
     const sesMetric = (metricName: string) =>
       new cloudwatch.Metric({
@@ -361,7 +365,7 @@ export class MonitoringStack extends cdk.NestedStack {
     });
 
     // Account-wide, so only the deployment that owns the sender identity alarms on it.
-    if (config.email.manageSenderIdentity) {
+    if (ses.manageSenderIdentity) {
       this.alarm("SesBounceRateAlarm", {
         severity: "medium",
         name: "SES bounce rate heading for a sending pause",
@@ -569,31 +573,33 @@ export class MonitoringStack extends cdk.NestedStack {
       threshold: 2,
     });
 
-    // Scheduled at 14:00 America/New_York, so the November clock change leaves one 25-hour gap.
-    this.alarm("DigestStoppedAlarm", {
-      severity: "medium",
-      name: "notification digest has stopped",
-      description: "The NOFO digest hasn't run for 24 hours, so users stop getting their daily and weekly emails.",
-      metric: props.notificationDigestFunction.metricInvocations({ period: cdk.Duration.hours(1), statistic: "Sum" }),
-      ...this.dailyHeartbeat(),
-    });
+    if (sesEmail(config)) {
+      // Scheduled at 14:00 America/New_York, so the November clock change leaves one 25-hour gap.
+      this.alarm("DigestStoppedAlarm", {
+        severity: "medium",
+        name: "notification digest has stopped",
+        description: "The NOFO digest hasn't run for 24 hours, so users stop getting their daily and weekly emails.",
+        metric: props.notificationDigestFunction.metricInvocations({ period: cdk.Duration.hours(1), statistic: "Sum" }),
+        ...this.dailyHeartbeat(),
+      });
 
-    // A crash before the user loop raises; per-user send failures are logged and the run carries on.
-    this.alarm("DigestFailingAlarm", {
-      severity: "medium",
-      name: "notification digest failing",
-      description: "Some or all users didn't get their NOFO digest email.",
-      metric: new cloudwatch.MathExpression({
-        expression: "IF(errors >= 1 OR sends >= 3, 1, 0)",
-        usingMetrics: {
-          errors: props.notificationDigestFunction.metricErrors({ statistic: "Sum" }),
-          sends: this.markerMetric("DigestSendFailed", props.notificationDigestFunction, LOG_MARKERS.digestSendFailed, cdk.Duration.hours(1)),
-        },
-        label: "digest run failed or 3+ sends failed",
-        period: cdk.Duration.hours(1),
-      }),
-      threshold: 1,
-    });
+      // A crash before the user loop raises; per-user send failures are logged and the run carries on.
+      this.alarm("DigestFailingAlarm", {
+        severity: "medium",
+        name: "notification digest failing",
+        description: "Some or all users didn't get their NOFO digest email.",
+        metric: new cloudwatch.MathExpression({
+          expression: "IF(errors >= 1 OR sends >= 3, 1, 0)",
+          usingMetrics: {
+            errors: props.notificationDigestFunction.metricErrors({ statistic: "Sum" }),
+            sends: this.markerMetric("DigestSendFailed", props.notificationDigestFunction, LOG_MARKERS.digestSendFailed, cdk.Duration.hours(1)),
+          },
+          label: "digest run failed or 3+ sends failed",
+          period: cdk.Duration.hours(1),
+        }),
+        threshold: 1,
+      });
+    }
 
     this.alarm("AutoArchiveFailingAlarm", {
       severity: "low",

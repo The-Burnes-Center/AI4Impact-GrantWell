@@ -43,7 +43,8 @@ export interface NotificationsStackProps extends cdk.NestedStackProps {
   readonly sesFeedbackTopicArn: string;
   /** Recreating it would invalidate every unsubscribe link already mailed out. */
   readonly unsubscribeSecret: secretsmanager.ISecret;
-  readonly notificationSender: string;
+  /** Undefined when the deployment has no SES: the digest then neither sends nor runs on a schedule. */
+  readonly notificationSender?: string;
   readonly supportedStatesEnv: string;
   readonly siteUrl: string;
   readonly branding: Branding;
@@ -84,7 +85,7 @@ export class NotificationsStack extends cdk.NestedStack {
             props.userNotificationPrefsTable.tableName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           USER_POOL_ID: props.userPool.userPoolId,
-          NOTIFICATION_SENDER: notificationSender,
+          ...(notificationSender && { NOTIFICATION_SENDER: notificationSender }),
           DEPLOYMENT_URL: siteUrl,
           UNSUBSCRIBE_SECRET_ARN: props.unsubscribeSecret.secretArn,
           DIGEST_SEND_LOG_TABLE_NAME: props.digestSendLogTable.tableName,
@@ -103,9 +104,9 @@ export class NotificationsStack extends cdk.NestedStack {
     props.digestSuppressionTable.grantReadData(notificationDigestFunction);
     props.userPool.grant(notificationDigestFunction, "cognito-idp:AdminGetUser");
     props.unsubscribeSecret.grantRead(notificationDigestFunction);
-    notificationDigestFunction.addToRolePolicy(
-      sesSendEmailPolicy(notificationSender)
-    );
+    if (notificationSender) {
+      notificationDigestFunction.addToRolePolicy(sesSendEmailPolicy(notificationSender));
+    }
 
     this.notificationDigestFunction = notificationDigestFunction;
 
@@ -127,7 +128,7 @@ export class NotificationsStack extends cdk.NestedStack {
             props.userNotificationPrefsTable.tableName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           DEPLOYMENT_URL: siteUrl,
-          NOTIFICATION_SENDER: notificationSender,
+          ...(notificationSender && { NOTIFICATION_SENDER: notificationSender }),
           SES_CONFIGURATION_SET: props.sesConfigurationSet.configurationSetName,
           SUPPORTED_STATES: props.supportedStatesEnv,
           ...digestBrandEnv,
@@ -141,9 +142,9 @@ export class NotificationsStack extends cdk.NestedStack {
     );
     props.nofoMetadataTable.grantReadData(notificationDigestPreviewFunction);
     // Test-send uses the same verified sender as the digest.
-    notificationDigestPreviewFunction.addToRolePolicy(
-      sesSendEmailPolicy(notificationSender)
-    );
+    if (notificationSender) {
+      notificationDigestPreviewFunction.addToRolePolicy(sesSendEmailPolicy(notificationSender));
+    }
     this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
 
     // Developer-only trigger that fires the real digest on demand (async-invokes the digest Lambda),
@@ -224,6 +225,8 @@ export class NotificationsStack extends cdk.NestedStack {
     props.userNotificationPrefsTable.grantReadWriteData(notificationSesFeedbackFunction);
     props.userPool.grant(notificationSesFeedbackFunction, "cognito-idp:ListUsers");
     this.notificationSesFeedbackFunction = notificationSesFeedbackFunction;
+
+    if (!notificationSender) return;
 
     // 2:00 PM America/New_York year-round. Scheduler, not events.Rule, because a Rule cron is UTC
     // only and would drift an hour across DST. Both cadences fire together on Mondays; a user is

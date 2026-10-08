@@ -1,4 +1,5 @@
 import { fetchAuthSession } from 'aws-amplify/auth'
+import { endSession } from './session-ended'
 import { DateTime } from "luxon";
 
 export class Utils {
@@ -133,6 +134,7 @@ export class Utils {
       return token
     } catch (error) {
       console.error('Error getting current user session:', error);
+      void endSession();
       throw new Error('Authentication failed');
     }
   }
