@@ -1,5 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
+import { apiFetch } from "../session-ended";
 
 export class KBSyncClient {
   private readonly API: string;
@@ -10,7 +11,7 @@ export class KBSyncClient {
 
   async isSyncing(): Promise<string> {
     const auth = await Utils.authenticate();
-    const response = await fetch(`${this.API}/kb-sync/still-syncing`, {
+    const response = await apiFetch(`${this.API}/kb-sync/still-syncing`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: auth,
@@ -25,7 +26,7 @@ export class KBSyncClient {
 
   async lastSync(): Promise<string> {
     const auth = await Utils.authenticate();
-    const response = await fetch(`${this.API}/kb-sync/get-last-sync`, {
+    const response = await apiFetch(`${this.API}/kb-sync/get-last-sync`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: auth,

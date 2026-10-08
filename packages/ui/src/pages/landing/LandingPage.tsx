@@ -12,6 +12,7 @@ import {
   OmniHeader,
 } from "./chrome";
 import { BrandLogo } from "../../components/common/BrandLogo";
+import { GovBanner } from "../../components/common/GovIdentity";
 
 const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => (
   <svg
@@ -42,6 +43,7 @@ export default function LandingPage() {
 
   return (
     <div className="marketing">
+      <GovBanner />
       <OmniHeader />
 
       <main id="main-content" tabIndex={-1}>

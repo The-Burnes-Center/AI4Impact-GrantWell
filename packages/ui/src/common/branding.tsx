@@ -44,6 +44,8 @@ export interface Branding {
    * footer.partners (text, not logos). Empty for neutral core — the strip renders nothing.
    */
   omniPartners: Link[];
+  /** A government deployment's identity: a strip above every page (logo + label, linking to href) and the logo beside the app logo. */
+  govHeader?: { logo: string; label: string; href: string };
   analyticsId?: string;
   seo?: {
     title?: string;

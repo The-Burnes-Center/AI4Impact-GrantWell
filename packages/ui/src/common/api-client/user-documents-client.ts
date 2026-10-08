@@ -1,5 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
+import { apiFetch } from "../session-ended";
 
 export class UserDocumentsClient {
   private readonly API: string;
@@ -22,7 +23,7 @@ export class UserDocumentsClient {
     const auth = await Utils.authenticate();
     const filePath = `${userId}/${nofoName}/${fileName}`;
 
-    const response = await fetch(`${this.API}/user-documents/upload-url`, {
+    const response = await apiFetch(`${this.API}/user-documents/upload-url`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +55,7 @@ export class UserDocumentsClient {
     const auth = await Utils.authenticate();
     const filePath = `${userId}/${nofoName}/${fileName}`;
 
-    const response = await fetch(`${this.API}/user-documents/download-url`, {
+    const response = await apiFetch(`${this.API}/user-documents/download-url`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,7 +81,7 @@ export class UserDocumentsClient {
     const auth = await Utils.authenticate();
     const folderPrefix = `${userId}/${nofoName}/`;
 
-    const response = await fetch(`${this.API}/user-documents/list`, {
+    const response = await apiFetch(`${this.API}/user-documents/list`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -103,7 +104,7 @@ export class UserDocumentsClient {
     const auth = await Utils.authenticate();
     const key = `${userId}/${nofoName}/${fileName}`;
 
-    const response = await fetch(`${this.API}/user-documents/delete`, {
+    const response = await apiFetch(`${this.API}/user-documents/delete`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,3 +1,29 @@
+# GrantWell v3.1.0
+
+**Last Updated:** October 8, 2026
+
+This release adds user search for admins and makes it clearer what happened when you are signed out.
+
+## Highlights
+
+- **Search users** by email or username in User Management (admins)
+- **Clearer sign-in when you are signed out**: GrantWell takes you back to Sign in and tells you why
+
+## Improvements
+
+### User Management
+
+- Admins can search users by any part of their email address or username
+- State admins see only users in their own state
+
+### Signing Back In
+
+- If you are signed out, for example after an admin resets your two-step verification, GrantWell takes you to Sign in and shows "You've been signed out. Please sign in again." instead of showing errors on the page
+
+## Behind the Scenes
+
+- GrantWell deployments run by state governments can show an official-website banner and their seal, and can send sign-in emails without setting up their own email service
+
 # GrantWell v3.0.0
 
 **Last Updated:** October 6, 2026

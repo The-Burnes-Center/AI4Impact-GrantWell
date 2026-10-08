@@ -20,6 +20,7 @@ interface StagedInstance {
   branding: Branding;
   states: UsState[];
   mfaDeadline?: string;
+  emailDigest?: false;
 }
 
 // Written by core's UserInterface construct at synth; absent in standalone builds (neutral fallback).
@@ -37,4 +38,6 @@ export const IS_PROD: boolean = staged?.stage === "prod";
 export const SEO_TITLE: string = staged?.seo?.title ?? activeBranding.appName;
 /** Epoch ms from which the app requires MFA; null when this deployment sets no deadline. */
 export const MFA_DEADLINE_ISO: string | null = staged?.mfaDeadline ?? null;
+/** False on deployments without SES: no digest emails, so no digest settings. */
+export const EMAIL_DIGEST: boolean = staged?.emailDigest !== false;
 export const MFA_DEADLINE: number | null = MFA_DEADLINE_ISO ? Date.parse(MFA_DEADLINE_ISO) : null;

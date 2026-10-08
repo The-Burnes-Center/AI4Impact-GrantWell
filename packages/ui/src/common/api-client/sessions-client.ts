@@ -1,6 +1,7 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 import type { ChatHistoryEntry } from "../types/document";
+import { apiFetch } from "../session-ended";
 
 export interface ChatSession {
   sessionId: string;
@@ -29,7 +30,7 @@ export class SessionsClient {
   // Creates a new chat session
   async createSession(session: ChatSession) {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-session', {
+    const response = await apiFetch(this.API + '/user-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +65,7 @@ export class SessionsClient {
 
     while (!validData && runs < limit) {
       runs += 1;
-      const response = await fetch(this.API + '/user-session', {
+      const response = await apiFetch(this.API + '/user-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ export class SessionsClient {
     entry: ChatHistoryEntry;
   }) {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-session', {
+    const response = await apiFetch(this.API + '/user-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -142,7 +143,7 @@ export class SessionsClient {
   // Updates a chat session
   async updateSession(session: ChatSession) {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-session', {
+    const response = await apiFetch(this.API + '/user-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -171,7 +172,7 @@ export class SessionsClient {
   async deleteSession(sessionId: string, userId: string) {
     try {
       const auth = await Utils.authenticate();
-      await fetch(this.API + '/user-session', {
+      await apiFetch(this.API + '/user-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -192,7 +193,7 @@ export class SessionsClient {
   // Lists all chat sessions
   async getSessions(userId: string, documentIdentifier?: string | null, all: boolean = false): Promise<SessionListItem[]> {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-session', {
+    const response = await apiFetch(this.API + '/user-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ import { ChatBotApi } from "../chatbot-api";
 import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
-import { InstanceConfig } from "../config/instance-config";
+import { InstanceConfig, sesEmail } from "../config/instance-config";
 import { applyPublicOverlay, checkBrandingImages } from "./public-overlay";
 import { resolveSeo, writeSeoFiles } from "./seo-files";
 
@@ -116,6 +116,7 @@ export class UserInterface extends Construct {
           branding: props.config.branding,
           states: props.config.states,
           ...(props.config.auth.mfaDeadline && { mfaDeadline: props.config.auth.mfaDeadline }),
+          ...(!sesEmail(props.config) && { emailDigest: false }),
         },
         null,
         2

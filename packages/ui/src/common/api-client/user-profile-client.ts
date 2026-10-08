@@ -1,5 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
+import { apiFetch } from "../session-ended";
 
 export interface UserProfile {
   agency: string;
@@ -29,7 +30,7 @@ export class UserProfileClient {
 
   async getProfile(): Promise<UserProfile> {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.API}/user-profile`, {
+    const response = await apiFetch(`${this.API}/user-profile`, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
     });
@@ -41,7 +42,7 @@ export class UserProfileClient {
 
   async updateProfile(profile: UserProfileInput): Promise<UserProfile> {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.API}/user-profile`, {
+    const response = await apiFetch(`${this.API}/user-profile`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: token },
       body: JSON.stringify(profile),
@@ -58,7 +59,7 @@ export class UserProfileClient {
 
   async getRecentlyViewed(): Promise<RecentlyViewedItem[]> {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.API}/user-profile/recently-viewed`, {
+    const response = await apiFetch(`${this.API}/user-profile/recently-viewed`, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
     });
@@ -75,7 +76,7 @@ export class UserProfileClient {
     mode: "merge" | "replace" = "merge"
   ): Promise<RecentlyViewedItem[]> {
     const token = await Utils.authenticate();
-    const response = await fetch(`${this.API}/user-profile/recently-viewed`, {
+    const response = await apiFetch(`${this.API}/user-profile/recently-viewed`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: token },
       body: JSON.stringify({ items, mode }),

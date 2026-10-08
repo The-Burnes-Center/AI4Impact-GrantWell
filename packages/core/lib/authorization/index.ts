@@ -6,7 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ses from 'aws-cdk-lib/aws-ses';
 import * as path from 'path';
-import { InstanceConfig, e2eBypassParameter, supportedStatesEnv } from '../config/instance-config';
+import { InstanceConfig, e2eBypassParameter, sesEmail, supportedStatesEnv } from '../config/instance-config';
 
 export interface AuthorizationStackProps {
   readonly config: InstanceConfig;
@@ -24,17 +24,16 @@ export class AuthorizationStack extends Construct {
     super(scope, id);
 
     const { config } = props;
-    const verificationSender = config.email.sender;
-    const verificationSenderDomain = verificationSender.split('@')[1];
+    const sesConfig = sesEmail(config);
 
     // Suppression stays off: one bounce would suppress the address and lock the user out of password reset.
-    const authEmailConfigurationSet = new ses.ConfigurationSet(this, 'AuthEmailConfigurationSet', {
+    const authEmailConfigurationSet = sesConfig && new ses.ConfigurationSet(this, 'AuthEmailConfigurationSet', {
       configurationSetName: `${config.aws.environment}-auth`,
       disableSuppressionList: true,
       reputationMetrics: true,
     });
 
-    authEmailConfigurationSet.addEventDestination('CloudWatchMetrics', {
+    authEmailConfigurationSet?.addEventDestination('CloudWatchMetrics', {
       destination: ses.EventDestination.cloudWatchDimensions([
         {
           source: ses.CloudWatchDimensionSource.MESSAGE_TAG,
@@ -94,17 +93,19 @@ export class AuthorizationStack extends Construct {
           'If you did not ask for this code, you can ignore this email. Nothing changes on your account unless the code is entered.<br><br>' +
           'The GrantWell Team'
       },
-      email: cognito.UserPoolEmail.withSES({
-        fromEmail: verificationSender,
-        fromName: 'GrantWell',
-        replyTo: config.branding.supportEmail,
-        sesRegion,
-        sesVerifiedDomain: verificationSenderDomain,
-        configurationSetName: authEmailConfigurationSet.configurationSetName,
-      })
+      email: sesConfig && authEmailConfigurationSet
+        ? cognito.UserPoolEmail.withSES({
+            fromEmail: sesConfig.sender,
+            fromName: 'GrantWell',
+            replyTo: config.branding.supportEmail,
+            sesRegion,
+            sesVerifiedDomain: sesConfig.sender.split('@')[1],
+            configurationSetName: authEmailConfigurationSet.configurationSetName,
+          })
+        : cognito.UserPoolEmail.withCognito(config.branding.supportEmail),
     });
     // Must come after the event destination, or metrics miss the first messages.
-    userPool.node.addDependency(authEmailConfigurationSet);
+    if (authEmailConfigurationSet) userPool.node.addDependency(authEmailConfigurationSet);
     this.userPool = userPool;
 
     const signupTriggerFunction = new lambda.Function(this, 'SignUpTriggerFunction', {

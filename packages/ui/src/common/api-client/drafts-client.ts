@@ -1,6 +1,7 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 import type { ProjectBasicsData, RawDraftRecord } from "../types/document";
+import { apiFetch } from "../session-ended";
 
 // Unified status that represents both the step and state in the grant writing flow
 export type DraftStatus = 
@@ -109,7 +110,7 @@ export class DraftsClient {
   // Creates a new document draft
   async createDraft(draft: DocumentDraft) {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-draft', {
+    const response = await apiFetch(this.API + '/user-draft', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -159,7 +160,7 @@ export class DraftsClient {
   /** Single-shot read; null when there is no such row. See waitForDraft. */
   async getDraft(params: { sessionId: string; userId: string }): Promise<DocumentDraft | null> {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-draft', {
+    const response = await apiFetch(this.API + '/user-draft', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -266,7 +267,7 @@ export class DraftsClient {
     draft: DocumentDraft & { expectedRev?: number; writeSource?: DraftWriteSource }
   ): Promise<DocumentDraft> {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-draft', {
+    const response = await apiFetch(this.API + '/user-draft', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -324,7 +325,7 @@ export class DraftsClient {
     authToken: string
   ): void {
     try {
-      void fetch(this.API + '/user-draft', {
+      void apiFetch(this.API + '/user-draft', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -340,7 +341,7 @@ export class DraftsClient {
 
   private async draftOperation<T>(body: Record<string, unknown>, what: string): Promise<T> {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/user-draft', {
+    const response = await apiFetch(this.API + '/user-draft', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -417,7 +418,7 @@ export class DraftsClient {
   async deleteDraft(sessionId: string, userId: string) {
     try {
       const auth = await Utils.authenticate();
-      const response = await fetch(this.API + '/user-draft', {
+      const response = await apiFetch(this.API + '/user-draft', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -456,7 +457,7 @@ export class DraftsClient {
   async getDrafts(userId: string, documentIdentifier?: string | null, all: boolean = false): Promise<DocumentDraft[]> {
     try {
       const auth = await Utils.authenticate();
-      const response = await fetch(this.API + '/user-draft', {
+      const response = await apiFetch(this.API + '/user-draft', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -528,7 +529,7 @@ export class DraftsClient {
     sessionId: string;
   }): Promise<string> {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/draft-generation', {
+    const response = await apiFetch(this.API + '/draft-generation', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -567,7 +568,7 @@ export class DraftsClient {
     console.log('Calling /draft-generation with:', params);
 
     // Start the draft generation job
-    const startResponse = await fetch(this.API + '/draft-generation', {
+    const startResponse = await apiFetch(this.API + '/draft-generation', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -617,7 +618,7 @@ export class DraftsClient {
       console.log(`[Polling] Checking draft generation job ${jobId} status (attempt ${pollCount}/${maxPolls})`);
 
       try {
-        const statusResponse = await fetch(this.API + `/draft-generation-jobs/${jobId}`, {
+        const statusResponse = await apiFetch(this.API + `/draft-generation-jobs/${jobId}`, {
           method: 'GET',
           headers: {
             'Authorization': 'Bearer ' + auth,
@@ -660,7 +661,7 @@ export class DraftsClient {
   // Polls a draft generation job for live status updates (used by SectionEditor)
   async pollDraftJob(jobId: string): Promise<DraftJobStatus> {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + `/draft-generation-jobs/${jobId}`, {
+    const response = await apiFetch(this.API + `/draft-generation-jobs/${jobId}`, {
       method: 'GET',
       headers: { 'Authorization': 'Bearer ' + auth },
     });
@@ -682,7 +683,7 @@ export class DraftsClient {
     const auth = await Utils.authenticate();
     console.log('Calling /generate-docx with:', draftData);
 
-    const response = await fetch(this.API + '/generate-docx', {
+    const response = await apiFetch(this.API + '/generate-docx', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -725,7 +726,7 @@ export class DraftsClient {
     sections?: Record<string, string>;
   }): Promise<string> {
     const auth = await Utils.authenticate();
-    const response = await fetch(this.API + '/generate-pdf', {
+    const response = await apiFetch(this.API + '/generate-pdf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -761,7 +762,7 @@ export class DraftsClient {
     const auth = await Utils.authenticate();
     console.log('Calling /generate-pdf with:', draftData);
     
-    const response = await fetch(this.API + '/generate-pdf', {
+    const response = await apiFetch(this.API + '/generate-pdf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

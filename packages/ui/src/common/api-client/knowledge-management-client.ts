@@ -3,6 +3,7 @@ import {
 } from "../utils"
 
 import { AppConfig } from "../types/app";
+import { apiFetch } from "../session-ended";
 
 export class KnowledgeManagementClient {
 
@@ -25,7 +26,7 @@ export class KnowledgeManagementClient {
       // Construct path: userId/nofoName/filename
       const filePath = `${userId}/${nofoName}/${fileName}`;
       
-      const response = await fetch(`${this.API}/signed-url`, {
+      const response = await apiFetch(`${this.API}/signed-url`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ export class KnowledgeManagementClient {
     // Construct folderPrefix: userId/nofoName/
     const folderPrefix = `${userId}/${nofoName}/`;
     
-    const response = await fetch(this.API + '/s3-bucket-data', {
+    const response = await apiFetch(this.API + '/s3-bucket-data', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +84,7 @@ export class KnowledgeManagementClient {
     // Construct key: userId/nofoName/filename
     const key = `${userId}/${nofoName}/${fileName}`;
     
-    const response = await fetch(this.API + '/delete-s3-file', {
+    const response = await apiFetch(this.API + '/delete-s3-file', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

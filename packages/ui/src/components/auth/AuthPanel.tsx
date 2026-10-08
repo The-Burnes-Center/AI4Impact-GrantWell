@@ -47,6 +47,9 @@ import { BrandLogo } from "../common/BrandLogo";
 
 interface AuthPanelProps {
   onAuthenticated: () => void;
+  /** Shown above the form until dismissed, e.g. why the user was signed out. */
+  notice?: string;
+  onNoticeDismiss?: () => void;
 }
 
 interface CardCopy {
@@ -156,7 +159,7 @@ function clearPendingSignupState() {
   }
 }
 
-export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
+export default function AuthPanel({ onAuthenticated, notice: initialNotice, onNoticeDismiss }: AuthPanelProps) {
   const branding = useBranding();
   const [view, setView] = useState<AuthView>("sign-in");
   const [email, setEmail] = useState("");
@@ -172,6 +175,7 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
   const [error, setError] = useState<string | null>(null);
   const [errorFields, setErrorFields] = useState<AuthErrorField[]>([]);
   const [success, setSuccess] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(initialNotice ?? null);
   const [newPasswordPending, setNewPasswordPending] = useState(false);
   const [totpSetup, setTotpSetup] = useState<{ uri: string; secret: string } | null>(
     null,
@@ -853,8 +857,23 @@ export default function AuthPanel({ onAuthenticated }: AuthPanelProps) {
             transition={false} for role={undefined} to reach the div — otherwise
             react-bootstrap's hardcoded role="alert" announces the same text again. */}
         <div aria-live="polite" aria-atomic="true" className="visually-hidden">
-          {error || success || ""}
+          {error || success || notice || ""}
         </div>
+        {notice ? (
+          <Alert
+            variant="info"
+            dismissible
+            onClose={() => {
+              setNotice(null);
+              onNoticeDismiss?.();
+            }}
+            className="mb-3"
+            transition={false}
+            role={undefined}
+          >
+            {notice}
+          </Alert>
+        ) : null}
         {error ? (
           <Alert
             variant="danger"

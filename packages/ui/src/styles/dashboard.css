@@ -3426,3 +3426,12 @@ select.form-input {
     border-top: 1px solid var(--gw-color-border, #e0e0e0);
   }
 }
+
+.user-management-search {
+  margin: 0 0 16px;
+}
+
+.user-management-table__empty {
+  color: var(--gw-color-text-secondary);
+  text-align: center;
+}

@@ -20,6 +20,7 @@ import { Modal } from "../../components/common/Modal";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { GRANT_TYPES, type NOFO, type GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
+import { EMAIL_DIGEST } from "../../common/instance";
 import "../../styles/dashboard.css";
 
 const STATUS_FILTERS = ["all", "active", "archived"] as const;
@@ -178,7 +179,7 @@ const Dashboard: React.FC = () => {
         ...(canManageUsers
           ? [{ key: "user-management" as const, ref: userManagementTabRef }]
           : []),
-        ...(isDeveloper
+        ...(isDeveloper && EMAIL_DIGEST
           ? [{ key: "digest-preview" as const, ref: digestPreviewTabRef }]
           : []),
       ];
@@ -529,7 +530,7 @@ const Dashboard: React.FC = () => {
                 User Management
               </button>
             )}
-            {isDeveloper && (
+            {isDeveloper && EMAIL_DIGEST && (
               <button
                 id="dashboard-tab-digest-preview"
                 ref={digestPreviewTabRef}

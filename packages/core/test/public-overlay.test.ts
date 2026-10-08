@@ -86,6 +86,13 @@ describe("checkBrandingImages", () => {
     );
   });
 
+  it("checks the government header's logo, which must be self-hosted", () => {
+    const gov = (logo: string) => branding({ govHeader: { logo, label: "An official website", href: "https://www.mass.gov" } });
+    write(path.join(appPath, "public", "images", "seal.png"));
+    expect(() => checkBrandingImages(appPath, gov("/images/seal.png"))).not.toThrow();
+    expect(() => checkBrandingImages(appPath, gov("https://unpkg.com/seal.png"))).toThrow(/govHeader\.logo: https:\/\/unpkg\.com\/seal\.png/);
+  });
+
   it("rejects a directory", () => {
     expect(() => checkBrandingImages(appPath, branding({ logo: "/images" }))).toThrow(/logo: \/images/);
   });

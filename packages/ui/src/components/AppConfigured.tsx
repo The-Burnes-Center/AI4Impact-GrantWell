@@ -12,6 +12,7 @@ import {
 } from "react-router";
 import { Amplify } from "aws-amplify";
 import { Hub } from "aws-amplify/utils";
+import { isEndingSession, setSignedIn } from "../common/session-ended";
 import { getCurrentUser } from "aws-amplify/auth";
 import { Alert, Spinner } from "react-bootstrap";
 import App from "../App";
@@ -34,6 +35,7 @@ import {
   OmniHeader,
 } from "../pages/landing/chrome";
 import "../styles/marketing-landing.css";
+import { GovBanner } from "./common/GovIdentity";
 
 const WhatsNewPage = lazy(() => import("../pages/whats-new/WhatsNewPage"));
 
@@ -131,6 +133,10 @@ export default function AppConfigured() {
   }, []);
 
   useEffect(() => {
+    setSignedIn(authenticated === true);
+  }, [authenticated]);
+
+  useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload }) => {
       switch (payload.event) {
         case "signedIn":
@@ -139,7 +145,7 @@ export default function AppConfigured() {
           break;
         case "signedOut":
           setAuthenticated(false);
-          if (window.location.pathname !== "/") {
+          if (!isEndingSession() && window.location.pathname !== "/") {
             window.location.href = "/";
           }
           break;
@@ -270,6 +276,7 @@ function AppLayoutContent({
     return (
       <NavigationProvider>
         <div className="marketing marketing__app-shell">
+          <GovBanner />
           <AppNavbar />
           <div className="marketing__app-body">
             <AppSidebar />

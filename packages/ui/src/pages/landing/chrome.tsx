@@ -5,6 +5,7 @@ import { useBranding } from "../../common/branding";
 import { useNavigationMenuButton } from "../../components/navigation/navigation-context";
 import { SIDEBAR_ID } from "../../components/navigation/UnifiedNavigation";
 import { BrandLogo } from "../../components/common/BrandLogo";
+import { GovSeal } from "../../components/common/GovIdentity";
 
 const ArrowUpRight = ({ className }: { className?: string }) => (
   <svg
@@ -157,6 +158,7 @@ export function AppNavbar() {
           onClick={handleLogoClick}
           className="marketing__nav-brand"
         >
+          <GovSeal />
           <BrandLogo
             src={branding.logo}
             alt={branding.appName}

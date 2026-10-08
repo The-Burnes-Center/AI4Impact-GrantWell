@@ -7,6 +7,7 @@ import type {
   FeatureRolloutSearchResponse,
 } from "../types/feature-rollout";
 import type { ManagedUsersResponse, UserRolePreset } from "../types/user-management";
+import { apiFetch } from "../session-ended";
 
 export class UserManagementClient {
   private readonly baseUrl: string;
@@ -26,6 +27,7 @@ export class UserManagementClient {
   async listUsers(options?: {
     limit?: number;
     paginationToken?: string | null;
+    query?: string;
   }): Promise<ManagedUsersResponse> {
     const headers = await this.getAuthHeaders();
     const url = new URL(`${this.baseUrl}/user-management/users`);
@@ -35,8 +37,11 @@ export class UserManagementClient {
     if (options?.paginationToken) {
       url.searchParams.set("paginationToken", options.paginationToken);
     }
+    if (options?.query?.trim()) {
+      url.searchParams.set("query", options.query.trim());
+    }
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers,
     });
@@ -51,7 +56,7 @@ export class UserManagementClient {
 
   async createUser(options: { email: string; state?: string }) {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(`${this.baseUrl}/user-management/users`, {
+    const response = await apiFetch(`${this.baseUrl}/user-management/users`, {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -70,7 +75,7 @@ export class UserManagementClient {
 
   async deleteUser(username: string) {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(
+    const response = await apiFetch(
       `${this.baseUrl}/user-management/users/${encodeURIComponent(username)}`,
       {
         method: "DELETE",
@@ -88,7 +93,7 @@ export class UserManagementClient {
 
   async resetUserMfa(username: string) {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(
+    const response = await apiFetch(
       `${this.baseUrl}/user-management/users/${encodeURIComponent(username)}/mfa-reset`,
       {
         method: "POST",
@@ -106,7 +111,7 @@ export class UserManagementClient {
 
   async updateUserRole(username: string, rolePreset: UserRolePreset) {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(
+    const response = await apiFetch(
       `${this.baseUrl}/user-management/users/${encodeURIComponent(username)}/roles`,
       {
         method: "PATCH",
@@ -125,7 +130,7 @@ export class UserManagementClient {
 
   async updateUserState(username: string, state: string) {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(
+    const response = await apiFetch(
       `${this.baseUrl}/user-management/users/${encodeURIComponent(username)}/roles`,
       {
         method: "PATCH",
@@ -144,7 +149,7 @@ export class UserManagementClient {
 
   async getCurrentFeatureAccess(): Promise<CurrentFeatureRolloutAccess> {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(`${this.baseUrl}/feature-rollouts/me`, {
+    const response = await apiFetch(`${this.baseUrl}/feature-rollouts/me`, {
       method: "GET",
       headers,
     });
@@ -159,7 +164,7 @@ export class UserManagementClient {
 
   async getFeatureRollout(featureKey: string): Promise<FeatureRolloutConfig> {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(`${this.baseUrl}/feature-rollouts/${encodeURIComponent(featureKey)}`, {
+    const response = await apiFetch(`${this.baseUrl}/feature-rollouts/${encodeURIComponent(featureKey)}`, {
       method: "GET",
       headers,
     });
@@ -174,7 +179,7 @@ export class UserManagementClient {
 
   async updateFeatureRollout(featureKey: string, mode: FeatureRolloutMode): Promise<FeatureRolloutConfig> {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(`${this.baseUrl}/feature-rollouts/${encodeURIComponent(featureKey)}`, {
+    const response = await apiFetch(`${this.baseUrl}/feature-rollouts/${encodeURIComponent(featureKey)}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify({ mode }),
@@ -202,7 +207,7 @@ export class UserManagementClient {
       url.searchParams.set("role", role);
     }
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers,
     });
@@ -217,7 +222,7 @@ export class UserManagementClient {
 
   async grantFeatureRolloutUser(featureKey: string, email: string) {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(
+    const response = await apiFetch(
       `${this.baseUrl}/feature-rollouts/${encodeURIComponent(featureKey)}/users/${encodeURIComponent(email)}`,
       {
         method: "PUT",
@@ -235,7 +240,7 @@ export class UserManagementClient {
 
   async revokeFeatureRolloutUser(featureKey: string, email: string) {
     const headers = await this.getAuthHeaders();
-    const response = await fetch(
+    const response = await apiFetch(
       `${this.baseUrl}/feature-rollouts/${encodeURIComponent(featureKey)}/users/${encodeURIComponent(email)}`,
       {
         method: "DELETE",

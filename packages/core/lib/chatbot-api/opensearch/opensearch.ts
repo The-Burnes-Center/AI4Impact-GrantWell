@@ -26,9 +26,19 @@ const LIVE_OSS_POLICY_NAMES: Record<string, OssPolicyNames> = {
     network: 'grantwell-burnes-staging-oss-net',
     access: 'grantwell-burnes-staging-oss-acc',
   },
+  'gw-eoanf-staging': {
+    enc: 'gw-eoanf-s-oss-enc-policy',
+    network: 'gw-eoanf-s-oss-network-policy',
+    access: 'gw-eoanf-s-oss-access-policy',
+  },
+  'gw-stack-prod': {
+    enc: 'gw-stack-p-oss-enc-policy',
+    network: 'gw-stack-p-oss-network-policy',
+    access: 'gw-stack-p-oss-access-policy',
+  },
 };
 
-function ossPolicyNamesFor(name: string): OssPolicyNames {
+export function ossPolicyNamesFor(name: string): OssPolicyNames {
   const lower = name.toLowerCase();
   const live = LIVE_OSS_POLICY_NAMES[lower];
   if (live) return live;
