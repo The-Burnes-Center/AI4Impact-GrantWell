@@ -21,6 +21,8 @@ interface StagedInstance {
   states: UsState[];
   mfaDeadline?: string;
   emailDigest?: false;
+  turnstile?: false;
+  tenancy?: "single";
 }
 
 // Written by core's UserInterface construct at synth; absent in standalone builds (neutral fallback).
@@ -40,4 +42,8 @@ export const SEO_TITLE: string = staged?.seo?.title ?? activeBranding.appName;
 export const MFA_DEADLINE_ISO: string | null = staged?.mfaDeadline ?? null;
 /** False on deployments without SES: no digest emails, so no digest settings. */
 export const EMAIL_DIGEST: boolean = staged?.emailDigest !== false;
+/** False when the deployment runs without the Cloudflare Turnstile bot check. */
+export const TURNSTILE_ENABLED: boolean = staged?.turnstile !== false;
+/** A single-state deployment's state: every user belongs to it and no state is ever chosen. */
+export const SINGLE_STATE: UsState | null = staged?.tenancy === "single" ? staged.states[0] ?? null : null;
 export const MFA_DEADLINE: number | null = MFA_DEADLINE_ISO ? Date.parse(MFA_DEADLINE_ISO) : null;

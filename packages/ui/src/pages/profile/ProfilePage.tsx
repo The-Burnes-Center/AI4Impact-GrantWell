@@ -17,7 +17,7 @@ import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
 import { EMAIL_DIGEST, MFA_DEADLINE_ISO } from "../../common/instance";
 import { deadlineDateText } from "../../common/mfa-deadline";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
-import { stateNameFromCode } from "../../common/states";
+import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
 import { roleLabel } from "../../common/helpers/auth-roles";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
@@ -231,7 +231,8 @@ export default function ProfilePage() {
     }
   };
 
-  const stateLabel = userState ? stateNameFromCode(userState) || userState : "Not assigned";
+  const shownState = SINGLE_STATE?.code || userState;
+  const stateLabel = shownState ? stateNameFromCode(shownState) || shownState : "Not assigned";
 
   // Hold rendering until identity (email, state, roles) resolves.
   if (identityLoading) {

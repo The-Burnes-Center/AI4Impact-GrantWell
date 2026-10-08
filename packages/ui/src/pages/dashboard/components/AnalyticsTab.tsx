@@ -17,7 +17,7 @@ import type {
   AnalyticsWindow,
   RankedItem,
 } from "../../../common/api-client/analytics-client";
-import { SUPPORTED_STATES, stateNameFromCode } from "../../../common/states";
+import { SINGLE_STATE, SUPPORTED_STATES, stateNameFromCode } from "../../../common/states";
 import "../../../styles/analytics.css";
 
 interface AnalyticsTabProps {
@@ -108,7 +108,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
             : "Usage across your instance. Metrics accrue from launch onward."}
         </p>
         <div className="analytics__controls">
-          {!isStateAdmin && (
+          {!isStateAdmin && !SINGLE_STATE && (
             <div className="analytics__state">
               <label className="visually-hidden" htmlFor="analytics-state">
                 Filter by state

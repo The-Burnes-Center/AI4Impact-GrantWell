@@ -19,6 +19,11 @@ const SUPPORTED_STATE_CODES = new Set(
   )
 );
 
+// Set on a deployment with no bot check; a missing secret without it still rejects (fail closed).
+const BOT_CHECK_OFF = process.env.TURNSTILE_DISABLED === "true";
+// A single-state deployment's code: every user belongs to it, whatever the client sends.
+const SINGLE_STATE = String(process.env.SINGLE_STATE || "").toUpperCase();
+
 function normalizeState(clientMetadata) {
   const raw = clientMetadata?.state;
   if (typeof raw !== "string") return "";
@@ -35,10 +40,12 @@ function rejectsUnsupportedState(clientMetadata) {
 
 export const handler = async (event) => {
   if (event.triggerSource === "PreSignUp_SignUp") {
-    await assertTurnstileToken(
-      event.request.clientMetadata,
-      event.request.userContextData?.ipAddress
-    );
+    if (!BOT_CHECK_OFF) {
+      await assertTurnstileToken(
+        event.request.clientMetadata,
+        event.request.userContextData?.ipAddress
+      );
+    }
 
     if (rejectsUnsupportedState(event.request.clientMetadata)) {
       throw new Error("Select a supported state.");
@@ -47,18 +54,18 @@ export const handler = async (event) => {
   }
 
   if (event.triggerSource === "PreAuthentication_Authentication") {
-    if (await isE2EBypass(event.request.validationData, event.request.userAttributes?.email)) {
-      return event;
+    if (!BOT_CHECK_OFF && !(await isE2EBypass(event.request.validationData, event.request.userAttributes?.email))) {
+      await assertTurnstileToken(
+        event.request.validationData,
+        event.request.userContextData?.ipAddress
+      );
     }
-    await assertTurnstileToken(
-      event.request.validationData,
-      event.request.userContextData?.ipAddress
-    );
+    await fillInSingleState(event);
     return event;
   }
 
   if (event.triggerSource === "PostConfirmation_ConfirmSignUp") {
-    const state = normalizeState(event.request.clientMetadata);
+    const state = SINGLE_STATE || normalizeState(event.request.clientMetadata);
     if (!state) return event;
 
     try {
@@ -99,3 +106,25 @@ export const handler = async (event) => {
 
   return event;
 };
+
+// Users from before a deployment became single-state, or made in the console, get the state on
+// their next sign-in. Fails open: the backfill script covers anyone this misses.
+async function fillInSingleState(event) {
+  if (!SINGLE_STATE) return;
+  const current = String(event.request.userAttributes?.["custom:state"] || "").trim().toUpperCase();
+  if (current === SINGLE_STATE) return;
+  try {
+    await cognitoClient.send(
+      new AdminUpdateUserAttributesCommand({
+        UserPoolId: event.userPoolId,
+        Username: event.userName,
+        UserAttributes: [{ Name: "custom:state", Value: SINGLE_STATE }],
+      })
+    );
+  } catch (error) {
+    console.error("Could not fill in custom:state at sign-in", {
+      username: event.userName,
+      error: error?.message,
+    });
+  }
+}

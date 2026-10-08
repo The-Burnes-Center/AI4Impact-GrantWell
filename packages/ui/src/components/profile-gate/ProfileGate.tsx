@@ -12,7 +12,7 @@ import {
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
-import { stateNameFromCode } from "../../common/states";
+import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
 import Button from "../ui/Button";
 import "./profile-gate.css";
 
@@ -157,7 +157,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
     return <>{children}</>;
   }
 
-  const effectiveState = profileState || userState || "";
+  const effectiveState = SINGLE_STATE?.code || profileState || userState || "";
   const stateLabel = effectiveState
     ? stateNameFromCode(effectiveState) || effectiveState
     : "";
@@ -265,7 +265,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                       value={effectiveState}
                       disabled
                       aria-readonly="true"
-                      title="Contact your administrator to change your state."
+                      title={SINGLE_STATE ? undefined : "Contact your administrator to change your state."}
                     >
                       {effectiveState ? (
                         <option value={effectiveState}>{stateLabel}</option>
@@ -274,9 +274,11 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                       )}
                     </select>
                   </div>
-                  <p className="profile-gate__hint">
-                    Contact your administrator to change your state.
-                  </p>
+                  {!SINGLE_STATE && (
+                    <p className="profile-gate__hint">
+                      Contact your administrator to change your state.
+                    </p>
+                  )}
                 </div>
 
                 <Button

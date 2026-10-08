@@ -30,7 +30,7 @@ import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
 import * as cr from "aws-cdk-lib/custom-resources";
-import { InstanceConfig, monitoringPrefix, sesEmail } from "../config/instance-config";
+import { InstanceConfig, monitoringPrefix, sesEmail, turnstileEnabled } from "../config/instance-config";
 
 /**
  * - `critical`: users can't use GrantWell right now. Red (prod only).
@@ -296,21 +296,23 @@ export class MonitoringStack extends cdk.NestedStack {
   private addSignInAlarms(props: MonitoringStackProps): void {
     const trigger = props.signupTriggerFunction;
 
-    this.alarm("TurnstileUnavailableAlarm", {
-      severity: "critical",
-      name: "sign-up bot check unreachable",
-      description: "Cloudflare Turnstile can't be reached or is failing, so every sign-up and sign-in is being rejected.",
-      metric: this.markerMetric("TurnstileUnavailable", trigger, LOG_MARKERS.turnstileUnavailable, cdk.Duration.minutes(15)),
-      threshold: 3,
-    });
+    if (turnstileEnabled(props.config)) {
+      this.alarm("TurnstileUnavailableAlarm", {
+        severity: "critical",
+        name: "sign-up bot check unreachable",
+        description: "Cloudflare Turnstile can't be reached or is failing, so every sign-up and sign-in is being rejected.",
+        metric: this.markerMetric("TurnstileUnavailable", trigger, LOG_MARKERS.turnstileUnavailable, cdk.Duration.minutes(15)),
+        threshold: 3,
+      });
 
-    this.alarm("TurnstileNotConfiguredAlarm", {
-      severity: "critical",
-      name: "sign-up bot check not configured",
-      description: "The Turnstile secret is missing from the sign-in trigger, so every sign-up and sign-in is being rejected.",
-      metric: this.markerMetric("TurnstileNotConfigured", trigger, LOG_MARKERS.turnstileNotConfigured, cdk.Duration.minutes(5)),
-      threshold: 1,
-    });
+      this.alarm("TurnstileNotConfiguredAlarm", {
+        severity: "critical",
+        name: "sign-up bot check not configured",
+        description: "The Turnstile secret is missing from the sign-in trigger, so every sign-up and sign-in is being rejected.",
+        metric: this.markerMetric("TurnstileNotConfigured", trigger, LOG_MARKERS.turnstileNotConfigured, cdk.Duration.minutes(5)),
+        threshold: 1,
+      });
+    }
 
     // The trigger's Lambda timeout sits 1 s under Cognito's budget; this fires a second before that.
     this.alarm("SignInTriggerSlowAlarm", {

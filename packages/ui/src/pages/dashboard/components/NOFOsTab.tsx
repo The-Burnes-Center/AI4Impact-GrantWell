@@ -13,7 +13,10 @@ import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId, CustomQuestion } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
-import { SUPPORTED_STATES } from "../../../common/states";
+import { SINGLE_STATE, SUPPORTED_STATES } from "../../../common/states";
+
+// A single-state deployment's state grants always belong to its state.
+const DEFAULT_UPLOAD_STATE = SINGLE_STATE?.code ?? "";
 
 function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback;
@@ -67,7 +70,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customGrantName, setCustomGrantName] = useState("");
   const [uploadGrantType, setUploadGrantType] = useState<GrantTypeId | "">("");
-  const [uploadState, setUploadState] = useState<string>("");
+  const [uploadState, setUploadState] = useState<string>(DEFAULT_UPLOAD_STATE);
   const [uploadCategory, setUploadCategory] = useState<string>("");
   const [uploadAgency, setUploadAgency] = useState<string>("");
 
@@ -396,7 +399,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       setSelectedFile(null);
       setCustomGrantName("");
       setUploadGrantType("");
-      setUploadState("");
+      setUploadState(DEFAULT_UPLOAD_STATE);
       setUploadCategory("");
       setUploadAgency("");
       setUploadNofoModalOpen(false);
@@ -786,7 +789,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       {/* Upload NOFO Modal */}
       <Modal
         isOpen={uploadNofoModalOpen}
-        onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(""); setUploadCategory(""); setUploadAgency(""); }}
+        onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(DEFAULT_UPLOAD_STATE); setUploadCategory(""); setUploadAgency(""); }}
         title="Add Grant"
       >
         <div className="modal-form">
@@ -821,7 +824,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     onChange={(e) => {
                       const next = e.target.value as GrantTypeId | "";
                       setUploadGrantType(next);
-                      if (next !== "state") setUploadState("");
+                      if (next !== "state") setUploadState(DEFAULT_UPLOAD_STATE);
                     }}
                     className="form-input"
                     required
@@ -835,7 +838,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 </div>
                 <div className="field-note">Required. Determines who this grant is visible to.</div>
               </div>
-              {uploadGrantType === "state" && (
+              {uploadGrantType === "state" && !SINGLE_STATE && (
                 <div className="form-group">
                   <label htmlFor="upload-state">State *</label>
                   <div className="select-wrapper">
@@ -875,7 +878,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
             </>
           )}
           <div className="modal-actions">
-            <button className="modal-button secondary" onClick={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(""); setUploadCategory(""); setUploadAgency(""); }}>Cancel</button>
+            <button className="modal-button secondary" onClick={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(DEFAULT_UPLOAD_STATE); setUploadCategory(""); setUploadAgency(""); }}>Cancel</button>
             <button
               className="modal-button primary"
               onClick={uploadNOFO}

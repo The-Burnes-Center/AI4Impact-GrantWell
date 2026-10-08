@@ -75,6 +75,8 @@ interface InstanceConfigBase {
     oidcProviderName?: string;
     /** ISO timestamp with offset. Until then the UI urges MFA at each sign-in; from then it blocks the app until the user enrolls. */
     mfaDeadline?: string;
+    /** Cloudflare Turnstile on sign-up and sign-in; on unless false. Off needs no TURNSTILE_* keys. */
+    turnstile?: boolean;
   };
   /** SES, or Cognito's own sender for an account without SES; the digest needs SES and is off without it. */
   email: SesEmail | { cognitoDefault: true };
@@ -97,6 +99,15 @@ export interface SesEmail {
   sender: string;
   /** False when another deployment in the same account and region already owns the identity. */
   manageSenderIdentity: boolean;
+}
+
+export function turnstileEnabled(config: InstanceConfig): boolean {
+  return config.auth.turnstile !== false;
+}
+
+/** The deployment's only state when tenancy is single: every user belongs to it. */
+export function singleState(config: InstanceConfig): UsState | undefined {
+  return config.tenancy === "single" ? config.states[0] : undefined;
 }
 
 /** Undefined when the deployment sends with Cognito's default sender. */
@@ -133,7 +144,11 @@ export function validateInstanceConfig(config: InstanceConfig): void {
     problems.push("auth.mfaDeadline must be an ISO timestamp with an offset, e.g. 2026-11-02T00:00:00-05:00");
   }
   if (config.seo?.indexable && config.stage === "dev") problems.push("seo.indexable must not be set on a dev deployment");
+  if (config.auth.turnstile !== undefined && typeof config.auth.turnstile !== "boolean") {
+    problems.push("auth.turnstile must be true or false");
+  }
   if (config.e2e) {
+    if (!turnstileEnabled(config)) problems.push("e2e only bypasses Turnstile; remove it when auth.turnstile is false");
     if (config.stage === "prod") problems.push("e2e must not be set on a prod deployment");
     if (config.e2e.testEmails.length === 0) problems.push("e2e.testEmails is empty");
     const outside = config.e2e.testEmails.filter((e) => !e.endsWith(E2E_TEST_EMAIL_DOMAIN));

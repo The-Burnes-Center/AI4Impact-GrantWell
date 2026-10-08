@@ -38,6 +38,9 @@ const SUPPORTED_STATE_CODES = new Set(
   )
 );
 
+// A single-state deployment: every user belongs to this state, and there is no Platform Admin.
+const SINGLE_STATE = String(process.env.SINGLE_STATE || "").toUpperCase();
+
 const LEGACY_NAME_TO_CODE = {
   "california": "CA",
   "colorado": "CO",
@@ -199,11 +202,24 @@ async function handleUpdate(scope, actor, event) {
         message: "rolePreset must be one of: user, admin, platformadmin, developer",
       });
     }
+    if (SINGLE_STATE && rolePreset === "platformadmin") {
+      return respond(400, { message: "Platform Admin isn't available on a single-state deployment" });
+    }
     requireRoleAssignmentPermission(scope, rolePreset);
     userAttributes.push({ Name: "custom:role", Value: JSON.stringify(nextRoles) });
   }
 
-  if (hasState) {
+  if (SINGLE_STATE) {
+    if (hasState && String(body.state == null ? "" : body.state).trim().toUpperCase() !== SINGLE_STATE) {
+      return respond(400, { message: `Every user on this deployment belongs to ${SINGLE_STATE}` });
+    }
+    if (target.state !== SINGLE_STATE || hasState) {
+      nextState = SINGLE_STATE;
+      userAttributes.push({ Name: "custom:state", Value: SINGLE_STATE });
+    }
+  }
+
+  if (hasState && !SINGLE_STATE) {
     const requested = String(body.state == null ? "" : body.state).trim().toUpperCase();
     if (requested && !SUPPORTED_STATE_CODES.has(requested)) {
       return respond(400, { message: "state must be a supported state code or empty" });
@@ -482,6 +498,7 @@ async function countPrivilegedUsers() {
 }
 
 function resolveCreateState(scope, rawState) {
+  if (SINGLE_STATE) return SINGLE_STATE;
   if (scope.kind === "stateAdmin") {
     return scope.state;
   }

@@ -26,7 +26,7 @@ import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
-import { InstanceConfig, supportedStatesEnv } from "../config/instance-config";
+import { InstanceConfig, singleState, supportedStatesEnv } from "../config/instance-config";
 
 // See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
 // still resolves to platform-wide. Flip both to "false" only after migrating every pool.
@@ -443,6 +443,7 @@ export class ChatBotApi extends Construct {
         USER_POOL_ID: props.authentication.userPool.userPoolId,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        ...(singleState(props.config) && { SINGLE_STATE: singleState(props.config)!.code }),
       },
       timeout: cdk.Duration.seconds(30),
     });
