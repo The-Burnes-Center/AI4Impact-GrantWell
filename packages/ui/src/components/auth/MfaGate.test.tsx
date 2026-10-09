@@ -45,7 +45,6 @@ describe("MfaGate", () => {
     await screen.findByText("SECRET123");
     await user.click(screen.getByLabelText("Digit 1 of 6"));
     await user.keyboard("123456");
-    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
 
     expect(await screen.findByText("App content")).toBeInTheDocument();
     expect(gate()).not.toBeInTheDocument();

@@ -1,5 +1,5 @@
 import type { ClipboardEvent, KeyboardEvent } from "react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const LENGTH = 6;
 
@@ -29,7 +29,20 @@ export default function OtpInput({
     boxes.current[Math.max(0, Math.min(LENGTH - 1, index))]?.focus();
   };
 
-  const commit = (next: string[]) => onChange(next.join("").slice(0, LENGTH));
+  const completedByUser = useRef(false);
+
+  const commit = (next: string[]) => {
+    const code = next.join("").slice(0, LENGTH);
+    completedByUser.current = code.length === LENGTH && value.length < LENGTH;
+    onChange(code);
+  };
+
+  // Submits once the parent has re-rendered with the full code, so its submit handler sees it.
+  useEffect(() => {
+    if (!completedByUser.current || value.length !== LENGTH || loading) return;
+    completedByUser.current = false;
+    boxes.current[0]?.form?.requestSubmit();
+  }, [value, loading]);
 
   const fillFrom = (index: number, text: string) => {
     const next = [...digits];

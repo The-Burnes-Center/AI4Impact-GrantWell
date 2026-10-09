@@ -55,8 +55,8 @@ export async function signIn(page: Page, isRetry: boolean): Promise<void> {
 
   const mfa = page.getByRole("form", { name: "Two-step verification form" });
   await expect(mfa, "the test account must have TOTP enrolled").toBeVisible();
+  // A complete code submits itself; clicking Verify code too would reuse the one-time code.
   await mfa.locator("#mfa-code-input").fill(await totpCode(isRetry));
-  await mfa.getByRole("button", { name: "Verify code" }).click();
 
   // The profile gate only appears if the account's profile was never completed.
   const gate = page.getByRole("dialog", { name: "Complete your profile" });

@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { auth } from "../../test/amplify";
@@ -29,15 +29,36 @@ describe("MfaSetupPanel", () => {
     expect(auth.setUpTOTP).toHaveBeenCalledTimes(1);
   });
 
-  it("verifies the code and makes TOTP the preferred method before reporting enrolment", async () => {
+  it("submits by itself on the sixth digit, then makes TOTP the preferred method", async () => {
     const { onEnrolled, user } = renderPanel();
     await screen.findByText("SECRET123");
     await enterCode(user, "123456");
-    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
 
+    await waitFor(() => expect(onEnrolled).toHaveBeenCalledTimes(1));
+    expect(auth.verifyTOTPSetup).toHaveBeenCalledTimes(1);
     expect(auth.verifyTOTPSetup).toHaveBeenCalledWith({ code: "123456" });
     expect(auth.updateMFAPreference).toHaveBeenCalledWith({ totp: "PREFERRED" });
-    expect(onEnrolled).toHaveBeenCalledTimes(1);
+  });
+
+  it("submits a pasted or autofilled code by itself", async () => {
+    const { onEnrolled, user } = renderPanel();
+    await screen.findByText("SECRET123");
+    await user.click(screen.getByLabelText("Digit 1 of 6"));
+    await user.paste("654321");
+
+    await waitFor(() => expect(onEnrolled).toHaveBeenCalledTimes(1));
+    expect(auth.verifyTOTPSetup).toHaveBeenCalledWith({ code: "654321" });
+  });
+
+  it("waits for all six digits, and the button still works", async () => {
+    const { user } = renderPanel();
+    await screen.findByText("SECRET123");
+    await enterCode(user, "12345");
+    expect(auth.verifyTOTPSetup).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Enter the 6-digit code");
+    expect(auth.verifyTOTPSetup).not.toHaveBeenCalled();
   });
 
   it("keeps the panel open with an error when the code is rejected", async () => {
@@ -46,10 +67,11 @@ describe("MfaSetupPanel", () => {
     const { onEnrolled, user } = renderPanel();
     await screen.findByText("SECRET123");
     await enterCode(user, "000000");
-    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("That code was not accepted.");
     expect(onEnrolled).not.toHaveBeenCalled();
+    expect(auth.verifyTOTPSetup).toHaveBeenCalledTimes(1);
+    expect(screen.getByLabelText("Digit 1 of 6")).toHaveValue("");
   });
 
   it("offers Try again when setup can't start", async () => {
