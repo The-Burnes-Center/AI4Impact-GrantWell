@@ -104,4 +104,36 @@ describe("UserManagementTab", () => {
     expect(last.get("limit")).toBe("50");
     expect(last.get("paginationToken")).toBeNull();
   });
+
+  it("shows Save only on a row you've changed, and no menu on your own row", async () => {
+    stubFetch({ [USERS]: json({ users: [user(0), user(1)], nextPaginationToken: null, pageSize: 25 }) });
+    const { user: ui } = renderTab();
+    await screen.findByText("person1@example.org");
+
+    expect(screen.queryByRole("button", { name: /^Save changes/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "More actions for person0@example.org" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "More actions for person1@example.org" })).toBeInTheDocument();
+
+    await ui.selectOptions(screen.getByLabelText("Role for person1@example.org"), "admin");
+    expect(screen.getByRole("button", { name: "Save changes for person1@example.org" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Save changes for person0@example.org" })).not.toBeInTheDocument();
+  });
+
+  it("keeps Reset two-step verification and Delete in the row's menu, each behind its confirmation", async () => {
+    stubFetch({ [USERS]: json({ users: [user(0), user(1)], nextPaginationToken: null, pageSize: 25 }) });
+    const { user: ui } = renderTab();
+    await screen.findByText("person1@example.org");
+
+    await ui.click(screen.getByRole("button", { name: "More actions for person1@example.org" }));
+    const menu = await screen.findByRole("menu", { name: "More actions for person1@example.org" });
+    expect(within(menu).getAllByRole("menuitem").map((i) => i.textContent)).toEqual([
+      "Reset two-step verification",
+      "Delete",
+    ]);
+    await waitFor(() => expect(within(menu).getAllByRole("menuitem")[0]).toHaveFocus());
+
+    await ui.click(within(menu).getByRole("menuitem", { name: "Delete" }));
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: "Delete User" })).toBeInTheDocument();
+  });
 });
