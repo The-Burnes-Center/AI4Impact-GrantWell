@@ -87,21 +87,27 @@ async function extractDeadline(keyDeadlines) {
         messages: [
           { role: "user", content: `${DEADLINE_EXTRACTION_PROMPT}\n\n${deadlineText}` },
         ],
-        max_tokens: 100,
-        temperature: 0.1,
+        max_tokens: 2048,
+        output_config: { effort: "low" },
       }),
     });
 
     const body = JSON.parse(new TextDecoder().decode(response.body));
-    const content = body.content[0].text.trim();
+    if (body.stop_reason === "refusal" || body.stop_reason === "max_tokens") {
+      console.warn(
+        `Deadline extraction stopped with ${body.stop_reason}` +
+          (body.stop_details?.category ? ` (category: ${body.stop_details.category})` : "")
+      );
+      return null;
+    }
+    const content = (body.content?.find((b) => b.type === "text")?.text ?? "").trim();
 
     if (content.toLowerCase() === "null" || !content) return null;
 
-    // Accept YYYY-MM-DD directly if the LLM returns it
-    const isoMatch = content.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (isoMatch) return content;
+    // A leading date is the deadline's own calendar date; converting a full timestamp would shift it.
+    const isoMatch = content.match(/^(\d{4}-\d{2}-\d{2})(?:$|T)/);
+    if (isoMatch) return isoMatch[1];
 
-    // Fallback: parse and format as UTC to avoid timezone drift
     const date = new Date(content);
     if (isNaN(date.getTime())) return null;
 

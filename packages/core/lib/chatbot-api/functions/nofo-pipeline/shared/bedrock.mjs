@@ -5,7 +5,8 @@ import {
 
 const client = new BedrockRuntimeClient();
 
-const REQUEST_TIMEOUT_MS = 120_000;
+// Room for up to 16K output tokens including adaptive thinking; the Lambda timeouts still bound it.
+const REQUEST_TIMEOUT_MS = 300_000;
 const MAX_RETRIES = 4;
 const BASE_DELAY_MS = 2000;
 const MAX_DELAY_MS = 30000;
@@ -57,12 +58,55 @@ export async function invokeBedrockWithRetry(params) {
   throw lastError;
 }
 
-/**
- * Invokes a Bedrock model with forced tool use to guarantee structured JSON output.
- *
- * The model is required to "call" the specified tool, producing JSON that
- * conforms to the provided schema. No manual JSON parsing or repair is needed.
- */
+const UNSUPPORTED_SCHEMA_KEYWORDS = new Set([
+  "minLength",
+  "maxLength",
+  "minimum",
+  "maximum",
+  "exclusiveMinimum",
+  "exclusiveMaximum",
+  "multipleOf",
+  "minItems",
+  "maxItems",
+  "uniqueItems",
+  "contains",
+  "minContains",
+  "maxContains",
+  "minProperties",
+  "maxProperties",
+]);
+const SCHEMA_MAP_KEYWORDS = new Set(["properties", "$defs", "definitions"]);
+const SCHEMA_LIST_KEYWORDS = new Set(["anyOf", "allOf", "oneOf", "prefixItems"]);
+
+export function toStrictSchema(schema) {
+  if (Array.isArray(schema)) return schema.map(toStrictSchema);
+  if (!schema || typeof schema !== "object") return schema;
+
+  const out = {};
+  for (const [key, value] of Object.entries(schema)) {
+    if (UNSUPPORTED_SCHEMA_KEYWORDS.has(key) || key === "additionalProperties") continue;
+    if (SCHEMA_MAP_KEYWORDS.has(key)) {
+      out[key] = Object.fromEntries(
+        Object.entries(value).map(([name, sub]) => [name, toStrictSchema(sub)])
+      );
+    } else if (SCHEMA_LIST_KEYWORDS.has(key) || key === "items" || key === "not") {
+      out[key] = toStrictSchema(value);
+    } else {
+      out[key] = structuredClone(value);
+    }
+  }
+
+  const types = Array.isArray(out.type) ? out.type : [out.type];
+  if (types.includes("object") || out.properties) out.additionalProperties = false;
+  return out;
+}
+
+function errorNamed(name, message) {
+  const error = new Error(message);
+  error.name = name;
+  return error;
+}
+
 export async function invokeStructuredOutput({
   modelId,
   prompt,
@@ -70,27 +114,25 @@ export async function invokeStructuredOutput({
   toolName,
   toolDescription,
   maxTokens,
-  temperature,
-  thinking,
+  effort,
   system,
 }) {
+  const instruction = toolDescription
+    ? `${toolDescription.replace(/\.\s*$/, "")}.`
+    : null;
+
   const body = {
     anthropic_version: "bedrock-2023-05-31",
     messages: [{ role: "user", content: prompt }],
-    tools: [
-      {
-        name: toolName,
-        description: toolDescription,
-        input_schema: schema,
-      },
-    ],
-    tool_choice: { type: "tool", name: toolName },
     max_tokens: maxTokens,
+    output_config: {
+      format: { type: "json_schema", schema: toStrictSchema(schema) },
+      ...(effort && { effort }),
+    },
   };
 
-  if (temperature !== undefined) body.temperature = temperature;
-  if (thinking) body.thinking = thinking;
-  if (system) body.system = system;
+  const systemText = [system, instruction].filter(Boolean).join("\n\n");
+  if (systemText) body.system = systemText;
 
   const response = await invokeBedrockWithRetry({
     modelId,
@@ -100,12 +142,29 @@ export async function invokeStructuredOutput({
   });
 
   const parsed = JSON.parse(new TextDecoder().decode(response.body));
-  const toolBlock = parsed.content?.find((b) => b.type === "tool_use");
 
-  if (!toolBlock?.input) {
-    console.error("Bedrock response had no tool_use block:", JSON.stringify(parsed.content));
-    throw new Error(`Model did not return structured tool output for ${toolName}`);
+  if (parsed.stop_reason === "refusal") {
+    throw errorNamed(
+      "BedrockRefusalError",
+      `Model refused ${toolName} (category: ${parsed.stop_details?.category ?? "unspecified"})`
+    );
+  }
+  if (parsed.stop_reason === "max_tokens") {
+    throw errorNamed(
+      "BedrockTruncatedError",
+      `Model output for ${toolName} was truncated at max_tokens=${maxTokens}`
+    );
   }
 
-  return toolBlock.input;
+  const textBlock = parsed.content?.find((b) => b.type === "text");
+  if (!textBlock?.text) {
+    console.error("Bedrock response had no text block:", JSON.stringify(parsed.content));
+    throw new Error(`Model did not return structured output for ${toolName}`);
+  }
+
+  try {
+    return JSON.parse(textBlock.text);
+  } catch (error) {
+    throw new Error(`Model returned invalid JSON for ${toolName}: ${error.message}`);
+  }
 }

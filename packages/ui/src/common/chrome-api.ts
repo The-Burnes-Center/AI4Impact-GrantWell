@@ -17,6 +17,13 @@ export interface ChromeUser {
   isAdmin: boolean;
 }
 
+export interface ChromeMenu {
+  expanded: boolean;
+  toggle: () => void;
+  /** The menu panel's id, for the toggle's aria-controls. */
+  controlsId: string;
+}
+
 export interface HeaderProps {
   /** Undefined on public pages. */
   user?: ChromeUser;
@@ -25,6 +32,11 @@ export interface HeaderProps {
   /** Client-side navigation to an app path such as "/home". */
   navigate: (href: string) => void;
   signOut: () => void;
+  /**
+   * Set while the app's menu is a drawer (narrow screens, and /home): the header must then show a
+   * button for it, since the app's own top bar steps aside for a chrome Header.
+   */
+  menu?: ChromeMenu;
 }
 
 export interface FooterProps {

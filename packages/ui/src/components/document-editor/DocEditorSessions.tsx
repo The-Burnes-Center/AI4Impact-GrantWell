@@ -265,7 +265,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       />
 
       {/* Header section */}
-      <div className="dashboard-header">
+      <div className="dashboard-header dashboard-header--wrap">
         <div>
           <h1>My Applications</h1>
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>

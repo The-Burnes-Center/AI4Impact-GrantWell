@@ -128,8 +128,12 @@ export class LambdaFunctionStack extends cdk.Stack {
     const knowledgeBaseIndexName = config.aws.knowledgeBaseIndexName;
     const SUPPORTED_STATES_ENV = supportedStatesEnv(config);
 
-    const SONNET_MODEL_ID = "us.anthropic.claude-sonnet-5";
-    const HAIKU_MODEL_ID = "us.anthropic.claude-haiku-4-5-20251001-v1:0";
+    const SONNET_MODEL_ID = "us.anthropic.claude-sonnet-5-5";
+    const HAIKU_MODEL_ID = "us.anthropic.claude-haiku-5-5";
+    // In the inference-profile names: a profile's model can't change in place, and its replacement
+    // must not reuse the old name, so a model change has to change these too.
+    const SONNET_TAG = "sonnet-5-5";
+    const HAIKU_TAG = "haiku-5-5";
     const TITAN_MODEL_ID = "amazon.titan-embed-text-v2:0";
     const RERANK_MODEL_ID = "cohere.rerank-v3-5:0";
 
@@ -153,19 +157,19 @@ export class LambdaFunctionStack extends cdk.Stack {
     const titanFoundationModelArn = `arn:aws:bedrock:${region}::foundation-model/${TITAN_MODEL_ID}`;
 
     const sonnetChatProfile = makeInferenceProfile(
-      "SonnetChatInferenceProfile", "sonnet-chat", sonnetSystemProfileArn, "chat",
+      "SonnetChatInferenceProfile", `${SONNET_TAG}-chat`, sonnetSystemProfileArn, "chat",
     );
     const sonnetNofoProfile = makeInferenceProfile(
-      "SonnetNofoInferenceProfile", "sonnet-nofo-pipeline", sonnetSystemProfileArn, "nofo-pipeline",
+      "SonnetNofoInferenceProfile", `${SONNET_TAG}-nofo-pipeline`, sonnetSystemProfileArn, "nofo-pipeline",
     );
     const sonnetDraftProfile = makeInferenceProfile(
-      "SonnetDraftInferenceProfile", "sonnet-draft-generation", sonnetSystemProfileArn, "draft-generation",
+      "SonnetDraftInferenceProfile", `${SONNET_TAG}-draft-generation`, sonnetSystemProfileArn, "draft-generation",
     );
     const haikuNofoProfile = makeInferenceProfile(
-      "HaikuNofoInferenceProfile", "haiku-nofo-pipeline", haikuSystemProfileArn, "nofo-pipeline",
+      "HaikuNofoInferenceProfile", `${HAIKU_TAG}-nofo-pipeline`, haikuSystemProfileArn, "nofo-pipeline",
     );
     const haikuScraperProfile = makeInferenceProfile(
-      "HaikuScraperInferenceProfile", "haiku-scraper", haikuSystemProfileArn, "nofo-scraper",
+      "HaikuScraperInferenceProfile", `${HAIKU_TAG}-scraper`, haikuSystemProfileArn, "nofo-scraper",
     );
     const titanSearchProfile = makeInferenceProfile(
       "TitanSearchInferenceProfile", "titan-grant-search", titanFoundationModelArn, "grant-search",

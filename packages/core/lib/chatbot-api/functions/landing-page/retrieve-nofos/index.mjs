@@ -329,12 +329,13 @@ export const handler = async (event) => {
     if (enableDynamoDBCache && tableName) {
       const dynamoResult = await fetchFromDynamoDB(tableName);
 
-      if (dynamoResult.success && dynamoResult.nofoData.length > 0) {
+      // An empty table is a new deployment with no grants yet, not an error.
+      if (dynamoResult.success) {
         nofoData = dynamoResult.nofoData;
         scopeKnown = true;
         console.log('Successfully retrieved NOFOs from DynamoDB');
       } else {
-        throw new Error('DynamoDB query failed or returned no results');
+        throw new Error('DynamoDB query failed');
       }
     } else {
       throw new Error('DynamoDB is not enabled or table name is missing');

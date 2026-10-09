@@ -1,8 +1,6 @@
 /**
- * JSON Schemas for Bedrock structured output (tool use).
- *
- * Each schema is used as a tool's input_schema to force the model
- * to return valid JSON conforming to the defined structure.
+ * JSON Schemas for Bedrock structured output (output_config.format).
+ * invokeStructuredOutput passes them through toStrictSchema before sending.
  */
 
 const SUMMARY_ITEM_SCHEMA = {

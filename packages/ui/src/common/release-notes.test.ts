@@ -23,7 +23,7 @@ describe("parseReleaseNotes", () => {
 
 describe("RELEASE_NOTES.md", () => {
   it("lists releases newest first", () => {
-    expect(releases.map((r) => r.version)).toEqual(["3.1.0", "3.0.0", "2.0.0", "1.0.0"]);
+    expect(releases.map((r) => r.version)).toEqual(["3.2.0", "3.1.0", "3.0.0", "2.0.0", "1.0.0"]);
   });
 
   it("keeps every release's Highlights short enough for the dialog", () => {

@@ -69,10 +69,11 @@ Return nofoIndex (1-${attachments.length}) and a brief reason.`;
   const nofoIdSchema = {
     type: "object",
     properties: {
-      nofoIndex: { type: "number", description: "1-based index of the NOFO attachment" },
+      nofoIndex: { type: "integer", description: "1-based index of the NOFO attachment" },
       reason: { type: "string", description: "Brief explanation of why this file is the NOFO" },
     },
     required: ["nofoIndex", "reason"],
+    additionalProperties: false,
   };
 
   const command = new InvokeModelCommand({
@@ -81,24 +82,34 @@ Return nofoIndex (1-${attachments.length}) and a brief reason.`;
     accept: 'application/json',
     body: JSON.stringify({
       anthropic_version: 'bedrock-2023-05-31',
-      max_tokens: 500,
-      temperature: 0,
+      max_tokens: 2500,
       messages: [{ role: 'user', content: [{ type: 'text', text: prompt }] }],
-      tools: [{ name: "identify_nofo", description: "Identify which attachment is the NOFO document", input_schema: nofoIdSchema }],
-      tool_choice: { type: "tool", name: "identify_nofo" },
+      output_config: {
+        effort: 'low',
+        format: { type: 'json_schema', schema: nofoIdSchema },
+      },
     }),
   });
 
   const response = await bedrockClient.send(command);
   const responseBody = JSON.parse(new TextDecoder().decode(response.body));
-  const toolBlock = responseBody.content?.find((b) => b.type === "tool_use");
-
-  if (!toolBlock?.input) {
+  if (responseBody.stop_reason === 'refusal') {
+    console.warn(`Bedrock declined to identify the NOFO (refusal category=${responseBody.stop_details?.category ?? 'unknown'})`);
+    return null;
+  }
+  if (responseBody.stop_reason === 'max_tokens') {
+    console.error(`Bedrock NOFO identification truncated at max_tokens (output_tokens=${responseBody.usage?.output_tokens})`);
+    return null;
+  }
+  const textBlock = responseBody.content?.find((b) => b.type === 'text');
+  let result;
+  try {
+    result = JSON.parse(textBlock?.text);
+  } catch {
     console.error('Bedrock did not return structured output:', JSON.stringify(responseBody.content));
     return null;
   }
 
-  const result = toolBlock.input;
   if (result.nofoIndex >= 1 && result.nofoIndex <= attachments.length) {
     return { attachment: attachments[result.nofoIndex - 1], reason: result.reason };
   }

@@ -81,9 +81,9 @@ const fullSummary = () => ({
 const QUESTIONS = { totalQuestions: 1, questions: [{ id: 1, question: "Describe your need." }] };
 
 const toolResponse = (input: object) => ({
-  body: new TextEncoder().encode(JSON.stringify({ content: [{ type: "tool_use", input }] })),
+  body: new TextEncoder().encode(JSON.stringify({ content: [{ type: "text", text: JSON.stringify(input) }] })),
 });
-const questionCalls = () => aws.bedrock.mock.calls.filter(([body]) => body.tools);
+const questionCalls = () => aws.bedrock.mock.calls.filter(([body]) => body.output_config?.format);
 
 beforeEach(() => {
   aws.bedrock.mockReset();
@@ -149,7 +149,7 @@ describe("synthesize", () => {
 
   beforeEach(() => {
     aws.bedrock.mockImplementation(async (body: any) =>
-      body.tools ? toolResponse(QUESTIONS) : { body: new TextEncoder().encode(JSON.stringify({ content: [{ text: "null" }] })) }
+      body.output_config?.format ? toolResponse(QUESTIONS) : { body: new TextEncoder().encode(JSON.stringify({ content: [{ text: "null" }] })) }
     );
   });
 
@@ -157,7 +157,7 @@ describe("synthesize", () => {
     const real = aws.bedrock.getMockImplementation()!;
     let failed = false;
     aws.bedrock.mockImplementation(async (body: any) => {
-      if (body.tools && !failed) {
+      if (body.output_config?.format && !failed) {
         failed = true;
         throw new Error("ValidationException");
       }
@@ -172,7 +172,7 @@ describe("synthesize", () => {
   it("gives up after the second empty result and returns no questions", async () => {
     const real = aws.bedrock.getMockImplementation()!;
     aws.bedrock.mockImplementation(async (body: any) =>
-      body.tools ? toolResponse({ totalQuestions: 0, questions: [] }) : real(body)
+      body.output_config?.format ? toolResponse({ totalQuestions: 0, questions: [] }) : real(body)
     );
 
     const out = await synthesize(event());

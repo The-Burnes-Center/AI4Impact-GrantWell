@@ -99,6 +99,7 @@ beforeEach(() => {
   toolCall = 0;
   vi.spyOn(console, "error").mockImplementation(() => {});
   vi.spyOn(console, "log").mockImplementation(() => {});
+  vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 
 describe("websocket-chat Bedrock loop", () => {
@@ -161,5 +162,96 @@ describe("websocket-chat Bedrock loop", () => {
     expect(aws.bedrock).toHaveBeenCalledTimes(1);
     expect(aws.bedrock.mock.calls[0][0].tool_choice).toBeUndefined();
     expect(sessionSaves()[0][0].new_chat_entry[0].chatbot).toBe("direct answer");
+  });
+
+  it("sends between_tools thinking at medium effort, no sampling params and no forced tool choice", async () => {
+    aws.bedrock.mockImplementation(async (body: any) => (body.tool_choice?.type === "none" ? answer("final") : toolUse()));
+
+    await chat();
+
+    expect(aws.bedrock).toHaveBeenCalledTimes(5);
+    for (const [body] of aws.bedrock.mock.calls) {
+      expect(body.thinking).toEqual({ type: "between_tools" });
+      expect(body.output_config).toEqual({ effort: "medium" });
+      expect(body).not.toHaveProperty("temperature");
+      expect(body).not.toHaveProperty("top_p");
+      expect(body).not.toHaveProperty("top_k");
+      expect([undefined, "none", "auto"]).toContain(body.tool_choice?.type);
+      expect(body.messages.at(-1).role).toBe("user");
+    }
+  });
+});
+
+describe("websocket-chat thinking blocks", () => {
+  const progressThenTool = () =>
+    stream([
+      { type: "content_block_start", index: 0, content_block: { type: "thinking", thinking: "", signature: "" } },
+      { type: "content_block_delta", index: 0, delta: { type: "thinking_delta", thinking: "Checking the eligibility " } },
+      { type: "content_block_delta", index: 0, delta: { type: "thinking_delta", thinking: "section first." } },
+      { type: "content_block_delta", index: 0, delta: { type: "signature_delta", signature: "sig-abc" } },
+      { type: "content_block_stop", index: 0 },
+      { type: "content_block_start", index: 1, content_block: { type: "text", text: "" } },
+      { type: "content_block_delta", index: 1, delta: { type: "text_delta", text: "Let me look. " } },
+      { type: "content_block_stop", index: 1 },
+      { type: "content_block_start", index: 2, content_block: { type: "tool_use", id: "t1", name: "query_db", input: {} } },
+      { type: "content_block_delta", index: 2, delta: { type: "input_json_delta", partial_json: '{"query":' } },
+      { type: "content_block_delta", index: 2, delta: { type: "input_json_delta", partial_json: '"eligibility"}' } },
+      { type: "content_block_stop", index: 2 },
+      { type: "message_delta", delta: { stop_reason: "tool_use" } },
+    ]);
+
+  it("hides thinking from the user and passes it back unchanged in the next request", async () => {
+    aws.bedrock.mockResolvedValueOnce(progressThenTool());
+    aws.bedrock.mockImplementation(async () => answer("You are eligible."));
+
+    await chat();
+
+    expect(aws.bedrock).toHaveBeenCalledTimes(2);
+    const posted = aws.posts.mock.calls.map(([d]) => String(d)).join("");
+    expect(posted).not.toContain("Checking the eligibility");
+    expect(posted).not.toContain("sig-abc");
+    expect(posted).toContain("Let me look. You are eligible.");
+
+    const messages = aws.bedrock.mock.calls[1][0].messages;
+    expect(messages.at(-2)).toEqual({
+      role: "assistant",
+      content: [
+        { type: "thinking", thinking: "Checking the eligibility section first.", signature: "sig-abc" },
+        { type: "text", text: "Let me look. " },
+        { type: "tool_use", id: "t1", name: "query_db", input: { query: "eligibility" } },
+      ],
+    });
+    expect(messages.at(-1).content).toEqual([expect.objectContaining({ type: "tool_result", tool_use_id: "t1" })]);
+
+    expect(sessionSaves()[0][0].new_chat_entry[0].chatbot).toBe("Let me look. You are eligible.");
+  });
+});
+
+describe("websocket-chat refusals", () => {
+  const refusal = (events: object[] = []) =>
+    stream([...events, { type: "message_delta", delta: { stop_reason: "refusal", stop_details: { type: "refusal", category: "cyber" } } }]);
+
+  it("tells the user plainly, logs the category and saves nothing", async () => {
+    aws.bedrock.mockResolvedValueOnce(refusal());
+
+    await chat();
+
+    expect(aws.bedrock).toHaveBeenCalledTimes(1);
+    expect(aws.posts.mock.calls.map(([d]) => d)).toEqual(["I can't help with that request.", "!<|EOF_STREAM|>!", "[]"]);
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("cyber"));
+    expect(sessionSaves()).toEqual([]);
+  });
+
+  it("stops the tool loop on a refusal after partial output and saves nothing", async () => {
+    aws.bedrock.mockResolvedValueOnce(toolUse());
+    aws.bedrock.mockResolvedValueOnce(refusal([{ type: "content_block_delta", delta: { type: "text_delta", text: "Partial" } }]));
+    aws.bedrock.mockImplementation(async () => answer("never requested"));
+
+    await chat();
+
+    expect(aws.bedrock).toHaveBeenCalledTimes(2);
+    expect(aws.posts.mock.calls.map(([d]) => d)).toEqual(["Partial", "\n\nI can't help with that request.", "!<|EOF_STREAM|>!", "[]"]);
+    expect(aws.posts.mock.calls.some(([d]) => String(d).startsWith("<!ERROR!>"))).toBe(false);
+    expect(sessionSaves()).toEqual([]);
   });
 });

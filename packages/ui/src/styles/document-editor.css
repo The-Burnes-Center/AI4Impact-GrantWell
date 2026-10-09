@@ -179,8 +179,8 @@
   font-size: 14px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
+  text-transform: var(--gw-button-text-transform);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   border: 1px solid transparent;
@@ -442,8 +442,8 @@
   font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
@@ -618,8 +618,8 @@
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   min-height: 44px;
@@ -652,8 +652,8 @@
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   min-height: 44px;
@@ -1314,8 +1314,8 @@
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   border: 1px solid transparent;
@@ -1327,7 +1327,7 @@
   background-color: transparent;
   color: var(--gw-color-primary-hover);
   border-color: transparent;
-  letter-spacing: 1px;
+  letter-spacing: var(--gw-button-letter-spacing, 1px);
 }
 
 .se-save-btn:hover {
