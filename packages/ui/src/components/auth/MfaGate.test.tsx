@@ -38,7 +38,10 @@ describe("MfaGate", () => {
     const user = userEvent.setup();
     renderGate();
 
-    await user.click(await screen.findByRole("button", { name: "Set it up" }));
+    const setItUp = await screen.findByRole("button", { name: "Set it up" });
+    // The focus trap focuses the first button 100 ms after opening; typing before then loses digits.
+    await waitFor(() => expect(setItUp).toHaveFocus());
+    await user.click(setItUp);
     await screen.findByText("SECRET123");
     await user.click(screen.getByLabelText("Digit 1 of 6"));
     await user.keyboard("123456");
