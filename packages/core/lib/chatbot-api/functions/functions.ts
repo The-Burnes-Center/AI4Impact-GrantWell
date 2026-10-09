@@ -115,7 +115,6 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly docxToTextConverterFunction: lambda.Function;
   public readonly applicationDocxGeneratorFunction: lambda.Function;
   public readonly applicationExportsBucket: s3.Bucket;
-  public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
   public readonly notificationDigestPreviewFunction: lambda.Function;
@@ -204,8 +203,13 @@ export class LambdaFunctionStack extends cdk.Stack {
       claude("draft generation (Sonnet)", sonnetDraftProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("NOFO synthesis and questions (Haiku)", haikuNofoProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
       claude("grants.gov scraper (Haiku)", haikuScraperProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
-      // ai-grant-search calls the foundation model directly; TITAN_MODEL_ID (the profile) is set but unused.
-      { label: "grant search embeddings (Titan)", kind: "titan-embed", modelId: TITAN_MODEL_ID, invokeResources: [titanFoundationModelArn] },
+      // ai-grant-search embeds through this profile (its TITAN_MODEL_ID); invoking a profile also needs the model.
+      {
+        label: "grant search embeddings (Titan)",
+        kind: "titan-embed",
+        modelId: titanSearchProfile.attrInferenceProfileArn,
+        invokeResources: [titanSearchProfile.attrInferenceProfileArn, titanFoundationModelArn],
+      },
       { label: "grant search reranking (Cohere)", kind: "rerank", modelId: rerankModelArn, invokeResources: [rerankModelArn] },
     ];
 
@@ -1193,7 +1197,6 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.scraperCoordinatorFunction = scraper.scraperCoordinatorFunction;
     this.opportunityProcessorFunction = scraper.opportunityProcessorFunction;
-    this.syncNofoMetadataFunction = scraper.syncNofoMetadataFunction;
     this.autoArchiveExpiredNofosFunction =
       scraper.autoArchiveExpiredNofosFunction;
 

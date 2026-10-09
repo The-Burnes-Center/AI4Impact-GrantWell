@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Upgrades this instance to a GrantWell release: downloads both .tgz files, verifies their checksums,
-# swaps vendor/, reinstalls, checks, and lists which generated templates the upgrade changes.
+# swaps vendor/, reinstalls, refreshes scripts/ from the release, checks, and lists which generated
+# templates the upgrade changes.
 # Usage: scripts/upgrade.sh <version>        e.g. scripts/upgrade.sh 3.0.0
 # Env:   GRANTWELL_REPO, GITHUB_TOKEN (see fetch-release.sh)
 set -euo pipefail
@@ -23,6 +24,7 @@ backup="$work/backup"
 mkdir -p "$backup/vendor"
 cp package.json package-lock.json "$backup/"
 cp vendor/grantwell-*.tgz "$backup/vendor/"
+cp -R scripts "$backup/scripts"
 swapped=false
 cleanup() {
   status=$?
@@ -30,7 +32,9 @@ cleanup() {
     rm -f vendor/grantwell-*.tgz
     cp "$backup"/vendor/*.tgz vendor/
     cp "$backup/package.json" "$backup/package-lock.json" .
-    echo "Upgrade failed; vendor/, package.json and package-lock.json are restored. Run npm ci before continuing." >&2
+    rm -rf scripts
+    cp -R "$backup/scripts" scripts
+    echo "Upgrade failed; vendor/, scripts/, package.json and package-lock.json are restored. Run npm ci before continuing." >&2
   fi
   rm -rf "$work"
   exit $status
@@ -44,20 +48,42 @@ scripts/fetch-release.sh "$version" "$work"
 echo "Generating templates for the current version"
 node scripts/check-vendor.mjs
 npm ci --no-audit --no-fund
-node scripts/synth.mjs synth cdk.out/upgrade/before
+baseline=true
+if ! node scripts/synth.mjs synth cdk.out/upgrade/before; then
+  baseline=false
+  rm -rf cdk.out/upgrade/before
+  echo "Warning: the current version can't generate templates from this config (does it already use a field from $version?)." >&2
+  echo "Continuing without them: no before/after comparison and no stateful-resource check." >&2
+fi
 
 swapped=true
 rm -f vendor/grantwell-core-*.tgz vendor/grantwell-ui-*.tgz
 cp "$work/$core" "$work/$ui" vendor/
 # Naming the files refreshes the lockfile integrity; plain `npm install` would keep the old one.
 npm install --no-audit --no-fund "./vendor/$core" "./vendor/$ui"
+check=node_modules/.bin/grantwell-check
+if [ -x "$check" ]; then
+  "$check" --sync-scripts
+fi
 node scripts/check-vendor.mjs
 npm run typecheck
 
 echo "Generating templates for $version"
 node scripts/synth.mjs synth cdk.out/upgrade/after
 echo
-node scripts/synth.mjs compare cdk.out/upgrade/before cdk.out/upgrade/after
-echo
-echo "Upgraded to $version. Templates are in cdk.out/upgrade/{before,after}."
-echo "Review git diff, then commit vendor/, package.json and package-lock.json."
+if $baseline; then
+  node scripts/synth.mjs compare cdk.out/upgrade/before cdk.out/upgrade/after
+  echo
+fi
+if [ -x "$check" ]; then
+  if $baseline; then
+    "$check" cdk.out/upgrade/after --before cdk.out/upgrade/before
+  else
+    "$check" cdk.out/upgrade/after
+  fi
+  echo
+else
+  echo "GrantWell $version has no grantwell-check; contract checks skipped."
+fi
+echo "Upgraded to $version. Templates are in cdk.out/upgrade/."
+echo "Review git diff, then commit vendor/, scripts/, package.json and package-lock.json."

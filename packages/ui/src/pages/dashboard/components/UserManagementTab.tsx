@@ -118,7 +118,12 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       });
     } catch (error) {
       console.error("Error loading users:", error);
-      addNotification("error", "Failed to load users");
+      addNotification(
+        "error",
+        error instanceof Error && error.message
+          ? `Failed to load users: ${error.message}`
+          : "Failed to load users"
+      );
     } finally {
       setLoading(false);
     }

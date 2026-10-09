@@ -1,0 +1,5 @@
+# Test-only. boto3 is the python3.12 Lambda runtime's version; pydantic matches the shared layer.
+boto3==1.42.97
+moto[dynamodb,sns,sqs]==5.2.2
+pydantic==2.13.5
+pytest==9.1.1

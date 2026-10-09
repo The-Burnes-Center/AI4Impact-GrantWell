@@ -10,7 +10,7 @@ This repo deploys one GrantWell instance: your configuration plus two release ar
 | `config/branding.ts` | Name, colors, logos, footer links |
 | `public/` | Your own images (logo, favicon, partner logos), served from the site root |
 | `bin/app.ts` | CDK entry point. Don't edit it. |
-| `scripts/` | `install.sh`, `upgrade.sh`, `check-models.sh` and their helpers. Don't edit them. |
+| `scripts/` | `install.sh`, `upgrade.sh`, `check-models.sh` and their helpers. Don't edit them: upgrade.sh replaces them with each release's copy. |
 | `.github/workflows/deploy.yml` | Checks every push; deploys when you run it by hand, then checks every Bedrock model answers |
 | `.github/workflows/upgrade.yml` | Weekly: opens a pull request when a newer GrantWell release is out |
 
@@ -45,9 +45,22 @@ Put your own images in `public/` and point `config/branding.ts` at them by their
 Your site is hidden from search engines until you set `seo: { indexable: true }` on a prod deployment in `config/instances.ts`; dev deployments are always hidden. Set the home page title, description and a 1200×630 share image under `seo` in `config/branding.ts`. GrantWell generates `robots.txt`, `sitemap.xml`, `manifest.json` and `llms.txt` from your config, so don't put those in `public/` (the synth fails if you do).
 
 ## Upgrade
-Once a week, `.github/workflows/upgrade.yml` runs `scripts/upgrade.sh` for the newest release and opens a pull request if it passes. Turn on Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests" for this. upgrade.sh only swaps the release; the PR links to what changed in the template's own files (scripts, workflows), which you copy by hand.
+Once a week, `.github/workflows/upgrade.yml` runs `scripts/upgrade.sh` for the newest release and opens a pull request if it passes. Turn on Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests" for this. upgrade.sh swaps the release and refreshes `scripts/` from it; the PR links to what changed in the template's other files (workflows, README), which you copy by hand.
 
-To upgrade by hand, run `scripts/upgrade.sh <version>`, for example `scripts/upgrade.sh 3.0.0`. It downloads that release, checks its SHA256SUMS, swaps `vendor/`, reinstalls, typechecks, and lists which generated templates the upgrade changes (templates in `cdk.out/upgrade/`). If a step fails, it restores `vendor/`, `package.json` and `package-lock.json`. Review `git diff`, then commit those three.
+To upgrade by hand, run `scripts/upgrade.sh <version>`, for example `scripts/upgrade.sh 3.0.0`. It downloads that release, checks its SHA256SUMS, swaps `vendor/`, refreshes `scripts/`, reinstalls, typechecks, lists which generated templates the upgrade changes (templates in `cdk.out/upgrade/`) and runs the contract checks (below). If a step fails, it restores `vendor/`, `scripts/`, `package.json` and `package-lock.json`. Review `git diff`, then commit those four.
+
+If your config already uses an option the new release adds, the current version can't generate templates from it: upgrade.sh warns and carries on without the before/after comparison and the stateful-resource check.
+
+### Contract checks
+`node_modules/.bin/grantwell-check <templates dir>` checks what a release needs from your repo beyond a typecheck. install.sh, upgrade.sh and the Deploy workflow's check job run it. It fails when:
+
+- `chrome/` targets another chrome API version, uses a `--gw-*` style variable the release doesn't have, or doesn't type-check against the release's chrome API (it installs the UI's dependencies in a temporary folder for this);
+- a deployment's generated root template has no `ModelCanaryFunctionName` output;
+- `scripts/` differs from the release's copy (`grantwell-check --sync-scripts` restores it);
+- on an upgrade, a user pool, table, bucket, vector collection or knowledge base would be removed or replaced;
+- `config/` still holds the template's example values (install.sh only warns).
+
+It warns when `.github/workflows/deploy.yml` lacks a step the template's has.
 
 Downloads need no GitHub account. If the source repo is ever private, set `GITHUB_TOKEN` to a token with read access to it.
 

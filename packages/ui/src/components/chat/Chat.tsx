@@ -10,6 +10,7 @@ import { useBranding } from "../../common/branding";
 import { useNotifications } from "../notifications/NotificationManager";
 import { LuCircleHelp, LuChevronDown, LuLoader } from "react-icons/lu";
 import { parseChatHistory } from "./utils";
+import { KB_SYNC_UNKNOWN_MESSAGE, type KbSyncStatus } from "../../hooks/use-kb-sync-poll";
 
 // Styles for components
 const styles: Record<string, React.CSSProperties> = {
@@ -124,7 +125,7 @@ const styles: Record<string, React.CSSProperties> = {
 export default function Chat(props: {
   sessionId?: string;
   documentIdentifier?: string;
-  kbSyncing?: boolean;
+  kbSyncStatus?: KbSyncStatus;
 }) {
   const appContext = useContext(AppContext);
   const branding = useBranding();
@@ -383,11 +384,15 @@ export default function Chat(props: {
       </div>
 
       <div role="status" aria-live="polite" className="visually-hidden">
-        {props.kbSyncing ? "Indexing your supporting documents. You can keep chatting." : ""}
+        {props.kbSyncStatus === "indexing"
+          ? "Indexing your supporting documents. You can keep chatting."
+          : props.kbSyncStatus === "unknown"
+          ? KB_SYNC_UNKNOWN_MESSAGE
+          : ""}
       </div>
 
       {/* KB indexing banner */}
-      {props.kbSyncing && (
+      {(props.kbSyncStatus === "indexing" || props.kbSyncStatus === "unknown") && (
         <div
           style={{
             display: "flex",
@@ -402,14 +407,20 @@ export default function Chat(props: {
             flexShrink: 0,
           }}
         >
-          <LuLoader
-            size={14}
-            aria-hidden="true"
-            style={{ animation: "spin 1s linear infinite" }}
-          />
-          Your supporting documents are being indexed. Newly added documents will
-          appear in results once indexing completes — you can keep chatting in the
-          meantime.
+          {props.kbSyncStatus === "indexing" ? (
+            <>
+              <LuLoader
+                size={14}
+                aria-hidden="true"
+                style={{ animation: "spin 1s linear infinite" }}
+              />
+              Your supporting documents are being indexed. Newly added documents will
+              appear in results once indexing completes — you can keep chatting in the
+              meantime.
+            </>
+          ) : (
+            KB_SYNC_UNKNOWN_MESSAGE
+          )}
         </div>
       )}
 

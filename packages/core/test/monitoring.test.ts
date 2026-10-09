@@ -218,10 +218,10 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       const [id, canary] = fnNamed(`${prefix}-model-canary`);
       expect(canary.Properties.Runtime).toBe("nodejs24.x");
       const models = JSON.stringify(canary.Properties.Environment.Variables.MODELS);
-      for (const profile of ["SonnetChat", "SonnetNofo", "SonnetDraft", "HaikuNofo", "HaikuScraper"]) {
+      for (const profile of ["SonnetChat", "SonnetNofo", "SonnetDraft", "HaikuNofo", "HaikuScraper", "TitanSearch"]) {
         expect(models, profile).toMatch(new RegExp(`ChatbotAPI${profile}InferenceProfile[0-9A-F]{8}InferenceProfileArn`));
       }
-      expect(models).toContain("amazon.titan-embed-text-v2:0");
+      expect(models).not.toContain("amazon.titan-embed-text-v2:0");
       expect(models).toContain("cohere.rerank-v3-5:0");
       const actions = policyOf(id).map((s) => s.Action).sort();
       expect(actions).toEqual(["bedrock:InvokeModel", "bedrock:Rerank"]);

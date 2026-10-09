@@ -41,7 +41,7 @@ function tokenCeilingForWords(words) {
   return Math.min(10400, Math.max(2000, Math.round(words * 2.9) + 500)) + THINKING_TOKEN_ALLOWANCE;
 }
 
-// SUPPORTED_STATES injected as [{code,name}] (from lib/shared/states.ts). Parsed inline because
+// SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts). Parsed inline because
 // this function does not attach the grantwell-shared Lambda layer.
 const STATE_NAME_BY_CODE = (() => {
   try {

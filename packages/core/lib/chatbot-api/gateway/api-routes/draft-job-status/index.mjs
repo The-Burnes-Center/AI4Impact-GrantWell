@@ -133,7 +133,8 @@ export const handler = async (event) => {
         body: JSON.stringify({ error: 'Unauthorized: missing JWT claims' })
       };
     }
-    if (job.userId && job.userId !== callerSub) {
+    // Every writer stamps userId, so a job without one has no owner to show it to.
+    if (!job.userId || job.userId !== callerSub) {
       // Return 404 (not 403) to avoid disclosing job existence to non-owners.
       return {
         statusCode: 404,

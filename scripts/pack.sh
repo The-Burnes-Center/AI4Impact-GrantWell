@@ -27,6 +27,8 @@ fi
 
 # Ignored files never reach an artifact: local node_modules, dist/, staged UI config.
 git -C "$repo" ls-files -z --cached --others --exclude-standard packages/core packages/ui | tar -C "$repo" --null -T - -cf - | tar -C "$work" -xf -
+# grantwell-check compares an instance's scripts/ with this copy, and upgrade.sh refreshes them from it.
+git -C "$repo" ls-files -z --cached --others --exclude-standard template/scripts | tar -C "$repo" --null -T - -cf - | tar -C "$work/packages/core" -xf -
 
 core="$work/packages/core"
 (cd "$core" && npm ci --ignore-scripts --no-audit --no-fund --loglevel=error >/dev/null && npx tsc -p . && rm -rf node_modules)

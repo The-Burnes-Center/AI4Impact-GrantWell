@@ -49,7 +49,8 @@ export interface PublicHomeProps {
 }
 
 export interface Chrome {
-  apiVersion: number;
+  /** Must be CHROME_API_VERSION, so a chrome written for another version fails the type check. */
+  apiVersion: typeof CHROME_API_VERSION;
   /** Replaces the official-website strip (branding.govHeader) at the top of every page. */
   Banner?: ComponentType;
   /** Shown under the banner on every page; the app's own top bar and sidebar logo then step aside. */

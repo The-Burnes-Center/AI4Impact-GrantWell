@@ -83,20 +83,26 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git checkout -b "$BRANCH"
-          git add vendor/ package.json package-lock.json
+          git add vendor/ scripts/ package.json package-lock.json
           git commit -q -m "Upgrade GrantWell to $VERSION"
           git push origin "$BRANCH"
           {
             echo "Upgrades GrantWell from $CURRENT to $VERSION: [release notes](https://github.com/$GRANTWELL_REPO/releases/tag/v$VERSION)."
             echo
-            echo "\`scripts/upgrade.sh $VERSION\` passed: checksums, install, typecheck and a synth of every deployment."
+            echo "\`scripts/upgrade.sh $VERSION\` passed: checksums, install, typecheck, a synth of every deployment and the contract checks."
             echo "Generated templates this upgrade changes:"
             echo
             echo '```'
-            grep -E '(templates differ$|^  (added|removed|changed) )' "$RUNNER_TEMP/upgrade.log"
+            grep -E '(templates differ$|^  (added|removed|changed) )' "$RUNNER_TEMP/upgrade.log" || echo "No comparison: the current version couldn't generate templates from this config."
             echo '```'
             echo
-            echo "Template files (scripts, workflows, README) may have changed too; upgrade.sh doesn't touch them. Compare and copy by hand: https://github.com/$TEMPLATE_REPO/compare/v$CURRENT...v$VERSION"
+            echo "Contract checks:"
+            echo
+            echo '```'
+            sed -n '/contract checks$/,/^$/p' "$RUNNER_TEMP/upgrade.log" | sed -E 's/::(warning|error):://'
+            echo '```'
+            echo
+            echo "upgrade.sh refreshed scripts/ from the release. Workflows and README may have changed too; compare and copy those by hand: https://github.com/$TEMPLATE_REPO/compare/v$CURRENT...v$VERSION"
             echo
             echo "Opened by GitHub Actions, so Deploy's check doesn't run on this PR; it runs on the merge. After merging, deploy staging first."
           } > "$RUNNER_TEMP/body.md"

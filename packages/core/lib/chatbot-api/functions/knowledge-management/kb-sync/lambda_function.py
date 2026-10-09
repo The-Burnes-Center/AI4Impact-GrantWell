@@ -121,6 +121,17 @@ def get_last_sync():
         'body': json.dumps(time)
     }
 
+def start_sync(data_source_id, label):
+    """Start an ingestion job; one started by another caller since check_running is not an error."""
+    try:
+        client.start_ingestion_job(
+            dataSourceId=data_source_id,
+            knowledgeBaseId=kb_index
+        )
+        print(f"Started {label} sync for data source: {data_source_id}")
+    except client.exceptions.ConflictException:
+        print(f"Skipped {label} sync — another ingestion job is already running.")
+
 def lambda_handler(event, context):
     """
     AWS Lambda handler function for handling requests.
@@ -144,22 +155,14 @@ def lambda_handler(event, context):
             if check_running(user_documents_source):
                 print("User documents sync already in progress.")
                 return
-            client.start_ingestion_job(
-                dataSourceId=user_documents_source,
-                knowledgeBaseId=kb_index
-            )
-            print(f"Started user documents sync for data source: {user_documents_source}")
+            start_sync(user_documents_source, "user documents")
             return
 
         if sync_source == 'nofo' and source_index:
             if check_running(source_index):
                 print("NOFO sync already in progress.")
                 return
-            client.start_ingestion_job(
-                dataSourceId=source_index,
-                knowledgeBaseId=kb_index
-            )
-            print(f"Started NOFO bucket sync for data source: {source_index}")
+            start_sync(source_index, "NOFO bucket")
             return
 
         # No syncSource specified — sync both (legacy / direct invocations)
@@ -168,29 +171,24 @@ def lambda_handler(event, context):
             return
 
         if user_documents_source:
-            try:
-                client.start_ingestion_job(
-                    dataSourceId=user_documents_source,
-                    knowledgeBaseId=kb_index
-                )
-                print(f"Started user documents bucket sync for data source: {user_documents_source}")
-            except client.exceptions.ConflictException:
-                print("Skipped user documents sync — another ingestion job is already running.")
-
+            start_sync(user_documents_source, "user documents bucket")
         if source_index:
-            try:
-                client.start_ingestion_job(
-                    dataSourceId=source_index,
-                    knowledgeBaseId=kb_index
-                )
-                print(f"Started NOFO bucket sync for data source: {source_index}")
-            except client.exceptions.ConflictException:
-                print("Skipped NOFO sync — another ingestion job is already running.")
+            start_sync(source_index, "NOFO bucket")
 
         print("Started knowledge base sync.")
         return
     
-    # Check admin access    
+    # Any signed-in user may poll this (the API's JWT authorizer guarantees one): users
+    # wait on it after uploading supporting documents, and it reveals only running/done.
+    if "still-syncing" in resource_path:
+        status_msg = 'STILL SYNCING' if check_any_running() else 'DONE SYNCING'
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps(status_msg)
+        }
+
+    # Check admin access
     try:
         claims = event["requestContext"]["authorizer"]["jwt"]["claims"]
         roles = json.loads(claims['custom:role'])
@@ -209,13 +207,5 @@ def lambda_handler(event, context):
             'body': json.dumps(f'Unable to check user role, please ensure you have Cognito configured correctly with a custom:role attribute. Error: {e}')
         }    
         
-    # Check if the request is for checking the sync status
-    if "still-syncing" in resource_path:
-        status_msg = 'STILL SYNCING' if check_any_running() else 'DONE SYNCING'
-        return {
-            'statusCode': 200,
-            'headers': {'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps(status_msg)
-        }
-    elif "last-sync" in resource_path:
+    if "last-sync" in resource_path:
         return get_last_sync()

@@ -9,6 +9,21 @@ import type {
 import type { ManagedUsersResponse, UserRolePreset } from "../types/user-management";
 import { apiFetch } from "../session-ended";
 
+/** Checks the status before parsing: a failed call may carry an HTML gateway page, not JSON. */
+async function readJson(response: Response) {
+  if (!response.ok) {
+    let message = "";
+    try {
+      const body = JSON.parse(await response.text());
+      if (typeof body?.message === "string") message = body.message;
+    } catch {
+      // Not JSON; fall back to the status.
+    }
+    throw new Error(message || `Request failed (HTTP ${response.status})`);
+  }
+  return response.json();
+}
+
 export class UserManagementClient {
   private readonly baseUrl: string;
 
@@ -46,12 +61,7 @@ export class UserManagementClient {
       headers,
     });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async createUser(options: { email: string; state?: string }) {
@@ -65,12 +75,7 @@ export class UserManagementClient {
       }),
     });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async deleteUser(username: string) {
@@ -83,12 +88,7 @@ export class UserManagementClient {
       }
     );
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async resetUserMfa(username: string) {
@@ -101,12 +101,7 @@ export class UserManagementClient {
       }
     );
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async updateUserRole(username: string, rolePreset: UserRolePreset) {
@@ -120,12 +115,7 @@ export class UserManagementClient {
       }
     );
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async updateUserState(username: string, state: string) {
@@ -139,12 +129,7 @@ export class UserManagementClient {
       }
     );
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async getCurrentFeatureAccess(): Promise<CurrentFeatureRolloutAccess> {
@@ -154,12 +139,7 @@ export class UserManagementClient {
       headers,
     });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async getFeatureRollout(featureKey: string): Promise<FeatureRolloutConfig> {
@@ -169,12 +149,7 @@ export class UserManagementClient {
       headers,
     });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async updateFeatureRollout(featureKey: string, mode: FeatureRolloutMode): Promise<FeatureRolloutConfig> {
@@ -185,12 +160,7 @@ export class UserManagementClient {
       body: JSON.stringify({ mode }),
     });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async searchFeatureRolloutUsers(
@@ -212,12 +182,7 @@ export class UserManagementClient {
       headers,
     });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async grantFeatureRolloutUser(featureKey: string, email: string) {
@@ -230,12 +195,7 @@ export class UserManagementClient {
       }
     );
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 
   async revokeFeatureRolloutUser(featureKey: string, email: string) {
@@ -248,11 +208,6 @@ export class UserManagementClient {
       }
     );
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Error: ${response.status}`);
-    }
-
-    return data;
+    return readJson(response);
   }
 } 

@@ -67,8 +67,8 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const status = statusFilter === "all" ? undefined : statusFilter;
-      const items = await apiClient.landingPage.getProcessingReviews(status);
+      // Without a status the server answers with pending reviews only.
+      const items = await apiClient.landingPage.getProcessingReviews(statusFilter);
       setReviews(items);
     } catch {
       addNotification("error", "Failed to load processing reviews");

@@ -71,6 +71,16 @@ jobs:
         if: steps.installed.outputs.value == 'true'
         run: node scripts/synth.mjs synth cdk.out/check
 
+      # What this release needs beyond a typecheck: chrome/, scripts/, outputs, no example values.
+      - name: Contract checks
+        if: steps.installed.outputs.value == 'true'
+        run: |
+          if [ -x node_modules/.bin/grantwell-check ]; then
+            node_modules/.bin/grantwell-check cdk.out/check
+          else
+            echo "::notice::This GrantWell release has no grantwell-check."
+          fi
+
       - name: Trial install (nothing committed)
         if: steps.installed.outputs.value == 'false'
         run: |
