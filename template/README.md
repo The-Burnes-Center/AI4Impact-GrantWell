@@ -41,6 +41,17 @@ Put your own images in `public/` and point `config/branding.ts` at them by their
 - **Bot check:** sign-up and sign-in use Cloudflare Turnstile unless `auth: { turnstile: false }`. With it off, no Turnstile keys are needed.
 - **Email:** `email: { cognitoDefault: true }` sends sign-in mail from Cognito's own sender when your account has no SES set up (about 50 a day); grant digest emails are then off.
 
+## Processing-queue email
+With `notifications: { processingQueueEmail: true }` on a deployment, admins get one email at 09:00 Eastern on weekdays when grants are waiting in the processing queue, soonest deadline first; nothing is sent when the queue is empty. It needs an SES sender, so it can't be combined with `email: { cognitoDefault: true }`.
+
+The recipients stay out of your repo. In that deployment's account and region, create an SSM String parameter named `/grantwell-<id>/queue-email/recipients` (`<id>` from `config/instances.ts`) holding comma-separated addresses:
+
+```
+aws ssm put-parameter --type String --name /grantwell-<id>/queue-email/recipients --value "ana@example.org,ben@example.org"
+```
+
+The next email uses whatever the parameter holds, so changing the list needs no deploy (add `--overwrite`). With no parameter, or an empty one, nothing is sent.
+
 ## Search engines
 Your site is hidden from search engines until you set `seo: { indexable: true }` on a prod deployment in `config/instances.ts`; dev deployments are always hidden. Set the home page title, description and a 1200×630 share image under `seo` in `config/branding.ts`. GrantWell generates `robots.txt`, `sitemap.xml`, `manifest.json` and `llms.txt` from your config, so don't put those in `public/` (the synth fails if you do).
 

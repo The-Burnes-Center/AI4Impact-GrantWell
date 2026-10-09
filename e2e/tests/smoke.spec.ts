@@ -5,8 +5,8 @@
  *
  * Never call from here (they write, send mail, or start work): user create, delete, roles and
  * mfa-reset; /test-url; NOFO rename, delete, status, summary-update, overlay PUT/DELETE and
- * promote-copy; review approve, reject and needs-reupload; reupload-nofo and reprocess-nofo;
- * /automated-nofo-scraper; digest broadcast and POST preview; /submit-feedback;
+ * promote-copy; review approve, reject, needs-reupload and close-expired; reupload-nofo and
+ * reprocess-nofo; /automated-nofo-scraper; digest broadcast and POST preview; /submit-feedback;
  * /draft-generation; /ai-grant-search; PUT /notification-prefs; feature-rollout PATCH/PUT/DELETE;
  * user-documents upload-url and delete.
  */

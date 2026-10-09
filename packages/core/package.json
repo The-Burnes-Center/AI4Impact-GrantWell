@@ -1,6 +1,6 @@
 {
   "name": "grantwell-core",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
@@ -30,6 +30,7 @@
     "@aws-sdk/client-sesv2": "3.1105.0",
     "@aws-sdk/client-sfn": "3.1105.0",
     "@aws-sdk/client-sqs": "3.1105.0",
+    "@aws-sdk/client-ssm": "3.1105.0",
     "@aws-sdk/s3-request-presigner": "3.1105.0",
     "@aws-sdk/util-dynamodb": "3.996.7",
     "@types/node": "^24.0.0",

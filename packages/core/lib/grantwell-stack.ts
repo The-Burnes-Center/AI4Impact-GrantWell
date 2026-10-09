@@ -88,6 +88,7 @@ export class GrantWellStack extends cdk.Stack {
       },
       scraperCoordinatorFunction: fns.scraperCoordinatorFunction,
       notificationDigestFunction: fns.notificationDigestFunction,
+      processingQueueEmailFunction: fns.processingQueueEmailFunction,
       autoArchiveFunction: fns.autoArchiveExpiredNofosFunction,
       bedrockModels: fns.bedrockModels,
     });

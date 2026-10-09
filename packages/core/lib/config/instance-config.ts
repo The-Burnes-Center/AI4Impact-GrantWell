@@ -83,6 +83,14 @@ interface InstanceConfigBase {
   /** SES, or Cognito's own sender for an account without SES; the digest needs SES and is off without it. */
   email: SesEmail | { cognitoDefault: true };
   scraper: { dailySchedule: boolean };
+  /** Admin emails, off unless set. They need an SES sender. */
+  notifications?: {
+    /**
+     * Weekdays at 09:00 Eastern, when grants are waiting in the processing queue, one email to the
+     * comma-separated addresses in the SSM String parameter `queueEmailRecipientsParameter(config)`.
+     */
+    processingQueueEmail?: boolean;
+  };
   /** Alarms always ship; this adds the once-a-day health brief to the alerts topic. */
   monitoring: { dailyBrief: boolean };
   /** Search engines may index the home page. Off unless set; never on a dev stage. */
@@ -138,6 +146,14 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (ses ? "cognitoDefault" in config.email : (config.email as { cognitoDefault?: unknown }).cognitoDefault !== true) {
     problems.push("email must be either { sender, manageSenderIdentity } or { cognitoDefault: true }");
   } else if (ses && !ses.sender.includes("@")) problems.push("email.sender is not an address");
+  const queueEmail = config.notifications?.processingQueueEmail;
+  if (queueEmail !== undefined && typeof queueEmail !== "boolean") {
+    problems.push("notifications.processingQueueEmail must be true or false");
+  } else if (queueEmail && !ses) {
+    problems.push(
+      "notifications.processingQueueEmail needs SES, but email is { cognitoDefault: true }: set email: { sender, manageSenderIdentity } or remove the option"
+    );
+  }
   if (config.feedbackFormUrl !== undefined && !config.feedbackFormUrl.startsWith("https://")) {
     problems.push("feedbackFormUrl must start with https://");
   }
@@ -171,6 +187,15 @@ export const E2E_TEST_EMAIL_DOMAIN = "@grantwell.invalid";
 /** SecureString created out of band; only deployments with `e2e` can read it. */
 export function e2eBypassParameter(config: InstanceConfig): string {
   return `/${monitoringPrefix(config)}/e2e/turnstile-bypass`;
+}
+
+/** String parameter created out of band so the addresses stay out of the repo. */
+export function queueEmailRecipientsParameter(config: InstanceConfig): string {
+  return `/${monitoringPrefix(config)}/queue-email/recipients`;
+}
+
+export function processingQueueEmailEnabled(config: InstanceConfig): boolean {
+  return config.notifications?.processingQueueEmail === true && sesEmail(config) !== undefined;
 }
 
 /** Tags core puts on every stack and resource. None of them may change for a deployed stack; see collectionTags. */

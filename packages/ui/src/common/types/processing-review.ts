@@ -9,6 +9,20 @@ export interface ReviewItem {
   guidanceTitle: string | null;
   guidanceSeverity: "critical" | "warning" | null;
   missingSections: string[];
+  /** The grant's deadline (YYYY-MM-DD), or null when none is known. */
+  deadline: string | null;
+  /** Days from today (Eastern) to the deadline; negative once it has passed. */
+  daysLeft: number | null;
+  /** due_soon ≤ 7 days, upcoming ≤ 30, expired once past; null when no deadline is known. */
+  deadlineUrgency: "due_soon" | "upcoming" | "later" | "expired" | null;
+  grantStatus: string | null;
+}
+
+export interface ProcessingReviewList {
+  /** Soonest deadline first, then no known deadline, then expired. */
+  reviews: ReviewItem[];
+  /** Open reviews (pending, failed, needs re-upload) on expired grants, whatever the filter. */
+  expiredOpenCount: number;
 }
 
 export interface AdminGuidance {

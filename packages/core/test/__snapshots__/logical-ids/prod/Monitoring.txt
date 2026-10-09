@@ -83,6 +83,10 @@ PdfExportFailingAlarmDC2C41B0	AWS::CloudWatch::Alarm
 PipelineDispatchFailedFilterA6ECEEDB	AWS::Logs::MetricFilter
 PipelineDispatchFailedLogGroupExistsC0A2A94A	Custom::AWS
 PipelineDispatchFailedLogGroupExistsCustomResourcePolicyBE18812C	AWS::IAM::Policy
+ProcessingQueueEmailFailingAlarm49BD6D9D	AWS::CloudWatch::Alarm
+QueueEmailSendFailedFilter9209D18E	AWS::Logs::MetricFilter
+QueueEmailSendFailedLogGroupExists78D67D27	Custom::AWS
+QueueEmailSendFailedLogGroupExistsCustomResourcePolicy40427997	AWS::IAM::Policy
 ScraperFailedAlarmE9E18209	AWS::CloudWatch::Alarm
 ScraperFatalFilter5B5C9263	AWS::Logs::MetricFilter
 ScraperFatalLogGroupExistsCustomResourcePolicyB6FF8DC3	AWS::IAM::Policy

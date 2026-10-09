@@ -33,6 +33,7 @@ export const instances: InstanceConfig[] = [
     },
     auth: { mfaRequired: false, mfaDeadline: "2026-11-02T00:00:00-05:00" },
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: true },
+    notifications: { processingQueueEmail: true },
     scraper: { dailySchedule: true },
     monitoring: { dailyBrief: true },
     seo: { indexable: true },

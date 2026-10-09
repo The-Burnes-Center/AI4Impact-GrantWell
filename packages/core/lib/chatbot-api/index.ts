@@ -648,6 +648,12 @@ export class ChatBotApi extends Construct {
       authorizer: httpAuthorizer,
     });
     restBackend.restAPI.addRoutes({
+      path: "/admin/processing-reviews/close-expired",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: nofoAdminAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+    restBackend.restAPI.addRoutes({
       path: "/admin/processing-reviews/{nofoName}",
       methods: [apigwv2.HttpMethod.GET],
       integration: nofoAdminAPIIntegration,

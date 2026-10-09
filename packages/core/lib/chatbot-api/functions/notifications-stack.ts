@@ -48,6 +48,9 @@ export interface NotificationsStackProps extends cdk.NestedStackProps {
   readonly supportedStatesEnv: string;
   readonly siteUrl: string;
   readonly branding: Branding;
+  readonly nofoProcessingReviewTable: Table;
+  /** Set only when the deployment has the processing-queue email on (it needs notificationSender). */
+  readonly processingQueueEmail?: { recipientsParameter: string; deploymentId: string };
 }
 
 export class NotificationsStack extends cdk.NestedStack {
@@ -56,6 +59,7 @@ export class NotificationsStack extends cdk.NestedStack {
   public readonly notificationDigestBroadcastFunction: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly notificationSesFeedbackFunction: lambda.Function;
+  public readonly processingQueueEmailFunction?: lambda.Function;
 
   constructor(scope: Construct, id: string, props: NotificationsStackProps) {
     super(scope, id, props);
@@ -228,6 +232,10 @@ export class NotificationsStack extends cdk.NestedStack {
 
     if (!notificationSender) return;
 
+    if (props.processingQueueEmail) {
+      this.processingQueueEmailFunction = this.addProcessingQueueEmail(props, notificationSender, digestBrandEnv);
+    }
+
     // 2:00 PM America/New_York year-round. Scheduler, not events.Rule, because a Rule cron is UTC
     // only and would drift an hour across DST. Both cadences fire together on Mondays; a user is
     // only ever on one of them, so the overlap costs a concurrent table read, not a double-send.
@@ -259,5 +267,56 @@ export class NotificationsStack extends cdk.NestedStack {
         input: scheduler.ScheduleTargetInput.fromObject({ frequency: "weekly" }),
       }),
     });
+  }
+
+  private addProcessingQueueEmail(
+    props: NotificationsStackProps,
+    sender: string,
+    brandEnv: Record<string, string>,
+  ): lambda.Function {
+    const { recipientsParameter, deploymentId } = props.processingQueueEmail!;
+    const fn = new lambda.Function(this, "ProcessingQueueEmailFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "notifications/processing-queue")),
+      handler: "index.handler",
+      layers: [props.jsSharedLayer],
+      environment: {
+        REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        NOTIFICATION_SENDER: sender,
+        SES_CONFIGURATION_SET: props.sesConfigurationSet.configurationSetName,
+        RECIPIENTS_PARAMETER: recipientsParameter,
+        DEPLOYMENT_URL: props.siteUrl,
+        DEPLOYMENT_ID: deploymentId,
+        DIGEST_APP_NAME: brandEnv.DIGEST_APP_NAME,
+        DIGEST_BRAND_COLOR: brandEnv.DIGEST_BRAND_COLOR,
+        DIGEST_LOGO_URL: brandEnv.DIGEST_LOGO_URL,
+      },
+      timeout: cdk.Duration.minutes(1),
+      description: "Weekday email to admins when grants are waiting in the processing queue",
+    });
+    props.nofoProcessingReviewTable.grantReadData(fn);
+    props.nofoMetadataTable.grantReadData(fn);
+    fn.addToRolePolicy(sesSendEmailPolicy(sender));
+    fn.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["ssm:GetParameter"],
+        resources: [
+          this.formatArn({ service: "ssm", resource: "parameter", resourceName: recipientsParameter.slice(1) }),
+        ],
+      })
+    );
+
+    const role = new iam.Role(this, "ProcessingQueueEmailSchedulerRole", {
+      assumedBy: new iam.ServicePrincipal("scheduler.amazonaws.com"),
+    });
+    fn.grantInvoke(role);
+    // Scheduler, not events.Rule, so 09:00 stays 09:00 Eastern across DST.
+    new scheduler.Schedule(this, "ProcessingQueueEmailSchedule", {
+      schedule: scheduler.ScheduleExpression.expression("cron(0 9 ? * MON-FRI *)", cdk.TimeZone.AMERICA_NEW_YORK),
+      description: "Email admins on weekdays when grants are waiting in the processing queue",
+      target: new schedulerTargets.LambdaInvoke(fn, { role }),
+    });
+    return fn;
   }
 }

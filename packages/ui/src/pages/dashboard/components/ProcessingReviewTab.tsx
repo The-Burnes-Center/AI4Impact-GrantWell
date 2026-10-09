@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { LuChevronDown, LuFileX, LuRefreshCw, LuUpload } from "react-icons/lu";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { LuArrowDown, LuArrowUp, LuArchiveX, LuChevronDown, LuFileX, LuRefreshCw, LuUpload } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import type {
   ReviewItem,
@@ -8,6 +8,7 @@ import type {
 import ProcessingMetrics from "./ProcessingMetrics";
 import ReviewExpandedRow from "./ReviewExpandedRow";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
+import { Modal } from "../../../components/common/Modal";
 
 interface ProcessingReviewTabProps {
   apiClient: ApiClient;
@@ -47,8 +48,26 @@ const SOURCE_LABELS: Record<string, string> = {
 
 const REPROCESSABLE_STATUSES = new Set(["failed", "pending_review", "needs_reupload"]);
 
-/** Checkbox, name, reason, status, date, details — the expanded row spans all of them. */
-const TABLE_COLUMN_COUNT = 6;
+/** Checkbox, name, reason, status, deadline, in queue since, details — the expanded row spans all of them. */
+const TABLE_COLUMN_COUNT = 7;
+
+type SortOrder = { key: "deadline" } | { key: "queued"; oldestFirst: boolean };
+
+const SORT_BUTTON_STYLE: React.CSSProperties = {
+  display: "inline-flex", alignItems: "center", gap: "4px", background: "none", border: "none",
+  cursor: "pointer", padding: 0, font: "inherit", color: "inherit",
+};
+
+function deadlineBadge(review: ReviewItem): { label: string; className: string } | null {
+  const { daysLeft, deadlineUrgency } = review;
+  if (deadlineUrgency === "expired") return { label: "Expired", className: "review-deadline-badge--expired" };
+  if ((deadlineUrgency !== "due_soon" && deadlineUrgency !== "upcoming") || daysLeft == null) return null;
+  const label = daysLeft === 0 ? "Due today" : `Due in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`;
+  return { label, className: `review-deadline-badge--${deadlineUrgency === "due_soon" ? "soon" : "upcoming"}` };
+}
+
+const formatDeadline = (deadline: string) =>
+  new Date(`${deadline}T00:00:00Z`).toLocaleDateString("en-US", { timeZone: "UTC" });
 
 const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   apiClient,
@@ -63,13 +82,18 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   const [expandedNofo, setExpandedNofo] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkAction, setBulkAction] = useState<"reprocess" | "needs_reupload" | null>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>({ key: "deadline" });
+  const [expiredOpenCount, setExpiredOpenCount] = useState(0);
+  const [confirmCloseExpired, setConfirmCloseExpired] = useState(false);
+  const [closingExpired, setClosingExpired] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       // Without a status the server answers with pending reviews only.
-      const items = await apiClient.landingPage.getProcessingReviews(statusFilter);
-      setReviews(items);
+      const list = await apiClient.landingPage.getProcessingReviews(statusFilter);
+      setReviews(list.reviews);
+      setExpiredOpenCount(list.expiredOpenCount);
     } catch {
       addNotification("error", "Failed to load processing reviews");
     } finally {
@@ -113,6 +137,30 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     setSelected(new Set());
     fetchData();
     fetchMetrics();
+  };
+
+  // The server already sends deadline order.
+  const sortedReviews = useMemo(() => {
+    if (sortOrder.key === "deadline") return reviews;
+    const direction = sortOrder.oldestFirst ? 1 : -1;
+    return [...reviews].sort((a, b) => direction * a.created_at.localeCompare(b.created_at));
+  }, [reviews, sortOrder]);
+
+  const sortByQueued = () =>
+    setSortOrder((prev) => ({ key: "queued", oldestFirst: prev.key === "queued" ? !prev.oldestFirst : true }));
+
+  const handleCloseExpired = async () => {
+    setClosingExpired(true);
+    try {
+      const { closed } = await apiClient.landingPage.closeExpiredReviews();
+      addNotification("success", closed === 1 ? "Closed 1 review for an expired grant" : `Closed ${closed} reviews for expired grants`);
+    } catch {
+      addNotification("error", "Couldn't close the reviews for expired grants. Try again.");
+    } finally {
+      setClosingExpired(false);
+      setConfirmCloseExpired(false);
+      handleActionComplete();
+    }
   };
 
   const toggleSelect = (reviewId: string) => {
@@ -256,7 +304,56 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </select>
           </div>
         </div>
+        <button
+          type="button"
+          className="review-btn review-btn--close-expired"
+          onClick={() => setConfirmCloseExpired(true)}
+          disabled={expiredOpenCount === 0 || closingExpired}
+          aria-describedby="close-expired-hint"
+        >
+          <LuArchiveX size={14} aria-hidden="true" />
+          <span>Close all expired</span>
+        </button>
+        <span id="close-expired-hint" className="visually-hidden">
+          {expiredOpenCount === 0
+            ? "No open reviews are for expired grants."
+            : expiredOpenCount === 1
+              ? "1 open review is for an expired grant."
+              : `${expiredOpenCount} open reviews are for expired grants.`}
+        </span>
       </div>
+
+      <Modal
+        isOpen={confirmCloseExpired}
+        onClose={() => !closingExpired && setConfirmCloseExpired(false)}
+        title="Close reviews for expired grants"
+      >
+        <div className="modal-form">
+          <p>
+            {expiredOpenCount === 1
+              ? "Close 1 review for an expired grant? The grant itself isn't changed."
+              : `Close ${expiredOpenCount} reviews for expired grants? The grants themselves aren't changed.`}
+          </p>
+          <div className="modal-actions">
+            <button
+              type="button"
+              className="modal-button secondary"
+              onClick={() => setConfirmCloseExpired(false)}
+              disabled={closingExpired}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="modal-button primary"
+              onClick={() => void handleCloseExpired()}
+              disabled={closingExpired}
+            >
+              {closingExpired ? "Closing..." : `Close ${expiredOpenCount} review${expiredOpenCount === 1 ? "" : "s"}`}
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Bulk action bar */}
       {selected.size > 0 && (
@@ -293,7 +390,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       )}
 
-      <TableScrollRegion label="Processing reviews table" minWidth={820}>
+      <TableScrollRegion label="Processing reviews table" minWidth={960}>
       <div className="table-container">
         <div role="table" aria-label="Processing reviews">
           <div className="table-header review-table-grid-select" role="rowgroup">
@@ -310,7 +407,27 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               <div className="header-cell" role="columnheader">Grant Name</div>
               <div className="header-cell" role="columnheader">Reason</div>
               <div className="header-cell" role="columnheader">Status</div>
-              <div className="header-cell" role="columnheader">Date</div>
+              <div
+                className="header-cell"
+                role="columnheader"
+                aria-sort={sortOrder.key === "deadline" ? "ascending" : "none"}
+              >
+                <button type="button" onClick={() => setSortOrder({ key: "deadline" })} style={SORT_BUTTON_STYLE}>
+                  Deadline
+                  {sortOrder.key === "deadline" && <LuArrowUp size={12} aria-hidden="true" />}
+                </button>
+              </div>
+              <div
+                className="header-cell"
+                role="columnheader"
+                aria-sort={sortOrder.key === "queued" ? (sortOrder.oldestFirst ? "ascending" : "descending") : "none"}
+              >
+                <button type="button" onClick={sortByQueued} style={SORT_BUTTON_STYLE}>
+                  In queue since
+                  {sortOrder.key === "queued" &&
+                    (sortOrder.oldestFirst ? <LuArrowUp size={12} aria-hidden="true" /> : <LuArrowDown size={12} aria-hidden="true" />)}
+                </button>
+              </div>
               <div className="header-cell" role="columnheader">Details</div>
             </div>
           </div>
@@ -326,67 +443,76 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                   </p>
                 </div>
               ) : (
-                reviews.map((review) => (
-                  <div key={`${review.nofo_name}-${review.review_id}`} style={{ display: "contents" }}>
-                    <div
-                      className={`table-row review-table-row review-table-grid-select ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""} ${selected.has(review.review_id) ? "review-table-row--selected" : ""}`}
-                      role="row"
-                    >
-                      <div className="row-cell review-checkbox-cell" role="cell">
-                        <input
-                          type="checkbox"
-                          checked={selected.has(review.review_id)}
-                          onChange={() => toggleSelect(review.review_id)}
-                          aria-label={`Select ${review.nofo_name}`}
-                        />
-                      </div>
-                      <div className="row-cell" role="cell">
-                        <span className="review-nofo-name">
-                          {review.nofo_name}
-                        </span>
-                      </div>
-                      <div className="row-cell" role="cell">{getReasonSummary(review)}</div>
-                      <div className="row-cell" role="cell">
-                        <span className={`review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
-                          {STATUS_LABELS[review.status] || review.status}
-                        </span>
-                      </div>
-                      <div className="row-cell" role="cell">
-                        <span className="review-date">
-                          {new Date(review.created_at).toLocaleDateString("en-US", { timeZone: "America/New_York" })}
-                        </span>
-                      </div>
-                      <div className="row-cell actions" role="cell">
-                        <button
-                          type="button"
-                          className="review-expand-toggle"
-                          onClick={() => toggleExpand(review.nofo_name)}
-                          aria-expanded={expandedNofo === review.nofo_name}
-                          aria-label={`${expandedNofo === review.nofo_name ? "Hide" : "View"} details for ${review.nofo_name}`}
-                          style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", padding: 0, font: "inherit", display: "inline-flex", alignItems: "center", gap: "4px" }}
-                        >
-                          {expandedNofo === review.nofo_name ? "Hide" : "View"}
-                          <LuChevronDown
-                            size={14}
-                            className={`review-chevron ${expandedNofo === review.nofo_name ? "review-chevron--expanded" : ""}`}
-                            aria-hidden="true"
+                sortedReviews.map((review) => {
+                  const badge = deadlineBadge(review);
+                  return (
+                    <div key={`${review.nofo_name}-${review.review_id}`} style={{ display: "contents" }}>
+                      <div
+                        className={`table-row review-table-row review-table-grid-select ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""} ${selected.has(review.review_id) ? "review-table-row--selected" : ""}`}
+                        role="row"
+                      >
+                        <div className="row-cell review-checkbox-cell" role="cell">
+                          <input
+                            type="checkbox"
+                            checked={selected.has(review.review_id)}
+                            onChange={() => toggleSelect(review.review_id)}
+                            aria-label={`Select ${review.nofo_name}`}
                           />
-                        </button>
+                        </div>
+                        <div className="row-cell" role="cell">
+                          <span className="review-nofo-name">
+                            {review.nofo_name}
+                          </span>
+                        </div>
+                        <div className="row-cell" role="cell">{getReasonSummary(review)}</div>
+                        <div className="row-cell" role="cell">
+                          <span className={`review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
+                            {STATUS_LABELS[review.status] || review.status}
+                          </span>
+                        </div>
+                        <div className="row-cell review-deadline-cell" role="cell">
+                          <span className="review-date">
+                            {review.deadline ? formatDeadline(review.deadline) : "No deadline"}
+                          </span>
+                          {badge && <span className={`review-deadline-badge ${badge.className}`}>{badge.label}</span>}
+                        </div>
+                        <div className="row-cell" role="cell">
+                          <span className="review-date">
+                            {new Date(review.created_at).toLocaleDateString("en-US", { timeZone: "America/New_York" })}
+                          </span>
+                        </div>
+                        <div className="row-cell actions" role="cell">
+                          <button
+                            type="button"
+                            className="review-expand-toggle"
+                            onClick={() => toggleExpand(review.nofo_name)}
+                            aria-expanded={expandedNofo === review.nofo_name}
+                            aria-label={`${expandedNofo === review.nofo_name ? "Hide" : "View"} details for ${review.nofo_name}`}
+                            style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", padding: 0, font: "inherit", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                          >
+                            {expandedNofo === review.nofo_name ? "Hide" : "View"}
+                            <LuChevronDown
+                              size={14}
+                              className={`review-chevron ${expandedNofo === review.nofo_name ? "review-chevron--expanded" : ""}`}
+                              aria-hidden="true"
+                            />
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    {expandedNofo === review.nofo_name && (
-                      <ReviewExpandedRow
-                        review={review}
-                        apiClient={apiClient}
-                        onActionComplete={handleActionComplete}
-                        addNotification={addNotification}
-                        onCollapse={() => setExpandedNofo(null)}
-                        colSpan={TABLE_COLUMN_COUNT}
-                      />
-                    )}
-                  </div>
-                ))
+                      {expandedNofo === review.nofo_name && (
+                        <ReviewExpandedRow
+                          review={review}
+                          apiClient={apiClient}
+                          onActionComplete={handleActionComplete}
+                          addNotification={addNotification}
+                          onCollapse={() => setExpandedNofo(null)}
+                          colSpan={TABLE_COLUMN_COUNT}
+                        />
+                      )}
+                    </div>
+                  );
+                })
               )}
             </div>
           )}

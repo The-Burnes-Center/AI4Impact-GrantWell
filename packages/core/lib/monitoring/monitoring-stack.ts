@@ -55,6 +55,7 @@ export const LOG_MARKERS = {
   scraperFatal: ["Fatal coordinator error:"],
   digestSendFailed: ["Digest send failed for", "Digest failed for user"],
   modelCanaryFailed: ["Model canary failed for"],
+  queueEmailSendFailed: ["Processing queue email send failed"],
 } as const;
 
 /** Cognito's fixed, non-adjustable budget for a synchronous trigger. */
@@ -88,6 +89,8 @@ export interface MonitoringStackProps extends cdk.NestedStackProps {
   };
   readonly scraperCoordinatorFunction: lambda.IFunction;
   readonly notificationDigestFunction: lambda.IFunction;
+  /** Only where the deployment has the processing-queue email on. */
+  readonly processingQueueEmailFunction?: lambda.IFunction;
   readonly autoArchiveFunction: lambda.IFunction;
   readonly bedrockModels: readonly BedrockModelUse[];
 }
@@ -604,6 +607,26 @@ export class MonitoringStack extends cdk.NestedStack {
             sends: this.markerMetric("DigestSendFailed", props.notificationDigestFunction, LOG_MARKERS.digestSendFailed, cdk.Duration.hours(1)),
           },
           label: "digest run failed or 3+ sends failed",
+          period: cdk.Duration.hours(1),
+        }),
+        threshold: 1,
+      });
+    }
+
+    // No heartbeat: it doesn't run at weekends, and an empty queue sends nothing by design.
+    if (props.processingQueueEmailFunction) {
+      const fn = props.processingQueueEmailFunction;
+      this.alarm("ProcessingQueueEmailFailingAlarm", {
+        severity: "low",
+        name: "processing-queue email failing",
+        description: "The weekday email to admins about grants waiting in the processing queue didn't go out. Users aren't affected, and the queue is still in the app.",
+        metric: new cloudwatch.MathExpression({
+          expression: "IF(errors >= 1 OR sends >= 1, 1, 0)",
+          usingMetrics: {
+            errors: fn.metricErrors({ statistic: "Sum" }),
+            sends: this.markerMetric("QueueEmailSendFailed", fn, LOG_MARKERS.queueEmailSendFailed, cdk.Duration.hours(1)),
+          },
+          label: "queue email run failed",
           period: cdk.Duration.hours(1),
         }),
         threshold: 1,

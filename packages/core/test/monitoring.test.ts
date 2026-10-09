@@ -54,9 +54,10 @@ const COMMON_ALARMS: [string, string, number][] = [
   ["the daily AI model check has stopped", "medium", 1],
 ];
 
-// Prod only: the SES identity owner, the scheduled scrape and the daily brief.
+// Prod only: the SES identity owner, the scheduled scrape, the daily brief and the processing-queue email.
 const PROD_ONLY_ALARMS: [string, string, number][] = [
   ["SES bounce rate heading for a sending pause", "medium", 0.05],
+  ["processing-queue email failing", "low", 1],
   ["daily grants.gov scrape has stopped", "medium", 1],
   ["the daily health brief has stopped running", "low", 1],
   ["the daily health brief is failing", "medium", 1],
@@ -72,6 +73,9 @@ const HEARTBEATS = [...DAILY_HEARTBEATS, "failed-NOFO sweep has stopped", "the f
 
 // The canary runs once a day: NOT_BREACHING would read the empty hours after a failed run as recovered.
 const HOLDS_STATE = ["AI models not responding"];
+
+// Generic dev has the processing-queue email off, so nothing there logs this marker.
+const PROD_ONLY_MARKERS = ["queueEmailSendFailed"];
 
 const DIRECT_TO_ALERTS = ["alerting itself is broken", "alerts are not reaching the formatter"];
 
@@ -162,8 +166,9 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       const filters = ofType("AWS::Logs::MetricFilter");
       const patterns = filters.map(([, r]) => r.Properties.FilterPattern).sort();
       const quote = (s: string) => `"${s}"`;
-      const expectedPatterns = Object.values(LOG_MARKERS)
-        .map((phrases) => (phrases.length === 1 ? quote(phrases[0]) : phrases.map((p) => `?${quote(p)}`).join(" ")))
+      const expectedPatterns = Object.entries(LOG_MARKERS)
+        .filter(([key]) => env === "prod" || !PROD_ONLY_MARKERS.includes(key))
+        .map(([, phrases]) => (phrases.length === 1 ? quote(phrases[0]) : phrases.map((p) => `?${quote(p)}`).join(" ")))
         .sort();
       expect(patterns).toEqual(expectedPatterns);
       for (const [id, filter] of filters) {

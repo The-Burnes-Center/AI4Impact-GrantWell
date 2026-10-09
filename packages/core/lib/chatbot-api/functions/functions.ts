@@ -6,7 +6,13 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
-import { InstanceConfig, sesEmail, supportedStatesEnv } from "../../config/instance-config";
+import {
+  InstanceConfig,
+  processingQueueEmailEnabled,
+  queueEmailRecipientsParameter,
+  sesEmail,
+  supportedStatesEnv,
+} from "../../config/instance-config";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -119,6 +125,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly notificationDigestFunction: lambda.Function;
   public readonly notificationDigestPreviewFunction: lambda.Function;
   public readonly notificationDigestBroadcastFunction: lambda.Function;
+  public readonly processingQueueEmailFunction?: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly notificationSesFeedbackFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
@@ -1315,6 +1322,10 @@ export class LambdaFunctionStack extends cdk.Stack {
       unsubscribeSecret: unsubscribeSecret,
       notificationSender: notificationSender,
       supportedStatesEnv: SUPPORTED_STATES_ENV,
+      nofoProcessingReviewTable: props.nofoProcessingReviewTable,
+      processingQueueEmail: processingQueueEmailEnabled(config)
+        ? { recipientsParameter: queueEmailRecipientsParameter(config), deploymentId: config.id }
+        : undefined,
     });
 
     // Ensure the identity exists before the sender-scoped policies are exercised.
@@ -1331,6 +1342,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       notifications.notificationUnsubscribeFunction;
     this.notificationSesFeedbackFunction =
       notifications.notificationSesFeedbackFunction;
+    this.processingQueueEmailFunction = notifications.processingQueueEmailFunction;
 
     // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
     const aiGrantSearchFunction = new lambda.Function(
