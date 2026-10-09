@@ -34,7 +34,7 @@ Extract critical application documents:
 Combine all SF-424 R&R forms into a single item, and all budget-related forms into a single item. Embed formatting requirements into the relevant document's description. Only list required documents — exclude optional forms.
 
 ### 3. ProjectNarrativeSections
-Extract every required narrative component mentioned; a missing section means an incomplete proposal.
+List each narrative section the NOFO requires, one item per section, under the NOFO's own section name; a missing section means an incomplete proposal. The kinds below show what counts as a narrative section, not a checklist to fill: a NOFO section that covers one of these kinds is that one item, never a second item beside it, and sub-elements or scoring factors listed inside a section belong in that section's description.
 - Problem statement/needs assessment
 - Project goals and objectives
 - Implementation methodology/approach

@@ -47,8 +47,8 @@ const groupHeadingStyle: React.CSSProperties = {
   fontSize: "var(--gw-font-size-sm, 14px)",
   fontWeight: 600,
   color: "var(--gw-color-nav-heading, #a0aec0)",
-  textTransform: "uppercase",
-  letterSpacing: "1px",
+  textTransform: "var(--gw-button-text-transform, uppercase)",
+  letterSpacing: "var(--gw-button-letter-spacing, 1px)",
   fontFamily: "var(--gw-font-family, 'Noto Sans', sans-serif)",
 };
 
@@ -160,6 +160,32 @@ export const AppSidebar: React.FC = () => {
     return () => clearTimeout(id);
   }, []);
 
+  // A deployment's banner and header sit above the sticky sidebar, so a full 100vh would push its
+  // bottom group below the fold until the page scrolls past them.
+  const [chromeOffset, setChromeOffset] = useState(0);
+  useEffect(() => {
+    const body = drawerRef.current?.parentElement;
+    if (!isDocked || !body) return;
+    let frame = 0;
+    const measure = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() =>
+        setChromeOffset(Math.max(0, Math.round(body.getBoundingClientRect().top)))
+      );
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(document.body);
+    window.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [isDocked, drawerRef]);
+
   const currentPath = location.pathname;
   const isDrafts = currentPath === "/document-editor/drafts";
   const isDocumentEditor =
@@ -256,7 +282,7 @@ export const AppSidebar: React.FC = () => {
           transition: "width 0.3s ease",
           position: "sticky",
           top: 0,
-          height: "100vh",
+          height: chromeOffset > 0 ? `calc(100vh - ${chromeOffset}px)` : "100vh",
           alignSelf: "flex-start",
           overflowY: "auto",
         }),
@@ -348,6 +374,11 @@ export const AppSidebar: React.FC = () => {
                 }),
           }}
         >
+          {showLabels && CHROME.Header && (
+            <span aria-hidden="true" style={{ ...groupHeadingStyle, padding: 0, gridColumn: 1 }}>
+              Menu
+            </span>
+          )}
           {showLabels && !CHROME.Header && (
             <a
               href="/home"

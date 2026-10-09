@@ -56,6 +56,15 @@ body {
   gap: 15px;
 }
 
+.dashboard-header--wrap,
+.dashboard-header--wrap .dashboard-actions {
+  flex-wrap: wrap;
+}
+
+.dashboard-header--wrap {
+  gap: 12px 16px;
+}
+
 .upload-button {
   background-color: var(--gw-color-primary);
   color: white;
@@ -1736,8 +1745,8 @@ select.form-input {
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   cursor: pointer;
   border: 1px solid transparent;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
@@ -1769,7 +1778,7 @@ select.form-input {
   background-color: transparent;
   color: var(--gw-color-primary-hover);
   border-color: transparent;
-  letter-spacing: 1px;
+  letter-spacing: var(--gw-button-letter-spacing, 1px);
 }
 
 .modal-button.secondary:hover {
@@ -2281,8 +2290,8 @@ select.form-input {
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   border: 1px solid transparent;
   cursor: pointer;
@@ -2341,7 +2350,7 @@ select.form-input {
   background-color: transparent;
   color: var(--gw-color-primary-hover);
   border-color: transparent;
-  letter-spacing: 1px;
+  letter-spacing: var(--gw-button-letter-spacing, 1px);
 }
 
 .action-button.refresh-button:hover:not(:disabled) {

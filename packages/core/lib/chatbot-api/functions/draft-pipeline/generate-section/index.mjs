@@ -15,6 +15,9 @@ const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-
 const CLAUDE_MODEL_ID = process.env.SONNET_MODEL_ID;
 
 const WORDS_PER_PAGE = 500;
+const SECTION_EFFORT = 'medium';
+// Adaptive thinking spends from max_tokens before the JSON reply starts.
+const THINKING_TOKEN_ALLOWANCE = 4000;
 const DEFAULT_SECTION_WORDS = 800;
 
 function sectionWordBudget(description) {
@@ -35,7 +38,7 @@ function sectionWordBudget(description) {
 }
 
 function tokenCeilingForWords(words) {
-  return Math.min(10400, Math.max(2000, Math.round(words * 2.9) + 500));
+  return Math.min(10400, Math.max(2000, Math.round(words * 2.9) + 500)) + THINKING_TOKEN_ALLOWANCE;
 }
 
 // SUPPORTED_STATES injected as [{code,name}] (from lib/shared/states.ts). Parsed inline because
@@ -130,7 +133,8 @@ Write only the content for the section described above. Follow the NOFO descript
 1. Personalize using specific details from project_basics and questionnaire_responses — no generic filler
 2. Integrate relevant requirements and best practices from grant_knowledge_base
 3. Include measurable outcomes and evaluation methods where applicable
-4. Address the user's query where relevant
+4. user_query is the request that started this job and usually covers the whole application;
+   apply it to your assigned section only
 5. Write a complete section that would be ready for review, within the length budget —
    this is one section of a page-limited application, not a standalone document, and
    concise and specific beats long and padded
@@ -148,7 +152,8 @@ Write only the content for the section described above. Follow the NOFO descript
    responses indicate it does not apply, return a single sentence saying so — do not
    fabricate a narrative to fill it
 
-Return the section content as a single string via the write_section tool.
+Write the content for the "${sectionName}" grant section. Return it as JSON whose "content"
+field holds the complete section as a single string.
 </instructions>`;
 
   const schema = {
@@ -166,9 +171,9 @@ Return the section content as a single string via the write_section tool.
     modelId: CLAUDE_MODEL_ID,
     prompt,
     schema,
-    toolName: 'write_section',
-    toolDescription: `Write the content for the "${sectionName}" grant section`,
+    label: `section "${sectionName}"`,
     maxTokens,
+    effort: SECTION_EFFORT,
   });
 
   const content = result.content;
@@ -191,14 +196,36 @@ Return the section content as a single string via the write_section tool.
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
-async function invokeStructuredOutput(client, { modelId, prompt, schema, toolName, toolDescription, maxTokens }) {
+const UNSUPPORTED_SCHEMA_KEYWORDS = new Set([
+  'minLength', 'maxLength', 'minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum',
+  'multipleOf', 'minItems', 'maxItems', 'uniqueItems',
+]);
+
+function toStrictSchema(schema) {
+  if (Array.isArray(schema)) return schema.map(toStrictSchema);
+  if (!schema || typeof schema !== 'object') return schema;
+  const out = {};
+  for (const [key, value] of Object.entries(schema)) {
+    if (UNSUPPORTED_SCHEMA_KEYWORDS.has(key)) continue;
+    if (key === 'properties' || key === '$defs' || key === 'definitions') {
+      out[key] = Object.fromEntries(Object.entries(value).map(([k, v]) => [k, toStrictSchema(v)]));
+    } else {
+      out[key] = toStrictSchema(value);
+    }
+  }
+  if (out.type === 'object' || out.properties) out.additionalProperties = false;
+  return out;
+}
+
+async function invokeStructuredOutput(client, { modelId, prompt, schema, label, maxTokens, effort }) {
   const body = JSON.stringify({
     anthropic_version: 'bedrock-2023-05-31',
     messages: [{ role: 'user', content: prompt }],
-    tools: [{ name: toolName, description: toolDescription, input_schema: schema }],
-    tool_choice: { type: 'tool', name: toolName },
     max_tokens: maxTokens,
-    thinking: { type: 'disabled' },
+    output_config: {
+      effort,
+      format: { type: 'json_schema', schema: toStrictSchema(schema) },
+    },
   });
 
   const command = new InvokeModelCommand({
@@ -210,21 +237,27 @@ async function invokeStructuredOutput(client, { modelId, prompt, schema, toolNam
 
   const response = await client.send(command);
   const parsed = JSON.parse(new TextDecoder().decode(response.body));
-  const toolBlock = parsed.content?.find((b) => b.type === 'tool_use');
 
+  if (parsed.stop_reason === 'refusal') {
+    throw new Error(
+      `Model declined to write ${label} (refusal category=${parsed.stop_details?.category ?? 'unknown'})`
+    );
+  }
   if (parsed.stop_reason === 'max_tokens') {
     throw new Error(
-      `Model output hit the ${maxTokens}-token ceiling for ${toolName} ` +
-        `(output_tokens=${parsed.usage?.output_tokens}); tool input was discarded as truncated`
+      `Model output hit the ${maxTokens}-token ceiling for ${label} ` +
+        `(output_tokens=${parsed.usage?.output_tokens}); output was discarded as truncated`
     );
   }
-  if (!toolBlock?.input || Object.keys(toolBlock.input).length === 0) {
-    throw new Error(
-      `Model did not return structured tool output for ${toolName} ` +
-        `(stop_reason=${parsed.stop_reason})`
-    );
+  const textBlock = parsed.content?.find((b) => b.type === 'text');
+  if (!textBlock?.text) {
+    throw new Error(`Model did not return structured output for ${label} (stop_reason=${parsed.stop_reason})`);
   }
-  return toolBlock.input;
+  try {
+    return JSON.parse(textBlock.text);
+  } catch {
+    throw new Error(`Model returned unparseable JSON for ${label} (stop_reason=${parsed.stop_reason})`);
+  }
 }
 
 async function updateSectionInJob(jobId, sectionName, content) {

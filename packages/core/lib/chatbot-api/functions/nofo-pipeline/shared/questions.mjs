@@ -17,13 +17,7 @@ You are a grant proposal strategist. Analyze the NOFO summary and generate 5-15 
 </rules>
 
 <output>
-Return ONLY this JSON with no additional text:
-{
-  "totalQuestions": [number],
-  "questions": [
-    {"id": 1, "question": "[question text]"}
-  ]
-}
+Number the questions from 1, in the order an applicant should answer them.
 </output>`;
 
 export const DOCUMENT_SAMPLE_CHARS = 30000;
@@ -54,9 +48,9 @@ export async function generateQuestions(summary, documentSample) {
       prompt,
       schema: QUESTIONS_SCHEMA,
       toolName: "save_questions",
-      toolDescription: "Save the generated strategic questions for the NOFO",
-      maxTokens: 2000,
-      temperature: 0.1,
+      toolDescription: "Write the strategic application questions for this grant",
+      maxTokens: 4000,
+      effort: "low",
     });
 
     const validation = validateQuestions(parsed);

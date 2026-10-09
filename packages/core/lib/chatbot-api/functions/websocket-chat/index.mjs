@@ -37,6 +37,8 @@ const NOFO_STATE_FILTER_ENABLED = process.env.NOFO_STATE_FILTER_ENABLED === "tru
 
 const MAX_MODEL_CALLS = 5;
 
+const REFUSAL_MESSAGE = "I can't help with that request.";
+
 // Platform authority comes from the explicit PlatformAdmin role; this flag keeps pre-migration
 // stateless admins working and must stay on until every pool is migrated.
 const LEGACY_STATELESS_ADMIN_IS_PLATFORM =
@@ -217,7 +219,7 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
     ]
   } : null;
 
-  const noResultsMessage = `No relevant passages were retrieved for this query from the active grant (${normalizedDocumentIdentifier}) or the user's uploaded documents. Do not say the NOFO is missing, not uploaded, or not indexed. Say only that no relevant passages were retrieved for this query, and answer from the active grant identifier only if that is sufficient.`;
+  const noResultsMessage = `No passages matched this query in the active grant (${normalizedDocumentIdentifier}) or the user's supporting documents. This says nothing about whether the grant document is available; only this query found nothing.`;
 
   try {
     // Split retrieval: separate queries for NOFO and user docs to ensure balanced context
@@ -297,7 +299,7 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
     }
 
     return {
-      content: `The search tool failed while retrieving passages for the active grant (${normalizedDocumentIdentifier}). Do not say the NOFO is missing, not uploaded, or not indexed. Tell the user retrieval failed and ask them to retry or submit feedback if it persists.`,
+      content: `The search failed with an error for the active grant (${normalizedDocumentIdentifier}), so no passages were retrieved. The grant document itself was not checked. The user can retry, and submit feedback if it keeps failing.`,
       uris: []
     };
   }
@@ -383,105 +385,60 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     let history = claude.assembleHistory(lastFiveMessages, "Please use your search tool one or more times based on this latest prompt: ".concat(userMessage));
     let fullDocs = { content: "", uris: [] };
     let modelCalls = 0;
+    const today = new Date().toLocaleDateString("en-US", { timeZone: "America/New_York", year: "numeric", month: "long", day: "numeric" });
+    let refusalCategory = null;
 
     while (!stopLoop) {
       history.forEach((historyItem) => {});
       modelCalls += 1;
       const lastCall = modelCalls >= MAX_MODEL_CALLS;
-      const updatedSystemPrompt = `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}\n\n${getPromptText(userState)}`;
+      const updatedSystemPrompt = `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}\n\n${getPromptText(userState)}\n\nToday's date is ${today} (US Eastern). Use it when a question turns on whether a deadline has passed or how much time is left.`;
       try {
         // tools stay defined on the last call because the history already holds tool_use blocks.
         const stream = await claude.getStreamedResponse(updatedSystemPrompt, history, lastCall ? { type: "none" } : undefined);
-        let toolInput = "";
-        let currentTool = null;
-        const collectedTools = [];
-
-        const finalizeCurrentTool = () => {
-          if (currentTool) {
-            currentTool.inputRaw = toolInput;
-            collectedTools.push(currentTool);
+        const { content, stopReason, stopDetails } = await claude.readStream(stream, async (text) => {
+          modelResponse = modelResponse.concat(text);
+          try {
+            await wsConnectionClient.send(new PostToConnectionCommand({
+              ConnectionId: id,
+              Data: text,
+            }));
+          } catch (error) {
+            console.error("Error sending chunk:", error);
           }
-          currentTool = null;
-          toolInput = "";
-        };
+        });
 
-        for await (const event of stream) {
-          const chunk = JSON.parse(new TextDecoder().decode(event.chunk.bytes));
-          const parsedChunk = await claude.parseChunk(chunk);
-          if (!parsedChunk) continue;
+        if (stopReason === "refusal") {
+          refusalCategory = stopDetails?.category ?? "none";
+          break;
+        }
 
-          if (parsedChunk.stop_reason) {
-            if (parsedChunk.stop_reason === "tool_use") {
-              finalizeCurrentTool();
-
-              if (collectedTools.length > 0) {
-                const assistantMessage = { role: "assistant", content: [] };
-                const toolResults = [];
-                for (const t of collectedTools) {
-                  let query;
-                  try {
-                    query = JSON.parse(t.inputRaw);
-                  } catch (e) {
-                    console.error(`Failed to parse tool input for ${t.id}: ${JSON.stringify(t.inputRaw)}`, e);
-                    query = { query: "" };
-                  }
-                  const docString = await retrieveKBDocs(
-                    query.query || "",
-                    knowledgeBase,
-                    process.env.KB_ID,
-                    documentIdentifier,
-                    userId,
-                    scopeFilter
-                  );
-                  fullDocs.content = fullDocs.content.concat(docString.content);
-                  fullDocs.uris = fullDocs.uris.concat(docString.uris);
-
-                  assistantMessage.content.push({
-                    type: "tool_use",
-                    id: t.id,
-                    name: t.name,
-                    input: { query: query.query || "" },
-                  });
-                  toolResults.push({
-                    type: "tool_result",
-                    tool_use_id: t.id,
-                    content: docString.content,
-                  });
-                }
-                history.push(assistantMessage);
-                history.push({ role: "user", content: toolResults });
-              }
-              break;
+        if (stopReason === "tool_use") {
+          const toolUses = content.filter((block) => block.type === "tool_use");
+          if (toolUses.length > 0) {
+            const toolResults = [];
+            for (const t of toolUses) {
+              const docString = await retrieveKBDocs(
+                t.input?.query || "",
+                knowledgeBase,
+                process.env.KB_ID,
+                documentIdentifier,
+                userId,
+                scopeFilter
+              );
+              fullDocs.content = fullDocs.content.concat(docString.content);
+              fullDocs.uris = fullDocs.uris.concat(docString.uris);
+              toolResults.push({
+                type: "tool_result",
+                tool_use_id: t.id,
+                content: docString.content,
+              });
             }
-
-            stopLoop = true;
-            break;
+            history.push({ role: "assistant", content });
+            history.push({ role: "user", content: toolResults });
           }
-
-          if (parsedChunk.type === "tool_use") {
-            finalizeCurrentTool();
-            currentTool = { id: parsedChunk.id, name: parsedChunk.name, inputRaw: "" };
-            continue;
-          }
-
-          if (currentTool) {
-            if (typeof parsedChunk === "string") {
-              toolInput = toolInput.concat(parsedChunk);
-            }
-            continue;
-          }
-
-          if (typeof parsedChunk === "string") {
-            modelResponse = modelResponse.concat(parsedChunk);
-            try {
-              await wsConnectionClient.send(new PostToConnectionCommand({
-                ConnectionId: id,
-                Data: parsedChunk,
-              }));
-            } catch (error) {
-              console.error("Error sending chunk:", error);
-            }
-          }
+        } else if (stopReason) {
+          stopLoop = true;
         }
       } catch (error) {
         console.error("Stream processing error:", error);
@@ -496,6 +453,22 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
         return;
       }
       if (lastCall) stopLoop = true;
+    }
+
+    if (refusalCategory) {
+      console.warn(`Model refused the request (category: ${refusalCategory})`);
+      try {
+        await wsConnectionClient.send(new PostToConnectionCommand({
+          ConnectionId: id,
+          Data: modelResponse ? `\n\n${REFUSAL_MESSAGE}` : REFUSAL_MESSAGE,
+        }));
+        await wsConnectionClient.send(new PostToConnectionCommand({ ConnectionId: id, Data: "!<|EOF_STREAM|>!" }));
+        await wsConnectionClient.send(new PostToConnectionCommand({ ConnectionId: id, Data: "[]" }));
+        await wsConnectionClient.send(new DeleteConnectionCommand({ ConnectionId: id }));
+      } catch (e) {
+        console.error("Error sending refusal message:", e);
+      }
+      return;
     }
 
     let command;

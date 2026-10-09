@@ -19,10 +19,11 @@ Commit `vendor/`. The .tgz files are your exact deployed version.
 ## Start a new instance
 1. On the template repo, click **Use this template** > **Create a new repository**. Make it private, in your own organization. Don't fork the template: your repo is yours, and updates arrive as releases (see Upgrade).
 2. Use two AWS accounts, one for staging and one for prod. In each, run `cdk bootstrap` once for your region.
-3. In each account, create an IAM role that GitHub OIDC may assume, trusting only your repo and that deployment's Environment (`repo:<org>/<repo>:environment:<aws.environment>`). The role needs to assume the CDK bootstrap roles.
-4. Edit `config/instances.ts` (one entry per deployment; the example has `example-staging` and `example-prod`) and `config/branding.ts`. List your deployments in `.github/workflows/deploy.yml`.
-5. Set up GitHub Environments and secrets (see Deploy), then follow Set up below.
-6. Deploy staging first, and deploy prod once staging works.
+3. In each account, turn on Amazon Bedrock model access in your region for Claude Sonnet 5.5, Claude Haiku 5.5, Cohere Rerank 3.5 and Amazon Titan Text Embeddings V2. Without it, grant processing, chat and application writing fail with an access error.
+4. In each account, create an IAM role that GitHub OIDC may assume, trusting only your repo and that deployment's Environment (`repo:<org>/<repo>:environment:<aws.environment>`). The role needs to assume the CDK bootstrap roles.
+5. Edit `config/instances.ts` (one entry per deployment; the example has `example-staging` and `example-prod`) and `config/branding.ts`. List your deployments in `.github/workflows/deploy.yml`.
+6. Set up GitHub Environments and secrets (see Deploy), then follow Set up below.
+7. Deploy staging first, and deploy prod once staging works.
 
 Until you commit `vendor/`, each push runs a trial install in Actions. It shows whether your config installs and synths.
 

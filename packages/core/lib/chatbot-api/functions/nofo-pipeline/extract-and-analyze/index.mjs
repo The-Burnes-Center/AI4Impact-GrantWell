@@ -57,9 +57,9 @@ async function extractFromText(text, nofoName) {
     prompt: fullPrompt,
     schema: EXTRACTION_SCHEMA,
     toolName: "save_nofo_extraction",
-    toolDescription: "Save the structured extraction of the NOFO document",
-    maxTokens: 10400,
-    thinking: { type: "disabled" },
+    toolDescription: "Extract the grant document's requirements into the four categories the schema defines",
+    maxTokens: 16000,
+    effort: "medium",
   });
 
   const validation = validateMergedSummary(parsed);

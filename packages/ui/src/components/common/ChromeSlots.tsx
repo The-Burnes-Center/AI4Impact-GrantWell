@@ -5,6 +5,8 @@ import { CHROME } from "../../common/chrome";
 import type { ChromeLink } from "../../common/chrome-api";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { LandingFooter } from "../../pages/landing/chrome";
+import { useNavigationMenuButton } from "../navigation/navigation-context";
+import { SIDEBAR_ID } from "../navigation/UnifiedNavigation";
 import { GovBanner } from "./GovIdentity";
 
 export function SiteBanner() {
@@ -24,6 +26,7 @@ export function PublicSiteHeader() {
 export function AppSiteHeader() {
   const navigate = useNavigate();
   const { isAdmin } = useAdminCheck();
+  const { showMenuButton, isDrawerOpen, toggleDrawer } = useNavigationMenuButton();
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -56,6 +59,9 @@ export function AppSiteHeader() {
       links={links}
       navigate={navigate}
       signOut={() => void handleSignOut()}
+      menu={
+        showMenuButton ? { expanded: isDrawerOpen, toggle: toggleDrawer, controlsId: SIDEBAR_ID } : undefined
+      }
     />
   );
 }

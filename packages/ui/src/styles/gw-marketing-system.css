@@ -35,8 +35,8 @@
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
@@ -106,8 +106,8 @@
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
@@ -159,8 +159,8 @@
   font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.2px);
+  text-transform: var(--gw-button-text-transform);
   border-radius: var(--gw-radius-pill);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;

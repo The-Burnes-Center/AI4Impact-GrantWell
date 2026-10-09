@@ -181,6 +181,7 @@
   --gw-font-button: 'Libre Franklin', 'Inter', system-ui, sans-serif;
   --gw-font-display: 'Finder', 'Libre Franklin', 'Inter', system-ui, sans-serif;
   --gw-font-serif: 'PT Serif', Georgia, serif;
+  --gw-font-marketing: 'Public Sans', 'Inter', system-ui, -apple-system, sans-serif;
   --gw-font-size-xs: 12px;
   --gw-font-size-sm: 14px;
   --gw-font-size-base: 16px;
@@ -193,6 +194,10 @@
   --gw-font-weight-medium: 500;
   --gw-font-weight-semibold: 600;
   --gw-font-weight-bold: 700;
+
+  /* Caps on buttons and tabs. --gw-button-letter-spacing is unset by default so each control
+     keeps its own tracking; a theme sets both, e.g. none and normal. */
+  --gw-button-text-transform: uppercase;
 
   /* ==============================
    * Transitions

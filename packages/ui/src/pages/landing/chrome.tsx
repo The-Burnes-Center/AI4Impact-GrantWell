@@ -129,8 +129,9 @@ export function AppNavbar() {
   const { showMenuButton, isDrawerOpen, toggleDrawer } =
     useNavigationMenuButton();
 
-  // The docked sidebar carries its own logo, so the bar is only needed as the drawer's toggle.
-  if (!showMenuButton) return <AppSkipLink />;
+  // The docked sidebar carries its own logo, so the bar is only needed as the drawer's toggle,
+  // which a chrome Header shows itself.
+  if (!showMenuButton || CHROME.Header) return <AppSkipLink />;
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
@@ -154,20 +155,18 @@ export function AppNavbar() {
         >
           <LuMenu size={22} aria-hidden="true" />
         </button>
-        {!CHROME.Header && (
-          <a
-            href="/home"
-            onClick={handleLogoClick}
-            className="marketing__nav-brand"
-          >
-            <GovSeal />
-            <BrandLogo
-              src={branding.logo}
-              alt={branding.appName}
-              className="marketing__nav-wordmark"
-            />
-          </a>
-        )}
+        <a
+          href="/home"
+          onClick={handleLogoClick}
+          className="marketing__nav-brand"
+        >
+          <GovSeal />
+          <BrandLogo
+            src={branding.logo}
+            alt={branding.appName}
+            className="marketing__nav-wordmark"
+          />
+        </a>
       </div>
     </nav>
   );

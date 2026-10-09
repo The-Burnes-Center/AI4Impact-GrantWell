@@ -190,7 +190,7 @@ export default function Sessions(props: SessionsProps) {
       />
 
       {/* Header section */}
-      <div className="dashboard-header">
+      <div className="dashboard-header dashboard-header--wrap">
         <div>
           <h1>My Chats</h1>
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>

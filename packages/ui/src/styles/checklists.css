@@ -105,6 +105,7 @@
 
 .checklist-main {
   flex: 1;
+  min-width: 0;
   margin: 0;
   padding: 0;
   padding-left: 0;
@@ -134,12 +135,22 @@
 }
 
 .checklist-content__header {
-  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px 24px;
   margin-bottom: 48px;
 }
 
 .checklist-content__header-inner {
-  padding-right: 120px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+/* Flex items' margins don't collapse into the header's own margin-bottom. */
+.checklist-content__header-inner > :last-child {
+  margin-bottom: 0;
 }
 
 .checklist-content__heading {
@@ -189,12 +200,10 @@
   font-family: var(--gw-font-button);
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.2px);
+  text-transform: var(--gw-button-text-transform);
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-  position: absolute;
-  top: 32px;
-  right: 32px;
+  flex-shrink: 0;
 }
 
 .checklist-help-btn:hover {
@@ -220,6 +229,7 @@
 .checklist-tabs__header {
   border-bottom: 1px solid #ddd;
   display: flex;
+  flex-wrap: wrap;
   font-family: 'Noto Sans', sans-serif;
 }
 
@@ -390,8 +400,8 @@
   font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
@@ -539,8 +549,8 @@
   font-family: var(--gw-font-button);
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
+  text-transform: var(--gw-button-text-transform);
   width: 100%;
   min-height: 48px;
   transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;

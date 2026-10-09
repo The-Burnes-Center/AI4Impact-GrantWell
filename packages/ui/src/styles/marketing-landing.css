@@ -3,11 +3,10 @@
   --mk-green-dark: var(--gw-color-primary-hover);
   --mk-green-deepest: var(--gw-color-primary-active);
   --mk-green-light: var(--gw-color-primary-light);
-  --mk-off-white: #F8F6F1;
   --mk-black: #282828;
   --mk-white: #ffffff;
 
-  font-family: 'Public Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--gw-font-marketing);
   color: var(--mk-black);
   line-height: 1.5;
   width: 100%;
@@ -93,8 +92,8 @@
   font-size: 14px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
+  text-transform: var(--gw-button-text-transform);
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
@@ -312,8 +311,8 @@
   font-size: 14px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
+  text-transform: var(--gw-button-text-transform);
   text-decoration: none;
   border: 1px solid transparent;
   cursor: pointer;
@@ -523,8 +522,8 @@
   font-family: var(--gw-font-button);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.2px);
+  text-transform: var(--gw-button-text-transform);
   border-radius: var(--gw-radius-pill);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -579,8 +578,8 @@
   font-family: var(--gw-font-button);
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
+  text-transform: var(--gw-button-text-transform);
   border-radius: var(--gw-radius-pill);
   padding: 12px 28px;
 }

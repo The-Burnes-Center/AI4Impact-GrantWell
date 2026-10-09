@@ -1,3 +1,36 @@
+# GrantWell v3.2.0
+
+**Last Updated:** October 8, 2026
+
+This release moves chats, grant summaries and AI-written applications to a newer AI model, fixes grant deadlines that showed one day late, and makes GrantWell easier to use on a phone.
+
+## Highlights
+
+- **Newer AI model** for chats, grant summaries and AI-written applications
+- **Correct deadlines**: a deadline late in the day no longer shows as the next day
+- **Easier to use on a phone**: Requirements, My Chats and My Applications fit small screens
+
+## Improvements
+
+### Chats
+
+- Chat knows today's date, so questions like "How long until the deadline?" get the right answer
+- Long answers are less likely to be cut off
+
+### Grant Summaries
+
+- Each required narrative section is listed once, so you don't write the same thing twice
+
+### On a Phone
+
+- Requirements, My Chats and My Applications fit the screen, and their buttons no longer run off the edge
+- The HELP button on Requirements no longer covers the description
+
+## Behind the Scenes
+
+- GrantWell deployments run by state governments can use their own header, footer and sign-in page, and choose whether to use two-step verification
+- A new deployment with no grants yet shows an empty list instead of an error
+
 # GrantWell v3.1.0
 
 **Last Updated:** October 8, 2026

@@ -2,6 +2,8 @@
 
 /* Layout — off-white canvas, full-bleed, with content centered on top */
 .landing-page {
+  /* Auto margins in the column-flex app shell shrink-wrap the box to its content's width instead of the viewport's. */
+  width: 100%;
   max-width: 950px;
   margin: 0 auto;
   padding: 40px 40px 60px;
@@ -706,8 +708,8 @@
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
+  text-transform: var(--gw-button-text-transform);
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   min-height: 44px;
