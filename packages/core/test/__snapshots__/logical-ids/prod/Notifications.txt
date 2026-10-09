@@ -19,3 +19,9 @@ NotificationSesFeedbackFunctionServiceRoleDefaultPolicy1DC17AFE	AWS::IAM::Policy
 NotificationUnsubscribeFunction4A4B2E78	AWS::Lambda::Function
 NotificationUnsubscribeFunctionServiceRoleB5C56983	AWS::IAM::Role
 NotificationUnsubscribeFunctionServiceRoleDefaultPolicy45F24A28	AWS::IAM::Policy
+ProcessingQueueEmailFunction69575A42	AWS::Lambda::Function
+ProcessingQueueEmailFunctionServiceRoleCF45F4F7	AWS::IAM::Role
+ProcessingQueueEmailFunctionServiceRoleDefaultPolicyCA28F702	AWS::IAM::Policy
+ProcessingQueueEmailSchedule108009B4	AWS::Scheduler::Schedule
+ProcessingQueueEmailSchedulerRole78CDCB59	AWS::IAM::Role
+ProcessingQueueEmailSchedulerRoleDefaultPolicyB291BFFF	AWS::IAM::Policy

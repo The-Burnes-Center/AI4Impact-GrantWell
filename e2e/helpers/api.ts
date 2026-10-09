@@ -28,15 +28,30 @@ export interface DraftJob {
 
 export const JOB_DONE = ["completed", "partial", "error"];
 
-async function call<T>(method: string, path: string, body?: object): Promise<T> {
-  const { idToken } = await tokens();
+export interface RawResponse {
+  status: number;
+  text: string;
+}
+
+/** One API call that returns the status instead of throwing. `token: "none"` sends no Authorization header. */
+export async function rawCall(
+  method: string,
+  path: string,
+  { body, token = "user" }: { body?: object; token?: "none" | "user" } = {}
+): Promise<RawResponse> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token === "user") headers.Authorization = `Bearer ${(await tokens()).idToken}`;
   const response = await fetch(`${appConfig().httpEndpoint.replace(/\/$/, "")}${path}`, {
     method,
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
+    headers,
     body: body ? JSON.stringify(body) : undefined,
   });
-  const text = await response.text();
-  if (!response.ok) throw new Error(`${method} ${path} → ${response.status}: ${text.slice(0, 300)}`);
+  return { status: response.status, text: await response.text() };
+}
+
+async function call<T>(method: string, path: string, body?: object): Promise<T> {
+  const { status, text } = await rawCall(method, path, { body });
+  if (status < 200 || status > 299) throw new Error(`${method} ${path} → ${status}: ${text.slice(0, 300)}`);
   return (text ? JSON.parse(text) : undefined) as T;
 }
 

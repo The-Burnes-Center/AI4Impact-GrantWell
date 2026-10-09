@@ -1,0 +1,35 @@
+import type { ComponentType, ReactNode } from "react";
+export const CHROME_API_VERSION = 1;
+export interface ChromeLink {
+    label: string;
+    href: string;
+}
+export interface ChromeUser {
+    email: string;
+    isAdmin: boolean;
+}
+export interface ChromeMenu {
+    expanded: boolean;
+    toggle: () => void;
+    controlsId: string;
+}
+export interface HeaderProps {
+    user?: ChromeUser;
+    links: ChromeLink[];
+    navigate: (href: string) => void;
+    signOut: () => void;
+    menu?: ChromeMenu;
+}
+export interface FooterProps {
+    signedIn: boolean;
+}
+export interface PublicHomeProps {
+    signIn: ReactNode;
+}
+export interface Chrome {
+    apiVersion: typeof CHROME_API_VERSION;
+    Banner?: ComponentType;
+    Header?: ComponentType<HeaderProps>;
+    Footer?: ComponentType<FooterProps>;
+    PublicHome?: ComponentType<PublicHomeProps>;
+}

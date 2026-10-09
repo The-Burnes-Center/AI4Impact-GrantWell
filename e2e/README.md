@@ -8,14 +8,27 @@ Playwright drives the deployed dev site (`grantwell-burnes-staging`) as one dedi
 | `tests/nofo.spec.ts` | Search the NOFO, select it, read its four requirement tabs |
 | `tests/chat.spec.ts` | Ask the assistant about the NOFO, check the answer and its sources, reload |
 | `tests/draft.spec.ts` | Project basics → generate every narrative section → review → export Word and PDF |
+| `tests/admin.spec.ts` | Open User Management, see the user list, find the test account by search (read-only) |
+| `tests/smoke.spec.ts` | API only: every read-only route answers with its exact status as the admin, with 401 without a token, 404 for missing items, 403 on Developer-only routes |
 
 AI output is checked by structure only: counts, lengths, headings, file types. Wording is never checked.
+
+## Guard
+Every spec imports `test` from `helpers/fixtures.ts`, which adds an automatic guard to each test, the login journey included. The guard collects these problems while the test and its hooks run, then fails the test once with the full list (also attached as `guard-problems.json`):
+- any response with status 500 or above from the app's HTTP API (method, path, status, start of the body);
+- an uncaught page error, unless its stack names only other origins;
+- a chat WebSocket frame containing `<!ERROR!>`;
+- when the test ends, a visible red notification or the "Something went wrong" error boundary.
+
+4xx responses are allowed, and other origins (Cognito, Cloudflare, analytics) are ignored. Calls the suite makes from Node (cleanup, the smoke spec) aren't watched; the smoke spec checks their statuses itself.
+
+The smoke spec never calls a route that writes, sends mail or starts work; the list is at the top of the file. Its only side effects are the ones every page load has: the NOFO summary read logs a view event, and the profile read stamps last-active.
 
 ## The NOFO
 Each run picks a random NOFO that is active, federal, open for at least 7 more days, and has narrative sections. The login journey logs the pick. To re-run with the same NOFO, set `E2E_NOFO_NAME`.
 
 ## The test account
-`e2e-dev@grantwell.invalid` is a plain user with no role, no state and no digest subscription. `.invalid` is reserved (RFC 2606), so no email can reach anyone. The account has a completed profile and TOTP enrolled, and it persists across runs.
+`e2e-dev@grantwell.invalid` has the Admin role (`custom:role` `["Admin"]`, so the admin journey can open User Management) but not Developer (the smoke spec expects 403 on Developer-only routes), no state and no digest subscription. `.invalid` is reserved (RFC 2606), so no email can reach anyone. The account has a completed profile and TOTP enrolled, and it persists across runs.
 
 To create it, run:
 
@@ -30,6 +43,12 @@ Then finish the setup in an ordinary browser on the dev site:
 1. Sign in and set the permanent password.
 2. Fill in the profile.
 3. Turn on two-step verification from Profile, and keep the "Setup key".
+4. Give it the Admin role:
+
+   ```bash
+   aws cognito-idp admin-update-user-attributes --user-pool-id <dev pool> --username e2e-dev@grantwell.invalid \
+     --user-attributes '[{"Name":"custom:role","Value":"[\"Admin\"]"}]'
+   ```
 
 ## The Turnstile bypass
 Turnstile runs on every password sign-in, and it refuses automated browsers. On dev only, the sign-in trigger skips the check when all of these hold:

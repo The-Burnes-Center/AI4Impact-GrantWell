@@ -1,106 +1,94 @@
-import importlib.util
-import io
-import os
-import sys
-import types
-import unittest
-from contextlib import redirect_stdout
-from pathlib import Path
+from decimal import Decimal
 
-# Bytecode next to the handler would land in its Lambda asset and change the hash.
-sys.dont_write_bytecode = True
+import pytest
+from boto3.dynamodb.types import TypeSerializer
 
-FUNCTIONS = Path(__file__).resolve().parents[2] / "lib" / "chatbot-api" / "functions"
+from conftest import FUNCTIONS, SHARED_LAYER, create_table, load_handler
+
+MARKER = "draft-version-writer failed on "
+_serialize = TypeSerializer().serialize
 
 
-def _module(name, **attrs):
-    module = types.ModuleType(name)
-    module.__dict__.update(attrs)
-    sys.modules[name] = module
+@pytest.fixture
+def writer(aws, monkeypatch):
+    monkeypatch.setenv("DRAFT_VERSION_TABLE_NAME", "draft-versions")
+    table = create_table("draft-versions", "draft_key", "rev", range_type="N")
+    module = load_handler(FUNCTIONS / "draft-version-writer" / "lambda_function.py", "draft_version_writer", [SHARED_LAYER])
+    module.test_table = table
     return module
 
 
-def _load(name, path):
-    spec = importlib.util.spec_from_file_location(name, path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+def image(**fields):
+    return {k: _serialize(v) for k, v in fields.items()}
 
 
-class ClientError(Exception):
-    def __init__(self, code):
-        super().__init__(code)
-        self.response = {"Error": {"Code": code}}
+def record(event_id, sequence_number, event_name="MODIFY", old=None, new=None):
+    stream = {"SequenceNumber": sequence_number}
+    if old is not None:
+        stream["OldImage"] = image(**old)
+    if new is not None:
+        stream["NewImage"] = image(**new)
+    return {"eventID": event_id, "eventName": event_name, "dynamodb": stream}
 
 
-def load_writer():
-    boto3 = _module("boto3", resource=lambda *a, **k: types.SimpleNamespace(Table=lambda name: object()))
-    _module("boto3.dynamodb")
-    _module("boto3.dynamodb.conditions", Key=lambda name: None)
-    _module("boto3.dynamodb.types", TypeDeserializer=object)
-    boto3.dynamodb = sys.modules["boto3.dynamodb"]
-    _module("botocore")
-    _module("botocore.exceptions", ClientError=ClientError)
-    # The real shared package imports pydantic; the writer only needs draft_versions.
-    draft_versions = _load(
-        "shared.draft_versions",
-        FUNCTIONS / "layers" / "python-shared-layer" / "python" / "shared" / "draft_versions.py",
-    )
-    _module("shared", draft_versions=draft_versions)
-    os.environ.setdefault("DRAFT_VERSION_TABLE_NAME", "draft-versions")
-    return _load("draft_version_writer", FUNCTIONS / "draft-version-writer" / "lambda_function.py")
+def versions(writer, key="user-1#s1"):
+    return writer.test_table.query(
+        KeyConditionExpression="draft_key = :k", ExpressionAttributeValues={":k": key}
+    )["Items"]
 
 
-def record(event_id, sequence_number):
-    return {
-        "eventID": event_id,
-        "eventName": "MODIFY",
-        "dynamodb": {"SequenceNumber": sequence_number},
-    }
+def test_a_new_draft_gets_an_initial_snapshot(writer):
+    new = {"user_id": "user-1", "session_id": "s1", "rev": 1, "title": "Bridge", "sections": {}}
+
+    result = writer.lambda_handler({"Records": [record("e-1", "100", "INSERT", new=new)]}, None)
+
+    assert result == {"batchItemFailures": []}
+    [row] = versions(writer)
+    assert row["rev"] == Decimal(1)
+    assert row["source"] == "initial"
 
 
-class BatchItemFailuresTest(unittest.TestCase):
-    def setUp(self):
-        self.writer = load_writer()
+def test_an_ai_write_is_snapshotted_with_the_sections_it_changed(writer):
+    old = {"user_id": "user-1", "session_id": "s1", "rev": 1, "sections": {"Summary": ""}}
+    new = {**old, "rev": 2, "sections": {"Summary": "We will repair the bridge."}, "last_write_source": "ai_generated"}
 
-    def run_batch(self, records, failing):
-        def process(rec):
-            if rec["eventID"] in failing:
-                raise RuntimeError("DynamoDB unavailable")
+    writer.lambda_handler({"Records": [record("e-1", "100", old=old, new=new)]}, None)
 
-        self.writer.process = process
-        out = io.StringIO()
-        with redirect_stdout(out):
-            result = self.writer.lambda_handler({"Records": records}, None)
-        return result, out.getvalue()
-
-    def test_reports_the_failed_records_sequence_number(self):
-        records = [record("e-1", "100"), record("e-2", "200"), record("e-3", "300")]
-
-        result, _ = self.run_batch(records, failing={"e-2"})
-
-        self.assertEqual(result, {"batchItemFailures": [{"itemIdentifier": "200"}]})
-
-    def test_reports_every_failed_record(self):
-        records = [record("e-1", "100"), record("e-2", "200"), record("e-3", "300")]
-
-        result, _ = self.run_batch(records, failing={"e-1", "e-3"})
-
-        self.assertEqual(
-            result,
-            {"batchItemFailures": [{"itemIdentifier": "100"}, {"itemIdentifier": "300"}]},
-        )
-
-    def test_no_failures_is_an_empty_list(self):
-        result, _ = self.run_batch([record("e-1", "100")], failing=set())
-
-        self.assertEqual(result, {"batchItemFailures": []})
-
-    def test_failure_log_keeps_the_alarm_marker(self):
-        _, logs = self.run_batch([record("e-1", "100")], failing={"e-1"})
-
-        self.assertTrue(logs.startswith("draft-version-writer failed on "), logs)
+    [row] = versions(writer)
+    assert (row["source"], row["changed_sections"], row["total_word_count"]) == ("ai_generated", ["Summary"], Decimal(5))
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_a_status_only_change_is_not_a_version(writer):
+    old = {"user_id": "user-1", "session_id": "s1", "rev": 1, "status": "questionnaire", "sections": {}}
+    new = {**old, "status": "editing_sections"}
+
+    writer.lambda_handler({"Records": [record("e-1", "100", old=old, new=new)]}, None)
+
+    assert versions(writer) == []
+
+
+def test_reports_only_the_failed_records_sequence_number(writer, monkeypatch, capsys):
+    real = writer.process
+
+    def process(rec):
+        if rec["eventID"] in {"e-1", "e-3"}:
+            raise RuntimeError("DynamoDB unavailable")
+        return real(rec)
+
+    monkeypatch.setattr(writer, "process", process)
+    records = [record("e-1", "100"), record("e-2", "200"), record("e-3", "300")]
+
+    result = writer.lambda_handler({"Records": records}, None)
+
+    assert result == {"batchItemFailures": [{"itemIdentifier": "100"}, {"itemIdentifier": "300"}]}
+    assert capsys.readouterr().out.startswith(f"{MARKER}e-1: DynamoDB unavailable")
+
+
+def test_a_real_dynamodb_failure_logs_the_alarm_marker(writer, capsys):
+    writer.test_table.delete()
+    new = {"user_id": "user-1", "session_id": "s1", "rev": 1, "sections": {}}
+
+    result = writer.lambda_handler({"Records": [record("e-9", "900", "INSERT", new=new)]}, None)
+
+    assert result == {"batchItemFailures": [{"itemIdentifier": "900"}]}
+    assert capsys.readouterr().out.startswith(f"{MARKER}e-9: ")

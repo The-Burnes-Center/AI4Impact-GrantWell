@@ -8,7 +8,7 @@ import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 
-// SUPPORTED_STATES injected as [{code,name}] (from lib/shared/states.ts). Parsed inline because
+// SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts). Parsed inline because
 // this function does not attach the grantwell-shared Lambda layer.
 const SUPPORTED_STATES = (() => {
   try {

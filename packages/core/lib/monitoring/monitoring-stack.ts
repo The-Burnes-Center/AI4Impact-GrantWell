@@ -31,6 +31,7 @@ import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
 import * as cr from "aws-cdk-lib/custom-resources";
 import { InstanceConfig, monitoringPrefix, sesEmail, turnstileEnabled } from "../config/instance-config";
+import type { BedrockModelUse } from "../chatbot-api/functions/functions";
 
 /**
  * - `critical`: users can't use GrantWell right now. Red (prod only).
@@ -53,6 +54,8 @@ export const LOG_MARKERS = {
   pipelineDispatchFailed: ["Error dispatching SQS record:"],
   scraperFatal: ["Fatal coordinator error:"],
   digestSendFailed: ["Digest send failed for", "Digest failed for user"],
+  modelCanaryFailed: ["Model canary failed for"],
+  queueEmailSendFailed: ["Processing queue email send failed"],
 } as const;
 
 /** Cognito's fixed, non-adjustable budget for a synchronous trigger. */
@@ -86,7 +89,10 @@ export interface MonitoringStackProps extends cdk.NestedStackProps {
   };
   readonly scraperCoordinatorFunction: lambda.IFunction;
   readonly notificationDigestFunction: lambda.IFunction;
+  /** Only where the deployment has the processing-queue email on. */
+  readonly processingQueueEmailFunction?: lambda.IFunction;
   readonly autoArchiveFunction: lambda.IFunction;
+  readonly bedrockModels: readonly BedrockModelUse[];
 }
 
 interface BriefComponent {
@@ -102,6 +108,8 @@ export class MonitoringStack extends cdk.NestedStack {
   /** Readable alerts. This is the topic AWS Chatbot subscribes to. */
   public readonly alertTopic: sns.Topic;
   public readonly alarms: cloudwatch.Alarm[] = [];
+  /** Deploy workflows invoke it after every deploy, through the root stack's ModelCanaryFunctionName output. */
+  public readonly modelCanaryFunctionName: string;
 
   private readonly prefix: string;
   private readonly stage: InstanceConfig["stage"];
@@ -142,6 +150,8 @@ export class MonitoringStack extends cdk.NestedStack {
     this.addNofoPipelineAlarms(props);
     this.addDraftAlarms(props);
     this.addScheduledJobAlarms(props, config);
+    this.addInitErrorScan(config.aws.stackName);
+    this.modelCanaryFunctionName = this.addModelCanary(props.bedrockModels);
 
     if (config.monitoring.dailyBrief) {
       this.addDailyBrief([
@@ -603,6 +613,26 @@ export class MonitoringStack extends cdk.NestedStack {
       });
     }
 
+    // No heartbeat: it doesn't run at weekends, and an empty queue sends nothing by design.
+    if (props.processingQueueEmailFunction) {
+      const fn = props.processingQueueEmailFunction;
+      this.alarm("ProcessingQueueEmailFailingAlarm", {
+        severity: "low",
+        name: "processing-queue email failing",
+        description: "The weekday email to admins about grants waiting in the processing queue didn't go out. Users aren't affected, and the queue is still in the app.",
+        metric: new cloudwatch.MathExpression({
+          expression: "IF(errors >= 1 OR sends >= 1, 1, 0)",
+          usingMetrics: {
+            errors: fn.metricErrors({ statistic: "Sum" }),
+            sends: this.markerMetric("QueueEmailSendFailed", fn, LOG_MARKERS.queueEmailSendFailed, cdk.Duration.hours(1)),
+          },
+          label: "queue email run failed",
+          period: cdk.Duration.hours(1),
+        }),
+        threshold: 1,
+      });
+    }
+
     this.alarm("AutoArchiveFailingAlarm", {
       severity: "low",
       name: "expired-NOFO archiving failing",
@@ -610,6 +640,144 @@ export class MonitoringStack extends cdk.NestedStack {
       metric: props.autoArchiveFunction.metricErrors({ period: cdk.Duration.hours(1), statistic: "Sum" }),
       threshold: 1,
     });
+  }
+
+  /**
+   * Covers every function whose name starts with the stack name, found at run time, so functions
+   * added later are covered without touching this file. Its own log group is outside that prefix.
+   */
+  private addInitErrorScan(stackName: string): void {
+    const metricName = "LambdaInitErrors";
+    const logGroup = new logs.LogGroup(this, "InitErrorScanLogGroup", {
+      retention: logs.RetentionDays.ONE_MONTH,
+    });
+    const scan = new lambda.Function(this, "InitErrorScanFunction", {
+      functionName: `${this.prefix}-init-error-scan`,
+      runtime: lambda.Runtime.NODEJS_24_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "functions/init-error-scan")),
+      timeout: cdk.Duration.minutes(5),
+      environment: {
+        LOG_GROUP_PREFIX: `/aws/lambda/${stackName}-`,
+        EXCLUDE_LOG_GROUP: logGroup.logGroupName,
+        METRIC_NAMESPACE: this.prefix,
+        METRIC_NAME: metricName,
+      },
+      description: "Finds GrantWell Lambdas that failed to start in the last 15 minutes",
+      logGroup,
+    });
+    scan.addToRolePolicy(new iam.PolicyStatement({
+      actions: ["logs:DescribeLogGroups"],
+      resources: [this.formatArn({ service: "logs", resource: "log-group", resourceName: "*", arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME })],
+    }));
+    scan.addToRolePolicy(new iam.PolicyStatement({
+      actions: ["logs:StartQuery"],
+      resources: [
+        this.formatArn({
+          service: "logs",
+          resource: "log-group",
+          resourceName: `/aws/lambda/${stackName}-*`,
+          arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME,
+        }),
+      ],
+    }));
+    // Neither action supports resource-level permissions.
+    scan.addToRolePolicy(new iam.PolicyStatement({
+      actions: ["logs:GetQueryResults", "logs:StopQuery"],
+      resources: ["*"],
+    }));
+    scan.addToRolePolicy(new iam.PolicyStatement({
+      actions: ["cloudwatch:PutMetricData"],
+      resources: ["*"],
+      conditions: { StringEquals: { "cloudwatch:namespace": this.prefix } },
+    }));
+
+    new events.Rule(this, "InitErrorScanSchedule", {
+      schedule: events.Schedule.rate(cdk.Duration.minutes(15)),
+      description: "Triggers the GrantWell Lambda init-error scan",
+      targets: [new targets.LambdaFunction(scan)],
+    });
+
+    const initErrors = (statistic: string, period: cdk.Duration) =>
+      new cloudwatch.Metric({ namespace: this.prefix, metricName, statistic, period });
+
+    this.alarm("LambdaInitErrorsAlarm", {
+      severity: "medium",
+      name: "a GrantWell function is failing to start",
+      description: `A GrantWell feature fails to start, so every request to it errors. The function name and error are in the ${this.prefix}-init-error-scan log.`,
+      metric: initErrors("Sum", cdk.Duration.minutes(15)),
+      threshold: 1,
+    });
+
+    // The scan reports a count every run, zero included, so no datapoints means it isn't running or is crashing.
+    this.alarm("InitErrorScanStoppedAlarm", {
+      severity: "medium",
+      name: "the function start-up check has stopped",
+      description: "The 15-minute check for functions that fail to start hasn't reported for an hour, so a broken deploy could go unnoticed. Nothing is known to be broken for users.",
+      metric: initErrors("SampleCount", cdk.Duration.hours(1)),
+      threshold: 1,
+      comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
+      treatMissingData: cloudwatch.TreatMissingData.BREACHING,
+    });
+  }
+
+  private addModelCanary(models: readonly BedrockModelUse[]): string {
+    const functionName = `${this.prefix}-model-canary`;
+    const canary = new lambda.Function(this, "ModelCanaryFunction", {
+      functionName,
+      runtime: lambda.Runtime.NODEJS_24_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "functions/model-canary")),
+      timeout: cdk.Duration.minutes(2),
+      // The SDK already retries throttles; a Lambda retry would only triple the Errors count.
+      retryAttempts: 0,
+      environment: {
+        MODELS: cdk.Stack.of(this).toJsonString(models.map(({ label, kind, modelId }) => ({ label, kind, modelId }))),
+      },
+      description: "Calls every Bedrock model GrantWell uses once; fails if any does",
+    });
+    canary.addToRolePolicy(new iam.PolicyStatement({
+      actions: ["bedrock:InvokeModel"],
+      resources: [...new Set(models.flatMap((m) => m.invokeResources))],
+    }));
+    if (models.some((m) => m.kind === "rerank")) {
+      // Rerank has no resource type; the model it uses is covered by InvokeModel above.
+      canary.addToRolePolicy(new iam.PolicyStatement({ actions: ["bedrock:Rerank"], resources: ["*"] }));
+    }
+
+    // Before the 13:00 UTC daily brief, so the brief shows the result.
+    new events.Rule(this, "ModelCanarySchedule", {
+      schedule: events.Schedule.cron({ minute: "30", hour: "12" }),
+      description: "Triggers the daily GrantWell Bedrock model check",
+      targets: [new targets.LambdaFunction(canary)],
+    });
+
+    // IGNORE holds the state between runs: the next run, daily or after a deploy, is what clears it.
+    this.alarm("ModelCanaryFailingAlarm", {
+      severity: "critical",
+      name: "AI models not responding",
+      description: `A Bedrock model GrantWell depends on failed its check, so chat, NOFO processing, drafting or grant search is failing. The ${functionName} log names the model.`,
+      metric: new cloudwatch.MathExpression({
+        expression: "IF(errors >= 1 OR failed >= 1, 1, 0)",
+        usingMetrics: {
+          errors: canary.metricErrors({ statistic: "Sum" }),
+          failed: this.markerMetric("ModelCanaryFailed", canary, LOG_MARKERS.modelCanaryFailed, cdk.Duration.minutes(5)),
+        },
+        label: "model check failed",
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 1,
+      treatMissingData: cloudwatch.TreatMissingData.IGNORE,
+    });
+
+    this.alarm("ModelCanaryStoppedAlarm", {
+      severity: "medium",
+      name: "the daily AI model check has stopped",
+      description: "The daily check that every Bedrock model still answers hasn't run for 24 hours, so a model outage would only show up as user errors.",
+      metric: canary.metricInvocations({ period: cdk.Duration.hours(1), statistic: "Sum" }),
+      ...this.dailyHeartbeat(),
+    });
+    return functionName;
   }
 
   /** Every empty hour breaches, so this fires 24 hours after the last run rather than at a fixed day boundary. */

@@ -1,6 +1,6 @@
 /**
  * Nested stack holding the Grants.gov scraper fan-out Lambdas and the NOFO lifecycle
- * Lambdas (metadata sync, expiry auto-archive) plus the EventBridge rules that drive
+ * Lambdas (expiry auto-archive) plus the EventBridge rules that drive
  * them. Split out of the main app stack to stay under the 500-resource
  * CloudFormation limit.
  *
@@ -25,7 +25,6 @@ import { Table } from "aws-cdk-lib/aws-dynamodb";
 import {
   bedrockInvokePolicy,
   metadataTableReadWritePolicy,
-  s3ReadOnlyPolicy,
   s3ReadWritePolicy,
 } from "./shared-policies";
 
@@ -52,7 +51,6 @@ export interface ScraperStackProps extends cdk.NestedStackProps {
 export class ScraperStack extends cdk.NestedStack {
   public readonly scraperCoordinatorFunction: lambda.Function;
   public readonly opportunityProcessorFunction: lambda.Function;
-  public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: ScraperStackProps) {
@@ -151,47 +149,6 @@ export class ScraperStack extends cdk.NestedStack {
 
       scraperRule.addTarget(new targets.LambdaFunction(scraperCoordinatorFunction));
     }
-
-    // Add sync NOFO metadata Lambda function
-    const syncNofoMetadataFunction = new lambda.Function(
-      this,
-      "SyncNofoMetadataFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "landing-page/sync-nofo-metadata")
-        ),
-        handler: "index.handler",
-        environment: {
-          BUCKET: props.ffioNofosBucket.bucketName,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-        },
-        timeout: cdk.Duration.minutes(15),
-      }
-    );
-
-    // S3 read permissions
-    syncNofoMetadataFunction.addToRolePolicy(
-      s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn)
-    );
-
-    // DynamoDB write permissions
-    syncNofoMetadataFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "dynamodb:PutItem",
-          "dynamodb:GetItem",
-          "dynamodb:UpdateItem",
-        ],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          props.nofoMetadataTable.tableArn + "/index/*",
-        ],
-      })
-    );
-
-    this.syncNofoMetadataFunction = syncNofoMetadataFunction;
 
     // Auto-Archive Expired NOFOs Lambda Function
     const autoArchiveExpiredNofosFunction = new lambda.Function(

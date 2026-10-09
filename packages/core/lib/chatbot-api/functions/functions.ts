@@ -6,7 +6,13 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
-import { InstanceConfig, sesEmail, supportedStatesEnv } from "../../config/instance-config";
+import {
+  InstanceConfig,
+  processingQueueEmailEnabled,
+  queueEmailRecipientsParameter,
+  sesEmail,
+  supportedStatesEnv,
+} from "../../config/instance-config";
 
 // Import Lambda L2 construct
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -40,6 +46,16 @@ import {
 // only after every stateless admin in the pool has been migrated to PlatformAdmin, or they
 // lose cross-state access. See scripts/migrate-platform-admins.mjs.
 const LEGACY_STATELESS_ADMIN_IS_PLATFORM = "true";
+
+/** A Bedrock model or inference profile the app calls, as the model canary checks it. */
+export interface BedrockModelUse {
+  readonly label: string;
+  readonly kind: "anthropic" | "titan-embed" | "rerank";
+  /** Exactly what the app passes as modelId (for rerank, the modelArn). */
+  readonly modelId: string;
+  /** What invoking it needs bedrock:InvokeModel on: the ID plus the foundation models a profile routes to. */
+  readonly invokeResources: string[];
+}
 
 interface LambdaFunctionStackProps {
   readonly config: InstanceConfig;
@@ -105,11 +121,11 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly docxToTextConverterFunction: lambda.Function;
   public readonly applicationDocxGeneratorFunction: lambda.Function;
   public readonly applicationExportsBucket: s3.Bucket;
-  public readonly syncNofoMetadataFunction: lambda.Function;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
   public readonly notificationDigestPreviewFunction: lambda.Function;
   public readonly notificationDigestBroadcastFunction: lambda.Function;
+  public readonly processingQueueEmailFunction?: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly notificationSesFeedbackFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
@@ -119,6 +135,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoPromoteCopyFunction: lambda.Function;
   public readonly userProfileFunction: lambda.Function;
   public readonly analyticsFunction: lambda.Function;
+  public readonly bedrockModels: BedrockModelUse[];
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -174,6 +191,34 @@ export class LambdaFunctionStack extends cdk.Stack {
     const titanSearchProfile = makeInferenceProfile(
       "TitanSearchInferenceProfile", "titan-grant-search", titanFoundationModelArn, "grant-search",
     );
+
+    // A US system profile routes to its model in several regions, so the foundation model is granted in any region.
+    const claude = (label: string, profile: bedrock.CfnApplicationInferenceProfile, systemProfileId: string, systemProfileArn: string): BedrockModelUse => ({
+      label,
+      kind: "anthropic",
+      modelId: profile.attrInferenceProfileArn,
+      invokeResources: [
+        profile.attrInferenceProfileArn,
+        systemProfileArn,
+        `arn:aws:bedrock:*::foundation-model/${systemProfileId.slice(systemProfileId.indexOf(".") + 1)}`,
+      ],
+    });
+    const rerankModelArn = `arn:aws:bedrock:${region}::foundation-model/${RERANK_MODEL_ID}`;
+    this.bedrockModels = [
+      claude("chat (Sonnet)", sonnetChatProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
+      claude("NOFO analysis (Sonnet)", sonnetNofoProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
+      claude("draft generation (Sonnet)", sonnetDraftProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
+      claude("NOFO synthesis and questions (Haiku)", haikuNofoProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
+      claude("grants.gov scraper (Haiku)", haikuScraperProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
+      // ai-grant-search embeds through this profile (its TITAN_MODEL_ID); invoking a profile also needs the model.
+      {
+        label: "grant search embeddings (Titan)",
+        kind: "titan-embed",
+        modelId: titanSearchProfile.attrInferenceProfileArn,
+        invokeResources: [titanSearchProfile.attrInferenceProfileArn, titanFoundationModelArn],
+      },
+      { label: "grant search reranking (Cohere)", kind: "rerank", modelId: rerankModelArn, invokeResources: [rerankModelArn] },
+    ];
 
     // Create Python shared models Lambda Layer
     const pythonSharedLayer = new lambda.LayerVersion(scope, "PythonSharedLayer", {
@@ -1159,7 +1204,6 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     this.scraperCoordinatorFunction = scraper.scraperCoordinatorFunction;
     this.opportunityProcessorFunction = scraper.opportunityProcessorFunction;
-    this.syncNofoMetadataFunction = scraper.syncNofoMetadataFunction;
     this.autoArchiveExpiredNofosFunction =
       scraper.autoArchiveExpiredNofosFunction;
 
@@ -1278,6 +1322,10 @@ export class LambdaFunctionStack extends cdk.Stack {
       unsubscribeSecret: unsubscribeSecret,
       notificationSender: notificationSender,
       supportedStatesEnv: SUPPORTED_STATES_ENV,
+      nofoProcessingReviewTable: props.nofoProcessingReviewTable,
+      processingQueueEmail: processingQueueEmailEnabled(config)
+        ? { recipientsParameter: queueEmailRecipientsParameter(config), deploymentId: config.id }
+        : undefined,
     });
 
     // Ensure the identity exists before the sender-scoped policies are exercised.
@@ -1294,6 +1342,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       notifications.notificationUnsubscribeFunction;
     this.notificationSesFeedbackFunction =
       notifications.notificationSesFeedbackFunction;
+    this.processingQueueEmailFunction = notifications.processingQueueEmailFunction;
 
     // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
     const aiGrantSearchFunction = new lambda.Function(

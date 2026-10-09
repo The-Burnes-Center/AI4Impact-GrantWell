@@ -2,7 +2,7 @@
  * Journey 1, and the session every other spec reuses: one login per run, because Cognito refuses
  * a TOTP code it has already accepted. This project runs untraced (see playwright.config.ts).
  */
-import { expect, test as setup } from "@playwright/test";
+import { expect, test as setup } from "../helpers/fixtures";
 import {
   clearRecentlyViewed,
   deleteDraft,

@@ -2,6 +2,12 @@ import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 import { apiFetch } from "../session-ended";
 
+export class KbSyncStatusError extends Error {
+  constructor(readonly status: number) {
+    super(`Failed to check sync status (HTTP ${status})`);
+  }
+}
+
 export class KBSyncClient {
   private readonly API: string;
 
@@ -19,7 +25,7 @@ export class KBSyncClient {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to check sync status");
+      throw new KbSyncStatusError(response.status);
     }
     return await response.json();
   }

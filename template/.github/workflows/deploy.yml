@@ -71,6 +71,16 @@ jobs:
         if: steps.installed.outputs.value == 'true'
         run: node scripts/synth.mjs synth cdk.out/check
 
+      # What this release needs beyond a typecheck: chrome/, scripts/, outputs, no example values.
+      - name: Contract checks
+        if: steps.installed.outputs.value == 'true'
+        run: |
+          if [ -x node_modules/.bin/grantwell-check ]; then
+            node_modules/.bin/grantwell-check cdk.out/check
+          else
+            echo "::notice::This GrantWell release has no grantwell-check."
+          fi
+
       - name: Trial install (nothing committed)
         if: steps.installed.outputs.value == 'false'
         run: |
@@ -120,4 +130,8 @@ jobs:
 
       # ENVIRONMENT selects one deployment, so --all is that deployment's stacks only.
       - name: Deploy
-        run: npx cdk deploy --all --require-approval never
+        run: npx cdk deploy --all --require-approval never --outputs-file "$RUNNER_TEMP/cdk-outputs.json"
+
+      # One minimal call to every Bedrock model the deployment uses; fails the run if any doesn't answer.
+      - name: Every Bedrock model answers
+        run: scripts/check-models.sh "$RUNNER_TEMP/cdk-outputs.json"

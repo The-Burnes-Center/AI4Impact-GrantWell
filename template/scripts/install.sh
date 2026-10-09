@@ -50,5 +50,10 @@ npm run typecheck
 echo "Generating templates"
 node scripts/synth.mjs synth cdk.out/install
 echo
+# Example values only warn here: a repo just made from the template still has them.
+if [ -x node_modules/.bin/grantwell-check ]; then
+  node_modules/.bin/grantwell-check cdk.out/install --placeholders warn
+  echo
+fi
 echo "Installed $version. Templates are in cdk.out/install/."
 echo "Commit vendor/, package.json and package-lock.json."

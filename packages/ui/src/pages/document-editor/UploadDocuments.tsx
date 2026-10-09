@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, type CSSProperties } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
+import { KB_SYNC_UNKNOWN_MESSAGE, useKbSyncPoll } from "../../hooks/use-kb-sync-poll";
 import { getCurrentUser } from "aws-amplify/auth";
 import { FileUploader } from "../../common/file-uploader";
 import Card from "../../components/ui/Card";
@@ -111,10 +112,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [draftProgress, setDraftProgress] = useState<string>("");
   const [generationPhase, setGenerationPhase] = useState<string>("preparing");
   const [hasExistingDraft, setHasExistingDraft] = useState(false);
-  const [kbIndexing, setKbIndexing] = useState(false);
   const [pendingLeave, setPendingLeave] = useState<{ run: () => void } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { status: kbSyncStatus, start: startKbSync } = useKbSyncPoll(apiClient.kbSync);
+  const kbIndexing = kbSyncStatus === "indexing";
 
   const extractNofoName = (docId: string | null): string => {
     if (!docId) return "";
@@ -156,12 +157,6 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setHasExistingDraft(true);
     }
   }, [documentData]);
-
-  useEffect(() => {
-    return () => {
-      if (syncPollRef.current) clearInterval(syncPollRef.current);
-    };
-  }, []);
 
   const hasStagedFiles = files.length > 0 && !uploading && !isLoading && !generatingDraft;
 
@@ -264,21 +259,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
 
       setUploadProgress(100);
-      setKbIndexing(true);
-
-      if (syncPollRef.current) clearInterval(syncPollRef.current);
-      syncPollRef.current = setInterval(async () => {
-        try {
-          const status = await apiClient.kbSync.isSyncing();
-          if (typeof status === "string" && status.includes("DONE")) {
-            setKbIndexing(false);
-            if (syncPollRef.current) clearInterval(syncPollRef.current);
-            syncPollRef.current = null;
-          }
-        } catch {
-          // Keep polling on transient errors
-        }
-      }, 5000);
+      startKbSync();
 
       setUploadAnnouncement("Upload complete");
       setTimeout(() => {
@@ -294,7 +275,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setUploading(false);
       return false;
     }
-  }, [selectedNofo, userId, files, apiClient]);
+  }, [selectedNofo, userId, files, apiClient, startKbSync]);
 
   const uploadAndLeave = async () => {
     const leave = pendingLeave;
@@ -709,10 +690,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           )}
 
           <div role="status" aria-live="polite" className="visually-hidden">
-            {kbIndexing && !uploading ? KB_INDEXING_MESSAGE : ""}
+            {uploading ? "" : kbIndexing ? KB_INDEXING_MESSAGE : kbSyncStatus === "unknown" ? KB_SYNC_UNKNOWN_MESSAGE : ""}
           </div>
 
-          {kbIndexing && !uploading && (
+          {kbSyncStatus !== "idle" && !uploading && (
             <div
               style={{
                 display: "flex",
@@ -728,19 +709,21 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                 fontFamily: typography.fontFamily,
               } satisfies CSSProperties}
             >
-              <div
-                aria-hidden="true"
-                style={{
-                  width: "14px",
-                  height: "14px",
-                  border: `2px solid ${colors.primary}`,
-                  borderTopColor: "transparent",
-                  borderRadius: "50%",
-                  animation: "spin 1s linear infinite",
-                  flexShrink: 0,
-                }}
-              />
-              {KB_INDEXING_MESSAGE}
+              {kbIndexing && (
+                <div
+                  aria-hidden="true"
+                  style={{
+                    width: "14px",
+                    height: "14px",
+                    border: `2px solid ${colors.primary}`,
+                    borderTopColor: "transparent",
+                    borderRadius: "50%",
+                    animation: "spin 1s linear infinite",
+                    flexShrink: 0,
+                  }}
+                />
+              )}
+              {kbIndexing ? KB_INDEXING_MESSAGE : KB_SYNC_UNKNOWN_MESSAGE}
             </div>
           )}
         </div>

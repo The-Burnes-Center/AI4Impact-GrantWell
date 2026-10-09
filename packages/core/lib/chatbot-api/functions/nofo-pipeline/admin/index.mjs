@@ -18,7 +18,15 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { safeJsonParse, httpResponse } from "../shared/json.mjs";
 import { readS3Text } from "../shared/s3.mjs";
 import { documentSampleOf, generateQuestions, hasQuestions } from "../shared/questions.mjs";
-import { requireAdmin, assertCanEditNofoOr403, resolveCallerScope, readNofoScope } from "grantwell-shared";
+import {
+  requireAdmin,
+  assertCanEditNofoOr403,
+  resolveCallerScope,
+  grantDeadline,
+  compareByDeadline,
+  readGrantMetadata,
+  OPEN_REVIEW_STATUSES,
+} from "grantwell-shared";
 
 const dynamoClient = new DynamoDBClient();
 const lambdaClient = new LambdaClient();
@@ -46,6 +54,9 @@ export const handler = async (event) => {
     }
     if (method === "GET" && path === "/admin/processing-metrics") {
       return await getMetrics();
+    }
+    if (method === "POST" && path === "/admin/processing-reviews/close-expired") {
+      return await closeExpiredReviews(event);
     }
     if (method === "GET" && path.startsWith("/admin/processing-reviews/")) {
       const suffix = path.slice("/admin/processing-reviews/".length);
@@ -97,55 +108,79 @@ export const handler = async (event) => {
   }
 };
 
-async function listReviews(event) {
-  const params = event.queryStringParameters || {};
-  const statusFilter = params.status || "pending_review";
-  const tableName = process.env.REVIEW_TABLE_NAME;
-
-  let items;
-  if (statusFilter === "all") {
-    // Paginated scan for "all" statuses
-    items = [];
-    let lastKey = undefined;
-    do {
-      const result = await dynamoClient.send(
-        new ScanCommand({
-          TableName: tableName,
-          ExclusiveStartKey: lastKey,
-        })
-      );
-      items.push(...(result.Items || []).map((item) => unmarshall(item)));
-      lastKey = result.LastEvaluatedKey;
-    } while (lastKey);
-    items.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
-  } else {
+async function queryReviewsByStatus(status) {
+  const items = [];
+  let lastKey;
+  do {
     const result = await dynamoClient.send(
       new QueryCommand({
-        TableName: tableName,
+        TableName: process.env.REVIEW_TABLE_NAME,
         IndexName: "StatusIndex",
         KeyConditionExpression: "#s = :status",
         ExpressionAttributeNames: { "#s": "status" },
-        ExpressionAttributeValues: marshall({ ":status": statusFilter }),
+        ExpressionAttributeValues: marshall({ ":status": status }),
         ScanIndexForward: false,
+        ExclusiveStartKey: lastKey,
       })
     );
-    items = (result.Items || []).map((item) => unmarshall(item));
+    items.push(...(result.Items || []).map((item) => unmarshall(item)));
+    lastKey = result.LastEvaluatedKey;
+  } while (lastKey);
+  return items;
+}
+
+async function scanAllReviews() {
+  const items = [];
+  let lastKey;
+  do {
+    const result = await dynamoClient.send(
+      new ScanCommand({ TableName: process.env.REVIEW_TABLE_NAME, ExclusiveStartKey: lastKey })
+    );
+    items.push(...(result.Items || []).map((item) => unmarshall(item)));
+    lastKey = result.LastEvaluatedKey;
+  } while (lastKey);
+  return items;
+}
+
+function grantMetadata(reviews) {
+  return readGrantMetadata(dynamoClient, process.env.NOFO_METADATA_TABLE_NAME, reviews.map((r) => r.nofo_name));
+}
+
+// A state admin only sees review rows for their own state's NOFOs — federal/other-state
+// rows are hidden entirely (matching retrieve-nofos), so no out-of-scope actions surface.
+function inCallerScope(callerScope, meta) {
+  if (callerScope.role !== "stateAdmin") return true;
+  return meta?.scope === "state" && meta?.state === callerScope.state;
+}
+
+function withDeadline(review, meta, now) {
+  const { deadline, daysLeft, urgency } = grantDeadline(meta, now);
+  return { ...review, deadline, daysLeft, urgency, grantStatus: meta?.status ?? null };
+}
+
+async function listReviews(event) {
+  const params = event.queryStringParameters || {};
+  const statusFilter = params.status || "pending_review";
+  const callerScope = resolveCallerScope(event);
+  const now = new Date();
+
+  const listed = statusFilter === "all" ? await scanAllReviews() : await queryReviewsByStatus(statusFilter);
+  // The "Close all expired" count covers every open status, not just the one being viewed.
+  const open = statusFilter === "all" ? listed.filter((r) => OPEN_REVIEW_STATUSES.includes(r.status)) : [...listed];
+  if (statusFilter !== "all") {
+    for (const status of OPEN_REVIEW_STATUSES) {
+      if (status !== statusFilter) open.push(...(await queryReviewsByStatus(status)));
+    }
   }
 
-  // A state admin only sees review rows for their own state's NOFOs — federal/other-state
-  // rows are hidden entirely (matching retrieve-nofos), so no out-of-scope actions surface.
-  const callerScope = resolveCallerScope(event);
-  if (callerScope.role === "stateAdmin") {
-    const metadataTable = process.env.NOFO_METADATA_TABLE_NAME;
-    const scopeByName = new Map();
-    for (const name of new Set(items.map((i) => i.nofo_name))) {
-      scopeByName.set(name, await readNofoScope(scopeDeps, metadataTable, name));
-    }
-    items = items.filter((i) => {
-      const s = scopeByName.get(i.nofo_name);
-      return s && s.scope === "state" && s.state === callerScope.state;
-    });
-  }
+  const metaByName = await grantMetadata([...listed, ...open]);
+  const scoped = (items) =>
+    items
+      .filter((r) => inCallerScope(callerScope, metaByName.get(r.nofo_name)))
+      .map((r) => withDeadline(r, metaByName.get(r.nofo_name), now));
+
+  const items = scoped(listed).sort(compareByDeadline);
+  const expiredOpenCount = scoped(open).filter((r) => r.urgency === "expired").length;
 
   const reviews = items.map((parsed) => {
     // Don't send full summary/questions/validation in list view
@@ -161,10 +196,65 @@ async function listReviews(event) {
       guidanceTitle: guidance?.title || null,
       guidanceSeverity: guidance?.severity || null,
       missingSections: guidance?.missingCategories || [],
+      deadline: parsed.deadline,
+      daysLeft: parsed.daysLeft,
+      deadlineUrgency: parsed.urgency,
+      grantStatus: parsed.grantStatus,
     };
   });
 
-  return httpResponse(200, { reviews });
+  return httpResponse(200, { reviews, expiredOpenCount });
+}
+
+/**
+ * Supersedes every open review whose grant's deadline has passed. Only review rows change; the
+ * grant, its files and its metadata are left alone.
+ */
+async function closeExpiredReviews(event) {
+  const callerScope = resolveCallerScope(event);
+  if (callerScope.role !== "developer" && callerScope.role !== "regularAdmin" && callerScope.role !== "stateAdmin") {
+    return httpResponse(403, { message: "Not authorized to modify NOFOs." });
+  }
+  const now = new Date();
+  const open = [];
+  for (const status of OPEN_REVIEW_STATUSES) open.push(...(await queryReviewsByStatus(status)));
+  const metaByName = await grantMetadata(open);
+  const expired = open.filter((r) => {
+    const meta = metaByName.get(r.nofo_name);
+    return inCallerScope(callerScope, meta) && grantDeadline(meta, now).urgency === "expired";
+  });
+
+  const claims = event.requestContext?.authorizer?.jwt?.claims || {};
+  const closedBy = claims.email || claims["cognito:username"] || claims.sub || null;
+  const closedAt = now.toISOString();
+  let closed = 0;
+  for (const review of expired) {
+    try {
+      await dynamoClient.send(
+        new UpdateItemCommand({
+          TableName: process.env.REVIEW_TABLE_NAME,
+          Key: marshall({ nofo_name: review.nofo_name, review_id: review.review_id }),
+          UpdateExpression: "SET #s = :closed, reviewed_at = :now, reviewed_by = :by, admin_notes = :notes",
+          // Skips a row someone else acted on since the read.
+          ConditionExpression: "#s = :was",
+          ExpressionAttributeNames: { "#s": "status" },
+          ExpressionAttributeValues: marshall({
+            ":closed": "superseded",
+            ":was": review.status,
+            ":now": closedAt,
+            ":by": closedBy,
+            ":notes": "Closed: grant expired",
+          }),
+        })
+      );
+      closed++;
+    } catch (error) {
+      if (error?.name !== "ConditionalCheckFailedException") throw error;
+    }
+  }
+
+  console.log(`Closed ${closed} review(s) for expired grants`, { by: closedBy });
+  return httpResponse(200, { closed });
 }
 
 async function getLatestReview(tableName, nofoName) {

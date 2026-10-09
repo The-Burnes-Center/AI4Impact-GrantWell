@@ -12,6 +12,3 @@ OpportunityProcessorFunctionSqsEventSourcegrantwellstagingChatbotAPIScraperStack
 ScraperCoordinatorFunction6BA33D46	AWS::Lambda::Function
 ScraperCoordinatorFunctionServiceRole870AC4C0	AWS::IAM::Role
 ScraperCoordinatorFunctionServiceRoleDefaultPolicyB69B333D	AWS::IAM::Policy
-SyncNofoMetadataFunction6E6EC375	AWS::Lambda::Function
-SyncNofoMetadataFunctionServiceRoleDefaultPolicy7649E8FC	AWS::IAM::Policy
-SyncNofoMetadataFunctionServiceRoleF3CFD29F	AWS::IAM::Role

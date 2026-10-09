@@ -1,0 +1,9 @@
+.fixture-header,
+.fixture-footer {
+  background: var(--gw-color-primary);
+  color: #fff;
+}
+
+.fixture-banner {
+  border-bottom: 1px solid var(--gw-color-primary-hover);
+}

@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { LuUserPlus } from "react-icons/lu";
+import { LuKeyRound, LuTrash, LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
 import { MFA_ENABLED, SINGLE_STATE } from "../../../common/instance";
 import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "./PaginationControls";
+import RowActionsMenu, { type RowAction } from "./RowActionsMenu";
 
 interface UserManagementTabProps {
   apiClient: ApiClient;
@@ -118,7 +119,12 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       });
     } catch (error) {
       console.error("Error loading users:", error);
-      addNotification("error", "Failed to load users");
+      addNotification(
+        "error",
+        error instanceof Error && error.message
+          ? `Failed to load users: ${error.message}`
+          : "Failed to load users"
+      );
     } finally {
       setLoading(false);
     }
@@ -467,35 +473,37 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                     )}
                     <td className="user-management-table__actions">
                       <div className="user-management-actions-cell">
-                        <button
-                          type="button"
-                          className="feature-rollouts-primary-button"
-                          onClick={() => void handleSave(user)}
-                          disabled={!hasChanges || isSaving}
-                        >
-                          {isSaving ? "Saving..." : "Save"}
-                        </button>
-                        {!isSelf && MFA_ENABLED && (
+                        {(hasChanges || isSaving) && (
                           <button
                             type="button"
-                            className="feature-rollouts-secondary-button"
-                            onClick={() => setMfaResetTarget(user)}
+                            className="feature-rollouts-primary-button"
+                            onClick={() => void handleSave(user)}
                             disabled={isSaving}
-                            aria-label={`Reset two-step verification for ${user.email}`}
+                            aria-label={`Save changes for ${user.email}`}
                           >
-                            Reset two-step verification
+                            {isSaving ? "Saving..." : "Save"}
                           </button>
                         )}
                         {!isSelf && (
-                          <button
-                            type="button"
-                            className="user-management-delete-button"
-                            onClick={() => setDeleteTarget(user)}
+                          <RowActionsMenu
+                            label={`More actions for ${user.email}`}
                             disabled={isSaving}
-                            aria-label={`Delete ${user.email}`}
-                          >
-                            Delete
-                          </button>
+                            actions={[
+                              ...(MFA_ENABLED
+                                ? [{
+                                    label: "Reset two-step verification",
+                                    icon: <LuKeyRound size={16} />,
+                                    onSelect: () => setMfaResetTarget(user),
+                                  } satisfies RowAction]
+                                : []),
+                              {
+                                label: "Delete",
+                                icon: <LuTrash size={16} />,
+                                onSelect: () => setDeleteTarget(user),
+                                danger: true,
+                              },
+                            ]}
+                          />
                         )}
                       </div>
                       {rowErrors[user.username] && (

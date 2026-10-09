@@ -48,22 +48,34 @@ const COMMON_ALARMS: [string, string, number][] = [
   ["notification digest has stopped", "medium", 1],
   ["notification digest failing", "medium", 1],
   ["expired-NOFO archiving failing", "low", 1],
+  ["a GrantWell function is failing to start", "medium", 1],
+  ["the function start-up check has stopped", "medium", 1],
+  ["AI models not responding", "critical", 1],
+  ["the daily AI model check has stopped", "medium", 1],
 ];
 
-// Prod only: the SES identity owner, the scheduled scrape and the daily brief.
+// Prod only: the SES identity owner, the scheduled scrape, the daily brief and the processing-queue email.
 const PROD_ONLY_ALARMS: [string, string, number][] = [
   ["SES bounce rate heading for a sending pause", "medium", 0.05],
+  ["processing-queue email failing", "low", 1],
   ["daily grants.gov scrape has stopped", "medium", 1],
   ["the daily health brief has stopped running", "low", 1],
   ["the daily health brief is failing", "medium", 1],
 ];
 
-const HEARTBEATS = [
+const DAILY_HEARTBEATS = [
   "daily grants.gov scrape has stopped",
-  "failed-NOFO sweep has stopped",
   "notification digest has stopped",
   "the daily health brief has stopped running",
+  "the daily AI model check has stopped",
 ];
+const HEARTBEATS = [...DAILY_HEARTBEATS, "failed-NOFO sweep has stopped", "the function start-up check has stopped"];
+
+// The canary runs once a day: NOT_BREACHING would read the empty hours after a failed run as recovered.
+const HOLDS_STATE = ["AI models not responding"];
+
+// Generic dev has the processing-queue email off, so nothing there logs this marker.
+const PROD_ONLY_MARKERS = ["queueEmailSendFailed"];
 
 const DIRECT_TO_ALERTS = ["alerting itself is broken", "alerts are not reaching the formatter"];
 
@@ -119,15 +131,16 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       }
     });
 
-    it("treats missing data as breaching on heartbeats and only there", () => {
+    it("treats missing data as breaching on heartbeats only, and holds state only on the canary", () => {
       for (const alarm of alarms) {
         const suffix = alarm.AlarmName.slice(prefix.length + 1);
-        expect(alarm.TreatMissingData, suffix).toBe(HEARTBEATS.includes(suffix) ? "breaching" : "notBreaching");
+        const expected = HEARTBEATS.includes(suffix) ? "breaching" : HOLDS_STATE.includes(suffix) ? "ignore" : "notBreaching";
+        expect(alarm.TreatMissingData, suffix).toBe(expected);
       }
     });
 
     it("evaluates daily heartbeats over 24 one-hour periods, never one period over a day", () => {
-      for (const suffix of HEARTBEATS.filter((h) => h !== "failed-NOFO sweep has stopped")) {
+      for (const suffix of DAILY_HEARTBEATS) {
         if (!alarms.some((a) => a.AlarmName === `${prefix} ${suffix}`)) continue;
         const alarm = byName(suffix);
         expect(alarm.Period, suffix).toBe(3600);
@@ -153,8 +166,9 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       const filters = ofType("AWS::Logs::MetricFilter");
       const patterns = filters.map(([, r]) => r.Properties.FilterPattern).sort();
       const quote = (s: string) => `"${s}"`;
-      const expectedPatterns = Object.values(LOG_MARKERS)
-        .map((phrases) => (phrases.length === 1 ? quote(phrases[0]) : phrases.map((p) => `?${quote(p)}`).join(" ")))
+      const expectedPatterns = Object.entries(LOG_MARKERS)
+        .filter(([key]) => env === "prod" || !PROD_ONLY_MARKERS.includes(key))
+        .map(([, phrases]) => (phrases.length === 1 ? quote(phrases[0]) : phrases.map((p) => `?${quote(p)}`).join(" ")))
         .sort();
       expect(patterns).toEqual(expectedPatterns);
       for (const [id, filter] of filters) {
@@ -166,14 +180,63 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
 
     it("builds the daily brief only where configured", () => {
       const parameters = ofType("AWS::SSM::Parameter").map(([, r]) => r.Properties.Name);
-      const rules = ofType("AWS::Events::Rule").map(([, r]) => r.Properties.ScheduleExpression);
+      const rules = ofType("AWS::Events::Rule").map(([, r]) => r.Properties.ScheduleExpression).sort();
+      const always = ["cron(30 12 * * ? *)", "rate(15 minutes)"];
       if (env === "prod") {
         expect(parameters).toEqual([`/${prefix}/daily-brief/components`]);
-        expect(rules).toEqual(["cron(0 13 * * ? *)"]);
+        expect(rules).toEqual(["cron(0 13 * * ? *)", ...always].sort());
       } else {
         expect(parameters).toEqual([]);
-        expect(rules).toEqual([]);
+        expect(rules).toEqual(always);
       }
+    });
+
+    const fnNamed = (name: string) => {
+      const found = ofType("AWS::Lambda::Function").find(([, r]) => r.Properties.FunctionName === name);
+      if (!found) throw new Error(`No function ${name}`);
+      return found;
+    };
+    const policyOf = (fnId: string) => {
+      const roleId = resources[fnId].Properties.Role["Fn::GetAtt"][0];
+      const policy = ofType("AWS::IAM::Policy").find(([, r]) => r.Properties.Roles.some((role: any) => role.Ref === roleId));
+      return policy![1].Properties.PolicyDocument.Statement as any[];
+    };
+
+    it("scans every Lambda log group under the stack name, publishing only to its own namespace", () => {
+      const [id, scan] = fnNamed(`${prefix}-init-error-scan`);
+      expect(scan.Properties.Runtime).toBe("nodejs24.x");
+      expect(scan.Properties.Environment.Variables).toMatchObject({
+        LOG_GROUP_PREFIX: `/aws/lambda/${ENVS[env].STACK_NAME}-`,
+        METRIC_NAMESPACE: prefix,
+        METRIC_NAME: "LambdaInitErrors",
+      });
+      const statements = policyOf(id);
+      const startQuery = statements.find((s) => s.Action === "logs:StartQuery");
+      expect(JSON.stringify(startQuery.Resource)).toContain(`:log-group:/aws/lambda/${ENVS[env].STACK_NAME}-*`);
+      const put = statements.find((s) => s.Action === "cloudwatch:PutMetricData");
+      expect(put.Condition).toEqual({ StringEquals: { "cloudwatch:namespace": prefix } });
+      const alarm = byName("a GrantWell function is failing to start");
+      expect([alarm.Namespace, alarm.MetricName, alarm.Statistic]).toEqual([prefix, "LambdaInitErrors", "Sum"]);
+    });
+
+    it("gives the model canary every Bedrock model and only InvokeModel on them", () => {
+      const [id, canary] = fnNamed(`${prefix}-model-canary`);
+      expect(canary.Properties.Runtime).toBe("nodejs24.x");
+      const models = JSON.stringify(canary.Properties.Environment.Variables.MODELS);
+      for (const profile of ["SonnetChat", "SonnetNofo", "SonnetDraft", "HaikuNofo", "HaikuScraper", "TitanSearch"]) {
+        expect(models, profile).toMatch(new RegExp(`ChatbotAPI${profile}InferenceProfile[0-9A-F]{8}InferenceProfileArn`));
+      }
+      expect(models).not.toContain("amazon.titan-embed-text-v2:0");
+      expect(models).toContain("cohere.rerank-v3-5:0");
+      const actions = policyOf(id).map((s) => s.Action).sort();
+      expect(actions).toEqual(["bedrock:InvokeModel", "bedrock:Rerank"]);
+      expect(policyOf(id).find((s) => s.Action === "bedrock:InvokeModel").Resource).not.toContain("*");
+    });
+
+    it("names the canary in a root stack output, without an export, for the deploy step", () => {
+      const app = JSON.parse(fs.readFileSync(path.join(outDir(env), `${ENVS[env].STACK_NAME}.template.json`), "utf8"));
+      expect(app.Outputs.ModelCanaryFunctionName).toMatchObject({ Value: `${prefix}-model-canary` });
+      expect(app.Outputs.ModelCanaryFunctionName.Export).toBeUndefined();
     });
   });
 }

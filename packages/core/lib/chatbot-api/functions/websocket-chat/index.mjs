@@ -20,7 +20,7 @@ const s3Client = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' })
 const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
-// SUPPORTED_STATES is injected as [{code,name}] (from lib/shared/states.ts). Parsed inline
+// SUPPORTED_STATES is injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts). Parsed inline
 // because this function does not attach the grantwell-shared Lambda layer.
 const SUPPORTED_STATES = (() => {
   try {

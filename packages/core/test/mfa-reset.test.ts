@@ -7,15 +7,11 @@ const aws = vi.hoisted(() => {
   const command = (name: string) => ({ [name]: class extends Command {} })[name];
   const sent: { name: string; input: any }[] = [];
   const users: Record<string, { state: string; roles: string[] }> = {};
-  return { command, sent, users };
-});
-
-vi.mock("@aws-sdk/client-cognito-identity-provider", () => ({
-  CognitoIdentityProviderClient: class {
+  class Client {
     async send(cmd: any) {
-      aws.sent.push({ name: cmd.constructor.name, input: cmd.input });
+      sent.push({ name: cmd.constructor.name, input: cmd.input });
       if (cmd.constructor.name === "AdminGetUserCommand") {
-        const user = aws.users[cmd.input.Username];
+        const user = users[cmd.input.Username];
         if (!user) throw Object.assign(new Error("not found"), { name: "UserNotFoundException" });
         return {
           Username: cmd.input.Username,
@@ -30,11 +26,17 @@ vi.mock("@aws-sdk/client-cognito-identity-provider", () => ({
       }
       return {};
     }
-  },
+  }
+  return { command, sent, users, Client };
+});
+
+// The runtime SDK mock deliberately lacks AdminDeleteSoftwareTokenCommand, like the real
+// nodejs24.x runtime: the handler must take it from the pinned bundle.
+vi.mock("@aws-sdk/client-cognito-identity-provider", () => ({
+  CognitoIdentityProviderClient: aws.Client,
   ...Object.fromEntries(
     [
       "AdminCreateUserCommand",
-      "AdminDeleteSoftwareTokenCommand",
       "AdminDeleteUserCommand",
       "AdminGetUserCommand",
       "AdminUpdateUserAttributesCommand",
@@ -42,6 +44,11 @@ vi.mock("@aws-sdk/client-cognito-identity-provider", () => ({
       "ListUsersCommand",
     ].map((n) => [n, aws.command(n)])
   ),
+}));
+
+vi.mock("../lib/chatbot-api/functions/user-management/users/vendor/cognito-client.mjs", () => ({
+  CognitoIdentityProviderClient: aws.Client,
+  AdminDeleteSoftwareTokenCommand: aws.command("AdminDeleteSoftwareTokenCommand"),
 }));
 
 let handler: (event: any) => Promise<{ statusCode: number; body: string }>;

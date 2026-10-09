@@ -44,7 +44,7 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Tests
+      - name: Unit and component tests
         run: npm test
 
       - name: Build
@@ -80,6 +80,43 @@ jobs:
       - name: List tests
         run: npx playwright test --list
 
+  lambda-unit:
+    name: Lambda handler tests (vitest + pytest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: packages/core
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: packages/core/package-lock.json
+
+      # The Lambda runtime's Python; boto3 in requirements.txt is that runtime's version.
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: packages/core/test/python/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          pip install -r test/python/requirements.txt
+
+      - name: JS handler tests
+        run: npm run test:lambda
+
+      - name: Python handler tests
+        run: python -m pytest -p no:cacheprovider test/python
+
   infra:
     name: CDK typecheck, Generic from source, logical-ID guard and cdk-nag
     runs-on: ubuntu-latest
@@ -106,9 +143,6 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
-      - name: Python handler tests
-        run: python3 -m unittest discover -s test/python -v
-
       # What dev deploys: Generic's config with vendor/ packed from this commit's source.
       - name: Build Generic from source (build/generic)
         working-directory: .
@@ -122,6 +156,10 @@ jobs:
         run: npm test
         env:
           REUSE_SYNTH: '1'
+
+      - name: Contract checks on Generic (build/generic)
+        working-directory: build/generic
+        run: node_modules/.bin/grantwell-check cdk.out
 
       - name: cdk-nag report (warn only)
         if: always() && steps.synth.outcome == 'success'
@@ -160,6 +198,10 @@ jobs:
           npm install --no-audit --no-fund ./vendor/grantwell-core-*.tgz ./vendor/grantwell-ui-*.tgz
           node scripts/check-vendor.mjs
 
+      # Generic has no chrome/, so the template run carries the chrome checks.
+      - name: Add the neutral chrome fixture
+        run: cp -R packages/core/test/fixtures/instance-check/chrome build/template/chrome
+
       - name: Typecheck template config
         working-directory: build/template
         run: npm run typecheck
@@ -167,6 +209,11 @@ jobs:
       - name: Generate example templates
         working-directory: build/template
         run: node scripts/synth.mjs synth cdk.out/ci
+
+      # The examples are placeholders by design, so those only warn.
+      - name: Contract checks on the template
+        working-directory: build/template
+        run: node_modules/.bin/grantwell-check cdk.out/ci --placeholders warn
 
   instance:
     name: Committed Generic release (vendor/, typecheck, templates)

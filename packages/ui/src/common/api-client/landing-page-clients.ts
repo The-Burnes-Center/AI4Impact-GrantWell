@@ -1,6 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
-import type { ReviewItem, ReviewDetail, ProcessingMetrics } from "../types/processing-review";
+import type { ProcessingReviewList, ReviewDetail, ProcessingMetrics } from "../types/processing-review";
 import type { CustomQuestion } from "../types/nofo";
 import { apiFetch } from "../session-ended";
 
@@ -314,7 +314,7 @@ export class LandingPageClient {
     }
   }
 
-  async getProcessingReviews(status?: string): Promise<ReviewItem[]> {
+  async getProcessingReviews(status?: string): Promise<ProcessingReviewList> {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/admin/processing-reviews`);
@@ -327,9 +327,24 @@ export class LandingPageClient {
 
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       const data = await response.json();
-      return data.reviews || [];
+      return { reviews: data.reviews || [], expiredOpenCount: data.expiredOpenCount ?? 0 };
     } catch (error) {
       console.error("Error fetching processing reviews:", error);
+      throw error;
+    }
+  }
+
+  async closeExpiredReviews(): Promise<{ closed: number }> {
+    try {
+      const token = await Utils.authenticate();
+      const response = await apiFetch(`${this.API}/admin/processing-reviews/close-expired`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: token },
+      });
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error("Error closing reviews for expired grants:", error);
       throw error;
     }
   }

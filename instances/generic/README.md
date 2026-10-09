@@ -10,7 +10,7 @@ Generic's prod (`grantwell-staging`) and dev (`grantwell-burnes-staging`) deploy
 | `config/branding.ts` | Name, colors, logos, footer links |
 | `public/` | Your own images (logo, favicon, partner logos), served from the site root |
 | `bin/app.ts` | CDK entry point. Don't edit it. |
-| `scripts/` | `install.sh`, `upgrade.sh` and their helpers. Don't edit them. |
+| `scripts/` | `install.sh`, `upgrade.sh`, `check-models.sh` and their helpers. Don't edit them. |
 
 Commit `vendor/`. The .tgz files are your exact deployed version.
 
@@ -22,6 +22,9 @@ Put your own images in `public/` and point `config/branding.ts` at them by their
 
 ## Search engines
 Only prod (`seo: { indexable: true }` in `config/instances.ts`) is open to search engines; dev is always hidden. The home page title, description and share image are under `seo` in `config/branding.ts`. GrantWell generates `robots.txt`, `sitemap.xml`, `manifest.json` and `llms.txt` from the config, so don't put those in `public/`.
+
+## Processing-queue email
+Prod has `notifications: { processingQueueEmail: true }`: on weekdays at 09:00 Eastern, when grants are waiting in the processing queue, one email goes to the comma-separated addresses in the SSM String parameter `/grantwell-generic-prod/queue-email/recipients` in the prod account. The deploy doesn't create it; set or change it with `aws ssm put-parameter --type String --overwrite --name /grantwell-generic-prod/queue-email/recipients --value "<addresses>"`. Without it nothing is sent. Dev has the email off.
 
 ## Upgrade
 Run `scripts/upgrade.sh <version>`, for example `scripts/upgrade.sh 3.0.0`. It downloads that release, checks its SHA256SUMS, swaps `vendor/`, reinstalls, typechecks, and lists which generated templates the upgrade changes (templates in `cdk.out/upgrade/`). If a step fails, it restores `vendor/`, `package.json` and `package-lock.json`. Review `git diff`, then commit those three.

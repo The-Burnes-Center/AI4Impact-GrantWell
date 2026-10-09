@@ -76,6 +76,11 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
 
+  // The processing-queue email links here.
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get("view") === "needs-attention") setGrantsSegment("attention");
+  }, [location.search]);
+
   // Fetch NOFOs data -- accepts a flag to indicate manual refresh. Background polls skip the
   // busy state: disabling the Refresh button under a keyboard user drops their focus to <body>.
   const fetchNofos = useCallback(async (showRefreshNotification = false, background = false) => {
