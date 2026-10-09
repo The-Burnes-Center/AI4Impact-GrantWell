@@ -1,6 +1,5 @@
 import {
   AdminCreateUserCommand,
-  AdminDeleteSoftwareTokenCommand,
   AdminDeleteUserCommand,
   AdminGetUserCommand,
   AdminUpdateUserAttributesCommand,
@@ -314,7 +313,11 @@ async function handleMfaReset(scope, actor, event) {
   }
   assertCanManageTarget(scope, target);
 
-  await cognitoClient.send(
+  // The runtime's bundled SDK has no AdminDeleteSoftwareToken (a static import of it failed
+  // init for every route), so it comes from a pinned bundle, loaded only on this route.
+  const { AdminDeleteSoftwareTokenCommand, CognitoIdentityProviderClient: ResetClient } =
+    await import("./vendor/cognito-client.mjs");
+  await new ResetClient({ region: process.env.AWS_REGION || "us-east-1" }).send(
     new AdminDeleteSoftwareTokenCommand({ UserPoolId: USER_POOL_ID, Username: username })
   );
   await cognitoClient.send(

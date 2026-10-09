@@ -3,7 +3,7 @@
  * as Word and PDF. Sections and exports are checked by structure only.
  */
 import * as fs from "node:fs";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../helpers/fixtures";
 import JSZip from "jszip";
 import { clearRecentlyViewed, deleteDraftSafely, waitForJob } from "../helpers/api";
 import { selectNofo } from "../helpers/app";

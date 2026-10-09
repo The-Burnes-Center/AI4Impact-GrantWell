@@ -10,7 +10,7 @@ Generic's prod (`grantwell-staging`) and dev (`grantwell-burnes-staging`) deploy
 | `config/branding.ts` | Name, colors, logos, footer links |
 | `public/` | Your own images (logo, favicon, partner logos), served from the site root |
 | `bin/app.ts` | CDK entry point. Don't edit it. |
-| `scripts/` | `install.sh`, `upgrade.sh` and their helpers. Don't edit them. |
+| `scripts/` | `install.sh`, `upgrade.sh`, `check-models.sh` and their helpers. Don't edit them. |
 
 Commit `vendor/`. The .tgz files are your exact deployed version.
 

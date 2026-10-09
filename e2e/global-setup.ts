@@ -15,7 +15,7 @@ async function readAwsExports() {
   if (!userPoolId || !clientId || !httpEndpoint) {
     throw new Error(`${SITE_URL}/aws-exports.json lacks Auth.userPoolId, Auth.userPoolWebClientId or httpEndpoint`);
   }
-  return { userPoolId, clientId, httpEndpoint };
+  return { userPoolId, clientId, httpEndpoint, wsEndpoint: exports?.wsEndpoint as string | undefined };
 }
 
 async function readBypassToken(): Promise<string> {
@@ -42,6 +42,7 @@ export default async function globalSetup(): Promise<void> {
   process.env.E2E_RESOLVED_USER_POOL_ID = config.userPoolId;
   process.env.E2E_RESOLVED_CLIENT_ID = config.clientId;
   process.env.E2E_RESOLVED_HTTP_ENDPOINT = config.httpEndpoint;
+  if (config.wsEndpoint) process.env.E2E_RESOLVED_WS_ENDPOINT = config.wsEndpoint;
   process.env.E2E_RESOLVED_BYPASS_TOKEN = await readBypassToken();
 
   console.log(`[e2e setup] site: ${SITE_URL}`);

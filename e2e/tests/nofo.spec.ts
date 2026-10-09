@@ -1,5 +1,5 @@
 /** Journey 2: find the run's NOFO and read its key requirements (stored pipeline output). */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../helpers/fixtures";
 import { clearRecentlyViewed, nofoSummary, type NofoSummary } from "../helpers/api";
 import { selectNofo } from "../helpers/app";
 import { runInfo } from "../helpers/config";

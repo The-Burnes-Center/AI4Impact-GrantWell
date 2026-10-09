@@ -41,6 +41,7 @@ export interface AppConfig {
   userPoolId: string;
   clientId: string;
   httpEndpoint: string;
+  wsEndpoint?: string;
 }
 
 export function appConfig(): AppConfig {
@@ -48,6 +49,7 @@ export function appConfig(): AppConfig {
     userPoolId: requireEnv("E2E_RESOLVED_USER_POOL_ID", "The user pool id (resolved by global setup)"),
     clientId: requireEnv("E2E_RESOLVED_CLIENT_ID", "The app client id (resolved by global setup)"),
     httpEndpoint: requireEnv("E2E_RESOLVED_HTTP_ENDPOINT", "The HTTP API endpoint (resolved by global setup)"),
+    wsEndpoint: process.env.E2E_RESOLVED_WS_ENDPOINT,
   };
 }
 

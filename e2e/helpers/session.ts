@@ -14,6 +14,8 @@ export interface Tokens {
   idToken: string;
   accessToken: string;
   sub: string;
+  /** `cognito:username`; the user-documents handlers key S3 folders by it, not by `sub`. */
+  username: string;
   email: string;
 }
 
@@ -60,11 +62,11 @@ export async function tokens(): Promise<Tokens> {
     AuthParameters: { REFRESH_TOKEN: storedRefreshToken() },
   });
   const idToken: string = result.AuthenticationResult.IdToken;
-  const { sub, email } = claims(idToken);
+  const { sub, email, "cognito:username": username } = claims(idToken);
   if (email !== USER_EMAIL || !String(email).endsWith(TEST_EMAIL_DOMAIN)) {
     throw new Error(`Signed in as ${email}, not the test account ${USER_EMAIL}; refusing to touch its data.`);
   }
-  cached = { idToken, accessToken: result.AuthenticationResult.AccessToken, sub, email };
+  cached = { idToken, accessToken: result.AuthenticationResult.AccessToken, sub, username: username ?? sub, email };
   return cached;
 }
 

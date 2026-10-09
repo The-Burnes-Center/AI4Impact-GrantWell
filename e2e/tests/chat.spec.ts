@@ -1,5 +1,5 @@
 /** Journey 3: ask the assistant about the run's NOFO. The answer is checked by structure only. */
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "../helpers/fixtures";
 import { clearRecentlyViewed, deleteSession } from "../helpers/api";
 import { selectNofo } from "../helpers/app";
 import { runInfo } from "../helpers/config";

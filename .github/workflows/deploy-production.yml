@@ -74,4 +74,8 @@ jobs:
       - name: Deploy CDK stacks to GrantWell
         working-directory: instances/generic
         run: |
-          npx cdk deploy ${{ env.STACK_NAME }} --require-approval never
+          npx cdk deploy ${{ env.STACK_NAME }} --require-approval never --outputs-file "$RUNNER_TEMP/cdk-outputs.json"
+
+      - name: Every Bedrock model answers
+        working-directory: instances/generic
+        run: scripts/check-models.sh "$RUNNER_TEMP/cdk-outputs.json"

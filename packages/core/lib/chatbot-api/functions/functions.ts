@@ -41,6 +41,16 @@ import {
 // lose cross-state access. See scripts/migrate-platform-admins.mjs.
 const LEGACY_STATELESS_ADMIN_IS_PLATFORM = "true";
 
+/** A Bedrock model or inference profile the app calls, as the model canary checks it. */
+export interface BedrockModelUse {
+  readonly label: string;
+  readonly kind: "anthropic" | "titan-embed" | "rerank";
+  /** Exactly what the app passes as modelId (for rerank, the modelArn). */
+  readonly modelId: string;
+  /** What invoking it needs bedrock:InvokeModel on: the ID plus the foundation models a profile routes to. */
+  readonly invokeResources: string[];
+}
+
 interface LambdaFunctionStackProps {
   readonly config: InstanceConfig;
   readonly wsApiEndpoint: string;
@@ -119,6 +129,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoPromoteCopyFunction: lambda.Function;
   public readonly userProfileFunction: lambda.Function;
   public readonly analyticsFunction: lambda.Function;
+  public readonly bedrockModels: BedrockModelUse[];
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
     super(scope, id);
@@ -174,6 +185,29 @@ export class LambdaFunctionStack extends cdk.Stack {
     const titanSearchProfile = makeInferenceProfile(
       "TitanSearchInferenceProfile", "titan-grant-search", titanFoundationModelArn, "grant-search",
     );
+
+    // A US system profile routes to its model in several regions, so the foundation model is granted in any region.
+    const claude = (label: string, profile: bedrock.CfnApplicationInferenceProfile, systemProfileId: string, systemProfileArn: string): BedrockModelUse => ({
+      label,
+      kind: "anthropic",
+      modelId: profile.attrInferenceProfileArn,
+      invokeResources: [
+        profile.attrInferenceProfileArn,
+        systemProfileArn,
+        `arn:aws:bedrock:*::foundation-model/${systemProfileId.slice(systemProfileId.indexOf(".") + 1)}`,
+      ],
+    });
+    const rerankModelArn = `arn:aws:bedrock:${region}::foundation-model/${RERANK_MODEL_ID}`;
+    this.bedrockModels = [
+      claude("chat (Sonnet)", sonnetChatProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
+      claude("NOFO analysis (Sonnet)", sonnetNofoProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
+      claude("draft generation (Sonnet)", sonnetDraftProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
+      claude("NOFO synthesis and questions (Haiku)", haikuNofoProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
+      claude("grants.gov scraper (Haiku)", haikuScraperProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
+      // ai-grant-search calls the foundation model directly; TITAN_MODEL_ID (the profile) is set but unused.
+      { label: "grant search embeddings (Titan)", kind: "titan-embed", modelId: TITAN_MODEL_ID, invokeResources: [titanFoundationModelArn] },
+      { label: "grant search reranking (Cohere)", kind: "rerank", modelId: rerankModelArn, invokeResources: [rerankModelArn] },
+    ];
 
     // Create Python shared models Lambda Layer
     const pythonSharedLayer = new lambda.LayerVersion(scope, "PythonSharedLayer", {

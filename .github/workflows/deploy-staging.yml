@@ -63,7 +63,11 @@ jobs:
       - name: Deploy CDK stacks to staging
         working-directory: build/generic
         run: |
-          npx cdk deploy ${{ env.STACK_NAME }} --require-approval never
+          npx cdk deploy ${{ env.STACK_NAME }} --require-approval never --outputs-file "$RUNNER_TEMP/cdk-outputs.json"
+
+      - name: Every Bedrock model answers
+        working-directory: build/generic
+        run: scripts/check-models.sh "$RUNNER_TEMP/cdk-outputs.json"
 
   e2e:
     needs: deploy

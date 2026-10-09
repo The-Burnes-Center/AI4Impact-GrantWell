@@ -10,8 +10,8 @@ This repo deploys one GrantWell instance: your configuration plus two release ar
 | `config/branding.ts` | Name, colors, logos, footer links |
 | `public/` | Your own images (logo, favicon, partner logos), served from the site root |
 | `bin/app.ts` | CDK entry point. Don't edit it. |
-| `scripts/` | `install.sh`, `upgrade.sh` and their helpers. Don't edit them. |
-| `.github/workflows/deploy.yml` | Checks every push; deploys when you run it by hand |
+| `scripts/` | `install.sh`, `upgrade.sh`, `check-models.sh` and their helpers. Don't edit them. |
+| `.github/workflows/deploy.yml` | Checks every push; deploys when you run it by hand, then checks every Bedrock model answers |
 | `.github/workflows/upgrade.yml` | Weekly: opens a pull request when a newer GrantWell release is out |
 
 Commit `vendor/`. The .tgz files are your exact deployed version.
@@ -20,7 +20,7 @@ Commit `vendor/`. The .tgz files are your exact deployed version.
 1. On the template repo, click **Use this template** > **Create a new repository**. Make it private, in your own organization. Don't fork the template: your repo is yours, and updates arrive as releases (see Upgrade).
 2. Use two AWS accounts, one for staging and one for prod. In each, run `cdk bootstrap` once for your region.
 3. In each account, turn on Amazon Bedrock model access in your region for Claude Sonnet 5.5, Claude Haiku 5.5, Cohere Rerank 3.5 and Amazon Titan Text Embeddings V2. Without it, grant processing, chat and application writing fail with an access error.
-4. In each account, create an IAM role that GitHub OIDC may assume, trusting only your repo and that deployment's Environment (`repo:<org>/<repo>:environment:<aws.environment>`). The role needs to assume the CDK bootstrap roles.
+4. In each account, create an IAM role that GitHub OIDC may assume, trusting only your repo and that deployment's Environment (`repo:<org>/<repo>:environment:<aws.environment>`). The role needs to assume the CDK bootstrap roles, and `lambda:InvokeFunction` on `grantwell-<id>-model-canary` (`<id>` from `config/instances.ts`) for the check after each deploy.
 5. Edit `config/instances.ts` (one entry per deployment; the example has `example-staging` and `example-prod`) and `config/branding.ts`. List your deployments in `.github/workflows/deploy.yml`.
 6. Set up GitHub Environments and secrets (see Deploy), then follow Set up below.
 7. Deploy staging first, and deploy prod once staging works.
@@ -63,8 +63,11 @@ By hand, deploys need Docker, AWS credentials for the target account, and these 
 Then run:
 
 ```
-npx cdk deploy <aws.stackName> --require-approval never
+npx cdk deploy <aws.stackName> --require-approval never --outputs-file cdk.out/outputs.json
+scripts/check-models.sh cdk.out/outputs.json
 ```
+
+The second command makes one minimal call to every Bedrock model the deployment uses and fails if any doesn't answer. The workflow runs it after every deploy; the same check also runs daily and alarms.
 
 ## Rules
 - Never change an `aws.*` value after the first deploy. Those values name real AWS resources, so changing one replaces them and loses data.

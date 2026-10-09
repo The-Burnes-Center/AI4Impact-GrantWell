@@ -68,7 +68,7 @@ export class GrantWellStack extends cdk.Stack {
 
     // Under ChatbotAPI like the other nested stacks; the root stack is too close to 500 resources.
     const fns = chatbotAPI.lambdaFunctions;
-    new MonitoringStack(chatbotAPI, "MonitoringStack", {
+    const monitoring = new MonitoringStack(chatbotAPI, "MonitoringStack", {
       config: props.config,
       httpApi: chatbotAPI.httpAPI.restAPI,
       distribution: userInterface.distribution,
@@ -89,6 +89,13 @@ export class GrantWellStack extends cdk.Stack {
       scraperCoordinatorFunction: fns.scraperCoordinatorFunction,
       notificationDigestFunction: fns.notificationDigestFunction,
       autoArchiveFunction: fns.autoArchiveExpiredNofosFunction,
+      bedrockModels: fns.bedrockModels,
+    });
+
+    // A plain name, not a reference into the nested stack, so it adds no export or parameter.
+    new cdk.CfnOutput(this, "ModelCanaryFunctionName", {
+      value: monitoring.modelCanaryFunctionName,
+      description: "Deploy workflows invoke this after each deploy to check every Bedrock model",
     });
   }
 }
