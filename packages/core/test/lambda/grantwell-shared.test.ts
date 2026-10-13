@@ -120,6 +120,34 @@ describe("assertCanEditNofoOr403", () => {
   });
 });
 
+describe("single-state deployment", () => {
+  const ddb = mockClient(DynamoDBClient);
+  const deps = () => ({ client: new DynamoDBClient({}), GetItemCommand, marshall, unmarshall });
+  let single: any;
+  beforeAll(async () => {
+    vi.stubEnv("SINGLE_STATE", "MA");
+    vi.resetModules();
+    single = await import("grantwell-shared");
+    vi.unstubAllEnvs();
+  });
+  beforeEach(() => ddb.reset());
+
+  it("lets the state's admin edit every NOFO, federal and unscoped ones included", async () => {
+    const maAdmin = { role: "stateAdmin", state: "MA" };
+    expect(single.canEditAnyNofo(maAdmin)).toBe(true);
+    expect(() => single.assertCanEditNofo(maAdmin, "federal", null)).not.toThrow();
+    ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Old Grant" }) });
+    const event = http({ "custom:role": roles("Admin"), "custom:state": "MA" });
+    await expect(single.assertCanEditNofoOr403(event, deps(), "nofos", "Old Grant")).resolves.toBeNull();
+  });
+
+  it("still denies users, and changes nothing on a multi-state deployment", () => {
+    expect(single.canEditAnyNofo({ role: "user", state: "MA" })).toBe(false);
+    expect(single.canEditAnyNofo({ role: "unscopedAdmin", state: "" })).toBe(false);
+    expect(shared.canEditAnyNofo({ role: "stateAdmin", state: "MA" })).toBe(false);
+  });
+});
+
 describe("getAuthenticatedUserId", () => {
   it("reads the sub from either authorizer shape, else null", () => {
     expect(shared.getAuthenticatedUserId(http({ sub: "u1" }))).toBe("u1");

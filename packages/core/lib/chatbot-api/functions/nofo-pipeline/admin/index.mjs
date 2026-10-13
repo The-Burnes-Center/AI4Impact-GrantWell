@@ -21,6 +21,7 @@ import { documentSampleOf, generateQuestions, hasQuestions } from "../shared/que
 import {
   requireAdmin,
   assertCanEditNofoOr403,
+  canEditAnyNofo,
   resolveCallerScope,
   grantDeadline,
   compareByDeadline,
@@ -149,7 +150,7 @@ function grantMetadata(reviews) {
 // A state admin only sees review rows for their own state's NOFOs — federal/other-state
 // rows are hidden entirely (matching retrieve-nofos), so no out-of-scope actions surface.
 function inCallerScope(callerScope, meta) {
-  if (callerScope.role !== "stateAdmin") return true;
+  if (callerScope.role !== "stateAdmin" || canEditAnyNofo(callerScope)) return true;
   return meta?.scope === "state" && meta?.state === callerScope.state;
 }
 

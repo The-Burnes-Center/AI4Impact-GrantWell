@@ -511,8 +511,11 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   // Mirror the backend scope check: a state admin may only modify
                   // NOFOs owned by their own state. Unknown scope fails closed, so
                   // every mutating action (pin/delete/archive/edit) is gated together.
+                  // A single-state deployment's admins may edit every grant (canEditAnyNofo).
                   const editDisabled = Boolean(
-                    isStateAdmin && !(nofo.scope === "state" && nofo.state === userState)
+                    isStateAdmin &&
+                      !(SINGLE_STATE && userState === SINGLE_STATE.code) &&
+                      !(nofo.scope === "state" && nofo.state === userState)
                   );
                   // On a federal grant, a state admin instead gets state-scoped actions:
                   // attach guidance for their state, or fork it into their own copy.

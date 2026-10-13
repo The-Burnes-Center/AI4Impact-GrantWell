@@ -61,6 +61,7 @@ export interface NofoPipelineStackProps extends cdk.NestedStackProps {
   readonly scraperDownloadDlqUrl: string;
   readonly supportedStatesEnv: string;
   readonly legacyStatelessAdminIsPlatform: string;
+  readonly singleStateEnv: Record<string, string>;
   readonly stackName: string;
 }
 
@@ -278,6 +279,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
         HAIKU_MODEL_ID: props.haikuNofoProfileArn,
         SUPPORTED_STATES: props.supportedStatesEnv,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
+        ...props.singleStateEnv,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,

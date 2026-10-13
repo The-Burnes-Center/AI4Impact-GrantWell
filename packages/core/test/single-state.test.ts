@@ -47,10 +47,17 @@ describe("auth.turnstile: false", () => {
 });
 
 describe("tenancy: single", () => {
-  it("puts SINGLE_STATE on the sign-in trigger and the user-management function only", () => {
+  it("puts SINGLE_STATE on the sign-in trigger, user management and the functions that change grants only", () => {
     expect(functionsWith(variantOut, "SINGLE_STATE").sort()).toEqual([
       ["AuthorizationSignUpTriggerFunction", "MA"],
       ["ChatbotAPIManageUsersFunction", "MA"],
+      ["ChatbotAPINofoDeleteHandlerFunction", "MA"],
+      ["ChatbotAPINofoRenameHandlerFunction", "MA"],
+      ["ChatbotAPINofoReprocessFunction", "MA"],
+      ["ChatbotAPINofoStatusHandlerFunction", "MA"],
+      ["ChatbotAPINofoSummaryUpdateFunction", "MA"],
+      ["ChatbotAPInofoUploadS3FilesHandlerFunction", "MA"],
+      ["NofoAdminFunction", "MA"],
     ]);
   });
 
