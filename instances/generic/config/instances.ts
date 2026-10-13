@@ -54,7 +54,7 @@ export const instances: InstanceConfig[] = [
       collectionTags,
     },
     siteUrl: "https://dghmgwzg4jiug.cloudfront.net",
-    auth: { mfaRequired: false, mfaDeadline: "2026-10-09T00:00:00-04:00" },
+    auth: { mfaRequired: false },
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: false },
     scraper: { dailySchedule: false },
     monitoring: { dailyBrief: false },
