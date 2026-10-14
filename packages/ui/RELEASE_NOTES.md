@@ -1,8 +1,8 @@
-# GrantWell v3.0.0
+# GrantWell v3.3.0
 
-**Last Updated:** October 9, 2026
+**Last Updated:** October 14, 2026
 
-This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, and administrators can search users and see which waiting grants are due soonest.
+This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest.
 
 ## Highlights
 
@@ -13,7 +13,7 @@ This release makes it easier to write and keep track of your applications. You c
 - **More reliable AI-written applications** and cleaner Word and PDF exports
 - **Easier to use on a phone**: Requirements, My Chats and My Applications fit small screens
 - **Clearer navigation and wording** across GrantWell, plus a faster landing page
-- **For admins**: search users, grants in the processing queue sorted by deadline, and a weekday email when grants are waiting
+- **For admins**: search users, grants in the processing queue sorted by deadline, a weekday email when grants are waiting, and fewer grants that need review
 
 ## New in this release
 
@@ -140,6 +140,7 @@ This release makes it easier to write and keep track of your applications. You c
 - A grant can no longer be published without application questions; if questions could not be created, it goes to **Needs attention**, and approving it creates the questions
 - The grant actions menu in the Admin Dashboard no longer gets cut off at the edge of the table
 - Admin Dashboard screens now use the same wording as the rest of GrantWell
+- On a GrantWell set up for a single state, its admins can edit, upload and review every grant there
 
 ### Processing Queue (Admin)
 
@@ -147,6 +148,9 @@ This release makes it easier to write and keep track of your applications. You c
 - **Close all expired** clears the reviews for grants whose deadline has passed, after showing how many
 - **All statuses** now really shows every status
 - A weekday email at 9:00 ET lists the grants waiting for review by deadline; each deployment chooses who gets it
+- More new grants arrive with the right document: GrantWell reads grant pages that are the full announcement and no longer picks up an agency's plans or reports by mistake, so fewer grants wait for review
+- A grant that keeps failing to download shows once in the queue instead of once a day
+- A grant renamed on Grants.gov updates the existing grant instead of adding a second copy
 
 ### Admin Dashboard Access (Admin)
 
