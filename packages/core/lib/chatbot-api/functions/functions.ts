@@ -1371,6 +1371,8 @@ export class LambdaFunctionStack extends cdk.Stack {
           FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 512,
