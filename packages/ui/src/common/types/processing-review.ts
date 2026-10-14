@@ -6,6 +6,9 @@ export interface ReviewItem {
   retryCount: number;
   source: "pipeline" | "dlq" | "duplicate" | "quality";
   errorMessage: string | null;
+  /** DLQ failures fold repeats into one row; absent on rows from before that. */
+  failure_count?: number;
+  last_failed_at?: string;
   guidanceTitle: string | null;
   guidanceSeverity: "critical" | "warning" | null;
   missingSections: string[];

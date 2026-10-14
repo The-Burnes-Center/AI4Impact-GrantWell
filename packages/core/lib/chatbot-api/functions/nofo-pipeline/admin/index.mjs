@@ -194,6 +194,8 @@ async function listReviews(event) {
       retryCount: parsed.retryCount,
       source: parsed.source,
       errorMessage: parsed.errorMessage,
+      failure_count: parsed.failure_count,
+      last_failed_at: parsed.last_failed_at,
       guidanceTitle: guidance?.title || null,
       guidanceSeverity: guidance?.severity || null,
       missingSections: guidance?.missingCategories || [],

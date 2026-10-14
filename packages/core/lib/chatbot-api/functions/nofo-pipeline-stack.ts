@@ -245,11 +245,13 @@ export class NofoPipelineStack extends cdk.NestedStack {
         DLQ_URL: props.nofoProcessingDlqUrl,
         SCRAPER_DLQ_URL: props.scraperDownloadDlqUrl,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
       timeout: cdk.Duration.minutes(5),
       memorySize: 256,
     });
     dlqProcessorFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
+    dlqProcessorFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     dlqProcessorFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
