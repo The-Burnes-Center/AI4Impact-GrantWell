@@ -100,6 +100,17 @@ async function repairOoxml(docxBuffer) {
   return zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
 }
 
+const CONTACT_FIELDS = new Set(['contactName', 'contactEmail', 'contact_name', 'contact_email']);
+
+/** Contact details go on the cover only when the request opts in. */
+function coverDraftData(draftData, includeContactDetails) {
+  if (includeContactDetails === true || !draftData.projectBasics) return draftData;
+  const projectBasics = Object.fromEntries(
+    Object.entries(draftData.projectBasics).filter(([key]) => !CONTACT_FIELDS.has(key))
+  );
+  return { ...draftData, projectBasics };
+}
+
 /**
  * Escape HTML special characters.
  */
@@ -220,7 +231,8 @@ function generateHtmlFromDraft(draftData) {
  *     "grantName": "...",        (optional)
  *     "projectBasics": { ... },
  *     "sections": { "Section Name": "Markdown, as the generator emitted it" }
- *   }
+ *   },
+ *   "includeContactDetails": true   (optional; contact fields are left off the cover otherwise)
  * }
  */
 export const handler = async (event) => {
@@ -234,7 +246,7 @@ export const handler = async (event) => {
       body = event.body || {};
     }
 
-    const draftData = body.draftData || {};
+    const draftData = coverDraftData(body.draftData || {}, body.includeContactDetails);
 
     if (!draftData || Object.keys(draftData).length === 0) {
       return {

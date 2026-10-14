@@ -498,7 +498,7 @@ export class DraftsClient {
         const drafts = typeof data.body === 'string' ? JSON.parse(data.body) : data.body;
         
         if (!Array.isArray(drafts)) {
-          console.error('Invalid drafts format:', drafts);
+          console.error('Invalid drafts format');
           throw new Error('Invalid response format: body is not an array');
         }
         
@@ -565,7 +565,6 @@ export class DraftsClient {
     onJobUpdate?: (jobStatus: DraftJobStatus) => void;
   }): Promise<{ jobId: string; sections: Record<string, string> }> {
     const auth = await Utils.authenticate();
-    console.log('Calling /draft-generation with:', params);
 
     // Start the draft generation job
     const startResponse = await apiFetch(this.API + '/draft-generation', {
@@ -679,10 +678,9 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    includeContactDetails?: boolean;
   }): Promise<Blob> {
     const auth = await Utils.authenticate();
-    console.log('Calling /generate-docx with:', draftData);
-
     const response = await apiFetch(this.API + '/generate-docx', {
       method: 'POST',
       headers: {
@@ -696,6 +694,7 @@ export class DraftsClient {
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
         },
+        includeContactDetails: draftData.includeContactDetails === true,
       }),
     });
 
@@ -724,6 +723,7 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    includeContactDetails?: boolean;
   }): Promise<string> {
     const auth = await Utils.authenticate();
     const response = await apiFetch(this.API + '/generate-pdf', {
@@ -740,6 +740,7 @@ export class DraftsClient {
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
         },
+        includeContactDetails: draftData.includeContactDetails === true,
       }),
     });
 
@@ -758,10 +759,9 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    includeContactDetails?: boolean;
   }): Promise<Blob> {
     const auth = await Utils.authenticate();
-    console.log('Calling /generate-pdf with:', draftData);
-    
     const response = await apiFetch(this.API + '/generate-pdf', {
       method: 'POST',
       headers: {
@@ -775,6 +775,7 @@ export class DraftsClient {
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
         },
+        includeContactDetails: draftData.includeContactDetails === true,
       }),
     });
 
