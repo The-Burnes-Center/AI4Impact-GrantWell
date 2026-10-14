@@ -1,5 +1,5 @@
 import { mockClient } from "aws-sdk-client-mock";
-import { BatchGetItemCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { BatchGetItemCommand, DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
 import { SendMessageBatchCommand, SQSClient } from "@aws-sdk/client-sqs";
 import { marshall } from "@aws-sdk/util-dynamodb";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -30,6 +30,7 @@ beforeEach(() => {
   ddb.reset();
   sqs.reset();
   sqs.on(SendMessageBatchCommand).resolves({ Successful: [], Failed: [] });
+  ddb.on(QueryCommand).resolves({ Items: [] });
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
   errors = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -64,6 +65,48 @@ describe("grants.gov scraper coordinator", () => {
       { opportunityId: 1, opportunityTitle: "New Grant", isUpdate: false, apiUpdatedAt: "2026-10-01" },
       { opportunityId: 2, opportunityTitle: "Changed Grant", isUpdate: true, apiUpdatedAt: "2026-10-05" },
     ]);
+  });
+
+  it("matches a retitled grant by opportunity_id and updates it under its stored name", async () => {
+    vi.stubGlobal(
+      "fetch",
+      grantsApi({
+        data: [
+          { opportunity_id: "a1", opportunity_title: "Renamed Changed Grant", updated_at: "2026-10-05" },
+          { opportunity_id: "b2", opportunity_title: "Renamed Same Grant", updated_at: "2026-09-01" },
+          { opportunity_id: "c3", opportunity_title: "Brand New Grant", updated_at: "2026-10-01" },
+        ],
+      })
+    );
+    ddb.on(BatchGetItemCommand).resolves({ Responses: { nofos: [] } });
+    const stored: Record<string, Record<string, string>> = {
+      a1: { nofo_name: "Old Changed Grant", opportunity_id: "a1", source_updated_at: "2026-09-30" },
+      b2: { nofo_name: "Old Same Grant", opportunity_id: "b2", source_updated_at: "2026-09-01" },
+    };
+    ddb.on(QueryCommand).callsFake((input) => {
+      const row = stored[input.ExpressionAttributeValues[":id"].S];
+      return { Items: row ? [marshall(row)] : [] };
+    });
+
+    const res = await handler({ source: "aws.events" });
+
+    expect(JSON.parse(res.body)).toMatchObject({ newQueued: 1, updatedQueued: 1, skipped: 1 });
+    expect(ddb.commandCalls(QueryCommand)[0].args[0].input.IndexName).toBe("OpportunityIdIndex");
+    const queued = sqs.commandCalls(SendMessageBatchCommand).flatMap((c) => c.args[0].input.Entries!.map((e) => JSON.parse(e.MessageBody!)));
+    expect(queued).toEqual([
+      { opportunityId: "a1", opportunityTitle: "Renamed Changed Grant", isUpdate: true, apiUpdatedAt: "2026-10-05", nofoName: "Old Changed Grant" },
+      { opportunityId: "c3", opportunityTitle: "Brand New Grant", isUpdate: false, apiUpdatedAt: "2026-10-01" },
+    ]);
+  });
+
+  it("treats a failed opportunity_id lookup as new, so a missing index doesn't stop the scrape", async () => {
+    vi.stubGlobal("fetch", grantsApi({ data: [{ opportunity_id: "z9", opportunity_title: "Grant", updated_at: "2026-10-01" }] }));
+    ddb.on(BatchGetItemCommand).resolves({ Responses: { nofos: [] } });
+    ddb.on(QueryCommand).rejects(new Error("The table does not have the specified index: OpportunityIdIndex"));
+
+    const res = await handler({ source: "aws.events" });
+
+    expect(JSON.parse(res.body)).toMatchObject({ newQueued: 1, errors: 0 });
   });
 
   it("logs scraperFatal and reports an error when the API changes shape", async () => {

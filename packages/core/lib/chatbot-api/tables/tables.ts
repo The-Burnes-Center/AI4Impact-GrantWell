@@ -117,6 +117,15 @@ export class TableStack extends Stack {
       projectionType: ProjectionType.KEYS_ONLY,
     });
 
+    // The scraper keys grants by title; grants.gov retitles opportunities, so it
+    // also looks them up by opportunity_id to update the existing row instead of duplicating it.
+    nofoMetadataTable.addGlobalSecondaryIndex({
+      indexName: 'OpportunityIdIndex',
+      partitionKey: { name: 'opportunity_id', type: AttributeType.STRING },
+      projectionType: ProjectionType.INCLUDE,
+      nonKeyAttributes: ['source_updated_at'],
+    });
+
     this.nofoMetadataTable = nofoMetadataTable;
 
     // Define the Draft Generation Jobs Table for async draft generation

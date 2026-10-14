@@ -7,7 +7,7 @@
  * (SendMessageBatch) for parallel Opportunity Processor Lambdas.
  */
 
-import { DynamoDBClient, BatchGetItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, BatchGetItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { SQSClient, SendMessageBatchCommand } from '@aws-sdk/client-sqs';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { randomUUID } from 'crypto';
@@ -60,6 +60,28 @@ async function batchGetMetadata(titles) {
   }
 
   return result;
+}
+
+/** A grants.gov retitle misses the title lookup; the opportunity_id still finds the stored grant. */
+async function findByOpportunityId(opportunityId) {
+  if (opportunityId == null) return null;
+  try {
+    const response = await dynamoClient.send(
+      new QueryCommand({
+        TableName: METADATA_TABLE,
+        IndexName: 'OpportunityIdIndex',
+        KeyConditionExpression: 'opportunity_id = :id',
+        ExpressionAttributeValues: marshall({ ':id': String(opportunityId) }),
+        Limit: 1,
+      })
+    );
+    const item = response.Items?.[0];
+    return item ? unmarshall(item) : null;
+  } catch (err) {
+    // The index backfills after deploy; until then a miss just means "new", as before.
+    console.warn(`OpportunityIdIndex lookup failed for ${opportunityId}: ${err.message}`);
+    return null;
+  }
 }
 
 /**
@@ -157,7 +179,12 @@ export const handler = async (event) => {
         const oppTitle = opp.opportunity_title;
         const apiUpdatedAt = opp.updated_at || null;
 
-        const existing = existingMap.get(normalizeNofoFolderName(oppTitle));
+        const normalizedTitle = normalizeNofoFolderName(oppTitle);
+        let existing = existingMap.get(normalizedTitle);
+        if (!existing) {
+          existing = await findByOpportunityId(oppId);
+          if (existing) console.log(`"${oppTitle}" was retitled; stored as "${existing.nofo_name}"`);
+        }
 
         if (existing) {
           const storedUpdatedAt = existing.source_updated_at || null;
@@ -170,6 +197,7 @@ export const handler = async (event) => {
               opportunityTitle: oppTitle,
               isUpdate: true,
               apiUpdatedAt,
+              ...(existing.nofo_name !== normalizedTitle && { nofoName: existing.nofo_name }),
             });
             updatedQueued++;
           } else {
