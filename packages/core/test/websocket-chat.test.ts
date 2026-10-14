@@ -45,7 +45,7 @@ vi.mock("@aws-sdk/client-cognito-identity-provider", () => ({
   AdminGetUserCommand: aws.command("AdminGetUserCommand"),
 }));
 vi.mock("@aws-sdk/client-dynamodb", () => ({
-  DynamoDBClient: aws.client(async () => ({})),
+  DynamoDBClient: aws.client(async () => ({ Item: { nofo_name: "nofo-a", scope: "federal" } })),
   GetItemCommand: aws.command("GetItemCommand"),
 }));
 vi.mock("@aws-sdk/util-dynamodb", () => ({ marshall: (x: unknown) => x, unmarshall: (x: unknown) => x }));
@@ -53,6 +53,7 @@ vi.mock("@aws-sdk/util-dynamodb", () => ({ marshall: (x: unknown) => x, unmarsha
 process.env.KB_ID = "kb";
 process.env.SESSION_HANDLER = "session-handler";
 process.env.WEBSOCKET_API_ENDPOINT = "https://ws.example";
+process.env.NOFO_METADATA_TABLE_NAME = "nofos";
 
 const { handler } = await import("../lib/chatbot-api/functions/websocket-chat/index.mjs");
 

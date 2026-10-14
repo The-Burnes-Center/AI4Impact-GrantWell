@@ -62,8 +62,9 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
   throw err;
 }
 
+// Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(tableName, nofoName) {
-  if (!tableName || !nofoName) return { scope: null, state: null };
+  if (!tableName || !nofoName) return null;
   try {
     const dynamoClient = new DynamoDBClient();
     const result = await dynamoClient.send(
@@ -72,7 +73,7 @@ async function readNofoScope(tableName, nofoName) {
         Key: marshall({ nofo_name: nofoName }),
       })
     );
-    if (!result.Item) return { scope: null, state: null };
+    if (!result.Item) return null;
     const row = unmarshall(result.Item);
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
@@ -80,7 +81,7 @@ async function readNofoScope(tableName, nofoName) {
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
-    return { scope: null, state: null };
+    return null;
   }
 }
 
@@ -127,9 +128,9 @@ export const handler = async (event) => {
     const basePath = baseFileName.split('/')[0];
 
     const existingScope = await readNofoScope(process.env.NOFO_METADATA_TABLE_NAME, basePath);
-    // Untagged rows default to federal (permissive) so legacy NOFOs stay viewable.
-    const effectiveScope = existingScope.scope || "federal";
-    const effectiveState = existingScope.state;
+    // Untagged rows default to federal (permissive) so legacy NOFOs stay viewable; a missing row is denied.
+    const effectiveScope = existingScope ? existingScope.scope || "federal" : null;
+    const effectiveState = existingScope?.state || null;
 
     const callerScope = resolveCallerScope(event);
     try {
@@ -142,7 +143,9 @@ export const handler = async (event) => {
           headers: corsHeaders,
           body: JSON.stringify({
             error: "ACCESS_DENIED_STATE",
-            message: `This grant is specific to ${stateName}. Please contact a platform administrator to request access.`,
+            message: existingScope
+              ? `This grant is specific to ${stateName}. Please contact a platform administrator to request access.`
+              : "We couldn't confirm your access to this grant. Please contact a platform administrator to request access.",
             userState: authError.userState,
             nofoState: authError.nofoState,
             cta: { label: "Go back to home", target: "/home" },
