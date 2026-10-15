@@ -12,6 +12,7 @@ import {
   sanitizeContentHtml,
   recordEvent,
   touchLastActive,
+  orderedSections,
 } from 'grantwell-shared';
 
 const SENSITIVE_HEADERS = new Set(['authorization', 'cookie', 'x-amz-security-token']);
@@ -144,7 +145,7 @@ function renderSectionBody(content) {
 function generateHtmlFromDraft(draftData) {
   let title = draftData.title || 'Grant Application';
   const projectBasics = draftData.projectBasics || {};
-  const sections = draftData.sections || {};
+  const sections = orderedSections(draftData);
 
   title = title.replace(/\//g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -194,10 +195,9 @@ function generateHtmlFromDraft(draftData) {
 
   // Table of contents
   let tocHtml = '';
-  const sectionKeys = Object.keys(sections);
-  if (sectionKeys.length > 0) {
+  if (sections.length > 0) {
     tocHtml = '<h2>Table of Contents</h2><ol>';
-    for (const name of sectionKeys) {
+    for (const { name } of sections) {
       tocHtml += `<li>${escapeHtml(name)}</li>`;
     }
     tocHtml += '</ol>';
@@ -205,8 +205,8 @@ function generateHtmlFromDraft(draftData) {
 
   // Sections
   let sectionsHtml = '';
-  sectionKeys.forEach((name, i) => {
-    sectionsHtml += `<h2>${i + 1}. ${escapeHtml(name)}</h2>${renderSectionBody(sections[name])}`;
+  sections.forEach(({ name, content }, i) => {
+    sectionsHtml += `<h2>${i + 1}. ${escapeHtml(name)}</h2>${renderSectionBody(content)}`;
   });
 
   return (
@@ -230,7 +230,8 @@ function generateHtmlFromDraft(draftData) {
  *     "title": "...",
  *     "grantName": "...",        (optional)
  *     "projectBasics": { ... },
- *     "sections": { "Section Name": "Markdown, as the generator emitted it" }
+ *     "sections": { "section-id": "Markdown, as the generator emitted it" },
+ *     "sectionOrder": [{ "id": "section-id", "name": "Section Name" }]  (optional; sections are keyed by name without it)
  *   },
  *   "includeContactDetails": true   (optional; contact fields are left off the cover otherwise)
  * }

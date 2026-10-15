@@ -92,3 +92,26 @@ def test_a_real_dynamodb_failure_logs_the_alarm_marker(writer, capsys):
 
     assert result == {"batchItemFailures": [{"itemIdentifier": "900"}]}
     assert capsys.readouterr().out.startswith(f"{MARKER}e-9: ")
+
+
+ORDER = [{"id": "summary", "name": "Summary"}, {"id": "budget", "name": "Budget"}]
+
+
+def test_converting_a_row_from_section_names_to_ids_is_not_a_new_version(writer):
+    old = {"user_id": "user-1", "session_id": "s1", "rev": 4, "sections": {"Summary": "Text", "Budget": ""}}
+    new = {**old, "rev": 5, "sections": {"summary": "Text", "budget": ""}, "section_order": ORDER, "last_write_source": "manual"}
+
+    writer.lambda_handler({"Records": [record("e-1", "100", old=old, new=new)]}, None)
+
+    assert versions(writer) == []
+
+
+def test_changes_across_the_conversion_are_reported_by_section_id(writer):
+    old = {"user_id": "user-1", "session_id": "s1", "rev": 4, "sections": {"Summary": "Text"}}
+    new = {**old, "rev": 5, "sections": {"summary": "Text", "budget": "New money"}, "section_order": ORDER, "last_write_source": "autosave"}
+
+    writer.lambda_handler({"Records": [record("e-1", "100", old=old, new=new)]}, None)
+
+    [row] = versions(writer)
+    assert row["changed_sections"] == ["budget"]
+    assert row["section_word_counts"] == {"summary": Decimal(1), "budget": Decimal(2)}

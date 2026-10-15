@@ -1,9 +1,12 @@
 import json
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
 from conftest import FUNCTIONS, SHARED_LAYER, create_table, http_event, load_handler
+
+ORDER = [{"id": "summary", "name": "Summary"}, {"id": "budget", "name": "Budget"}]
 
 
 @pytest.fixture
@@ -37,23 +40,23 @@ def test_a_new_draft_starts_at_rev_1_on_project_basics(drafts):
 def test_a_save_with_the_current_rev_bumps_it(drafts):
     create(drafts)
 
-    status, body = call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"Summary": "Text"}, "expected_rev": 1})
+    status, body = call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Text"}, "section_order": ORDER, "expected_rev": 1})
 
     assert status == 200
-    assert (body["rev"], body["sections"]) == (2, {"Summary": "Text"})
+    assert (body["rev"], body["sections"], body["sectionOrder"]) == (2, {"summary": "Text"}, ORDER)
 
 
 def test_a_stale_save_is_a_409_carrying_the_current_draft_and_writes_nothing(drafts):
     create(drafts)
-    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"Summary": "From tab A"}, "expected_rev": 1})
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "From tab A"}, "section_order": ORDER, "expected_rev": 1})
 
-    status, body = call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"Summary": "From tab B"}, "expected_rev": 1})
+    status, body = call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "From tab B"}, "section_order": ORDER, "expected_rev": 1})
 
     assert status == 409
     assert body["error"] == "conflict"
-    assert body["current"]["sections"] == {"Summary": "From tab A"}
+    assert body["current"]["sections"] == {"summary": "From tab A"}
     stored = drafts.test_table.get_item(Key={"user_id": "user-1", "session_id": "d1"})["Item"]
-    assert (stored["sections"], stored["rev"]) == ({"Summary": "From tab A"}, Decimal(2))
+    assert (stored["sections"], stored["rev"]) == ({"summary": "From tab A"}, Decimal(2))
 
 
 def test_another_user_cannot_read_or_overwrite_a_draft(drafts):
@@ -102,3 +105,123 @@ def test_an_unknown_status_is_rejected_before_any_write(drafts):
 
     assert status == 400
     assert body["error"] == "Validation error"
+
+
+def stored(drafts, session_id="d1", sub="user-1"):
+    return drafts.test_table.get_item(Key={"user_id": sub, "session_id": session_id})["Item"]
+
+
+def put_old_style(drafts, sections, session_id="d1"):
+    """A row saved before section ids existed: keyed by name, no section_order."""
+    drafts.test_table.put_item(Item={
+        "user_id": "user-1", "session_id": session_id, "title": "Old", "document_identifier": "Grant A",
+        "sections": sections, "status": "editing_sections", "rev": 5, "last_modified": "2026-01-01T00:00:00+00:00",
+    })
+
+
+def test_a_new_application_is_keyed_by_section_id_from_the_start(drafts):
+    create(drafts)
+
+    assert stored(drafts)["section_order"] == []
+
+
+def test_a_save_without_an_order_maps_section_names_onto_the_ids(drafts):
+    create(drafts)
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "A"}, "section_order": ORDER})
+
+    status, body = call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"Summary": "B", "budget": "C"}})
+
+    assert status == 200
+    assert body["sections"] == {"summary": "B", "budget": "C"}
+    assert stored(drafts)["section_order"] == ORDER
+
+
+def test_an_old_application_stays_keyed_by_name_until_a_client_sends_an_order(drafts):
+    put_old_style(drafts, {"Summary": "Old"})
+
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"Summary": "Edited"}})
+    assert "section_order" not in stored(drafts)
+
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Edited"}, "section_order": ORDER})
+    row = stored(drafts)
+    assert (row["sections"], row["section_order"]) == ({"summary": "Edited"}, ORDER)
+
+
+def test_user_saves_record_when_each_section_changed_and_ai_writes_do_not(drafts):
+    create(drafts)
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Mine", "budget": ""}, "section_order": ORDER, "last_write_source": "autosave"})
+    first = dict(stored(drafts)["section_saved_at"])
+    assert set(first) == {"summary", "budget"}
+
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Mine", "budget": "AI text"}, "section_order": ORDER, "last_write_source": "ai_generated"})
+    assert stored(drafts)["section_saved_at"] == first
+
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Mine", "budget": "Edited"}, "section_order": ORDER, "last_write_source": "manual"})
+    after = stored(drafts)["section_saved_at"]
+    assert after["summary"] == first["summary"]
+    assert after["budget"] > first["budget"]
+
+
+def version(drafts, rev, content):
+    from shared import draft_versions as dv
+
+    drafts.test_versions.put_item(Item=dv.build_version_item("user-1", "d1", rev, content, "2026-10-01T00:00:00+00:00", source="autosave"))
+
+
+def test_restoring_one_section_from_a_version_saved_before_ids_lands_on_its_id(drafts):
+    create(drafts)
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Now", "budget": "Now budget"}, "section_order": ORDER})
+    version(drafts, 1, {"sections": {"Summary": "Then", "Budget": "Then budget"}})
+
+    status, body = call(drafts, {"operation": "restore_draft_version", "session_id": "d1", "rev": 1, "sections_only": ["summary"]})
+
+    assert status == 200
+    assert body["restoredSections"] == ["summary"]
+    row = stored(drafts)
+    assert row["sections"] == {"summary": "Then", "budget": "Now budget"}
+    assert row["section_order"] == ORDER
+
+
+def test_an_older_client_can_still_restore_a_section_by_name(drafts):
+    create(drafts)
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Now"}, "section_order": ORDER})
+    version(drafts, 1, {"sections": {"summary": "Then"}, "section_order": ORDER})
+
+    status, _ = call(drafts, {"operation": "restore_draft_version", "session_id": "d1", "rev": 1, "sections_only": ["Summary"]})
+
+    assert status == 200
+    assert stored(drafts)["sections"]["summary"] == "Then"
+
+
+def test_a_missing_section_is_named_in_the_refusal(drafts):
+    create(drafts)
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Now"}, "section_order": ORDER})
+    version(drafts, 1, {"sections": {"summary": "Then"}, "section_order": ORDER})
+
+    status, body = call(drafts, {"operation": "restore_draft_version", "session_id": "d1", "rev": 1, "sections_only": ["budget"]})
+
+    assert status == 422
+    assert '"Budget"' in body["message"]
+
+
+def test_restoring_a_whole_old_version_converts_it_to_ids(drafts):
+    create(drafts)
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "Now"}, "section_order": ORDER})
+    version(drafts, 1, {"title": "Bridge", "sections": {"Summary": "Then", "Gone section": "Kept"}})
+
+    status, _ = call(drafts, {"operation": "restore_draft_version", "session_id": "d1", "rev": 1})
+
+    assert status == 200
+    row = stored(drafts)
+    assert row["sections"] == {"summary": "Then", "gone-section": "Kept"}
+    assert [ref["id"] for ref in row["section_order"]] == ["summary", "budget", "gone-section"]
+
+
+FIXTURE = json.loads((Path(__file__).resolve().parents[1] / "fixtures" / "section-ids.json").read_text())
+
+
+def test_section_ids_slug_the_same_way_as_the_js_and_ui_copies(drafts):
+    from shared import draft_sections as ds
+
+    for name, slug in FIXTURE["slugs"]:
+        assert ds.section_slug(name) == slug

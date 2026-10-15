@@ -1,0 +1,22 @@
+{
+  "slugs": [
+    ["Project Narrative", "project-narrative"],
+    ["Goals & Objectives", "goals-objectives"],
+    ["  Évaluation   Plan  ", "evaluation-plan"],
+    ["Budget Justification (Max. 5 pages)", "budget-justification-max-5-pages"],
+    ["***", "section"],
+    ["", "section"],
+    ["1.", "1"],
+    ["A section name that runs on far past the sixty four character cap for ids", "a-section-name-that-runs-on-far-past-the-sixty-four-character-ca"]
+  ],
+  "withIds": {
+    "input": [
+      { "item": "Statement of Need" },
+      { "item": "Goals & Objectives", "id": "kept-id" },
+      { "item": "Statement of Need" },
+      { "item": "Goals / Objectives" },
+      { "item": "Renamed later", "id": "kept-id" }
+    ],
+    "ids": ["statement-of-need", "kept-id", "statement-of-need-2", "goals-objectives", "renamed-later"]
+  }
+}

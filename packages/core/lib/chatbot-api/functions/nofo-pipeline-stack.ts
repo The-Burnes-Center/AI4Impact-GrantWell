@@ -140,6 +140,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "publish/index.handler",
+      layers: [props.jsSharedLayer],
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,

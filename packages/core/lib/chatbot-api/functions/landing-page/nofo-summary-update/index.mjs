@@ -9,7 +9,7 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3
 import { DynamoDBClient, UpdateItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import { requireAdmin, assertCanEditNofoOr403 } from 'grantwell-shared';
+import { requireAdmin, assertCanEditNofoOr403, withSectionIds } from 'grantwell-shared';
 
 const scopeDeps = { client: new DynamoDBClient(), GetItemCommand, marshall, unmarshall };
 
@@ -152,6 +152,9 @@ export const handler = async (event) => {
           .filter((item) => !item.removed)
           .map(({ removed, ...rest }) => rest);
       }
+    }
+    if (Array.isArray(existingSummary.ProjectNarrativeSections)) {
+      existingSummary.ProjectNarrativeSections = withSectionIds(existingSummary.ProjectNarrativeSections);
     }
 
     const putCommand = new PutObjectCommand({

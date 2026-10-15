@@ -42,6 +42,7 @@ export class DraftGenerationStateMachine extends Construct {
     // never aborts — failed sections return a stub with status "error"
     const sectionErrorFallback = new sfn.Pass(this, "SectionErrorFallback", {
       parameters: {
+        "sectionId.$": "$.sectionItem.id",
         "sectionName.$": "$.sectionItem.item",
         "status": "error",
       },

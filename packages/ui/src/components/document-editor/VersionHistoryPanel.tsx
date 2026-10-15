@@ -10,6 +10,11 @@ import { useFocusTrap } from "../../hooks/use-focus-trap";
 import ConfirmationModal from "../common/ConfirmationModal";
 import VersionDiff from "./VersionDiff";
 import type { DraftVersionDetail, DraftVersionMeta } from "../../common/api-client/drafts-client";
+import {
+  resolveApplicationSections,
+  toSectionId,
+  type ApplicationSection,
+} from "../../common/helpers/application-sections";
 
 /** A row's source is the write that produced its content. */
 const SOURCE_LABELS: Record<string, string> = {
@@ -46,7 +51,10 @@ interface VersionHistoryPanelProps {
   isOpen: boolean;
   onClose: () => void;
   sessionId: string;
-  activeSectionName?: string;
+  /** The application's sections, used to read versions saved before section ids existed. */
+  sections: ApplicationSection[];
+  activeSectionId?: string;
+  /** Keyed by section id. */
   currentSections: Record<string, string>;
   /** Marks the row that is already the live draft, which cannot be restored onto itself. */
   currentRev?: number;
@@ -64,7 +72,8 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
   isOpen,
   onClose,
   sessionId,
-  activeSectionName,
+  sections,
+  activeSectionId,
   currentSections,
   currentRev,
   onRestored,
@@ -110,12 +119,26 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
     loadVersions();
   }, [isOpen, loadVersions]);
 
+  const readVersion = useCallback(
+    (detail: DraftVersionDetail | null) =>
+      resolveApplicationSections(sections, detail?.content?.sections, detail?.content?.section_order),
+    [sections]
+  );
+
+  const nameOf = (key: string, known: ApplicationSection[] = sections) => {
+    const id = toSectionId(key, known) ?? key;
+    return known.find((s) => s.id === id)?.name ?? key;
+  };
+
   const defaultScope = (detail: DraftVersionDetail): string | null => {
-    const sections = detail.content?.sections ?? {};
-    const changed = (detail.changed_sections || []).filter((name) => sections[name]);
+    const version = readVersion(detail);
+    const text = version.answers;
+    const changed = (detail.changed_sections || [])
+      .map((key) => toSectionId(key, version.sections) ?? key)
+      .filter((id) => text[id]);
     if (changed.length === 1) return changed[0];
-    if (activeSectionName && sections[activeSectionName]) return activeSectionName;
-    return changed[0] ?? Object.keys(sections).find((name) => sections[name]) ?? null;
+    if (activeSectionId && text[activeSectionId]) return activeSectionId;
+    return changed[0] ?? version.sections.find((s) => text[s.id])?.id ?? null;
   };
 
   const openVersion = async (version: DraftVersionMeta) => {
@@ -185,15 +208,15 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
 
   if (!isOpen) return null;
 
-  const previousText = scopeSection ? selected?.content?.sections?.[scopeSection] ?? "" : "";
+  const snapshot = selected ? readVersion(selected) : null;
+  const snapshotSections = snapshot?.answers ?? {};
+  const scopeName = scopeSection ? nameOf(scopeSection, snapshot?.sections) : "";
+  const previousText = scopeSection ? snapshotSections[scopeSection] ?? "" : "";
   const currentText = scopeSection ? currentSections?.[scopeSection] ?? "" : "";
 
-  const snapshotSections = selected?.content?.sections ?? {};
   const versionHasText = Object.values(snapshotSections).some(Boolean);
   const draftHasText = Object.values(currentSections || {}).some(Boolean);
-  const restorableSections = Object.keys(snapshotSections)
-    .filter((name) => snapshotSections[name])
-    .sort();
+  const restorableSections = (snapshot?.sections ?? []).filter((s) => snapshotSections[s.id]);
   const canRestoreSection = Boolean(scopeSection && snapshotSections[scopeSection]);
   // Blocked rather than merely warned about: this snapshot predates the draft's text.
   const wouldEraseDraft = draftHasText && !versionHasText;
@@ -259,7 +282,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                       )}
                       <span className="vh-row-meta">
                         {(version.changed_sections || []).length > 0
-                          ? `Changed: ${(version.changed_sections || []).join(", ")}`
+                          ? `Changed: ${(version.changed_sections || []).map((key) => nameOf(key)).join(", ")}`
                           : emptyChangeNote(version.source)}
                       </span>
                       <span className="vh-row-meta">
@@ -296,15 +319,15 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                     value={scopeSection ?? ""}
                     onChange={(e) => setScopeSection(e.target.value || null)}
                   >
-                    {restorableSections.map((name) => (
-                      <option key={name} value={name}>{name}</option>
+                    {restorableSections.map((section) => (
+                      <option key={section.id} value={section.id}>{section.name}</option>
                     ))}
                   </select>
                 </div>
               )}
 
               {scopeSection ? (
-                <VersionDiff previous={previousText} current={currentText} label={scopeSection} />
+                <VersionDiff previous={previousText} current={currentText} label={scopeName} />
               ) : (
                 <p className="vh-status">This version has no saved section text to compare.</p>
               )}
@@ -339,12 +362,12 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
             )}
             {versionHasText && scopeSection && !canRestoreSection && (
               <p className="vh-status">
-                This version has no saved text for &quot;{scopeSection}&quot;. You can still
+                This version has no saved text for &quot;{scopeName}&quot;. You can still
                 restore the sections it does contain.
               </p>
             )}
             {canRestoreSection && (
-              <p className="vh-status">Section in scope: &quot;{scopeSection}&quot;</p>
+              <p className="vh-status">Section in scope: &quot;{scopeName}&quot;</p>
             )}
 
             <div className="vh-actions">
@@ -380,7 +403,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
         confirmLabel="Restore"
         message={
           restoreScope === "section"
-            ? `This replaces your current "${scopeSection}" text with the version you are viewing. Other sections are left alone.`
+            ? `This replaces your current "${scopeName}" text with the version you are viewing. Other sections are left alone.`
             : "This replaces every section, plus your project basics and questionnaire answers, with the version you are viewing."
         }
         warning="Your current text is already kept as a version, so this can be undone."

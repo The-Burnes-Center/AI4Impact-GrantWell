@@ -1194,6 +1194,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       draftTable: props.draftTable,
       draftGenerationJobsTable: props.draftGenerationJobsTable,
       knowledgeBaseId: props.knowledgeBase.attrKnowledgeBaseId,
+      jsSharedLayer: jsSharedLayer,
       sonnetDraftProfileArn: sonnetDraftProfile.attrInferenceProfileArn,
       supportedStatesEnv: SUPPORTED_STATES_ENV,
       legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,

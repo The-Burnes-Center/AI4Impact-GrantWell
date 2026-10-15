@@ -79,6 +79,7 @@ export const handler = async (event) => {
   } = event;
 
   const { item: sectionName, description: sectionDescription, index: sectionIndex } = sectionItem;
+  const sectionId = sectionItem.id || sectionName;
 
   const wordBudget = sectionWordBudget(sectionDescription);
   const maxTokens = tokenCeilingForWords(wordBudget);
@@ -228,10 +229,11 @@ field holds the complete section as a single string.
   console.log(`GenerateSection: generated ${content.length} chars for "${sectionName}"`);
 
   // Atomically write section content and increment counter in DDB
-  await updateSectionInJob(jobId, sectionName, content);
+  await updateSectionInJob(jobId, sectionId, sectionName, content);
 
   // Content omitted here: full prose in the Map result overruns SFN's 256 KB limit.
   return {
+    sectionId,
     sectionName,
     status: 'completed',
   };
@@ -303,7 +305,7 @@ async function invokeStructuredOutput(client, { modelId, prompt, schema, label, 
   }
 }
 
-async function updateSectionInJob(jobId, sectionName, content) {
+async function updateSectionInJob(jobId, sectionId, sectionName, content) {
   const tableName = process.env.DRAFT_GENERATION_JOBS_TABLE_NAME;
   if (!tableName) return;
 
@@ -311,10 +313,10 @@ async function updateSectionInJob(jobId, sectionName, content) {
     const command = new UpdateItemCommand({
       TableName: tableName,
       Key: { jobId: { S: jobId } },
-      UpdateExpression: 'SET #sections.#sectionName = :content ADD #completed :one',
+      UpdateExpression: 'SET #sections.#sectionId = :content ADD #completed :one',
       ExpressionAttributeNames: {
         '#sections': 'sections',
-        '#sectionName': sectionName,
+        '#sectionId': sectionId,
         '#completed': 'completedSectionCount',
       },
       ExpressionAttributeValues: {

@@ -159,6 +159,7 @@ export const handler = async (event) => {
         jobId: job.jobId,
         status: job.status,
         sectionNames: job.sectionNames,
+        sectionIds: job.sectionIds,
         totalSections: job.totalSections,
         completedSectionCount: job.completedSectionCount,
         sections: job.sections || {},

@@ -137,6 +137,13 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
   throw err;
 }
 
+/** A retry names the sections to rewrite; anything else means the whole application. */
+function requestedSectionIds(raw) {
+  if (!Array.isArray(raw)) return undefined;
+  const ids = raw.filter((id) => typeof id === "string" && id.trim() !== "").slice(0, 200);
+  return ids.length > 0 ? ids : undefined;
+}
+
 /** Keeps only {question, answer} pairs of strings with a non-empty answer. */
 function normalizeQuestionnaireAnswers(raw) {
   if (!Array.isArray(raw)) return [];
@@ -310,6 +317,7 @@ export const handler = async (event) => {
       userState,
       nofoScope: effectiveScope,
       nofoState: effectiveState,
+      sectionIds: requestedSectionIds(body.sectionIds),
     }, userId);
 
     // Return the jobId immediately for polling

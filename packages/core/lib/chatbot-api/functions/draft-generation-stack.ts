@@ -37,6 +37,7 @@ export interface DraftGenerationStackProps extends cdk.NestedStackProps {
   readonly draftGenerationJobsTable: Table;
   /** Knowledge base owned by the parent; the prepare step only retrieves from it. */
   readonly knowledgeBaseId: string;
+  readonly jsSharedLayer: lambda.ILayerVersion;
   /** Bedrock application inference profile owned by the parent. */
   readonly sonnetDraftProfileArn: string;
   readonly supportedStatesEnv: string;
@@ -59,6 +60,7 @@ export class DraftGenerationStack extends cdk.NestedStack {
           path.join(__dirname, "draft-pipeline/prepare")
         ),
         handler: "index.handler",
+        layers: [props.jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
           KB_ID: props.knowledgeBaseId,
@@ -125,6 +127,7 @@ export class DraftGenerationStack extends cdk.NestedStack {
           path.join(__dirname, "draft-pipeline/assemble")
         ),
         handler: "index.handler",
+        layers: [props.jsSharedLayer],
         environment: {
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
           DRAFT_TABLE_NAME: props.draftTable.tableName,

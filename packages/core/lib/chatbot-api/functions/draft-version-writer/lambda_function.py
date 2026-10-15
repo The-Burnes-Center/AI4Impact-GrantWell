@@ -138,7 +138,7 @@ def process(record):
         if source == "status_change":
             source = "autosave"
     created_at = _record_timestamp(record)
-    changed = dv.changed_sections(old_image.get("sections"), new_image.get("sections"))
+    changed = dv.changed_section_keys(old_image, new_image)
 
     superseded = _superseded_row(draft_key, source, changed, created_at)
     if superseded is not None and source == "ai_generated":

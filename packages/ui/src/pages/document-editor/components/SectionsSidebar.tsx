@@ -1,10 +1,9 @@
 import React from "react";
 import { LuCircleCheckBig, LuCircleAlert, LuLoader, LuLock } from "react-icons/lu";
+import type { ApplicationSection } from "../../../common/helpers/application-sections";
+import AddSectionForm from "./AddSectionForm";
 
-interface Section {
-  name: string;
-  description: string;
-}
+type Section = ApplicationSection;
 
 const CONCURRENCY_WINDOW = 5;
 
@@ -12,10 +11,15 @@ interface SectionsSidebarProps {
   sections: Section[];
   activeSection: number;
   setActiveSection: (idx: number) => void;
+  /** Keyed by section id. */
   sectionAnswers: { [key: string]: string };
   generating?: boolean;
   completedSectionCount?: number;
+  /** Section ids. */
   failedSections?: string[];
+  /** Sections the running job writes; all of them unless it is a retry. */
+  generationTotal?: number;
+  onAddSection?: (name: string) => void;
 }
 
 const SectionsSidebar = React.memo(function SectionsSidebar({
@@ -26,9 +30,12 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
   generating,
   completedSectionCount = 0,
   failedSections = [],
+  generationTotal,
+  onAddSection,
 }: SectionsSidebarProps) {
+  const total = generationTotal ?? sections.length;
   const isSectionReady = (section: Section) => {
-    return !!sectionAnswers[section.name] || failedSections.includes(section.name);
+    return !!sectionAnswers[section.id] || failedSections.includes(section.id);
   };
 
   // Backend generates sections in a sliding window of CONCURRENCY_WINDOW; anything
@@ -37,8 +44,8 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
     !!generating && idx >= completedSectionCount && idx < completedSectionCount + CONCURRENCY_WINDOW;
 
   const getStatus = (section: Section, idx: number) => {
-    if (sectionAnswers[section.name]) return "completed";
-    if (failedSections.includes(section.name)) return "failed";
+    if (sectionAnswers[section.id]) return "completed";
+    if (failedSections.includes(section.id)) return "failed";
     if (!generating) return "";
     return isActivelyGenerating(idx) ? "generating" : "pending";
   };
@@ -73,9 +80,9 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
     sections.length === 0
       ? ""
       : generating
-        ? `Generating ${sections.length} sections.`
+        ? `Generating ${total} sections.`
         : completedSectionCount > 0
-          ? `Section generation finished. ${completedSectionCount} of ${sections.length} sections generated.`
+          ? `Section generation finished. ${completedSectionCount} of ${total} sections generated.`
           : "";
 
   return (
@@ -87,7 +94,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
         Sections
         {generating && (
           <span style={{ fontSize: '13px', fontWeight: 400, color: '#6B7280', marginLeft: 8 }}>
-            {completedSectionCount}/{sections.length} generated
+            {completedSectionCount}/{total} generated
           </span>
         )}
       </h3>
@@ -97,7 +104,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
           const status = getStatus(section, idx);
           return (
             <button
-              key={idx}
+              key={section.id}
               onClick={() => { if (!locked) setActiveSection(idx); }}
               className={`se-sidebar__btn${activeSection === idx ? " se-sidebar__btn--active" : ""}${locked ? " se-sidebar__btn--locked" : ""}`}
               aria-label={`Section ${idx + 1} of ${sections.length}: ${section.name}${status ? `, ${status}` : ""}${locked ? " (not yet available)" : ""}`}
@@ -113,6 +120,11 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
           );
         })}
       </div>
+      {onAddSection && (
+        <div className="se-sidebar__add">
+          <AddSectionForm onAdd={onAddSection} disabled={generating} />
+        </div>
+      )}
     </div>
   );
 });

@@ -41,6 +41,7 @@ vi.mock("@aws-sdk/client-textract", () => ({
   StartDocumentTextDetectionCommand: aws.command("StartDocumentTextDetectionCommand"),
   GetDocumentTextDetectionCommand: aws.command("GetDocumentTextDetectionCommand"),
 }));
+vi.mock("grantwell-shared", async () => import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/sections.mjs"));
 
 process.env.SONNET_MODEL_ID = "sonnet";
 process.env.NOFO_METADATA_TABLE_NAME = "nofos";

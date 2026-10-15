@@ -3,6 +3,7 @@ import { AppConfig } from "../types/app";
 import type { ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../types/document";
 import { apiFetch } from "../session-ended";
 import { dailyLimitError } from "./daily-limit";
+import type { SectionRef } from "../helpers/application-sections";
 
 // Unified status that represents both the step and state in the grant writing flow
 export type DraftStatus = 
@@ -37,7 +38,9 @@ export interface DocumentDraft {
   documentIdentifier: string;
   status?: DraftStatus;
   reachedSteps?: string[];
+  /** Keyed by section id; keyed by name on an application without `sectionOrder`. */
   sections?: Record<string, string>;
+  sectionOrder?: SectionRef[];
   projectBasics?: ProjectBasicsData;
   questionnaire?: Record<string, string>;
   additionalInfo?: string;
@@ -81,6 +84,7 @@ export interface DraftVersionDetail extends DraftVersionMeta {
     title?: string;
     status?: DraftStatus;
     sections?: Record<string, string>;
+    section_order?: SectionRef[];
     project_basics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
     additional_info?: string;
@@ -92,6 +96,7 @@ export interface DraftJobStatus {
   jobId: string;
   status: 'in_progress' | 'completed' | 'partial' | 'error';
   sectionNames?: string[];
+  sectionIds?: string[];
   totalSections?: number;
   completedSectionCount?: number;
   sections?: Record<string, string>;
@@ -124,6 +129,7 @@ export class DraftsClient {
         title: draft.title,
         document_identifier: draft.documentIdentifier,
         sections: draft.sections || {},
+        section_order: draft.sectionOrder || [],
         project_basics: draft.projectBasics || {},
         questionnaire: draft.questionnaire || {},
         status: draft.status || 'project_basics',
@@ -148,6 +154,7 @@ export class DraftsClient {
       status: ((row.status as DraftStatus) || 'project_basics'),
       reachedSteps: Array.isArray(row.reached_steps) ? (row.reached_steps as string[]) : undefined,
       sections: (row.sections as Record<string, string>) || {},
+      sectionOrder: Array.isArray(row.section_order) ? (row.section_order as SectionRef[]) : undefined,
       projectBasics: (row.project_basics as ProjectBasicsData) || {},
       questionnaire: (row.questionnaire as Record<string, string>) || {},
       additionalInfo: (row.additional_info as string) ?? '',
@@ -251,6 +258,7 @@ export class DraftsClient {
       title: draft.title,
       document_identifier: draft.documentIdentifier,
       sections: draft.sections || {},
+      section_order: draft.sectionOrder,
       project_basics: draft.projectBasics || {},
       questionnaire: draft.questionnaire || {},
       additional_info: draft.additionalInfo,
@@ -305,6 +313,7 @@ export class DraftsClient {
       ...draft,
       title: data.title ?? draft.title,
       sections: data.sections ?? draft.sections,
+      sectionOrder: Array.isArray(data.sectionOrder) ? data.sectionOrder : draft.sectionOrder,
       projectBasics: data.projectBasics ?? draft.projectBasics,
       questionnaire: data.questionnaire ?? draft.questionnaire,
       additionalInfo: data.additionalInfo ?? draft.additionalInfo,
@@ -570,6 +579,8 @@ export class DraftsClient {
     questionnaireAnswers?: QuestionnaireAnswer[];
     additionalInfo?: string;
     sessionId: string;
+    /** Rewrite only these sections; the rest of the application is left alone. */
+    sectionIds?: string[];
     onProgress?: (status: string, pollCount?: number, maxPolls?: number) => void;
     onJobUpdate?: (jobStatus: DraftJobStatus) => void;
   }): Promise<{ jobId: string; sections: Record<string, string> }> {
@@ -589,7 +600,8 @@ export class DraftsClient {
         questionnaire: params.questionnaire || {},
         questionnaireAnswers: params.questionnaireAnswers || [],
         additionalInfo: params.additionalInfo || '',
-        sessionId: params.sessionId
+        sessionId: params.sessionId,
+        sectionIds: params.sectionIds,
       }),
     });
 
@@ -691,6 +703,7 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    sectionOrder?: SectionRef[];
     includeContactDetails?: boolean;
   }): Promise<Blob> {
     const auth = await Utils.authenticate();
@@ -706,6 +719,7 @@ export class DraftsClient {
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
+          sectionOrder: draftData.sectionOrder,
         },
         includeContactDetails: draftData.includeContactDetails === true,
       }),
@@ -736,6 +750,7 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    sectionOrder?: SectionRef[];
     includeContactDetails?: boolean;
   }): Promise<string> {
     const auth = await Utils.authenticate();
@@ -752,6 +767,7 @@ export class DraftsClient {
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
+          sectionOrder: draftData.sectionOrder,
         },
         includeContactDetails: draftData.includeContactDetails === true,
       }),
@@ -772,6 +788,7 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    sectionOrder?: SectionRef[];
     includeContactDetails?: boolean;
   }): Promise<Blob> {
     const auth = await Utils.authenticate();
@@ -787,6 +804,7 @@ export class DraftsClient {
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
+          sectionOrder: draftData.sectionOrder,
         },
         includeContactDetails: draftData.includeContactDetails === true,
       }),

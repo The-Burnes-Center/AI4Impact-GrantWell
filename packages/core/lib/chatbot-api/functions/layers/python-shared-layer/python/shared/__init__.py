@@ -13,7 +13,7 @@ from .models import (
     parse_lambda_event_body,
     parse_query_params,
 )
-from . import draft_versions
+from . import draft_sections, draft_versions
 
 __all__ = [
     'DraftOperationRequest',
@@ -25,5 +25,6 @@ __all__ = [
     'DeleteS3Request',
     'parse_lambda_event_body',
     'parse_query_params',
+    'draft_sections',
     'draft_versions',
 ]

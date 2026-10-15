@@ -13,10 +13,12 @@ import {
 } from "../common/api-client/drafts-client";
 import { writeDraftCache } from "../common/helpers/document-editor-utils";
 import type { ProjectBasicsData } from "../common/types/document";
+import type { SectionRef } from "../common/helpers/application-sections";
 
 export interface DraftSaveFields {
   title?: string;
   sections?: Record<string, string>;
+  sectionOrder?: SectionRef[];
   projectBasics?: ProjectBasicsData;
   questionnaire?: Record<string, string>;
   additionalInfo?: string;
@@ -111,6 +113,7 @@ export function useDraftSave({
         title: snapshot.title ?? known?.title ?? fallbackTitle ?? "",
         documentIdentifier: documentIdentifier || known?.documentIdentifier || "",
         sections: snapshot.sections ?? known?.sections ?? {},
+        sectionOrder: snapshot.sectionOrder ?? known?.sectionOrder,
         projectBasics: snapshot.projectBasics ?? known?.projectBasics ?? {},
         questionnaire: snapshot.questionnaire ?? known?.questionnaire ?? {},
         additionalInfo: snapshot.additionalInfo ?? known?.additionalInfo,
