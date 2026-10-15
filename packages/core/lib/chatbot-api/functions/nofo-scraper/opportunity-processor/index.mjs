@@ -3,13 +3,13 @@
  *
  * Triggered by SQS (ScraperDownloadQueue). Each invocation handles exactly
  * one opportunity: fetch details from Simpler.Grants.gov, identify the NOFO
- * attachment (using Bedrock if multiple), download, upload to S3, and write
- * metadata to DynamoDB.
+ * attachment (using Bedrock if multiple), download, write metadata to
+ * DynamoDB, then upload to S3.
  */
 
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
-import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, UpdateItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { createHash } from 'crypto';
 import {
@@ -538,34 +538,73 @@ async function writeFederalScopeSidecar(sourceKey) {
   );
 }
 
-async function writeMetadata(title, details, isUpdate, contentHash) {
+/**
+ * Updates only the fields grants.gov owns; review, processing, pin and admin-only fields are left
+ * alone, and scope/state/status/grant_type are set only on a new row. Without `landedHash` the
+ * content_hash and source_updated_at stay as they were, so a failed upload is retried rather than
+ * recorded as done (see recordLandedContent).
+ */
+async function writeMetadata(title, details, isUpdate, landedHash) {
   const now = new Date().toISOString();
-  const existingItem = await getExistingItem(title);
-  const expirationDate = normalizeDateToYYYYMMDD(details.close_date);
-
-  const item = {
-    nofo_name: title,
-    opportunity_id: details.opportunity_id || null,
-    agency: details.agency_name || 'Unknown',
-    category: details.category,
-    grant_type: existingItem?.grant_type || 'federal',
-    scope: 'federal',
-    state: null,
-    status: existingItem?.status || 'active',
-    isPinned: existingItem?.isPinned || 'false',
-    expiration_date: expirationDate,
-    source_updated_at: details.source_updated_at || null,
-    content_hash: contentHash || existingItem?.content_hash || null,
-    created_at: existingItem?.created_at || now,
-    updated_at: now,
+  const sets = [
+    'agency = :agency',
+    'category = :category',
+    'expiration_date = :expirationDate',
+    'updated_at = :now',
+    'created_at = if_not_exists(created_at, :now)',
+    'grant_type = if_not_exists(grant_type, :federal)',
+    '#scope = if_not_exists(#scope, :federal)',
+    '#state = if_not_exists(#state, :noState)',
+    '#status = if_not_exists(#status, :active)',
+    'isPinned = if_not_exists(isPinned, :notPinned)',
+  ];
+  const values = {
+    ':agency': details.agency_name || 'Unknown',
+    ':category': details.category,
+    ':expirationDate': normalizeDateToYYYYMMDD(details.close_date),
+    ':now': now,
+    ':federal': 'federal',
+    ':noState': null,
+    ':active': 'active',
+    ':notPinned': 'false',
   };
+  if (details.opportunity_id) {
+    sets.push('opportunity_id = :opportunityId');
+    values[':opportunityId'] = details.opportunity_id;
+  }
+  if (landedHash) {
+    sets.push('content_hash = :hash', 'source_updated_at = :sourceUpdatedAt');
+    values[':hash'] = landedHash;
+    values[':sourceUpdatedAt'] = details.source_updated_at || null;
+  }
 
   await dynamoClient.send(
-    new PutItemCommand({ TableName: METADATA_TABLE, Item: marshall(item) })
+    new UpdateItemCommand({
+      TableName: METADATA_TABLE,
+      Key: marshall({ nofo_name: title }),
+      UpdateExpression: `SET ${sets.join(', ')}`,
+      ExpressionAttributeNames: { '#scope': 'scope', '#state': 'state', '#status': 'status' },
+      ExpressionAttributeValues: marshall(values),
+    })
   );
 
   const action = isUpdate ? 'Updated' : 'Created';
   console.log(`${action} metadata for ${title} — Agency: ${details.agency_name}, Category: ${details.category}`);
+}
+
+async function recordLandedContent(title, details, contentHash) {
+  await dynamoClient.send(
+    new UpdateItemCommand({
+      TableName: METADATA_TABLE,
+      Key: marshall({ nofo_name: title }),
+      UpdateExpression: 'SET content_hash = :hash, source_updated_at = :sourceUpdatedAt, updated_at = :now',
+      ExpressionAttributeValues: marshall({
+        ':hash': contentHash,
+        ':sourceUpdatedAt': details.source_updated_at || null,
+        ':now': new Date().toISOString(),
+      }),
+    })
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -618,23 +657,22 @@ export const handler = async (event) => {
         contentType = 'text/html';
       }
 
+      // The upload starts the pipeline, which reads this row, so the row goes first.
+      await writeMetadata(folderName, details, isUpdate, contentChanged ? null : newHash);
+
       if (contentChanged) {
         await uploadToS3(s3Key, resolved.buffer, contentType);
         // pending-conversion HTML is under a different prefix; sidecar lands on conversion.
         if (resolved.kind === "pdf" || resolved.kind === "html_text") {
           await writeFederalScopeSidecar(s3Key);
         }
+        await recordLandedContent(folderName, details, newHash);
         const followNote = resolved.followedFrom ? ` (followed from ${resolved.followedFrom})` : '';
         console.log(`Uploaded ${s3Key} (hash: ${newHash.substring(0, 12)}…, kind: ${resolved.kind})${followNote}`);
       } else {
         console.log(
           `Content unchanged for "${opportunityTitle}" (hash: ${newHash.substring(0, 12)}…), skipping S3 upload`
         );
-      }
-
-      // Always update metadata (agency, expiration, source_updated_at may have changed)
-      if (details.category) {
-        await writeMetadata(folderName, details, isUpdate, newHash);
       }
 
       console.log(`Completed ${opportunityId}${contentChanged ? '' : ' (metadata only)'}`);

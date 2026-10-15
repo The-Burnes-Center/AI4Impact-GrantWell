@@ -1,8 +1,9 @@
 import { mockClient } from "aws-sdk-client-mock";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { DynamoDBClient, GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { BedrockRuntimeClient } from "@aws-sdk/client-bedrock-runtime";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { createHash } from "node:crypto";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const s3 = mockClient(S3Client);
@@ -91,7 +92,38 @@ const sidecars = () =>
     .commandCalls(PutObjectCommand)
     .map((c) => c.args[0].input.Key)
     .filter((k) => k!.endsWith(".metadata.json"));
-const metadata = () => ddb.commandCalls(PutItemCommand).map((c) => unmarshall(c.args[0].input.Item!));
+/** Splits a SET-only UpdateExpression into plain assignments and create-only (if_not_exists) ones. */
+function parseUpdate(input: any) {
+  const names: Record<string, string> = input.ExpressionAttributeNames ?? {};
+  const values = unmarshall(input.ExpressionAttributeValues);
+  const expr: string = input.UpdateExpression;
+  expect(expr.startsWith("SET ")).toBe(true);
+  const set: Record<string, unknown> = {};
+  const onCreate: Record<string, unknown> = {};
+  for (const clause of expr.slice(4).split(/,\s*(?![^()]*\))/)) {
+    const [lhs, rhs] = clause.split(" = ");
+    const field = names[lhs] ?? lhs;
+    const ifNotExists = /^if_not_exists\(([^,]+),\s*(:\w+)\)$/.exec(rhs);
+    if (ifNotExists) onCreate[field] = values[ifNotExists[2]];
+    else set[field] = values[rhs];
+  }
+  return { name: unmarshall(input.Key).nofo_name as string, set, onCreate };
+}
+
+const updates = () => ddb.commandCalls(UpdateItemCommand).map((c) => parseUpdate(c.args[0].input));
+
+/** The rows the recorded UpdateItem calls leave behind, applied on top of `existing`. */
+function metadata(existing: Record<string, unknown>[] = []) {
+  const rows = new Map(existing.map((r) => [r.nofo_name as string, { ...r }]));
+  const touched = new Set<string>();
+  for (const { name, set, onCreate } of updates()) {
+    const row = rows.get(name) ?? { nofo_name: name };
+    for (const [k, v] of Object.entries(onCreate)) if (!(k in row)) row[k] = v;
+    rows.set(name, Object.assign(row, set));
+    touched.add(name);
+  }
+  return [...touched].map((name) => rows.get(name)!);
+}
 
 beforeEach(() => {
   s3.reset();
@@ -99,7 +131,7 @@ beforeEach(() => {
   bedrock.reset();
   s3.on(PutObjectCommand).resolves({});
   ddb.on(GetItemCommand).resolves({});
-  ddb.on(PutItemCommand).resolves({});
+  ddb.on(UpdateItemCommand).resolves({});
   bedrock.rejects(new Error("Bedrock should not be called"));
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-10-14T13:00:00.000Z"));
@@ -324,5 +356,138 @@ describe("opportunity processor", () => {
     const lookups = ddb.commandCalls(GetItemCommand).map((c) => unmarshall(c.args[0].input.Key!).nofo_name);
     expect(lookups.length).toBeGreaterThan(0);
     expect(lookups.every((n) => n === "Old Title")).toBe(true);
+  });
+
+  describe("metadata writes", () => {
+    const url = "https://grants.gov/attachments/nofo.pdf";
+    const stored = {
+      nofo_name: "Test Grant",
+      opportunity_id: 101,
+      agency: "Old Agency",
+      category: "Education",
+      expiration_date: "2026-11-30",
+      source_updated_at: "2026-09-01T00:00:00Z",
+      content_hash: "old-hash",
+      grant_type: "state",
+      scope: "state",
+      state: "MA",
+      status: "archived",
+      isPinned: "true",
+      is_rolling: "true",
+      created_at: "2026-01-01T00:00:00.000Z",
+      review_flag: { reason: "Missing eligibility", missingCategories: ["eligibility"] },
+      processing_status: "synthesizing",
+      processing_outcome: "published",
+      processing_completed_at: "2026-09-02T00:00:00.000Z",
+      pipeline_claim_at: "2026-10-14T12:55:00.000Z",
+      pipeline_claim_execution: "exec-1",
+      pipeline_execution_arn: "arn:exec-1",
+      promoted_from: "Federal Grant",
+    };
+
+    beforeEach(() => {
+      ddb.on(GetItemCommand).resolves({ Item: marshall(stored) });
+      serve(opportunity({ attachments: [{ download_path: url }] }), {
+        [url]: { body: PDF, contentType: "application/pdf" },
+      });
+    });
+
+    it("updates in place and only sets grants.gov fields", async () => {
+      const res = await handler(message({ isUpdate: true }));
+
+      expect(res.batchItemFailures).toEqual([]);
+      expect(ddb.commandCalls(PutItemCommand)).toHaveLength(0);
+      const all = updates();
+      expect(all.length).toBeGreaterThan(0);
+      const setFields = new Set(all.flatMap((u) => Object.keys(u.set)));
+      expect([...setFields].sort()).toEqual(
+        ["agency", "category", "content_hash", "expiration_date", "opportunity_id", "source_updated_at", "updated_at"]
+      );
+      for (const u of all) {
+        expect(u.onCreate).not.toHaveProperty("is_rolling");
+        expect(Object.keys(u.onCreate).every((f) => ["created_at", "grant_type", "scope", "state", "status", "isPinned"].includes(f))).toBe(true);
+      }
+      for (const input of ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input)) {
+        expect(input.UpdateExpression).not.toMatch(/REMOVE|review_flag|processing_|pipeline_|is_rolling|promoted_from/);
+      }
+    });
+
+    it("keeps admin, review, processing and scope fields and refreshes the grants.gov ones", async () => {
+      await handler(message({ isUpdate: true }));
+
+      const [row] = metadata([stored]);
+      expect(row).toEqual({
+        ...stored,
+        agency: "Test Agency",
+        category: "Health",
+        expiration_date: "2026-12-31",
+        source_updated_at: "2026-10-01T00:00:00Z",
+        content_hash: expect.not.stringMatching(/^old-hash$/),
+        updated_at: "2026-10-14T13:00:00.000Z",
+      });
+    });
+
+    it("sets scope, state, status and created_at only when the row is new", async () => {
+      ddb.on(GetItemCommand).resolves({});
+
+      await handler(message({}));
+
+      const [first] = updates();
+      expect(first.onCreate).toEqual({
+        created_at: "2026-10-14T13:00:00.000Z",
+        grant_type: "federal",
+        scope: "federal",
+        state: null,
+        status: "active",
+        isPinned: "false",
+      });
+      expect(first.set).not.toHaveProperty("scope");
+      expect(first.set).not.toHaveProperty("state");
+      expect(first.set).not.toHaveProperty("status");
+      expect(metadata()[0]).toMatchObject({ scope: "federal", status: "active", content_hash: expect.any(String) });
+    });
+
+    it("writes the row before the document upload that starts processing", async () => {
+      const order: string[] = [];
+      ddb.on(UpdateItemCommand).callsFake((input) => {
+        order.push(`ddb:${/content_hash/.test(input.UpdateExpression) ? "hash" : "row"}`);
+        return {};
+      });
+      s3.on(PutObjectCommand).callsFake((input) => {
+        order.push(`s3:${input.Key}`);
+        return {};
+      });
+
+      await handler(message({ isUpdate: true }));
+
+      expect(order).toEqual([
+        "ddb:row",
+        "s3:Test Grant/NOFO-File-PDF",
+        "s3:Test Grant/NOFO-File-PDF.metadata.json",
+        "ddb:hash",
+      ]);
+    });
+
+    it("leaves the stored hash and source date alone when the upload fails, so the retry uploads again", async () => {
+      s3.on(PutObjectCommand).rejects(new Error("S3 down"));
+
+      const res = await handler(message({ isUpdate: true }, "s3-down"));
+
+      expect(res.batchItemFailures).toEqual([{ itemIdentifier: "s3-down" }]);
+      const [row] = metadata([stored]);
+      expect(row.content_hash).toBe("old-hash");
+      expect(row.source_updated_at).toBe("2026-09-01T00:00:00Z");
+    });
+
+    it("records the source date without uploading when the document is unchanged", async () => {
+      const hash = createHash("sha256").update(Buffer.from(PDF)).digest("hex");
+      ddb.on(GetItemCommand).resolves({ Item: marshall({ ...stored, content_hash: hash }) });
+
+      await handler(message({ isUpdate: true }));
+
+      expect(s3.commandCalls(PutObjectCommand)).toHaveLength(0);
+      expect(updates()).toHaveLength(1);
+      expect(metadata([stored])[0]).toMatchObject({ content_hash: hash, source_updated_at: "2026-10-01T00:00:00Z", scope: "state", state: "MA" });
+    });
   });
 });
