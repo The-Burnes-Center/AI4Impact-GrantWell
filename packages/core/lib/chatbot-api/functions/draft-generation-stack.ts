@@ -35,7 +35,7 @@ export interface DraftGenerationStackProps extends cdk.NestedStackProps {
   readonly ffioNofosBucket: s3.Bucket;
   readonly draftTable: Table;
   readonly draftGenerationJobsTable: Table;
-  /** Knowledge base owned by the parent; the prepare step only retrieves from it. */
+  /** Knowledge base owned by the parent; each section step only retrieves from it. */
   readonly knowledgeBaseId: string;
   /** Bedrock application inference profile owned by the parent. */
   readonly sonnetDraftProfileArn: string;
@@ -61,7 +61,6 @@ export class DraftGenerationStack extends cdk.NestedStack {
         handler: "index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
-          KB_ID: props.knowledgeBaseId,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
         },
         timeout: cdk.Duration.seconds(60),
@@ -74,13 +73,6 @@ export class DraftGenerationStack extends cdk.NestedStack {
 
     draftPrepareFunction.addToRolePolicy(
       s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn)
-    );
-    draftPrepareFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Retrieve", "bedrock-agent:Retrieve"],
-        resources: ["*"],
-      })
     );
     draftPrepareFunction.addToRolePolicy(
       dynamoUpdateItemPolicy(props.draftGenerationJobsTable.tableArn)
@@ -97,6 +89,7 @@ export class DraftGenerationStack extends cdk.NestedStack {
         handler: "index.handler",
         environment: {
           SONNET_MODEL_ID: props.sonnetDraftProfileArn,
+          KB_ID: props.knowledgeBaseId,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
           SUPPORTED_STATES: props.supportedStatesEnv,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
@@ -111,6 +104,13 @@ export class DraftGenerationStack extends cdk.NestedStack {
 
     draftGenerateSectionFunction.addToRolePolicy(
       bedrockInvokePolicy()
+    );
+    draftGenerateSectionFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:Retrieve", "bedrock-agent:Retrieve"],
+        resources: ["*"],
+      })
     );
     draftGenerateSectionFunction.addToRolePolicy(
       dynamoUpdateItemPolicy(props.draftGenerationJobsTable.tableArn)

@@ -24,7 +24,7 @@ export class DraftGenerationStateMachine extends Construct {
     super(scope, id);
 
     // ── Step 1: Prepare ─────────────────────────────────────────────
-    // Fetches NOFO summary + KB docs, splits into N section items
+    // Fetches the NOFO summary and splits it into N section items
     const prepareSections = new tasks.LambdaInvoke(this, "PrepareSections", {
       lambdaFunction: props.prepareFunction,
       outputPath: "$.Payload",
@@ -99,8 +99,6 @@ export class DraftGenerationStateMachine extends Construct {
         "sessionId.$": "$.sessionId",
         "userId.$": "$.userId",
         "userState.$": "$.userState",
-        "grantInfos.$": "$.grantInfos",
-        "applicantDocuments.$": "$.applicantDocuments",
         "totalSections.$": "$.totalSections",
         "sectionNames.$": "$.sectionNames",
       },

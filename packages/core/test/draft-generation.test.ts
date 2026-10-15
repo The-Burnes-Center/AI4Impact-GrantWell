@@ -19,7 +19,7 @@ function stateMachineDefinitions(env: string): string[] {
 }
 
 describe.each(Object.keys(ENVS))("draft generation state machine (%s)", (env) => {
-  it("hands each section writer the answers, additional information and applicant documents", () => {
+  it("hands each section writer the answers, additional information and what it needs to search, but no passages", () => {
     const def = stateMachineDefinitions(env).find((d) => d.includes('"GenerateAllSections"'));
     expect(def).toBeDefined();
     const selector = JSON.parse(def!.replace(/<ref>/g, "x")).States.GenerateAllSections.ItemSelector;
@@ -27,9 +27,11 @@ describe.each(Object.keys(ENVS))("draft generation state machine (%s)", (env) =>
       "questionnaire.$": "$.questionnaire",
       "questionnaireAnswers.$": "$.questionnaireAnswers",
       "additionalInfo.$": "$.additionalInfo",
-      "grantInfos.$": "$.grantInfos",
-      "applicantDocuments.$": "$.applicantDocuments",
+      "documentIdentifier.$": "$.documentIdentifier",
+      "userId.$": "$.userId",
       "userState.$": "$.userState",
     });
+    expect(selector).not.toHaveProperty("grantInfos.$");
+    expect(selector).not.toHaveProperty("applicantDocuments.$");
   });
 });

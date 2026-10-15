@@ -108,17 +108,12 @@ describe("starting a draft", () => {
 });
 
 describe("preparing a draft", () => {
-  const summary = { ProjectNarrativeSections: [{ item: "Need", description: "Describe the need." }] };
-  const grantChunk = {
-    content: { text: "Applicants must serve rural areas.", type: "TEXT" },
-    location: { s3Location: { uri: "s3://nofos/Grant A/NOFO-File-TXT" } },
-    metadata: { documentType: "NOFO" },
+  const summary = {
+    ProjectNarrativeSections: [
+      { item: "Need", description: "Describe the need." },
+      { item: "Budget", description: "Justify each cost." },
+    ],
   };
-  const userChunk = (uri: string, text: string) => ({
-    content: { text, type: "TEXT" },
-    location: { s3Location: { uri } },
-    metadata: { documentType: "userDocument", fileName: uri.split("/").pop() },
-  });
 
   beforeEach(() => {
     s3.on(GetObjectCommand).resolves({ Body: { transformToString: async () => JSON.stringify(summary) } } as any);
@@ -138,51 +133,25 @@ describe("preparing a draft", () => {
       ...fields,
     });
 
-  const filters = () =>
-    kb.commandCalls(RetrieveCommand).map((c) => c.args[0].input.retrievalConfiguration?.vectorSearchConfiguration?.filter);
-
-  it("searches only the requesting user's supporting documents for this grant", async () => {
-    kb.on(RetrieveCommand).resolves({ retrievalResults: [] });
-    await run();
-    expect(filters()).toContainEqual({
-      andAll: [
-        { equals: { key: "documentType", value: "userDocument" } },
-        { equals: { key: "userId", value: "user-1" } },
-        { equals: { key: "nofoName", value: "Grant A" } },
-      ],
-    });
-    expect(filters()).toContainEqual({
-      andAll: [
-        { equals: { key: "documentType", value: "NOFO" } },
-        { equals: { key: "documentIdentifier", value: "federal/Grant A" } },
-      ],
-    });
-  });
-
-  it("returns the user's passages apart from the grant's, dropping any outside their folder for this grant", async () => {
-    kb.on(RetrieveCommand)
-      .callsFake((input) =>
-        input.retrievalConfiguration.vectorSearchConfiguration.filter.andAll[0].equals.value === "userDocument"
-          ? {
-              retrievalResults: [
-                userChunk("s3://userdocs/user-1/Grant A/budget.pdf", "Our budget is $40,000."),
-                userChunk("s3://userdocs/user-2/Grant A/other.pdf", "Another user's text."),
-                userChunk("s3://userdocs/user-1/Grant B/old.pdf", "Another grant's text."),
-              ],
-            }
-          : { retrievalResults: [grantChunk] }
-      );
+  it("splits the grant into sections without searching, leaving retrieval to each section", async () => {
     const out = await run();
-    expect(out.applicantDocuments).toEqual([{ fileName: "budget.pdf", content: "Our budget is $40,000." }]);
-    expect(out.grantInfos).toEqual([{ grantId: "unknown", combinedContent: "Applicants must serve rural areas." }]);
-    expect(out).toMatchObject({ additionalInfo: "We partner with the council on aging.", questionnaireAnswers: answers });
+    expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);
+    expect(out.sections).toEqual([
+      { item: "Need", description: "Describe the need.", index: 0 },
+      { item: "Budget", description: "Justify each cost.", index: 1 },
+    ]);
+    expect(out).not.toHaveProperty("grantInfos");
+    expect(out).not.toHaveProperty("applicantDocuments");
+    expect(out).toMatchObject({
+      userId: "user-1",
+      additionalInfo: "We partner with the council on aging.",
+      questionnaireAnswers: answers,
+    });
   });
 
-  it("skips the user-document search without an authenticated user", async () => {
-    kb.on(RetrieveCommand).resolves({ retrievalResults: [] });
-    const out = await run({ userId: undefined, additionalInfo: undefined, questionnaireAnswers: undefined });
-    expect(kb.commandCalls(RetrieveCommand)).toHaveLength(1);
-    expect(out).toMatchObject({ applicantDocuments: [], additionalInfo: "", questionnaireAnswers: [] });
+  it("defaults missing inputs from an older client", async () => {
+    const out = await run({ additionalInfo: undefined, questionnaireAnswers: undefined });
+    expect(out).toMatchObject({ additionalInfo: "", questionnaireAnswers: [] });
   });
 });
 
@@ -193,32 +162,125 @@ describe("writing a section", () => {
     ),
   });
 
+  const grantChunk = {
+    content: { text: "Applicants must serve rural areas.", type: "TEXT" },
+    location: { s3Location: { uri: "s3://nofos/federal/Grant A/NOFO-File-TXT" } },
+    metadata: { documentType: "NOFO" },
+  };
+  const userChunk = (uri: string, text: string) => ({
+    content: { text, type: "TEXT" },
+    location: { s3Location: { uri } },
+    metadata: { documentType: "userDocument", fileName: uri.split("/").pop() },
+  });
+  const isUserSearch = (input: any) =>
+    input.retrievalConfiguration.vectorSearchConfiguration.filter.andAll[0].equals.value === "userDocument";
+
   const write = (fields: object = {}) =>
     generateSection({
       sectionItem: { item: "Need", description: "Describe the need.", index: 0 },
       jobId: "job-1",
       query: "Generate all sections",
-      documentIdentifier: "Grant A",
+      documentIdentifier: "federal/Grant A/",
       projectBasics: { projectName: "Meals on Wheels" },
       questionnaire: { question_1: "Rural seniors in Franklin County" },
-      grantInfos: [{ grantId: "unknown", combinedContent: "Applicants must serve rural areas." }],
-      totalSections: 1,
-      sectionNames: ["Need"],
+      userId: "user-1",
+      totalSections: 2,
+      sectionNames: ["Need", "Budget"],
       ...fields,
     });
 
-  const prompt = () =>
-    JSON.parse(bedrock.commandCalls(InvokeModelCommand)[0].args[0].input.body as string).messages[0].content as string;
+  const prompt = (i = 0) =>
+    JSON.parse(bedrock.commandCalls(InvokeModelCommand)[i].args[0].input.body as string).messages[0].content as string;
+  const retrievals = () => kb.commandCalls(RetrieveCommand).map((c) => c.args[0].input as any);
 
   beforeEach(() => {
     bedrock.on(InvokeModelCommand).resolves(reply() as any);
+    kb.on(RetrieveCommand).callsFake((input) =>
+      isUserSearch(input)
+        ? {
+            retrievalResults: [
+              userChunk("s3://userdocs/user-1/Grant A/budget.pdf", "Our budget is $40,000."),
+              userChunk("s3://userdocs/user-2/Grant A/other.pdf", "Another user's text."),
+              userChunk("s3://userdocs/user-1/Grant B/old.pdf", "Another grant's text."),
+            ],
+          }
+        : { retrievalResults: [grantChunk] }
+    );
+  });
+
+  it("searches the grant and the user's documents with a query built from each section's own title and description", async () => {
+    await write();
+    await write({ sectionItem: { item: "Budget", description: "Justify each cost.", index: 1 } });
+    const calls = retrievals();
+    expect(calls).toHaveLength(4);
+    const [needCalls, budgetCalls] = [calls.slice(0, 2), calls.slice(2)];
+    for (const c of needCalls) {
+      expect(c.retrievalQuery.text).toContain("Need");
+      expect(c.retrievalQuery.text).toContain("Describe the need.");
+      expect(c.retrievalQuery.text).not.toContain("Justify each cost.");
+    }
+    for (const c of budgetCalls) {
+      expect(c.retrievalQuery.text).toContain("Budget");
+      expect(c.retrievalQuery.text).toContain("Justify each cost.");
+      expect(c.retrievalQuery.text).not.toContain("Describe the need.");
+    }
+    expect(calls.every((c) => c.knowledgeBaseId === "kb-1")).toBe(true);
+  });
+
+  it("keeps the grant filter and scopes the user search to the job's user and this grant", async () => {
+    await write({ userId: "user-1" });
+    const calls = retrievals();
+    const grant = calls.find((c) => !isUserSearch(c));
+    const user = calls.find(isUserSearch);
+    expect(grant.retrievalConfiguration.vectorSearchConfiguration).toEqual({
+      numberOfResults: 10,
+      filter: {
+        andAll: [
+          { equals: { key: "documentType", value: "NOFO" } },
+          { equals: { key: "documentIdentifier", value: "federal/Grant A" } },
+        ],
+      },
+    });
+    expect(user.retrievalConfiguration.vectorSearchConfiguration).toEqual({
+      numberOfResults: 5,
+      filter: {
+        andAll: [
+          { equals: { key: "documentType", value: "userDocument" } },
+          { equals: { key: "userId", value: "user-1" } },
+          { equals: { key: "nofoName", value: "Grant A" } },
+        ],
+      },
+    });
+  });
+
+  it("takes the user from the job, not the section item", async () => {
+    await write({
+      userId: "user-2",
+      sectionItem: { item: "Need", description: "Describe the need.", index: 0, userId: "user-1" },
+    });
+    const user = retrievals().find(isUserSearch);
+    expect(user.retrievalConfiguration.vectorSearchConfiguration.filter.andAll[1]).toEqual({
+      equals: { key: "userId", value: "user-2" },
+    });
+  });
+
+  it("skips the user-document search without a user on the job", async () => {
+    await write({ userId: undefined });
+    expect(retrievals()).toHaveLength(1);
+    expect(isUserSearch(retrievals()[0])).toBe(false);
+    expect(prompt()).not.toContain("<applicant_documents>");
+  });
+
+  it("still writes the section when a search fails", async () => {
+    kb.on(RetrieveCommand).rejects(new Error("throttled"));
+    await expect(write()).resolves.toEqual({ sectionName: "Need", status: "completed" });
+    expect(prompt()).not.toContain("<applicant_documents>");
   });
 
   it("gives the writer the additional information, each question with its answer, and the applicant's documents", async () => {
     await write({
       questionnaireAnswers: answers,
       additionalInfo: "We partner with the county council on aging.",
-      applicantDocuments: [{ fileName: "budget.pdf", content: "Our budget is $40,000." }],
     });
     const text = prompt();
     expect(text).toContain("<additional_information>");
@@ -229,12 +291,16 @@ describe("writing a section", () => {
     const docs = text.slice(text.indexOf("<applicant_documents>"), text.indexOf("</applicant_documents>"));
     expect(docs).toContain("applicant's own supporting documents");
     expect(docs).toContain('<document name="budget.pdf">\nOur budget is $40,000.\n</document>');
+    expect(docs).not.toContain("Another user's text.");
+    expect(docs).not.toContain("Another grant's text.");
     expect(docs).not.toContain("Applicants must serve rural areas.");
     const grant = text.slice(text.indexOf("<grant_knowledge_base>"), text.indexOf("</grant_knowledge_base>"));
+    expect(grant).toContain('<grant_entry id="unknown">\nApplicants must serve rural areas.\n</grant_entry>');
     expect(grant).not.toContain("Our budget");
   });
 
   it("falls back to the saved answers and leaves out empty blocks for a job started by an older client", async () => {
+    kb.on(RetrieveCommand).resolves({ retrievalResults: [] });
     await write();
     const text = prompt();
     expect(text).toContain('"question_1": "Rural seniors in Franklin County"');
