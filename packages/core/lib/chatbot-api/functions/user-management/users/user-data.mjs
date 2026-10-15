@@ -25,6 +25,8 @@ const s3 = new S3Client({ region });
 const lambda = new LambdaClient({ region });
 
 const BATCH_SIZE = 25;
+// A chat's turns are rows of their own next to it, keyed "<session_id>#turn#<n>".
+const CHAT_TURN_MARKER = "#turn#";
 const MAX_BATCH_ATTEMPTS = 5;
 
 function config() {
@@ -117,7 +119,7 @@ async function deleteChats(env, sub) {
     ProjectionExpression: "user_id, session_id",
   })) {
     await batchDelete(env.chats, items.map(({ user_id, session_id }) => ({ user_id, session_id })));
-    count += items.length;
+    count += items.filter(({ session_id }) => !session_id.includes(CHAT_TURN_MARKER)).length;
   }
   return count;
 }

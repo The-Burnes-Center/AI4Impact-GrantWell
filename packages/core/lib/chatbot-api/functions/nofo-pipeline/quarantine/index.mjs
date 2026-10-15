@@ -35,15 +35,21 @@ export const handler = async (event) => {
 
   // Auto-supersede any existing pending/failed/needs_reupload reviews for this NOFO
   try {
-    const existing = await dynamoClient.send(
-      new QueryCommand({
-        TableName: tableName,
-        KeyConditionExpression: "nofo_name = :name",
-        ExpressionAttributeValues: marshall({ ":name": nofoName }),
-      })
-    );
-    const toSupersede = (existing.Items || [])
-      .map((i) => unmarshall(i))
+    const existing = [];
+    let lastKey;
+    do {
+      const page = await dynamoClient.send(
+        new QueryCommand({
+          TableName: tableName,
+          KeyConditionExpression: "nofo_name = :name",
+          ExpressionAttributeValues: marshall({ ":name": nofoName }),
+          ExclusiveStartKey: lastKey,
+        })
+      );
+      existing.push(...(page.Items || []).map((i) => unmarshall(i)));
+      lastKey = page.LastEvaluatedKey;
+    } while (lastKey);
+    const toSupersede = existing
       .filter((r) => r.status === "pending_review" || r.status === "failed" || r.status === "needs_reupload");
 
     for (const old of toSupersede) {

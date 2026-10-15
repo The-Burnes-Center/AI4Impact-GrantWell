@@ -178,6 +178,25 @@ beforeEach(() => {
 });
 
 describe("DELETE /user-management/users/{username}", () => {
+  it("removes a chat's turn rows with it and counts the chat once", async () => {
+    store.chats = [
+      { user_id: "sub-1", session_id: "c1" },
+      { user_id: "sub-1", session_id: "c1#turn#000001" },
+      { user_id: "sub-1", session_id: "c1#turn#000002" },
+      { user_id: "sub-1", session_id: "c2", chat_history: [] },
+      { user_id: "sub-2", session_id: "other" },
+      { user_id: "sub-2", session_id: "other#turn#000001" },
+    ];
+    serveTables(store);
+    serveBucket(bucket);
+    const handler = await load();
+
+    const res = await handler(deleteEvent());
+
+    expect(JSON.parse(res.body).removed.chats).toBe(2);
+    expect(store.chats.map((r) => r.session_id)).toEqual(["other", "other#turn#000001"]);
+  });
+
   it("removes every store's rows for the user, then the account", async () => {
     serveTables(store);
     serveBucket(bucket);

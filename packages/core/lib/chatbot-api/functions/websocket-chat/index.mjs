@@ -539,71 +539,29 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       console.error("Error sending EOF_STREAM and sources:", e);
     }
 
-    const sessionRequest = {
-      body: JSON.stringify({
-        operation: "get_session",
-        user_id: userId,
-        session_id: sessionId,
-      })
-    };
-    const client = new LambdaClient({});
-    const lambdaCommand = new InvokeCommand({
-      FunctionName: process.env.SESSION_HANDLER,
-      Payload: JSON.stringify(sessionRequest),
-    });
-
-    const { Payload, LogResult } = await client.send(lambdaCommand);
-    const result = Buffer.from(Payload).toString();
-
-    if (!result) {
-      throw new Error(`Error retrieving session data!`);
-    }
-
-    let output = {};
-    try {
-      const response = JSON.parse(result);
-      output = JSON.parse(response.body);
-    } catch (error) {
-      console.error('Failed to parse JSON:', error);
-      let responseParams = {
-        ConnectionId: id,
-        Data: '<!ERROR!>: Unable to load past messages, please retry your query'
-      };
-      command = new PostToConnectionCommand(responseParams);
-      await wsConnectionClient.send(command);
-      return;
-    }
-
-    const retrievedHistory = output.chat_history;
-    let operation = '';
-    let title = '';
-
-    let newChatEntry = [{ user: userMessage, chatbot: modelResponse, metadata: links }];
-    
-    if (retrievedHistory === undefined) {
-      operation = 'add_session';
-      title = `Chat about ${documentIdentifier}`;
-    } else {
-      operation = 'update_session';
-    }
-
     const sessionSaveRequest = {
       body: JSON.stringify({
-        operation: operation,
+        operation: "update_session",
         user_id: userId,
         session_id: sessionId,
-        new_chat_entry: newChatEntry,
-        title: title,
+        new_chat_entry: [{ user: userMessage, chatbot: modelResponse, metadata: links }],
+        title: `Chat about ${documentIdentifier}`,
         document_identifier: documentIdentifier,
       })
     };
 
-    const lambdaSaveCommand = new InvokeCommand({
+    const client = new LambdaClient({});
+    const { Payload } = await client.send(new InvokeCommand({
       FunctionName: process.env.SESSION_HANDLER,
       Payload: JSON.stringify(sessionSaveRequest),
-    });
-
-    await client.send(lambdaSaveCommand);
+    }));
+    let saved = {};
+    try {
+      saved = JSON.parse(Buffer.from(Payload).toString());
+    } catch {}
+    if (saved.statusCode !== 200) {
+      console.error("Could not save the chat turn:", saved.error || saved.body || saved.errorMessage);
+    }
 
     const input = {
       ConnectionId: id,

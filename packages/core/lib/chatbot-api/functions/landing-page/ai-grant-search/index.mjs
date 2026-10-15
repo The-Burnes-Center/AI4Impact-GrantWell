@@ -589,16 +589,23 @@ function matchesIntentFilter(meta, statusFilter, rollingOnly) {
 async function fetchGrantsByCategory(category) {
   if (!METADATA_TABLE) return [];
   try {
-    const result = await dynamoClient.send(
-      new QueryCommand({
-        TableName: METADATA_TABLE,
-        IndexName: CATEGORY_INDEX,
-        KeyConditionExpression: 'category = :cat',
-        ExpressionAttributeValues: { ':cat': { S: category } },
-        ProjectionExpression: 'nofo_name',
-      })
-    );
-    return (result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean);
+    const names = [];
+    let lastKey;
+    do {
+      const result = await dynamoClient.send(
+        new QueryCommand({
+          TableName: METADATA_TABLE,
+          IndexName: CATEGORY_INDEX,
+          KeyConditionExpression: 'category = :cat',
+          ExpressionAttributeValues: { ':cat': { S: category } },
+          ProjectionExpression: 'nofo_name',
+          ExclusiveStartKey: lastKey,
+        })
+      );
+      names.push(...(result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean));
+      lastKey = result.LastEvaluatedKey;
+    } while (lastKey);
+    return names;
   } catch (err) {
     console.error('Category lookup failed:', err.message);
     return [];
@@ -630,10 +637,15 @@ function nameContainsWord(lowerName, word, stemmed) {
 async function fetchGrantsByName(query, isVisible) {
   if (!METADATA_TABLE) return new Map();
   try {
-    const result = await dynamoClient.send(
-      new ScanCommand({ TableName: METADATA_TABLE, ProjectionExpression: 'nofo_name' })
-    );
-    const allNames = (result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean);
+    const allNames = [];
+    let lastKey;
+    do {
+      const result = await dynamoClient.send(
+        new ScanCommand({ TableName: METADATA_TABLE, ProjectionExpression: 'nofo_name', ExclusiveStartKey: lastKey })
+      );
+      allNames.push(...(result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean));
+      lastKey = result.LastEvaluatedKey;
+    } while (lastKey);
 
     const queryWords = query.toLowerCase().split(/\s+/).filter((w) => w.length > 2);
     if (queryWords.length === 0) return new Map();

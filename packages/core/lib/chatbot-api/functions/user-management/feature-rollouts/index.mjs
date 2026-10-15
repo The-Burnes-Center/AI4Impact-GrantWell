@@ -252,18 +252,25 @@ async function putFeatureConfig(featureKey, mode, updatedBy) {
 }
 
 async function listAllowlistedUsers(featureKey) {
-  const response = await dynamoClient.send(
-    new QueryCommand({
-      TableName: TABLE_NAME,
-      KeyConditionExpression: "featureKey = :featureKey AND begins_with(subjectKey, :subjectPrefix)",
-      ExpressionAttributeValues: {
-        ":featureKey": { S: featureKey },
-        ":subjectPrefix": { S: "USER#" },
-      },
-    })
-  );
+  const items = [];
+  let lastKey;
+  do {
+    const response = await dynamoClient.send(
+      new QueryCommand({
+        TableName: TABLE_NAME,
+        KeyConditionExpression: "featureKey = :featureKey AND begins_with(subjectKey, :subjectPrefix)",
+        ExpressionAttributeValues: {
+          ":featureKey": { S: featureKey },
+          ":subjectPrefix": { S: "USER#" },
+        },
+        ExclusiveStartKey: lastKey,
+      })
+    );
+    items.push(...(response.Items || []));
+    lastKey = response.LastEvaluatedKey;
+  } while (lastKey);
 
-  return (response.Items || [])
+  return items
     .map((item) => unmarshall(item))
     .map((item) => ({
       email: normalizeEmail(item.email),
