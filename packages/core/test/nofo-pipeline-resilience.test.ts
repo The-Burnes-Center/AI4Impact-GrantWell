@@ -233,23 +233,21 @@ describe("partial grants in review", () => {
   const QUESTIONS = { totalQuestions: 1, questions: [{ id: 1, question: "Describe your need." }] };
   const failedChunks = [{ part: 2, of: 3, startPercent: 37, endPercent: 78, error: "BedrockRefusalError: x" }];
 
-  it("publishes a grant with an unread part and flags it as Review suggested", async () => {
+  it("holds a grant with an unread part for review and names the part", async () => {
     const out = await validate({ nofoName: "G", mergedSummary: summaryFor("A"), questionsData: QUESTIONS, failedChunks });
 
-    expect(out.validationResult.overallVerdict).toBe("PASS");
+    expect(out.validationResult.overallVerdict).toBe("NEEDS_REVIEW");
     expect(out.adminGuidance).toMatchObject({ reason: "partial_document", severity: "warning", canApprove: true, missingCategories: [] });
     expect(out.adminGuidance.missingParts).toBe(
       "The grant text could not be read in part 2 of 3 (about 37%–78% of the way through), so requirements from there may be missing."
     );
+  });
 
-    await publish({ ...out, s3Bucket: "b", documentKey: "G/NOFO-File-PDF" });
+  it("holds a grant with missing sections and an unread part for review", async () => {
+    const mergedSummary = { ...summaryFor("A"), KeyDeadlines: [] };
+    const out = await validate({ nofoName: "G", mergedSummary, questionsData: QUESTIONS, failedChunks });
 
-    const update = aws.dynamo.mock.calls.find(([, input]) => input.ExpressionAttributeValues?.[":reviewFlag"])![1];
-    expect(update.ExpressionAttributeValues[":reviewFlag"]).toMatchObject({
-      reason: "partial_document",
-      missingCategories: [],
-      missingParts: out.adminGuidance.missingParts,
-    });
+    expect(out.validationResult.overallVerdict).toBe("NEEDS_REVIEW");
   });
 
   it("names the unread part in the guidance of a grant held for review", async () => {

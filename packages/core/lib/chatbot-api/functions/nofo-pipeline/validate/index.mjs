@@ -30,15 +30,14 @@ export const handler = async (event) => {
     ? buildAdminGuidance(reason, { emptyCategories: missingSections, nofoName, missingParts })
     : null;
 
-  // partial_extraction (1-2 missing) and partial_document are approvable, so auto-publish them and
-  // let the guidance ride along as an advisory review flag. Everything else blocks on manual review.
+  // partial_extraction (1-2 missing) is approvable, so auto-publish it and let the guidance ride along
+  // as an advisory review flag. Anything else, including an unread part of the text, blocks on review.
   let validationResult;
-  if (!reason || reason === "partial_extraction" || reason === "partial_document") {
+  if (!reason || (reason === "partial_extraction" && !missingParts)) {
     validationResult = { overallVerdict: "PASS" };
     console.log(
       reason
-        ? `Content check PASS (flagged) for ${nofoName}: ` +
-            (missingSections.length > 0 ? `missing ${missingSections.join(", ")}` : "part of the text unread")
+        ? `Content check PASS (flagged) for ${nofoName}: missing ${missingSections.join(", ")}`
         : `Content check PASS for ${nofoName}: all 4 sections present`
     );
   } else {
@@ -46,7 +45,9 @@ export const handler = async (event) => {
     console.log(
       reason === "no_questions"
         ? `Content check NEEDS_REVIEW for ${nofoName}: no application questions generated`
-        : `Content check NEEDS_REVIEW for ${nofoName}: missing ${missingSections.join(", ")}`
+        : reason === "partial_document"
+          ? `Content check NEEDS_REVIEW for ${nofoName}: part of the text unread`
+          : `Content check NEEDS_REVIEW for ${nofoName}: missing ${missingSections.join(", ")}`
     );
   }
 
