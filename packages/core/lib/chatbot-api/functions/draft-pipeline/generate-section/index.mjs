@@ -1,15 +1,19 @@
 /**
  * Draft Pipeline - Generate Section Lambda
  *
- * Generates content for ONE grant section using Bedrock structured output.
- * Atomically updates the DDB job with the section content and increments
- * the completedSectionCount.
+ * Generates content for ONE grant section using Bedrock structured output,
+ * grounded in grant passages and the requesting user's supporting-document
+ * passages retrieved with a query built from this section's title and
+ * description. Atomically updates the DDB job with the section content and
+ * increments the completedSectionCount.
  */
 
+import { BedrockAgentRuntimeClient, RetrieveCommand } from '@aws-sdk/client-bedrock-agent-runtime';
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 
 const bedrockClient = new BedrockRuntimeClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const kbClient = new BedrockAgentRuntimeClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
 const CLAUDE_MODEL_ID = process.env.SONNET_MODEL_ID;
@@ -19,6 +23,7 @@ const SECTION_EFFORT = 'medium';
 // Adaptive thinking spends from max_tokens before the JSON reply starts.
 const THINKING_TOKEN_ALLOWANCE = 4000;
 const DEFAULT_SECTION_WORDS = 800;
+const MAX_RETRIEVAL_QUERY_CHARS = 1000;
 
 function sectionWordBudget(description) {
   const text = typeof description === 'string' ? description : '';
@@ -71,8 +76,7 @@ export const handler = async (event) => {
     questionnaire,
     questionnaireAnswers,
     additionalInfo,
-    grantInfos,
-    applicantDocuments,
+    userId,
     totalSections,
     userState,
     sectionNames,
@@ -86,6 +90,17 @@ export const handler = async (event) => {
   console.log(
     `GenerateSection: generating "${sectionName}" (${sectionIndex + 1}/${totalSections}) ` +
       `budget=${wordBudget}w max_tokens=${maxTokens}`
+  );
+
+  const retrievalQuery = sectionRetrievalQuery(sectionName, sectionDescription);
+  const [kbResults, userDocResults] = await Promise.all([
+    retrieveFromKnowledgeBase(retrievalQuery, documentIdentifier),
+    retrieveUserDocuments(retrievalQuery, documentIdentifier, userId),
+  ]);
+  const grantInfos = extractGrantInfoFromKBResults(kbResults);
+  const applicantDocuments = extractApplicantDocuments(userDocResults);
+  console.log(
+    `GenerateSection: fetched ${grantInfos.length} KB results, ${applicantDocuments.length} from the applicant's documents for "${sectionName}"`
   );
 
   const stateName = userState ? (STATE_NAME_BY_CODE[userState] || userState) : "";
@@ -126,13 +141,12 @@ ${escapeWrapperClosingTags(additionalInfo.trim())}
 `
     : "";
 
-  const applicantDocs = Array.isArray(applicantDocuments) ? applicantDocuments : [];
-  const applicantDocumentsBlock = applicantDocs.length > 0
+  const applicantDocumentsBlock = applicantDocuments.length > 0
     ? `<applicant_documents>
 Excerpts from the applicant's own supporting documents for this application. These are the
 applicant's materials, not the grant's requirements; use them for facts about the applicant
 and the project.
-${applicantDocs.map((d) => `<document name="${String(d.fileName ?? '').replace(/["<>]/g, '')}">\n${escapeWrapperClosingTags(d.content)}\n</document>`).join('\n')}
+${applicantDocuments.map((d) => `<document name="${String(d.fileName ?? '').replace(/["<>]/g, '')}">\n${escapeWrapperClosingTags(d.content)}\n</document>`).join('\n')}
 </applicant_documents>
 
 `
@@ -156,7 +170,7 @@ ${questionnaireBlock}
 </questionnaire_responses>
 
 ${additionalInfoBlock}<grant_knowledge_base>
-${(grantInfos || []).map((grant) => `<grant_entry id="${grant.grantId}">\n${escapeWrapperClosingTags(grant.combinedContent)}\n</grant_entry>`).join('\n')}
+${grantInfos.map((grant) => `<grant_entry id="${grant.grantId}">\n${escapeWrapperClosingTags(grant.combinedContent)}\n</grant_entry>`).join('\n')}
 </grant_knowledge_base>
 
 ${applicantDocumentsBlock}<section_to_write>
@@ -238,6 +252,94 @@ field holds the complete section as a single string.
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────
+
+function sectionRetrievalQuery(sectionName, sectionDescription) {
+  const text = [sectionName, sectionDescription]
+    .filter((part) => typeof part === 'string' && part.trim() !== '')
+    .map((part) => part.trim())
+    .join('\n\n');
+  return text.slice(0, MAX_RETRIEVAL_QUERY_CHARS);
+}
+
+async function retrieveFromKnowledgeBase(query, documentIdentifier) {
+  if (!query || !documentIdentifier) return [];
+  try {
+    const normalizedDocumentIdentifier = documentIdentifier.replace(/\/+$/, '');
+    const filter = {
+      andAll: [
+        { equals: { key: 'documentType', value: 'NOFO' } },
+        { equals: { key: 'documentIdentifier', value: normalizedDocumentIdentifier } },
+      ],
+    };
+
+    const command = new RetrieveCommand({
+      knowledgeBaseId: process.env.KB_ID,
+      retrievalQuery: { text: query },
+      retrievalConfiguration: {
+        vectorSearchConfiguration: {
+          numberOfResults: 10,
+          filter,
+        },
+      },
+    });
+
+    const response = await kbClient.send(command);
+    return response.retrievalResults || [];
+  } catch (error) {
+    console.error('Error retrieving from Knowledge Base:', error);
+    return [];
+  }
+}
+
+/** userId must come from the job, which the start handler takes from the authenticated caller. */
+async function retrieveUserDocuments(query, documentIdentifier, userId) {
+  if (!query || !userId || !documentIdentifier) return [];
+  const nofoName = documentIdentifier.replace(/\/+$/, '').split('/').pop();
+  if (!nofoName) return [];
+  try {
+    const filter = {
+      andAll: [
+        { equals: { key: 'documentType', value: 'userDocument' } },
+        { equals: { key: 'userId', value: userId } },
+        { equals: { key: 'nofoName', value: nofoName } },
+      ],
+    };
+
+    const command = new RetrieveCommand({
+      knowledgeBaseId: process.env.KB_ID,
+      retrievalQuery: { text: query },
+      retrievalConfiguration: {
+        vectorSearchConfiguration: {
+          numberOfResults: 5,
+          filter,
+        },
+      },
+    });
+
+    const response = await kbClient.send(command);
+    const folder = `/${userId}/${nofoName}/`;
+    return (response.retrievalResults || []).filter((r) => r.location?.s3Location?.uri?.includes(folder));
+  } catch (error) {
+    console.error("Error retrieving the applicant's documents from Knowledge Base:", error);
+    return [];
+  }
+}
+
+function extractGrantInfoFromKBResults(results) {
+  return results.map((result) => ({
+    grantId: result.metadata?.grantId || 'unknown',
+    combinedContent: result.content?.text ?? '',
+  }));
+}
+
+function extractApplicantDocuments(results) {
+  return results
+    .filter((result) => typeof result.content?.text === 'string' && result.content.text.trim() !== '')
+    .map((result) => ({
+      fileName: result.metadata?.fileName || result.location?.s3Location?.uri?.split('/').pop() || 'document',
+      content: result.content.text,
+    }));
+}
 
 const UNSUPPORTED_SCHEMA_KEYWORDS = new Set([
   'minLength', 'maxLength', 'minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum',
