@@ -7,6 +7,7 @@ import {
   CognitoIdentityProviderClient,
   ListUsersCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
+import { deleteUserData } from "./user-data.mjs";
 
 const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION || "us-east-1",
@@ -284,14 +285,17 @@ async function handleDelete(scope, actor, event) {
   assertCanManageTarget(scope, target);
   await assertNotLastPrivilegedUser(target, []);
 
+  // Data first: once the account is gone, its sub can no longer be looked up for a retry.
+  const removed = await deleteUserData({ sub: target.sub, username: target.username });
+
   await cognitoClient.send(
     new AdminDeleteUserCommand({
       UserPoolId: USER_POOL_ID,
-      Username: username,
+      Username: target.username,
     })
   );
 
-  return respond(200, { username, deleted: true });
+  return respond(200, { username, deleted: true, removed });
 }
 
 // AdminSetUserMFAPreference alone leaves the authenticator registered, and a pool that
@@ -614,12 +618,11 @@ function mapCognitoUser(user) {
 
 // AdminGetUser exposes attributes as UserAttributes (top level), unlike ListUsers.
 function mapAdminGetUser(response) {
-  return mapAttributes(
-    response.Username,
-    response.UserStatus,
-    response.Enabled,
-    response.UserAttributes
-  );
+  const sub = (response.UserAttributes || []).find((attribute) => attribute.Name === "sub")?.Value || "";
+  return {
+    ...mapAttributes(response.Username, response.UserStatus, response.Enabled, response.UserAttributes),
+    sub,
+  };
 }
 
 function mapAttributes(username, status, enabled, rawAttributes) {
