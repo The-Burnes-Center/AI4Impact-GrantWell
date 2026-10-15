@@ -3,7 +3,8 @@
  *
  * Paginates the Simpler.Grants.gov search API, deduplicates against DynamoDB
  * (BatchGetItem for speed), detects updated opportunities by comparing the
- * API's updated_at with stored source_updated_at, and queues SQS messages
+ * API's updated_at with stored source_updated_at, re-queues grants whose first
+ * upload never landed, and queues SQS messages
  * (SendMessageBatch) for parallel Opportunity Processor Lambdas.
  */
 
@@ -82,6 +83,22 @@ async function findByOpportunityId(opportunityId) {
     console.warn(`OpportunityIdIndex lookup failed for ${opportunityId}: ${err.message}`);
     return null;
   }
+}
+
+/**
+ * The processor writes a new grant's row before its upload and sets source_updated_at only once
+ * the file lands, so a scraper row for this opportunity without it never finished. Rows from
+ * other sources, archived rows, and opportunities with no API date are left alone.
+ */
+function isUnfinishedScrape(existing, opportunityId, apiUpdatedAt) {
+  return Boolean(
+    apiUpdatedAt &&
+      !existing.source_updated_at &&
+      existing.status !== 'archived' &&
+      existing.opportunity_id != null &&
+      opportunityId != null &&
+      String(existing.opportunity_id) === String(opportunityId)
+  );
 }
 
 /**
@@ -186,7 +203,17 @@ export const handler = async (event) => {
           if (existing) console.log(`"${oppTitle}" was retitled; stored as "${existing.nofo_name}"`);
         }
 
-        if (existing) {
+        if (existing && isUnfinishedScrape(existing, oppId, apiUpdatedAt)) {
+          console.log(`Retrying "${oppTitle}" — stored without a landed file`);
+          toQueue.push({
+            opportunityId: oppId,
+            opportunityTitle: oppTitle,
+            isUpdate: false,
+            apiUpdatedAt,
+            ...(existing.nofo_name !== normalizedTitle && { nofoName: existing.nofo_name }),
+          });
+          newQueued++;
+        } else if (existing) {
           const storedUpdatedAt = existing.source_updated_at || null;
           if (apiUpdatedAt && storedUpdatedAt && apiUpdatedAt > storedUpdatedAt) {
             console.log(

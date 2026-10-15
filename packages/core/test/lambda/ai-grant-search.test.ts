@@ -117,6 +117,20 @@ describe("AI grant search", () => {
     expect(JSON.parse(res.body).results.map((r: any) => r.name)).toEqual(["Bridge Repair Program"]);
   });
 
+  it("looks up the Other category only for the word itself", async () => {
+    const categoryLookups = () =>
+      ddb.commandCalls(QueryCommand)
+        .filter((c) => c.args[0].input.IndexName === "CategoryIndex")
+        .map((c) => c.args[0].input.ExpressionAttributeValues?.[":cat"]?.S);
+
+    await search({ query: "other grants" });
+    expect(categoryLookups()).toEqual(["Other"]);
+
+    ddb.resetHistory();
+    await search({ query: "mother" });
+    expect(categoryLookups()).not.toContain("Other");
+  });
+
   describe("scoping", () => {
     const freshHandler = async () => {
       vi.resetModules();

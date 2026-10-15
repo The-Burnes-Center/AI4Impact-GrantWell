@@ -61,12 +61,13 @@ const GRANT_CATEGORIES = [
   'Income Security and Social Services', 'Law, Justice, and Legal Services',
   'Natural Resources', 'Opportunity Zone Benefits', 'Regional Development',
   'Science, Technology, and Other Research and Development',
-  'Transportation', 'Affordable Care Act',
+  'Transportation', 'Affordable Care Act', 'Other',
 ];
 
 const CATEGORY_LOOKUP = new Map(GRANT_CATEGORIES.map((c) => [c.toLowerCase(), c]));
+// "Other" matches exactly only; fuzzily it would catch "mother" or "otter".
 const SINGLE_WORD_CATEGORIES = new Map(
-  GRANT_CATEGORIES.filter((c) => !c.includes(' ')).map((c) => [c.toLowerCase(), c])
+  GRANT_CATEGORIES.filter((c) => !c.includes(' ') && c !== 'Other').map((c) => [c.toLowerCase(), c])
 );
 
 const STOP_WORDS = new Set([

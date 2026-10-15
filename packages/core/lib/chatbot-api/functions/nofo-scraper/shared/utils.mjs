@@ -34,6 +34,7 @@ export const FUNDING_CATEGORY_MAP = {
   'science_technology_and_other_research_and_development': 'Science, Technology, and Other Research and Development',
   'transportation': 'Transportation',
   'affordable_care_act': 'Affordable Care Act',
+  'other': 'Other',
 };
 
 /** Normalize NOFO folder name: slashes → dashes so S3 path matches DynamoDB nofo_name */
@@ -90,7 +91,6 @@ export function normalizeDateToYYYYMMDD(dateString) {
 
 const FUNDING_CATEGORY_ALIASES = {
   'energy_infrastructure_and_critical_mineral_and_materials': 'Energy Infrastructure and Critical Mineral and Materials (EICMM)',
-  'other': 'Science, Technology, and Other Research and Development',
 };
 
 function categoryKey(value) {

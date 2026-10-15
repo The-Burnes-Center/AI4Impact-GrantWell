@@ -66,7 +66,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
   const uniqueCategories = Array.from(
     new Set(nofos.map((nofo) => nofo.category).filter((category): category is string => !!category))
-  ).sort();
+  ).sort((a, b) => Number(a === "Other") - Number(b === "Other") || a.localeCompare(b));
 
   const getCategoryCount = (category: string) => {
     return nofos.filter((nofo) => {
