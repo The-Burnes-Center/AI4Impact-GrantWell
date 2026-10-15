@@ -50,6 +50,9 @@ export interface DocumentDraft {
   lastModified?: string;
   rev?: number;
   lastWriteSource?: DraftWriteSource;
+  /** Approximate stored size after the last save, against the per-application limit. */
+  itemBytes?: number;
+  itemLimitBytes?: number;
 }
 
 /** Thrown by updateDraft when the row moved on; `remote` is the server state. */
@@ -298,6 +301,11 @@ export class DraftsClient {
       throw new DraftConflictError(remote);
     }
 
+    if (response.status === 413) {
+      const body = await response.json().catch((): null => null);
+      throw new Error(body?.message || 'This application is too large to save. Shorten a long section and try again.');
+    }
+
     if (response.status !== 200) {
       let detail = `HTTP ${response.status}`;
       try {
@@ -322,6 +330,8 @@ export class DraftsClient {
       reachedSteps: data.reachedSteps ?? draft.reachedSteps,
       lastModified: data.lastModified ?? draft.lastModified,
       rev: typeof data.rev === 'number' ? data.rev : draft.rev,
+      itemBytes: typeof data.itemBytes === 'number' ? data.itemBytes : undefined,
+      itemLimitBytes: typeof data.itemLimitBytes === 'number' ? data.itemLimitBytes : undefined,
     };
   }
 

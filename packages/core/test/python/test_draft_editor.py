@@ -3,6 +3,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import pytest
+from botocore.exceptions import ClientError
 
 from conftest import FUNCTIONS, SHARED_LAYER, create_table, http_event, load_handler
 
@@ -162,6 +163,33 @@ def test_user_saves_record_when_each_section_changed_and_ai_writes_do_not(drafts
     assert after["budget"] > first["budget"]
 
 
+def test_a_save_reports_the_stored_size_against_the_limit(drafts):
+    create(drafts)
+
+    _, body = call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "x" * 1000}, "section_order": ORDER})
+
+    assert 1000 < body["itemBytes"] < 2000
+    assert body["itemLimitBytes"] == 400 * 1024
+
+
+def test_an_application_over_the_item_limit_is_a_413_with_a_plain_message(drafts, monkeypatch):
+    create(drafts)
+    too_large = ClientError(
+        {"Error": {"Code": "ValidationException", "Message": "Item size to update has exceeded the maximum allowed size"}},
+        "UpdateItem",
+    )
+
+    def fail(**_):
+        raise too_large
+
+    monkeypatch.setattr(drafts.table, "update_item", fail)
+    status, body = call(drafts, {"operation": "update_draft", "session_id": "d1", "sections": {"summary": "x"}, "section_order": ORDER})
+
+    assert status == 413
+    assert body["error"] == "too_large"
+    assert "too large to save" in body["message"]
+
+
 def version(drafts, rev, content):
     from shared import draft_versions as dv
 
@@ -215,6 +243,27 @@ def test_restoring_a_whole_old_version_converts_it_to_ids(drafts):
     row = stored(drafts)
     assert row["sections"] == {"summary": "Then", "gone-section": "Kept"}
     assert [ref["id"] for ref in row["section_order"]] == ["summary", "budget", "gone-section"]
+
+
+def test_listing_versions_reads_past_a_short_page(drafts, monkeypatch):
+    create(drafts)
+    pages = [
+        {"Items": [{"rev": 9}], "LastEvaluatedKey": {"draft_key": "user-1#d1", "rev": 9}},
+        {"Items": [{"rev": 8}, {"rev": 7}]},
+    ]
+    seen = []
+
+    def query(**kwargs):
+        seen.append(kwargs)
+        return pages[len(seen) - 1]
+
+    monkeypatch.setattr(drafts._version_table, "query", query)
+    status, body = call(drafts, {"operation": "list_draft_versions", "session_id": "d1", "limit": 3})
+
+    assert status == 200
+    assert [v["rev"] for v in body["versions"]] == [9, 8, 7]
+    assert [q["Limit"] for q in seen] == [3, 2]
+    assert seen[1]["ExclusiveStartKey"] == {"draft_key": "user-1#d1", "rev": 9}
 
 
 FIXTURE = json.loads((Path(__file__).resolve().parents[1] / "fixtures" / "section-ids.json").read_text())

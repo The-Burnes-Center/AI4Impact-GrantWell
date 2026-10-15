@@ -1253,6 +1253,16 @@
   cursor: not-allowed;
 }
 
+.se-storage-warning {
+  margin: 0 0 16px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--gw-color-warning-callout-bg, #fef3c7);
+  border: 1px solid var(--gw-color-warning-callout-border, #f59e0b);
+  color: var(--gw-color-warning-callout-text, #78350f);
+  font-size: 14px;
+}
+
 .se-empty-state {
   max-width: 560px;
   padding: 32px 0;

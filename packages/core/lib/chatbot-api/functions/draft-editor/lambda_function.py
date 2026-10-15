@@ -41,6 +41,26 @@ def _dumps(payload):
 
 AI_WRITE_SOURCES = ("ai_generated", "ai_regenerated")
 
+ITEM_LIMIT_BYTES = 400 * 1024
+
+
+def _item_bytes(item):
+    """Close to DynamoDB's own count: attribute names plus UTF-8 values."""
+    return len(json.dumps(item, default=dv.json_default, separators=(",", ":")).encode("utf-8"))
+
+
+def _is_too_large(error):
+    details = error.response.get("Error", {})
+    return details.get("Code") == "ValidationException" and "size" in str(details.get("Message", "")).lower()
+
+
+def _too_large_response():
+    return _json_response(413, {
+        'error': 'too_large',
+        'message': 'This application is too large to save. Shorten a long section and try again.',
+        'itemLimitBytes': ITEM_LIMIT_BYTES,
+    })
+
 
 def _sections_for_write(current, sections, section_order, source):
     """Sections keyed the way the row is, its order, and per-section user save times.
@@ -160,6 +180,8 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
         return _json_response(200, response_item)
     except ClientError as error:
         print("Caught error: DynamoDB error - could not add draft")
+        if _is_too_large(error):
+            return _too_large_response()
         return {
             'statusCode': 500,
             'headers': {'Access-Control-Allow-Origin': '*'},
@@ -346,12 +368,16 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             "lastModified": updated_item.get("last_modified", ""),
             "status": updated_item.get("status", "project_basics"),
             "reachedSteps": sorted(updated_item.get("reached_steps") or []),
-            "rev": updated_item.get("rev")
+            "rev": updated_item.get("rev"),
+            "itemBytes": _item_bytes(updated_item),
+            "itemLimitBytes": ITEM_LIMIT_BYTES,
         }
 
         return _json_response(200, response_item)
     except ClientError as error:
         print("Caught error: DynamoDB error - could not update draft")
+        if _is_too_large(error):
+            return _too_large_response()
         # Return a structured error message and status code
         error_code = error.response['Error']['Code']
         if error_code == "ConditionalCheckFailedException":
@@ -628,15 +654,26 @@ def _version_unavailable():
 def list_draft_versions(session_id, user_id, limit=None):
     if not _version_table:
         return _version_unavailable()
+    wanted = limit or dv.MAX_UNLABELED_VERSIONS
+    versions, start_key = [], None
     try:
-        response = _version_table.query(
-            KeyConditionExpression=Key('draft_key').eq(dv.draft_key(user_id, session_id)),
-            ProjectionExpression=VERSION_META_PROJECTION,
-            ExpressionAttributeNames=VERSION_META_NAMES,
-            ScanIndexForward=False,
-            Limit=limit or dv.MAX_UNLABELED_VERSIONS,
-        )
-        return _json_response(200, {'versions': response.get('Items', [])})
+        # A page stops at 1 MB read, which a few large rows reach before `Limit` does.
+        while len(versions) < wanted:
+            query = {
+                'KeyConditionExpression': Key('draft_key').eq(dv.draft_key(user_id, session_id)),
+                'ProjectionExpression': VERSION_META_PROJECTION,
+                'ExpressionAttributeNames': VERSION_META_NAMES,
+                'ScanIndexForward': False,
+                'Limit': wanted - len(versions),
+            }
+            if start_key:
+                query['ExclusiveStartKey'] = start_key
+            response = _version_table.query(**query)
+            versions.extend(response.get('Items', []))
+            start_key = response.get('LastEvaluatedKey')
+            if not start_key:
+                break
+        return _json_response(200, {'versions': versions})
     except ClientError as error:
         print(f"Caught error: could not list draft versions - {error}")
         return _json_response(500, {'error': 'Failed to list versions'})

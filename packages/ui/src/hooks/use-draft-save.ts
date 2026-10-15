@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
 import { useDraftsClient } from "./use-drafts-client";
 import { useAutoSave } from "./use-auto-save";
@@ -24,6 +24,11 @@ export interface DraftSaveFields {
   additionalInfo?: string;
   uploadedFiles?: UploadedFileMeta[];
   status?: DraftStatus;
+}
+
+export interface DraftStorageUse {
+  bytes: number;
+  limit: number;
 }
 
 type DraftPart = keyof DraftSaveFields;
@@ -73,6 +78,7 @@ export function useDraftSave({
   const authTokenRef = useRef<string | null>(null);
   const dirtySectionsRef = useRef<Set<string>>(new Set());
   const dirtyPartsRef = useRef<Set<DraftPart>>(new Set());
+  const [storageUse, setStorageUse] = useState<DraftStorageUse | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -193,6 +199,9 @@ export function useDraftSave({
         lastModified: saved.lastModified,
         status: saved.status ?? draftRef.current?.status,
       };
+      if (saved.itemBytes !== undefined && saved.itemLimitBytes !== undefined) {
+        setStorageUse({ bytes: saved.itemBytes, limit: saved.itemLimitBytes });
+      }
 
       for (const name of snapshot.dirtySections) dirtySectionsRef.current.delete(name);
       for (const part of snapshot.dirtyParts) dirtyPartsRef.current.delete(part);
@@ -273,6 +282,7 @@ export function useDraftSave({
     isDirty,
     lastSavedAt,
     error,
+    storageUse,
   };
 }
 

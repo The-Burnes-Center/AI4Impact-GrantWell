@@ -32,6 +32,9 @@ interface SectionEditorProps {
   draftSave: ReturnType<typeof useDraftSave>;
 }
 
+/** Share of the per-application storage limit at which the editor starts warning. */
+const STORAGE_WARNING_SHARE = 0.75;
+
 const SectionEditor: React.FC<SectionEditorProps> = ({
   onContinue,
   selectedNofo,
@@ -57,7 +60,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [undoConfirmOpen, setUndoConfirmOpen] = useState(false);
   const apiClient = useApiClient();
   const { addNotification } = useNotifications();
-  const { saveFields, flush, saveStatus, retry } = draftSave;
+  const { saveFields, flush, saveStatus, retry, storageUse } = draftSave;
 
   // Read by the generation poll below; kept in refs so typing (which changes
   // sectionAnswers/editorContent) cannot tear down and restart the interval.
@@ -439,6 +442,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
   const active = sections[activeSection];
   const activeSectionName = active?.name;
+  const nearStorageLimit =
+    !!storageUse && storageUse.limit > 0 && storageUse.bytes >= storageUse.limit * STORAGE_WARNING_SHARE;
   const failedNames = failedSections.map((id) => sections.find((s) => s.id === id)?.name ?? id);
 
   if (loaded && sections.length === 0 && !generating) {
@@ -589,6 +594,13 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               </button>
             </div>
           </div>
+
+          {nearStorageLimit && (
+            <p className="se-storage-warning" role="status">
+              This application is close to its size limit. Shorten long sections or move background
+              material into supporting documents.
+            </p>
+          )}
 
           {active?.description && (
             <div className="se-section-description">

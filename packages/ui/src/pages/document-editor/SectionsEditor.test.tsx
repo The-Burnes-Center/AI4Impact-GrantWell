@@ -38,6 +38,7 @@ function Editor(props: { activeJobId?: string; isGenerating?: boolean }) {
 interface Fake {
   row: Record<string, unknown>;
   job?: Record<string, unknown>;
+  itemBytes?: number;
 }
 
 function stubServer(fake: Fake, grant: unknown = GRANT) {
@@ -51,7 +52,13 @@ function stubServer(fake: Fake, grant: unknown = GRANT) {
           return json(fake.row);
         case "update_draft":
           fake.row = { ...fake.row, sections: body.sections, section_order: body.section_order ?? fake.row.section_order };
-          return json({ ...fake.row, sectionOrder: fake.row.section_order, rev: 2 });
+          return json({
+            ...fake.row,
+            sectionOrder: fake.row.section_order,
+            rev: 2,
+            itemBytes: fake.itemBytes ?? 2000,
+            itemLimitBytes: 409600,
+          });
         case "list_draft_versions":
           return json({ versions: [] });
         default:
@@ -143,5 +150,22 @@ describe("SectionsEditor sections", () => {
       sections: { "statement-of-need": "Old text" },
       section_order: ORDER,
     });
+  });
+});
+
+describe("SectionsEditor size", () => {
+  it("warns once a save brings the application close to its storage limit", async () => {
+    const fake: Fake = {
+      row: { session_id: "s1", status: "editing_sections", sections: { budget: "x" }, section_order: ORDER, rev: 1 },
+      itemBytes: 320_000,
+    };
+    stubServer(fake);
+    const { user } = renderApp(<Editor />);
+
+    const editor = await screen.findByRole("textbox", { name: "Statement of Need" });
+    expect(screen.queryByText(/close to its size limit/)).not.toBeInTheDocument();
+    await user.type(editor, "More");
+
+    expect(await screen.findByText(/This application is close to its size limit/)).toBeInTheDocument();
   });
 });
