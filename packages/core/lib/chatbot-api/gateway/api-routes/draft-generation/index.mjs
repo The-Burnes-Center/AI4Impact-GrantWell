@@ -55,6 +55,8 @@ const APPLICATIONS_PER_DAY = Number(process.env.APPLICATIONS_PER_DAY) || 10;
 
 const CAP_EXEMPT_ROLES = ["Admin", "PlatformAdmin", "Developer"];
 
+const MAX_INPUT_CHARS = 10000;
+
 /** Pinned by LOG_MARKERS.applicationCapReached. */
 const APPLICATION_CAP_MARKER = "Daily application limit reached";
 
@@ -135,6 +137,19 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
   err.userState = callerScope.state || null;
   err.nofoState = nofoState || null;
   throw err;
+}
+
+/** The plain message for the first field over MAX_INPUT_CHARS, or null. */
+function inputTooLongMessage(additionalInfo, questionnaire, questionnaireAnswers) {
+  if (additionalInfo.length > MAX_INPUT_CHARS) return "Additional information can be up to 10,000 characters.";
+  const answers = [
+    ...questionnaireAnswers.map((a) => a.answer),
+    ...(questionnaire && typeof questionnaire === "object" ? Object.values(questionnaire) : []),
+  ];
+  if (answers.some((a) => typeof a === "string" && a.length > MAX_INPUT_CHARS)) {
+    return "Each answer can be up to 10,000 characters.";
+  }
+  return null;
 }
 
 /** Keeps only {question, answer} pairs of strings with a non-empty answer. */
@@ -219,6 +234,11 @@ export const handler = async (event) => {
         headers,
         body: JSON.stringify({ error: 'Query, documentIdentifier, and sessionId are required' })
       };
+    }
+
+    const tooLong = inputTooLongMessage(additionalInfo, questionnaire, questionnaireAnswers);
+    if (tooLong) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: "INPUT_TOO_LONG", message: tooLong }) };
     }
 
     // Generate a unique job ID for this draft generation

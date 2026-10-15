@@ -107,6 +107,12 @@ export function sweepLegacyDraftCache(): void {
   }
 }
 
+/** Server-enforced limit for additional information and each questionnaire answer. */
+export const MAX_INPUT_CHARS = 10000;
+
+export const characterCount = (text: string): string =>
+  `${text.length.toLocaleString("en-US")}/${MAX_INPUT_CHARS.toLocaleString("en-US")} characters`;
+
 /**
  * Pairs each saved `question_${id}` answer with its question's text, in question order.
  * Answers whose question is no longer listed are kept with an empty question.

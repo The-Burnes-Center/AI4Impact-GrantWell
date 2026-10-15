@@ -9,7 +9,7 @@ import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import AutoSaveIndicator, { type SaveStatus } from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import { colors, typography } from "../../components/ui/styles";
-import { readDraftCache } from "../../common/helpers/document-editor-utils";
+import { characterCount, MAX_INPUT_CHARS, readDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DocumentData } from "../../common/types/document";
 
 interface QuickQuestionnaireProps {
@@ -236,6 +236,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                 name={`question_${questionItem.id}`}
                 value={formData[`question_${questionItem.id}`] || ""}
                 onChange={handleInputChange}
+                maxLength={MAX_INPUT_CHARS}
                 aria-describedby={`question_${questionItem.id}_help`}
                 style={{
                   width: "100%",
@@ -261,6 +262,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                 }}
               >
                 {questionItem.helpText || "Provide a detailed answer. You can edit this later in the Section Editor."}
+                {` (${characterCount(formData[`question_${questionItem.id}`] || "")})`}
               </span>
             </div>
           ))}

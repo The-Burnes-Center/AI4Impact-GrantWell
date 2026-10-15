@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { json, stubFetch } from "../../test/fetch-routes";
 import { testConfig } from "../../test/render";
-import { DraftsClient } from "./drafts-client";
+import { DraftsClient, InputTooLongError } from "./drafts-client";
 
 const DOCX = "POST /generate-docx";
 const PDF = "POST /generate-pdf";
@@ -48,5 +48,18 @@ describe("DraftsClient.startDraftGeneration", () => {
       additionalInfo: "We partner with the council on aging.",
       sessionId: "s1",
     });
+  });
+
+  it("carries the API's message when additional information or an answer is too long", async () => {
+    const message = "Additional information can be up to 10,000 characters.";
+    stubFetch({ [START]: json({ error: "INPUT_TOO_LONG", message }, 400) });
+    const started = new DraftsClient(testConfig).startDraftGeneration({
+      query: "q",
+      documentIdentifier: "Grant A",
+      additionalInfo: "x".repeat(10001),
+      sessionId: "s1",
+    });
+    await expect(started).rejects.toBeInstanceOf(InputTooLongError);
+    await expect(started).rejects.toThrow(message);
   });
 });
