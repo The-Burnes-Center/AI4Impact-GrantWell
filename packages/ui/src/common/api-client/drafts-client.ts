@@ -2,6 +2,7 @@ import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 import type { ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../types/document";
 import { apiFetch } from "../session-ended";
+import { dailyLimitError } from "./daily-limit";
 
 // Unified status that represents both the step and state in the grant writing flow
 export type DraftStatus = 
@@ -550,6 +551,8 @@ export class DraftsClient {
 
     if (response.status !== 200) {
       const errorData = await response.json();
+      const limitError = dailyLimitError(response.status, errorData);
+      if (limitError) throw limitError;
       throw new Error(errorData.error || 'Failed to start draft generation');
     }
 
@@ -602,6 +605,8 @@ export class DraftsClient {
           new CustomEvent("grantwell:access-denied", { detail: errorMessage })
         );
       }
+      const limitError = dailyLimitError(startResponse.status, errorMessage);
+      if (limitError) throw limitError;
       throw new Error(errorMessage.error || 'Failed to start draft generation');
     }
 

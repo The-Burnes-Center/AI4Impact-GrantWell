@@ -13,9 +13,11 @@ AlertFormatterFunctionServiceRoleDefaultPolicy82F9A0C9	AWS::IAM::Policy
 AlertFormatterLogGroup1BA0855B	AWS::Logs::LogGroup
 AlertTopic2720D535	AWS::SNS::Topic
 ApiServerErrorAlarm0098B6E3	AWS::CloudWatch::Alarm
+ApplicationCapReachedFilter96724097	AWS::Logs::MetricFilter
 AuthEmailNotDeliveredAlarmB0B2B392	AWS::CloudWatch::Alarm
 AutoArchiveFailingAlarm669E2069	AWS::CloudWatch::Alarm
 ChatAuthorizerErrorsAlarmEA9AB159	AWS::CloudWatch::Alarm
+ChatCapReachedFilterCDFC7D3C	AWS::Logs::MetricFilter
 ChatErrorsAlarm173D708E	AWS::CloudWatch::Alarm
 ChatRetrievalFailingAlarm48AB668A	AWS::CloudWatch::Alarm
 ChatThrottlesAlarmE66FA00D	AWS::CloudWatch::Alarm

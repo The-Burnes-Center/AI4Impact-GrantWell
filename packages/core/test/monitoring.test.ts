@@ -162,7 +162,7 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       });
     });
 
-    it("counts exactly the pinned log markers, each after its log group is ensured", () => {
+    it("counts exactly the pinned log markers, each after its log group is ensured or on a stack-owned one", () => {
       const filters = ofType("AWS::Logs::MetricFilter");
       const patterns = filters.map(([, r]) => r.Properties.FilterPattern).sort();
       const quote = (s: string) => `"${s}"`;
@@ -174,7 +174,8 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       for (const [id, filter] of filters) {
         expect(filter.Properties.MetricTransformations[0].MetricNamespace, id).toBe(prefix);
         const deps = filter.DependsOn ?? [];
-        expect(deps.some((d) => resources[d]?.Type === "Custom::AWS"), id).toBe(true);
+        const stackOwned = typeof filter.Properties.LogGroupName.Ref === "string";
+        expect(stackOwned || deps.some((d) => resources[d]?.Type === "Custom::AWS"), id).toBe(true);
       }
     });
 

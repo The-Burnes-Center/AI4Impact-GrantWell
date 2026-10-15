@@ -27,6 +27,7 @@ export class TableStack extends Stack {
   public readonly digestSuppressionTable: Table;
   public readonly nofoStateOverlayTable: Table;
   public readonly analyticsTable: Table;
+  public readonly dailyUsageTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -242,5 +243,16 @@ export class TableStack extends Stack {
     });
 
     this.analyticsTable = analyticsTable;
+
+    // Per-user daily counters behind the chat and application caps: pk is "<user>#<UTC day>".
+    const dailyUsageTable = new Table(this, 'DailyUsageTable', {
+      partitionKey: { name: 'pk', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      timeToLiveAttribute: 'ttl',
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: true },
+      deletionProtection: true,
+    });
+
+    this.dailyUsageTable = dailyUsageTable;
   }
 }

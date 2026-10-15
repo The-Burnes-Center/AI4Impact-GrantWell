@@ -9,7 +9,7 @@ import { BedrockAgentRuntimeClient, RetrieveCommand as KBRetrieveCommand } from 
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
-import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import ClaudeModel from "./claudeSonnet.mjs";
 import { getPromptText, retrievedPassages } from "./prompt.mjs";
@@ -34,6 +34,13 @@ const SUPPORTED_STATE_CODES = new Set(SUPPORTED_STATES.map((s) => s.code));
 const STATE_NAME_BY_CODE = Object.fromEntries(SUPPORTED_STATES.map((s) => [s.code, s.name]));
 
 const NOFO_STATE_FILTER_ENABLED = process.env.NOFO_STATE_FILTER_ENABLED === "true";
+
+const CHAT_MESSAGES_PER_DAY = Number(process.env.CHAT_MESSAGES_PER_DAY) || 100;
+
+const CAP_EXEMPT_ROLES = ["Admin", "PlatformAdmin", "Developer"];
+
+/** Pinned by LOG_MARKERS.chatCapReached. */
+const CHAT_CAP_MARKER = "Daily chat message limit reached";
 
 const MAX_MODEL_CALLS = 5;
 
@@ -361,6 +368,20 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       return;
     }
 
+    if (!userRoles.some((r) => CAP_EXEMPT_ROLES.includes(r)) && !(await takeDailyChatMessage(userId))) {
+      console.warn(`${CHAT_CAP_MARKER} for ${userId}`);
+      try {
+        await wsConnectionClient.send(new PostToConnectionCommand({
+          ConnectionId: id,
+          Data: `<!LIMIT!>You've reached today's limit of ${CHAT_MESSAGES_PER_DAY} chat messages. You can chat again tomorrow.`,
+        }));
+        await wsConnectionClient.send(new DeleteConnectionCommand({ ConnectionId: id }));
+      } catch (e) {
+        console.warn("Failed to send the daily limit message:", e.message);
+      }
+      return;
+    }
+
     const knowledgeBase = new BedrockAgentRuntimeClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
     if (!process.env.KB_ID) {
@@ -599,6 +620,39 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     await wsConnectionClient.send(command);
   }
 };
+
+/**
+ * Counts one message against the user's cap for the current UTC day. False once the cap is
+ * reached; the condition makes concurrent messages unable to pass it. Fails open on any other error.
+ */
+async function takeDailyChatMessage(userId) {
+  const tableName = process.env.DAILY_USAGE_TABLE_NAME;
+  if (!tableName) return true;
+  const now = new Date();
+  const day = now.toISOString().slice(0, 10);
+  const expires = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 2) / 1000);
+  try {
+    await dynamoClient.send(
+      new UpdateItemCommand({
+        TableName: tableName,
+        Key: { pk: { S: `${userId}#${day}` } },
+        UpdateExpression: "ADD #count :one SET #ttl = :ttl",
+        ConditionExpression: "attribute_not_exists(#count) OR #count < :cap",
+        ExpressionAttributeNames: { "#count": "chat_messages", "#ttl": "ttl" },
+        ExpressionAttributeValues: {
+          ":one": { N: "1" },
+          ":cap": { N: String(CHAT_MESSAGES_PER_DAY) },
+          ":ttl": { N: String(expires) },
+        },
+      })
+    );
+    return true;
+  } catch (err) {
+    if (err.name === "ConditionalCheckFailedException") return false;
+    console.warn(`Could not count the chat message for ${userId}:`, err.message);
+    return true;
+  }
+}
 
 /**
  * Main Lambda handler function for WebSocket events.
