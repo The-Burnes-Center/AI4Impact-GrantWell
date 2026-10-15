@@ -145,6 +145,8 @@ const styles = {
 const RESPONSE_WARN_MS = 40000;
 const RESPONSE_EXTEND_MS = 20000;
 
+const LIMIT_SENTINEL = "<!LIMIT!>";
+
 export interface ChatInputPanelProps {
   running: boolean;
   setRunning: Dispatch<SetStateAction<boolean>>;
@@ -561,6 +563,22 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           ws.close();
           return;
         }
+        // The daily chat limit: the API's message stands in for the reply.
+        if (typeof data.data === "string" && data.data.startsWith(LIMIT_SENTINEL)) {
+          messageHistoryRef.current = [
+            ...messageHistoryRef.current.slice(0, -1),
+            {
+              type: ChatBotMessageType.AI,
+              content: data.data.slice(LIMIT_SENTINEL.length),
+              metadata: { limitReached: true },
+            },
+          ];
+          props.setMessageHistory(messageHistoryRef.current);
+          props.setRunning(false);
+          ws.close();
+          return;
+        }
+
         /**This is a custom tag from the API that denotes that an error occured
          * and the next chunk will be an error message. */
         if (data.data.includes("<!ERROR!>:")) {

@@ -6,11 +6,12 @@
 
 import { Construct } from "constructs";
 import { Duration, aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
+import type { Throttle } from "../../config/instance-config";
 
 export class RestBackendAPI extends Construct {
   public readonly restAPI: apigwv2.HttpApi;
 
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: { throttle: Throttle }) {
     super(scope, id);
 
     // Create an HTTP API with CORS configuration
@@ -30,6 +31,12 @@ export class RestBackendAPI extends Construct {
         maxAge: Duration.days(10),
       },
     });
+
+    // HttpApi takes no throttle for the stage it creates itself.
+    (httpApi.defaultStage!.node.defaultChild as apigwv2.CfnStage).defaultRouteSettings = {
+      throttlingRateLimit: props.throttle.rateLimit,
+      throttlingBurstLimit: props.throttle.burstLimit,
+    };
 
     // Assign the created HTTP API to the restAPI property
     this.restAPI = httpApi;

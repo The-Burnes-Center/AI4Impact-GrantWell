@@ -6,12 +6,13 @@
 
 import { aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import type { Throttle } from "../../config/instance-config";
 
 export class WebsocketBackendAPI extends Construct {
   public readonly wsAPI: apigwv2.WebSocketApi;
   public readonly wsAPIStage: apigwv2.WebSocketStage;
 
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: { throttle: Throttle }) {
     super(scope, id);
 
     // Create the WebSocket API
@@ -22,6 +23,7 @@ export class WebsocketBackendAPI extends Construct {
       webSocketApi,
       stageName: 'prod',
       autoDeploy: true,
+      throttle: props.throttle,
     });
 
     // Assign the created WebSocket API and stage to the class properties

@@ -73,6 +73,7 @@ export class GrantWellStack extends cdk.Stack {
       httpApi: chatbotAPI.httpAPI.restAPI,
       distribution: userInterface.distribution,
       chatFunction: fns.chatFunction,
+      draftGeneratorApiLogGroup: chatbotAPI.draftGeneratorAPILogGroup,
       websocketAuthorizerFunction: authentication.lambdaAuthorizer,
       signupTriggerFunction: authentication.signupTriggerFunction,
       createMetadataFunction: fns.createMetadataFunction,

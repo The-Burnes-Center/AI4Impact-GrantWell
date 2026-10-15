@@ -97,6 +97,8 @@ interface InstanceConfigBase {
   seo?: { indexable: boolean };
   /** https URL the in-app feedback form is forwarded to; unset, feedback is only logged. */
   feedbackFormUrl?: string;
+  /** Abuse and cost limits; every key is optional, `limits(config)` fills in the defaults. */
+  limits?: Partial<Limits>;
   /** Dev only. These accounts may sign in past Turnstile with the token in SSM at `e2eBypassParameter(config)`. */
   e2e?: { testEmails: string[] };
   /** Extra tags for every resource except the vector collection. Project, Instance and Stage come from core. */
@@ -109,6 +111,37 @@ export interface SesEmail {
   sender: string;
   /** False when another deployment in the same account and region already owns the identity. */
   manageSenderIdentity: boolean;
+}
+
+/** Stage-wide API Gateway throttling: shared by every caller, not per user. */
+export interface Throttle {
+  /** Steady requests per second. */
+  rateLimit: number;
+  /** Requests allowed in a burst above the steady rate. */
+  burstLimit: number;
+}
+
+export interface Limits {
+  /** Chat messages per user per UTC day. Admins are exempt. */
+  chatMessagesPerDay: number;
+  /** Generated applications per user per UTC day. Admins are exempt. */
+  applicationsPerDay: number;
+  /** Reserved concurrency of the chat Lambda: its ceiling, and taken from the account's shared pool. */
+  chatConcurrency: number;
+  httpApiThrottle: Throttle;
+  websocketThrottle: Throttle;
+}
+
+export const DEFAULT_LIMITS: Limits = {
+  chatMessagesPerDay: 100,
+  applicationsPerDay: 10,
+  chatConcurrency: 25,
+  httpApiThrottle: { rateLimit: 200, burstLimit: 400 },
+  websocketThrottle: { rateLimit: 50, burstLimit: 100 },
+};
+
+export function limits(config: InstanceConfig): Limits {
+  return { ...DEFAULT_LIMITS, ...config.limits };
 }
 
 export function turnstileEnabled(config: InstanceConfig): boolean {
@@ -169,6 +202,7 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (config.auth.turnstile !== undefined && typeof config.auth.turnstile !== "boolean") {
     problems.push("auth.turnstile must be true or false");
   }
+  problems.push(...limitProblems(config.limits));
   if (config.e2e) {
     if (!turnstileEnabled(config)) problems.push("e2e only bypasses Turnstile; remove it when auth.turnstile is false");
     if (config.stage === "prod") problems.push("e2e must not be set on a prod deployment");
@@ -179,6 +213,27 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (problems.length) {
     throw new Error(`Invalid instance config "${config.id}": ${problems.join("; ")}`);
   }
+}
+
+function limitProblems(given: Partial<Limits> | undefined): string[] {
+  if (given === undefined) return [];
+  if (typeof given !== "object" || given === null) return ["limits must be an object"];
+  const problems: string[] = [];
+  const isPositiveInt = (v: unknown) => Number.isInteger(v) && (v as number) > 0;
+  const known = Object.keys(DEFAULT_LIMITS);
+  const unknown = Object.keys(given).filter((k) => !known.includes(k));
+  if (unknown.length) problems.push(`limits has unknown keys: ${unknown.join(", ")}`);
+  for (const key of ["chatMessagesPerDay", "applicationsPerDay", "chatConcurrency"] as const) {
+    if (given[key] !== undefined && !isPositiveInt(given[key])) problems.push(`limits.${key} must be a positive whole number`);
+  }
+  for (const key of ["httpApiThrottle", "websocketThrottle"] as const) {
+    const t = given[key];
+    if (t === undefined) continue;
+    if (typeof t !== "object" || t === null || !(typeof t.rateLimit === "number" && t.rateLimit > 0) || !isPositiveInt(t.burstLimit)) {
+      problems.push(`limits.${key} must be { rateLimit: a number above 0, burstLimit: a positive whole number }`);
+    }
+  }
+  return problems;
 }
 
 /** Reserved (RFC 2606), so no real person can hold an e2e account. The trigger Lambda re-checks it. */

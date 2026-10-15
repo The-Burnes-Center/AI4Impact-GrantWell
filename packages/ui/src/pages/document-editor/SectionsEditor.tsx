@@ -10,6 +10,7 @@ import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { readDraftCache, writeDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DraftJobStatus, DraftVersionMeta } from "../../common/api-client/drafts-client";
 import type { useDraftSave } from "../../hooks/use-draft-save";
+import { DailyLimitError } from "../../common/api-client/daily-limit";
 import "../../styles/document-editor.css";
 
 interface SectionEditorProps {
@@ -301,6 +302,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
   const handleRetryFailedSections = useCallback(async () => {
     if (!selectedNofo || failedSections.length === 0) return;
+    const retrying = failedSections;
 
     try {
       setGenerating(true);
@@ -340,10 +342,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       }
     } catch (error) {
       console.error('Error retrying failed sections:', error);
+      if (error instanceof DailyLimitError) {
+        setFailedSections(retrying);
+        addNotification("error", error.message);
+      }
     } finally {
       setGenerating(false);
     }
-  }, [selectedNofo, failedSections, sessionId, apiClient, sectionAnswers, saveFields]);
+  }, [selectedNofo, failedSections, sessionId, apiClient, sectionAnswers, saveFields, addNotification]);
 
   const reloadAfterRestore = useCallback(async () => {
     const username = (await getCurrentUser()).username;

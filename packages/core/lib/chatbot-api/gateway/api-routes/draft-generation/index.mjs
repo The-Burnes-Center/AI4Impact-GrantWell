@@ -7,7 +7,7 @@
  */
 
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
-import { DynamoDBClient, PutItemCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, PutItemCommand, GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { randomUUID } from "crypto";
 
@@ -50,6 +50,46 @@ const SUPPORTED_STATES = (() => {
 })();
 const SUPPORTED_STATE_CODES = new Set(SUPPORTED_STATES.map((s) => s.code));
 const STATE_NAMES = Object.fromEntries(SUPPORTED_STATES.map((s) => [s.code, s.name]));
+
+const APPLICATIONS_PER_DAY = Number(process.env.APPLICATIONS_PER_DAY) || 10;
+
+const CAP_EXEMPT_ROLES = ["Admin", "PlatformAdmin", "Developer"];
+
+/** Pinned by LOG_MARKERS.applicationCapReached. */
+const APPLICATION_CAP_MARKER = "Daily application limit reached";
+
+/**
+ * Counts one generated application against the user's cap for the current UTC day. False once the
+ * cap is reached; the condition makes concurrent starts unable to pass it. Fails open on any other error.
+ */
+async function takeDailyApplication(userId) {
+  const tableName = process.env.DAILY_USAGE_TABLE_NAME;
+  if (!tableName) return true;
+  const now = new Date();
+  const day = now.toISOString().slice(0, 10);
+  const expires = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 2) / 1000);
+  try {
+    await dynamoClient.send(
+      new UpdateItemCommand({
+        TableName: tableName,
+        Key: { pk: { S: `${userId}#${day}` } },
+        UpdateExpression: "ADD #count :one SET #ttl = :ttl",
+        ConditionExpression: "attribute_not_exists(#count) OR #count < :cap",
+        ExpressionAttributeNames: { "#count": "applications", "#ttl": "ttl" },
+        ExpressionAttributeValues: {
+          ":one": { N: "1" },
+          ":cap": { N: String(APPLICATIONS_PER_DAY) },
+          ":ttl": { N: String(expires) },
+        },
+      })
+    );
+    return true;
+  } catch (err) {
+    if (err.name === "ConditionalCheckFailedException") return false;
+    console.warn(`Could not count the application for ${userId}:`, err.message);
+    return true;
+  }
+}
 
 function parseRoles(raw) {
   if (Array.isArray(raw)) return raw.filter((r) => typeof r === "string");
@@ -210,6 +250,19 @@ export const handler = async (event) => {
     }
 
     const userState = callerScope.state || "";
+
+    const roles = parseRoles(event.requestContext?.authorizer?.jwt?.claims?.["custom:role"]);
+    if (!roles.some((r) => CAP_EXEMPT_ROLES.includes(r)) && !(await takeDailyApplication(userId))) {
+      console.warn(`${APPLICATION_CAP_MARKER} for ${userId}`);
+      return {
+        statusCode: 429,
+        headers,
+        body: JSON.stringify({
+          error: "DAILY_LIMIT_REACHED",
+          message: `You've reached today's limit of ${APPLICATIONS_PER_DAY} generated applications. You can generate more tomorrow.`,
+        }),
+      };
+    }
 
     // Store initial job status in DynamoDB
     const tableName = process.env.DRAFT_GENERATION_JOBS_TABLE_NAME;

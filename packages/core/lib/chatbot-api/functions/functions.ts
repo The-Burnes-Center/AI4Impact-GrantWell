@@ -8,6 +8,7 @@ import { Construct } from "constructs";
 import * as path from "path";
 import {
   InstanceConfig,
+  limits,
   processingQueueEmailEnabled,
   queueEmailRecipientsParameter,
   sesEmail,
@@ -73,6 +74,7 @@ interface LambdaFunctionStackProps {
   readonly digestSuppressionTable: Table;
   readonly nofoStateOverlayTable: Table;
   readonly analyticsTable: Table;
+  readonly dailyUsageTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -380,10 +382,14 @@ export class LambdaFunctionStack extends cdk.Stack {
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           // Flip to "true" once existing NOFOs are sidecar-tagged.
           NOFO_STATE_FILTER_ENABLED: "false",
+          DAILY_USAGE_TABLE_NAME: props.dailyUsageTable.tableName,
+          CHAT_MESSAGES_PER_DAY: String(limits(config).chatMessagesPerDay),
         },
         timeout: cdk.Duration.seconds(300),
+        reservedConcurrentExecutions: limits(config).chatConcurrency,
       }
     );
+    props.dailyUsageTable.grant(websocketAPIFunction, "dynamodb:UpdateItem");
 
     // WebSocket messages lack JWT claims, so resolve state via AdminGetUser per message.
     websocketAPIFunction.addToRolePolicy(

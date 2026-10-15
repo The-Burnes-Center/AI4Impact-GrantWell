@@ -26,7 +26,7 @@ import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
-import { InstanceConfig, singleState, supportedStatesEnv } from "../config/instance-config";
+import { InstanceConfig, limits, singleState, supportedStatesEnv } from "../config/instance-config";
 
 // See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
 // still resolves to platform-wide. Flip both to "false" only after migrating every pool.
@@ -42,6 +42,7 @@ export class ChatBotApi extends Construct {
   public readonly httpAPI: RestBackendAPI;
   public readonly wsAPI: WebsocketBackendAPI;
   public readonly lambdaFunctions: LambdaFunctionStack;
+  public readonly draftGeneratorAPILogGroup: logs.LogGroup;
 
   constructor(scope: Construct, id: string, props: ChatbotAPIProps) {
     super(scope, id);
@@ -57,11 +58,13 @@ export class ChatBotApi extends Construct {
       userDocumentsBucket: buckets.userDocumentsBucket,
     });
 
-    const restBackend = new RestBackendAPI(this, "RestBackend");
+    const instanceLimits = limits(props.config);
+    const restBackend = new RestBackendAPI(this, "RestBackend", { throttle: instanceLimits.httpApiThrottle });
     this.httpAPI = restBackend;
     const websocketBackend = new WebsocketBackendAPI(
       this,
-      "WebsocketBackend"
+      "WebsocketBackend",
+      { throttle: instanceLimits.websocketThrottle }
     );
     this.wsAPI = websocketBackend;
 
@@ -80,6 +83,7 @@ export class ChatBotApi extends Construct {
       digestSuppressionTable: tables.digestSuppressionTable,
       nofoStateOverlayTable: tables.nofoStateOverlayTable,
       analyticsTable: tables.analyticsTable,
+      dailyUsageTable: tables.dailyUsageTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
@@ -364,6 +368,10 @@ export class ChatBotApi extends Construct {
 
     // Add REST API route for draft generation
     // Create a dedicated API function that starts jobs asynchronously
+    const draftGeneratorAPILogGroup = new logs.LogGroup(this, "DraftGeneratorAPIFunctionLogGroup", {
+      retention: logs.RetentionDays.THREE_MONTHS,
+    });
+    this.draftGeneratorAPILogGroup = draftGeneratorAPILogGroup;
     const draftGeneratorAPIFunction = new lambda.Function(this, "DraftGeneratorAPIFunction", {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(
@@ -376,11 +384,11 @@ export class ChatBotApi extends Construct {
         NOFO_METADATA_TABLE_NAME: tables.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        DAILY_USAGE_TABLE_NAME: tables.dailyUsageTable.tableName,
+        APPLICATIONS_PER_DAY: String(instanceLimits.applicationsPerDay),
       },
       timeout: cdk.Duration.seconds(30), // Max allowed by API Gateway HTTP API
-      logGroup: new logs.LogGroup(this, "DraftGeneratorAPIFunctionLogGroup", {
-        retention: logs.RetentionDays.THREE_MONTHS,
-      }),
+      logGroup: draftGeneratorAPILogGroup,
     });
 
     // Grant permission to start Step Functions execution
@@ -391,6 +399,7 @@ export class ChatBotApi extends Construct {
 
     // Read access to NOFOMetadataTable for the per-NOFO state gate.
     tables.nofoMetadataTable.grantReadData(draftGeneratorAPIFunction);
+    tables.dailyUsageTable.grant(draftGeneratorAPIFunction, "dynamodb:UpdateItem");
     
     const draftGeneratorAPIIntegration = new HttpLambdaIntegration(
       "DraftGeneratorAPIIntegration",

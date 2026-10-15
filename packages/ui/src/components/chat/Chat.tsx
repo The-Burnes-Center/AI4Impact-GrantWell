@@ -294,6 +294,8 @@ export default function Chat(props: {
       setReplyStatus("Response stopped");
     } else if (last.metadata?.timedOut) {
       setReplyStatus("Response timed out. Send your message again to retry.");
+    } else if (last.metadata?.limitReached) {
+      setReplyStatus(last.content);
     } else {
       setReplyStatus(last.content ? "Assistant replied" : "No response received");
     }
