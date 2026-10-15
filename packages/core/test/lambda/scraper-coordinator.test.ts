@@ -99,6 +99,64 @@ describe("grants.gov scraper coordinator", () => {
     ]);
   });
 
+  it("re-queues a grants.gov grant whose row was written but whose file never landed", async () => {
+    vi.stubGlobal(
+      "fetch",
+      grantsApi({
+        data: [
+          { opportunity_id: "n1", opportunity_title: "Upload Failed Grant", updated_at: "2026-10-01" },
+          { opportunity_id: "r2", opportunity_title: "Renamed Upload Failed Grant", updated_at: "2026-10-01" },
+        ],
+      })
+    );
+    ddb.on(BatchGetItemCommand).resolves({
+      Responses: { nofos: [marshall({ nofo_name: "Upload Failed Grant", opportunity_id: "n1", status: "active" })] },
+    });
+    ddb.on(QueryCommand).callsFake((input) =>
+      input.ExpressionAttributeValues[":id"].S === "r2"
+        ? { Items: [marshall({ nofo_name: "Old Upload Failed Grant", opportunity_id: "r2", status: "active" })] }
+        : { Items: [] }
+    );
+
+    const res = await handler({ source: "aws.events" });
+
+    expect(JSON.parse(res.body)).toMatchObject({ newQueued: 2, updatedQueued: 0, skipped: 0 });
+    const queued = sqs.commandCalls(SendMessageBatchCommand).flatMap((c) => c.args[0].input.Entries!.map((e) => JSON.parse(e.MessageBody!)));
+    expect(queued).toEqual([
+      { opportunityId: "n1", opportunityTitle: "Upload Failed Grant", isUpdate: false, apiUpdatedAt: "2026-10-01" },
+      { opportunityId: "r2", opportunityTitle: "Renamed Upload Failed Grant", isUpdate: false, apiUpdatedAt: "2026-10-01", nofoName: "Old Upload Failed Grant" },
+    ]);
+  });
+
+  it("leaves rows with no source date alone unless they are this opportunity's live scraper row", async () => {
+    vi.stubGlobal(
+      "fetch",
+      grantsApi({
+        data: [
+          { opportunity_id: "a1", opportunity_title: "Archived Stub", updated_at: "2026-10-01" },
+          { opportunity_id: "m2", opportunity_title: "Manual State Grant", updated_at: "2026-10-01" },
+          { opportunity_id: "o3", opportunity_title: "Other Opportunity Grant", updated_at: "2026-10-01" },
+          { opportunity_id: "d4", opportunity_title: "Undated Grant" },
+        ],
+      })
+    );
+    ddb.on(BatchGetItemCommand).resolves({
+      Responses: {
+        nofos: [
+          marshall({ nofo_name: "Archived Stub", opportunity_id: "a1", status: "archived" }),
+          marshall({ nofo_name: "Manual State Grant", scope: "state", state: "MA", status: "active" }),
+          marshall({ nofo_name: "Other Opportunity Grant", opportunity_id: "x9", status: "active" }),
+          marshall({ nofo_name: "Undated Grant", opportunity_id: "d4", status: "active", source_updated_at: null }),
+        ],
+      },
+    });
+
+    const res = await handler({ source: "aws.events" });
+
+    expect(JSON.parse(res.body)).toMatchObject({ newQueued: 0, updatedQueued: 0, skipped: 4 });
+    expect(sqs.commandCalls(SendMessageBatchCommand)).toHaveLength(0);
+  });
+
   it("treats a failed opportunity_id lookup as new, so a missing index doesn't stop the scrape", async () => {
     vi.stubGlobal("fetch", grantsApi({ data: [{ opportunity_id: "z9", opportunity_title: "Grant", updated_at: "2026-10-01" }] }));
     ddb.on(BatchGetItemCommand).resolves({ Responses: { nofos: [] } });
