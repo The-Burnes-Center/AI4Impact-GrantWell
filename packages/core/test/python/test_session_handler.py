@@ -21,6 +21,23 @@ def put(table, user_id, session_id, title="Chat", stamp="2026-10-01 10:00:00", d
     })
 
 
+def append_body(session_id, question, answer="a", title=None):
+    body = {"operation": "update_session", "user_id": "user-1", "session_id": session_id,
+            "new_chat_entry": [{"user": question, "chatbot": answer, "metadata": "[]"}], "document_identifier": "Grant A"}
+    if title:
+        body["title"] = title
+    return body
+
+
+def header(sessions, session_id):
+    return sessions.test_table.get_item(Key={"user_id": "user-1", "session_id": session_id})["Item"]
+
+
+def history(sessions, session_id):
+    res = sessions.lambda_handler(http_event({"operation": "get_session", "session_id": session_id}), None)
+    return json.loads(res["body"])["chat_history"]
+
+
 def test_a_spoofed_user_id_in_the_body_is_ignored(sessions):
     put(sessions.test_table, "victim", "s1", history=[{"user": "secret question"}])
 
@@ -51,18 +68,96 @@ def test_the_chat_lambda_saves_by_the_user_id_it_already_authenticated(sessions)
 
     assert sessions.lambda_handler({"body": json.dumps(body)}, None)["statusCode"] == 200
 
-    item = sessions.test_table.get_item(Key={"user_id": "user-1", "session_id": "s9"})["Item"]
-    assert (item["title"], item["chat_history"]) == ("Chat about Grant A", [entry])
+    assert header(sessions, "s9")["title"] == "Chat about Grant A"
+    assert history(sessions, "s9") == entry
 
 
 def test_update_appends_to_the_history(sessions):
     put(sessions.test_table, "user-1", "s1", history=[{"user": "q1", "chatbot": "a1"}])
-    body = {"operation": "update_session", "user_id": "user-1", "session_id": "s1", "new_chat_entry": [{"user": "q2", "chatbot": "a2"}]}
+
+    sessions.lambda_handler({"body": json.dumps(append_body("s1", "q2"))}, None)
+
+    assert [e["user"] for e in history(sessions, "s1")] == ["q1", "q2"]
+
+
+def test_each_turn_is_its_own_row_so_a_chat_can_outgrow_one_item(sessions):
+    answer = "x" * 60_000
+    for i in range(20):
+        body = append_body("s1", f"q{i}", answer=answer, title="Chat about Grant A")
+        assert sessions.lambda_handler({"body": json.dumps(body)}, None)["statusCode"] == 200
+
+    turns = history(sessions, "s1")
+    assert [e["user"] for e in turns] == [f"q{i}" for i in range(20)]
+    assert all(e["chatbot"] == answer for e in turns)
+    assert "chat_history" not in header(sessions, "s1")
+
+
+def test_the_first_message_creates_a_listed_chat_and_turns_stay_out_of_the_list(sessions):
+    sessions.lambda_handler({"body": json.dumps(append_body("s1", "q1", title=" Chat about Grant A "))}, None)
+    sessions.lambda_handler({"body": json.dumps(append_body("s1", "q2", title="Chat about Grant A"))}, None)
+
+    listed = json.loads(sessions.lambda_handler(http_event({"operation": "list_all_sessions_by_user_id"}), None)["body"])
+
+    assert [(s["session_id"], s["title"], s["document_identifier"]) for s in listed] == [("s1", "Chat about Grant A", "Grant A")]
+
+
+def test_appending_keeps_an_existing_title(sessions):
+    put(sessions.test_table, "user-1", "s1", title="Chat about Grant B", history=[])
+
+    sessions.lambda_handler({"body": json.dumps(append_body("s1", "q1", title="Chat about Grant A"))}, None)
+
+    assert header(sessions, "s1")["title"] == "Chat about Grant B"
+
+
+def test_an_old_single_row_chat_converts_when_opened(sessions):
+    put(sessions.test_table, "user-1", "s1", history=[[{"user": "q1", "chatbot": "a1"}], {"user": "q2", "chatbot": "a2"}])
+
+    res = sessions.lambda_handler(http_event({"operation": "get_session", "session_id": "s1"}), None)
+
+    assert [e["user"] for e in json.loads(res["body"])["chat_history"]] == ["q1", "q2"]
+    row = header(sessions, "s1")
+    assert "chat_history" not in row and row["turn_count"] == 2
+    assert [e["user"] for e in history(sessions, "s1")] == ["q1", "q2"]
+    assert "turn_count" not in json.loads(res["body"])
+
+
+def test_an_old_single_row_chat_converts_when_written(sessions):
+    put(sessions.test_table, "user-1", "s1", history=[{"user": "q1", "chatbot": "a1"}])
+
+    sessions.lambda_handler({"body": json.dumps(append_body("s1", "q2", title="Chat about Grant A"))}, None)
+
+    assert "chat_history" not in header(sessions, "s1")
+    assert [e["user"] for e in history(sessions, "s1")] == ["q1", "q2"]
+
+
+def test_creating_a_session_again_replaces_its_turns(sessions):
+    for i in range(3):
+        sessions.lambda_handler({"body": json.dumps(append_body("s1", f"old{i}", title="Chat"))}, None)
+    body = {"operation": "add_session", "user_id": "user-1", "session_id": "s1", "title": "Chat",
+            "chat_history": [{"user": "", "chatbot": "Hello!", "metadata": ""}]}
 
     sessions.lambda_handler({"body": json.dumps(body)}, None)
 
-    item = sessions.test_table.get_item(Key={"user_id": "user-1", "session_id": "s1"})["Item"]
-    assert [e["user"] for e in item["chat_history"]] == ["q1", "q2"]
+    assert history(sessions, "s1") == [{"user": "", "chatbot": "Hello!", "metadata": ""}]
+
+
+def test_deleting_a_chat_removes_its_turns(sessions):
+    for i in range(3):
+        sessions.lambda_handler({"body": json.dumps(append_body("s1", f"q{i}", title="Chat"))}, None)
+    sessions.lambda_handler({"body": json.dumps(append_body("s2", "keep", title="Chat"))}, None)
+
+    res = sessions.lambda_handler(http_event({"operation": "delete_session", "session_id": "s1"}), None)
+
+    assert res["deleted"] is True
+    assert sorted(i["session_id"] for i in sessions.test_table.scan()["Items"]) == ["s2", "s2#turn#000001"]
+
+
+def test_a_session_id_with_the_turn_separator_is_rejected(sessions):
+    sessions.lambda_handler({"body": json.dumps(append_body("s1", "q1", title="Chat"))}, None)
+
+    res = sessions.lambda_handler(http_event({"operation": "get_session", "session_id": "s1#turn#000001"}), None)
+
+    assert res["statusCode"] == 400
 
 
 def test_listing_returns_only_the_callers_15_newest_sessions(sessions):

@@ -303,3 +303,39 @@ describe("websocket-chat refusals", () => {
     expect(sessionSaves()).toEqual([]);
   });
 });
+
+describe("websocket-chat history", () => {
+  it("appends the turn in one call, without reading the whole chat first", async () => {
+    aws.bedrock.mockImplementation(async () => answer("You qualify."));
+    aws.lambda.mockImplementation(async () => ({ Payload: Buffer.from(JSON.stringify({ statusCode: 200, body: "{}" })) }));
+
+    await chat();
+
+    expect(aws.lambda.mock.calls).toEqual([
+      [
+        {
+          operation: "update_session",
+          user_id: "user-1",
+          session_id: "s1",
+          new_chat_entry: [{ user: "Am I eligible?", chatbot: "You qualify.", metadata: "[]" }],
+          title: "Chat about nofo-a",
+          document_identifier: "nofo-a",
+        },
+      ],
+    ]);
+    expect(console.error).not.toHaveBeenCalled();
+    expect(aws.posts.mock.calls.some(([d]) => String(d).startsWith("<!ERROR!>"))).toBe(false);
+  });
+
+  it("logs a turn the session handler could not save, after the user already has the answer", async () => {
+    aws.bedrock.mockImplementation(async () => answer("You qualify."));
+    aws.lambda.mockImplementation(async () => ({
+      Payload: Buffer.from(JSON.stringify({ statusCode: 500, error: "ProvisionedThroughputExceededException" })),
+    }));
+
+    await chat();
+
+    expect(console.error).toHaveBeenCalledWith("Could not save the chat turn:", "ProvisionedThroughputExceededException");
+    expect(aws.posts.mock.calls.map(([d]) => d)).toEqual(["You qualify.", "!<|EOF_STREAM|>!", "[]"]);
+  });
+});

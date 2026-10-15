@@ -65,15 +65,21 @@ export const handler = async (event) => {
   const reviewTable = process.env.REVIEW_TABLE_NAME;
   if (reviewTable) {
     try {
-      const existing = await dynamoClient.send(
-        new QueryCommand({
-          TableName: reviewTable,
-          KeyConditionExpression: "nofo_name = :name",
-          ExpressionAttributeValues: marshall({ ":name": nofoName }),
-        })
-      );
-      const pendingReviews = (existing.Items || [])
-        .map((i) => unmarshall(i))
+      const existing = [];
+      let lastKey;
+      do {
+        const page = await dynamoClient.send(
+          new QueryCommand({
+            TableName: reviewTable,
+            KeyConditionExpression: "nofo_name = :name",
+            ExpressionAttributeValues: marshall({ ":name": nofoName }),
+            ExclusiveStartKey: lastKey,
+          })
+        );
+        existing.push(...(page.Items || []).map((i) => unmarshall(i)));
+        lastKey = page.LastEvaluatedKey;
+      } while (lastKey);
+      const pendingReviews = existing
         .filter((r) => r.status === "pending_review" || r.status === "failed" || r.status === "needs_reupload");
 
       for (const review of pendingReviews) {

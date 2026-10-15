@@ -1,12 +1,24 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
-const db = vi.hoisted(() => ({ items: [] as any[], fail: false }));
+const db = vi.hoisted(() => ({
+  items: [] as any[],
+  fail: false,
+  pageSize: Infinity,
+  queries: [] as any[],
+}));
 
+// Pages each status the way DynamoDB does: `pageSize` rows, then a LastEvaluatedKey to resume from.
 vi.mock("@aws-sdk/client-dynamodb", () => ({
   DynamoDBClient: class {
-    async send() {
+    async send(cmd: any) {
       if (db.fail) throw new Error("throttled");
-      return { Items: db.items };
+      db.queries.push(cmd.input);
+      const status = cmd.input.ExpressionAttributeValues?.[":status"];
+      const rows = db.items.filter((i) => i.status === status);
+      const start = cmd.input.ExclusiveStartKey?.offset ?? 0;
+      const page = rows.slice(start, start + db.pageSize);
+      const next = start + page.length;
+      return { Items: page, ...(next < rows.length ? { LastEvaluatedKey: { offset: next } } : {}) };
     }
   },
   QueryCommand: class {
@@ -50,5 +62,23 @@ describe("grant list", () => {
     db.fail = true;
     const res = await handler(request);
     expect(res.statusCode).toBe(500);
+  });
+
+  it("reads every page of each status, not just the first 1 MB", async () => {
+    db.fail = false;
+    db.pageSize = 2;
+    db.queries = [];
+    db.items = [
+      ...Array.from({ length: 5 }, (_, i) => ({ nofo_name: `Grant ${i}`, status: "active", scope: "federal" })),
+      ...Array.from({ length: 3 }, (_, i) => ({ nofo_name: `Old ${i}`, status: "archived", scope: "federal" })),
+    ];
+
+    const res = await handler(request);
+
+    const body = JSON.parse(res.body);
+    expect(body.folders).toEqual(["Grant 0", "Grant 1", "Grant 2", "Grant 3", "Grant 4"]);
+    expect(body.nofoData.filter((n: any) => n.status === "archived")).toHaveLength(3);
+    expect(db.queries.filter((q) => q.ExclusiveStartKey)).toHaveLength(3);
+    db.pageSize = Infinity;
   });
 });

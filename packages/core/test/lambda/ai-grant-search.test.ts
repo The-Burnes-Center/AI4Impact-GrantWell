@@ -117,6 +117,27 @@ describe("AI grant search", () => {
     expect(JSON.parse(res.body).results.map((r: any) => r.name)).toEqual(["Bridge Repair Program"]);
   });
 
+  it("matches names and categories past the first page of results", async () => {
+    const page = (start: any) =>
+      start
+        ? { Items: [marshall({ nofo_name: "Bridge Repair Program", status: "active" })] }
+        : { Items: [marshall({ nofo_name: "Library Grants", status: "active" })], LastEvaluatedKey: marshall({ nofo_name: "Library Grants" }) };
+    ddb.on(ScanCommand).callsFake((input) => page(input.ExclusiveStartKey));
+    ddb.on(QueryCommand).callsFake((input) =>
+      input.ExclusiveStartKey
+        ? { Items: [marshall({ nofo_name: "Bridge Repair Program" })] }
+        : { Items: [], LastEvaluatedKey: marshall({ nofo_name: "x" }) },
+    );
+    vi.resetModules();
+    ({ handler } = await import("../../lib/chatbot-api/functions/landing-page/ai-grant-search/index.mjs"));
+
+    const res = await search({ query: "bridge repair" });
+
+    expect(JSON.parse(res.body).results.map((r: any) => r.name)).toEqual(["Bridge Repair Program"]);
+    const nameScans = ddb.commandCalls(ScanCommand).filter((c) => c.args[0].input.ProjectionExpression === "nofo_name");
+    expect(nameScans.map((c) => Boolean(c.args[0].input.ExclusiveStartKey))).toEqual([false, true]);
+  });
+
   it("looks up the Other category only for the word itself", async () => {
     const categoryLookups = () =>
       ddb.commandCalls(QueryCommand)
