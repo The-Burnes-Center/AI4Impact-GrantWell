@@ -9,6 +9,7 @@ const SONNET_MODEL = process.env.SONNET_MODEL_ID;
 const CHUNK_SIZE = 80000;
 const CHUNK_OVERLAP = 5000;
 const MAX_CONCURRENT_CHUNKS = 3;
+const NOFO_CLOSING_TAG = /<\s*\/\s*nofo_document\s*>/gi;
 
 export const handler = async (event) => {
   const { s3Bucket, rawTextKey, nofoName } = event;
@@ -51,7 +52,7 @@ export const handler = async (event) => {
 };
 
 async function extractFromText(text, nofoName) {
-  const fullPrompt = `${EXTRACTION_PROMPT}\n\n<nofo_document>\n${text}\n</nofo_document>`;
+  const fullPrompt = `${EXTRACTION_PROMPT}\n\n<nofo_document>\n${text.replace(NOFO_CLOSING_TAG, "&lt;/nofo_document&gt;")}\n</nofo_document>`;
   const parsed = await invokeStructuredOutput({
     modelId: SONNET_MODEL,
     prompt: fullPrompt,

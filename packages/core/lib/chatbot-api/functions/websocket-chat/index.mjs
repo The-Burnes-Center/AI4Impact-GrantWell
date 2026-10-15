@@ -12,7 +12,7 @@ import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/cli
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import ClaudeModel from "./claudeSonnet.mjs";
-import { getPromptText } from "./prompt.mjs";
+import { getPromptText, retrievedPassages } from "./prompt.mjs";
 
 const ENDPOINT = process.env.WEBSOCKET_API_ENDPOINT;
 const wsConnectionClient = new ApiGatewayManagementApiClient({ endpoint: ENDPOINT });
@@ -253,7 +253,7 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
         };
       }
 
-      return { content: fullContent, uris: uniqueUris };
+      return { content: retrievedPassages(fullContent), uris: uniqueUris };
     }
 
     // No user docs -- single NOFO-only query
@@ -269,7 +269,7 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
     }
 
     const uniqueUris = Array.from(new Map(nofoResult.uris.map(item => [item.uri, item])).values());
-    return { content: nofoResult.content, uris: uniqueUris };
+    return { content: retrievedPassages(nofoResult.content), uris: uniqueUris };
 
   } catch (error) {
     console.error("Caught error: could not retrieve Knowledge Base documents:", error);
@@ -301,7 +301,7 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
         }));
 
         return {
-          content: fallbackContent || noResultsMessage,
+          content: fallbackContent ? retrievedPassages(fallbackContent) : noResultsMessage,
           uris: Array.from(new Map(fallbackUris.map(item => [item.uri, item])).values())
         };
       } catch (fallbackError) {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useLocation, useNavigate, useSearchParams } from "react-router";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import ModelMarkdown from "../../components/common/ModelMarkdown";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useInert } from "../../hooks/use-inert";
@@ -251,21 +250,9 @@ const Checklists: React.FC = () => {
                   >
                     <p className="checklist-content__description">{tabContents[tabId].title}</p>
                     <div className="checklist-tabs__markdown">
-                      <ReactMarkdown
-                        className="custom-markdown"
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          a({ href, children, ...rest }) {
-                            return (
-                              <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>
-                                {children}
-                              </a>
-                            );
-                          },
-                        }}
-                      >
+                      <ModelMarkdown className="custom-markdown">
                         {tabContents[tabId].content}
-                      </ReactMarkdown>
+                      </ModelMarkdown>
 
                       {tabId === "eligibility" && (
                         <div className="checklist-info-box">
