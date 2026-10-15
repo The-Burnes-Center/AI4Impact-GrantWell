@@ -112,4 +112,5 @@ export const GRANT_CATEGORIES = [
   "Science, Technology, and Other Research and Development",
   "Transportation",
   "Affordable Care Act",
+  "Other",
 ] as const;

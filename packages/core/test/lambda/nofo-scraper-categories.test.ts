@@ -24,8 +24,9 @@ describe("mapFundingCategory", () => {
     expect(mapFundingCategory("Employment,  Labor and Training")).toBe("Employment, Labor, and Training");
   });
 
-  it("keeps the API's other code on Science, Technology, and Other Research and Development", () => {
-    expect(mapFundingCategory("other")).toBe("Science, Technology, and Other Research and Development");
+  it("files the API's other code under Other", () => {
+    expect(mapFundingCategory("other")).toBe("Other");
+    expect(mapFundingCategory("Other")).toBe("Other");
   });
 
   it("does not match fragments or longer strings", () => {
