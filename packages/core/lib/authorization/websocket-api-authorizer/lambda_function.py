@@ -1,9 +1,9 @@
 import json
 from jose import jwt, jwk
 from jose.utils import base64url_decode
-import requests
 import time
 import os
+from urllib.request import urlopen
 
 def lambda_handler(event, context):
     token = event['queryStringParameters']['Authorization']
@@ -13,8 +13,8 @@ def lambda_handler(event, context):
     keys_url = f'https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json'
 
     # Download JWKs and transform them to a key dictionary
-    response = requests.get(keys_url, timeout=(3, 5))
-    keys = response.json()['keys']
+    with urlopen(keys_url, timeout=5) as response:
+        keys = json.load(response)['keys']
     key_dict = {key['kid']: json.dumps(key) for key in keys}
 
     # Decode and validate the token

@@ -30,6 +30,7 @@ function detectRedirectStub(html) {
   if (Number(match[1]) > 2) return null;
   const bodyText = (html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '')
     .replace(/<[^>]*>/g, '')
+    .replace(/[<>]/g, '')
     .trim();
   if (bodyText.length > 0) return null;
   return { redirectTarget: match[2] };

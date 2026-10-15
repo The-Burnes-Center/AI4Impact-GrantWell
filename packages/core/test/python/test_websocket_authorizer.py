@@ -1,4 +1,5 @@
 import base64
+import io
 import json
 import time
 
@@ -47,15 +48,11 @@ def authorizer(monkeypatch, keypair):
     module = load_handler(AUTHORIZER, "websocket_authorizer")
     fetched = []
 
-    class Jwks:
-        def json(self):
-            return {"keys": [keypair[2]]}
-
-    def get(url, timeout=None):
+    def urlopen(url, timeout=None):
         fetched.append((url, timeout))
-        return Jwks()
+        return io.BytesIO(json.dumps({"keys": [keypair[2]]}).encode())
 
-    monkeypatch.setattr(module.requests, "get", get)
+    monkeypatch.setattr(module, "urlopen", urlopen)
     module.fetched = fetched
     return module
 
@@ -75,7 +72,7 @@ def test_a_valid_id_token_is_allowed_with_the_user_and_role_in_context(authorize
     assert policy["principalId"] == "user-1"
     assert policy["context"] == {"role": '["Admin"]', "userId": "user-1"}
     assert policy["policyDocument"]["Statement"] == [{"Action": "execute-api:Invoke", "Effect": "Allow", "Resource": METHOD_ARN}]
-    assert authorizer.fetched == [("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_pool/.well-known/jwks.json", (3, 5))]
+    assert authorizer.fetched == [("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_pool/.well-known/jwks.json", 5)]
 
 
 def test_an_expired_token_is_refused(authorizer, keypair, capsys):
