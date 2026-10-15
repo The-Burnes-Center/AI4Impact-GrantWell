@@ -83,9 +83,19 @@ describe("SPA routing function", () => {
     "/",
     "/login",
     "/home",
+    "/home/",
+    "/Home",
+    "/profile",
+    "/admin",
+    "/admin/dashboard",
+    "/chat/sessions",
     "/chat/0f8c2d6e-1b2a-4c3d-9e8f-7a6b5c4d3e2f",
+    "/document-editor",
+    "/document-editor/drafts",
     "/document-editor/0f8c2d6e-1b2a-4c3d-9e8f-7a6b5c4d3e2f",
     "/requirements/U.S.%20Rural%20Grants%20v2.0",
+    "/requirements/FY%202025%20Grant.pdf",
+    "/requirements/Parks%20%2F%20Recreation",
   ])("sends app route %s to /index.html", (uri) => {
     expect(routed(uri)).toBe("/index.html");
   });
@@ -94,13 +104,30 @@ describe("SPA routing function", () => {
     expect(routed(uri)).toBe("/whats-new.html");
   });
 
-  it("leaves other paths under /whats-new to the app", () => {
-    expect(routed("/whats-new/extra")).toBe("/index.html");
+  it.each([
+    "/whats-new/extra",
+    "/nope",
+    "/homepage",
+    "/chat",
+    "/chat/",
+    "/requirements",
+    "/requirements/",
+    "/requirements/a/b",
+    "/document-editor/0f8c2d6e/extra",
+    "/unsubscribe",
+    "/auth/callback",
+    "/wp-admin/setup-config",
+    "//home",
+  ])("leaves unknown path %s for the bucket to 404", (uri) => {
+    expect(routed(uri)).toBe(uri);
   });
 
   it.each([
     "/whats-new.html",
     "/robots.txt",
+    "/sitemap.xml",
+    "/llms.txt",
+    "/404.html",
     "/missing.txt",
     "/wp-login.php",
     "/.env",
@@ -110,15 +137,31 @@ describe("SPA routing function", () => {
   ])("leaves file %s alone", (uri) => {
     expect(routed(uri)).toBe(uri);
   });
+
+  it("fits CloudFront Functions' 10 KB code limit", () => {
+    expect(Buffer.byteLength(SPA_ROUTING_CODE)).toBeLessThan(10 * 1024);
+  });
+});
+
+const resources = (env: keyof typeof ENVS) =>
+  fs
+    .readdirSync(outDir(env))
+    .filter((f) => f.endsWith(".template.json"))
+    .flatMap((f) => Object.values(JSON.parse(fs.readFileSync(path.join(outDir(env), f), "utf8")).Resources ?? {}) as any[]);
+
+describe("unknown paths", () => {
+  it.each(["prod", "dev"] as const)("get /404.html with a 404 from the distribution on %s", (env) => {
+    const dists = resources(env).filter((r) => r.Type === "AWS::CloudFront::Distribution");
+    expect(dists).toHaveLength(1);
+    expect(dists[0].Properties.DistributionConfig.CustomErrorResponses).toEqual([
+      { ErrorCachingMinTTL: 0, ErrorCode: 404, ResponseCode: 404, ResponsePagePath: "/404.html" },
+    ]);
+  });
 });
 
 describe("whats-new.html upload", () => {
   const deployments = (env: keyof typeof ENVS) =>
-    fs
-      .readdirSync(outDir(env))
-      .filter((f) => f.endsWith(".template.json"))
-      .flatMap((f) => Object.values(JSON.parse(fs.readFileSync(path.join(outDir(env), f), "utf8")).Resources ?? {}) as any[])
-      .filter((r) => r.Type === "Custom::CDKBucketDeployment");
+    resources(env).filter((r) => r.Type === "Custom::CDKBucketDeployment");
 
   it.each(["prod", "dev"] as const)("ships with index.html under no-cache on %s, never under the 1-day rule", (env) => {
     const all = deployments(env);
