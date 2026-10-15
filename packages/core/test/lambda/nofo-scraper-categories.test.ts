@@ -46,7 +46,9 @@ describe("primaryFundingCategory", () => {
 
   it("keeps the first listed category otherwise", () => {
     expect(primaryFundingCategory(["education", "health"])).toBe("education");
-    expect(primaryFundingCategory(["other", "unknown_code", "health"])).toBe("unknown_code");
+    expect(primaryFundingCategory(["other", "unknown_code", "health"])).toBe("health");
+    expect(primaryFundingCategory(["unknown_code", "other"])).toBe("other");
+    expect(primaryFundingCategory(["unknown_code", "another_unknown"])).toBe("unknown_code");
     expect(primaryFundingCategory([])).toBeNull();
     expect(primaryFundingCategory(undefined)).toBeNull();
   });

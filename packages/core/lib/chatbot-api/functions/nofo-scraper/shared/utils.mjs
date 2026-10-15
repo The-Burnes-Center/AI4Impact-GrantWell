@@ -115,7 +115,10 @@ export function mapFundingCategory(apiCategory) {
  */
 export function primaryFundingCategory(apiCategories) {
   if (!Array.isArray(apiCategories) || !apiCategories.length) return null;
-  return apiCategories.find((c) => mapFundingCategory(c) !== 'Other') ?? apiCategories[0];
+  const known = apiCategories.filter((c) => mapFundingCategory(c));
+  const unknown = apiCategories.filter((c) => !mapFundingCategory(c));
+  if (known.length && unknown.length) console.warn(`Skipping unrecognised grants.gov categories: ${unknown.join(', ')}`);
+  return known.find((c) => mapFundingCategory(c) !== 'Other') ?? known[0] ?? apiCategories[0];
 }
 
 export function sleep(ms) {
