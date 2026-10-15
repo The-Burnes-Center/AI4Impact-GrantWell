@@ -121,6 +121,7 @@ function AppContent() {
               path="/"
               element={<Navigate to={`/home`} replace />}
             />
+            <Route path="/login" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<HomePage />} />
             <Route
               path="/requirements/:documentIdentifier"
