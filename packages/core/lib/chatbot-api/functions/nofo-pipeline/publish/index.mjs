@@ -5,6 +5,7 @@ import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { hasQuestions } from "../shared/questions.mjs";
+import { withSectionIds } from "grantwell-shared";
 
 // scope/state are written by upload-nofos / scraper; publish reads them so
 // the late-stage sidecar overwrite doesn't drop these fields.
@@ -69,6 +70,12 @@ export const handler = async (event) => {
   let finalSummary = mergedSummary;
   if (corrections) {
     finalSummary = { ...mergedSummary, ...corrections };
+  }
+  if (Array.isArray(finalSummary.ProjectNarrativeSections)) {
+    finalSummary = {
+      ...finalSummary,
+      ProjectNarrativeSections: withSectionIds(finalSummary.ProjectNarrativeSections),
+    };
   }
 
   // Upload summary.json
@@ -155,6 +162,7 @@ export const handler = async (event) => {
       exprValues[":reviewFlag"] = {
         reason: adminGuidance.reason,
         missingCategories: adminGuidance.missingCategories || [],
+        ...(adminGuidance.missingParts && { missingParts: adminGuidance.missingParts }),
         flaggedAt: now,
       };
     } else {

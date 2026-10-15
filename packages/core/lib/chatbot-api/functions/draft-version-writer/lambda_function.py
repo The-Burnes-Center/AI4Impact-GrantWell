@@ -91,13 +91,23 @@ def _superseded_row(draft_key, source, changed, created_at):
 
 
 def _prune(draft_key):
-    response = table.query(
-        KeyConditionExpression=Key("draft_key").eq(draft_key),
-        ProjectionExpression="#r, #lbl",
-        ExpressionAttributeNames={"#r": "rev", "#lbl": "label"},
-        ScanIndexForward=False,
-    )
-    unlabeled = [item for item in response.get("Items", []) if not item.get("label")]
+    # Rows carry whole application bodies, so one page stops at 1 MB long before the last row.
+    items, start_key = [], None
+    while True:
+        query = {
+            "KeyConditionExpression": Key("draft_key").eq(draft_key),
+            "ProjectionExpression": "#r, #lbl",
+            "ExpressionAttributeNames": {"#r": "rev", "#lbl": "label"},
+            "ScanIndexForward": False,
+        }
+        if start_key:
+            query["ExclusiveStartKey"] = start_key
+        response = table.query(**query)
+        items.extend(response.get("Items", []))
+        start_key = response.get("LastEvaluatedKey")
+        if not start_key:
+            break
+    unlabeled = [item for item in items if not item.get("label")]
     excess = unlabeled[dv.MAX_UNLABELED_VERSIONS:]
     if not excess:
         return
@@ -138,7 +148,7 @@ def process(record):
         if source == "status_change":
             source = "autosave"
     created_at = _record_timestamp(record)
-    changed = dv.changed_sections(old_image.get("sections"), new_image.get("sections"))
+    changed = dv.changed_section_keys(old_image, new_image)
 
     superseded = _superseded_row(draft_key, source, changed, created_at)
     if superseded is not None and source == "ai_generated":

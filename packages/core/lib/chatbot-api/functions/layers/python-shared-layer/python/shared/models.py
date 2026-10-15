@@ -30,7 +30,8 @@ class DraftOperationRequest(BaseModel):
     session_id: Optional[str] = Field(None, description="Session identifier")
     # These default to None, not {}, so an update that omits a field leaves the
     # stored value alone; an explicit {} still clears it.
-    sections: Optional[Dict[str, Any]] = Field(None, description="Draft sections")
+    sections: Optional[Dict[str, Any]] = Field(None, description="Draft sections, keyed by section id")
+    section_order: Optional[List[Dict[str, Any]]] = Field(None, description="Sections in order, as [{id, name}]")
     title: Optional[str] = Field(None, description="Draft title")
     document_identifier: Optional[str] = Field(None, description="Document identifier")
     project_basics: Optional[Dict[str, Any]] = Field(None, description="Project basics")
@@ -58,7 +59,7 @@ class DraftOperationRequest(BaseModel):
     ]] = Field(None, description="Attribution for the write, read by the version-writer stream consumer")
     rev: Optional[int] = Field(None, ge=0, description="Version revision to read, restore or label")
     label: Optional[str] = Field(None, max_length=120, description="Human label for a saved version")
-    sections_only: Optional[List[str]] = Field(None, description="Restore just these section names")
+    sections_only: Optional[List[str]] = Field(None, description="Restore just these sections (ids, or names for older clients)")
     reached_step: Optional[Literal[
         'projectBasics',
         'questionnaire',
@@ -169,6 +170,8 @@ class SessionOperationRequest(BaseModel):
     new_chat_entry: Optional[List[Dict[str, Any]]] = Field(None, description="New chat entry to add")
     title: Optional[str] = Field(None, description="Session title")
     document_identifier: Optional[str] = Field(None, description="Document identifier")
+    cursor: Optional[str] = Field(None, pattern=r'^[1-9][0-9]{0,5}$', description="get_session: older_cursor from the previous page")
+    limit: Optional[int] = Field(None, ge=1, le=100, description="get_session: turns per page")
 
     SESSION_ID_OPERATIONS: ClassVar[frozenset] = frozenset({
         'add_session', 'get_session', 'update_session', 'delete_session',

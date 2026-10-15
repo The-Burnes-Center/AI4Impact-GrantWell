@@ -18,10 +18,13 @@ import gzip
 import json
 from decimal import Decimal
 
+from . import draft_sections as ds
+
 CONTENT_KEYS = (
     "title",
     "status",
     "sections",
+    "section_order",
     "project_basics",
     "questionnaire",
     "additional_info",
@@ -62,14 +65,38 @@ def snapshot_content(item):
     return {key: item.get(key) for key in CONTENT_KEYS if item.get(key) is not None}
 
 
+def _same(a, b):
+    return json.dumps(a, sort_keys=True, default=json_default) == json.dumps(b, sort_keys=True, default=json_default)
+
+
+def _comparable_sections(old_image, new_image):
+    """Both images' sections keyed alike, so a row converting from name keys to ids is no change."""
+    if not ds.is_keyed_by_id(old_image) and not ds.is_keyed_by_id(new_image):
+        return old_image.get("sections") or {}, new_image.get("sections") or {}
+    known = new_image.get("section_order") or old_image.get("section_order")
+    old_sections, _ = ds.normalize_item(old_image, known)
+    new_sections, _ = ds.normalize_item(new_image, known)
+    return old_sections, new_sections
+
+
 def is_content_change(old_image, new_image):
     """True when a change touched user work rather than only bookkeeping."""
+    old_sections, new_sections = _comparable_sections(old_image, new_image)
+    if not _same(old_sections, new_sections):
+        return True
+    if ds.is_keyed_by_id(old_image) and not _same(old_image.get("section_order"), new_image.get("section_order")):
+        return True
     for key in WORK_KEYS:
-        if json.dumps(old_image.get(key), sort_keys=True, default=json_default) != json.dumps(
-            new_image.get(key), sort_keys=True, default=json_default
-        ):
+        if key in ("sections", "section_order"):
+            continue
+        if not _same(old_image.get(key), new_image.get(key)):
             return True
     return False
+
+
+def changed_section_keys(old_image, new_image):
+    """Sections whose text differs between two draft images: ids, or names for rows keyed by name."""
+    return changed_sections(*_comparable_sections(old_image, new_image))
 
 
 def changed_sections(old_sections, new_sections):

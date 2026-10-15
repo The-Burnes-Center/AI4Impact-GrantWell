@@ -21,116 +21,223 @@ dynamodb = boto3.resource("dynamodb", region_name=os.environ.get("AWS_REGION", "
 # Connect to the specified DynamoDB table
 table = dynamodb.Table(DDB_TABLE_NAME)
 
-# Define a function to add a session or update an existing one in the DynamoDB table
+# A chat is a header item (keyed by its session_id) plus one item per turn, keyed
+# "<session_id>#turn#<n>". Turn items carry no time_stamp, so the TimeIndex lists headers only.
+# Older chats keep every turn in the header's chat_history list; they convert on next open or write.
+TURN_MARKER = "#turn#"
+# Keeps one get_session response far below Lambda's 6 MB payload limit (a turn item is at most 400 KB).
+PAGE_TURNS = 40
+PAGE_BYTES = 2_000_000
+
+
+def turn_key(session_id, number):
+    return f"{session_id}{TURN_MARKER}{number:06d}"
+
+
+def flatten_entries(entries):
+    flat = []
+    for entry in entries or []:
+        if isinstance(entry, list):
+            flat.extend(e for e in entry if isinstance(e, dict))
+        elif isinstance(entry, dict):
+            flat.append(entry)
+    return flat
+
+
+def query_turns(user_id, session_id, keys_only=False):
+    params = {
+        'KeyConditionExpression': Key('user_id').eq(user_id) & Key('session_id').begins_with(session_id + TURN_MARKER),
+    }
+    if keys_only:
+        params['ProjectionExpression'] = 'session_id'
+    items = []
+    while True:
+        response = table.query(**params)
+        items.extend(response.get('Items', []))
+        if not response.get('LastEvaluatedKey'):
+            return items
+        params['ExclusiveStartKey'] = response['LastEvaluatedKey']
+
+
+def write_turns(user_id, session_id, entries, first_number):
+    with table.batch_writer() as batch:
+        for offset, entry in enumerate(entries):
+            number = first_number + offset
+            batch.put_item(Item={
+                'user_id': user_id,
+                'session_id': turn_key(session_id, number),
+                'turn': number,
+                'entry': entry,
+            })
+
+
+def delete_turn_items(user_id, keys):
+    with table.batch_writer() as batch:
+        for key in keys:
+            batch.delete_item(Key={'user_id': user_id, 'session_id': key})
+
+
+def convert_legacy_session(user_id, session_id, header):
+    """Move a chat_history list into turn items. Safe to repeat: the turn keys are fixed."""
+    entries = flatten_entries(header.get('chat_history'))
+    write_turns(user_id, session_id, entries, 1)
+    try:
+        table.update_item(
+            Key={'user_id': user_id, 'session_id': session_id},
+            UpdateExpression='REMOVE chat_history SET turn_count = :n',
+            ConditionExpression='attribute_exists(chat_history)',
+            ExpressionAttributeValues={':n': len(entries)},
+        )
+    except ClientError as error:
+        if error.response['Error']['Code'] != 'ConditionalCheckFailedException':
+            raise
+    return entries
+
+
 def add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier):
     try:
-        # Attempt to add an item to the DynamoDB table with provided details
-        item = {
-            'user_id': user_id,  # Identifier for the user
-            'session_id': session_id,  # Unique identifier for the session
-            "title": title.strip(),  # Title of the session
-            "time_stamp": str(datetime.now()),  # Current timestamp as a string
+        entries = flatten_entries(new_chat_entry) if new_chat_entry else flatten_entries(chat_history)
+        stale = [item['session_id'] for item in query_turns(user_id, session_id, keys_only=True)
+                 if int(item['session_id'].rsplit(TURN_MARKER, 1)[1]) > len(entries)]
+        delete_turn_items(user_id, stale)
+        write_turns(user_id, session_id, entries, 1)
+        table.put_item(Item={
+            'user_id': user_id,
+            'session_id': session_id,
+            "title": title.strip(),
+            "time_stamp": str(datetime.now()),
             'document_identifier': document_identifier,
-        }
-        if new_chat_entry:
-            item['chat_history'] = [new_chat_entry]
-        elif chat_history:
-            item['chat_history'] = chat_history
-        else:
-            item['chat_history'] = []
-
-        response = table.put_item(Item=item)
-        # Return any attributes returned by the DynamoDB operation, default to an empty dictionary if none
+            'turn_count': len(entries),
+        })
         return {
             'statusCode': 200,
             'headers': {'Access-Control-Allow-Origin': '*'},
             'body': json.dumps({'message': 'Session created successfully'})
         }
     except ClientError as error:
-        # Check for specific DynamoDB client errors
         print("Caught error: DynamoDB error - could not add new session")
         if error.response["Error"]["Code"] == "ResourceNotFoundException":
-            # Return an error message if the DynamoDB resource (e.g., table, item) is not found
             return {
                 'statusCode': 404,
                 'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps(f"No record found with session id: {session_id}")
             }
         else:
-            # Return a general error message for other client errors encountered
             return {
                 'statusCode': 500,
                 'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps(str(error))
             }
 
-# A function to retrieve a session from DynamoDB based on session_id and user_id
-def get_session(session_id, user_id):
-    # Initialize a variable to hold the response from DynamoDB
-    response = {}
+def query_newest_turns(user_id, session_id, before, count):
+    """Up to `count` turn items numbered below `before` (all when None), newest first."""
+    if before is None:
+        turns = Key('session_id').begins_with(session_id + TURN_MARKER)
+    else:
+        turns = Key('session_id').between(turn_key(session_id, 0), turn_key(session_id, before - 1))
+    params = {
+        'KeyConditionExpression': Key('user_id').eq(user_id) & turns,
+        'ScanIndexForward': False,
+        'Limit': count,
+    }
+    items = []
+    while len(items) < count:
+        response = table.query(**params)
+        items.extend(response.get('Items', []))
+        if not response.get('LastEvaluatedKey'):
+            break
+        params['ExclusiveStartKey'] = response['LastEvaluatedKey']
+        params['Limit'] = count - len(items)
+    return [(int(item['session_id'].rsplit(TURN_MARKER, 1)[1]), item['entry']) for item in items[:count]]
+
+
+def newest_page(turns, limit):
+    """Oldest-first entries for the newest turns that fit one response, and the cursor for older ones."""
+    page, size = [], 0
+    for number, entry in turns[:limit]:
+        size += len(json.dumps(entry, default=str))
+        if page and size > PAGE_BYTES:
+            break
+        page.append((number, entry))
+    cursor = str(page[-1][0]) if page and len(page) < len(turns) else None
+    return [entry for _, entry in reversed(page)], cursor
+
+
+def get_session(session_id, user_id, cursor=None, limit=PAGE_TURNS):
+    """The chat's header with its newest `limit` turns, or the turns before `cursor`.
+    older_cursor is null once the oldest turn is in hand."""
+    before = int(cursor) if cursor else None
     try:
-        # Attempt to retrieve an item using the session_id and user_id as keys
-        response = table.get_item(Key={"user_id": user_id, "session_id": session_id})
+        item = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item")
+        if item:
+            if 'chat_history' in item:
+                entries = convert_legacy_session(user_id, session_id, item)
+                turns = [(n, e) for n, e in enumerate(entries, 1) if before is None or n < before][::-1][:limit + 1]
+            elif before == 1:
+                turns = []
+            else:
+                turns = query_newest_turns(user_id, session_id, before, limit + 1)
+            item.pop('turn_count', None)
+            item['chat_history'], item['older_cursor'] = newest_page(turns, limit)
     except ClientError as error:
         print("Caught error: DynamoDB error - could not get session")
-        # Handle specific error when the specified resource is not found in DynamoDB
         if error.response["Error"]["Code"] == "ResourceNotFoundException":
-            # Return a 404 Not Found status code and message when the item is not found
             return {
                 'statusCode': 404,
-                'headers': {'Access-Control-Allow-Origin': '*'},  # Allow all domains for CORS
+                'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps(f"No record found with session id: {session_id}")
             }
         else:
-            # Return a 500 Internal Server Error status for all other DynamoDB errors
             return {
                 'statusCode': 500,
-                'headers': {'Access-Control-Allow-Origin': '*'},  # Allow all domains for CORS
+                'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps('An unexpected error occurred')
             }
 
-    # Prepare the response to the client with a 200 OK status if the item is successfully retrieved
-    response_to_client = {
-        'statusCode': 200,  # HTTP status code indicating a successful operation
-        'headers': {'Access-Control-Allow-Origin': '*'},  # Allow all domains for CORS
-        'body': json.dumps(response.get("Item", {}))  # Convert the retrieved item to JSON format
+    return {
+        'statusCode': 200,
+        'headers': {'Access-Control-Allow-Origin': '*'},
+        'body': json.dumps(item or {})
     }
-    # Return the prepared response to the client
-    return response_to_client
 
-# Define a function to update a session in the DynamoDB table
-def update_session(session_id, user_id, new_chat_entry):
+def reserve_turns(session_id, user_id, count, title, document_identifier):
+    """Claim the next `count` turn numbers; a title also fills in a missing header."""
+    update = 'ADD turn_count :k'
+    values = {':k': count}
+    if title:
+        update += ' SET title = if_not_exists(title, :t), time_stamp = if_not_exists(time_stamp, :ts)'
+        update += ', document_identifier = if_not_exists(document_identifier, :d)'
+        values.update({':t': title.strip(), ':ts': str(datetime.now()), ':d': document_identifier})
+    response = table.update_item(
+        Key={"user_id": user_id, "session_id": session_id},
+        UpdateExpression=update,
+        ConditionExpression='attribute_not_exists(chat_history)',
+        ExpressionAttributeValues=values,
+        ReturnValues="UPDATED_NEW",
+    )
+    return int(response['Attributes']['turn_count'])
+
+# Append turns to a session, creating its header when a title is given and none exists
+def update_session(session_id, user_id, new_chat_entry, title=None, document_identifier=None):
     try:
-        # Fetch current session details
-        session_response = get_session(session_id, user_id)
-        if 'statusCode' in session_response and session_response['statusCode'] != 200:
-            return session_response  # Return the error from get_session if any
-
-        session_data = json.loads(session_response['body'])
-        
-        # Check if 'chat_history' exists in the session data
-        current_chat_history = session_data.get('chat_history', [])
-        
-        # Append the new chat entry to the existing chat history
-        updated_chat_history = current_chat_history + new_chat_entry
-        
-        # Update the item in DynamoDB with both chat_history and document_identifier
-        response = table.update_item(
-            Key={"user_id": user_id, "session_id": session_id},
-            UpdateExpression="set chat_history = :chat_history",
-            ExpressionAttributeValues={
-                ":chat_history": updated_chat_history,
-            },
-            ReturnValues="UPDATED_NEW"
-        )
+        entries = flatten_entries(new_chat_entry)
+        if entries:
+            try:
+                last = reserve_turns(session_id, user_id, len(entries), title, document_identifier)
+            except ClientError as error:
+                if error.response['Error']['Code'] != 'ConditionalCheckFailedException':
+                    raise
+                header = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item") or {}
+                convert_legacy_session(user_id, session_id, header)
+                last = reserve_turns(session_id, user_id, len(entries), title, document_identifier)
+            write_turns(user_id, session_id, entries, last - len(entries) + 1)
         return {
             'statusCode': 200,
             'headers': {'Access-Control-Allow-Origin': '*'},
-            'body': response.get("Attributes", {})
+            'body': json.dumps({'message': 'Session updated successfully'})
         }
     except ClientError as error:
         print("Caught error: DynamoDB error - could not update session")
-        # Return a structured error message and status code
         error_code = error.response['Error']['Code']
         if error_code == "ResourceNotFoundException":
             return {
@@ -148,7 +255,6 @@ def update_session(session_id, user_id, new_chat_entry):
             }
     except Exception as general_error:
         print("Caught error: DynamoDB error - could not update session")
-        # Return a generic error response for unexpected errors
         return {
             'statusCode': 500,
             'headers': {'Access-Control-Allow-Origin': '*'},
@@ -156,14 +262,13 @@ def update_session(session_id, user_id, new_chat_entry):
             'body': 'An unexpected error occurred while updating the session.'
         }
 
-# Define a function to delete a session from the DynamoDB table
+# Turns go first so a failed delete leaves the chat listed and the user can retry.
 def delete_session(session_id, user_id):
     try:
-        # Attempt to delete an item from the DynamoDB table based on the provided session_id and user_id.
+        delete_turn_items(user_id, [item['session_id'] for item in query_turns(user_id, session_id, keys_only=True)])
         table.delete_item(Key={"user_id": user_id, "session_id": session_id})
     except ClientError as error:
         print("Caught error: DynamoDB error - could not delete session")
-        # Handle specific DynamoDB client errors. If the item cannot be found or another error occurs, return the appropriate message.
         error_code = error.response['Error']['Code']
         if error_code == "ResourceNotFoundException":
             return {
@@ -182,7 +287,6 @@ def delete_session(session_id, user_id):
                 "body": json.dumps(f"Error occurred: {error}")
             }
 
-    # If no exceptions are raised, return a response indicating that the deletion was successful.
     return {
         'statusCode': 200,
         "id": session_id,
@@ -343,6 +447,8 @@ def lambda_handler(event, context):
         operation = request.operation
         user_id = authenticated_user_id if is_apigw_invocation else request.user_id
         session_id = request.session_id
+        if session_id and '#' in session_id:
+            raise ValueError("session_id must not contain '#'")
         chat_history = request.chat_history
         new_chat_entry = request.new_chat_entry
         title = request.title or f"Chat on {str(datetime.now())}"
@@ -352,9 +458,9 @@ def lambda_handler(event, context):
         if operation == 'add_session':
             return add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier)
         elif operation == 'get_session':
-            return get_session(session_id, user_id)
+            return get_session(session_id, user_id, request.cursor, request.limit or PAGE_TURNS)
         elif operation == 'update_session':
-            return update_session(session_id, user_id, new_chat_entry)
+            return update_session(session_id, user_id, new_chat_entry, request.title, document_identifier)
         elif operation == 'list_sessions_by_user_id':
             return list_sessions_by_user_id(user_id, document_identifier=document_identifier)
         elif operation == 'list_all_sessions_by_user_id':

@@ -27,6 +27,8 @@ export interface CustomQuestion {
 export interface ReviewFlag {
   reason: string;
   missingCategories: string[];
+  /** Names the parts of the grant text that could not be read. */
+  missingParts?: string;
   flaggedAt?: string;
 }
 
@@ -112,4 +114,5 @@ export const GRANT_CATEGORIES = [
   "Science, Technology, and Other Research and Development",
   "Transportation",
   "Affordable Care Act",
+  "Other",
 ] as const;

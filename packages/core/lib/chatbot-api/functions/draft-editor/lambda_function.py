@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from boto3.dynamodb.conditions import Key, Attr
 from pydantic import ValidationError
 from shared.models import DraftOperationRequest, parse_lambda_event_body
+from shared import draft_sections as ds
 from shared import draft_versions as dv
 
 # Retrieve DynamoDB table name from environment variables
@@ -36,6 +37,51 @@ def _now_iso():
 def _dumps(payload):
     """json.dumps that survives the Decimal/Binary values DynamoDB returns."""
     return json.dumps(payload, default=dv.json_default)
+
+
+AI_WRITE_SOURCES = ("ai_generated", "ai_regenerated")
+
+ITEM_LIMIT_BYTES = 400 * 1024
+
+
+def _item_bytes(item):
+    """Close to DynamoDB's own count: attribute names plus UTF-8 values."""
+    return len(json.dumps(item, default=dv.json_default, separators=(",", ":")).encode("utf-8"))
+
+
+def _is_too_large(error):
+    details = error.response.get("Error", {})
+    return details.get("Code") == "ValidationException" and "size" in str(details.get("Message", "")).lower()
+
+
+def _too_large_response():
+    return _json_response(413, {
+        'error': 'too_large',
+        'message': 'This application is too large to save. Shorten a long section and try again.',
+        'itemLimitBytes': ITEM_LIMIT_BYTES,
+    })
+
+
+def _sections_for_write(current, sections, section_order, source):
+    """Sections keyed the way the row is, its order, and per-section user save times.
+
+    A write without an order onto a row keyed by id is mapped onto that row's ids; a write and a
+    row both keyed by name stay that way until a client that sends an order saves it.
+    """
+    if current is None:
+        return sections, section_order, None
+    if section_order is None and ds.is_keyed_by_id(current):
+        sections, section_order = ds.normalize(sections, None, current.get("section_order"))
+    if section_order is None:
+        return sections, None, None
+    current_sections, _ = ds.normalize_item(current, section_order)
+    saved_at = dict(current.get("section_saved_at") or {})
+    if source not in AI_WRITE_SOURCES:
+        now = _now_iso()
+        for section_id in dv.changed_sections(current_sections, sections):
+            if section_id in sections:
+                saved_at[section_id] = now
+    return sections, section_order, saved_at
 
 
 def _json_response(status_code, payload, extra=None):
@@ -82,7 +128,7 @@ def record_event(event_type, user_id, state=None, nofo_name=None):
         print(f"record_event failed (non-fatal): {e}")
 
 # Define a function to add a draft or update an existing one in the DynamoDB table
-def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, last_write_source=None, reached_step=None):
+def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, last_write_source=None, reached_step=None, section_order=None):
     try:
         # Determine default status based on what data exists
         if status is None:
@@ -113,6 +159,10 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
         }
         if reached_step:
             item["reached_steps"] = {reached_step}
+        if section_order is not None:
+            item["section_order"] = section_order
+        elif not sections:
+            item["section_order"] = []
 
         # Put the item in DynamoDB
         table.put_item(Item=item)
@@ -130,6 +180,8 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
         return _json_response(200, response_item)
     except ClientError as error:
         print("Caught error: DynamoDB error - could not add draft")
+        if _is_too_large(error):
+            return _too_large_response()
         return {
             'statusCode': 500,
             'headers': {'Access-Control-Allow-Origin': '*'},
@@ -175,18 +227,38 @@ def get_draft(session_id, user_id):
     return _json_response(200, response.get("Item", {}))
 
 # Define a function to update a draft in the DynamoDB table
-def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, expected_rev=None, last_write_source=None):
+def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, expected_rev=None, last_write_source=None, section_order=None):
     try:
         # Prepare update expression and attribute values
         update_parts = []
         expression_values = {}
         expression_names = {}
 
+        current_item = None
+        if sections is not None or status is None:
+            try:
+                current_item = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item", {})
+            except ClientError as read_error:
+                print(f"Could not read the draft before updating it: {read_error}")
+
         if sections is not None:
+            sections, section_order, saved_at = _sections_for_write(current_item, sections, section_order, last_write_source)
             update_parts.append("#sec = :sections")
             expression_values[":sections"] = sections
             expression_names["#sec"] = "sections"
-            
+            if section_order is not None:
+                update_parts.append("#so = :section_order")
+                expression_values[":section_order"] = section_order
+                expression_names["#so"] = "section_order"
+            if saved_at is not None:
+                update_parts.append("#ssa = :section_saved_at")
+                expression_values[":section_saved_at"] = saved_at
+                expression_names["#ssa"] = "section_saved_at"
+        elif section_order is not None:
+            update_parts.append("#so = :section_order")
+            expression_values[":section_order"] = section_order
+            expression_names["#so"] = "section_order"
+
         if title is not None:
             update_parts.append("#ttl = :title")
             expression_values[":title"] = title.strip() if title else ""
@@ -228,10 +300,9 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             expression_names["#st"] = "status"
         else:
             # Auto-update status based on content if not explicitly provided
-            # Get current draft to check existing state
             try:
-                current_response = table.get_item(Key={"user_id": user_id, "session_id": session_id})
-                current_item = current_response.get("Item", {})
+                if current_item is None:
+                    raise ValueError("current draft unavailable")
                 current_sections = sections if sections is not None else current_item.get("sections", {})
                 current_project_basics = project_basics if project_basics is not None else current_item.get("project_basics", {})
                 current_doc_id = document_identifier if document_identifier is not None else current_item.get("document_identifier")
@@ -289,6 +360,7 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             "title": updated_item.get("title", ""),
             "documentIdentifier": updated_item.get("document_identifier", ""),
             "sections": updated_item.get("sections", {}),
+            "sectionOrder": updated_item.get("section_order"),
             "projectBasics": updated_item.get("project_basics", {}),
             "questionnaire": updated_item.get("questionnaire", {}),
             "additionalInfo": updated_item.get("additional_info", ""),
@@ -296,12 +368,16 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             "lastModified": updated_item.get("last_modified", ""),
             "status": updated_item.get("status", "project_basics"),
             "reachedSteps": sorted(updated_item.get("reached_steps") or []),
-            "rev": updated_item.get("rev")
+            "rev": updated_item.get("rev"),
+            "itemBytes": _item_bytes(updated_item),
+            "itemLimitBytes": ITEM_LIMIT_BYTES,
         }
 
         return _json_response(200, response_item)
     except ClientError as error:
         print("Caught error: DynamoDB error - could not update draft")
+        if _is_too_large(error):
+            return _too_large_response()
         # Return a structured error message and status code
         error_code = error.response['Error']['Code']
         if error_code == "ConditionalCheckFailedException":
@@ -578,15 +654,26 @@ def _version_unavailable():
 def list_draft_versions(session_id, user_id, limit=None):
     if not _version_table:
         return _version_unavailable()
+    wanted = limit or dv.MAX_UNLABELED_VERSIONS
+    versions, start_key = [], None
     try:
-        response = _version_table.query(
-            KeyConditionExpression=Key('draft_key').eq(dv.draft_key(user_id, session_id)),
-            ProjectionExpression=VERSION_META_PROJECTION,
-            ExpressionAttributeNames=VERSION_META_NAMES,
-            ScanIndexForward=False,
-            Limit=limit or dv.MAX_UNLABELED_VERSIONS,
-        )
-        return _json_response(200, {'versions': response.get('Items', [])})
+        # A page stops at 1 MB read, which a few large rows reach before `Limit` does.
+        while len(versions) < wanted:
+            query = {
+                'KeyConditionExpression': Key('draft_key').eq(dv.draft_key(user_id, session_id)),
+                'ProjectionExpression': VERSION_META_PROJECTION,
+                'ExpressionAttributeNames': VERSION_META_NAMES,
+                'ScanIndexForward': False,
+                'Limit': wanted - len(versions),
+            }
+            if start_key:
+                query['ExclusiveStartKey'] = start_key
+            response = _version_table.query(**query)
+            versions.extend(response.get('Items', []))
+            start_key = response.get('LastEvaluatedKey')
+            if not start_key:
+                break
+        return _json_response(200, {'versions': versions})
     except ClientError as error:
         print(f"Caught error: could not list draft versions - {error}")
         return _json_response(500, {'error': 'Failed to list versions'})
@@ -654,22 +741,24 @@ def restore_draft_version(session_id, user_id, rev, sections_only=None):
         print(f"Corrupt version body for rev {rev}: {error}")
         return _json_response(422, {'error': 'Stored version could not be read'})
 
-    snapshot_sections = snapshot.get('sections') or {}
-
     try:
         current = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item") or {}
     except ClientError as error:
         print(f"Caught error: could not read draft for restore - {error}")
         return _json_response(500, {'error': 'Failed to read application'})
 
-    current_sections = current.get('sections') or {}
+    # Either side may predate section ids; both are read keyed by id against each other's order.
+    current_sections, current_order = ds.normalize_item(current, snapshot.get('section_order'))
+    snapshot_sections, snapshot_order = ds.normalize_item(snapshot, current_order)
+    names = {ref['id']: ref['name'] for ref in [*snapshot_order, *current_order]}
 
     if sections_only:
         # A section stored as empty is not a restore candidate: writing it back
         # erases the user's text under the guise of recovering it.
-        restored = [name for name in sections_only if snapshot_sections.get(name)]
+        wanted = ds.resolve_ids(sections_only, [*current_order, *snapshot_order])
+        restored = [section_id for section_id in wanted if snapshot_sections.get(section_id)]
         if not restored:
-            named = ', '.join(f'"{name}"' for name in sections_only)
+            named = ', '.join(f'"{names.get(section_id, section_id)}"' for section_id in wanted)
             return _json_response(422, {
                 'error': 'section_not_in_version',
                 'message': (
@@ -679,12 +768,13 @@ def restore_draft_version(session_id, user_id, rev, sections_only=None):
             })
 
         merged = dict(current_sections)
-        for name in restored:
-            merged[name] = snapshot_sections[name]
+        for section_id in restored:
+            merged[section_id] = snapshot_sections[section_id]
         result = update_draft(
             session_id=session_id,
             user_id=user_id,
             sections=merged,
+            section_order=ds.merge_orders(current_order, snapshot_order),
             status=current.get('status'),
             last_write_source='restore',
         )
@@ -701,11 +791,12 @@ def restore_draft_version(session_id, user_id, rev, sections_only=None):
                 ),
             })
 
-        restored = sorted(name for name, text in snapshot_sections.items() if text)
+        restored = sorted(section_id for section_id, text in snapshot_sections.items() if text)
         result = update_draft(
             session_id=session_id,
             user_id=user_id,
             sections=snapshot_sections,
+            section_order=snapshot_order,
             title=snapshot.get('title'),
             project_basics=snapshot.get('project_basics'),
             questionnaire=snapshot.get('questionnaire'),
@@ -837,6 +928,7 @@ def lambda_handler(event, context):
         user_id = authenticated_user_id if is_apigw_invocation else request.user_id
         session_id = request.session_id
         sections = request.sections
+        section_order = request.section_order
         title = request.title
         document_identifier = request.document_identifier
         project_basics = request.project_basics
@@ -852,7 +944,7 @@ def lambda_handler(event, context):
         # Route to appropriate operation handler
         if operation == 'add_draft':
             new_title = title or f"Draft on {_now_iso()}"
-            result = add_draft(session_id, user_id, sections, new_title, document_identifier, project_basics, questionnaire, last_modified, status, additional_info, uploaded_files, last_write_source, reached_step)
+            result = add_draft(session_id, user_id, sections, new_title, document_identifier, project_basics, questionnaire, last_modified, status, additional_info, uploaded_files, last_write_source, reached_step, section_order)
             # Creating a draft is both a draft-created event and "pursuing" its grant.
             record_event('draft_created', user_id, caller_state, document_identifier)
             if document_identifier:
@@ -869,6 +961,7 @@ def lambda_handler(event, context):
                 session_id=session_id,
                 user_id=user_id,
                 sections=sections,
+                section_order=section_order,
                 title=title,
                 document_identifier=document_identifier,
                 project_basics=project_basics,

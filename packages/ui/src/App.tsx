@@ -11,6 +11,7 @@ import NotificationBar from "./components/notifications/NotificationBar";
 import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
 import { useBranding } from "./common/branding";
 import { IS_PROD } from "./common/instance";
+import NotFoundPage from "./pages/not-found/NotFoundPage";
 import "./styles/app.scss";
 
 const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
@@ -120,6 +121,7 @@ function AppContent() {
               path="/"
               element={<Navigate to={`/home`} replace />}
             />
+            <Route path="/login" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<HomePage />} />
             <Route
               path="/requirements/:documentIdentifier"
@@ -143,10 +145,7 @@ function AppContent() {
               path="/admin/dashboard"
               element={<Navigate to="/admin" replace />}
             />
-            <Route
-              path="*"
-              element={<Navigate to={`/home`} replace />}
-            />
+            <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
         </ErrorBoundary>

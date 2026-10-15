@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
 import { useDraftsClient } from "./use-drafts-client";
 import { useAutoSave } from "./use-auto-save";
@@ -13,15 +13,22 @@ import {
 } from "../common/api-client/drafts-client";
 import { writeDraftCache } from "../common/helpers/document-editor-utils";
 import type { ProjectBasicsData } from "../common/types/document";
+import type { SectionRef } from "../common/helpers/application-sections";
 
 export interface DraftSaveFields {
   title?: string;
   sections?: Record<string, string>;
+  sectionOrder?: SectionRef[];
   projectBasics?: ProjectBasicsData;
   questionnaire?: Record<string, string>;
   additionalInfo?: string;
   uploadedFiles?: UploadedFileMeta[];
   status?: DraftStatus;
+}
+
+export interface DraftStorageUse {
+  bytes: number;
+  limit: number;
 }
 
 type DraftPart = keyof DraftSaveFields;
@@ -71,6 +78,7 @@ export function useDraftSave({
   const authTokenRef = useRef<string | null>(null);
   const dirtySectionsRef = useRef<Set<string>>(new Set());
   const dirtyPartsRef = useRef<Set<DraftPart>>(new Set());
+  const [storageUse, setStorageUse] = useState<DraftStorageUse | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -111,6 +119,7 @@ export function useDraftSave({
         title: snapshot.title ?? known?.title ?? fallbackTitle ?? "",
         documentIdentifier: documentIdentifier || known?.documentIdentifier || "",
         sections: snapshot.sections ?? known?.sections ?? {},
+        sectionOrder: snapshot.sectionOrder ?? known?.sectionOrder,
         projectBasics: snapshot.projectBasics ?? known?.projectBasics ?? {},
         questionnaire: snapshot.questionnaire ?? known?.questionnaire ?? {},
         additionalInfo: snapshot.additionalInfo ?? known?.additionalInfo,
@@ -190,6 +199,9 @@ export function useDraftSave({
         lastModified: saved.lastModified,
         status: saved.status ?? draftRef.current?.status,
       };
+      if (saved.itemBytes !== undefined && saved.itemLimitBytes !== undefined) {
+        setStorageUse({ bytes: saved.itemBytes, limit: saved.itemLimitBytes });
+      }
 
       for (const name of snapshot.dirtySections) dirtySectionsRef.current.delete(name);
       for (const part of snapshot.dirtyParts) dirtyPartsRef.current.delete(part);
@@ -270,6 +282,7 @@ export function useDraftSave({
     isDirty,
     lastSavedAt,
     error,
+    storageUse,
   };
 }
 

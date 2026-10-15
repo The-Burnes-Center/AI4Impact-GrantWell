@@ -1,4 +1,5 @@
 import type { DraftJobStatus, DraftStatus } from "../api-client/drafts-client";
+import type { QuestionnaireAnswer } from "../types/document";
 
 /**
  * Maps a UI step ID to the backend draft status string.
@@ -104,6 +105,49 @@ export function sweepLegacyDraftCache(): void {
   } catch {
     /* storage unavailable — nothing to sweep */
   }
+}
+
+/** Server-enforced limit for additional information and each questionnaire answer. */
+export const MAX_INPUT_CHARS = 10000;
+
+export const characterCount = (text: string): string =>
+  `${text.length.toLocaleString("en-US")}/${MAX_INPUT_CHARS.toLocaleString("en-US")} characters`;
+
+/**
+ * Pairs each saved `question_${id}` answer with its question's text, in question order.
+ * Answers whose question is no longer listed are kept with an empty question.
+ */
+export function questionnaireAnswers(
+  questions: { id: number | string; question: string }[],
+  questionnaire: Record<string, string> | null | undefined,
+): QuestionnaireAnswer[] {
+  const answers = { ...(questionnaire ?? {}) };
+  const paired: QuestionnaireAnswer[] = [];
+  for (const q of questions) {
+    const key = `question_${q.id}`;
+    const answer = answers[key];
+    delete answers[key];
+    if (typeof answer === "string" && answer.trim()) paired.push({ question: q.question, answer });
+  }
+  for (const answer of Object.values(answers)) {
+    if (typeof answer === "string" && answer.trim()) paired.push({ question: "", answer });
+  }
+  return paired;
+}
+
+/** Fetches the grant's questions to label the answers; a failed fetch still sends the answers. */
+export async function resolveQuestionnaireAnswers(
+  fetchQuestions: () => Promise<unknown>,
+  questionnaire: Record<string, string> | null | undefined,
+): Promise<QuestionnaireAnswer[]> {
+  let questions: { id: number | string; question: string }[] = [];
+  try {
+    const fetched = ((await fetchQuestions()) as { data?: { questions?: unknown } } | null)?.data?.questions;
+    if (Array.isArray(fetched)) questions = fetched;
+  } catch (error) {
+    console.warn("Could not load the grant's questions for the drafter:", error);
+  }
+  return questionnaireAnswers(questions, questionnaire);
 }
 
 export async function pollForExportUrl(options: {

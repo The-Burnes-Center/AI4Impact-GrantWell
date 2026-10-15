@@ -8,9 +8,11 @@ import { Construct } from "constructs";
 import * as path from "path";
 import {
   InstanceConfig,
+  limits,
   processingQueueEmailEnabled,
   queueEmailRecipientsParameter,
   sesEmail,
+  singleState,
   supportedStatesEnv,
 } from "../../config/instance-config";
 
@@ -72,6 +74,7 @@ interface LambdaFunctionStackProps {
   readonly digestSuppressionTable: Table;
   readonly nofoStateOverlayTable: Table;
   readonly analyticsTable: Table;
+  readonly dailyUsageTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
@@ -144,6 +147,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     const stackName = config.aws.stackName;
     const knowledgeBaseIndexName = config.aws.knowledgeBaseIndexName;
     const SUPPORTED_STATES_ENV = supportedStatesEnv(config);
+    const SINGLE_STATE_ENV: Record<string, string> = singleState(config) ? { SINGLE_STATE: singleState(config)!.code } : {};
 
     const SONNET_MODEL_ID = "us.anthropic.claude-sonnet-5-5";
     const HAIKU_MODEL_ID = "us.anthropic.claude-haiku-5-5";
@@ -347,6 +351,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           "dynamodb:PutItem",
           "dynamodb:UpdateItem",
           "dynamodb:DeleteItem",
+          "dynamodb:BatchWriteItem",
           "dynamodb:Query",
           "dynamodb:Scan",
         ],
@@ -378,10 +383,14 @@ export class LambdaFunctionStack extends cdk.Stack {
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           // Flip to "true" once existing NOFOs are sidecar-tagged.
           NOFO_STATE_FILTER_ENABLED: "false",
+          DAILY_USAGE_TABLE_NAME: props.dailyUsageTable.tableName,
+          CHAT_MESSAGES_PER_DAY: String(limits(config).chatMessagesPerDay),
         },
         timeout: cdk.Duration.seconds(300),
+        reservedConcurrentExecutions: limits(config).chatConcurrency,
       }
     );
+    props.dailyUsageTable.grant(websocketAPIFunction, "dynamodb:UpdateItem");
 
     // WebSocket messages lack JWT claims, so resolve state via AdminGetUser per message.
     websocketAPIFunction.addToRolePolicy(
@@ -708,6 +717,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scraperDownloadDlqUrl: scraperDownloadDLQ.queueUrl,
       supportedStatesEnv: SUPPORTED_STATES_ENV,
       legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+      singleStateEnv: SINGLE_STATE_ENV,
     });
 
     this.nofoProcessingStateMachine = nofoPipeline.nofoProcessingStateMachine;
@@ -747,6 +757,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+      ...SINGLE_STATE_ENV,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,
@@ -849,6 +860,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           BUCKET: props.ffioNofosBucket.bucketName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         },
         timeout: cdk.Duration.seconds(60),
@@ -886,6 +898,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -932,6 +945,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -1021,6 +1035,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -1080,6 +1095,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -1179,6 +1195,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       draftTable: props.draftTable,
       draftGenerationJobsTable: props.draftGenerationJobsTable,
       knowledgeBaseId: props.knowledgeBase.attrKnowledgeBaseId,
+      jsSharedLayer: jsSharedLayer,
       sonnetDraftProfileArn: sonnetDraftProfile.attrInferenceProfileArn,
       supportedStatesEnv: SUPPORTED_STATES_ENV,
       legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,
@@ -1362,6 +1379,8 @@ export class LambdaFunctionStack extends cdk.Stack {
           FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 512,

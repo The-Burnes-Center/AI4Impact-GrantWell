@@ -116,8 +116,14 @@ function resolveCallerScope(event) {
   return { role: "user", state };
 }
 
+// A single-state deployment's admins may upload any grant, as in canEditAnyNofo (grantwell-shared).
+const SINGLE_STATE = String(process.env.SINGLE_STATE || "").trim().toUpperCase();
+
 function assertCanUpload(callerScope, scope, state) {
   if (callerScope.role === "developer" || callerScope.role === "regularAdmin") {
+    return;
+  }
+  if (callerScope.role === "stateAdmin" && SINGLE_STATE !== "" && callerScope.state === SINGLE_STATE) {
     return;
   }
   if (callerScope.role === "stateAdmin") {

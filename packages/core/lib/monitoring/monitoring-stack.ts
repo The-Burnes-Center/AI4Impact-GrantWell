@@ -48,6 +48,7 @@ export const LOG_MARKERS = {
   turnstileNotConfigured: ["TURNSTILE_SECRET_KEY is not set"],
   accountSetupFailed: ["Failed to set custom:state at confirmation", "Failed to revoke sessions after password reset"],
   kbRetrieveFailed: ["could not retrieve Knowledge Base documents"],
+  chatAnswerFailed: ["Stream processing error:"],
   grantSearchFailed: ["Hybrid search error:"],
   createMetadataFailed: ["Error processing record:"],
   draftVersionWriteFailed: ["draft-version-writer failed on"],
@@ -56,6 +57,8 @@ export const LOG_MARKERS = {
   digestSendFailed: ["Digest send failed for", "Digest failed for user"],
   modelCanaryFailed: ["Model canary failed for"],
   queueEmailSendFailed: ["Processing queue email send failed"],
+  chatCapReached: ["Daily chat message limit reached"],
+  applicationCapReached: ["Daily application limit reached"],
 } as const;
 
 /** Cognito's fixed, non-adjustable budget for a synchronous trigger. */
@@ -66,6 +69,8 @@ export interface MonitoringStackProps extends cdk.NestedStackProps {
   readonly httpApi: apigwv2.IHttpApi;
   readonly distribution: cf.IDistribution;
   readonly chatFunction: lambda.IFunction;
+  /** The function that starts application generation logs here, not under /aws/lambda/. */
+  readonly draftGeneratorApiLogGroup: logs.ILogGroup;
   readonly websocketAuthorizerFunction: lambda.IFunction;
   readonly signupTriggerFunction: lambda.IFunction;
   readonly createMetadataFunction: lambda.IFunction;
@@ -146,6 +151,7 @@ export class MonitoringStack extends cdk.NestedStack {
     this.addSignInAlarms(props);
     this.addEmailAlarms(config);
     this.addChatAndSearchAlarms(props);
+    this.addDailyCapMetrics(props);
     this.addDocumentAlarms(props);
     this.addNofoPipelineAlarms(props);
     this.addDraftAlarms(props);
@@ -403,6 +409,15 @@ export class MonitoringStack extends cdk.NestedStack {
       threshold: 3,
     });
 
+    // A failed model call or stream is caught and shown to the user as an error, so Errors stays flat.
+    this.alarm("ChatAnswersFailingAlarm", {
+      severity: "medium",
+      name: "chat answers failing",
+      description: "Chat is showing users an error instead of an answer because the model call or its stream is failing.",
+      metric: this.markerMetric("ChatAnswerFailed", props.chatFunction, LOG_MARKERS.chatAnswerFailed, cdk.Duration.minutes(15)),
+      threshold: 3,
+    });
+
     // A failed hybrid search returns an empty 200.
     this.alarm("GrantSearchFailingAlarm", {
       severity: "medium",
@@ -411,6 +426,12 @@ export class MonitoringStack extends cdk.NestedStack {
       metric: this.markerMetric("GrantSearchFailed", props.aiGrantSearchFunction, LOG_MARKERS.grantSearchFailed, cdk.Duration.minutes(15)),
       threshold: 3,
     });
+  }
+
+  /** Counted, never alarmed: a user at a daily cap is the cap working. */
+  private addDailyCapMetrics(props: MonitoringStackProps): void {
+    this.markerMetric("ChatCapReached", props.chatFunction, LOG_MARKERS.chatCapReached, cdk.Duration.hours(1));
+    this.markerMetric("ApplicationCapReached", props.draftGeneratorApiLogGroup, LOG_MARKERS.applicationCapReached, cdk.Duration.hours(1));
   }
 
   private addDocumentAlarms(props: MonitoringStackProps): void {
@@ -860,11 +881,12 @@ export class MonitoringStack extends cdk.NestedStack {
    */
   private markerMetric(
     metricName: string,
-    fn: lambda.IFunction,
+    source: lambda.IFunction | logs.ILogGroup,
     phrases: readonly string[],
     period: cdk.Duration,
   ): cloudwatch.Metric {
-    const { logGroup, ensure } = this.ensureLogGroup(metricName, fn);
+    const { logGroup, ensure } =
+      "functionName" in source ? this.ensureLogGroup(metricName, source) : { logGroup: source, ensure: undefined };
     const filter = new logs.MetricFilter(this, `${metricName}Filter`, {
       logGroup,
       filterPattern: logs.FilterPattern.anyTerm(...phrases),
@@ -873,7 +895,7 @@ export class MonitoringStack extends cdk.NestedStack {
       metricValue: "1",
       defaultValue: 0,
     });
-    filter.node.addDependency(ensure);
+    if (ensure) filter.node.addDependency(ensure);
 
     return new cloudwatch.Metric({
       namespace: this.prefix,

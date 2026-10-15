@@ -3,17 +3,19 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { getCurrentUser } from "aws-amplify/auth";
 import { LuFileText, LuDownload, LuArrowLeft, LuSquarePen, LuInfo, LuCircleCheckBig, LuTriangleAlert, LuChevronDown, LuEye } from "react-icons/lu";
 import { readDraftCache, pollForExportUrl } from "../../common/helpers/document-editor-utils";
+import {
+  exportSections,
+  grantSections,
+  resolveApplicationSections,
+  toSectionId,
+  type ApplicationSection,
+} from "../../common/helpers/application-sections";
 import "../../styles/document-editor.css";
 
 interface ReviewApplicationProps {
   selectedNofo: string | null;
   sessionId: string;
   onNavigate: (step: string) => void;
-}
-
-interface Section {
-  name: string;
-  description: string;
 }
 
 type ExportFormat = "pdf" | "docx";
@@ -32,7 +34,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   sessionId,
   onNavigate,
 }) => {
-  const [sections, setSections] = useState<Section[]>([]);
+  const [sections, setSections] = useState<ApplicationSection[]>([]);
   const [sectionAnswers, setSectionAnswers] = useState<Record<string, string>>({});
   const [completenessPassed, setCompletenessPassed] = useState(false);
   const [unviewedSections, setUnviewedSections] = useState<string[]>([]);
@@ -41,6 +43,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   const [exportStatus, setExportStatus] = useState("");
   const [exportError, setExportError] = useState<string | null>(null);
+  const [includeContactDetails, setIncludeContactDetails] = useState(false);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
   const exportInFlightRef = useRef(false);
   const apiClient = useApiClient();
@@ -58,24 +61,15 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         });
 
         if (currentDraft) {
-          if (currentDraft.sections) {
-            setSectionAnswers(currentDraft.sections);
-          }
-
           const result =
             await apiClient.landingPage.getNOFOSummary(selectedNofo);
-          if (result?.data?.ProjectNarrativeSections) {
-            const apiSections = result.data.ProjectNarrativeSections;
-            if (Array.isArray(apiSections) && apiSections.length > 0) {
-              setSections(
-                apiSections.map((section) => ({
-                  name: section.item || "Untitled Section",
-                  description:
-                    section.description || "No description provided.",
-                }))
-              );
-            }
-          }
+          const resolved = resolveApplicationSections(
+            grantSections(result?.data?.ProjectNarrativeSections),
+            currentDraft.sections,
+            currentDraft.sectionOrder
+          );
+          setSections(resolved.sections);
+          setSectionAnswers(resolved.answers);
         }
       } catch (error) {
         console.error("Error loading draft data:", error);
@@ -87,19 +81,21 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
   useEffect(() => {
     if (sections.length === 0) return;
-    const viewed = readDraftCache<string[]>(sessionId, "sectionsViewed") || [];
-    setUnviewedSections(sections.map((s) => s.name).filter((name) => !viewed.includes(name)));
+    const viewed = (readDraftCache<string[]>(sessionId, "sectionsViewed") || []).map(
+      (key) => toSectionId(key, sections) ?? key
+    );
+    setUnviewedSections(sections.filter((s) => !viewed.includes(s.id)).map((s) => s.name));
   }, [sections, sessionId]);
 
   useEffect(() => {
     if (sections.length > 0) {
       const complete = sections.filter(
-        (s) => (sectionAnswers[s.name] || "").trim().length > 0
+        (s) => (sectionAnswers[s.id] || "").trim().length > 0
       ).length;
       setCompletenessPassed(complete === sections.length);
 
       const allText = sections
-        .map((s) => sectionAnswers[s.name] || "")
+        .map((s) => sectionAnswers[s.id] || "")
         .join(" ");
       const wordCount = allText.trim().split(/\s+/).filter(Boolean).length;
       const pageCount = Math.max(1, Math.round(wordCount / 300));
@@ -152,12 +148,19 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   };
 
   const fetchDraftForExport = async () => {
-    if (!selectedNofo) return { draftData: null, grantName: null };
+    if (!selectedNofo) return { draftData: null, grantName: null, resolved: null };
     const username = (await getCurrentUser()).username;
     const draftData = await apiClient.drafts.getDraft({ sessionId, userId: username });
     const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo);
     const grantName = nofoSummary?.data?.GrantName || null;
-    return { draftData, grantName };
+    const resolved = draftData
+      ? resolveApplicationSections(
+          grantSections(nofoSummary?.data?.ProjectNarrativeSections),
+          draftData.sections,
+          draftData.sectionOrder
+        )
+      : null;
+    return { draftData, grantName, resolved };
   };
 
   const downloadBlob = async (blob: Blob, filename: string) => {
@@ -207,14 +210,15 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     setExportStatus(`Generating ${label}. This may take a moment.`);
 
     try {
-      const { draftData, grantName } = await fetchDraftForExport();
-      if (!draftData) throw new Error("No application data available for export.");
+      const { draftData, grantName, resolved } = await fetchDraftForExport();
+      if (!draftData || !resolved) throw new Error("No application data available for export.");
 
       const payload = {
         title: draftData.title,
         grantName: grantName || undefined,
         projectBasics: draftData.projectBasics,
-        sections: draftData.sections,
+        ...exportSections(resolved.sections, resolved.answers),
+        includeContactDetails,
       };
 
       if (format === "docx") {
@@ -408,6 +412,16 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       <div role="status" aria-live="polite" className="visually-hidden">
         {exportStatus}
       </div>
+
+      <label className="ra-export-option">
+        <input
+          type="checkbox"
+          checked={includeContactDetails}
+          onChange={(e) => setIncludeContactDetails(e.target.checked)}
+          disabled={exportingFormat !== null}
+        />
+        Include contact name and email on the cover page
+      </label>
 
       {/* Action Buttons */}
       <div className="ra-actions">

@@ -24,7 +24,7 @@ export class DraftGenerationStateMachine extends Construct {
     super(scope, id);
 
     // ── Step 1: Prepare ─────────────────────────────────────────────
-    // Fetches NOFO summary + KB docs, splits into N section items
+    // Fetches the NOFO summary and splits it into N section items
     const prepareSections = new tasks.LambdaInvoke(this, "PrepareSections", {
       lambdaFunction: props.prepareFunction,
       outputPath: "$.Payload",
@@ -42,6 +42,7 @@ export class DraftGenerationStateMachine extends Construct {
     // never aborts — failed sections return a stub with status "error"
     const sectionErrorFallback = new sfn.Pass(this, "SectionErrorFallback", {
       parameters: {
+        "sectionId.$": "$.sectionItem.id",
         "sectionName.$": "$.sectionItem.item",
         "status": "error",
       },
@@ -94,10 +95,11 @@ export class DraftGenerationStateMachine extends Construct {
         "documentIdentifier.$": "$.documentIdentifier",
         "projectBasics.$": "$.projectBasics",
         "questionnaire.$": "$.questionnaire",
+        "questionnaireAnswers.$": "$.questionnaireAnswers",
+        "additionalInfo.$": "$.additionalInfo",
         "sessionId.$": "$.sessionId",
         "userId.$": "$.userId",
         "userState.$": "$.userState",
-        "grantInfos.$": "$.grantInfos",
         "totalSections.$": "$.totalSections",
         "sectionNames.$": "$.sectionNames",
       },

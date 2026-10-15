@@ -53,7 +53,8 @@ vi.mock("@aws-sdk/client-lambda", () => ({
   LambdaClient: aws.client(async (cmd: any) => aws.lambda(JSON.parse(cmd.input.Payload))),
   InvokeCommand: aws.command("InvokeCommand"),
 }));
-vi.mock("grantwell-shared", () => ({
+vi.mock("grantwell-shared", async () => ({
+  ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/sections.mjs")),
   requireAdmin: () => null,
   assertCanEditNofoOr403: async () => null,
   resolveCallerScope: () => ({ role: "admin" }),
@@ -195,6 +196,13 @@ describe("publish", () => {
   it("writes questions.json when questions are present", async () => {
     await publish(event(QUESTIONS));
     expect(aws.uploads.map((u) => u.Key)).toContain("G/questions.json");
+  });
+
+  it("gives every narrative section of the published summary an id", async () => {
+    await publish(event(QUESTIONS));
+    const summary = JSON.parse(aws.uploads.find((u) => u.Key === "G/summary.json")!.Body);
+    expect(summary.ProjectNarrativeSections).toEqual([{ item: "Need", description: "Need details", id: "need" }]);
+    expect(summary.EligibilityCriteria[0].id).toBeUndefined();
   });
 });
 

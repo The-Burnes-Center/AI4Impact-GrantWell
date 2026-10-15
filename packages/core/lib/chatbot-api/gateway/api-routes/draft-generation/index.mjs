@@ -7,7 +7,7 @@
  */
 
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
-import { DynamoDBClient, PutItemCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, PutItemCommand, GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { randomUUID } from "crypto";
 
@@ -50,6 +50,48 @@ const SUPPORTED_STATES = (() => {
 })();
 const SUPPORTED_STATE_CODES = new Set(SUPPORTED_STATES.map((s) => s.code));
 const STATE_NAMES = Object.fromEntries(SUPPORTED_STATES.map((s) => [s.code, s.name]));
+
+const APPLICATIONS_PER_DAY = Number(process.env.APPLICATIONS_PER_DAY) || 10;
+
+const CAP_EXEMPT_ROLES = ["Admin", "PlatformAdmin", "Developer"];
+
+const MAX_INPUT_CHARS = 10000;
+
+/** Pinned by LOG_MARKERS.applicationCapReached. */
+const APPLICATION_CAP_MARKER = "Daily application limit reached";
+
+/**
+ * Counts one generated application against the user's cap for the current UTC day. False once the
+ * cap is reached; the condition makes concurrent starts unable to pass it. Fails open on any other error.
+ */
+async function takeDailyApplication(userId) {
+  const tableName = process.env.DAILY_USAGE_TABLE_NAME;
+  if (!tableName) return true;
+  const now = new Date();
+  const day = now.toISOString().slice(0, 10);
+  const expires = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 2) / 1000);
+  try {
+    await dynamoClient.send(
+      new UpdateItemCommand({
+        TableName: tableName,
+        Key: { pk: { S: `${userId}#${day}` } },
+        UpdateExpression: "ADD #count :one SET #ttl = :ttl",
+        ConditionExpression: "attribute_not_exists(#count) OR #count < :cap",
+        ExpressionAttributeNames: { "#count": "applications", "#ttl": "ttl" },
+        ExpressionAttributeValues: {
+          ":one": { N: "1" },
+          ":cap": { N: String(APPLICATIONS_PER_DAY) },
+          ":ttl": { N: String(expires) },
+        },
+      })
+    );
+    return true;
+  } catch (err) {
+    if (err.name === "ConditionalCheckFailedException") return false;
+    console.warn(`Could not count the application for ${userId}:`, err.message);
+    return true;
+  }
+}
 
 function parseRoles(raw) {
   if (Array.isArray(raw)) return raw.filter((r) => typeof r === "string");
@@ -97,9 +139,38 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
   throw err;
 }
 
+/** The plain message for the first field over MAX_INPUT_CHARS, or null. */
+function inputTooLongMessage(additionalInfo, questionnaire, questionnaireAnswers) {
+  if (additionalInfo.length > MAX_INPUT_CHARS) return "Additional information can be up to 10,000 characters.";
+  const answers = [
+    ...questionnaireAnswers.map((a) => a.answer),
+    ...(questionnaire && typeof questionnaire === "object" ? Object.values(questionnaire) : []),
+  ];
+  if (answers.some((a) => typeof a === "string" && a.length > MAX_INPUT_CHARS)) {
+    return "Each answer can be up to 10,000 characters.";
+  }
+  return null;
+}
+
+/** A retry names the sections to rewrite; anything else means the whole application. */
+function requestedSectionIds(raw) {
+  if (!Array.isArray(raw)) return undefined;
+  const ids = raw.filter((id) => typeof id === "string" && id.trim() !== "").slice(0, 200);
+  return ids.length > 0 ? ids : undefined;
+}
+
+/** Keeps only {question, answer} pairs of strings with a non-empty answer. */
+function normalizeQuestionnaireAnswers(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((a) => a && typeof a.answer === "string" && a.answer.trim() !== "")
+    .map((a) => ({ question: typeof a.question === "string" ? a.question : "", answer: a.answer }));
+}
+
+// Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(nofoName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
-  if (!tableName || !nofoName) return { scope: null, state: null };
+  if (!tableName || !nofoName) return null;
   try {
     const result = await dynamoClient.send(
       new GetItemCommand({
@@ -107,7 +178,7 @@ async function readNofoScope(nofoName) {
         Key: marshall({ nofo_name: nofoName }),
       })
     );
-    if (!result.Item) return { scope: null, state: null };
+    if (!result.Item) return null;
     const row = unmarshall(result.Item);
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
@@ -115,7 +186,7 @@ async function readNofoScope(nofoName) {
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
-    return { scope: null, state: null };
+    return null;
   }
 }
 
@@ -160,6 +231,8 @@ export const handler = async (event) => {
     }
 
     const { query, documentIdentifier, projectBasics, questionnaire, sessionId } = body;
+    const additionalInfo = typeof body.additionalInfo === "string" ? body.additionalInfo : "";
+    const questionnaireAnswers = normalizeQuestionnaireAnswers(body.questionnaireAnswers);
 
     // Validate required parameters
     if (!query || !documentIdentifier || !sessionId) {
@@ -168,6 +241,11 @@ export const handler = async (event) => {
         headers,
         body: JSON.stringify({ error: 'Query, documentIdentifier, and sessionId are required' })
       };
+    }
+
+    const tooLong = inputTooLongMessage(additionalInfo, questionnaire, questionnaireAnswers);
+    if (tooLong) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: "INPUT_TOO_LONG", message: tooLong }) };
     }
 
     // Generate a unique job ID for this draft generation
@@ -185,9 +263,9 @@ export const handler = async (event) => {
     }
 
     const callerScope = resolveCallerScope(event);
-    const nofoScopeRow = await readNofoScope(documentIdentifier);
-    const effectiveScope = nofoScopeRow.scope || "federal";
-    const effectiveState = nofoScopeRow.state;
+    const nofoScopeRow = await readNofoScope(String(documentIdentifier).replace(/\/+$/, ""));
+    const effectiveScope = nofoScopeRow ? nofoScopeRow.scope || "federal" : null;
+    const effectiveState = nofoScopeRow?.state || null;
 
     try {
       assertUserCanAccessNofo(callerScope, effectiveScope, effectiveState);
@@ -199,7 +277,9 @@ export const handler = async (event) => {
           headers,
           body: JSON.stringify({
             error: "ACCESS_DENIED_STATE",
-            message: `This grant is specific to ${stateName}. Please contact a platform administrator to request access.`,
+            message: nofoScopeRow
+              ? `This grant is specific to ${stateName}. Please contact a platform administrator to request access.`
+              : "We couldn't confirm your access to this grant. Please contact a platform administrator to request access.",
             userState: authError.userState,
             nofoState: authError.nofoState,
             cta: { label: "Go back to home", target: "/home" },
@@ -210,6 +290,19 @@ export const handler = async (event) => {
     }
 
     const userState = callerScope.state || "";
+
+    const roles = parseRoles(event.requestContext?.authorizer?.jwt?.claims?.["custom:role"]);
+    if (!roles.some((r) => CAP_EXEMPT_ROLES.includes(r)) && !(await takeDailyApplication(userId))) {
+      console.warn(`${APPLICATION_CAP_MARKER} for ${userId}`);
+      return {
+        statusCode: 429,
+        headers,
+        body: JSON.stringify({
+          error: "DAILY_LIMIT_REACHED",
+          message: `You've reached today's limit of ${APPLICATIONS_PER_DAY} generated applications. You can generate more tomorrow.`,
+        }),
+      };
+    }
 
     // Store initial job status in DynamoDB
     const tableName = process.env.DRAFT_GENERATION_JOBS_TABLE_NAME;
@@ -237,11 +330,14 @@ export const handler = async (event) => {
       documentIdentifier,
       projectBasics: projectBasics || {},
       questionnaire: questionnaire || {},
+      questionnaireAnswers,
+      additionalInfo,
       sessionId,
       userId,
       userState,
       nofoScope: effectiveScope,
       nofoState: effectiveState,
+      sectionIds: requestedSectionIds(body.sectionIds),
     }, userId);
 
     // Return the jobId immediately for polling

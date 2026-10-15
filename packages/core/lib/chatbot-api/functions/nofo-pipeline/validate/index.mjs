@@ -3,9 +3,11 @@ import { hasMeaningfulContent, SUMMARY_ARRAY_FIELDS } from "../shared/json.mjs";
 import { hasQuestions } from "../shared/questions.mjs";
 
 export const handler = async (event) => {
-  const { nofoName, mergedSummary, questionsData } = event;
+  const { nofoName, mergedSummary, questionsData, failedChunks } = event;
 
   await updateProcessingStatus(nofoName, "validating");
+
+  const missingParts = describeMissingParts(failedChunks);
 
   const missingSections = SUMMARY_ARRAY_FIELDS.filter(
     (field) => !hasMeaningfulContent(mergedSummary[field])
@@ -20,16 +22,18 @@ export const handler = async (event) => {
     reason = "no_questions";
   } else if (missingSections.length > 0) {
     reason = "partial_extraction";
+  } else if (missingParts) {
+    reason = "partial_document";
   }
 
   const adminGuidance = reason
-    ? buildAdminGuidance(reason, { emptyCategories: missingSections, nofoName })
+    ? buildAdminGuidance(reason, { emptyCategories: missingSections, nofoName, missingParts })
     : null;
 
-  // partial_extraction (1-2 missing) is approvable, so auto-publish it and let the
-  // guidance ride along as an advisory review flag. Everything else blocks on manual review.
+  // partial_extraction (1-2 missing) is approvable, so auto-publish it and let the guidance ride along
+  // as an advisory review flag. Anything else, including an unread part of the text, blocks on review.
   let validationResult;
-  if (!reason || reason === "partial_extraction") {
+  if (!reason || (reason === "partial_extraction" && !missingParts)) {
     validationResult = { overallVerdict: "PASS" };
     console.log(
       reason
@@ -41,7 +45,9 @@ export const handler = async (event) => {
     console.log(
       reason === "no_questions"
         ? `Content check NEEDS_REVIEW for ${nofoName}: no application questions generated`
-        : `Content check NEEDS_REVIEW for ${nofoName}: missing ${missingSections.join(", ")}`
+        : reason === "partial_document"
+          ? `Content check NEEDS_REVIEW for ${nofoName}: part of the text unread`
+          : `Content check NEEDS_REVIEW for ${nofoName}: missing ${missingSections.join(", ")}`
     );
   }
 
@@ -53,19 +59,29 @@ export const handler = async (event) => {
   };
 };
 
+/** One sentence naming the parts of the grant text the extraction step could not read, or null. */
+function describeMissingParts(failedChunks) {
+  if (!Array.isArray(failedChunks) || failedChunks.length === 0) return null;
+  const parts = failedChunks.map(
+    (c) => `part ${c.part} of ${c.of} (about ${c.startPercent}%–${c.endPercent}% of the way through)`
+  );
+  const list = parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`;
+  return `The grant text could not be read in ${list}, so requirements from there may be missing.`;
+}
+
 /**
  * Build actionable admin guidance for quarantined NOFOs.
  * This tells the admin exactly what went wrong and what they should do.
  */
 function buildAdminGuidance(reason, context) {
-  const { emptyCategories, nofoName } = context;
+  const { emptyCategories, nofoName, missingParts } = context;
   const missingList = emptyCategories.join(", ");
 
   const guidance = {
     reason,
-    severity: reason === "partial_extraction" ? "warning" : "critical",
+    severity: reason === "partial_extraction" || reason === "partial_document" ? "warning" : "critical",
     missingCategories: emptyCategories,
-    canApprove: reason === "partial_extraction" || reason === "no_questions",
+    canApprove: reason === "partial_extraction" || reason === "partial_document" || reason === "no_questions",
   };
 
   switch (reason) {
@@ -124,10 +140,23 @@ function buildAdminGuidance(reason, context) {
       ];
       break;
 
+    case "partial_document":
+      guidance.title = "Part of the grant could not be read";
+      guidance.message = `The rest of "${nofoName}" was extracted and published.`;
+      guidance.actions = [
+        "Compare that part of the original document with the extracted requirements and add anything missing.",
+      ];
+      break;
+
     default:
       guidance.title = "Review required";
       guidance.message = `The grant "${nofoName}" needs manual review.`;
       guidance.actions = ["Review the extracted requirements, then approve or reject."];
+  }
+
+  if (missingParts) {
+    guidance.missingParts = missingParts;
+    guidance.message = `${missingParts} ${guidance.message}`;
   }
 
   return guidance;

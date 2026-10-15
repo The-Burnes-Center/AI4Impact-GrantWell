@@ -1,7 +1,24 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
-import type { ProjectBasicsData, RawDraftRecord } from "../types/document";
+import type { ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../types/document";
 import { apiFetch } from "../session-ended";
+import { dailyLimitError } from "./daily-limit";
+import type { SectionRef } from "../helpers/application-sections";
+
+/** A draft start refused because additional information or an answer is too long; the message says which. */
+export class InputTooLongError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InputTooLongError";
+  }
+}
+
+function inputTooLongError(status: number, body: unknown): InputTooLongError | null {
+  if (status !== 400 || typeof body !== "object" || body === null) return null;
+  const { error, message } = body as { error?: unknown; message?: unknown };
+  if (error !== "INPUT_TOO_LONG" || typeof message !== "string" || !message) return null;
+  return new InputTooLongError(message);
+}
 
 // Unified status that represents both the step and state in the grant writing flow
 export type DraftStatus = 
@@ -36,7 +53,9 @@ export interface DocumentDraft {
   documentIdentifier: string;
   status?: DraftStatus;
   reachedSteps?: string[];
+  /** Keyed by section id; keyed by name on an application without `sectionOrder`. */
   sections?: Record<string, string>;
+  sectionOrder?: SectionRef[];
   projectBasics?: ProjectBasicsData;
   questionnaire?: Record<string, string>;
   additionalInfo?: string;
@@ -46,6 +65,9 @@ export interface DocumentDraft {
   lastModified?: string;
   rev?: number;
   lastWriteSource?: DraftWriteSource;
+  /** Approximate stored size after the last save, against the per-application limit. */
+  itemBytes?: number;
+  itemLimitBytes?: number;
 }
 
 /** Thrown by updateDraft when the row moved on; `remote` is the server state. */
@@ -80,6 +102,7 @@ export interface DraftVersionDetail extends DraftVersionMeta {
     title?: string;
     status?: DraftStatus;
     sections?: Record<string, string>;
+    section_order?: SectionRef[];
     project_basics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
     additional_info?: string;
@@ -91,6 +114,7 @@ export interface DraftJobStatus {
   jobId: string;
   status: 'in_progress' | 'completed' | 'partial' | 'error';
   sectionNames?: string[];
+  sectionIds?: string[];
   totalSections?: number;
   completedSectionCount?: number;
   sections?: Record<string, string>;
@@ -123,6 +147,7 @@ export class DraftsClient {
         title: draft.title,
         document_identifier: draft.documentIdentifier,
         sections: draft.sections || {},
+        section_order: draft.sectionOrder || [],
         project_basics: draft.projectBasics || {},
         questionnaire: draft.questionnaire || {},
         status: draft.status || 'project_basics',
@@ -147,6 +172,7 @@ export class DraftsClient {
       status: ((row.status as DraftStatus) || 'project_basics'),
       reachedSteps: Array.isArray(row.reached_steps) ? (row.reached_steps as string[]) : undefined,
       sections: (row.sections as Record<string, string>) || {},
+      sectionOrder: Array.isArray(row.section_order) ? (row.section_order as SectionRef[]) : undefined,
       projectBasics: (row.project_basics as ProjectBasicsData) || {},
       questionnaire: (row.questionnaire as Record<string, string>) || {},
       additionalInfo: (row.additional_info as string) ?? '',
@@ -250,6 +276,7 @@ export class DraftsClient {
       title: draft.title,
       document_identifier: draft.documentIdentifier,
       sections: draft.sections || {},
+      section_order: draft.sectionOrder,
       project_basics: draft.projectBasics || {},
       questionnaire: draft.questionnaire || {},
       additional_info: draft.additionalInfo,
@@ -289,6 +316,11 @@ export class DraftsClient {
       throw new DraftConflictError(remote);
     }
 
+    if (response.status === 413) {
+      const body = await response.json().catch((): null => null);
+      throw new Error(body?.message || 'This application is too large to save. Shorten a long section and try again.');
+    }
+
     if (response.status !== 200) {
       let detail = `HTTP ${response.status}`;
       try {
@@ -304,6 +336,7 @@ export class DraftsClient {
       ...draft,
       title: data.title ?? draft.title,
       sections: data.sections ?? draft.sections,
+      sectionOrder: Array.isArray(data.sectionOrder) ? data.sectionOrder : draft.sectionOrder,
       projectBasics: data.projectBasics ?? draft.projectBasics,
       questionnaire: data.questionnaire ?? draft.questionnaire,
       additionalInfo: data.additionalInfo ?? draft.additionalInfo,
@@ -312,6 +345,8 @@ export class DraftsClient {
       reachedSteps: data.reachedSteps ?? draft.reachedSteps,
       lastModified: data.lastModified ?? draft.lastModified,
       rev: typeof data.rev === 'number' ? data.rev : draft.rev,
+      itemBytes: typeof data.itemBytes === 'number' ? data.itemBytes : undefined,
+      itemLimitBytes: typeof data.itemLimitBytes === 'number' ? data.itemLimitBytes : undefined,
     };
   }
 
@@ -498,7 +533,7 @@ export class DraftsClient {
         const drafts = typeof data.body === 'string' ? JSON.parse(data.body) : data.body;
         
         if (!Array.isArray(drafts)) {
-          console.error('Invalid drafts format:', drafts);
+          console.error('Invalid drafts format');
           throw new Error('Invalid response format: body is not an array');
         }
         
@@ -526,6 +561,8 @@ export class DraftsClient {
     documentIdentifier: string;
     projectBasics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
+    questionnaireAnswers?: QuestionnaireAnswer[];
+    additionalInfo?: string;
     sessionId: string;
   }): Promise<string> {
     const auth = await Utils.authenticate();
@@ -540,12 +577,18 @@ export class DraftsClient {
         documentIdentifier: params.documentIdentifier,
         projectBasics: params.projectBasics || {},
         questionnaire: params.questionnaire || {},
+        questionnaireAnswers: params.questionnaireAnswers || [],
+        additionalInfo: params.additionalInfo || '',
         sessionId: params.sessionId,
       }),
     });
 
     if (response.status !== 200) {
       const errorData = await response.json();
+      const limitError = dailyLimitError(response.status, errorData);
+      if (limitError) throw limitError;
+      const tooLong = inputTooLongError(response.status, errorData);
+      if (tooLong) throw tooLong;
       throw new Error(errorData.error || 'Failed to start draft generation');
     }
 
@@ -560,12 +603,15 @@ export class DraftsClient {
     documentIdentifier: string;
     projectBasics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
+    questionnaireAnswers?: QuestionnaireAnswer[];
+    additionalInfo?: string;
     sessionId: string;
+    /** Rewrite only these sections; the rest of the application is left alone. */
+    sectionIds?: string[];
     onProgress?: (status: string, pollCount?: number, maxPolls?: number) => void;
     onJobUpdate?: (jobStatus: DraftJobStatus) => void;
   }): Promise<{ jobId: string; sections: Record<string, string> }> {
     const auth = await Utils.authenticate();
-    console.log('Calling /draft-generation with:', params);
 
     // Start the draft generation job
     const startResponse = await apiFetch(this.API + '/draft-generation', {
@@ -579,7 +625,10 @@ export class DraftsClient {
         documentIdentifier: params.documentIdentifier,
         projectBasics: params.projectBasics || {},
         questionnaire: params.questionnaire || {},
-        sessionId: params.sessionId
+        questionnaireAnswers: params.questionnaireAnswers || [],
+        additionalInfo: params.additionalInfo || '',
+        sessionId: params.sessionId,
+        sectionIds: params.sectionIds,
       }),
     });
 
@@ -595,6 +644,10 @@ export class DraftsClient {
           new CustomEvent("grantwell:access-denied", { detail: errorMessage })
         );
       }
+      const limitError = dailyLimitError(startResponse.status, errorMessage);
+      if (limitError) throw limitError;
+      const tooLong = inputTooLongError(startResponse.status, errorMessage);
+      if (tooLong) throw tooLong;
       throw new Error(errorMessage.error || 'Failed to start draft generation');
     }
 
@@ -679,10 +732,10 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    sectionOrder?: SectionRef[];
+    includeContactDetails?: boolean;
   }): Promise<Blob> {
     const auth = await Utils.authenticate();
-    console.log('Calling /generate-docx with:', draftData);
-
     const response = await apiFetch(this.API + '/generate-docx', {
       method: 'POST',
       headers: {
@@ -695,7 +748,9 @@ export class DraftsClient {
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
+          sectionOrder: draftData.sectionOrder,
         },
+        includeContactDetails: draftData.includeContactDetails === true,
       }),
     });
 
@@ -724,6 +779,8 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    sectionOrder?: SectionRef[];
+    includeContactDetails?: boolean;
   }): Promise<string> {
     const auth = await Utils.authenticate();
     const response = await apiFetch(this.API + '/generate-pdf', {
@@ -739,7 +796,9 @@ export class DraftsClient {
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
+          sectionOrder: draftData.sectionOrder,
         },
+        includeContactDetails: draftData.includeContactDetails === true,
       }),
     });
 
@@ -758,10 +817,10 @@ export class DraftsClient {
     grantName?: string;
     projectBasics?: ProjectBasicsData;
     sections?: Record<string, string>;
+    sectionOrder?: SectionRef[];
+    includeContactDetails?: boolean;
   }): Promise<Blob> {
     const auth = await Utils.authenticate();
-    console.log('Calling /generate-pdf with:', draftData);
-    
     const response = await apiFetch(this.API + '/generate-pdf', {
       method: 'POST',
       headers: {
@@ -774,7 +833,9 @@ export class DraftsClient {
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
+          sectionOrder: draftData.sectionOrder,
         },
+        includeContactDetails: draftData.includeContactDetails === true,
       }),
     });
 

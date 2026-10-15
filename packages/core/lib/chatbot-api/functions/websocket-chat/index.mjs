@@ -9,10 +9,10 @@ import { BedrockAgentRuntimeClient, RetrieveCommand as KBRetrieveCommand } from 
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
-import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import ClaudeModel from "./claudeSonnet.mjs";
-import { getPromptText } from "./prompt.mjs";
+import { getPromptText, retrievedPassages } from "./prompt.mjs";
 
 const ENDPOINT = process.env.WEBSOCKET_API_ENDPOINT;
 const wsConnectionClient = new ApiGatewayManagementApiClient({ endpoint: ENDPOINT });
@@ -35,9 +35,23 @@ const STATE_NAME_BY_CODE = Object.fromEntries(SUPPORTED_STATES.map((s) => [s.cod
 
 const NOFO_STATE_FILTER_ENABLED = process.env.NOFO_STATE_FILTER_ENABLED === "true";
 
+const CHAT_MESSAGES_PER_DAY = Number(process.env.CHAT_MESSAGES_PER_DAY) || 100;
+
+const CAP_EXEMPT_ROLES = ["Admin", "PlatformAdmin", "Developer"];
+
+/** Pinned by LOG_MARKERS.chatCapReached. */
+const CHAT_CAP_MARKER = "Daily chat message limit reached";
+
 const MAX_MODEL_CALLS = 5;
 
 const REFUSAL_MESSAGE = "I can't help with that request.";
+
+const NO_GRANT_RECORD_MESSAGE =
+  "We couldn't confirm your access to this grant. Please contact a platform administrator to request access.";
+
+const CUT_OFF_NOTICE = "This answer was cut off. Ask me to continue.";
+
+const ERROR_MESSAGE = "Something went wrong while answering. Try again in a moment.";
 
 // Platform authority comes from the explicit PlatformAdmin role; this flag keeps pre-migration
 // stateless admins working and must stay on until every pool is migrated.
@@ -76,9 +90,10 @@ async function resolveUserAttributes(userId) {
   }
 }
 
+// Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(nofoName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
-  if (!tableName || !nofoName) return { scope: null, state: null };
+  if (!tableName || !nofoName) return null;
   try {
     const result = await dynamoClient.send(
       new GetItemCommand({
@@ -86,7 +101,7 @@ async function readNofoScope(nofoName) {
         Key: marshall({ nofo_name: nofoName }),
       })
     );
-    if (!result.Item) return { scope: null, state: null };
+    if (!result.Item) return null;
     const row = unmarshall(result.Item);
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
@@ -94,7 +109,7 @@ async function readNofoScope(nofoName) {
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
-    return { scope: null, state: null };
+    return null;
   }
 }
 
@@ -114,15 +129,18 @@ async function checkPerNofoAccess(userRoles, userState, nofoName) {
     (isAdmin && !userState && LEGACY_STATELESS_ADMIN_IS_PLATFORM);
   if (isDeveloper || isPlatformAdmin) return null;
 
-  const { scope: nofoScope, state: nofoState } = await readNofoScope(nofoName);
-  const effectiveScope = nofoScope || "federal";
+  const row = await readNofoScope(nofoName);
+  const nofoState = row?.state || null;
+  const effectiveScope = row ? row.scope || "federal" : null;
   if (effectiveScope === "federal") return null;
   if (effectiveScope === "state" && nofoState && nofoState === userState) return null;
 
   const stateLabel = nofoState ? (STATE_NAME_BY_CODE[nofoState] || nofoState) : "another state";
   return {
     error: "ACCESS_DENIED_STATE",
-    message: `This grant is specific to ${stateLabel}. Please contact a platform administrator to request access.`,
+    message: row
+      ? `This grant is specific to ${stateLabel}. Please contact a platform administrator to request access.`
+      : NO_GRANT_RECORD_MESSAGE,
     userState: userState || null,
     nofoState: nofoState || null,
     cta: { label: "Go back to home", target: "/home" },
@@ -242,7 +260,7 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
         };
       }
 
-      return { content: fullContent, uris: uniqueUris };
+      return { content: retrievedPassages(fullContent), uris: uniqueUris };
     }
 
     // No user docs -- single NOFO-only query
@@ -258,7 +276,7 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
     }
 
     const uniqueUris = Array.from(new Map(nofoResult.uris.map(item => [item.uri, item])).values());
-    return { content: nofoResult.content, uris: uniqueUris };
+    return { content: retrievedPassages(nofoResult.content), uris: uniqueUris };
 
   } catch (error) {
     console.error("Caught error: could not retrieve Knowledge Base documents:", error);
@@ -290,7 +308,7 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
         }));
 
         return {
-          content: fallbackContent || noResultsMessage,
+          content: fallbackContent ? retrievedPassages(fallbackContent) : noResultsMessage,
           uris: Array.from(new Map(fallbackUris.map(item => [item.uri, item])).values())
         };
       } catch (fallbackError) {
@@ -327,11 +345,12 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     const sessionId = data.session_id;
     const chatHistory = data.chatHistory;
     const documentIdentifier = data.documentIdentifier;
+    const grantName = (documentIdentifier || "").replace(/\/+$/, "");
 
     const { state: userState, roles: userRoles } = await resolveUserAttributes(userId);
     const scopeFilter = buildScopeFilter(userState);
 
-    const accessDenied = await checkPerNofoAccess(userRoles, userState, documentIdentifier);
+    const accessDenied = await checkPerNofoAccess(userRoles, userState, grantName);
     if (accessDenied) {
       try {
         await wsConnectionClient.send(new PostToConnectionCommand({
@@ -349,13 +368,27 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       return;
     }
 
+    if (!userRoles.some((r) => CAP_EXEMPT_ROLES.includes(r)) && !(await takeDailyChatMessage(userId))) {
+      console.warn(`${CHAT_CAP_MARKER} for ${userId}`);
+      try {
+        await wsConnectionClient.send(new PostToConnectionCommand({
+          ConnectionId: id,
+          Data: `<!LIMIT!>You've reached today's limit of ${CHAT_MESSAGES_PER_DAY} chat messages. You can chat again tomorrow.`,
+        }));
+        await wsConnectionClient.send(new DeleteConnectionCommand({ ConnectionId: id }));
+      } catch (e) {
+        console.warn("Failed to send the daily limit message:", e.message);
+      }
+      return;
+    }
+
     const knowledgeBase = new BedrockAgentRuntimeClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
     if (!process.env.KB_ID) {
       throw new Error("Knowledge Base ID is not found.");
     }
 
-    const nofoName = documentIdentifier.split("/").pop() || documentIdentifier;
+    const nofoName = grantName.split("/").pop() || grantName;
     let uploadedFilesList = '';
     if (userId && process.env.USER_DOCUMENTS_BUCKET) {
       try {
@@ -377,12 +410,12 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     }
 
     let claude = new ClaudeModel();
-    let lastFiveMessages = chatHistory.slice(-2);
+    const recentTurns = Array.isArray(chatHistory) ? chatHistory.slice(-2) : [];
     
     let stopLoop = false;
     let modelResponse = '';
     
-    let history = claude.assembleHistory(lastFiveMessages, "Please use your search tool one or more times based on this latest prompt: ".concat(userMessage));
+    let history = claude.assembleHistory(recentTurns, "Please use your search tool one or more times based on this latest prompt: ".concat(userMessage));
     let fullDocs = { content: "", uris: [] };
     let modelCalls = 0;
     const today = new Date().toLocaleDateString("en-US", { timeZone: "America/New_York", year: "numeric", month: "long", day: "numeric" });
@@ -439,13 +472,25 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
           }
         } else if (stopReason) {
           stopLoop = true;
+          if (stopReason === "max_tokens") {
+            const notice = modelResponse ? `\n\n${CUT_OFF_NOTICE}` : CUT_OFF_NOTICE;
+            modelResponse = modelResponse.concat(notice);
+            try {
+              await wsConnectionClient.send(new PostToConnectionCommand({
+                ConnectionId: id,
+                Data: notice,
+              }));
+            } catch (error) {
+              console.error("Error sending chunk:", error);
+            }
+          }
         }
       } catch (error) {
         console.error("Stream processing error:", error);
         try {
           await wsConnectionClient.send(new PostToConnectionCommand({
             ConnectionId: id,
-            Data: `<!ERROR!>: ${error}`
+            Data: `<!ERROR!>: ${ERROR_MESSAGE}`
           }));
         } catch (e) {
           console.error("Error sending stream error:", e);
@@ -494,71 +539,29 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       console.error("Error sending EOF_STREAM and sources:", e);
     }
 
-    const sessionRequest = {
-      body: JSON.stringify({
-        operation: "get_session",
-        user_id: userId,
-        session_id: sessionId,
-      })
-    };
-    const client = new LambdaClient({});
-    const lambdaCommand = new InvokeCommand({
-      FunctionName: process.env.SESSION_HANDLER,
-      Payload: JSON.stringify(sessionRequest),
-    });
-
-    const { Payload, LogResult } = await client.send(lambdaCommand);
-    const result = Buffer.from(Payload).toString();
-
-    if (!result) {
-      throw new Error(`Error retrieving session data!`);
-    }
-
-    let output = {};
-    try {
-      const response = JSON.parse(result);
-      output = JSON.parse(response.body);
-    } catch (error) {
-      console.error('Failed to parse JSON:', error);
-      let responseParams = {
-        ConnectionId: id,
-        Data: '<!ERROR!>: Unable to load past messages, please retry your query'
-      };
-      command = new PostToConnectionCommand(responseParams);
-      await wsConnectionClient.send(command);
-      return;
-    }
-
-    const retrievedHistory = output.chat_history;
-    let operation = '';
-    let title = '';
-
-    let newChatEntry = [{ user: userMessage, chatbot: modelResponse, metadata: links }];
-    
-    if (retrievedHistory === undefined) {
-      operation = 'add_session';
-      title = `Chat about ${documentIdentifier}`;
-    } else {
-      operation = 'update_session';
-    }
-
     const sessionSaveRequest = {
       body: JSON.stringify({
-        operation: operation,
+        operation: "update_session",
         user_id: userId,
         session_id: sessionId,
-        new_chat_entry: newChatEntry,
-        title: title,
+        new_chat_entry: [{ user: userMessage, chatbot: modelResponse, metadata: links }],
+        title: `Chat about ${documentIdentifier}`,
         document_identifier: documentIdentifier,
       })
     };
 
-    const lambdaSaveCommand = new InvokeCommand({
+    const client = new LambdaClient({});
+    const { Payload } = await client.send(new InvokeCommand({
       FunctionName: process.env.SESSION_HANDLER,
       Payload: JSON.stringify(sessionSaveRequest),
-    });
-
-    await client.send(lambdaSaveCommand);
+    }));
+    let saved = {};
+    try {
+      saved = JSON.parse(Buffer.from(Payload).toString());
+    } catch {}
+    if (saved.statusCode !== 200) {
+      console.error("Could not save the chat turn:", saved.error || saved.body || saved.errorMessage);
+    }
 
     const input = {
       ConnectionId: id,
@@ -569,12 +572,45 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     console.error("Error:", error);
     let responseParams = {
       ConnectionId: id,
-      Data: `<!ERROR!>: ${error}`
+      Data: `<!ERROR!>: ${ERROR_MESSAGE}`
     };
     let command = new PostToConnectionCommand(responseParams);
     await wsConnectionClient.send(command);
   }
 };
+
+/**
+ * Counts one message against the user's cap for the current UTC day. False once the cap is
+ * reached; the condition makes concurrent messages unable to pass it. Fails open on any other error.
+ */
+async function takeDailyChatMessage(userId) {
+  const tableName = process.env.DAILY_USAGE_TABLE_NAME;
+  if (!tableName) return true;
+  const now = new Date();
+  const day = now.toISOString().slice(0, 10);
+  const expires = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 2) / 1000);
+  try {
+    await dynamoClient.send(
+      new UpdateItemCommand({
+        TableName: tableName,
+        Key: { pk: { S: `${userId}#${day}` } },
+        UpdateExpression: "ADD #count :one SET #ttl = :ttl",
+        ConditionExpression: "attribute_not_exists(#count) OR #count < :cap",
+        ExpressionAttributeNames: { "#count": "chat_messages", "#ttl": "ttl" },
+        ExpressionAttributeValues: {
+          ":one": { N: "1" },
+          ":cap": { N: String(CHAT_MESSAGES_PER_DAY) },
+          ":ttl": { N: String(expires) },
+        },
+      })
+    );
+    return true;
+  } catch (err) {
+    if (err.name === "ConditionalCheckFailedException") return false;
+    console.warn(`Could not count the chat message for ${userId}:`, err.message);
+    return true;
+  }
+}
 
 /**
  * Main Lambda handler function for WebSocket events.

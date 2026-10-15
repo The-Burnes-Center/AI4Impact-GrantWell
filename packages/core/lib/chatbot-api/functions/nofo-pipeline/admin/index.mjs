@@ -21,6 +21,7 @@ import { documentSampleOf, generateQuestions, hasQuestions } from "../shared/que
 import {
   requireAdmin,
   assertCanEditNofoOr403,
+  canEditAnyNofo,
   resolveCallerScope,
   grantDeadline,
   compareByDeadline,
@@ -149,7 +150,7 @@ function grantMetadata(reviews) {
 // A state admin only sees review rows for their own state's NOFOs — federal/other-state
 // rows are hidden entirely (matching retrieve-nofos), so no out-of-scope actions surface.
 function inCallerScope(callerScope, meta) {
-  if (callerScope.role !== "stateAdmin") return true;
+  if (callerScope.role !== "stateAdmin" || canEditAnyNofo(callerScope)) return true;
   return meta?.scope === "state" && meta?.state === callerScope.state;
 }
 
@@ -193,6 +194,8 @@ async function listReviews(event) {
       retryCount: parsed.retryCount,
       source: parsed.source,
       errorMessage: parsed.errorMessage,
+      failure_count: parsed.failure_count,
+      last_failed_at: parsed.last_failed_at,
       guidanceTitle: guidance?.title || null,
       guidanceSeverity: guidance?.severity || null,
       missingSections: guidance?.missingCategories || [],
@@ -258,17 +261,23 @@ async function closeExpiredReviews(event) {
 }
 
 async function getLatestReview(tableName, nofoName) {
-  const result = await dynamoClient.send(
-    new QueryCommand({
-      TableName: tableName,
-      KeyConditionExpression: "nofo_name = :name",
-      ExpressionAttributeValues: marshall({ ":name": nofoName }),
-    })
-  );
+  const items = [];
+  let lastKey;
+  do {
+    const result = await dynamoClient.send(
+      new QueryCommand({
+        TableName: tableName,
+        KeyConditionExpression: "nofo_name = :name",
+        ExpressionAttributeValues: marshall({ ":name": nofoName }),
+        ExclusiveStartKey: lastKey,
+      })
+    );
+    items.push(...(result.Items || []).map((i) => unmarshall(i)));
+    lastKey = result.LastEvaluatedKey;
+  } while (lastKey);
 
-  if (!result.Items?.length) return null;
+  if (!items.length) return null;
 
-  const items = result.Items.map((i) => unmarshall(i));
   items.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
   return items[0];
 }
@@ -534,17 +543,24 @@ async function getMetrics() {
 
   for (const status of statuses) {
     try {
-      const result = await dynamoClient.send(
-        new QueryCommand({
-          TableName: tableName,
-          IndexName: "StatusIndex",
-          KeyConditionExpression: "#s = :status",
-          ExpressionAttributeNames: { "#s": "status" },
-          ExpressionAttributeValues: marshall({ ":status": status }),
-          Select: "COUNT",
-        })
-      );
-      counts[status] = result.Count || 0;
+      let count = 0;
+      let lastKey;
+      do {
+        const result = await dynamoClient.send(
+          new QueryCommand({
+            TableName: tableName,
+            IndexName: "StatusIndex",
+            KeyConditionExpression: "#s = :status",
+            ExpressionAttributeNames: { "#s": "status" },
+            ExpressionAttributeValues: marshall({ ":status": status }),
+            Select: "COUNT",
+            ExclusiveStartKey: lastKey,
+          })
+        );
+        count += result.Count || 0;
+        lastKey = result.LastEvaluatedKey;
+      } while (lastKey);
+      counts[status] = count;
     } catch (error) {
       // A count badge must not 500 the dashboard. Degrade a failed bucket to 0 and keep going.
       console.warn(`Could not count review status "${status}":`, error.message);
@@ -555,13 +571,18 @@ async function getMetrics() {
   // Count total NOFOs processed (from metadata table)
   let totalProcessed = 0;
   try {
-    const scanResult = await dynamoClient.send(
-      new ScanCommand({
-        TableName: metadataTable,
-        Select: "COUNT",
-      })
-    );
-    totalProcessed = scanResult.Count || 0;
+    let lastKey;
+    do {
+      const scanResult = await dynamoClient.send(
+        new ScanCommand({
+          TableName: metadataTable,
+          Select: "COUNT",
+          ExclusiveStartKey: lastKey,
+        })
+      );
+      totalProcessed += scanResult.Count || 0;
+      lastKey = scanResult.LastEvaluatedKey;
+    } while (lastKey);
   } catch (error) {
     console.warn("Could not count processed NOFOs:", error.message);
   }

@@ -1,5 +1,5 @@
 import { mockClient } from "aws-sdk-client-mock";
-import { BatchGetItemCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { BatchGetItemCommand, DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
 import { SendMessageBatchCommand, SQSClient } from "@aws-sdk/client-sqs";
 import { marshall } from "@aws-sdk/util-dynamodb";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -30,6 +30,7 @@ beforeEach(() => {
   ddb.reset();
   sqs.reset();
   sqs.on(SendMessageBatchCommand).resolves({ Successful: [], Failed: [] });
+  ddb.on(QueryCommand).resolves({ Items: [] });
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
   errors = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -64,6 +65,106 @@ describe("grants.gov scraper coordinator", () => {
       { opportunityId: 1, opportunityTitle: "New Grant", isUpdate: false, apiUpdatedAt: "2026-10-01" },
       { opportunityId: 2, opportunityTitle: "Changed Grant", isUpdate: true, apiUpdatedAt: "2026-10-05" },
     ]);
+  });
+
+  it("matches a retitled grant by opportunity_id and updates it under its stored name", async () => {
+    vi.stubGlobal(
+      "fetch",
+      grantsApi({
+        data: [
+          { opportunity_id: "a1", opportunity_title: "Renamed Changed Grant", updated_at: "2026-10-05" },
+          { opportunity_id: "b2", opportunity_title: "Renamed Same Grant", updated_at: "2026-09-01" },
+          { opportunity_id: "c3", opportunity_title: "Brand New Grant", updated_at: "2026-10-01" },
+        ],
+      })
+    );
+    ddb.on(BatchGetItemCommand).resolves({ Responses: { nofos: [] } });
+    const stored: Record<string, Record<string, string>> = {
+      a1: { nofo_name: "Old Changed Grant", opportunity_id: "a1", source_updated_at: "2026-09-30" },
+      b2: { nofo_name: "Old Same Grant", opportunity_id: "b2", source_updated_at: "2026-09-01" },
+    };
+    ddb.on(QueryCommand).callsFake((input) => {
+      const row = stored[input.ExpressionAttributeValues[":id"].S];
+      return { Items: row ? [marshall(row)] : [] };
+    });
+
+    const res = await handler({ source: "aws.events" });
+
+    expect(JSON.parse(res.body)).toMatchObject({ newQueued: 1, updatedQueued: 1, skipped: 1 });
+    expect(ddb.commandCalls(QueryCommand)[0].args[0].input.IndexName).toBe("OpportunityIdIndex");
+    const queued = sqs.commandCalls(SendMessageBatchCommand).flatMap((c) => c.args[0].input.Entries!.map((e) => JSON.parse(e.MessageBody!)));
+    expect(queued).toEqual([
+      { opportunityId: "a1", opportunityTitle: "Renamed Changed Grant", isUpdate: true, apiUpdatedAt: "2026-10-05", nofoName: "Old Changed Grant" },
+      { opportunityId: "c3", opportunityTitle: "Brand New Grant", isUpdate: false, apiUpdatedAt: "2026-10-01" },
+    ]);
+  });
+
+  it("re-queues a grants.gov grant whose row was written but whose file never landed", async () => {
+    vi.stubGlobal(
+      "fetch",
+      grantsApi({
+        data: [
+          { opportunity_id: "n1", opportunity_title: "Upload Failed Grant", updated_at: "2026-10-01" },
+          { opportunity_id: "r2", opportunity_title: "Renamed Upload Failed Grant", updated_at: "2026-10-01" },
+        ],
+      })
+    );
+    ddb.on(BatchGetItemCommand).resolves({
+      Responses: { nofos: [marshall({ nofo_name: "Upload Failed Grant", opportunity_id: "n1", status: "active" })] },
+    });
+    ddb.on(QueryCommand).callsFake((input) =>
+      input.ExpressionAttributeValues[":id"].S === "r2"
+        ? { Items: [marshall({ nofo_name: "Old Upload Failed Grant", opportunity_id: "r2", status: "active" })] }
+        : { Items: [] }
+    );
+
+    const res = await handler({ source: "aws.events" });
+
+    expect(JSON.parse(res.body)).toMatchObject({ newQueued: 2, updatedQueued: 0, skipped: 0 });
+    const queued = sqs.commandCalls(SendMessageBatchCommand).flatMap((c) => c.args[0].input.Entries!.map((e) => JSON.parse(e.MessageBody!)));
+    expect(queued).toEqual([
+      { opportunityId: "n1", opportunityTitle: "Upload Failed Grant", isUpdate: false, apiUpdatedAt: "2026-10-01" },
+      { opportunityId: "r2", opportunityTitle: "Renamed Upload Failed Grant", isUpdate: false, apiUpdatedAt: "2026-10-01", nofoName: "Old Upload Failed Grant" },
+    ]);
+  });
+
+  it("leaves rows with no source date alone unless they are this opportunity's live scraper row", async () => {
+    vi.stubGlobal(
+      "fetch",
+      grantsApi({
+        data: [
+          { opportunity_id: "a1", opportunity_title: "Archived Stub", updated_at: "2026-10-01" },
+          { opportunity_id: "m2", opportunity_title: "Manual State Grant", updated_at: "2026-10-01" },
+          { opportunity_id: "o3", opportunity_title: "Other Opportunity Grant", updated_at: "2026-10-01" },
+          { opportunity_id: "d4", opportunity_title: "Undated Grant" },
+        ],
+      })
+    );
+    ddb.on(BatchGetItemCommand).resolves({
+      Responses: {
+        nofos: [
+          marshall({ nofo_name: "Archived Stub", opportunity_id: "a1", status: "archived" }),
+          marshall({ nofo_name: "Manual State Grant", scope: "state", state: "MA", status: "active" }),
+          marshall({ nofo_name: "Other Opportunity Grant", opportunity_id: "x9", status: "active" }),
+          marshall({ nofo_name: "Undated Grant", opportunity_id: "d4", status: "active", source_updated_at: null }),
+        ],
+      },
+    });
+
+    const res = await handler({ source: "aws.events" });
+
+    expect(JSON.parse(res.body)).toMatchObject({ newQueued: 0, updatedQueued: 0, skipped: 4 });
+    expect(sqs.commandCalls(SendMessageBatchCommand)).toHaveLength(0);
+  });
+
+  it("treats a failed opportunity_id lookup as new, so a missing index doesn't stop the scrape", async () => {
+    vi.stubGlobal("fetch", grantsApi({ data: [{ opportunity_id: "z9", opportunity_title: "Grant", updated_at: "2026-10-01" }] }));
+    ddb.on(BatchGetItemCommand).resolves({ Responses: { nofos: [] } });
+    ddb.on(QueryCommand).rejects(new Error("The table does not have the specified index: OpportunityIdIndex"));
+
+    const res = await handler({ source: "aws.events" });
+
+    expect(JSON.parse(res.body)).toMatchObject({ newQueued: 1, errors: 0 });
   });
 
   it("logs scraperFatal and reports an error when the API changes shape", async () => {

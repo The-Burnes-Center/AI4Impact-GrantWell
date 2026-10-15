@@ -87,75 +87,39 @@ async function streamToString(stream) {
 }
 
 /**
+ * Every NOFO with the given status from the StatusIndex GSI, across all result pages.
+ */
+async function queryStatus(dynamoClient, tableName, status) {
+  const items = [];
+  let ExclusiveStartKey;
+  do {
+    const page = await dynamoClient.send(new QueryCommand({
+      TableName: tableName,
+      IndexName: 'StatusIndex',
+      KeyConditionExpression: '#status = :status',
+      ExpressionAttributeNames: { '#status': 'status' },
+      ExpressionAttributeValues: marshall({ ':status': status }),
+      ExclusiveStartKey,
+    }));
+    items.push(...(page.Items || []).map((item) => unmarshall(item)));
+    ExclusiveStartKey = page.LastEvaluatedKey;
+  } while (ExclusiveStartKey);
+  return items;
+}
+
+/**
  * Fetch NOFOs from DynamoDB
  */
 async function fetchFromDynamoDB(tableName) {
   const dynamoClient = new DynamoDBClient();
   
   try {
-    // Query active NOFOs using StatusIndex GSI
-    const activeQuery = new QueryCommand({
-      TableName: tableName,
-      IndexName: 'StatusIndex',
-      KeyConditionExpression: '#status = :status',
-      ExpressionAttributeNames: {
-        '#status': 'status',
-      },
-      ExpressionAttributeValues: marshall({
-        ':status': 'active',
-      }),
-    });
-
-    const activeResult = await dynamoClient.send(activeQuery);
-    const activeNofos = (activeResult.Items || []).map(item => unmarshall(item));
-
-    // Query archived NOFOs
-    const archivedQuery = new QueryCommand({
-      TableName: tableName,
-      IndexName: 'StatusIndex',
-      KeyConditionExpression: '#status = :status',
-      ExpressionAttributeNames: {
-        '#status': 'status',
-      },
-      ExpressionAttributeValues: marshall({
-        ':status': 'archived',
-      }),
-    });
-
-    const archivedResult = await dynamoClient.send(archivedQuery);
-    const archivedNofos = (archivedResult.Items || []).map(item => unmarshall(item));
-
-    const processingQuery = new QueryCommand({
-      TableName: tableName,
-      IndexName: 'StatusIndex',
-      KeyConditionExpression: '#status = :status',
-      ExpressionAttributeNames: {
-        '#status': 'status',
-      },
-      ExpressionAttributeValues: marshall({
-        ':status': 'processing',
-      }),
-    });
-
-    const processingResult = await dynamoClient.send(processingQuery);
-    const processingNofos = (processingResult.Items || []).map(item => unmarshall(item));
-
+    const activeNofos = await queryStatus(dynamoClient, tableName, 'active');
+    const archivedNofos = await queryStatus(dynamoClient, tableName, 'archived');
+    const processingNofos = await queryStatus(dynamoClient, tableName, 'processing');
     // Quarantined NOFOs: a terminal review state. Needed for the admin Grants list ("Needs review"
     // pill / attention segment); excluded from the user-facing `folders` (status !== 'active').
-    const quarantinedQuery = new QueryCommand({
-      TableName: tableName,
-      IndexName: 'StatusIndex',
-      KeyConditionExpression: '#status = :status',
-      ExpressionAttributeNames: {
-        '#status': 'status',
-      },
-      ExpressionAttributeValues: marshall({
-        ':status': 'quarantined',
-      }),
-    });
-
-    const quarantinedResult = await dynamoClient.send(quarantinedQuery);
-    const quarantinedNofos = (quarantinedResult.Items || []).map(item => unmarshall(item));
+    const quarantinedNofos = await queryStatus(dynamoClient, tableName, 'quarantined');
 
     const allNofos = [...activeNofos, ...processingNofos, ...quarantinedNofos, ...archivedNofos];
 

@@ -108,6 +108,7 @@ const Dashboard: React.FC = () => {
             ? {
                 reason: nofo.review_flag.reason,
                 missingCategories: nofo.review_flag.missingCategories ?? [],
+                missingParts: nofo.review_flag.missingParts,
                 flaggedAt: nofo.review_flag.flaggedAt,
               }
             : null,

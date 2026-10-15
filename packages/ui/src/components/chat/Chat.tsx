@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState, useRef } from "react";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
@@ -120,7 +120,24 @@ const styles: Record<string, React.CSSProperties> = {
     opacity: 1,
     pointerEvents: "auto",
   },
+  earlierRow: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  earlierButton: {
+    backgroundColor: "white",
+    border: "1px solid var(--gw-color-border, #cbd5e0)",
+    borderRadius: "6px",
+    padding: "8px 16px",
+    color: "var(--gw-color-primary)",
+    fontSize: "14px",
+    fontWeight: 500,
+    cursor: "pointer",
+  },
 };
+
+/** Scrolling up to within this distance of the top loads the next older page. */
+const EARLIER_SCROLL_THRESHOLD_PX = 200;
 
 export default function Chat(props: {
   sessionId?: string;
@@ -145,11 +162,25 @@ export default function Chat(props: {
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
   const prevRunningRef = useRef<boolean>(running);
   const awaitingReplyRef = useRef<boolean>(false);
+  // Older pages live apart from messageHistory, which ChatInputPanel rewrites while a reply streams.
+  const [olderMessages, setOlderMessages] = useState<ChatBotHistoryItem[]>([]);
+  const [olderCursor, setOlderCursor] = useState<string | null>(null);
+  const [loadingOlder, setLoadingOlder] = useState(false);
+  const [earlierStatus, setEarlierStatus] = useState("");
+  const sessionIdRef = useRef(props.sessionId);
+  const earlierButtonRef = useRef<HTMLButtonElement>(null);
+  const scrollRestoreRef = useRef<{ height: number; top: number; focusTranscript: boolean } | null>(null);
+  const loadOlderRef = useRef<() => Promise<void>>(async () => {});
 
   /** Loads session history */
   useEffect(() => {
     if (!appContext) return;
+    sessionIdRef.current = props.sessionId;
     setMessageHistory([]);
+    setOlderMessages([]);
+    setOlderCursor(null);
+    setLoadingOlder(false);
+    setEarlierStatus("");
 
     (async () => {
       if (!props.sessionId) {
@@ -187,6 +218,7 @@ export default function Chat(props: {
           // Convert backend format to frontend format
           const parsedHistory = parseChatHistory(hist.chatHistory as unknown as Array<Record<string, unknown>>);
           setMessageHistory(parsedHistory);
+          setOlderCursor(hist.olderCursor);
           // Scroll to bottom of message area to show latest messages
           setTimeout(() => {
             if (messageAreaRef.current) {
@@ -294,10 +326,76 @@ export default function Chat(props: {
       setReplyStatus("Response stopped");
     } else if (last.metadata?.timedOut) {
       setReplyStatus("Response timed out. Send your message again to retry.");
+    } else if (last.metadata?.limitReached) {
+      setReplyStatus(last.content);
     } else {
       setReplyStatus(last.content ? "Assistant replied" : "No response received");
     }
   }, [running]);
+
+  const loadOlder = async () => {
+    const sessionId = props.sessionId;
+    if (!appContext || !sessionId || !olderCursor || loadingOlder) return;
+    const focusWasOnButton = document.activeElement === earlierButtonRef.current;
+    setLoadingOlder(true);
+    setEarlierStatus("Loading earlier messages…");
+    try {
+      const { username } = await getCurrentUser();
+      const page = await new ApiClient(appContext).sessions.getSession({
+        sessionId,
+        userId: username,
+        cursor: olderCursor,
+      });
+      if (sessionIdRef.current !== sessionId) return;
+      const older = parseChatHistory((page?.chatHistory ?? []) as unknown as Array<Record<string, unknown>>);
+      const nextCursor = page?.olderCursor ?? null;
+      const area = messageAreaRef.current;
+      if (area) {
+        scrollRestoreRef.current = {
+          height: area.scrollHeight,
+          top: area.scrollTop,
+          focusTranscript: focusWasOnButton && !nextCursor,
+        };
+      }
+      setOlderMessages((current) => [...older, ...current]);
+      setOlderCursor(nextCursor);
+      setEarlierStatus("Earlier messages loaded");
+    } catch (error) {
+      if (sessionIdRef.current !== sessionId) return;
+      console.warn("Could not load earlier messages:", error);
+      setEarlierStatus("");
+      addNotification("error", "Could not load earlier messages.");
+    } finally {
+      if (sessionIdRef.current === sessionId) setLoadingOlder(false);
+    }
+  };
+  loadOlderRef.current = loadOlder;
+
+  /** Keeps the messages the user was reading in place when older ones are inserted above them. */
+  useLayoutEffect(() => {
+    const restore = scrollRestoreRef.current;
+    const area = messageAreaRef.current;
+    if (!restore || !area) return;
+    scrollRestoreRef.current = null;
+    const behavior = area.style.scrollBehavior;
+    area.style.scrollBehavior = "auto";
+    area.scrollTop = restore.top + (area.scrollHeight - restore.height);
+    area.style.scrollBehavior = behavior;
+    if (restore.focusTranscript) area.focus({ preventScroll: true });
+  }, [olderMessages]);
+
+  useEffect(() => {
+    const area = messageAreaRef.current;
+    if (!area) return;
+    let lastTop = area.scrollTop;
+    const onScroll = () => {
+      const movingUp = area.scrollTop < lastTop;
+      lastTop = area.scrollTop;
+      if (movingUp && area.scrollTop < EARLIER_SCROLL_THRESHOLD_PX) void loadOlderRef.current();
+    };
+    area.addEventListener("scroll", onScroll);
+    return () => area.removeEventListener("scroll", onScroll);
+  }, []);
 
   const scrollToBottom = () => {
     if (messageAreaRef.current) {
@@ -331,6 +429,26 @@ export default function Chat(props: {
               </span>
             </li>
           )}
+
+          {olderCursor && (
+            <li style={styles.earlierRow}>
+              <button
+                ref={earlierButtonRef}
+                type="button"
+                onClick={() => void loadOlder()}
+                aria-disabled={loadingOlder}
+                style={styles.earlierButton}
+              >
+                {loadingOlder ? "Loading earlier messages…" : "Show earlier messages"}
+              </button>
+            </li>
+          )}
+
+          {olderMessages.map((message, idx) => (
+            <li key={`older-${olderMessages.length - idx}`}>
+              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} />
+            </li>
+          ))}
 
           {messageHistory.map((message, idx) => (
             <li key={idx}>
@@ -381,6 +499,10 @@ export default function Chat(props: {
           : running
           ? "Assistant is replying"
           : replyStatus}
+      </div>
+
+      <div role="status" aria-live="polite" className="sr-only">
+        {earlierStatus}
       </div>
 
       <div role="status" aria-live="polite" className="visually-hidden">

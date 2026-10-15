@@ -3,11 +3,12 @@
  *
  * Paginates the Simpler.Grants.gov search API, deduplicates against DynamoDB
  * (BatchGetItem for speed), detects updated opportunities by comparing the
- * API's updated_at with stored source_updated_at, and queues SQS messages
+ * API's updated_at with stored source_updated_at, re-queues grants whose first
+ * upload never landed, and queues SQS messages
  * (SendMessageBatch) for parallel Opportunity Processor Lambdas.
  */
 
-import { DynamoDBClient, BatchGetItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, BatchGetItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { SQSClient, SendMessageBatchCommand } from '@aws-sdk/client-sqs';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { randomUUID } from 'crypto';
@@ -60,6 +61,44 @@ async function batchGetMetadata(titles) {
   }
 
   return result;
+}
+
+/** A grants.gov retitle misses the title lookup; the opportunity_id still finds the stored grant. */
+async function findByOpportunityId(opportunityId) {
+  if (opportunityId == null) return null;
+  try {
+    const response = await dynamoClient.send(
+      new QueryCommand({
+        TableName: METADATA_TABLE,
+        IndexName: 'OpportunityIdIndex',
+        KeyConditionExpression: 'opportunity_id = :id',
+        ExpressionAttributeValues: marshall({ ':id': String(opportunityId) }),
+        Limit: 1,
+      })
+    );
+    const item = response.Items?.[0];
+    return item ? unmarshall(item) : null;
+  } catch (err) {
+    // The index backfills after deploy; until then a miss just means "new", as before.
+    console.warn(`OpportunityIdIndex lookup failed for ${opportunityId}: ${err.message}`);
+    return null;
+  }
+}
+
+/**
+ * The processor writes a new grant's row before its upload and sets source_updated_at only once
+ * the file lands, so a scraper row for this opportunity without it never finished. Rows from
+ * other sources, archived rows, and opportunities with no API date are left alone.
+ */
+function isUnfinishedScrape(existing, opportunityId, apiUpdatedAt) {
+  return Boolean(
+    apiUpdatedAt &&
+      !existing.source_updated_at &&
+      existing.status !== 'archived' &&
+      existing.opportunity_id != null &&
+      opportunityId != null &&
+      String(existing.opportunity_id) === String(opportunityId)
+  );
 }
 
 /**
@@ -157,9 +196,24 @@ export const handler = async (event) => {
         const oppTitle = opp.opportunity_title;
         const apiUpdatedAt = opp.updated_at || null;
 
-        const existing = existingMap.get(normalizeNofoFolderName(oppTitle));
+        const normalizedTitle = normalizeNofoFolderName(oppTitle);
+        let existing = existingMap.get(normalizedTitle);
+        if (!existing) {
+          existing = await findByOpportunityId(oppId);
+          if (existing) console.log(`"${oppTitle}" was retitled; stored as "${existing.nofo_name}"`);
+        }
 
-        if (existing) {
+        if (existing && isUnfinishedScrape(existing, oppId, apiUpdatedAt)) {
+          console.log(`Retrying "${oppTitle}" — stored without a landed file`);
+          toQueue.push({
+            opportunityId: oppId,
+            opportunityTitle: oppTitle,
+            isUpdate: false,
+            apiUpdatedAt,
+            ...(existing.nofo_name !== normalizedTitle && { nofoName: existing.nofo_name }),
+          });
+          newQueued++;
+        } else if (existing) {
           const storedUpdatedAt = existing.source_updated_at || null;
           if (apiUpdatedAt && storedUpdatedAt && apiUpdatedAt > storedUpdatedAt) {
             console.log(
@@ -170,6 +224,7 @@ export const handler = async (event) => {
               opportunityTitle: oppTitle,
               isUpdate: true,
               apiUpdatedAt,
+              ...(existing.nofo_name !== normalizedTitle && { nofoName: existing.nofo_name }),
             });
             updatedQueued++;
           } else {

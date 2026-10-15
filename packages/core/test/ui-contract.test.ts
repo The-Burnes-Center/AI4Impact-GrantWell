@@ -5,11 +5,16 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
+import { APP_ROUTES } from "../lib/user-interface/spa-routing";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const coreTypes = path.resolve(here, "..", "lib", "config", "instance-config.ts");
 const uiBranding = path.resolve(here, "..", "..", "ui", "src", "common", "branding.tsx");
 const chromeApi = path.resolve(here, "..", "..", "ui", "src", "common", "chrome-api.ts");
+const uiRouters = [
+  path.resolve(here, "..", "..", "ui", "src", "App.tsx"),
+  path.resolve(here, "..", "..", "ui", "src", "components", "AppConfigured.tsx"),
+];
 
 /** Type errors in `source` only; react is unresolved here and errors in the imported files are ignored. */
 function typeErrors(source: string): string[] {
@@ -67,5 +72,34 @@ describe("chrome API", () => {
     const { version, shape } = chromeApiShape();
     expect(Number.isInteger(version)).toBe(true);
     await expect(shape).toMatchFileSnapshot(path.join("__snapshots__", "chrome-api", `v${version}.ts.snap`));
+  });
+});
+
+/** The path of every <Route> in a .tsx file; a path that isn't a plain string comes back as null. */
+function routePaths(file: string): (string | null)[] {
+  const sourceFile = ts.createSourceFile(file, fs.readFileSync(file, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const paths: (string | null)[] = [];
+  const visit = (node: ts.Node) => {
+    if ((ts.isJsxSelfClosingElement(node) || ts.isJsxOpeningElement(node)) && node.tagName.getText() === "Route") {
+      const attr = node.attributes.properties.find(
+        (p): p is ts.JsxAttribute => ts.isJsxAttribute(p) && p.name.getText() === "path"
+      );
+      const init = attr?.initializer;
+      const expr = init && ts.isJsxExpression(init) ? init.expression : init;
+      paths.push(expr && ts.isStringLiteralLike(expr) ? expr.text : null);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return paths;
+}
+
+describe("UI routes", () => {
+  it("are the routes the CloudFront function sends to the app", () => {
+    const ui = uiRouters.flatMap(routePaths);
+    expect(ui).not.toContain(null);
+    expect(ui).toContain("*");
+    const routes = [...new Set(ui.filter((p) => p !== "*"))].sort();
+    expect(routes).toEqual([...APP_ROUTES].sort());
   });
 });

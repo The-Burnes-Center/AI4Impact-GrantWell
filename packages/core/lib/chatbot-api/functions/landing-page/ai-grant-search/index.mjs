@@ -4,7 +4,8 @@
  * Three-layer search: hybrid (BM25 keyword + k-NN semantic) via OpenSearch,
  * category matching via DynamoDB CategoryIndex, and name matching via DynamoDB scan.
  * Results are merged, deduplicated, and scored. Name/category matches fill gaps
- * that hybrid search misses due to chunk limits.
+ * that hybrid search misses due to chunk limits. Only grant documents the caller may
+ * see (same state rule as the grant list) are scored, reranked, or returned.
  */
 
 import { createHash, createHmac } from 'node:crypto';
@@ -39,6 +40,7 @@ const NAME_MATCH_MIN_FRACTION = 0.5;
 const RERANK_MODEL_ID = 'cohere.rerank-v3-5:0';
 const RERANK_TIMEOUT_MS = 5_000;
 const RECENCY_TIE_EPSILON = 0.05;
+const GRANT_DOCUMENT_TYPE = 'NOFO';
 
 // Short queries (≤3 words) favour BM25 keywords; longer queries favour semantic meaning
 const SCORING = {
@@ -59,12 +61,13 @@ const GRANT_CATEGORIES = [
   'Income Security and Social Services', 'Law, Justice, and Legal Services',
   'Natural Resources', 'Opportunity Zone Benefits', 'Regional Development',
   'Science, Technology, and Other Research and Development',
-  'Transportation', 'Affordable Care Act',
+  'Transportation', 'Affordable Care Act', 'Other',
 ];
 
 const CATEGORY_LOOKUP = new Map(GRANT_CATEGORIES.map((c) => [c.toLowerCase(), c]));
+// "Other" matches exactly only; fuzzily it would catch "mother" or "otter".
 const SINGLE_WORD_CATEGORIES = new Map(
-  GRANT_CATEGORIES.filter((c) => !c.includes(' ')).map((c) => [c.toLowerCase(), c])
+  GRANT_CATEGORIES.filter((c) => !c.includes(' ') && c !== 'Other').map((c) => [c.toLowerCase(), c])
 );
 
 const STOP_WORDS = new Set([
@@ -138,6 +141,22 @@ const CATEGORY_SYNONYMS = new Map([
   ['seniors',    ['Income Security and Social Services', 'Health']],
   ['consumer',   ['Consumer Protection']],
 ]);
+
+// SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts).
+const SUPPORTED_STATE_CODES = (() => {
+  try {
+    const parsed = JSON.parse(process.env.SUPPORTED_STATES || '[]');
+    if (!Array.isArray(parsed)) return new Set();
+    return new Set(parsed.filter((s) => s && typeof s.code === 'string').map((s) => s.code));
+  } catch {
+    return new Set();
+  }
+})();
+
+// Platform authority comes from the explicit PlatformAdmin role; this flag keeps pre-migration
+// stateless admins working and must stay on until every pool is migrated.
+const LEGACY_STATELESS_ADMIN_IS_PLATFORM =
+  String(process.env.LEGACY_STATELESS_ADMIN_IS_PLATFORM ?? 'true').toLowerCase() !== 'false';
 
 const bedrockClient = new BedrockRuntimeClient({ region: REGION });
 const dynamoClient = new DynamoDBClient({ region: REGION });
@@ -246,17 +265,20 @@ export const handler = async (event) => {
     console.log('Search query:', { query: trimmedQuery, searchQuery, statusFilter, rollingOnly, wordCount });
 
     const intentFilterActive = Boolean(statusFilter || rollingOnly);
-    const metadataPromise = getMetadataCache();
-
-    const embedding = await generateEmbedding(searchQuery);
+    const callerScope = resolveCallerScope(event);
+    const [metaMap, embedding] = await Promise.all([getMetadataCache(), generateEmbedding(searchQuery)]);
+    const isVisible = (name) => callerCanSeeGrant(callerScope, metaMap.get(name));
 
     const matchedCategories = matchCategory(searchQuery);
     const [hybridResults, categoryFetches, nameMatches] = await Promise.all([
-      hybridSearch(searchQuery, embedding, MAX_RESULTS),
+      hybridSearch(searchQuery, embedding, MAX_RESULTS, isVisible),
       Promise.all(
-        matchedCategories.map(async (category) => ({ category, names: await fetchGrantsByCategory(category) }))
+        matchedCategories.map(async (category) => ({
+          category,
+          names: (await fetchGrantsByCategory(category)).filter(isVisible),
+        }))
       ),
-      fetchGrantsByName(searchQuery),
+      fetchGrantsByName(searchQuery, isVisible),
     ]);
 
     // Merge all sources, deduplicate, boost hybrid results that also matched by name.
@@ -293,7 +315,6 @@ export const handler = async (event) => {
       }
     }
 
-    const metaMap = await metadataPromise;
     let finalPool = all;
     let filteredOut = 0;
     if (intentFilterActive) {
@@ -338,6 +359,44 @@ export const handler = async (event) => {
     return respond(500, { message, results: [], query: '', searchTimeMs: 0 });
   }
 };
+
+// ── Caller scope — same rule as the grant list (retrieve-nofos) ──
+
+function parseRoles(raw) {
+  if (Array.isArray(raw)) return raw.filter((r) => typeof r === 'string');
+  if (typeof raw !== 'string' || raw.trim() === '') return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((r) => typeof r === 'string') : [];
+  } catch {
+    return [raw];
+  }
+}
+
+function resolveCallerScope(event) {
+  const claims = event?.requestContext?.authorizer?.jwt?.claims || {};
+  const roles = parseRoles(claims['custom:role']);
+  const stateRaw = String(claims['custom:state'] || '').trim().toUpperCase();
+  const state = SUPPORTED_STATE_CODES.has(stateRaw) ? stateRaw : '';
+
+  if (roles.includes('Developer')) return { role: 'developer', state };
+  if (roles.includes('PlatformAdmin')) return { role: 'regularAdmin', state: '' };
+  if (roles.includes('Admin')) {
+    if (state) return { role: 'stateAdmin', state };
+    return LEGACY_STATELESS_ADMIN_IS_PLATFORM
+      ? { role: 'regularAdmin', state: '' }
+      : { role: 'unscopedAdmin', state: '' };
+  }
+  return { role: 'user', state };
+}
+
+function callerCanSeeGrant(callerScope, meta) {
+  if (callerScope.role === 'developer' || callerScope.role === 'regularAdmin') return true;
+  if (!meta) return false;
+  const scope = meta.scope || 'federal';
+  if (scope === 'federal') return true;
+  return scope === 'state' && Boolean(meta.state) && meta.state === callerScope.state;
+}
 
 // ── Feature access ──
 
@@ -453,7 +512,7 @@ async function getMetadataCache() {
   const now = Date.now();
   if (metadataCache && now - metadataCacheFetchedAt < METADATA_CACHE_TTL_MS) return metadataCache;
   if (inflightMetadataFetch) return inflightMetadataFetch;
-  if (!METADATA_TABLE) return new Map();
+  if (!METADATA_TABLE) throw new Error('NOFO_METADATA_TABLE_NAME not set');
 
   inflightMetadataFetch = (async () => {
     const map = new Map();
@@ -463,8 +522,8 @@ async function getMetadataCache() {
         const result = await dynamoClient.send(
           new ScanCommand({
             TableName: METADATA_TABLE,
-            ProjectionExpression: 'nofo_name, #s, expiration_date, is_rolling',
-            ExpressionAttributeNames: { '#s': 'status' },
+            ProjectionExpression: 'nofo_name, #s, expiration_date, is_rolling, #scope, #state',
+            ExpressionAttributeNames: { '#s': 'status', '#scope': 'scope', '#state': 'state' },
             ExclusiveStartKey: lastKey,
           })
         );
@@ -480,8 +539,9 @@ async function getMetadataCache() {
       return map;
     } catch (err) {
       console.error('Metadata cache scan failed:', err.message);
-      // Serve stale cache rather than dropping the filter silently
-      return metadataCache || new Map();
+      // Serve stale cache; with none, fail the search rather than return unscoped results
+      if (metadataCache) return metadataCache;
+      throw err;
     } finally {
       inflightMetadataFetch = null;
     }
@@ -529,16 +589,23 @@ function matchesIntentFilter(meta, statusFilter, rollingOnly) {
 async function fetchGrantsByCategory(category) {
   if (!METADATA_TABLE) return [];
   try {
-    const result = await dynamoClient.send(
-      new QueryCommand({
-        TableName: METADATA_TABLE,
-        IndexName: CATEGORY_INDEX,
-        KeyConditionExpression: 'category = :cat',
-        ExpressionAttributeValues: { ':cat': { S: category } },
-        ProjectionExpression: 'nofo_name',
-      })
-    );
-    return (result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean);
+    const names = [];
+    let lastKey;
+    do {
+      const result = await dynamoClient.send(
+        new QueryCommand({
+          TableName: METADATA_TABLE,
+          IndexName: CATEGORY_INDEX,
+          KeyConditionExpression: 'category = :cat',
+          ExpressionAttributeValues: { ':cat': { S: category } },
+          ProjectionExpression: 'nofo_name',
+          ExclusiveStartKey: lastKey,
+        })
+      );
+      names.push(...(result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean));
+      lastKey = result.LastEvaluatedKey;
+    } while (lastKey);
+    return names;
   } catch (err) {
     console.error('Category lookup failed:', err.message);
     return [];
@@ -567,13 +634,18 @@ function nameContainsWord(lowerName, word, stemmed) {
  * query words. Requiring *every* word (the previous rule) collapsed to ~10% recall as soon
  * as a user added a word not in the title ("grants", a state name) — the dominant real shape.
  */
-async function fetchGrantsByName(query) {
+async function fetchGrantsByName(query, isVisible) {
   if (!METADATA_TABLE) return new Map();
   try {
-    const result = await dynamoClient.send(
-      new ScanCommand({ TableName: METADATA_TABLE, ProjectionExpression: 'nofo_name' })
-    );
-    const allNames = (result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean);
+    const allNames = [];
+    let lastKey;
+    do {
+      const result = await dynamoClient.send(
+        new ScanCommand({ TableName: METADATA_TABLE, ProjectionExpression: 'nofo_name', ExclusiveStartKey: lastKey })
+      );
+      allNames.push(...(result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean));
+      lastKey = result.LastEvaluatedKey;
+    } while (lastKey);
 
     const queryWords = query.toLowerCase().split(/\s+/).filter((w) => w.length > 2);
     if (queryWords.length === 0) return new Map();
@@ -581,6 +653,7 @@ async function fetchGrantsByName(query) {
 
     const matches = new Map();
     for (const name of allNames) {
+      if (!isVisible(name)) continue;
       const lowerName = name.toLowerCase();
       let hits = 0;
       for (let i = 0; i < queryWords.length; i++) {
@@ -612,7 +685,7 @@ async function generateEmbedding(text) {
 
 // ── Hybrid search — BM25 keyword + k-NN semantic via OpenSearch Serverless ──
 
-async function hybridSearch(query, vector, k) {
+async function hybridSearch(query, vector, k, isVisible) {
   if (!OPENSEARCH_ENDPOINT || !OPENSEARCH_INDEX) {
     console.warn('OpenSearch not configured, skipping hybrid search');
     return [];
@@ -625,34 +698,44 @@ async function hybridSearch(query, vector, k) {
 
   try {
     const knnSize = k * KNN_FETCH_MULTIPLIER;
+    const grantsOnly = { term: { 'documentType.keyword': GRANT_DOCUMENT_TYPE } };
+    const sourceFields = ['metadata_field', 'text_field', 'documentType', 'documentIdentifier'];
 
     const [bm25Data, knnData] = await Promise.all([
       aossRequest('POST', searchPath, {
         size: k,
-        query: { match: { text_field: { query, operator: 'or', minimum_should_match: BM25_MIN_SHOULD_MATCH, fuzziness: BM25_FUZZINESS, prefix_length: BM25_FUZZY_PREFIX_LENGTH } } },
-        _source: ['metadata_field', 'text_field'],
+        query: {
+          bool: {
+            must: { match: { text_field: { query, operator: 'or', minimum_should_match: BM25_MIN_SHOULD_MATCH, fuzziness: BM25_FUZZINESS, prefix_length: BM25_FUZZY_PREFIX_LENGTH } } },
+            filter: grantsOnly,
+          },
+        },
+        _source: sourceFields,
       }),
       aossRequest('POST', searchPath, {
         size: knnSize,
-        query: { knn: { vector_field: { vector, k: knnSize } } },
-        _source: ['metadata_field', 'text_field'],
+        query: { knn: { vector_field: { vector, k: knnSize, filter: grantsOnly } } },
+        _source: sourceFields,
       }),
     ]);
 
-    const bm25Hits = bm25Data?.hits?.hits || [];
-    const knnHits = knnData?.hits?.hits || [];
+    const visibleGrantHits = (hits) => hits.flatMap((hit) => {
+      if (hit._source?.documentType !== GRANT_DOCUMENT_TYPE) return [];
+      const name = grantNameOf(hit);
+      return name && isVisible(name) ? [{ ...hit, name }] : [];
+    });
+    const bm25Hits = visibleGrantHits(bm25Data?.hits?.hits || []);
+    const knnHits = visibleGrantHits(knnData?.hits?.hits || []);
     const scoreMap = new Map();
     // best-scoring chunk per NOFO, fed to the reranker below
     const chunkTextByNofo = new Map();
-    for (const hit of [...knnHits, ...bm25Hits]) {
-      const name = extractNofoName(hit);
-      const text = hit._source?.text_field;
-      if (name && text && !chunkTextByNofo.has(name)) chunkTextByNofo.set(name, text);
+    for (const { name, _source } of [...knnHits, ...bm25Hits]) {
+      const text = _source?.text_field;
+      if (text && !chunkTextByNofo.has(name)) chunkTextByNofo.set(name, text);
     }
 
     for (const hit of bm25Hits) {
-      const name = extractNofoName(hit);
-      if (!name) continue;
+      const { name } = hit;
       const rawScore = hit._score || 0;
       const existing = scoreMap.get(name) || { bm25: 0, semantic: 0 };
       existing.bm25 = Math.max(existing.bm25, rawScore / (rawScore + BM25_SATURATION_K));
@@ -667,8 +750,7 @@ async function hybridSearch(query, vector, k) {
 
     const semanticChunks = new Map();
     for (const hit of knnHits) {
-      const name = extractNofoName(hit);
-      if (!name) continue;
+      const { name } = hit;
       const chunkScore = (hit._score - knnMin) / knnRange;
       if (!semanticChunks.has(name)) semanticChunks.set(name, []);
       semanticChunks.get(name).push(chunkScore);
@@ -772,6 +854,12 @@ async function rerankAccepted(query, accepted, chunkTextByNofo) {
   } finally {
     clearTimeout(timeoutId);
   }
+}
+
+function grantNameOf(hit) {
+  const identifier = hit._source?.documentIdentifier;
+  if (typeof identifier === 'string' && identifier.trim()) return identifier.trim();
+  return extractNofoName(hit);
 }
 
 function extractNofoName(hit) {

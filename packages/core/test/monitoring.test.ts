@@ -26,6 +26,7 @@ const COMMON_ALARMS: [string, string, number][] = [
   ["account setup step failed", "medium", 1],
   ["sign-in emails not delivered", "medium", 3],
   ["chat cannot search NOFOs", "medium", 3],
+  ["chat answers failing", "medium", 3],
   ["grant search returning nothing", "medium", 3],
   ["uploaded documents not indexed", "medium", 1],
   ["document index sync failing", "medium", 3],
@@ -162,7 +163,7 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       });
     });
 
-    it("counts exactly the pinned log markers, each after its log group is ensured", () => {
+    it("counts exactly the pinned log markers, each after its log group is ensured or on a stack-owned one", () => {
       const filters = ofType("AWS::Logs::MetricFilter");
       const patterns = filters.map(([, r]) => r.Properties.FilterPattern).sort();
       const quote = (s: string) => `"${s}"`;
@@ -174,7 +175,8 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       for (const [id, filter] of filters) {
         expect(filter.Properties.MetricTransformations[0].MetricNamespace, id).toBe(prefix);
         const deps = filter.DependsOn ?? [];
-        expect(deps.some((d) => resources[d]?.Type === "Custom::AWS"), id).toBe(true);
+        const stackOwned = typeof filter.Properties.LogGroupName.Ref === "string";
+        expect(stackOwned || deps.some((d) => resources[d]?.Type === "Custom::AWS"), id).toBe(true);
       }
     });
 

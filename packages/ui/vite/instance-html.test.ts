@@ -39,7 +39,7 @@ describe("whatsNewHtml", () => {
   it("pre-renders every release in place of the landing fallback and keeps it only on /whats-new", () => {
     expect(html).not.toContain("landing fallback");
     expect(html.match(/<section>/g)).toHaveLength(releases.length);
-    expect(html).toContain("<h2>GrantWell v3.0.0</h2>");
+    expect(html).toContain("<h2>GrantWell v3.3.0</h2>");
     expect(html).toContain('if (location.pathname !== "/whats-new")');
     expect(html).not.toContain('if (location.pathname !== "/")');
     expect(html).toContain('<script type="module" src="/assets/index-abc.js"></script>');

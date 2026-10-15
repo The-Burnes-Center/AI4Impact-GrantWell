@@ -34,6 +34,7 @@ export const FUNDING_CATEGORY_MAP = {
   'science_technology_and_other_research_and_development': 'Science, Technology, and Other Research and Development',
   'transportation': 'Transportation',
   'affordable_care_act': 'Affordable Care Act',
+  'other': 'Other',
 };
 
 /** Normalize NOFO folder name: slashes → dashes so S3 path matches DynamoDB nofo_name */
@@ -88,26 +89,36 @@ export function normalizeDateToYYYYMMDD(dateString) {
   }
 }
 
+const FUNDING_CATEGORY_ALIASES = {
+  'energy_infrastructure_and_critical_mineral_and_materials': 'Energy Infrastructure and Critical Mineral and Materials (EICMM)',
+};
+
+function categoryKey(value) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+}
+
 /**
- * Map API funding category to display category.
+ * Map API funding category to display category by exact key after normalising
+ * case, whitespace and punctuation, so API codes and display names both match.
  * Returns null if category cannot be mapped (category is mandatory).
  */
 export function mapFundingCategory(apiCategory) {
-  if (!apiCategory) return null;
+  if (!apiCategory || typeof apiCategory !== 'string') return null;
 
-  const normalized = apiCategory.toLowerCase().replace(/-/g, '_');
+  const key = categoryKey(apiCategory);
+  return FUNDING_CATEGORY_MAP[key] || FUNDING_CATEGORY_ALIASES[key] || null;
+}
 
-  if (FUNDING_CATEGORY_MAP[normalized]) {
-    return FUNDING_CATEGORY_MAP[normalized];
-  }
-
-  for (const [key, value] of Object.entries(FUNDING_CATEGORY_MAP)) {
-    if (normalized.includes(key) || key.includes(normalized)) {
-      return value;
-    }
-  }
-
-  return null;
+/**
+ * The grants.gov category a grant is filed under: the first listed one that isn't Other, so a
+ * grant goes under Other only when grants.gov lists nothing more specific.
+ */
+export function primaryFundingCategory(apiCategories) {
+  if (!Array.isArray(apiCategories) || !apiCategories.length) return null;
+  const known = apiCategories.filter((c) => mapFundingCategory(c));
+  const unknown = apiCategories.filter((c) => !mapFundingCategory(c));
+  if (known.length && unknown.length) console.warn(`Skipping unrecognised grants.gov categories: ${unknown.join(', ')}`);
+  return known.find((c) => mapFundingCategory(c) !== 'Other') ?? known[0] ?? apiCategories[0];
 }
 
 export function sleep(ms) {

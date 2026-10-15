@@ -3,19 +3,20 @@
  *
  * Triggered by SQS (ScraperDownloadQueue). Each invocation handles exactly
  * one opportunity: fetch details from Simpler.Grants.gov, identify the NOFO
- * attachment (using Bedrock if multiple), download, upload to S3, and write
- * metadata to DynamoDB.
+ * attachment (using Bedrock if multiple), download, write metadata to
+ * DynamoDB, then upload to S3.
  */
 
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
-import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, UpdateItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { createHash } from 'crypto';
 import {
   normalizeDateToYYYYMMDD,
   normalizeNofoFolderName,
   mapFundingCategory,
+  primaryFundingCategory,
   sleep,
   RATE_LIMIT_DELAY,
   CLAUDE_MODEL_ID,
@@ -118,6 +119,46 @@ Return nofoIndex (1-${attachments.length}) and a brief reason.`;
   return null;
 }
 
+const STALE_WITHOUT_CLOSE_DATE_YEARS = 3;
+const MAX_CLOSE_DATE_YEARS_AHEAD = 10;
+const OJP_OFFICES = new Set(['BJA', 'BJS', 'NIJ', 'OJJDP', 'OVC', 'SMART', 'OJP']);
+
+/** Agencies type bare hosts ("www.bja.ojp.gov") into additional_info_url. */
+function normalizeUrl(raw) {
+  const trimmed = (raw || '').trim();
+  if (!trimmed) return null;
+  const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    return new URL(withScheme).toString();
+  } catch {
+    return null;
+  }
+}
+
+/** OJP lists only its homepage on grants.gov, but every solicitation lives at a URL built from the number. */
+function knownAgencyNofoUrl(opportunityNumber) {
+  const m = /^O-([A-Z]+)-(\d{4})-(\d+)$/.exec((opportunityNumber || '').trim());
+  if (!m || !OJP_OFFICES.has(m[1])) return null;
+  return `https://www.ojp.gov/funding/docs/${m[1].toLowerCase()}-${m[2]}-${m[3]}.pdf`;
+}
+
+/** grants.gov keeps some long-closed opportunities "posted" with no close date (e.g. a 2018 NASA NRA). */
+function isStaleWithoutCloseDate(opp, now = new Date()) {
+  if (opp.summary?.close_date) return false;
+  const posted = Date.parse(opp.summary?.post_date || opp.posted_date || '');
+  if (Number.isNaN(posted)) return false;
+  const cutoff = new Date(now);
+  cutoff.setUTCFullYear(cutoff.getUTCFullYear() - STALE_WITHOUT_CLOSE_DATE_YEARS);
+  return posted < cutoff.getTime();
+}
+
+/** Placeholder close dates like 2076-09-01 mean "no deadline", not a real one. */
+function plausibleCloseDate(yyyymmdd, now = new Date()) {
+  if (!yyyymmdd) return null;
+  const year = Number(yyyymmdd.slice(0, 4));
+  return year > now.getUTCFullYear() + MAX_CLOSE_DATE_YEARS_AHEAD ? null : yyyymmdd;
+}
+
 async function fetchOpportunityDetails(opportunityId) {
   const response = await fetch(
     `https://api.simpler.grants.gov/v1/opportunities/${opportunityId}`,
@@ -132,23 +173,31 @@ async function fetchOpportunityDetails(opportunityId) {
   const opp = data?.data;
   if (!opp) return null;
 
+  if (isStaleWithoutCloseDate(opp)) {
+    console.log(`Skipping ${opportunityId} — no close date and posted ${opp.summary?.post_date || opp.posted_date}`);
+    return null;
+  }
+
   const attachments = (opp.attachments || []).filter((att) => !!att.download_path);
 
   let selectedAttachment;
   let nofoIdentificationReason = null;
   let isAdditionalInfoUrl = false;
+  let downloadPaths;
 
   if (attachments.length === 0) {
-    const additionalInfoUrl = opp.summary?.additional_info_url;
-    if (!additionalInfoUrl) return null;
+    const additionalInfoUrl = normalizeUrl(opp.summary?.additional_info_url);
+    const agencyUrl = knownAgencyNofoUrl(opp.opportunity_number);
+    if (!additionalInfoUrl && !agencyUrl) return null;
 
     selectedAttachment = {
-      download_path: additionalInfoUrl,
+      download_path: agencyUrl || additionalInfoUrl,
       file_description: opp.summary?.additional_info_url_description || 'Additional Information URL',
     };
+    downloadPaths = [agencyUrl, additionalInfoUrl].filter(Boolean);
     nofoIdentificationReason = 'Using additional_info_url (no attachments available)';
     isAdditionalInfoUrl = true;
-    console.log(`No attachments for ${opportunityId}, using additional_info_url`);
+    console.log(`No attachments for ${opportunityId}, trying ${downloadPaths.join(' then ')}`);
   } else if (attachments.length === 1) {
     selectedAttachment = attachments[0];
   } else {
@@ -166,9 +215,10 @@ async function fetchOpportunityDetails(opportunityId) {
   const fundingCategories = opp.summary?.funding_categories || [];
   let category = null;
   if (fundingCategories.length > 0) {
-    category = mapFundingCategory(fundingCategories[0]);
+    const listedCategory = primaryFundingCategory(fundingCategories);
+    category = mapFundingCategory(listedCategory);
     if (!category) {
-      console.log(`Unmappable category "${fundingCategories[0]}" for ${opportunityId}`);
+      console.log(`Unmappable category "${listedCategory}" for ${opportunityId}`);
       return null;
     }
   } else {
@@ -176,12 +226,13 @@ async function fetchOpportunityDetails(opportunityId) {
     return null;
   }
 
-  const closeDate = normalizeDateToYYYYMMDD(opp.summary?.close_date);
+  const closeDate = plausibleCloseDate(normalizeDateToYYYYMMDD(opp.summary?.close_date));
 
   return {
     opportunity_id: opp.opportunity_id,
     opportunity_title: opp.opportunity_title,
     download_path: selectedAttachment.download_path,
+    download_paths: downloadPaths || [selectedAttachment.download_path],
     file_description: selectedAttachment.file_description || '',
     posted_date: opp.posted_date,
     close_date: closeDate,
@@ -196,8 +247,23 @@ async function fetchOpportunityDetails(opportunityId) {
 const BROWSER_UA =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
+const DOWNLOAD_TIMEOUT_MS = 20000;
+
+async function fetchWithHttpsFallback(url) {
+  const init = () => ({ headers: { 'User-Agent': BROWSER_UA }, signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS) });
+  try {
+    return await fetch(url, init());
+  } catch (err) {
+    // Some agency hosts (nspires.nasaprs.com) drop port 80 but serve HTTPS. Our own
+    // timeout means the host answered too slowly, so retrying would just double the wait.
+    if (!url.startsWith('http://') || err.name === 'TimeoutError') throw err;
+    console.warn(`HTTP fetch failed for ${url} (${err.cause?.code || err.name}); retrying over HTTPS`);
+    return await fetch(`https://${url.slice('http://'.length)}`, init());
+  }
+}
+
 async function downloadFile(url) {
-  const response = await fetch(url, { headers: { 'User-Agent': BROWSER_UA } });
+  const response = await fetchWithHttpsFallback(url);
   if (!response.ok) {
     if (response.status === 404 || response.status === 410) {
       return null;
@@ -298,6 +364,19 @@ function sameTldOrHost(candidateUrl, baseUrl) {
   }
 }
 
+// Solicitation pages link the agency's strategic plans and program reports, which
+// once won as the page's only PDF (NIH Strategic Plan, NSB Vision 2030, EPSCoR reports).
+const NOT_A_NOFO_DOC_RE =
+  /strategic[\s_-]*plan|\breports?\b|vision[\s_-]*20\d\d|workshop|eligibility[\s_-]*table|\bfaqs?\b|privacy/i;
+
+function safeDecode(url) {
+  try {
+    return decodeURIComponent(url);
+  } catch {
+    return url;
+  }
+}
+
 function findPdfCandidates(html, baseUrl) {
   const anchorRe = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   const docPathRe = /\.pdf(?:[?#]|$)|viewrepositorydocument|download=1|\/download\//i;
@@ -321,6 +400,7 @@ function findPdfCandidates(html, baseUrl) {
     const absolute = parsed.toString();
     if (seen.has(absolute)) continue;
     if (!sameTldOrHost(absolute, baseUrl)) continue;
+    if (NOT_A_NOFO_DOC_RE.test(`${safeDecode(absolute)} ${label}`)) continue;
 
     const strong = docPathRe.test(absolute);
     const weak = docLabelRe.test(label);
@@ -331,6 +411,8 @@ function findPdfCandidates(html, baseUrl) {
   }
   return candidates;
 }
+
+const FULL_PAGE_NOFO_MIN_CHARS = 20000;
 
 async function resolveNofoDocument(url, opportunityTitle, followDepth = 1) {
   const downloaded = await downloadFile(url);
@@ -351,9 +433,13 @@ async function resolveNofoDocument(url, opportunityTitle, followDepth = 1) {
     ? { kind: 'html_text', buffer: Buffer.from(text, 'utf8'), url: finalUrl }
     : { kind: 'html_raw', buffer, url: finalUrl };
 
-  // Always prefer a real PDF over stripped page text — a landing page that reads
-  // "NOFO-ish" is still just chrome around the actual document. Only accept the
-  // page text when no PDF link exists to follow at all.
+  // NIH guide pages and NSF solicitation pages are the full NOFO as HTML; any PDF
+  // they link is supplementary. Short landing pages that merely read "NOFO-ish"
+  // are still chrome around the real document, so those keep following links.
+  if (textIsNofo && text.length >= FULL_PAGE_NOFO_MIN_CHARS) {
+    return { ...fallback, pageIsNofo: true };
+  }
+
   const pool = strong.length > 0 ? strong : candidates;
   if (pool.length === 0) return fallback;
 
@@ -370,11 +456,53 @@ async function resolveNofoDocument(url, opportunityTitle, followDepth = 1) {
   }
 
   console.log(`Following link from ${finalUrl} → ${chosen.url} (label: "${chosen.label}")`);
-  const followed = await resolveNofoDocument(chosen.url, opportunityTitle, followDepth - 1);
+  let followed;
+  try {
+    followed = await resolveNofoDocument(chosen.url, opportunityTitle, followDepth - 1);
+  } catch (err) {
+    console.warn(`Could not follow ${chosen.url}: ${err.cause?.code || err.message}`);
+    followed = null;
+  }
   if (!followed || followed.kind === 'html_raw' || followed.kind === 'other') {
     return fallback;
   }
   return { ...followed, followedFrom: finalUrl };
+}
+
+/**
+ * Tries each candidate path in order; a dead, unreachable or unusable one falls
+ * through to the next instead of failing the message. An additional_info_url is
+ * a landing page, so it only counts when it reached a PDF or was itself the full
+ * NOFO; otherwise saving it would just ingest site chrome.
+ */
+async function resolveFirstUsable(details) {
+  const errors = [];
+  for (const path of details.download_paths) {
+    let resolved;
+    try {
+      resolved = await resolveNofoDocument(path, details.opportunity_title, 1);
+    } catch (err) {
+      console.warn(`Could not fetch ${path}: ${err.cause?.code || err.message}`);
+      errors.push(err);
+      continue;
+    }
+    if (!resolved) {
+      console.log(`${path} returned 404/410 (dead link)`);
+      continue;
+    }
+    if (resolved.kind === 'other') {
+      console.log(`Unsupported content type at ${resolved.url}`);
+      continue;
+    }
+    if (details.is_additional_info_url && resolved.kind !== 'pdf' && !resolved.pageIsNofo) {
+      console.log(`${path} did not resolve to a NOFO (got ${resolved.kind})`);
+      continue;
+    }
+    return resolved;
+  }
+  // Every path unreachable is an outage, not a bad link: let SQS retry and the DLQ surface it.
+  if (errors.length === details.download_paths.length) throw errors[errors.length - 1];
+  return null;
 }
 
 async function uploadToS3(key, fileBuffer, contentType) {
@@ -412,34 +540,73 @@ async function writeFederalScopeSidecar(sourceKey) {
   );
 }
 
-async function writeMetadata(title, details, isUpdate, contentHash) {
+/**
+ * Updates only the fields grants.gov owns; review, processing, pin and admin-only fields are left
+ * alone, and scope/state/status/grant_type are set only on a new row. Without `landedHash` the
+ * content_hash and source_updated_at stay as they were, so a failed upload is retried rather than
+ * recorded as done (see recordLandedContent).
+ */
+async function writeMetadata(title, details, isUpdate, landedHash) {
   const now = new Date().toISOString();
-  const existingItem = await getExistingItem(title);
-  const expirationDate = normalizeDateToYYYYMMDD(details.close_date);
-
-  const item = {
-    nofo_name: title,
-    opportunity_id: details.opportunity_id || null,
-    agency: details.agency_name || 'Unknown',
-    category: details.category,
-    grant_type: existingItem?.grant_type || 'federal',
-    scope: 'federal',
-    state: null,
-    status: existingItem?.status || 'active',
-    isPinned: existingItem?.isPinned || 'false',
-    expiration_date: expirationDate,
-    source_updated_at: details.source_updated_at || null,
-    content_hash: contentHash || existingItem?.content_hash || null,
-    created_at: existingItem?.created_at || now,
-    updated_at: now,
+  const sets = [
+    'agency = :agency',
+    'category = :category',
+    'expiration_date = :expirationDate',
+    'updated_at = :now',
+    'created_at = if_not_exists(created_at, :now)',
+    'grant_type = if_not_exists(grant_type, :federal)',
+    '#scope = if_not_exists(#scope, :federal)',
+    '#state = if_not_exists(#state, :noState)',
+    '#status = if_not_exists(#status, :active)',
+    'isPinned = if_not_exists(isPinned, :notPinned)',
+  ];
+  const values = {
+    ':agency': details.agency_name || 'Unknown',
+    ':category': details.category,
+    ':expirationDate': normalizeDateToYYYYMMDD(details.close_date),
+    ':now': now,
+    ':federal': 'federal',
+    ':noState': null,
+    ':active': 'active',
+    ':notPinned': 'false',
   };
+  if (details.opportunity_id) {
+    sets.push('opportunity_id = :opportunityId');
+    values[':opportunityId'] = details.opportunity_id;
+  }
+  if (landedHash) {
+    sets.push('content_hash = :hash', 'source_updated_at = :sourceUpdatedAt');
+    values[':hash'] = landedHash;
+    values[':sourceUpdatedAt'] = details.source_updated_at || null;
+  }
 
   await dynamoClient.send(
-    new PutItemCommand({ TableName: METADATA_TABLE, Item: marshall(item) })
+    new UpdateItemCommand({
+      TableName: METADATA_TABLE,
+      Key: marshall({ nofo_name: title }),
+      UpdateExpression: `SET ${sets.join(', ')}`,
+      ExpressionAttributeNames: { '#scope': 'scope', '#state': 'state', '#status': 'status' },
+      ExpressionAttributeValues: marshall(values),
+    })
   );
 
   const action = isUpdate ? 'Updated' : 'Created';
   console.log(`${action} metadata for ${title} — Agency: ${details.agency_name}, Category: ${details.category}`);
+}
+
+async function recordLandedContent(title, details, contentHash) {
+  await dynamoClient.send(
+    new UpdateItemCommand({
+      TableName: METADATA_TABLE,
+      Key: marshall({ nofo_name: title }),
+      UpdateExpression: 'SET content_hash = :hash, source_updated_at = :sourceUpdatedAt, updated_at = :now',
+      ExpressionAttributeValues: marshall({
+        ':hash': contentHash,
+        ':sourceUpdatedAt': details.source_updated_at || null,
+        ':now': new Date().toISOString(),
+      }),
+    })
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -452,7 +619,7 @@ export const handler = async (event) => {
   for (const record of event.Records) {
     const { messageId } = record;
     try {
-      const { opportunityId, opportunityTitle, isUpdate, apiUpdatedAt } = JSON.parse(record.body);
+      const { opportunityId, opportunityTitle, isUpdate, nofoName } = JSON.parse(record.body);
       const action = isUpdate ? 'Updating' : 'Processing new';
       console.log(`${action} opportunity ${opportunityId}: ${opportunityTitle}`);
 
@@ -464,28 +631,15 @@ export const handler = async (event) => {
 
       await sleep(RATE_LIMIT_DELAY);
 
-      const resolved = await resolveNofoDocument(details.download_path, details.opportunity_title, 1);
+      const resolved = await resolveFirstUsable(details);
       if (!resolved) {
-        console.log(`Skipping ${opportunityId} — download URL returned 404/410 (dead link)`);
+        console.log(`Skipping ${opportunityId} — no usable NOFO at ${details.download_paths.join(', ')}`);
         continue;
       }
 
-      if (resolved.kind === 'other') {
-        console.log(`Unsupported content type for ${opportunityTitle} at ${resolved.url}`);
-        continue;
-      }
-
-      // An additional_info_url is a landing page, not a NOFO. Only keep it if we
-      // followed through to a real PDF; otherwise saving it just ingests site
-      // chrome. Skip so a later run (or a real attachment) can supersede it.
-      if (details.is_additional_info_url && resolved.kind !== 'pdf') {
-        console.log(
-          `Skipping ${opportunityId} — additional_info_url did not resolve to a PDF (got ${resolved.kind})`
-        );
-        continue;
-      }
-
-      const folderName = normalizeNofoFolderName(details.opportunity_title);
+      // The coordinator passes the stored name when grants.gov has retitled the
+      // opportunity, so a rename updates the existing grant instead of duplicating it.
+      const folderName = nofoName || normalizeNofoFolderName(details.opportunity_title);
 
       const newHash = sha256(resolved.buffer);
       const existingItem = await getExistingItem(folderName);
@@ -505,23 +659,22 @@ export const handler = async (event) => {
         contentType = 'text/html';
       }
 
+      // The upload starts the pipeline, which reads this row, so the row goes first.
+      await writeMetadata(folderName, details, isUpdate, contentChanged ? null : newHash);
+
       if (contentChanged) {
         await uploadToS3(s3Key, resolved.buffer, contentType);
         // pending-conversion HTML is under a different prefix; sidecar lands on conversion.
         if (resolved.kind === "pdf" || resolved.kind === "html_text") {
           await writeFederalScopeSidecar(s3Key);
         }
+        await recordLandedContent(folderName, details, newHash);
         const followNote = resolved.followedFrom ? ` (followed from ${resolved.followedFrom})` : '';
         console.log(`Uploaded ${s3Key} (hash: ${newHash.substring(0, 12)}…, kind: ${resolved.kind})${followNote}`);
       } else {
         console.log(
           `Content unchanged for "${opportunityTitle}" (hash: ${newHash.substring(0, 12)}…), skipping S3 upload`
         );
-      }
-
-      // Always update metadata (agency, expiration, source_updated_at may have changed)
-      if (details.category) {
-        await writeMetadata(folderName, details, isUpdate, newHash);
       }
 
       console.log(`Completed ${opportunityId}${contentChanged ? '' : ' (metadata only)'}`);

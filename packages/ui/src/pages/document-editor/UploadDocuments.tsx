@@ -8,9 +8,12 @@ import NavigationButtons from "../../components/ui/NavigationButtons";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
-import { readDraftCache } from "../../common/helpers/document-editor-utils";
+import { characterCount, MAX_INPUT_CHARS, readDraftCache, resolveQuestionnaireAnswers } from "../../common/helpers/document-editor-utils";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import type { DocumentData } from "../../common/types/document";
+import { DailyLimitError } from "../../common/api-client/daily-limit";
+import { InputTooLongError } from "../../common/api-client/drafts-client";
+import { grantSections } from "../../common/helpers/application-sections";
 
 const MIME_TYPES: Record<string, string> = {
   ".pdf": "application/pdf",
@@ -298,6 +301,15 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     return "\u{1F4CE}";
   };
 
+  const grantListsNoSections = async (nofo: string) => {
+    try {
+      const summary = await apiClient.landingPage.getNOFOSummary(nofo);
+      return grantSections(summary?.data?.ProjectNarrativeSections).length === 0;
+    } catch {
+      return false;
+    }
+  };
+
   const handleSubmit = async () => {
     if (!selectedNofo) return;
 
@@ -323,6 +335,17 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       const uploadedFileInfo = files.map((f) => ({
         name: f.name, size: f.size, type: f.type, lastModified: f.lastModified,
       }));
+
+      // Generation refuses a grant with no narrative sections; the applicant writes their own.
+      if (await grantListsNoSections(selectedNofo)) {
+        await draftSave.saveFields(
+          { status: "editing_sections", additionalInfo, uploadedFiles: uploadedFileInfo },
+          { source: "manual", immediate: true }
+        );
+        onNavigate("sectionEditor");
+        return;
+      }
+
       await draftSave.saveFields(
         {
           status: "generating_draft",
@@ -337,12 +360,19 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setGenerationPhase("preparing");
       setIsLoading(false);
 
+      const questionnaireAnswers = await resolveQuestionnaireAnswers(
+        () => apiClient.landingPage.getNOFOQuestions(selectedNofo),
+        draftToUse.questionnaire,
+      );
+
       // Start the generation job — returns jobId immediately
       const jobId = await apiClient.drafts.startDraftGeneration({
         query: "Generate all sections for the grant application",
         documentIdentifier: selectedNofo,
         projectBasics: draftToUse.projectBasics || {},
         questionnaire: draftToUse.questionnaire || {},
+        questionnaireAnswers,
+        additionalInfo,
         sessionId,
       });
       console.log('Draft generation job started:', jobId);
@@ -373,6 +403,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
     } catch (error) {
       console.error("Error creating draft:", error);
+      if (error instanceof DailyLimitError || error instanceof InputTooLongError) {
+        void draftSave.saveFields({ status: "uploading_documents" }, { source: "status_change", immediate: true });
+      }
       setUploadError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
       setIsLoading(false);
       setGeneratingDraft(false);
@@ -758,6 +791,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               draftSave.saveFields({ additionalInfo: e.target.value });
             }}
             placeholder="Enter any additional context or notes about your application..."
+            maxLength={MAX_INPUT_CHARS}
             aria-describedby="additional-info-help"
             style={{
               width: "100%",
@@ -781,7 +815,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               fontFamily: typography.fontFamily,
             }}
           >
-            This information will help tailor the generated draft to your needs.
+            This information will help tailor the generated draft to your needs. ({characterCount(additionalInfo)})
           </span>
         </div>
 

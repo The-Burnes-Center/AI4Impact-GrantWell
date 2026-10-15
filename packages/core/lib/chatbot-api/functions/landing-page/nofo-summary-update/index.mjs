@@ -9,7 +9,7 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3
 import { DynamoDBClient, UpdateItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import { requireAdmin, assertCanEditNofoOr403 } from 'grantwell-shared';
+import { requireAdmin, assertCanEditNofoOr403, withSectionIds } from 'grantwell-shared';
 
 const scopeDeps = { client: new DynamoDBClient(), GetItemCommand, marshall, unmarshall };
 
@@ -30,6 +30,17 @@ const EDITABLE_ARRAY_FIELDS = [
 ];
 
 const EDITABLE_SCALAR_FIELDS = ['GrantName', 'Agency', 'Category'];
+
+const hasItems = (items) =>
+  Array.isArray(items) && items.some((entry) => String(entry?.item ?? '').trim() !== '');
+
+// The pipeline only clears review_flag on republish, so an admin filling in the flagged
+// sections here would otherwise leave "Review suggested" showing forever.
+export function reviewFlagResolved(reviewFlag, summary) {
+  if (!reviewFlag) return false;
+  const missing = Array.isArray(reviewFlag.missingCategories) ? reviewFlag.missingCategories : [];
+  return missing.length > 0 && missing.every((field) => hasItems(summary[field]));
+}
 
 async function syncMetadataToDynamoDB(tableName, nofoName, summary) {
   const dynamoClient = new DynamoDBClient();
@@ -56,10 +67,13 @@ async function syncMetadataToDynamoDB(tableName, nofoName, summary) {
       expressionAttributeValues[':category'] = summary.Category || null;
     }
 
+    const { review_flag: reviewFlag } = unmarshall(existingItem.Item);
+    const removeFlag = reviewFlagResolved(reviewFlag, summary) ? ' REMOVE review_flag' : '';
+
     const updateCommand = new UpdateItemCommand({
       TableName: tableName,
       Key: marshall({ nofo_name: nofoName }),
-      UpdateExpression: `SET ${updateExpression.join(', ')}`,
+      UpdateExpression: `SET ${updateExpression.join(', ')}${removeFlag}`,
       ExpressionAttributeNames: expressionAttributeNames,
       ExpressionAttributeValues: marshall(expressionAttributeValues),
     });
@@ -138,6 +152,9 @@ export const handler = async (event) => {
           .filter((item) => !item.removed)
           .map(({ removed, ...rest }) => rest);
       }
+    }
+    if (Array.isArray(existingSummary.ProjectNarrativeSections)) {
+      existingSummary.ProjectNarrativeSections = withSectionIds(existingSummary.ProjectNarrativeSections);
     }
 
     const putCommand = new PutObjectCommand({

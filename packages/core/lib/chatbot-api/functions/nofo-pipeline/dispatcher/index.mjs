@@ -104,15 +104,21 @@ async function supersedeOpenReviews(nofoName) {
   if (!reviewTable) return;
 
   try {
-    const existing = await dynamoClient.send(
-      new QueryCommand({
-        TableName: reviewTable,
-        KeyConditionExpression: "nofo_name = :name",
-        ExpressionAttributeValues: marshall({ ":name": nofoName }),
-      })
-    );
-    const openReviews = (existing.Items || [])
-      .map((i) => unmarshall(i))
+    const existing = [];
+    let lastKey;
+    do {
+      const page = await dynamoClient.send(
+        new QueryCommand({
+          TableName: reviewTable,
+          KeyConditionExpression: "nofo_name = :name",
+          ExpressionAttributeValues: marshall({ ":name": nofoName }),
+          ExclusiveStartKey: lastKey,
+        })
+      );
+      existing.push(...(page.Items || []).map((i) => unmarshall(i)));
+      lastKey = page.LastEvaluatedKey;
+    } while (lastKey);
+    const openReviews = existing
       .filter((r) => STALE_REVIEW_STATUSES.has(r.status));
 
     for (const review of openReviews) {

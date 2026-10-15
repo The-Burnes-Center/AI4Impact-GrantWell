@@ -61,6 +61,7 @@ export interface NofoPipelineStackProps extends cdk.NestedStackProps {
   readonly scraperDownloadDlqUrl: string;
   readonly supportedStatesEnv: string;
   readonly legacyStatelessAdminIsPlatform: string;
+  readonly singleStateEnv: Record<string, string>;
   readonly stackName: string;
 }
 
@@ -86,7 +87,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
-      timeout: cdk.Duration.minutes(5),
+      timeout: cdk.Duration.minutes(15),
       memorySize: 512,
     });
     extractTextFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
@@ -139,6 +140,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "publish/index.handler",
+      layers: [props.jsSharedLayer],
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -244,11 +246,13 @@ export class NofoPipelineStack extends cdk.NestedStack {
         DLQ_URL: props.nofoProcessingDlqUrl,
         SCRAPER_DLQ_URL: props.scraperDownloadDlqUrl,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
       timeout: cdk.Duration.minutes(5),
       memorySize: 256,
     });
     dlqProcessorFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
+    dlqProcessorFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     dlqProcessorFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -278,6 +282,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
         HAIKU_MODEL_ID: props.haikuNofoProfileArn,
         SUPPORTED_STATES: props.supportedStatesEnv,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
+        ...props.singleStateEnv,
       },
       timeout: cdk.Duration.seconds(30),
       memorySize: 256,

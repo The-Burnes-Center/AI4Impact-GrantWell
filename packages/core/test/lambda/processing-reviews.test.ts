@@ -188,6 +188,13 @@ describe("GET /admin/processing-reviews", () => {
     expect(body.expiredOpenCount).toBe(1);
   });
 
+  it("shows a single-state deployment's admin every review, as a platform admin sees them", async () => {
+    serve();
+    const everything = await list(await load(), { roles: ["PlatformAdmin"] });
+    const single = await list(await load({ SINGLE_STATE: "MA" }), { state: "MA" });
+    expect(single).toEqual(everything);
+  });
+
   it("orders status=all the same way", async () => {
     serve();
     const body = await list(await load(), { query: { status: "all" } });

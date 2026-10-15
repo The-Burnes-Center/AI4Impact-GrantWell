@@ -13,6 +13,12 @@ export interface ProjectBasicsData {
   contactEmail?: string;
 }
 
+/** A questionnaire answer sent to the drafter with the question it answers. */
+export interface QuestionnaireAnswer {
+  question: string;
+  answer: string;
+}
+
 export interface DocumentData {
   id: string;
   nofoId: string;
@@ -61,6 +67,7 @@ export interface RawNOFOData {
   review_flag?: {
     reason: string;
     missingCategories?: string[];
+    missingParts?: string;
     flaggedAt?: string;
   } | null;
   isPinned?: boolean;

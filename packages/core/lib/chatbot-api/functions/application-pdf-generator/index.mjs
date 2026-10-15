@@ -17,6 +17,7 @@ import {
   sanitizeContentHtml,
   recordEvent,
   touchLastActive,
+  orderedSections,
 } from 'grantwell-shared';
 
 const SENSITIVE_HEADERS = new Set(['authorization', 'cookie', 'x-amz-security-token']);
@@ -42,6 +43,16 @@ function redactEvent(event) {
   return e;
 }
 
+const CONTACT_FIELDS = new Set(['contactName', 'contactEmail', 'contact_name', 'contact_email']);
+
+/** Contact details go on the cover only when the request opts in. */
+function coverDraftData(draftData, includeContactDetails) {
+  if (includeContactDetails === true || !draftData.projectBasics) return draftData;
+  const projectBasics = Object.fromEntries(
+    Object.entries(draftData.projectBasics).filter(([key]) => !CONTACT_FIELDS.has(key))
+  );
+  return { ...draftData, projectBasics };
+}
 
 /**
  * Generate HTML content from draft data for PDF conversion.
@@ -50,13 +61,14 @@ function redactEvent(event) {
  *   - title: Application title
  *   - grantName: Name of the grant/NOFO (optional, will be extracted from title if not provided)
  *   - projectBasics: Object of project basic information
- *   - sections: Object of section names and content
+ *   - sections: Object of section content, keyed by section id (or by name without sectionOrder)
+ *   - sectionOrder: [{id, name}] giving the export order and headings (optional)
  * @returns {string} HTML string ready for PDF conversion
  */
 function generateHtmlFromDraft(draftData) {
   let title = draftData.title || 'Grant Application';
   const projectBasics = draftData.projectBasics || {};
-  const sections = draftData.sections || {};
+  const sections = orderedSections(draftData);
   
   // Clean title: remove slashes that might come from path-like structures
   title = title.replace(/\//g, ' ').replace(/\s+/g, ' ').trim();
@@ -122,10 +134,10 @@ function generateHtmlFromDraft(draftData) {
   
   // Build table of contents
   let tocHtml = '';
-  if (Object.keys(sections).length > 0) {
+  if (sections.length > 0) {
     tocHtml = '<div class="toc"><h2>Table of Contents</h2><ol>';
     let idx = 1;
-    for (const sectionName of Object.keys(sections)) {
+    for (const { name: sectionName } of sections) {
       tocHtml += `<li>${idx}. ${escapeHtml(sectionName)}</li>`;
       idx++;
     }
@@ -135,7 +147,7 @@ function generateHtmlFromDraft(draftData) {
   // Build sections HTML
   let sectionsHtml = '';
   let idx = 1;
-  for (const [sectionName, content] of Object.entries(sections)) {
+  for (const { name: sectionName, content } of sections) {
     sectionsHtml += `
         <section id="section-${idx}" class="section">
             <h2>${idx}. ${escapeHtml(sectionName)}</h2>
@@ -377,8 +389,10 @@ async function generatePdfBuffer(html) {
  *       "title": "...",
  *       "grantName": "Grant Name" (optional, will be extracted from title if not provided),
  *       "projectBasics": {...},
- *       "sections": {...}
- *     }
+ *       "sections": {...},
+ *       "sectionOrder": [{ "id": "...", "name": "..." }] (optional)
+ *     },
+ *     "includeContactDetails": true (optional; contact fields are left off the cover otherwise)
  *   }
  * }
  */
@@ -548,7 +562,7 @@ export const handler = async (event) => {
       body = event.body || {};
     }
     
-    const draftData = body.draftData || {};
+    const draftData = coverDraftData(body.draftData || {}, body.includeContactDetails);
     
     if (!draftData || Object.keys(draftData).length === 0) {
       return {

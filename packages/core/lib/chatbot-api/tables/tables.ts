@@ -6,7 +6,13 @@
 
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { AttributeType, Table, ProjectionType, BillingMode, StreamViewType } from 'aws-cdk-lib/aws-dynamodb';
+import { AttributeType, Table, TableProps, ProjectionType, BillingMode, StreamViewType } from 'aws-cdk-lib/aws-dynamodb';
+
+// Every table is restorable to a point in time, and no stack change can delete one.
+const BACKED_UP: Partial<TableProps> = {
+  pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: true },
+  deletionProtection: true,
+};
 
 export class TableStack extends Stack {
   public readonly historyTable: Table;
@@ -21,12 +27,14 @@ export class TableStack extends Stack {
   public readonly digestSuppressionTable: Table;
   public readonly nofoStateOverlayTable: Table;
   public readonly analyticsTable: Table;
+  public readonly dailyUsageTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     // Define the Chat History Table
     const chatHistoryTable = new Table(this, 'ChatHistoryTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
       sortKey: { name: 'session_id', type: AttributeType.STRING },
     });
@@ -43,10 +51,10 @@ export class TableStack extends Stack {
 
     // Define the Draft Table with LastModifiedIndex GSI
     const draftTable = new Table(this, 'DraftTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
       sortKey: { name: 'session_id', type: AttributeType.STRING },
       stream: StreamViewType.NEW_AND_OLD_IMAGES,
-      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: true },
     });
 
     // Add global secondary index to DraftTable by last_modified
@@ -62,6 +70,7 @@ export class TableStack extends Stack {
     // Version history, one row per draft revision, written by the DraftTable
     // stream consumer. No GSI: every read is a single-partition query.
     const draftVersionTable = new Table(this, 'DraftVersionTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'draft_key', type: AttributeType.STRING },
       sortKey: { name: 'rev', type: AttributeType.NUMBER },
       billingMode: BillingMode.PAY_PER_REQUEST,
@@ -73,6 +82,7 @@ export class TableStack extends Stack {
     // Define the NOFO Metadata Table for caching NOFO information
     // On-demand: landing-page reads scan StatusIndex on every load; provisioned 5 RCU throttled it.
     const nofoMetadataTable = new Table(this, 'NOFOMetadataTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
     });
@@ -117,11 +127,21 @@ export class TableStack extends Stack {
       projectionType: ProjectionType.KEYS_ONLY,
     });
 
+    // The scraper keys grants by title; grants.gov retitles opportunities, so it
+    // also looks them up by opportunity_id to update the existing row instead of duplicating it.
+    nofoMetadataTable.addGlobalSecondaryIndex({
+      indexName: 'OpportunityIdIndex',
+      partitionKey: { name: 'opportunity_id', type: AttributeType.STRING },
+      projectionType: ProjectionType.INCLUDE,
+      nonKeyAttributes: ['source_updated_at'],
+    });
+
     this.nofoMetadataTable = nofoMetadataTable;
 
     // Define the Draft Generation Jobs Table for async draft generation
     // Stores job status and results for polling
     const draftGenerationJobsTable = new Table(this, 'DraftGenerationJobsTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'jobId', type: AttributeType.STRING },
       timeToLiveAttribute: 'ttl', // Auto-delete jobs after expiry
     });
@@ -130,6 +150,7 @@ export class TableStack extends Stack {
 
     // Generic feature rollout table keyed by feature and subject.
     const featureRolloutTable = new Table(this, 'FeatureRolloutTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'featureKey', type: AttributeType.STRING },
       sortKey: { name: 'subjectKey', type: AttributeType.STRING },
     });
@@ -137,6 +158,7 @@ export class TableStack extends Stack {
     this.featureRolloutTable = featureRolloutTable;
 
     const nofoProcessingReviewTable = new Table(this, 'NOFOProcessingReviewTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
       sortKey: { name: 'review_id', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
@@ -153,6 +175,7 @@ export class TableStack extends Stack {
     this.nofoProcessingReviewTable = nofoProcessingReviewTable;
 
     const userNotificationPrefsTable = new Table(this, 'UserNotificationPrefsTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
     });
@@ -168,6 +191,7 @@ export class TableStack extends Stack {
     // One row per send attempt. (user_id, sent_at) doubles as the idempotency claim, where sent_at
     // is the cadence window key, so a retry or double-fire collides instead of mailing twice.
     const digestSendLogTable = new Table(this, 'DigestSendLogTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'user_id', type: AttributeType.STRING },
       sortKey: { name: 'sent_at', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
@@ -179,6 +203,7 @@ export class TableStack extends Stack {
     // Hard bounces and complaints by lowercased email. Checked before every send, independent of
     // the user's prefs row.
     const digestSuppressionTable = new Table(this, 'DigestSuppressionTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'email', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
     });
@@ -189,6 +214,7 @@ export class TableStack extends Stack {
     // attaches guidance shown only to their state's users, without mutating the shared
     // federal record. See nofo-state-overlay Lambda and the merge in retrieveNOFOSummary.
     const nofoStateOverlayTable = new Table(this, 'NOFOStateOverlayTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'nofo_name', type: AttributeType.STRING },
       sortKey: { name: 'state', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
@@ -202,6 +228,7 @@ export class TableStack extends Stack {
     // (only they carry event_day/event_sk), so the dashboard can query "events on day D" without
     // scanning. See lib/chatbot-api/functions/shared/analytics.mjs for the row shape.
     const analyticsTable = new Table(this, 'AnalyticsTable', {
+      ...BACKED_UP,
       partitionKey: { name: 'pk', type: AttributeType.STRING },
       sortKey: { name: 'sk', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
@@ -216,5 +243,16 @@ export class TableStack extends Stack {
     });
 
     this.analyticsTable = analyticsTable;
+
+    // Per-user daily counters behind the chat and application caps: pk is "<user>#<UTC day>".
+    const dailyUsageTable = new Table(this, 'DailyUsageTable', {
+      partitionKey: { name: 'pk', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      timeToLiveAttribute: 'ttl',
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: true },
+      deletionProtection: true,
+    });
+
+    this.dailyUsageTable = dailyUsageTable;
   }
 }
