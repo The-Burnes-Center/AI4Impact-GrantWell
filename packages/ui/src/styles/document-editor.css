@@ -599,6 +599,24 @@
 }
 
 /* Action Buttons */
+.ra-export-option {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.ra-export-option input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
 .ra-actions {
   display: flex;
   justify-content: space-between;

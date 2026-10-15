@@ -41,6 +41,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   const [exportStatus, setExportStatus] = useState("");
   const [exportError, setExportError] = useState<string | null>(null);
+  const [includeContactDetails, setIncludeContactDetails] = useState(false);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
   const exportInFlightRef = useRef(false);
   const apiClient = useApiClient();
@@ -215,6 +216,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         grantName: grantName || undefined,
         projectBasics: draftData.projectBasics,
         sections: draftData.sections,
+        includeContactDetails,
       };
 
       if (format === "docx") {
@@ -408,6 +410,16 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       <div role="status" aria-live="polite" className="visually-hidden">
         {exportStatus}
       </div>
+
+      <label className="ra-export-option">
+        <input
+          type="checkbox"
+          checked={includeContactDetails}
+          onChange={(e) => setIncludeContactDetails(e.target.checked)}
+          disabled={exportingFormat !== null}
+        />
+        Include contact name and email on the cover page
+      </label>
 
       {/* Action Buttons */}
       <div className="ra-actions">

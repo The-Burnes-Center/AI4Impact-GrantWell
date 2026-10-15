@@ -42,6 +42,16 @@ function redactEvent(event) {
   return e;
 }
 
+const CONTACT_FIELDS = new Set(['contactName', 'contactEmail', 'contact_name', 'contact_email']);
+
+/** Contact details go on the cover only when the request opts in. */
+function coverDraftData(draftData, includeContactDetails) {
+  if (includeContactDetails === true || !draftData.projectBasics) return draftData;
+  const projectBasics = Object.fromEntries(
+    Object.entries(draftData.projectBasics).filter(([key]) => !CONTACT_FIELDS.has(key))
+  );
+  return { ...draftData, projectBasics };
+}
 
 /**
  * Generate HTML content from draft data for PDF conversion.
@@ -378,7 +388,8 @@ async function generatePdfBuffer(html) {
  *       "grantName": "Grant Name" (optional, will be extracted from title if not provided),
  *       "projectBasics": {...},
  *       "sections": {...}
- *     }
+ *     },
+ *     "includeContactDetails": true (optional; contact fields are left off the cover otherwise)
  *   }
  * }
  */
@@ -548,7 +559,7 @@ export const handler = async (event) => {
       body = event.body || {};
     }
     
-    const draftData = body.draftData || {};
+    const draftData = coverDraftData(body.draftData || {}, body.includeContactDetails);
     
     if (!draftData || Object.keys(draftData).length === 0) {
       return {
