@@ -197,7 +197,7 @@ This release makes it easier to write and keep track of your applications. You c
 
 - GrantWell deployments run by state governments can use their own header, footer and sign-in page, show an official-website banner and their seal, choose whether to use two-step verification, and send sign-in emails without setting up their own email service
 - A new deployment with no grants yet shows an empty list instead of an error
-- GrantWell checks every day that its AI models answer, and alerts the team within 15 minutes if any part of GrantWell fails to start
+- GrantWell checks every day that its AI models answer, and alerts the team within 15 minutes if any part of GrantWell fails to start, or if chats start showing errors instead of answers
 - Many more automated tests run before every update reaches you
 - Every GrantWell database is now backed up continuously and protected from accidental deletion
 - GrantWell limits how fast requests can arrive, so a flood of traffic can't slow it down for everyone; each deployment can adjust its limits

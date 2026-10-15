@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { LOG_MARKERS } from "../lib/monitoring/monitoring-stack";
 
 const aws = vi.hoisted(() => {
   class Command {
@@ -115,7 +116,7 @@ describe("websocket-chat Bedrock loop", () => {
       ["<!ERROR!>: Something went wrong while answering. Try again in a moment."],
     ]);
     expect(console.error).toHaveBeenCalledWith(
-      "Stream processing error:",
+      LOG_MARKERS.chatAnswerFailed[0],
       expect.objectContaining({ message: "ThrottlingException: Too many requests" }),
     );
     expect(aws.posts).not.toHaveBeenCalledWith("!<|EOF_STREAM|>!");

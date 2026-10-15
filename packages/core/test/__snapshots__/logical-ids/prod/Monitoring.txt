@@ -16,6 +16,8 @@ ApiServerErrorAlarm0098B6E3	AWS::CloudWatch::Alarm
 ApplicationCapReachedFilter96724097	AWS::Logs::MetricFilter
 AuthEmailNotDeliveredAlarmB0B2B392	AWS::CloudWatch::Alarm
 AutoArchiveFailingAlarm669E2069	AWS::CloudWatch::Alarm
+ChatAnswerFailedFilterF01D1BC4	AWS::Logs::MetricFilter
+ChatAnswersFailingAlarm1B6CCBD1	AWS::CloudWatch::Alarm
 ChatAuthorizerErrorsAlarmEA9AB159	AWS::CloudWatch::Alarm
 ChatCapReachedFilterCDFC7D3C	AWS::Logs::MetricFilter
 ChatErrorsAlarm173D708E	AWS::CloudWatch::Alarm

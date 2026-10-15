@@ -48,6 +48,7 @@ export const LOG_MARKERS = {
   turnstileNotConfigured: ["TURNSTILE_SECRET_KEY is not set"],
   accountSetupFailed: ["Failed to set custom:state at confirmation", "Failed to revoke sessions after password reset"],
   kbRetrieveFailed: ["could not retrieve Knowledge Base documents"],
+  chatAnswerFailed: ["Stream processing error:"],
   grantSearchFailed: ["Hybrid search error:"],
   createMetadataFailed: ["Error processing record:"],
   draftVersionWriteFailed: ["draft-version-writer failed on"],
@@ -405,6 +406,15 @@ export class MonitoringStack extends cdk.NestedStack {
       name: "chat cannot search NOFOs",
       description: "Chat can't read the knowledge base, so it answers users without the NOFO text.",
       metric: this.markerMetric("KbRetrieveFailed", props.chatFunction, LOG_MARKERS.kbRetrieveFailed, cdk.Duration.minutes(15)),
+      threshold: 3,
+    });
+
+    // A failed model call or stream is caught and shown to the user as an error, so Errors stays flat.
+    this.alarm("ChatAnswersFailingAlarm", {
+      severity: "medium",
+      name: "chat answers failing",
+      description: "Chat is showing users an error instead of an answer because the model call or its stream is failing.",
+      metric: this.markerMetric("ChatAnswerFailed", props.chatFunction, LOG_MARKERS.chatAnswerFailed, cdk.Duration.minutes(15)),
       threshold: 3,
     });
 

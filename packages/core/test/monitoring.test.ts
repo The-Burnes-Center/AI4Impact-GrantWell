@@ -26,6 +26,7 @@ const COMMON_ALARMS: [string, string, number][] = [
   ["account setup step failed", "medium", 1],
   ["sign-in emails not delivered", "medium", 3],
   ["chat cannot search NOFOs", "medium", 3],
+  ["chat answers failing", "medium", 3],
   ["grant search returning nothing", "medium", 3],
   ["uploaded documents not indexed", "medium", 1],
   ["document index sync failing", "medium", 3],
