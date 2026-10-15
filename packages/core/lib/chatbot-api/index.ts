@@ -23,6 +23,7 @@ import { aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { OpenSearchStack } from "./opensearch/opensearch";
 import { KnowledgeBaseStack } from "./knowledge-base/knowledge-base";
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
@@ -444,9 +445,47 @@ export class ChatBotApi extends Construct {
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         ...(singleState(props.config) && { SINGLE_STATE: singleState(props.config)!.code }),
+        CHAT_HISTORY_TABLE_NAME: tables.historyTable.tableName,
+        DRAFT_TABLE_NAME: tables.draftTable.tableName,
+        DRAFT_VERSION_TABLE_NAME: tables.draftVersionTable.tableName,
+        ANALYTICS_TABLE_NAME: tables.analyticsTable.tableName,
+        USER_NOTIFICATION_PREFS_TABLE_NAME: tables.userNotificationPrefsTable.tableName,
+        USER_DOCUMENTS_BUCKET: buckets.userDocumentsBucket.bucketName,
+        SYNC_KB_FUNCTION_NAME: lambdaFunctions.syncKBFunction.functionName,
       },
       timeout: cdk.Duration.seconds(30),
     });
+
+    manageUsersFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["dynamodb:Query", "dynamodb:BatchWriteItem"],
+        resources: [
+          tables.historyTable.tableArn,
+          tables.draftTable.tableArn,
+          tables.draftVersionTable.tableArn,
+          tables.analyticsTable.tableArn,
+        ],
+      })
+    );
+    manageUsersFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["dynamodb:DeleteItem"],
+        resources: [tables.userNotificationPrefsTable.tableArn],
+      })
+    );
+    manageUsersFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:ListBucketVersions"],
+        resources: [buckets.userDocumentsBucket.bucketArn],
+      })
+    );
+    manageUsersFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:DeleteObjectVersion"],
+        resources: [buckets.userDocumentsBucket.arnForObjects("*")],
+      })
+    );
+    lambdaFunctions.syncKBFunction.grantInvoke(manageUsersFunction);
 
     props.authentication.userPool.grant(
       manageUsersFunction,

@@ -606,7 +606,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       >
         <div className="modal-form">
           <p className="modal-description">
-            Permanently delete <strong>{deleteTarget?.email}</strong>? This removes their account and cannot be undone.
+            Permanently delete <strong>{deleteTarget?.email}</strong>? This deletes their account and their chats, applications and supporting documents. It cannot be undone.
           </p>
           <div className="modal-actions">
             <button
