@@ -145,8 +145,7 @@ describe("preparing a draft", () => {
       );
     const out = await run();
     expect(out.applicantDocuments).toEqual([{ fileName: "budget.pdf", content: "Our budget is $40,000." }]);
-    expect(out.grantInfos).toHaveLength(1);
-    expect(JSON.stringify(out.grantInfos)).not.toContain("budget");
+    expect(out.grantInfos).toEqual([{ grantId: "unknown", combinedContent: "Applicants must serve rural areas." }]);
     expect(out).toMatchObject({ additionalInfo: "We partner with the council on aging.", questionnaireAnswers: answers });
   });
 

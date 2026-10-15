@@ -155,7 +155,7 @@ async function retrieveUserDocuments(query, documentIdentifier, userId) {
 function extractGrantInfoFromKBResults(results) {
   return results.map((result) => ({
     grantId: result.metadata?.grantId || 'unknown',
-    combinedContent: result.content,
+    combinedContent: result.content?.text ?? '',
   }));
 }
 
