@@ -3,7 +3,9 @@ import type { DraftJobStatus } from "../api-client/drafts-client";
 import {
   clearDraftCache,
   pollForExportUrl,
+  questionnaireAnswers,
   readDraftCache,
+  resolveQuestionnaireAnswers,
   statusToStep,
   stepToIndex,
   stepToStatus,
@@ -99,5 +101,48 @@ describe("pollForExportUrl", () => {
     await expect(pollForExportUrl({ poll, intervalMs: 1, timeoutMs: 10, ...clock() })).rejects.toThrow(
       "Template missing"
     );
+  });
+});
+
+describe("questionnaire answers for the drafter", () => {
+  const questions = [
+    { id: 1, question: "Who will the project serve?" },
+    { id: "custom-a", question: "Which county partners are involved?" },
+    { id: 2, question: "What is the timeline?" },
+  ];
+
+  it("pairs saved question_ answers with their question text, in question order", () => {
+    expect(
+      questionnaireAnswers(questions, {
+        question_2: "Twelve months",
+        "question_custom-a": "Franklin County",
+        question_1: "Rural seniors",
+      }),
+    ).toEqual([
+      { question: "Who will the project serve?", answer: "Rural seniors" },
+      { question: "Which county partners are involved?", answer: "Franklin County" },
+      { question: "What is the timeline?", answer: "Twelve months" },
+    ]);
+  });
+
+  it("drops blank answers and keeps answers whose question is gone", () => {
+    expect(questionnaireAnswers(questions, { question_1: "  ", question_9: "Kept anyway" })).toEqual([
+      { question: "", answer: "Kept anyway" },
+    ]);
+    expect(questionnaireAnswers(questions, undefined)).toEqual([]);
+  });
+
+  it("still sends the answers when the questions can't be loaded", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const answers = await resolveQuestionnaireAnswers(() => Promise.reject(new Error("offline")), { question_1: "Rural seniors" });
+    expect(answers).toEqual([{ question: "", answer: "Rural seniors" }]);
+  });
+
+  it("reads the questions from the questions endpoint's response", async () => {
+    const answers = await resolveQuestionnaireAnswers(
+      async () => ({ data: { questions } }),
+      { question_1: "Rural seniors" },
+    );
+    expect(answers).toEqual([{ question: "Who will the project serve?", answer: "Rural seniors" }]);
   });
 });

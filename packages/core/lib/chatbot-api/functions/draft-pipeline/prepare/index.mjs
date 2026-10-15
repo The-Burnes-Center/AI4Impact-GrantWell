@@ -1,8 +1,9 @@
 /**
  * Draft Pipeline - Prepare Lambda
  *
- * Fetches the NOFO summary and KB documents, then splits the work into
- * N section items for the Step Functions Map state to fan out.
+ * Fetches the NOFO summary, KB passages from the grant and from the
+ * requesting user's supporting documents for that grant, then splits the
+ * work into N section items for the Step Functions Map state to fan out.
  * Updates the DDB job with sectionNames and totalSections.
  */
 
@@ -16,7 +17,10 @@ const kbClient = new BedrockAgentRuntimeClient({ region: process.env.AWS_REGION 
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
 export const handler = async (event) => {
-  const { jobId, query, documentIdentifier, projectBasics, questionnaire, sessionId, userId, userState } = event;
+  const {
+    jobId, query, documentIdentifier, projectBasics, questionnaire, questionnaireAnswers,
+    additionalInfo, sessionId, userId, userState,
+  } = event;
 
   console.log(`Prepare: job ${jobId} for "${documentIdentifier}" (session ${sessionId})`);
 
@@ -26,10 +30,14 @@ export const handler = async (event) => {
     throw new Error('Failed to get grant sections from requirements — ProjectNarrativeSections missing or empty');
   }
 
-  // 2. Retrieve relevant docs from Knowledge Base (filtered by document)
-  const kbResults = await retrieveFromKnowledgeBase(query, documentIdentifier);
+  // 2. Retrieve relevant passages: the grant, and this user's own uploads for it
+  const [kbResults, userDocResults] = await Promise.all([
+    retrieveFromKnowledgeBase(query, documentIdentifier),
+    retrieveUserDocuments(query, documentIdentifier, userId),
+  ]);
   const grantInfos = extractGrantInfoFromKBResults(kbResults);
-  console.log(`Prepare: fetched ${grantInfos.length} KB results`);
+  const applicantDocuments = extractApplicantDocuments(userDocResults);
+  console.log(`Prepare: fetched ${grantInfos.length} KB results, ${applicantDocuments.length} from the applicant's documents`);
 
   // 3. Build section list
   const sections = summary.ProjectNarrativeSections.map((section, index) => ({
@@ -51,10 +59,13 @@ export const handler = async (event) => {
     documentIdentifier,
     projectBasics: projectBasics || {},
     questionnaire: questionnaire || {},
+    questionnaireAnswers: Array.isArray(questionnaireAnswers) ? questionnaireAnswers : [],
+    additionalInfo: typeof additionalInfo === "string" ? additionalInfo : "",
     sessionId,
     userId,
     userState: typeof userState === "string" ? userState : "",
     grantInfos,
+    applicantDocuments,
     totalSections,
     sections,
     sectionNames,
@@ -107,11 +118,54 @@ async function retrieveFromKnowledgeBase(query, documentIdentifier) {
   }
 }
 
+/** userId must come from the authenticated caller; it scopes retrieval to that user's uploads. */
+async function retrieveUserDocuments(query, documentIdentifier, userId) {
+  if (!userId) return [];
+  const nofoName = documentIdentifier.replace(/\/+$/, '').split('/').pop();
+  if (!nofoName) return [];
+  try {
+    const filter = {
+      andAll: [
+        { equals: { key: 'documentType', value: 'userDocument' } },
+        { equals: { key: 'userId', value: userId } },
+        { equals: { key: 'nofoName', value: nofoName } },
+      ],
+    };
+
+    const command = new RetrieveCommand({
+      knowledgeBaseId: process.env.KB_ID,
+      retrievalQuery: { text: query },
+      retrievalConfiguration: {
+        vectorSearchConfiguration: {
+          numberOfResults: 5,
+          filter,
+        },
+      },
+    });
+
+    const response = await kbClient.send(command);
+    const folder = `/${userId}/${nofoName}/`;
+    return (response.retrievalResults || []).filter((r) => r.location?.s3Location?.uri?.includes(folder));
+  } catch (error) {
+    console.error("Error retrieving the applicant's documents from Knowledge Base:", error);
+    return [];
+  }
+}
+
 function extractGrantInfoFromKBResults(results) {
   return results.map((result) => ({
     grantId: result.metadata?.grantId || 'unknown',
     combinedContent: result.content,
   }));
+}
+
+function extractApplicantDocuments(results) {
+  return results
+    .filter((result) => typeof result.content?.text === 'string' && result.content.text.trim() !== '')
+    .map((result) => ({
+      fileName: result.metadata?.fileName || result.location?.s3Location?.uri?.split('/').pop() || 'document',
+      content: result.content.text,
+    }));
 }
 
 async function updateJobMetadata(jobId, sectionNames, totalSections) {

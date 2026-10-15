@@ -13,6 +13,12 @@ export interface ProjectBasicsData {
   contactEmail?: string;
 }
 
+/** A questionnaire answer sent to the drafter with the question it answers. */
+export interface QuestionnaireAnswer {
+  question: string;
+  answer: string;
+}
+
 export interface DocumentData {
   id: string;
   nofoId: string;

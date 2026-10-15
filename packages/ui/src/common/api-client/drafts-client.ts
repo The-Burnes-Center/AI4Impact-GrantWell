@@ -1,6 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
-import type { ProjectBasicsData, RawDraftRecord } from "../types/document";
+import type { ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../types/document";
 import { apiFetch } from "../session-ended";
 
 // Unified status that represents both the step and state in the grant writing flow
@@ -526,6 +526,8 @@ export class DraftsClient {
     documentIdentifier: string;
     projectBasics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
+    questionnaireAnswers?: QuestionnaireAnswer[];
+    additionalInfo?: string;
     sessionId: string;
   }): Promise<string> {
     const auth = await Utils.authenticate();
@@ -540,6 +542,8 @@ export class DraftsClient {
         documentIdentifier: params.documentIdentifier,
         projectBasics: params.projectBasics || {},
         questionnaire: params.questionnaire || {},
+        questionnaireAnswers: params.questionnaireAnswers || [],
+        additionalInfo: params.additionalInfo || '',
         sessionId: params.sessionId,
       }),
     });
@@ -560,6 +564,8 @@ export class DraftsClient {
     documentIdentifier: string;
     projectBasics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
+    questionnaireAnswers?: QuestionnaireAnswer[];
+    additionalInfo?: string;
     sessionId: string;
     onProgress?: (status: string, pollCount?: number, maxPolls?: number) => void;
     onJobUpdate?: (jobStatus: DraftJobStatus) => void;
@@ -579,6 +585,8 @@ export class DraftsClient {
         documentIdentifier: params.documentIdentifier,
         projectBasics: params.projectBasics || {},
         questionnaire: params.questionnaire || {},
+        questionnaireAnswers: params.questionnaireAnswers || [],
+        additionalInfo: params.additionalInfo || '',
         sessionId: params.sessionId
       }),
     });

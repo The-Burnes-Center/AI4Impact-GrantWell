@@ -8,7 +8,7 @@ import NavigationButtons from "../../components/ui/NavigationButtons";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
-import { readDraftCache } from "../../common/helpers/document-editor-utils";
+import { readDraftCache, resolveQuestionnaireAnswers } from "../../common/helpers/document-editor-utils";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import type { DocumentData } from "../../common/types/document";
 
@@ -337,12 +337,19 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setGenerationPhase("preparing");
       setIsLoading(false);
 
+      const questionnaireAnswers = await resolveQuestionnaireAnswers(
+        () => apiClient.landingPage.getNOFOQuestions(selectedNofo),
+        draftToUse.questionnaire,
+      );
+
       // Start the generation job — returns jobId immediately
       const jobId = await apiClient.drafts.startDraftGeneration({
         query: "Generate all sections for the grant application",
         documentIdentifier: selectedNofo,
         projectBasics: draftToUse.projectBasics || {},
         questionnaire: draftToUse.questionnaire || {},
+        questionnaireAnswers,
+        additionalInfo,
         sessionId,
       });
       console.log('Draft generation job started:', jobId);
