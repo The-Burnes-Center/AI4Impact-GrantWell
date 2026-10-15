@@ -22,6 +22,8 @@ describe("DraftsClient exports", () => {
 
     expect(net.to(DOCX).map((r) => (r.body as { includeContactDetails: boolean }).includeContactDetails)).toEqual([false, true]);
     expect(net.to(PDF).map((r) => (r.body as { includeContactDetails: boolean }).includeContactDetails)).toEqual([false, true]);
+  });
+});
 
 const START = "POST /draft-generation";
 

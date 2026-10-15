@@ -19,6 +19,7 @@ let generateSection: Handler;
 beforeAll(async () => {
   vi.stubEnv("AWS_REGION", "us-east-1");
   vi.stubEnv("KB_ID", "kb-1");
+  vi.stubEnv("NOFO_METADATA_TABLE_NAME", "nofo-metadata");
   vi.stubEnv("BUCKET", "nofos");
   vi.stubEnv("DRAFT_GENERATION_JOBS_TABLE_NAME", "jobs");
   vi.stubEnv("DRAFT_GENERATION_STATE_MACHINE_ARN", "arn:aws:states:us-east-1:111111111111:stateMachine:draft");
@@ -31,6 +32,7 @@ beforeAll(async () => {
 beforeEach(() => {
   for (const m of [kb, bedrock, ddb, s3, sfn]) m.reset();
   ddb.on(GetItemCommand).resolves({});
+  ddb.on(GetItemCommand, { TableName: "nofo-metadata" }).resolves({ Item: { nofo_name: { S: "Grant A" }, scope: { S: "federal" } } });
   ddb.on(PutItemCommand).resolves({});
   ddb.on(UpdateItemCommand).resolves({});
   sfn.on(StartExecutionCommand).resolves({});
