@@ -42,6 +42,10 @@ const REFUSAL_MESSAGE = "I can't help with that request.";
 const NO_GRANT_RECORD_MESSAGE =
   "We couldn't confirm your access to this grant. Please contact a platform administrator to request access.";
 
+const CUT_OFF_NOTICE = "This answer was cut off. Ask me to continue.";
+
+const ERROR_MESSAGE = "Something went wrong while answering. Try again in a moment.";
+
 // Platform authority comes from the explicit PlatformAdmin role; this flag keeps pre-migration
 // stateless admins working and must stay on until every pool is migrated.
 const LEGACY_STATELESS_ADMIN_IS_PLATFORM =
@@ -447,13 +451,25 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
           }
         } else if (stopReason) {
           stopLoop = true;
+          if (stopReason === "max_tokens") {
+            const notice = modelResponse ? `\n\n${CUT_OFF_NOTICE}` : CUT_OFF_NOTICE;
+            modelResponse = modelResponse.concat(notice);
+            try {
+              await wsConnectionClient.send(new PostToConnectionCommand({
+                ConnectionId: id,
+                Data: notice,
+              }));
+            } catch (error) {
+              console.error("Error sending chunk:", error);
+            }
+          }
         }
       } catch (error) {
         console.error("Stream processing error:", error);
         try {
           await wsConnectionClient.send(new PostToConnectionCommand({
             ConnectionId: id,
-            Data: `<!ERROR!>: ${error}`
+            Data: `<!ERROR!>: ${ERROR_MESSAGE}`
           }));
         } catch (e) {
           console.error("Error sending stream error:", e);
@@ -577,7 +593,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     console.error("Error:", error);
     let responseParams = {
       ConnectionId: id,
-      Data: `<!ERROR!>: ${error}`
+      Data: `<!ERROR!>: ${ERROR_MESSAGE}`
     };
     let command = new PostToConnectionCommand(responseParams);
     await wsConnectionClient.send(command);

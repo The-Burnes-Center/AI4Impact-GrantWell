@@ -20,7 +20,7 @@ import {
   ChatInputState,
 } from "./types";
 
-import { assembleHistory } from "./utils";
+import { assembleHistory, chatErrorText } from "./utils";
 
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
@@ -564,7 +564,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         /**This is a custom tag from the API that denotes that an error occured
          * and the next chunk will be an error message. */
         if (data.data.includes("<!ERROR!>:")) {
-          addNotification("error", data.data);
+          addNotification("error", chatErrorText(data.data));
           ws.close();
           return;
         }

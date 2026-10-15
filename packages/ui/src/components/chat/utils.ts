@@ -2,6 +2,20 @@ import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 
 type ChatMetadata = ChatBotHistoryItem["metadata"];
 
+const ERROR_SENTINEL = "<!ERROR!>:";
+
+export const CHAT_ERROR_MESSAGE = "Something went wrong while answering. Try again in a moment.";
+
+/**
+ * The user-facing text of an error frame from the chat socket: whatever follows
+ * the error sentinel, or a plain default when nothing does.
+ */
+export function chatErrorText(frame: string): string {
+  const at = frame.indexOf(ERROR_SENTINEL);
+  const text = at === -1 ? "" : frame.slice(at + ERROR_SENTINEL.length).trim();
+  return text || CHAT_ERROR_MESSAGE;
+}
+
 /**
  * Assembles the chat history into a format expected by the API
  */

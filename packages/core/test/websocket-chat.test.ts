@@ -112,8 +112,12 @@ describe("websocket-chat Bedrock loop", () => {
 
     expect(aws.bedrock).toHaveBeenCalledTimes(1);
     expect(aws.posts.mock.calls.filter(([d]) => String(d).startsWith("<!ERROR!>"))).toEqual([
-      ["<!ERROR!>: Error: ThrottlingException: Too many requests"],
+      ["<!ERROR!>: Something went wrong while answering. Try again in a moment."],
     ]);
+    expect(console.error).toHaveBeenCalledWith(
+      "Stream processing error:",
+      expect.objectContaining({ message: "ThrottlingException: Too many requests" }),
+    );
     expect(aws.posts).not.toHaveBeenCalledWith("!<|EOF_STREAM|>!");
     expect(sessionSaves()).toEqual([]);
   });
@@ -127,8 +131,51 @@ describe("websocket-chat Bedrock loop", () => {
     await chat();
 
     expect(aws.bedrock).toHaveBeenCalledTimes(1);
-    expect(aws.posts).toHaveBeenCalledWith("<!ERROR!>: Error: ModelStreamErrorException");
+    expect(aws.posts).toHaveBeenCalledWith("<!ERROR!>: Something went wrong while answering. Try again in a moment.");
+    expect(aws.posts.mock.calls.some(([d]) => String(d).includes("ModelStreamErrorException"))).toBe(false);
     expect(sessionSaves()).toEqual([]);
+  });
+
+  it("sends a plain error, not the internal one, when the request fails outside the stream", async () => {
+    aws.bedrock.mockImplementation(async () => answer("an answer"));
+    aws.lambda.mockRejectedValue(new Error("AccessDeniedException: lambda:InvokeFunction on arn:aws:lambda:secret"));
+
+    await chat();
+
+    const errors = aws.posts.mock.calls.filter(([d]) => String(d).startsWith("<!ERROR!>"));
+    expect(errors).toEqual([["<!ERROR!>: Something went wrong while answering. Try again in a moment."]]);
+    expect(console.error).toHaveBeenCalledWith("Error:", expect.objectContaining({ message: expect.stringContaining("arn:aws:lambda:secret") }));
+  });
+
+  it("flags an answer cut off at max_tokens and saves it with the notice", async () => {
+    aws.bedrock.mockResolvedValueOnce(
+      stream([
+        { type: "content_block_delta", delta: { type: "text_delta", text: "The first three requirements are" } },
+        { type: "message_delta", delta: { stop_reason: "max_tokens" } },
+      ]),
+    );
+
+    await chat();
+
+    expect(aws.bedrock).toHaveBeenCalledTimes(1);
+    expect(aws.posts.mock.calls.map(([d]) => d)).toEqual([
+      "The first three requirements are",
+      "\n\nThis answer was cut off. Ask me to continue.",
+      "!<|EOF_STREAM|>!",
+      "[]",
+    ]);
+    expect(sessionSaves()).toHaveLength(1);
+    expect(sessionSaves()[0][0].new_chat_entry[0].chatbot).toBe(
+      "The first three requirements are\n\nThis answer was cut off. Ask me to continue.",
+    );
+  });
+
+  it("adds no notice to an answer that ends normally", async () => {
+    aws.bedrock.mockImplementation(async () => answer("complete answer"));
+
+    await chat();
+
+    expect(aws.posts.mock.calls.some(([d]) => String(d).includes("cut off"))).toBe(false);
   });
 
   it("makes at most 5 Bedrock calls, the last one without tool use, and saves the answer", async () => {
