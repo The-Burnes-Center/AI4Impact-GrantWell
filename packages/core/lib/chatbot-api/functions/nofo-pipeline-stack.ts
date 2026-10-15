@@ -87,7 +87,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       environment: {
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
-      timeout: cdk.Duration.minutes(5),
+      timeout: cdk.Duration.minutes(15),
       memorySize: 512,
     });
     extractTextFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));

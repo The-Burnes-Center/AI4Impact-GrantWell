@@ -11,7 +11,7 @@ import SummaryEditor from "./SummaryEditor";
 import { PROCESSING_LABELS } from "./processing-stages";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import { Utils } from "../../../common/utils";
-import type { NOFO, GrantTypeId, CustomQuestion } from "../../../common/types/nofo";
+import type { NOFO, GrantTypeId, CustomQuestion, ReviewFlag } from "../../../common/types/nofo";
 import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
 import { SINGLE_STATE, SUPPORTED_STATES } from "../../../common/states";
 
@@ -20,6 +20,14 @@ const DEFAULT_UPLOAD_STATE = SINGLE_STATE?.code ?? "";
 
 function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback;
+}
+
+function reviewFlagTitle(flag: ReviewFlag) {
+  const parts = [
+    flag.missingCategories.length > 0 ? `Missing: ${flag.missingCategories.join(", ")}` : "",
+    flag.missingParts ?? "",
+  ].filter(Boolean);
+  return parts.length > 0 ? parts.join(". ") : undefined;
 }
 
 interface NOFOsTabProps {
@@ -470,11 +478,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     type="button"
                     className="grant-review-link grant-review-link--suggested"
                     onClick={() => handleEditSummary(nofo)}
-                    title={
-                      nofo.reviewFlag.missingCategories.length > 0
-                        ? `Missing: ${nofo.reviewFlag.missingCategories.join(", ")}`
-                        : undefined
-                    }
+                    title={reviewFlagTitle(nofo.reviewFlag)}
                   >
                     <LuInfo size={12} aria-hidden="true" />
                     Review suggested

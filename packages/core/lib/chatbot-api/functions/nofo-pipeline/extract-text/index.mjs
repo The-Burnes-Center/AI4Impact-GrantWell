@@ -85,7 +85,19 @@ export const handler = async (event) => {
   };
 };
 
-const MAX_TEXTRACT_POLLS = 120; // 120 * 5s = 10 min max wait
+const TEXTRACT_POLL_INTERVAL_MS = 5000;
+// Leaves the 15-minute Lambda time to page the results and upload them.
+export const MAX_TEXTRACT_WAIT_MS = 13 * 60 * 1000;
+
+export class TextractTimeoutError extends Error {
+  constructor(jobId) {
+    super(
+      `Text extraction did not finish within ${MAX_TEXTRACT_WAIT_MS / 60000} minutes (Textract job ${jobId}). ` +
+        "The PDF may be very long or scanned; reprocess it later or upload a smaller or text-based PDF."
+    );
+    this.name = "TextractTimeoutError";
+  }
+}
 
 async function extractPdfText(bucket, key) {
   const startResponse = await textractClient.send(
@@ -95,14 +107,14 @@ async function extractPdfText(bucket, key) {
   );
 
   const jobId = startResponse.JobId;
+  const deadline = Date.now() + MAX_TEXTRACT_WAIT_MS;
   let status = "IN_PROGRESS";
-  let polls = 0;
 
   while (status === "IN_PROGRESS") {
-    if (++polls > MAX_TEXTRACT_POLLS) {
-      throw new Error(`Textract job ${jobId} timed out after ${MAX_TEXTRACT_POLLS * 5}s`);
+    if (Date.now() + TEXTRACT_POLL_INTERVAL_MS > deadline) {
+      throw new TextractTimeoutError(jobId);
     }
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, TEXTRACT_POLL_INTERVAL_MS));
     const result = await textractClient.send(
       new GetDocumentTextDetectionCommand({ JobId: jobId })
     );

@@ -36,6 +36,11 @@ export class NofoProcessingStateMachine extends Construct {
       maxAttempts: 4,
       backoffRate: 2,
     });
+    // Must precede States.TaskFailed: a rerun would wait just as long and push past the 30-minute limit.
+    extractText.addRetry({
+      errors: ["TextractTimeoutError"],
+      maxAttempts: 0,
+    });
     extractText.addRetry({
       errors: ["States.TaskFailed"],
       interval: cdk.Duration.seconds(10),

@@ -155,6 +155,7 @@ export const handler = async (event) => {
       exprValues[":reviewFlag"] = {
         reason: adminGuidance.reason,
         missingCategories: adminGuidance.missingCategories || [],
+        ...(adminGuidance.missingParts && { missingParts: adminGuidance.missingParts }),
         flaggedAt: now,
       };
     } else {

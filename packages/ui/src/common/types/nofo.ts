@@ -27,6 +27,8 @@ export interface CustomQuestion {
 export interface ReviewFlag {
   reason: string;
   missingCategories: string[];
+  /** Names the parts of the grant text that could not be read. */
+  missingParts?: string;
   flaggedAt?: string;
 }
 
