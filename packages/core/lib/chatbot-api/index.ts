@@ -472,8 +472,13 @@ export class ChatBotApi extends Construct {
           tables.historyTable.tableArn,
           tables.draftTable.tableArn,
           tables.draftVersionTable.tableArn,
-          tables.analyticsTable.tableArn,
         ],
+      })
+    );
+    manageUsersFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["dynamodb:Query", "dynamodb:UpdateItem", "dynamodb:DeleteItem"],
+        resources: [tables.analyticsTable.tableArn],
       })
     );
     manageUsersFunction.addToRolePolicy(

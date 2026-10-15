@@ -1,8 +1,8 @@
 /**
  * Removes what a user stored, ahead of deleting their account: chats, applications and their
  * version history, supporting documents (every version and delete marker under the user's folder,
- * knowledge-base sidecars included), the profile row, notification preferences, and search events,
- * which hold the typed query. Other usage events carry no user content and stay for the dashboard.
+ * knowledge-base sidecars included), the profile row, notification preferences, and the typed query
+ * on each search event. Usage events themselves stay so the dashboard's counts don't change.
  * Each step re-reads what is left, so a retry after a partial failure finishes the job.
  *
  * Env: CHAT_HISTORY_TABLE_NAME, DRAFT_TABLE_NAME, DRAFT_VERSION_TABLE_NAME, ANALYTICS_TABLE_NAME,
@@ -14,6 +14,7 @@ import {
   DeleteItemCommand,
   DynamoDBClient,
   QueryCommand,
+  UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { DeleteObjectsCommand, ListObjectVersionsCommand, S3Client } from "@aws-sdk/client-s3";
@@ -80,7 +81,7 @@ export async function deleteUserData({ sub, username }) {
     applicationVersions: applications.versions,
     supportingDocuments: documents,
     profile: profile.profile,
-    searchEvents: profile.searchEvents,
+    searchTextsErased: profile.searchTextsErased,
     notificationPreferences,
   };
 }
@@ -194,7 +195,7 @@ async function deleteDocuments(env, username) {
 
 async function deleteProfile(env, sub) {
   let profile = false;
-  let searchEvents = 0;
+  let searchTextsErased = 0;
   for await (const items of queryPages({
     TableName: env.analytics,
     KeyConditionExpression: "pk = :pk",
@@ -202,13 +203,37 @@ async function deleteProfile(env, sub) {
     ExpressionAttributeValues: marshall({ ":pk": `USER#${sub}`, ":profile": "PROFILE" }),
     ProjectionExpression: "pk, sk",
   })) {
-    await batchDelete(env.analytics, items.map(({ pk, sk }) => ({ pk, sk })));
-    for (const item of items) {
-      if (item.sk === "PROFILE") profile = true;
-      else searchEvents += 1;
+    const searches = items.filter((item) => item.sk !== "PROFILE");
+    for (let i = 0; i < searches.length; i += BATCH_SIZE) {
+      const erased = await Promise.all(searches.slice(i, i + BATCH_SIZE).map((key) => eraseQueryText(env, key)));
+      searchTextsErased += erased.filter(Boolean).length;
+    }
+    if (searches.length < items.length) {
+      await dynamo.send(
+        new DeleteItemCommand({ TableName: env.analytics, Key: marshall({ pk: `USER#${sub}`, sk: "PROFILE" }) })
+      );
+      profile = true;
     }
   }
-  return { profile, searchEvents };
+  return { profile, searchTextsErased };
+}
+
+// The condition keeps an event that expired since the query from coming back as a bare key.
+async function eraseQueryText(env, { pk, sk }) {
+  try {
+    await dynamo.send(
+      new UpdateItemCommand({
+        TableName: env.analytics,
+        Key: marshall({ pk, sk }),
+        UpdateExpression: "REMOVE query_text",
+        ConditionExpression: "attribute_exists(pk)",
+      })
+    );
+    return true;
+  } catch (error) {
+    if (error.name === "ConditionalCheckFailedException") return false;
+    throw error;
+  }
 }
 
 async function deleteNotificationPrefs(env, sub) {
