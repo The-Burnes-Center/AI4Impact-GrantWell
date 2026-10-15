@@ -92,3 +92,60 @@ def test_a_real_dynamodb_failure_logs_the_alarm_marker(writer, capsys):
 
     assert result == {"batchItemFailures": [{"itemIdentifier": "900"}]}
     assert capsys.readouterr().out.startswith(f"{MARKER}e-9: ")
+
+
+ORDER = [{"id": "summary", "name": "Summary"}, {"id": "budget", "name": "Budget"}]
+
+
+def test_converting_a_row_from_section_names_to_ids_is_not_a_new_version(writer):
+    old = {"user_id": "user-1", "session_id": "s1", "rev": 4, "sections": {"Summary": "Text", "Budget": ""}}
+    new = {**old, "rev": 5, "sections": {"summary": "Text", "budget": ""}, "section_order": ORDER, "last_write_source": "manual"}
+
+    writer.lambda_handler({"Records": [record("e-1", "100", old=old, new=new)]}, None)
+
+    assert versions(writer) == []
+
+
+def test_changes_across_the_conversion_are_reported_by_section_id(writer):
+    old = {"user_id": "user-1", "session_id": "s1", "rev": 4, "sections": {"Summary": "Text"}}
+    new = {**old, "rev": 5, "sections": {"summary": "Text", "budget": "New money"}, "section_order": ORDER, "last_write_source": "autosave"}
+
+    writer.lambda_handler({"Records": [record("e-1", "100", old=old, new=new)]}, None)
+
+    [row] = versions(writer)
+    assert row["changed_sections"] == ["budget"]
+    assert row["section_word_counts"] == {"summary": Decimal(1), "budget": Decimal(2)}
+
+
+def test_pruning_reads_every_page_of_versions(writer, monkeypatch):
+    rows = [{"rev": Decimal(rev)} for rev in range(60, 0, -1)]
+    pages = [rows[:20], rows[20:40], rows[40:]]
+    calls = []
+    deleted = []
+
+    def query(**kwargs):
+        calls.append(kwargs)
+        page = pages[len(calls) - 1]
+        out = {"Items": page}
+        if len(calls) < len(pages):
+            out["LastEvaluatedKey"] = {"draft_key": "user-1#s1", "rev": page[-1]["rev"]}
+        return out
+
+    class Batch:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def delete_item(self, Key):
+            deleted.append(int(Key["rev"]))
+
+    monkeypatch.setattr(writer.table, "query", query)
+    monkeypatch.setattr(writer.table, "batch_writer", lambda: Batch())
+
+    writer._prune("user-1#s1")
+
+    assert len(calls) == 3
+    assert calls[2]["ExclusiveStartKey"]["rev"] == Decimal(21)
+    assert deleted == list(range(10, 0, -1))

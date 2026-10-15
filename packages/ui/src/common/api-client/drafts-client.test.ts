@@ -63,3 +63,14 @@ describe("DraftsClient.startDraftGeneration", () => {
     await expect(started).rejects.toThrow(message);
   });
 });
+
+describe("DraftsClient.updateDraft", () => {
+  it("passes on the server's message when the application is too large to save", async () => {
+    stubFetch({
+      "POST /user-draft": json({ error: "too_large", message: "This application is too large to save. Shorten a long section and try again." }, 413),
+    });
+    await expect(
+      client().updateDraft({ sessionId: "s1", userId: "u1", title: "", documentIdentifier: "Grant A", sections: {} })
+    ).rejects.toThrow("This application is too large to save. Shorten a long section and try again.");
+  });
+});

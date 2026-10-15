@@ -137,8 +137,8 @@ describe("preparing a draft", () => {
     const out = await run();
     expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);
     expect(out.sections).toEqual([
-      { item: "Need", description: "Describe the need.", index: 0 },
-      { item: "Budget", description: "Justify each cost.", index: 1 },
+      { id: "need", item: "Need", description: "Describe the need.", index: 0 },
+      { id: "budget", item: "Budget", description: "Justify each cost.", index: 1 },
     ]);
     expect(out).not.toHaveProperty("grantInfos");
     expect(out).not.toHaveProperty("applicantDocuments");
@@ -177,7 +177,7 @@ describe("writing a section", () => {
 
   const write = (fields: object = {}) =>
     generateSection({
-      sectionItem: { item: "Need", description: "Describe the need.", index: 0 },
+      sectionItem: { id: "need", item: "Need", description: "Describe the need.", index: 0 },
       jobId: "job-1",
       query: "Generate all sections",
       documentIdentifier: "federal/Grant A/",
@@ -210,7 +210,7 @@ describe("writing a section", () => {
 
   it("searches the grant and the user's documents with a query built from each section's own title and description", async () => {
     await write();
-    await write({ sectionItem: { item: "Budget", description: "Justify each cost.", index: 1 } });
+    await write({ sectionItem: { id: "budget", item: "Budget", description: "Justify each cost.", index: 1 } });
     const calls = retrievals();
     expect(calls).toHaveLength(4);
     const [needCalls, budgetCalls] = [calls.slice(0, 2), calls.slice(2)];
@@ -256,7 +256,7 @@ describe("writing a section", () => {
   it("takes the user from the job, not the section item", async () => {
     await write({
       userId: "user-2",
-      sectionItem: { item: "Need", description: "Describe the need.", index: 0, userId: "user-1" },
+      sectionItem: { id: "need", item: "Need", description: "Describe the need.", index: 0, userId: "user-1" },
     });
     const user = retrievals().find(isUserSearch);
     expect(user.retrievalConfiguration.vectorSearchConfiguration.filter.andAll[1]).toEqual({
@@ -273,7 +273,7 @@ describe("writing a section", () => {
 
   it("still writes the section when a search fails", async () => {
     kb.on(RetrieveCommand).rejects(new Error("throttled"));
-    await expect(write()).resolves.toEqual({ sectionName: "Need", status: "completed" });
+    await expect(write()).resolves.toEqual({ sectionId: "need", sectionName: "Need", status: "completed" });
     expect(prompt()).not.toContain("<applicant_documents>");
   });
 

@@ -158,7 +158,11 @@ const sectionEvent = (description = "Describe the project need. Not to exceed 2 
 describe("draft generate-section on Sonnet 5.5", () => {
   it("sends a structured-outputs request at medium effort with no forced tool or sampling params", async () => {
     bedrock.responses.push(reply({ content: "Our project will pave 12 miles." }));
-    await expect(generateSection(sectionEvent())).resolves.toEqual({ sectionName: "Project Narrative", status: "completed" });
+    await expect(generateSection(sectionEvent())).resolves.toEqual({
+      sectionId: "Project Narrative",
+      sectionName: "Project Narrative",
+      status: "completed",
+    });
     const input = bedrock.inputs[0];
     expect(input.modelId).toBe(process.env.SONNET_MODEL_ID);
     const body = lastBody();

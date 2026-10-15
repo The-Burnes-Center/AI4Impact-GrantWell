@@ -91,6 +91,26 @@ describe("application pdf generator cover", () => {
     expect(included.projectBasics).toMatchObject({ contactName: "Pat Example", contactEmail: "pat@example.org" });
   });
 
+  it("exports sections in the application's order under their names", async () => {
+    const html = await exportPdf({
+      draftData: {
+        ...draftData,
+        sections: { "2": "Second text.", need: "Need text.", "custom-annex": "Annex text." },
+        sectionOrder: [
+          { id: "need", name: "Statement of Need" },
+          { id: "2", name: "Budget" },
+          { id: "custom-annex", name: "Annex" },
+        ],
+      },
+    });
+    const at = (text: string) => html.indexOf(text);
+    expect(at("Statement of Need")).toBeGreaterThan(-1);
+    expect(at("Need text.")).toBeLessThan(at("Second text."));
+    expect(at("Second text.")).toBeLessThan(at("Annex text."));
+    expect(html).toContain("2. Budget");
+    expect(html).not.toContain("custom-annex");
+  });
+
   it("still rejects a request without draftData", async () => {
     const res = await handler({ body: JSON.stringify({}) });
     expect(res.statusCode).toBe(400);
