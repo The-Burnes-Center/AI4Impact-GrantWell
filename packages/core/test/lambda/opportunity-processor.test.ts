@@ -293,6 +293,21 @@ describe("opportunity processor", () => {
     });
   });
 
+  it.each([
+    [["other"], "Other"],
+    [["other", "health", "education"], "Health"],
+  ])("files a grant listed under %j as %s", async (categories, expected) => {
+    const url = "https://grants.gov/attachments/nofo.pdf";
+    serve(opportunity({ attachments: [{ download_path: url }], summary: { funding_categories: categories } }), {
+      [url]: { body: PDF, contentType: "application/pdf" },
+    });
+
+    const res = await handler(message({}));
+
+    expect(res.batchItemFailures).toEqual([]);
+    expect(metadata()[0].category).toBe(expected);
+  });
+
   it("skips a years-old opportunity with no close date before fetching any document", async () => {
     const url = "https://nspires.nasaprs.com/nra.pdf";
     const fetched = serve(

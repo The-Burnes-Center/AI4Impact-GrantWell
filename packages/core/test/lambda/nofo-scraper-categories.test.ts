@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FUNDING_CATEGORY_MAP, mapFundingCategory } from "../../lib/chatbot-api/functions/nofo-scraper/shared/utils.mjs";
+import { FUNDING_CATEGORY_MAP, mapFundingCategory, primaryFundingCategory } from "../../lib/chatbot-api/functions/nofo-scraper/shared/utils.mjs";
 
 const EICMM = "Energy Infrastructure and Critical Mineral and Materials (EICMM)";
 
@@ -33,5 +33,21 @@ describe("mapFundingCategory", () => {
     for (const value of ["art", "energ", "health_and_safety", "transportation_safety", "act", "and", "", null, undefined]) {
       expect(mapFundingCategory(value as string)).toBeNull();
     }
+  });
+});
+
+describe("primaryFundingCategory", () => {
+  it("uses Other only when grants.gov lists nothing more specific", () => {
+    expect(primaryFundingCategory(["other"])).toBe("other");
+    expect(primaryFundingCategory(["other", "other"])).toBe("other");
+    expect(primaryFundingCategory(["other", "health", "education"])).toBe("health");
+    expect(primaryFundingCategory(["housing", "other"])).toBe("housing");
+  });
+
+  it("keeps the first listed category otherwise", () => {
+    expect(primaryFundingCategory(["education", "health"])).toBe("education");
+    expect(primaryFundingCategory(["other", "unknown_code", "health"])).toBe("unknown_code");
+    expect(primaryFundingCategory([])).toBeNull();
+    expect(primaryFundingCategory(undefined)).toBeNull();
   });
 });
