@@ -61,6 +61,7 @@ export interface RawNOFOData {
   review_flag?: {
     reason: string;
     missingCategories?: string[];
+    missingParts?: string;
     flaggedAt?: string;
   } | null;
   isPinned?: boolean;

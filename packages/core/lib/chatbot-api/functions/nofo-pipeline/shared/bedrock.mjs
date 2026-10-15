@@ -30,6 +30,14 @@ function isThrottleError(error) {
   );
 }
 
+/** Throttling, timeouts and 5xx: worth another try. Refusals, truncation and bad JSON are not. */
+export function isRetryableError(error) {
+  if (!error) return false;
+  if (isThrottleError(error) || error.name === "InternalServerException") return true;
+  const status = error.$metadata?.httpStatusCode;
+  return status === 429 || status >= 500;
+}
+
 export async function invokeBedrockWithRetry(params) {
   let lastError;
 
