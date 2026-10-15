@@ -410,12 +410,12 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     }
 
     let claude = new ClaudeModel();
-    let lastFiveMessages = chatHistory.slice(-2);
+    const recentTurns = Array.isArray(chatHistory) ? chatHistory.slice(-2) : [];
     
     let stopLoop = false;
     let modelResponse = '';
     
-    let history = claude.assembleHistory(lastFiveMessages, "Please use your search tool one or more times based on this latest prompt: ".concat(userMessage));
+    let history = claude.assembleHistory(recentTurns, "Please use your search tool one or more times based on this latest prompt: ".concat(userMessage));
     let fullDocs = { content: "", uris: [] };
     let modelCalls = 0;
     const today = new Date().toLocaleDateString("en-US", { timeZone: "America/New_York", year: "numeric", month: "long", day: "numeric" });

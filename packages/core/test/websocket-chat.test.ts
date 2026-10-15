@@ -80,11 +80,11 @@ const toolUse = () =>
     { type: "message_delta", delta: { stop_reason: "tool_use" } },
   ]);
 
-const chat = () =>
+const chat = (data: object = {}) =>
   handler({
     requestContext: { connectionId: "c1", routeKey: "getChatbotResponse", authorizer: { userId: "user-1" } },
     body: JSON.stringify({
-      data: { userMessage: "Am I eligible?", session_id: "s1", chatHistory: [], documentIdentifier: "nofo-a" },
+      data: { userMessage: "Am I eligible?", session_id: "s1", chatHistory: [], documentIdentifier: "nofo-a", ...data },
     }),
   });
 
@@ -337,5 +337,25 @@ describe("websocket-chat history", () => {
 
     expect(console.error).toHaveBeenCalledWith("Could not save the chat turn:", "ProvisionedThroughputExceededException");
     expect(aws.posts.mock.calls.map(([d]) => d)).toEqual(["You qualify.", "!<|EOF_STREAM|>!", "[]"]);
+  });
+
+  it("gives the model only the last two turns it was sent", async () => {
+    aws.bedrock.mockImplementation(async () => answer("You qualify."));
+    const chatHistory = Array.from({ length: 6 }, (_, i) => ({ user: `q${i}`, chatbot: `a${i}`, metadata: "[]" }));
+
+    await chat({ chatHistory });
+
+    const texts = aws.bedrock.mock.calls[0][0].messages.map((m: any) => m.content[0].text);
+    expect(texts.slice(0, 4)).toEqual(["q4", "a4", "q5", "a5"]);
+    expect(texts).toHaveLength(5);
+  });
+
+  it("answers a message sent without any history", async () => {
+    aws.bedrock.mockImplementation(async () => answer("You qualify."));
+
+    await chat({ chatHistory: undefined });
+
+    expect(aws.bedrock.mock.calls[0][0].messages).toHaveLength(1);
+    expect(aws.posts).toHaveBeenCalledWith("You qualify.");
   });
 });
