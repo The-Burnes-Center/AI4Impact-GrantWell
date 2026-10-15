@@ -97,6 +97,14 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
   throw err;
 }
 
+/** Keeps only {question, answer} pairs of strings with a non-empty answer. */
+function normalizeQuestionnaireAnswers(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((a) => a && typeof a.answer === "string" && a.answer.trim() !== "")
+    .map((a) => ({ question: typeof a.question === "string" ? a.question : "", answer: a.answer }));
+}
+
 // Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(nofoName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
@@ -161,6 +169,8 @@ export const handler = async (event) => {
     }
 
     const { query, documentIdentifier, projectBasics, questionnaire, sessionId } = body;
+    const additionalInfo = typeof body.additionalInfo === "string" ? body.additionalInfo : "";
+    const questionnaireAnswers = normalizeQuestionnaireAnswers(body.questionnaireAnswers);
 
     // Validate required parameters
     if (!query || !documentIdentifier || !sessionId) {
@@ -240,6 +250,8 @@ export const handler = async (event) => {
       documentIdentifier,
       projectBasics: projectBasics || {},
       questionnaire: questionnaire || {},
+      questionnaireAnswers,
+      additionalInfo,
       sessionId,
       userId,
       userState,

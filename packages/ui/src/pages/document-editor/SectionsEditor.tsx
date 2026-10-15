@@ -7,7 +7,7 @@ import { useNotifications } from "../../components/notifications/NotificationMan
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
 import VersionHistoryPanel from "../../components/document-editor/VersionHistoryPanel";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
-import { readDraftCache, writeDraftCache } from "../../common/helpers/document-editor-utils";
+import { readDraftCache, resolveQuestionnaireAnswers, writeDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DraftJobStatus, DraftVersionMeta } from "../../common/api-client/drafts-client";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import "../../styles/document-editor.css";
@@ -310,11 +310,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       const currentDraft = await apiClient.drafts.getDraft({ sessionId, userId: username });
       if (!currentDraft) throw new Error('No draft found');
 
+      const questionnaireAnswers = await resolveQuestionnaireAnswers(
+        () => apiClient.landingPage.getNOFOQuestions(selectedNofo),
+        currentDraft.questionnaire,
+      );
+
       const result = await apiClient.drafts.generateDraft({
         query: 'Generate all sections for the grant application',
         documentIdentifier: selectedNofo,
         projectBasics: currentDraft.projectBasics || {},
         questionnaire: currentDraft.questionnaire || {},
+        questionnaireAnswers,
+        additionalInfo: currentDraft.additionalInfo || '',
         sessionId,
         onJobUpdate: (jobStatus: DraftJobStatus) => {
           if (jobStatus.sections) {
