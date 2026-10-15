@@ -1,8 +1,7 @@
 import * as React from "react";
 import { useState, useEffect, useContext } from "react";
-import ReactMarkdown from "react-markdown";
+import ModelMarkdown from "../common/ModelMarkdown";
 import TableScrollRegion from "../ui/TableScrollRegion";
-import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 import { AppContext } from "../../common/app-context";
@@ -249,8 +248,7 @@ function ChatMessage(props: ChatMessageProps) {
                         <div style={spinnerStyle}></div>
                       ) : null}
 
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
+                      <ModelMarkdown
                         components={{
                           h1(props) {
                             const { children, ...rest } = props;
@@ -312,7 +310,7 @@ function ChatMessage(props: ChatMessageProps) {
                         }}
                       >
                         {content}
-                      </ReactMarkdown>
+                      </ModelMarkdown>
                     </div>
 
                     {stopped && (
