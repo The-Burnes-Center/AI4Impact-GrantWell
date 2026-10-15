@@ -170,6 +170,8 @@ class SessionOperationRequest(BaseModel):
     new_chat_entry: Optional[List[Dict[str, Any]]] = Field(None, description="New chat entry to add")
     title: Optional[str] = Field(None, description="Session title")
     document_identifier: Optional[str] = Field(None, description="Document identifier")
+    cursor: Optional[str] = Field(None, pattern=r'^[1-9][0-9]{0,5}$', description="get_session: older_cursor from the previous page")
+    limit: Optional[int] = Field(None, ge=1, le=100, description="get_session: turns per page")
 
     SESSION_ID_OPERATIONS: ClassVar[frozenset] = frozenset({
         'add_session', 'get_session', 'update_session', 'delete_session',

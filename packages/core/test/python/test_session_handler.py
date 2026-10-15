@@ -190,3 +190,110 @@ def test_a_missing_session_id_is_a_400_not_a_500(sessions):
 
     assert res["statusCode"] == 400
     assert "session_id is required" in res["body"]
+
+
+def page(sessions, session_id, cursor=None, **extra):
+    body = {"operation": "get_session", "session_id": session_id, **extra}
+    if cursor:
+        body["cursor"] = cursor
+    res = sessions.lambda_handler(http_event(body), None)
+    assert res["statusCode"] == 200, res["body"]
+    return json.loads(res["body"])
+
+
+def seed_turns(sessions, session_id, count, answer="a"):
+    sessions.test_table.put_item(Item={"user_id": "user-1", "session_id": session_id, "title": "Chat",
+                                       "time_stamp": "2026-10-01 10:00:00", "turn_count": count})
+    sessions.write_turns("user-1", session_id, [{"user": f"q{i}", "chatbot": answer} for i in range(count)], 1)
+
+
+def test_opening_a_chat_returns_its_newest_40_turns_and_a_cursor_for_older_ones(sessions):
+    seed_turns(sessions, "s1", 95)
+
+    first = page(sessions, "s1")
+    assert [e["user"] for e in first["chat_history"]] == [f"q{i}" for i in range(55, 95)]
+    assert first["title"] == "Chat" and "turn_count" not in first
+
+    second = page(sessions, "s1", first["older_cursor"])
+    assert [e["user"] for e in second["chat_history"]] == [f"q{i}" for i in range(15, 55)]
+
+    last = page(sessions, "s1", second["older_cursor"])
+    assert [e["user"] for e in last["chat_history"]] == [f"q{i}" for i in range(15)]
+    assert last["older_cursor"] is None
+
+
+def test_a_chat_that_fits_one_page_has_no_cursor(sessions):
+    seed_turns(sessions, "s1", 40)
+
+    body = page(sessions, "s1")
+
+    assert len(body["chat_history"]) == 40
+    assert body["older_cursor"] is None
+
+
+def test_the_page_size_can_be_smaller(sessions):
+    seed_turns(sessions, "s1", 5)
+
+    first = page(sessions, "s1", limit=2)
+    rest = page(sessions, "s1", first["older_cursor"], limit=2)
+
+    assert [e["user"] for e in first["chat_history"]] == ["q3", "q4"]
+    assert [e["user"] for e in rest["chat_history"]] == ["q1", "q2"]
+
+
+def test_a_page_of_large_turns_stops_well_under_the_lambda_payload_limit(sessions):
+    seed_turns(sessions, "s1", 30, answer="x" * 350_000)
+
+    seen, cursor, sizes = [], None, []
+    while True:
+        res = sessions.lambda_handler(http_event({"operation": "get_session", "session_id": "s1", **({"cursor": cursor} if cursor else {})}), None)
+        sizes.append(len(res["body"]))
+        body = json.loads(res["body"])
+        seen = body["chat_history"] + seen
+        cursor = body["older_cursor"]
+        if not cursor:
+            break
+
+    assert max(sizes) < 3_000_000
+    assert len(sizes) > 1
+    assert [e["user"] for e in seen] == [f"q{i}" for i in range(30)]
+
+
+def test_a_cursor_never_reaches_into_another_chat(sessions):
+    seed_turns(sessions, "s1", 3)
+    seed_turns(sessions, "s10", 3)
+
+    body = page(sessions, "s1", "3")
+
+    assert [e["user"] for e in body["chat_history"]] == ["q0", "q1"]
+    assert body["older_cursor"] is None
+
+
+def test_an_old_single_row_chat_converts_then_pages(sessions):
+    put(sessions.test_table, "user-1", "s1", history=[{"user": f"q{i}", "chatbot": "a"} for i in range(50)])
+
+    first = page(sessions, "s1")
+    assert [e["user"] for e in first["chat_history"]] == [f"q{i}" for i in range(10, 50)]
+    assert "chat_history" not in header(sessions, "s1")
+
+    older = page(sessions, "s1", first["older_cursor"])
+    assert [e["user"] for e in older["chat_history"]] == [f"q{i}" for i in range(10)]
+    assert older["older_cursor"] is None
+
+
+def test_a_cursor_on_an_unconverted_chat_pages_the_old_history(sessions):
+    put(sessions.test_table, "user-1", "s1", history=[{"user": f"q{i}", "chatbot": "a"} for i in range(5)])
+
+    body = page(sessions, "s1", "4", limit=2)
+
+    assert [e["user"] for e in body["chat_history"]] == ["q1", "q2"]
+    assert body["older_cursor"] == "2"
+
+
+@pytest.mark.parametrize("cursor", ["0", "-1", "abc", "1#turn#", "9999999"])
+def test_a_malformed_cursor_is_a_400(sessions, cursor):
+    seed_turns(sessions, "s1", 3)
+
+    res = sessions.lambda_handler(http_event({"operation": "get_session", "session_id": "s1", "cursor": cursor}), None)
+
+    assert res["statusCode"] == 400

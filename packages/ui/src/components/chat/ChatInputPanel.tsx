@@ -533,7 +533,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
             userMessage: messageToSend,
             chatHistory: assembleHistory(
               messageHistoryRef.current.slice(0, -2)
-            ),
+            ).slice(-2),
             projectId: "apck1608",
             user_id: username,
             session_id: props.session.id,

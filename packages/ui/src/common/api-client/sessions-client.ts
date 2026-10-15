@@ -12,6 +12,12 @@ export interface ChatSession {
   lastModified?: string;
 }
 
+/** One page of a chat: its newest messages, or the ones before `cursor`. */
+export interface ChatSessionPage extends ChatSession {
+  /** Pass back as `cursor` to fetch the next older page; null once the oldest message is loaded. */
+  olderCursor: string | null;
+}
+
 /** Raw session record as returned by the list sessions API (snake_case). */
 export interface SessionListItem {
   session_id: string;
@@ -54,8 +60,8 @@ export class SessionsClient {
     return response.json();
   }
 
-  // Gets a chat session
-  async getSession(params: { sessionId: string; userId: string }): Promise<ChatSession | null> {
+  // Gets a chat's newest messages, or the page before params.cursor
+  async getSession(params: { sessionId: string; userId: string; cursor?: string }): Promise<ChatSessionPage | null> {
     const auth = await Utils.authenticate();
     let validData = false;
     let output;
@@ -74,7 +80,8 @@ export class SessionsClient {
         body: JSON.stringify({
           operation: 'get_session',
           session_id: params.sessionId,
-          user_id: params.userId
+          user_id: params.userId,
+          cursor: params.cursor,
         }),
       });
 
@@ -107,6 +114,7 @@ export class SessionsClient {
       documentIdentifier: output.document_identifier || '',
       chatHistory: output.chat_history || [],
       lastModified: output.last_modified || new Date().toISOString(),
+      olderCursor: output.older_cursor ?? null,
     };
   }
 

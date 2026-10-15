@@ -25,6 +25,9 @@ table = dynamodb.Table(DDB_TABLE_NAME)
 # "<session_id>#turn#<n>". Turn items carry no time_stamp, so the TimeIndex lists headers only.
 # Older chats keep every turn in the header's chat_history list; they convert on next open or write.
 TURN_MARKER = "#turn#"
+# Keeps one get_session response far below Lambda's 6 MB payload limit (a turn item is at most 400 KB).
+PAGE_TURNS = 40
+PAGE_BYTES = 2_000_000
 
 
 def turn_key(session_id, number):
@@ -126,17 +129,56 @@ def add_session(session_id, user_id, chat_history, title, new_chat_entry, docume
                 'body': json.dumps(str(error))
             }
 
-# A function to retrieve a session from DynamoDB based on session_id and user_id
-def get_session(session_id, user_id):
+def query_newest_turns(user_id, session_id, before, count):
+    """Up to `count` turn items numbered below `before` (all when None), newest first."""
+    if before is None:
+        turns = Key('session_id').begins_with(session_id + TURN_MARKER)
+    else:
+        turns = Key('session_id').between(turn_key(session_id, 0), turn_key(session_id, before - 1))
+    params = {
+        'KeyConditionExpression': Key('user_id').eq(user_id) & turns,
+        'ScanIndexForward': False,
+        'Limit': count,
+    }
+    items = []
+    while len(items) < count:
+        response = table.query(**params)
+        items.extend(response.get('Items', []))
+        if not response.get('LastEvaluatedKey'):
+            break
+        params['ExclusiveStartKey'] = response['LastEvaluatedKey']
+        params['Limit'] = count - len(items)
+    return [(int(item['session_id'].rsplit(TURN_MARKER, 1)[1]), item['entry']) for item in items[:count]]
+
+
+def newest_page(turns, limit):
+    """Oldest-first entries for the newest turns that fit one response, and the cursor for older ones."""
+    page, size = [], 0
+    for number, entry in turns[:limit]:
+        size += len(json.dumps(entry, default=str))
+        if page and size > PAGE_BYTES:
+            break
+        page.append((number, entry))
+    cursor = str(page[-1][0]) if page and len(page) < len(turns) else None
+    return [entry for _, entry in reversed(page)], cursor
+
+
+def get_session(session_id, user_id, cursor=None, limit=PAGE_TURNS):
+    """The chat's header with its newest `limit` turns, or the turns before `cursor`.
+    older_cursor is null once the oldest turn is in hand."""
+    before = int(cursor) if cursor else None
     try:
         item = table.get_item(Key={"user_id": user_id, "session_id": session_id}).get("Item")
         if item:
             if 'chat_history' in item:
-                history = convert_legacy_session(user_id, session_id, item)
+                entries = convert_legacy_session(user_id, session_id, item)
+                turns = [(n, e) for n, e in enumerate(entries, 1) if before is None or n < before][::-1][:limit + 1]
+            elif before == 1:
+                turns = []
             else:
-                history = [turn['entry'] for turn in query_turns(user_id, session_id)]
+                turns = query_newest_turns(user_id, session_id, before, limit + 1)
             item.pop('turn_count', None)
-            item['chat_history'] = history
+            item['chat_history'], item['older_cursor'] = newest_page(turns, limit)
     except ClientError as error:
         print("Caught error: DynamoDB error - could not get session")
         if error.response["Error"]["Code"] == "ResourceNotFoundException":
@@ -416,7 +458,7 @@ def lambda_handler(event, context):
         if operation == 'add_session':
             return add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier)
         elif operation == 'get_session':
-            return get_session(session_id, user_id)
+            return get_session(session_id, user_id, request.cursor, request.limit or PAGE_TURNS)
         elif operation == 'update_session':
             return update_session(session_id, user_id, new_chat_entry, request.title, document_identifier)
         elif operation == 'list_sessions_by_user_id':
