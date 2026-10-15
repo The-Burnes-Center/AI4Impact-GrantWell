@@ -39,6 +39,9 @@ const MAX_MODEL_CALLS = 5;
 
 const REFUSAL_MESSAGE = "I can't help with that request.";
 
+const NO_GRANT_RECORD_MESSAGE =
+  "We couldn't confirm your access to this grant. Please contact a platform administrator to request access.";
+
 // Platform authority comes from the explicit PlatformAdmin role; this flag keeps pre-migration
 // stateless admins working and must stay on until every pool is migrated.
 const LEGACY_STATELESS_ADMIN_IS_PLATFORM =
@@ -76,9 +79,10 @@ async function resolveUserAttributes(userId) {
   }
 }
 
+// Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(nofoName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
-  if (!tableName || !nofoName) return { scope: null, state: null };
+  if (!tableName || !nofoName) return null;
   try {
     const result = await dynamoClient.send(
       new GetItemCommand({
@@ -86,7 +90,7 @@ async function readNofoScope(nofoName) {
         Key: marshall({ nofo_name: nofoName }),
       })
     );
-    if (!result.Item) return { scope: null, state: null };
+    if (!result.Item) return null;
     const row = unmarshall(result.Item);
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
@@ -94,7 +98,7 @@ async function readNofoScope(nofoName) {
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
-    return { scope: null, state: null };
+    return null;
   }
 }
 
@@ -114,15 +118,18 @@ async function checkPerNofoAccess(userRoles, userState, nofoName) {
     (isAdmin && !userState && LEGACY_STATELESS_ADMIN_IS_PLATFORM);
   if (isDeveloper || isPlatformAdmin) return null;
 
-  const { scope: nofoScope, state: nofoState } = await readNofoScope(nofoName);
-  const effectiveScope = nofoScope || "federal";
+  const row = await readNofoScope(nofoName);
+  const nofoState = row?.state || null;
+  const effectiveScope = row ? row.scope || "federal" : null;
   if (effectiveScope === "federal") return null;
   if (effectiveScope === "state" && nofoState && nofoState === userState) return null;
 
   const stateLabel = nofoState ? (STATE_NAME_BY_CODE[nofoState] || nofoState) : "another state";
   return {
     error: "ACCESS_DENIED_STATE",
-    message: `This grant is specific to ${stateLabel}. Please contact a platform administrator to request access.`,
+    message: row
+      ? `This grant is specific to ${stateLabel}. Please contact a platform administrator to request access.`
+      : NO_GRANT_RECORD_MESSAGE,
     userState: userState || null,
     nofoState: nofoState || null,
     cta: { label: "Go back to home", target: "/home" },
@@ -327,11 +334,12 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     const sessionId = data.session_id;
     const chatHistory = data.chatHistory;
     const documentIdentifier = data.documentIdentifier;
+    const grantName = (documentIdentifier || "").replace(/\/+$/, "");
 
     const { state: userState, roles: userRoles } = await resolveUserAttributes(userId);
     const scopeFilter = buildScopeFilter(userState);
 
-    const accessDenied = await checkPerNofoAccess(userRoles, userState, documentIdentifier);
+    const accessDenied = await checkPerNofoAccess(userRoles, userState, grantName);
     if (accessDenied) {
       try {
         await wsConnectionClient.send(new PostToConnectionCommand({
@@ -355,7 +363,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       throw new Error("Knowledge Base ID is not found.");
     }
 
-    const nofoName = documentIdentifier.split("/").pop() || documentIdentifier;
+    const nofoName = grantName.split("/").pop() || grantName;
     let uploadedFilesList = '';
     if (userId && process.env.USER_DOCUMENTS_BUCKET) {
       try {

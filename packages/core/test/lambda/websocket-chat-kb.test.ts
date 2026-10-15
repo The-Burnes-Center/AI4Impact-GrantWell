@@ -53,7 +53,7 @@ beforeEach(() => {
   for (const m of [ws, kb, bedrock, ddb, lambda]) m.reset();
   ws.on(PostToConnectionCommand).resolves({});
   ws.on(DeleteConnectionCommand).resolves({});
-  ddb.on(GetItemCommand).resolves({});
+  ddb.on(GetItemCommand).resolves({ Item: { nofo_name: { S: "Grant A" }, scope: { S: "federal" } } });
   lambda.on(InvokeCommand).resolves({ Payload: sessionPayload({}) as any });
   bedrock.on(InvokeModelWithResponseStreamCommand).resolvesOnce(toolUse()).resolves(answer("You qualify."));
   vi.spyOn(console, "log").mockImplementation(() => {});
