@@ -109,6 +109,15 @@ export function mapFundingCategory(apiCategory) {
   return FUNDING_CATEGORY_MAP[key] || FUNDING_CATEGORY_ALIASES[key] || null;
 }
 
+/**
+ * The grants.gov category a grant is filed under: the first listed one that isn't Other, so a
+ * grant goes under Other only when grants.gov lists nothing more specific.
+ */
+export function primaryFundingCategory(apiCategories) {
+  if (!Array.isArray(apiCategories) || !apiCategories.length) return null;
+  return apiCategories.find((c) => mapFundingCategory(c) !== 'Other') ?? apiCategories[0];
+}
+
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }

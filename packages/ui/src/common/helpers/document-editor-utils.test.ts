@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { DraftJobStatus } from "../api-client/drafts-client";
 import {
+  characterCount,
   clearDraftCache,
   pollForExportUrl,
   questionnaireAnswers,
@@ -144,5 +145,12 @@ describe("questionnaire answers for the drafter", () => {
       { question_1: "Rural seniors" },
     );
     expect(answers).toEqual([{ question: "Who will the project serve?", answer: "Rural seniors" }]);
+  });
+});
+
+describe("character count", () => {
+  it("shows used and allowed characters with thousands separators", () => {
+    expect(characterCount("")).toBe("0/10,000 characters");
+    expect(characterCount("x".repeat(1234))).toBe("1,234/10,000 characters");
   });
 });

@@ -8,10 +8,11 @@ import NavigationButtons from "../../components/ui/NavigationButtons";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
-import { readDraftCache, resolveQuestionnaireAnswers } from "../../common/helpers/document-editor-utils";
+import { characterCount, MAX_INPUT_CHARS, readDraftCache, resolveQuestionnaireAnswers } from "../../common/helpers/document-editor-utils";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import type { DocumentData } from "../../common/types/document";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
+import { InputTooLongError } from "../../common/api-client/drafts-client";
 
 const MIME_TYPES: Record<string, string> = {
   ".pdf": "application/pdf",
@@ -381,7 +382,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
     } catch (error) {
       console.error("Error creating draft:", error);
-      if (error instanceof DailyLimitError) {
+      if (error instanceof DailyLimitError || error instanceof InputTooLongError) {
         void draftSave.saveFields({ status: "uploading_documents" }, { source: "status_change", immediate: true });
       }
       setUploadError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
@@ -769,6 +770,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               draftSave.saveFields({ additionalInfo: e.target.value });
             }}
             placeholder="Enter any additional context or notes about your application..."
+            maxLength={MAX_INPUT_CHARS}
             aria-describedby="additional-info-help"
             style={{
               width: "100%",
@@ -792,7 +794,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               fontFamily: typography.fontFamily,
             }}
           >
-            This information will help tailor the generated draft to your needs.
+            This information will help tailor the generated draft to your needs. ({characterCount(additionalInfo)})
           </span>
         </div>
 

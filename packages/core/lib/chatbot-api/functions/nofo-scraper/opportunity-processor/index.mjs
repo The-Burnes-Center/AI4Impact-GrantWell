@@ -16,6 +16,7 @@ import {
   normalizeDateToYYYYMMDD,
   normalizeNofoFolderName,
   mapFundingCategory,
+  primaryFundingCategory,
   sleep,
   RATE_LIMIT_DELAY,
   CLAUDE_MODEL_ID,
@@ -214,9 +215,10 @@ async function fetchOpportunityDetails(opportunityId) {
   const fundingCategories = opp.summary?.funding_categories || [];
   let category = null;
   if (fundingCategories.length > 0) {
-    category = mapFundingCategory(fundingCategories[0]);
+    const listedCategory = primaryFundingCategory(fundingCategories);
+    category = mapFundingCategory(listedCategory);
     if (!category) {
-      console.log(`Unmappable category "${fundingCategories[0]}" for ${opportunityId}`);
+      console.log(`Unmappable category "${listedCategory}" for ${opportunityId}`);
       return null;
     }
   } else {

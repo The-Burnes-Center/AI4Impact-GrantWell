@@ -4,6 +4,21 @@ import type { ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../
 import { apiFetch } from "../session-ended";
 import { dailyLimitError } from "./daily-limit";
 
+/** A draft start refused because additional information or an answer is too long; the message says which. */
+export class InputTooLongError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InputTooLongError";
+  }
+}
+
+function inputTooLongError(status: number, body: unknown): InputTooLongError | null {
+  if (status !== 400 || typeof body !== "object" || body === null) return null;
+  const { error, message } = body as { error?: unknown; message?: unknown };
+  if (error !== "INPUT_TOO_LONG" || typeof message !== "string" || !message) return null;
+  return new InputTooLongError(message);
+}
+
 // Unified status that represents both the step and state in the grant writing flow
 export type DraftStatus = 
   | 'project_basics'        // User is entering project basics
@@ -553,6 +568,8 @@ export class DraftsClient {
       const errorData = await response.json();
       const limitError = dailyLimitError(response.status, errorData);
       if (limitError) throw limitError;
+      const tooLong = inputTooLongError(response.status, errorData);
+      if (tooLong) throw tooLong;
       throw new Error(errorData.error || 'Failed to start draft generation');
     }
 
@@ -607,6 +624,8 @@ export class DraftsClient {
       }
       const limitError = dailyLimitError(startResponse.status, errorMessage);
       if (limitError) throw limitError;
+      const tooLong = inputTooLongError(startResponse.status, errorMessage);
+      if (tooLong) throw tooLong;
       throw new Error(errorMessage.error || 'Failed to start draft generation');
     }
 

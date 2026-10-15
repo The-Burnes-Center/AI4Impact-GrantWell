@@ -11,6 +11,7 @@ import { readDraftCache, resolveQuestionnaireAnswers, writeDraftCache } from "..
 import type { DraftJobStatus, DraftVersionMeta } from "../../common/api-client/drafts-client";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
+import { InputTooLongError } from "../../common/api-client/drafts-client";
 import "../../styles/document-editor.css";
 
 interface SectionEditorProps {
@@ -349,7 +350,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       }
     } catch (error) {
       console.error('Error retrying failed sections:', error);
-      if (error instanceof DailyLimitError) {
+      if (error instanceof DailyLimitError || error instanceof InputTooLongError) {
         setFailedSections(retrying);
         addNotification("error", error.message);
       }

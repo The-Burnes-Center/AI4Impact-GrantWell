@@ -9,6 +9,7 @@ import {
   DeleteItemCommand,
   DynamoDBClient,
   QueryCommand,
+  UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { DeleteObjectsCommand, ListObjectVersionsCommand, S3Client } from "@aws-sdk/client-s3";
@@ -64,7 +65,7 @@ type Store = Record<string, Row[]>;
 
 // A fake DynamoDB: Query reads rows by partition key (paged by `pageSize` with a key cursor, as
 // DynamoDB does, so deleting rows mid-scan doesn't shift pages), BatchWriteItem and
-// DeleteItem remove them, so a second handler run sees what the first left.
+// DeleteItem remove them and UpdateItem drops query_text, so a second handler run sees what the first left.
 function serveTables(store: Store, pageSize = 100) {
   const partitionKey: Record<string, string> = {
     chats: "user_id",
@@ -100,12 +101,19 @@ function serveTables(store: Store, pageSize = 100) {
     }
     return { UnprocessedItems: {} };
   });
+  const matches = (key: Row) => (row: Row) => Object.entries(key).every(([k, v]) => row[k] === v);
   ddb.on(DeleteItemCommand).callsFake((input) => {
-    const { user_id } = unmarshall(input.Key);
+    const key = unmarshall(input.Key);
     const rows = store[input.TableName] || [];
-    const found = rows.find((r) => r.user_id === user_id);
-    store[input.TableName] = rows.filter((r) => r.user_id !== user_id);
+    const found = rows.find(matches(key));
+    store[input.TableName] = rows.filter((r) => !matches(key)(r));
     return found ? { Attributes: marshall(found) } : {};
+  });
+  ddb.on(UpdateItemCommand).callsFake((input) => {
+    const row = (store[input.TableName] || []).find(matches(unmarshall(input.Key)));
+    if (!row) throw Object.assign(new Error("The conditional request failed"), { name: "ConditionalCheckFailedException" });
+    delete row.query_text;
+    return {};
   });
 }
 
@@ -162,7 +170,7 @@ beforeEach(() => {
     ],
     analytics: [
       { pk: "USER#sub-1", sk: "PROFILE" },
-      { pk: "USER#sub-1", sk: "EVT#2026-10-01#a", query_text: "housing grants" },
+      { pk: "USER#sub-1", sk: "EVT#2026-10-01#a", event_type: "search", query_text: "housing grants" },
       { pk: "USER#sub-1", sk: "EVT#2026-10-02#b", event_type: "nofo_view" },
       { pk: "USER#sub-2", sk: "PROFILE" },
     ],
@@ -194,7 +202,7 @@ describe("DELETE /user-management/users/{username}", () => {
         applicationVersions: 2,
         supportingDocuments: 2,
         profile: true,
-        searchEvents: 1,
+        searchTextsErased: 1,
         notificationPreferences: true,
       },
     });
@@ -208,17 +216,21 @@ describe("DELETE /user-management/users/{username}", () => {
       { draft_key: "sub-1#d1", rev: 1 },
       { draft_key: "sub-1#d1", rev: 2 },
     ]);
-    expect(batchKeys("analytics")).toEqual(
+    expect(batchKeys("analytics")).toEqual([]);
+    expect(ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input)).toEqual([
+      {
+        TableName: "analytics",
+        Key: marshall({ pk: "USER#sub-1", sk: "EVT#2026-10-01#a" }),
+        UpdateExpression: "REMOVE query_text",
+        ConditionExpression: "attribute_exists(pk)",
+      },
+    ]);
+    expect(ddb.commandCalls(DeleteItemCommand).map((c) => c.args[0].input)).toEqual(
       expect.arrayContaining([
-        { pk: "USER#sub-1", sk: "PROFILE" },
-        { pk: "USER#sub-1", sk: "EVT#2026-10-01#a" },
+        expect.objectContaining({ TableName: "prefs", Key: marshall({ user_id: "sub-1" }) }),
+        expect.objectContaining({ TableName: "analytics", Key: marshall({ pk: "USER#sub-1", sk: "PROFILE" }) }),
       ])
     );
-    expect(batchKeys("analytics")).toHaveLength(2);
-    expect(ddb.commandCalls(DeleteItemCommand)[0].args[0].input).toMatchObject({
-      TableName: "prefs",
-      Key: marshall({ user_id: "sub-1" }),
-    });
 
     expect(s3.commandCalls(ListObjectVersionsCommand)[0].args[0].input).toEqual({
       Bucket: "user-docs",
@@ -242,7 +254,12 @@ describe("DELETE /user-management/users/{username}", () => {
     expect(deletes).toHaveLength(1);
     expect(deletes[0].args[0].input).toEqual({ UserPoolId: "pool", Username: "user-uuid" });
     const lastDataWrite = Math.max(
-      ...[...ddb.commandCalls(BatchWriteItemCommand), ...s3.commandCalls(DeleteObjectsCommand)].map(
+      ...[
+        ...ddb.commandCalls(BatchWriteItemCommand),
+        ...ddb.commandCalls(UpdateItemCommand),
+        ...ddb.commandCalls(DeleteItemCommand),
+        ...s3.commandCalls(DeleteObjectsCommand),
+      ].map(
         (c) => c.callId
       )
     );
@@ -250,7 +267,11 @@ describe("DELETE /user-management/users/{username}", () => {
 
     expect(store.chats).toEqual([{ user_id: "sub-2", session_id: "other" }]);
     expect(store.versions).toEqual([{ draft_key: "sub-2#d9", rev: 1 }]);
-    expect(store.analytics.map((r) => r.sk)).toEqual(["EVT#2026-10-02#b", "PROFILE"]);
+    expect(store.analytics).toEqual([
+      { pk: "USER#sub-1", sk: "EVT#2026-10-01#a", event_type: "search" },
+      { pk: "USER#sub-1", sk: "EVT#2026-10-02#b", event_type: "nofo_view" },
+      { pk: "USER#sub-2", sk: "PROFILE" },
+    ]);
   });
 
   it("pages through queries and bucket listings, and batches deletes 25 at a time", async () => {
@@ -332,11 +353,25 @@ describe("DELETE /user-management/users/{username}", () => {
       applicationVersions: 0,
       supportingDocuments: 2,
       profile: false,
-      searchEvents: 0,
+      searchTextsErased: 0,
       notificationPreferences: false,
     });
     expect(cognito.commandCalls(AdminDeleteUserCommand)).toHaveLength(1);
     expect(bucket).toEqual([{ Key: "user-uuid-2/grant/theirs.pdf", VersionId: "x1" }]);
+  });
+
+  it("skips a search event that expired before its text was erased", async () => {
+    serveTables(store);
+    serveBucket(bucket);
+    ddb.on(UpdateItemCommand).rejects(
+      Object.assign(new Error("The conditional request failed"), { name: "ConditionalCheckFailedException" })
+    );
+    const handler = await load();
+
+    const res = await handler(deleteEvent());
+    expect(res.statusCode).toBe(200);
+    expect(JSON.parse(res.body).removed.searchTextsErased).toBe(0);
+    expect(cognito.commandCalls(AdminDeleteUserCommand)).toHaveLength(1);
   });
 
   it("does not start a knowledge-base sync when the user had no documents", async () => {
@@ -358,6 +393,7 @@ describe("DELETE /user-management/users/{username}", () => {
     const res = await handler(deleteEvent());
     expect(res.statusCode).toBe(500);
     expect(ddb.commandCalls(BatchWriteItemCommand)).toHaveLength(0);
+    expect(ddb.commandCalls(UpdateItemCommand)).toHaveLength(0);
     expect(s3.commandCalls(DeleteObjectsCommand)).toHaveLength(0);
     expect(cognito.commandCalls(AdminDeleteUserCommand)).toHaveLength(0);
   });

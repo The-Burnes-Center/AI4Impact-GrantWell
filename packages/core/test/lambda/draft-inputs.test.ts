@@ -78,6 +78,33 @@ describe("starting a draft", () => {
     const input = JSON.parse(sfn.commandCalls(StartExecutionCommand)[0].args[0].input.input as string);
     expect(input).toMatchObject({ additionalInfo: "", questionnaireAnswers: [], questionnaire: { question_1: "x" } });
   });
+
+  const base = { query: "q", documentIdentifier: "Grant A", sessionId: "s1" };
+  const long = "x".repeat(10001);
+
+  it("accepts additional information and answers of exactly 10,000 characters", async () => {
+    const full = "x".repeat(10000);
+    const res = await post({
+      ...base,
+      additionalInfo: full,
+      questionnaire: { question_1: full },
+      questionnaireAnswers: [{ question: "Q", answer: full }],
+    });
+    expect(res.statusCode).toBe(200);
+  });
+
+  it.each([
+    ["additional information", { additionalInfo: long }, "Additional information can be up to 10,000 characters."],
+    ["an answer", { questionnaireAnswers: [{ question: "Q", answer: long }] }, "Each answer can be up to 10,000 characters."],
+    ["a saved answer", { questionnaire: { question_1: long } }, "Each answer can be up to 10,000 characters."],
+  ])("rejects %s over 10,000 characters before counting the application", async (_label, fields, message) => {
+    const res = await post({ ...base, ...fields });
+    expect(res.statusCode).toBe(400);
+    expect(JSON.parse(res.body)).toEqual({ error: "INPUT_TOO_LONG", message });
+    expect(sfn.commandCalls(StartExecutionCommand)).toHaveLength(0);
+    expect(ddb.commandCalls(UpdateItemCommand)).toHaveLength(0);
+    expect(ddb.commandCalls(PutItemCommand)).toHaveLength(0);
+  });
 });
 
 describe("preparing a draft", () => {
