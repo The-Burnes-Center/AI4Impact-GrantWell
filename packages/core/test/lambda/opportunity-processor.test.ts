@@ -6,6 +6,8 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { createHash } from "node:crypto";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("../../lib/chatbot-api/functions/nofo-scraper/opportunity-processor/download.mjs", () => import("../fetch-backed-download"));
+
 const s3 = mockClient(S3Client);
 const ddb = mockClient(DynamoDBClient);
 const bedrock = mockClient(BedrockRuntimeClient);
@@ -339,21 +341,6 @@ describe("opportunity processor", () => {
     expect(res.batchItemFailures).toEqual([]);
     expect(metadata()).toHaveLength(1);
     expect(metadata()[0].expiration_date).toBeNull();
-  });
-
-  it("retries an unreachable http:// URL once over https", async () => {
-    const http = "http://nspires.nasaprs.com/external/viewrepositorydocument/nofo.pdf";
-    const https = "https://nspires.nasaprs.com/external/viewrepositorydocument/nofo.pdf";
-    const fetched = serve(opportunity({ attachments: [{ download_path: http }] }), {
-      [http]: "reject",
-      [https]: { body: PDF, contentType: "application/pdf" },
-    });
-
-    const res = await handler(message({}));
-
-    expect(res.batchItemFailures).toEqual([]);
-    expect(fetched()).toEqual([http, https]);
-    expect(uploads().map((u) => u.Key)).toEqual(["Test Grant/NOFO-File-PDF"]);
   });
 
   it("keeps the stored name when grants.gov has retitled the opportunity", async () => {

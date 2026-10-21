@@ -21,6 +21,7 @@ import {
   RATE_LIMIT_DELAY,
   CLAUDE_MODEL_ID,
 } from '../shared/utils.mjs';
+import { downloadFile } from './download.mjs';
 
 const API_KEY = process.env.GRANTS_GOV_API_KEY;
 const S3_BUCKET = process.env.BUCKET;
@@ -242,37 +243,6 @@ async function fetchOpportunityDetails(opportunityId) {
     is_additional_info_url: isAdditionalInfoUrl,
     source_updated_at: opp.updated_at || null,
   };
-}
-
-const BROWSER_UA =
-  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-
-const DOWNLOAD_TIMEOUT_MS = 20000;
-
-async function fetchWithHttpsFallback(url) {
-  const init = () => ({ headers: { 'User-Agent': BROWSER_UA }, signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS) });
-  try {
-    return await fetch(url, init());
-  } catch (err) {
-    // Some agency hosts (nspires.nasaprs.com) drop port 80 but serve HTTPS. Our own
-    // timeout means the host answered too slowly, so retrying would just double the wait.
-    if (!url.startsWith('http://') || err.name === 'TimeoutError') throw err;
-    console.warn(`HTTP fetch failed for ${url} (${err.cause?.code || err.name}); retrying over HTTPS`);
-    return await fetch(`https://${url.slice('http://'.length)}`, init());
-  }
-}
-
-async function downloadFile(url) {
-  const response = await fetchWithHttpsFallback(url);
-  if (!response.ok) {
-    if (response.status === 404 || response.status === 410) {
-      return null;
-    }
-    throw new Error(`Download failed ${response.status}: ${response.statusText}`);
-  }
-  const buffer = Buffer.from(await response.arrayBuffer());
-  const contentType = response.headers.get('content-type') || '';
-  return { buffer, contentType, finalUrl: response.url || url };
 }
 
 function sniffKind(buffer, contentType) {
