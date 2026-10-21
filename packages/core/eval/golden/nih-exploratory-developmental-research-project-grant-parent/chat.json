@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are R21 applications due?",
+    "expected": "There are multiple receipt cycles on NIH standard dates: new applications February 16, June 16 and October 16, and resubmission and revision applications March 16, July 16 and November 16 (listed from February 16, 2025 through November 16, 2027; renewals are not an allowed application type). All applications are due by 5:00 PM local time of the applicant organization, and the notice expires January 08, 2028.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "How much money can I ask for on an R21?",
+    "expected": "Combined direct costs for the two-year project period may not exceed $275,000, with no more than $200,000 requested in any single year.",
+    "quote": "The combined budget for direct costs for the two-year project period may not exceed $275,000. No more than",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "What font size and margins do I have to use?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

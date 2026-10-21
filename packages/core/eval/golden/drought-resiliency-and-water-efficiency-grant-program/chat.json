@@ -1,0 +1,35 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are DRWE applications due?",
+    "expected": "Proposals must be submitted through the EEA Grant Management System by November 12, 2026 at 11:59 PM (no time zone is stated); no late applications are accepted.",
+    "quote": "documents must be submitted on or before, November 12, 2026 at 11:59 PM at which time the online",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "How much can we get per project?",
+    "expected": "Target awards are up to $50,000 per project, paid as reimbursement.",
+    "quote": "REIMBURSEMENT program. Target awards are up to $50,000 per project. The program helps",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "How much total funding is available this round and how many grants will be made?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  },
+  {
+    "id": "q4",
+    "kind": "allowable_cost",
+    "question": "Can we use the grant to buy land for the project?",
+    "expected": "No. Costs to acquire an interest in real property are listed as not allowable and should not be included in the funding request (they may be cited as evidence of local commitment).",
+    "quote": "Costs to acquire an interest in real property",
+    "confirmed": false,
+    "verdict": "not_allowed"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are CTSA UM1 applications due?",
+    "expected": "There are multiple receipt dates (same for new and renewal/resubmission): March 13, 2025; May 28, 2025; September 29, 2025; January 28, 2026; May 28, 2026; September 28, 2026; January 28, 2027; May 28, 2027; and September 28, 2027, all by 5:00 PM local time of the applicant organization. The NOFO expires September 29, 2027.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the most we can ask for per year?",
+    "expected": "The maximum direct cost request depends on the hub's budget tier (based on 5-year average NIH direct cost funding of the applicant plus partners), with tiers ranging from $2,600,000 to $6,500,000 in direct costs per year; the project period is up to 7 years.",
+    "quote": "thresholds that range from $2,600,000 to $6,500,000. CTSA UL1 award recipients funded previously",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Do we have to send a letter of intent before applying?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

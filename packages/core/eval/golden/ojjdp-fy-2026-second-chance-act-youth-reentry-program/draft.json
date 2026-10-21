@@ -1,0 +1,56 @@
+{
+  "query": "Generate all sections for the grant application",
+  "projectBasics": {
+    "projectName": "Riverside Reentry Bridge",
+    "organizationName": "Riverside Youth Alliance",
+    "requestedAmount": "$750,000",
+    "location": "Worcester, MA",
+    "zipCode": "01608",
+    "contactName": "Marcus Bell, Executive Director",
+    "contactEmail": "mbell@riversideyouth.example"
+  },
+  "questionnaireAnswers": [
+    {
+      "question": "Which category are you applying under (Category 1: Improving Youth Reentry or Category 2: Strengthening Community-Based Youth Reentry Programs), and how does your organization's eligible entity type fit that category's requirements?",
+      "answer": "Category 2. We're a 501(c)(3) community-based nonprofit."
+    },
+    {
+      "question": "Describe your need: what gap or issue in youth reentry will your project address, and what data or evidence shows its size and impact on moderate- to high-risk youth and your community?",
+      "answer": "About 120 youth a year return to Worcester from DYS facilities. Our own data show 41% are re-arrested within a year. There's no dedicated reentry case manager for most of them."
+    },
+    {
+      "question": "How does the need you described relate to the purpose of the OJJDP FY 2026 Second Chance Act Youth Reentry Program and its goal of reducing recidivism within 24 months of release from a juvenile residential facility?",
+      "answer": "We want to cut re-arrest among the youth we serve, which is basically what the program is about."
+    },
+    {
+      "question": "Describe your project goals and the specific, measurable objectives you will achieve, and explain how each one aligns with the Category objectives in this NOFO.",
+      "answer": "Serve 30 youth a year; 75% stay in school or work at 12 months; re-arrest under 25% for our participants."
+    },
+    {
+      "question": "Describe your project activities, how and when each will be delivered across the 36-month award period, and which participants and beneficiaries will be served, including how you will target youth assessed as moderate and high risk using validated assessment tools.",
+      "answer": "Case managers start working with youth 90 days before release, then mentoring, job readiness and family sessions for 12 months after. Enrollment runs through month 27. We use the YLS/CMI risk tool."
+    },
+    {
+      "question": "Describe your partnerships and subrecipients, including who they are or how you will identify them, their specific roles, and how your MOU with the correctional agencies overseeing target facilities and community corrections (or, for Category 1, your federal corrections, service provider, and nonprofit partners) will ensure pre-release case planning at least 90 days before release.",
+      "answer": "DYS Central Region (MOU in draft), Worcester Public Schools, and Quinsigamond Community College for job training."
+    },
+    {
+      "question": "What deliverables and performance reports will you produce, and what evidence will you collect to show progress toward recidivism reduction and your stated objectives?",
+      "answer": "Quarterly performance reports to OJJDP and an annual outcomes report. We track re-arrest from court data."
+    },
+    {
+      "question": "Describe your organization's capacity to deliver the project and meet post-award requirements, and provide evidence from past or current projects and the relevant experience of key personnel who will carry out this work.",
+      "answer": "We've run a youth mentoring program for 9 years serving 200 youth. Our program director has 12 years in juvenile justice."
+    }
+  ],
+  "additionalInfo": "",
+  "userState": "MA",
+  "note": "Rebuilt 2026-10-21 from the 2026-10-16 review's applicant profile; the original answers were deleted with the drafts.",
+  "traps": [
+    "Each answer may be no more than 1-2 paragraphs; drafts must respect it.",
+    "Budget, the 2,000-character abstract and the timeline are scored or required.",
+    "Applicant measures re-arrest; the notice defines recidivism as return to residential placement, jail or prison within 24 months. The draft must not claim to measure the notice's definition.",
+    "Enrollment through month 27 plus 12 months of services runs past the 36-month award.",
+    "Serves 30 of about 120 youth a year; any claim of universal coverage is invented."
+  ]
+}

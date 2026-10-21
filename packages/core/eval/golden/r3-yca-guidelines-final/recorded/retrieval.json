@@ -1,0 +1,1714 @@
+{
+ "2fee74d25e63530b": {
+  "query": "application submission deadline proposal due date",
+  "filter": "95287bfdbf7c84ca",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicable sections left blank will receive zero for that section.\n\n STEP ONE: PROJECT PROPOSAL\n\n Applicants are required to submit an online Project Proposal in the Resource Agency’s Project Tracking and Reporting (RAPTR) system. Applicants should refer to the solicitation notice for due dates. No hard copy Project Proposals are required. Applicants proposing the most competitive eligible projects will be invited to compete in the next phase of the evaluation process, a teleconference visit. The most competitive projects receiving a teleconference visit will be invited to submit additional supporting documentation for further evaluation. Incomplete or noncompliant proposals may be eliminated from the competitive process.\n\n All Project Proposal submittals must include both responses to the project questions below and the required project proposal documentation (See Appendix A for submittal checklist).\n\n 8PROJECT QUESTIONS\n\n Applicants must answer the following questions. If a question does not apply to the project, indicate “Not Applicable” with a brief explanation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4094113,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AerVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Project Proposals are reviewed and evaluated. Incomplete or ineligible Project Proposals may be removed from the competitive process.\n\n Step Two • Teleconference visits are conducted for the most competitive projects. Applicants\n\n may be required to provide additional documentation prior to or after a teleconference visit.\n\n Step Three • Applicants selected to further compete will submit additional documentation.\n\n • Documentation is evaluated, with the most competitive projects being recommended for funding.\n\n Once Step 3 evaluations have been completed, funding recommendations are submitted to the California Secretary for Natural Resources. Upon approval by the Secretary, grant awards are announced.\n\n All information contained in the Project Proposal and supporting documentation is confidential until grant awards are announced.\n\n The State reserves the right to reject any Project Proposal from an applicant who is in violation of law or policy at any other public agency. Potential violations include, but are not limited to, being in default of performance requirements in other contracts or grant agreements issued by the State, being engaged in or suspected of criminal conduct that poorly reflects or brings discredit to the State or failing to have all required licenses necessary to carry out the project.\n\n The State further reserves the right to reject any proposal from an applicant who has a history of performance issues with past grants or other agreements with any public entity.\n\n Tribal Outreach and Consultation\n\n For projects that affect California Native American tribal communities, Grantees will be required to show early, often, and meaningful outreach and attempt to collaborate with local California Native American tribes through the implementation of their project.\n\n Meaningful outreach includes, but is not limited to, writing letters and emails, and following with phone calls updating the tribe throughout the development, implementation, and completion of the project, inviting tribal leadership to attend\n\n 6planning meetings, and meeting with local tribal government-led consortiums or other inter-tribal governmental organizations. Collaborating with local California Native American tribes can include developing the project with tribal leadership, ensuring the project provides benefits to the local tribe and its membership, and providing contracting opportunities to local tribes and their members where appropriate.\n\n Conflict of Interest\n\n All applicants and individuals who participate in the review of submitted Project Proposals are subject to state and federal conflict-of-interest laws. Any individual who has participated in planning or setting priorities for a specific solicitation over and above the public comment process or who will participate in any part of the grant development and negotiation process on behalf of the public is ineligible to receive funds or personally benefit from funds through that solicitation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3298011,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AeLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposal Form Signature Page – The signature page of the completed Project Proposal Form should be electronically signed (See Appendix B). In the alternative to electronic signature, the page may be printed, signed, and then scanned. This form should signed by the same Authorized Representative to be identified in the resolution or certification letter. (See Appendix G or Appendix H).\n\n 2. Project Proposal Questions Form – The Project Proposal Questions Form contains the project proposal questions and a space for responses. The form can be downloaded from RAPTR and is available on the program webpage.\n\n 3. Low-Income Community Documentation – Provide evidence the project meets the low-income community eligibility requirement. Submit at least one of the following:\n\n a. Color-coded map from State Parks Outdoor Equity Program Community Fact Finder demonstrating the project meets the low-income requirement.\n\n See https://www.parksforcalifornia.org/outdoorequity/\n\n b. Color-coded map from Department of Water Resources Mapping tool demonstrating project meets the low-income requirement.\n\n See https://gis.water.ca.gov/app/dacs/\n\n c. For those populations (e.g., foster or homeless youth) that may not be identifiable on the above tools, submit evidence demonstrating youth participants will meet the low-income requirement.\n\n 4. Cost Estimate – Provide a cost estimate reflecting all costs associated with the project. Identify costs to be funded by the grant and costs covered by other funding sources in separate columns. Where possible, the cost of project elements funded by the grant should not be split between the grant and other funding sources. (See Appendix D for a sample format).\n\n 5. Nonprofit Questionnaire – Nonprofit applicants provide a completed questionnaire. (See Appendix F).\n\n 6. Supporting Documentation – Submit up to eight pages of documentation that helps illustrate and support the proposed project, such as, but not limited to, brochures, curriculum samples, draft workplans, logic models, sample formats, modules, photographs of program or current site conditions for development (e.g., construction projects) marketing materials, or other relevant documentation.\n\n 12\n\n \n\n \n  https://www.parksforcalifornia.org/outdoorequity/\n \n\n \n  https://gis.water.ca.gov/app/dacs/Development Projects (see Appendix O for definition) should include the following additional documents:\n\n 7. Site Plan – Submit a drawing or schematic of the proposed changes to land or structures to support youth access to natural or cultural resources that clearly delineates exterior project boundaries and the location of proposed improvements described in the proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2810911,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 18,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Failure to comply with conflict-of-interest laws, including business and financial disclosure provisions, will result in the Project Proposal being rejected and any subsequent grant agreement being declared void. Other legal actions may also be taken. Applicable statutes include, but are not limited to, California Government Code section 1090 and Public Contract Code sections 10365.5, 10410, and 10411. Applicants should also be aware that certain state agencies may submit project proposals that will compete for funding.\n\n 7EVALUATION & SCORING CRITERIA\n\n Information provided by applicant during the evaluation process should demonstrate how effectively the proposed project meets statutory requirements, funding priorities, and program objectives. Projects will be evaluated using established criteria and any additional funding considerations. Project Proposals will receive an initial ranking, with a score of 100 points possible. The initial ranking will be used to facilitate discussions about each proposal among a multidisciplinary team. Points will be attributed to each section and not to individual questions."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2594473,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AebVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Provides accounting data so the total cost of each individual project can be readily determined.\n\n Records Retention\n\n Records must be retained for a period of three (3) years after final payment is made by the State. Grantee must retain all project records at least one (1) year following an audit.\n\n 19APPENDICES FOR STEP ONE: PROJECT PROPOSAL\n\n (PAGES 21 TO 30)\n\n 20APPENDIX A: SUBMITTAL CHECKLIST\n\n STEP ONE – PROJECT PROPOSAL\n\n \n\n 21APPENDIX B – PROJECT PROPOSAL SIGNATURE PAGE FORM A fillable Project Proposal Signature Form can be found on the YCA Grant Page here.\n\n \n\n 22\n\n \n\n \n  https://resources.ca.gov/grants/youthAPPENDIX C – PROJECT PROPOSAL QUESTIONS The Project Proposal Questions are a downloadable form found on the YCA homepage or in RAPTR. Provide responses to all the questions."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2452961,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ah7VXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 25,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Describe any youth leadership opportunities during project development and/or implementation. Provide information pertaining to any distinct youth participant roles that may be applicable (e.g., interns, youth advisory committee, etc.).\n\n 12. Of the total number of youth participants, how many will be given leadership opportunities during project development or implementation? If distinct roles are applicable, how many youth are anticipated for each role?\n\n 13. What skills and knowledge will youth gain because of the project?\n\n 14. Describe lasting impacts of the project and how project experiences will continue to influence youth participants after the project concludes.\n\n 15. Describe any youth participation in public awareness/outreach campaigns before and/or after project completion.\n\n 16. Explain how the project encourages and empowers youth to make healthy choices during and beyond the project.\n\n Project Readiness\n\n 17. Describe the immediate steps to be taken post-grant award and timeline for implementation and completion of each.\n\n 18. Explain how the applicant will fill any funding gaps to complete the project.\n\n 19. If the project requires hiring of staff, explain the timeline for hiring and the specific role(s) the new staff will perform for the grant-funded project.\n\n 20. If applicable, provide the status of communications about the project with entities (e.g., schools, nonprofit organizations, foster system, etc.) from which youth will be recruited.\n\n 1021. If a Development Project (see Appendix O for definition), will the project trigger any permits and/or environmental reviews? If so, provide the status and/or anticipated timeline of applicable compliance measures (See Appendix J).\n\n Organizational Capacity & Collaboration\n\n 22. Describe the applicant’s ability and experience with fundraising (e.g., grants, donations, etc.).\n\n 23. Describe the applicant’s experience in completing similar projects.\n\n 24. Describe the applicant’s fiscal capacity to carry out the proposed project.\n\n 25. What is the applicant’s primary source of revenue? Describe any partnerships with other entities and their roles in the project.\n\n 26. If funded, what documentation will applicant use to demonstrate that the project was successful—i.e., met expected outcomes and benefitted the intended audience?\n\n Additional Project Characteristics\n\n 27. Describe other project characteristics not previously discussed that would assist in evaluating the proposal. (No response or an answer of “Not Applicable” will be given a score of zero).\n\n End of Project Questions\n\n 11REQUIRED DOCUMENTATION FOR PROJECT PROPOSAL\n\n The following documents must be uploaded into RAPTR as part of the Project Proposal:\n\n 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2382822,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfbVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "End of Step One Information\n\n 13STEP TWO: TELECONFERENCE VISITS (QUALIFYING PROJECTS ONLY)\n\n Applicants submitting the most competitive Project Proposals will be further evaluated during a teleconference visit with grant program staff. Applicants should be prepared to respond to project-specific questions including, but not limited to, the cost estimate, curriculum design, site plan, program goals, outreach efforts, partnerships, sustainability, transportation, community involvement, and any possible barriers to successful project completion.\n\n For Development Projects, landowners must join the teleconference visit. Applicants and landowners should be prepared to discuss formal agreements, status of environmental reviews, and long-term roles and responsibilities for project maintenance, as applicable.\n\n Applicants may be required to provide additional documentation about the project before being granted a teleconference visit.\n\n End of Step Two Information\n\n 14STEP THREE: SUPPORTING DOCUMENTATION (QUALIFYING PROJECTS ONLY)\n\n Applicants with the most competitive projects after teleconference visits will be required to submit supporting documentation further demonstrating their ability to carry out the project.\n\n The following required supporting materials must be uploaded to RAPTR. If a requested document is not applicable to the project, upload an attachment with a brief explanation of why it is not applicable. Templates for some materials will be available at http://resources.ca.gov/grants/youth/.\n\n 1. Signed Authorizing Resolution or Certification Letter – Provide a signed authorizing resolution from the applicant’s governing board. (See Appendix G for the required resolution format and content). Resolutions must include all assurances contained in the template. A Certification Letter can be submitted for agencies without a governing board. (See Appendix H for required format and content).\n\n 2. Eligibility for Nonprofit Applicants – Provide evidence:\n\n a. The corporation is qualified under Section 501 (c)(3) of the Internal Revenue Service Code. An IRS 501(c)(3) Determination Letter or printout from the IRS tax-exempt organization search tool on the official IRS website is sufficient. See https://apps.irs.gov/app/eos/; and\n\n b. The corporation has an active status with the Secretary of State. A printout from the Secretary of State business search web page showing the corporation is Active is sufficient. See https://bizfileonline.sos.ca.gov/search/business; and\n\n c. The corporation is current in registration and reporting requirements with the Attorney General’s Registry of Charities and Fundraisers. A printout from the Department of Justice Registry Search Tool showing the corporation’s registration is Current is sufficient."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2245593,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Af7VXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 19,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   }
+  ]
+ },
+ "306f8b4110d8dd9e": {
+  "query": "available funding total amount this solicitation",
+  "filter": "1561cdbcf9305d6a",
+  "retrievalResults": []
+ },
+ "3edb160922ead3b1": {
+  "query": "number of grants awards expected to be funded",
+  "filter": "95287bfdbf7c84ca",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Be sure to address all parts of each question as succinctly as possible.\n\n The Project\n\n 1. Describe the discrete project the grant would fund. The information provided should include grant deliverables and support the cost estimate submitted with the proposal. (See Appendix O for a definition and examples of grant deliverables).\n\n The following project-specific information should be included in response to this question (as applicable):\n\n a. The approximate number of experiences with natural or cultural resources youth will have (e.g., field trips, days at camp), the length of the project funded by the grant, any cost for youth to participate, and percentage of classroom versus outdoor program time.\n\n b. A description of the clean vehicle to be acquired and how the vehicle will be used both during and after the grant period.\n\n c. For Development Projects (see Appendix O for definition): The percentage of the project footprint located within a low-income community, the owners of the property on which the project will take place, the status of any agreements needed to access and implement the project and plans for long-term operations and maintenance of the project (See Appendix K).\n\n Requirements & Project Need\n\n 1. How many youth will be served by the project funded with the grant and across what time period?\n\n 2. How will youth be recruited to participate in the project? Describe the low-income communities and/or households to which at least 80% of the youth participants will belong.\n\n 3. How will applicant ensure that at least 80% of youth served through the project live within a low-income household and/or community?\n\n 4. Describe the underserved communities of color and/or vulnerable populations to which at least 80% of youth participants will belong.\n\n 5. How will applicant ensure that at least 80% of the youth to be served are members of underserved communities of color and/or vulnerable populations? (If funded, documentation must be available upon request and for audit purposes.)\n\n 96. Provide specific examples of natural and/or cultural resources youth will access because of the project.\n\n 7. Describe how the project addresses a critical need of the youth to be served.\n\n 8. What steps will be taken to address youth safety, well-being, and comfort throughout the project?\n\n 9. Describe the specific training staff receive in areas such as safety, risk management, cultural competency, trauma informed practices, etc.\n\n 10. Describe any existing ADA accessibility accommodations available to participating youth and/or planned accommodations to be created by the proposed project.\n\n Funding Priorities\n\n 11."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2520354,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other – Project-specific additional documentation may be requested.\n\n 7. Payee Data Record/Government Agency Taxpayer ID Form – Nonprofit applicants must provide a completed and signed STD 204 Payee Data Record form. Government Agency applicants must provide a completed and signed Government Agency Taxpayer ID Form. (See Appendix L for links to both forms).\n\n End of Step Three Information\n\n 16GRANT PROJECT ADMINSTRATION (POST GRANT AWARD)\n\n For projects awarded grant funding, the following is the general post-award administrative procedure:\n\n 1. Grantee attends grant management workshop which addresses project administration, including proper submission of payment requests and periodic reports.\n\n 2. State Grant Administrator works with Grantee to develop and execute a grant agreement.\n\n 3. Grantee commences initial planning work and submits periodic reimbursement requests for eligible costs (subject to retention).\n\n 4. Grantee submits evidence of funding recognition on program materials, acquired vehicles, and/or at a Development project site, as applicable.\n\n 5. Grantee notifies the State of public events related to the project.\n\n 6. Grantee commences project work/activities.\n\n 7. Grantee submits periodic progress reports.\n\n 8. Grantee completes project and submits project completion forms.\n\n 9. The State conducts final project inspection and/or reviews final report and approves final payment request(s).\n\n Changes to Approved Project\n\n Grantees seeking changes or amendments to an approved project must obtain the State’s approval. Changes in project scope must continue to meet the need cited in the original Project Proposal. Grantees jeopardize funding should changes be made without prior notice to and approval by the State.\n\n Eligible Costs\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible for reimbursement. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. (See Appendix E for further information on Eligible Costs). Indirect costs are limited to 15% of the grant-funded budget.\n\n Site Visits\n\n The State may make periodic visits to the project site, including a final inspection. The State will determine if the work is consistent with the approved project scope and ensure compliance with signage requirements.\n\n 17Payment of Grant Funds\n\n Funds will not be disbursed until there is a fully executed grant agreement between the State and the Grantee. For Development Projects (see Appendix O for definition) that require an environmental review, funds cannot be disbursed until the review is complete and evidence provided to the State."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2460073,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Ten percent (10%) of the amount requested for reimbursement may be retained and issued as a final payment upon completion.\n\n • Upon compelling need, advances up to twenty-five percent (25%) of the grant award at a time may be available. For vehicle acquisitions, higher advances may be approved. Advances must be reconciled at least quarterly.\n\n Loss of Funding\n\n The following are examples of actions that may result in a Grantee’s loss of funding. This is not an exhaustive list.\n\n 1. Grantee fails to execute a grant agreement.\n\n 2. Grantee changes the project scope without prior notice to and approval by the State.\n\n 3. Grantee fails to timely submit all required documentation.\n\n 4. Grantee fails to complete the project.\n\n 5. Grantee fails to provide project updates as requested.\n\n Project Reporting\n\n Grantee is required to keep the State informed of the project’s progress throughout the project performance period. Grantee must submit periodic status reports as requested by the Grant Administrator. (See Appendix M for periodic reporting template).\n\n Insurance Requirements\n\n Grantees shall maintain commercial general liability workers compensation and employer’s liability, and, if applicable, automobile liability insurance with minimum coverage limits of $1 million. Upon request, Grantees must provide evidence of compliance with insurance requirements.\n\n 18STATE AUDIT & ACCOUNTING REQUIREMENTS\n\n Audit Requirements\n\n Projects are subject to audit by the State annually and for three (3) years following the final payment of grant funds. If the project is selected for audit, Grantee will be contacted in advance. The audit shall include all books, papers, accounts, documents, or other records for Grantee as they relate to the project. All project expenditure documentation should be available for an audit, whether paid with grant funds or other funds.\n\n Grantee must have project records, including source documents and evidence of payment, readily available and must provide an employee with knowledge of the project to assist the auditor. Grantee must provide a copy of any document, paper, record, etc., requested by the auditor. Further, Grantees must include planning, monitoring, and reporting necessary to ensure successful implementation of the project objectives and have documentation available for State review upon request.\n\n Accounting Requirements\n\n Grantee must maintain an accounting system that:\n\n • Accurately reflects fiscal transactions, with necessary controls and safeguards.\n\n • Provides a good audit trail, including original source documents such as purchase orders, receipts, progress payments, invoices, employee paystubs, and timecards, evidence of payment, etc."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2351356,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Generally, payments will be made on a reimbursement basis. This means the Grantee pays for services, products, or supplies; submits invoices; and is then reimbursed by the State. It generally takes six to eight weeks to receive payment after Grantee submits a completed payment request."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2119963,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhbVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "No indirect rates or overhead costs may be folded into the hourly rate. No billable rates may be used.\n\n 5. Youth Community Access Grant and Other Funding Source columns should sum to the Total Cost column.\n\n 6. Add/delete elements and funding sources as needed. Be sure all costs are eligible, within allowable limits, and all columns add up correctly.\n\n 7. Contingency costs can be no more than ten percent (10%) of the grant request.\n\n 8. Any indirect costs must be included as a separate line item in the budget and are limited to no more than 15% of total direct costs of the grant. (See Appendix E for further information on indirect cost requirements).\n\n 24• A customizable cost estimate template can be found at: http://resources.ca.gov/grants/youth/\n\n 25\n\n \n\n \n  http://resources.ca.gov/grants/youth/APPENDIX E: ELIGIBLE COSTS\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. Indirect costs are limited to 15% of the grant-funded project budget.\n\n Projects must comply with Labor Code section 1771.5. Therefore, cost estimates should include prevailing wages, as applicable. See Department of Industrial Relations’ Division of Labor Statistics and Research website at Director's General Prevailing Wage Determinations (ca.gov) for general prevailing wage determinations. For questions about prevailing wage, contact the Department Industrial Relations.\n\n All Projects\n\n 1. Direct Costs – Costs that are directly tied to the implementation of the project to be funded and incurred during the project performance period specified in the grant agreement. Direct costs may include materials, equipment, technical consultants, subcontractors, Grantee’s staff labor, and other eligible costs. Direct costs do not include general administrative costs and overhead nor do they include endowments for ongoing project maintenance.\n\n 2. Contingency – Up to ten percent (10%) of the grant may be budgeted for contingency costs. All contingency costs must be eligible per these guidelines. Contingency funds may not be used to increase the amount of funds that can be used for project management/non-construction (pre-implementation) work or indirect costs.\n\n 3. Contracted Services – The costs of contracted services may be reimbursed if invoices identify the specific project activities and include evidence of payment.\n\n 4."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2050141,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AirVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Describe any youth leadership opportunities during project development and/or implementation. Provide information pertaining to any distinct youth participant roles that may be applicable (e.g., interns, youth advisory committee, etc.).\n\n 12. Of the total number of youth participants, how many will be given leadership opportunities during project development or implementation? If distinct roles are applicable, how many youth are anticipated for each role?\n\n 13. What skills and knowledge will youth gain because of the project?\n\n 14. Describe lasting impacts of the project and how project experiences will continue to influence youth participants after the project concludes.\n\n 15. Describe any youth participation in public awareness/outreach campaigns before and/or after project completion.\n\n 16. Explain how the project encourages and empowers youth to make healthy choices during and beyond the project.\n\n Project Readiness\n\n 17. Describe the immediate steps to be taken post-grant award and timeline for implementation and completion of each.\n\n 18. Explain how the applicant will fill any funding gaps to complete the project.\n\n 19. If the project requires hiring of staff, explain the timeline for hiring and the specific role(s) the new staff will perform for the grant-funded project.\n\n 20. If applicable, provide the status of communications about the project with entities (e.g., schools, nonprofit organizations, foster system, etc.) from which youth will be recruited.\n\n 1021. If a Development Project (see Appendix O for definition), will the project trigger any permits and/or environmental reviews? If so, provide the status and/or anticipated timeline of applicable compliance measures (See Appendix J).\n\n Organizational Capacity & Collaboration\n\n 22. Describe the applicant’s ability and experience with fundraising (e.g., grants, donations, etc.).\n\n 23. Describe the applicant’s experience in completing similar projects.\n\n 24. Describe the applicant’s fiscal capacity to carry out the proposed project.\n\n 25. What is the applicant’s primary source of revenue? Describe any partnerships with other entities and their roles in the project.\n\n 26. If funded, what documentation will applicant use to demonstrate that the project was successful—i.e., met expected outcomes and benefitted the intended audience?\n\n Additional Project Characteristics\n\n 27. Describe other project characteristics not previously discussed that would assist in evaluating the proposal. (No response or an answer of “Not Applicable” will be given a score of zero).\n\n End of Project Questions\n\n 11REQUIRED DOCUMENTATION FOR PROJECT PROPOSAL\n\n The following documents must be uploaded into RAPTR as part of the Project Proposal:\n\n 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2025142,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfbVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Do not leave blank fields. Once completed, upload the questions, as an attachment, into RAPTR.\n\n 23\n\n \n\n \n  https://resources.ca.gov/grants/youthAPPENDIX D: COST ESTIMATE\n\n In preparing a cost estimate for the project, applicants should comply with the following:\n\n 1. All project elements should be detailed and customized to fit the project.\n\n 2. Each element should be clearly described in the project narrative.\n\n 3. Where possible, the cost of project elements funded by the Youth Community Access Grant should not be split between the grant and other funding sources.\n\n 4. Grantee’s staff labor must be computed on actual time spent on the project and evidenced by time and attendance records describing the work performed. Only salary plus benefits are eligible."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.193789,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AibVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 29,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   }
+  ]
+ },
+ "4cc084223fd5d9f5": {
+  "query": "total funding available and award amounts",
+  "filter": "95287bfdbf7c84ca",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Ten percent (10%) of the amount requested for reimbursement may be retained and issued as a final payment upon completion.\n\n • Upon compelling need, advances up to twenty-five percent (25%) of the grant award at a time may be available. For vehicle acquisitions, higher advances may be approved. Advances must be reconciled at least quarterly.\n\n Loss of Funding\n\n The following are examples of actions that may result in a Grantee’s loss of funding. This is not an exhaustive list.\n\n 1. Grantee fails to execute a grant agreement.\n\n 2. Grantee changes the project scope without prior notice to and approval by the State.\n\n 3. Grantee fails to timely submit all required documentation.\n\n 4. Grantee fails to complete the project.\n\n 5. Grantee fails to provide project updates as requested.\n\n Project Reporting\n\n Grantee is required to keep the State informed of the project’s progress throughout the project performance period. Grantee must submit periodic status reports as requested by the Grant Administrator. (See Appendix M for periodic reporting template).\n\n Insurance Requirements\n\n Grantees shall maintain commercial general liability workers compensation and employer’s liability, and, if applicable, automobile liability insurance with minimum coverage limits of $1 million. Upon request, Grantees must provide evidence of compliance with insurance requirements.\n\n 18STATE AUDIT & ACCOUNTING REQUIREMENTS\n\n Audit Requirements\n\n Projects are subject to audit by the State annually and for three (3) years following the final payment of grant funds. If the project is selected for audit, Grantee will be contacted in advance. The audit shall include all books, papers, accounts, documents, or other records for Grantee as they relate to the project. All project expenditure documentation should be available for an audit, whether paid with grant funds or other funds.\n\n Grantee must have project records, including source documents and evidence of payment, readily available and must provide an employee with knowledge of the project to assist the auditor. Grantee must provide a copy of any document, paper, record, etc., requested by the auditor. Further, Grantees must include planning, monitoring, and reporting necessary to ensure successful implementation of the project objectives and have documentation available for State review upon request.\n\n Accounting Requirements\n\n Grantee must maintain an accounting system that:\n\n • Accurately reflects fiscal transactions, with necessary controls and safeguards.\n\n • Provides a good audit trail, including original source documents such as purchase orders, receipts, progress payments, invoices, employee paystubs, and timecards, evidence of payment, etc."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2525277,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "No indirect rates or overhead costs may be folded into the hourly rate. No billable rates may be used.\n\n 5. Youth Community Access Grant and Other Funding Source columns should sum to the Total Cost column.\n\n 6. Add/delete elements and funding sources as needed. Be sure all costs are eligible, within allowable limits, and all columns add up correctly.\n\n 7. Contingency costs can be no more than ten percent (10%) of the grant request.\n\n 8. Any indirect costs must be included as a separate line item in the budget and are limited to no more than 15% of total direct costs of the grant. (See Appendix E for further information on indirect cost requirements).\n\n 24• A customizable cost estimate template can be found at: http://resources.ca.gov/grants/youth/\n\n 25\n\n \n\n \n  http://resources.ca.gov/grants/youth/APPENDIX E: ELIGIBLE COSTS\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. Indirect costs are limited to 15% of the grant-funded project budget.\n\n Projects must comply with Labor Code section 1771.5. Therefore, cost estimates should include prevailing wages, as applicable. See Department of Industrial Relations’ Division of Labor Statistics and Research website at Director's General Prevailing Wage Determinations (ca.gov) for general prevailing wage determinations. For questions about prevailing wage, contact the Department Industrial Relations.\n\n All Projects\n\n 1. Direct Costs – Costs that are directly tied to the implementation of the project to be funded and incurred during the project performance period specified in the grant agreement. Direct costs may include materials, equipment, technical consultants, subcontractors, Grantee’s staff labor, and other eligible costs. Direct costs do not include general administrative costs and overhead nor do they include endowments for ongoing project maintenance.\n\n 2. Contingency – Up to ten percent (10%) of the grant may be budgeted for contingency costs. All contingency costs must be eligible per these guidelines. Contingency funds may not be used to increase the amount of funds that can be used for project management/non-construction (pre-implementation) work or indirect costs.\n\n 3. Contracted Services – The costs of contracted services may be reimbursed if invoices identify the specific project activities and include evidence of payment.\n\n 4."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2067881,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AirVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other – Project-specific additional documentation may be requested.\n\n 7. Payee Data Record/Government Agency Taxpayer ID Form – Nonprofit applicants must provide a completed and signed STD 204 Payee Data Record form. Government Agency applicants must provide a completed and signed Government Agency Taxpayer ID Form. (See Appendix L for links to both forms).\n\n End of Step Three Information\n\n 16GRANT PROJECT ADMINSTRATION (POST GRANT AWARD)\n\n For projects awarded grant funding, the following is the general post-award administrative procedure:\n\n 1. Grantee attends grant management workshop which addresses project administration, including proper submission of payment requests and periodic reports.\n\n 2. State Grant Administrator works with Grantee to develop and execute a grant agreement.\n\n 3. Grantee commences initial planning work and submits periodic reimbursement requests for eligible costs (subject to retention).\n\n 4. Grantee submits evidence of funding recognition on program materials, acquired vehicles, and/or at a Development project site, as applicable.\n\n 5. Grantee notifies the State of public events related to the project.\n\n 6. Grantee commences project work/activities.\n\n 7. Grantee submits periodic progress reports.\n\n 8. Grantee completes project and submits project completion forms.\n\n 9. The State conducts final project inspection and/or reviews final report and approves final payment request(s).\n\n Changes to Approved Project\n\n Grantees seeking changes or amendments to an approved project must obtain the State’s approval. Changes in project scope must continue to meet the need cited in the original Project Proposal. Grantees jeopardize funding should changes be made without prior notice to and approval by the State.\n\n Eligible Costs\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible for reimbursement. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. (See Appendix E for further information on Eligible Costs). Indirect costs are limited to 15% of the grant-funded budget.\n\n Site Visits\n\n The State may make periodic visits to the project site, including a final inspection. The State will determine if the work is consistent with the approved project scope and ensure compliance with signage requirements.\n\n 17Payment of Grant Funds\n\n Funds will not be disbursed until there is a fully executed grant agreement between the State and the Grantee. For Development Projects (see Appendix O for definition) that require an environmental review, funds cannot be disbursed until the review is complete and evidence provided to the State."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2043568,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Do not leave blank fields. Once completed, upload the questions, as an attachment, into RAPTR.\n\n 23\n\n \n\n \n  https://resources.ca.gov/grants/youthAPPENDIX D: COST ESTIMATE\n\n In preparing a cost estimate for the project, applicants should comply with the following:\n\n 1. All project elements should be detailed and customized to fit the project.\n\n 2. Each element should be clearly described in the project narrative.\n\n 3. Where possible, the cost of project elements funded by the Youth Community Access Grant should not be split between the grant and other funding sources.\n\n 4. Grantee’s staff labor must be computed on actual time spent on the project and evidenced by time and attendance records describing the work performed. Only salary plus benefits are eligible."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1917878,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AibVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 29,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If applicable, certify that the project will comply with any laws and regulations including, but not limited to, the California Environmental Quality Act (CEQA), legal requirements for building codes, health and safety codes, and disabled access laws, and that prior to commencement of construction all applicable permits will have been obtained; and\n\n 6. Appoint the (Title/Position of Authorized Representative (e.g., Executive Director, President, etc., not the individual’s name)), or designee, as agent to conduct all negotiations, execute and submit all documents including, but not limited to, applications, agreements, payment requests and so on, which may be necessary for the completion of the aforementioned project(s).\n\n 7. Contain the signature of the Director or Chief Executive Officer.\n\n 33APPENDIX I: SIGNAGE & RECOGNITION GUIDELINES\n\n Funding acknowledgement recognition must be included for all projects as follows:\n\n • Programming – The Grantee shall use the Youth Community Access logo and acknowledgement language on project announcements, social media, website, marketing materials, and news releases. Materials should include the logo and acknowledgement language, at a minimum, throughout the performance period of the Grant Agreement.\n\n • Clean Vehicle Acquisition – The Grantee shall install a vehicle decal/banner with the Youth Community Access logo and required acknowledgment language on each vehicle purchased prior to activating the vehicle for program use. Said decal/banner should remain in place for at least four (4) years from the date the vehicle was purchased.\n\n • Development – The Grantee shall install a sign with the Youth Community Access logo and required acknowledgement language at the project location. The sign should remain in place for at least (4) years from the date the project was completed.\n\n Vehicle decals/banners and development project signage should contain the language included with the logo as shown below. The applicant’s name may be added, as well as the names (and/or logos) of partner organizations, individuals, and elected representatives. The logo must measure a minimum of 12 inches in size.\n\n The logo is available at https://resources.ca.gov/grants/Grant-Program-Resources under Logo Artwork.\n\n 34\n\n \n\n \n  https://resources.ca.gov/grants/Grant-Program-ResourcesThe cost of the funding acknowledgment materials is an eligible project cost."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1882262,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AkrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 39,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Development projects may require permits, environmental reviews, and long-term access and operation and maintenance agreements. To be eligible, at least 80 percent of the project’s footprint must be located within a low-income community.\n\n Direct Costs – means costs associated with the development, administration, planning, and management of the project which are specifically incurred for the benefit of the project.\n\n 44Disadvantaged Community – means underserved communities of color and/or vulnerable populations. See definition of underserved community.\n\n Free and Reduced-price Meal Program – means School Nutrition Programs such as the National School Lunch Program, School Breakfast Program, Afterschool Meal Supplements, Special Milk Program, and State Meal Programs. See https://www.cde.ca.gov/ls/nu/sn/eligmaterials.asp.\n\n Fund or Funds – means the Youth Education Prevention, Early Intervention, and Treatment account created by The Control, Regulate, and Tax Adult Use of Marijuana Act of 2016 (Proposition 64).\n\n Grant Agreement – means an arrangement between the State and Grantee specifying the payment of funds by the State for the performance of specific project objectives within a specific project performance period by the Grantee.\n\n Grantee – means an applicant that has an agreement for grant funding with the State.\n\n Grants Administrator – means an employee of the State who manages the grants.\n\n In-Kind – means non-cash donations, from governmental or private sources, and includes volunteers, materials, and services.\n\n Indirect Costs – means the costs of doing business that are not directly related to carrying out the grant-funded project but are necessary for the general operation of the grantee organization. Examples of indirect costs include rent, electricity, computers, telephones, office supplies, internet access as well as functions such as janitorial, human resources, business services, information technology, etc. Certain types of indirect costs may not be charged to the grant including food and beverage, fundraising, lobbying, and entertainment. Any cost that is billed as a direct cost may not be including in indirect costs.\n\n Land Tenure/Site Control – means the applicant owns the project land or has other legal long-term interest with the landowner that is satisfactory to the State.\n\n Local Agency – means any political subdivision of the State of California, including, but not limited to, any county, city, city and county, district, joint powers authority, public schools and school districts, local community conservation corps agency, or council of governments."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1779879,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AnLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 50,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposition 64 created the Youth Education, Prevention, Early Intervention and Treatment Account (YEPEITA) into which the State Controller deposits 60 percent (60%) of the tax revenues from marijuana sales for youth programs designed to educate about and prevent substance use disorders and to prevent harm from substance use. These programs emphasize accurate education, effective prevention, early intervention, school retention, and timely treatment services for youth, their families, and caregivers.\n\n YEPEITA funds appropriated to the California Natural Resources Agency (the State) are to be used for competitive grants to support youth access to natural or cultural resources with a focus on low-income and disadvantaged communities. The grants may include, but are not limited to, community education and recreational amenities to support youth substance use prevention and early intervention. To meet this mandate, the State created the Youth Community Access Grant Program.\n\n The Youth Community Access Grant Program is a competitive program to award grants to communities disproportionately affected by past federal and state drug policies, also known as the War on Drugs, as well as other underserved communities. The War on Drugs disproportionately impacted communities of color, particularly low-income communities. Harsh federal and state drug policies enacted during the War on Drugs led to mass incarceration of people of color, decreased access to social services, loss of educational attainment due to diminished federal financial aid eligibility, prohibitions on the use of public assistance, and the separation of families. The Youth Community Access Grant Program aims to be a resource to address and repair the multi-generational community impacts of the War on Drugs.\n\n Funding Allocation\n\n Approximately $18.5 million is available for Youth Community Access projects.\n\n Grant Amounts\n\n The maximum award for an individual project is $500,000. The minimum award is $25,000.\n\n Eligible Applicants\n\n Eligible applicants include local, state, and federal agencies; nonprofit organizations; and federally recognized Native American tribes.\n\n Nonprofit organizations are defined as any nonprofit public benefit corporation that is formed pursuant to the Nonprofit Corporation Law (commencing with Section 5000 of\n\n 1the Corporations Code), incorporated for a minimum of two years, qualified to do business in California, and qualified as a tax-exempt 501(c)(3) organization under the US Internal Revenue Code. In addition, all nonprofit organizations must be active with the California Secretary of State and current with the registration and reporting requirements of the California Department of Justice, Office of the Attorney General Registry of Charities and Fundraisers."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1760241,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   }
+  ]
+ },
+ "4d39aa930972e099": {
+  "query": "grant awards will be up to $ minimum maximum grant request",
+  "filter": "1561cdbcf9305d6a",
+  "retrievalResults": []
+ },
+ "5c0295feb482b07b": {
+  "query": "total funding available and award amounts",
+  "filter": "1561cdbcf9305d6a",
+  "retrievalResults": []
+ },
+ "6b8d86cf6c3b4bb9": {
+  "query": "funding limits, minimum and maximum request, total available funding",
+  "filter": "1561cdbcf9305d6a",
+  "retrievalResults": []
+ },
+ "7cb9171c339e5a76": {
+  "query": "number of grants awards expected to be funded",
+  "filter": "1561cdbcf9305d6a",
+  "retrievalResults": []
+ },
+ "9a1a63e3f5807f92": {
+  "query": "Youth Community Access timeline key dates",
+  "filter": "1561cdbcf9305d6a",
+  "retrievalResults": []
+ },
+ "b50567a9e9fefb1b": {
+  "query": "maximum award amount per grant",
+  "filter": "95287bfdbf7c84ca",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Ten percent (10%) of the amount requested for reimbursement may be retained and issued as a final payment upon completion.\n\n • Upon compelling need, advances up to twenty-five percent (25%) of the grant award at a time may be available. For vehicle acquisitions, higher advances may be approved. Advances must be reconciled at least quarterly.\n\n Loss of Funding\n\n The following are examples of actions that may result in a Grantee’s loss of funding. This is not an exhaustive list.\n\n 1. Grantee fails to execute a grant agreement.\n\n 2. Grantee changes the project scope without prior notice to and approval by the State.\n\n 3. Grantee fails to timely submit all required documentation.\n\n 4. Grantee fails to complete the project.\n\n 5. Grantee fails to provide project updates as requested.\n\n Project Reporting\n\n Grantee is required to keep the State informed of the project’s progress throughout the project performance period. Grantee must submit periodic status reports as requested by the Grant Administrator. (See Appendix M for periodic reporting template).\n\n Insurance Requirements\n\n Grantees shall maintain commercial general liability workers compensation and employer’s liability, and, if applicable, automobile liability insurance with minimum coverage limits of $1 million. Upon request, Grantees must provide evidence of compliance with insurance requirements.\n\n 18STATE AUDIT & ACCOUNTING REQUIREMENTS\n\n Audit Requirements\n\n Projects are subject to audit by the State annually and for three (3) years following the final payment of grant funds. If the project is selected for audit, Grantee will be contacted in advance. The audit shall include all books, papers, accounts, documents, or other records for Grantee as they relate to the project. All project expenditure documentation should be available for an audit, whether paid with grant funds or other funds.\n\n Grantee must have project records, including source documents and evidence of payment, readily available and must provide an employee with knowledge of the project to assist the auditor. Grantee must provide a copy of any document, paper, record, etc., requested by the auditor. Further, Grantees must include planning, monitoring, and reporting necessary to ensure successful implementation of the project objectives and have documentation available for State review upon request.\n\n Accounting Requirements\n\n Grantee must maintain an accounting system that:\n\n • Accurately reflects fiscal transactions, with necessary controls and safeguards.\n\n • Provides a good audit trail, including original source documents such as purchase orders, receipts, progress payments, invoices, employee paystubs, and timecards, evidence of payment, etc."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3083804,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other – Project-specific additional documentation may be requested.\n\n 7. Payee Data Record/Government Agency Taxpayer ID Form – Nonprofit applicants must provide a completed and signed STD 204 Payee Data Record form. Government Agency applicants must provide a completed and signed Government Agency Taxpayer ID Form. (See Appendix L for links to both forms).\n\n End of Step Three Information\n\n 16GRANT PROJECT ADMINSTRATION (POST GRANT AWARD)\n\n For projects awarded grant funding, the following is the general post-award administrative procedure:\n\n 1. Grantee attends grant management workshop which addresses project administration, including proper submission of payment requests and periodic reports.\n\n 2. State Grant Administrator works with Grantee to develop and execute a grant agreement.\n\n 3. Grantee commences initial planning work and submits periodic reimbursement requests for eligible costs (subject to retention).\n\n 4. Grantee submits evidence of funding recognition on program materials, acquired vehicles, and/or at a Development project site, as applicable.\n\n 5. Grantee notifies the State of public events related to the project.\n\n 6. Grantee commences project work/activities.\n\n 7. Grantee submits periodic progress reports.\n\n 8. Grantee completes project and submits project completion forms.\n\n 9. The State conducts final project inspection and/or reviews final report and approves final payment request(s).\n\n Changes to Approved Project\n\n Grantees seeking changes or amendments to an approved project must obtain the State’s approval. Changes in project scope must continue to meet the need cited in the original Project Proposal. Grantees jeopardize funding should changes be made without prior notice to and approval by the State.\n\n Eligible Costs\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible for reimbursement. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. (See Appendix E for further information on Eligible Costs). Indirect costs are limited to 15% of the grant-funded budget.\n\n Site Visits\n\n The State may make periodic visits to the project site, including a final inspection. The State will determine if the work is consistent with the approved project scope and ensure compliance with signage requirements.\n\n 17Payment of Grant Funds\n\n Funds will not be disbursed until there is a fully executed grant agreement between the State and the Grantee. For Development Projects (see Appendix O for definition) that require an environmental review, funds cannot be disbursed until the review is complete and evidence provided to the State."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2552786,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Personnel or Employee Services – Costs for the services of Grantee's employees directly engaged in project execution must be computed according to Grantee's prevailing wage or salary scales and may include benefits such as vacation, sick leave, Social Security contributions, etc., that are customarily charged to grantee’s various projects, excluding overhead allocations.\n\n a. Costs charged to the project must be computed on actual time spent on the project and evidenced by time and attendance records describing the work as well as payroll records. Overtime costs may be allowed under Grantee’s established policy, provided the regular work time was devoted to the same project.\n\n b. Salaries and wages claimed for employees working on State grant-funded projects must not exceed Grantee's established rates for similar positions.\n\n 26\n\n \n\n \n  https://www.dir.ca.gov/OPRL/DPreWageDetermination.htm\n \n\n \n  https://www.dir.ca.gov/OPRL/DPreWageDetermination.htm5. Supplies and Materials – Supplies and materials may be purchased for a specific project or may be drawn from a central stock, providing they are claimed at a cost no higher than that paid by the Grantee.\n\n 6. Community Engagement – Costs of engaging community members through community meetings and events directly related to the project are eligible.\n\n 7. Indirect Costs – Indirect costs (also known as administrative costs, incidental costs, or overhead) are the costs of doing business that are not directly related to carrying out the grant-funded project but are necessary for the general operation of the grantee organization. Examples of indirect costs include rent, computers, telephones, office supplies, internet access, copy machines, electricity as well as functions such as janitorial, human resources, business services, information technology, etc. Certain types of indirect costs are not allowed including food and beverage, fundraising, lobbying, and entertainment. Any cost that is billed as a direct cost may NOT be included in indirect costs.\n\n Indirect costs should be included as a single line item in the project cost estimate and is charged as a percentage of the grant-funded project budget (i.e., the direct costs). The maximum indirect rate is 15 percent of direct costs. For example, if direct project costs total $260,870, the maximum indirect cost that could be budgeted is $39,130 (15% x $260,870). Together, the direct and indirect costs should equal the total grant award, which is $300,000 in this example ($260,870 + $39,130)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2494091,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ai7VXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 32,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "No indirect rates or overhead costs may be folded into the hourly rate. No billable rates may be used.\n\n 5. Youth Community Access Grant and Other Funding Source columns should sum to the Total Cost column.\n\n 6. Add/delete elements and funding sources as needed. Be sure all costs are eligible, within allowable limits, and all columns add up correctly.\n\n 7. Contingency costs can be no more than ten percent (10%) of the grant request.\n\n 8. Any indirect costs must be included as a separate line item in the budget and are limited to no more than 15% of total direct costs of the grant. (See Appendix E for further information on indirect cost requirements).\n\n 24• A customizable cost estimate template can be found at: http://resources.ca.gov/grants/youth/\n\n 25\n\n \n\n \n  http://resources.ca.gov/grants/youth/APPENDIX E: ELIGIBLE COSTS\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. Indirect costs are limited to 15% of the grant-funded project budget.\n\n Projects must comply with Labor Code section 1771.5. Therefore, cost estimates should include prevailing wages, as applicable. See Department of Industrial Relations’ Division of Labor Statistics and Research website at Director's General Prevailing Wage Determinations (ca.gov) for general prevailing wage determinations. For questions about prevailing wage, contact the Department Industrial Relations.\n\n All Projects\n\n 1. Direct Costs – Costs that are directly tied to the implementation of the project to be funded and incurred during the project performance period specified in the grant agreement. Direct costs may include materials, equipment, technical consultants, subcontractors, Grantee’s staff labor, and other eligible costs. Direct costs do not include general administrative costs and overhead nor do they include endowments for ongoing project maintenance.\n\n 2. Contingency – Up to ten percent (10%) of the grant may be budgeted for contingency costs. All contingency costs must be eligible per these guidelines. Contingency funds may not be used to increase the amount of funds that can be used for project management/non-construction (pre-implementation) work or indirect costs.\n\n 3. Contracted Services – The costs of contracted services may be reimbursed if invoices identify the specific project activities and include evidence of payment.\n\n 4."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2280512,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AirVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Generally, payments will be made on a reimbursement basis. This means the Grantee pays for services, products, or supplies; submits invoices; and is then reimbursed by the State. It generally takes six to eight weeks to receive payment after Grantee submits a completed payment request."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2254003,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhbVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Grantees that wish to include indirect costs in their grant budgets must be able to document how the indirect rate was calculated. One typical method for documentation is to have a Cost Allocation Plan. Other methods may also be adequate, but it is the grantee’s responsibility to determine this based on Generally Accepted Accounting Principles. It is recommended that grantees work with a Certified Public Accountant (CPA) to develop an appropriate method for calculating their indirect rate and determining what indirect costs may be allocated to a grant. It is the responsibility of the grantee to maintain appropriate records for all indirect costs and to be able to provide those records in the event of an audit.\n\n 8. Travel Costs – Travel costs incurred by Grantee staff directly related to the project and reasonable and necessary for the completion of the project are eligible. Reimbursement rates shall be consistent with the Grantee's written travel policy. Absent a written policy, per diem shall not exceed the California Standard Per Diem Rate allowable by the U.S. General Services Administration."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2160354,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 33,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Mileage rates shall not exceed the IRS mileage reimbursement rate in effect at the time of travel. Mileage reimbursement covers:\n\n • The cost of maintenance (oil, lube, routine maintenance)\n\n • Insurance (liability, damage, comprehensive, and collision coverage)\n\n 27• Licensing and registration\n\n • Depreciation and all other costs associated with operation of the vehicle\n\n For Grantee-owned vehicles, a Mileage Log with the date, mileage, destination, and trip purpose (referencing the grant’s project scope) must be signed by the operator and supervisor.\n\n 9. Food and Beverage Expenses –\n\n a. Employee meals incurred as a travel expense necessary to carry out the grant project may be reimbursed at a rate at or below the State employee per diem reimbursement rate in effect at the time of travel. See https://www.calhr.ca.gov/employees/Pages/travel-reimbursements.aspx\n\n b. Food expenses for grants that are reasonable and necessary to complete the grant project may be eligible at the discretion of the State. The specific purpose for the expense must be discussed and approved by the State and included as a separate item in the grant budget.\n\n 10. Construction – a. All necessary labor and construction activities to complete the project are eligible,\n\n including site preparation (demolition, clearing and grubbing, excavation, grading), monitoring (including soil and water testing during construction), onsite/field implementation, and construction supervision, etc. The grant can pay for up to two years of plant establishment, as deemed appropriate.\n\n b. Supplies and materials may be purchased for a specific project or may be drawn from central stock, providing they are claimed at a cost no higher than paid by the grantee. When supplies and/or materials are purchased with the intention of constructing a piece of equipment, a structure or part of a structure, the costs that are charged as supplies and materials may be capitalized according to the grantee’s normal practice or policy. If capitalized, only that cost reasonably attributable to the project may be claimed under the project.\n\n c. Trees, supplies, and materials may be purchased for a specific project or may be drawn from a central stock, provided they are claimed at a cost no higher than that paid by grantee.\n\n d. Grantees in the business of growing plants may not charge retail rates for plants reared for a project; however, charges for materials and staff time are allowable.\n\n e. Trees larger than 15 gallons in size are not eligible for reimbursement.\n\n f."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1642087,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjbVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 33,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   }
+  ]
+ },
+ "bc198bee1230e18e": {
+  "query": "funding limits, minimum and maximum request, total available funding",
+  "filter": "95287bfdbf7c84ca",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "No indirect rates or overhead costs may be folded into the hourly rate. No billable rates may be used.\n\n 5. Youth Community Access Grant and Other Funding Source columns should sum to the Total Cost column.\n\n 6. Add/delete elements and funding sources as needed. Be sure all costs are eligible, within allowable limits, and all columns add up correctly.\n\n 7. Contingency costs can be no more than ten percent (10%) of the grant request.\n\n 8. Any indirect costs must be included as a separate line item in the budget and are limited to no more than 15% of total direct costs of the grant. (See Appendix E for further information on indirect cost requirements).\n\n 24• A customizable cost estimate template can be found at: http://resources.ca.gov/grants/youth/\n\n 25\n\n \n\n \n  http://resources.ca.gov/grants/youth/APPENDIX E: ELIGIBLE COSTS\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. Indirect costs are limited to 15% of the grant-funded project budget.\n\n Projects must comply with Labor Code section 1771.5. Therefore, cost estimates should include prevailing wages, as applicable. See Department of Industrial Relations’ Division of Labor Statistics and Research website at Director's General Prevailing Wage Determinations (ca.gov) for general prevailing wage determinations. For questions about prevailing wage, contact the Department Industrial Relations.\n\n All Projects\n\n 1. Direct Costs – Costs that are directly tied to the implementation of the project to be funded and incurred during the project performance period specified in the grant agreement. Direct costs may include materials, equipment, technical consultants, subcontractors, Grantee’s staff labor, and other eligible costs. Direct costs do not include general administrative costs and overhead nor do they include endowments for ongoing project maintenance.\n\n 2. Contingency – Up to ten percent (10%) of the grant may be budgeted for contingency costs. All contingency costs must be eligible per these guidelines. Contingency funds may not be used to increase the amount of funds that can be used for project management/non-construction (pre-implementation) work or indirect costs.\n\n 3. Contracted Services – The costs of contracted services may be reimbursed if invoices identify the specific project activities and include evidence of payment.\n\n 4."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2839075,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AirVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Ten percent (10%) of the amount requested for reimbursement may be retained and issued as a final payment upon completion.\n\n • Upon compelling need, advances up to twenty-five percent (25%) of the grant award at a time may be available. For vehicle acquisitions, higher advances may be approved. Advances must be reconciled at least quarterly.\n\n Loss of Funding\n\n The following are examples of actions that may result in a Grantee’s loss of funding. This is not an exhaustive list.\n\n 1. Grantee fails to execute a grant agreement.\n\n 2. Grantee changes the project scope without prior notice to and approval by the State.\n\n 3. Grantee fails to timely submit all required documentation.\n\n 4. Grantee fails to complete the project.\n\n 5. Grantee fails to provide project updates as requested.\n\n Project Reporting\n\n Grantee is required to keep the State informed of the project’s progress throughout the project performance period. Grantee must submit periodic status reports as requested by the Grant Administrator. (See Appendix M for periodic reporting template).\n\n Insurance Requirements\n\n Grantees shall maintain commercial general liability workers compensation and employer’s liability, and, if applicable, automobile liability insurance with minimum coverage limits of $1 million. Upon request, Grantees must provide evidence of compliance with insurance requirements.\n\n 18STATE AUDIT & ACCOUNTING REQUIREMENTS\n\n Audit Requirements\n\n Projects are subject to audit by the State annually and for three (3) years following the final payment of grant funds. If the project is selected for audit, Grantee will be contacted in advance. The audit shall include all books, papers, accounts, documents, or other records for Grantee as they relate to the project. All project expenditure documentation should be available for an audit, whether paid with grant funds or other funds.\n\n Grantee must have project records, including source documents and evidence of payment, readily available and must provide an employee with knowledge of the project to assist the auditor. Grantee must provide a copy of any document, paper, record, etc., requested by the auditor. Further, Grantees must include planning, monitoring, and reporting necessary to ensure successful implementation of the project objectives and have documentation available for State review upon request.\n\n Accounting Requirements\n\n Grantee must maintain an accounting system that:\n\n • Accurately reflects fiscal transactions, with necessary controls and safeguards.\n\n • Provides a good audit trail, including original source documents such as purchase orders, receipts, progress payments, invoices, employee paystubs, and timecards, evidence of payment, etc."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2785197,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Projects must comply with all labor laws. In addition, Development Projects (see Appendix O for definition) must comply with the California Environmental Quality Act (CEQA) (Public Resources Code, Division 13, commencing with Section 21000). (See Appendix J)\n\n 3PROGRAM REQUIREMENTS & FUNDING PRIORITIES\n\n To be eligible for funding, projects must meet ALL the following program requirements:\n\n 1. Projects must serve youth. For the purposes of this program, youth is defined as a person between the ages of birth and 26 years old.\n\n 2. Projects must directly support youth access to either natural or cultural resources.\n\n 3. Projects must include design features and program elements to promote youth health, safety, well-being, and comfort.\n\n Funding Priorities\n\n Projects containing one or more of the following elements will be given priority consideration in funding decisions:\n\n 1. Projects in which youth participate in project planning, decision making, facilitation, and evaluation.\n\n 2. Projects in which youth participate in outreach and awareness campaigns.\n\n 3. Projects that empower youth to make healthy choices.\n\n Other Funding Considerations\n\n In evaluating Project Proposals, scores are used to determine initial rankings and facilitate discussions for each proposal among a multidisciplinary team. To achieve equitable distribution of funds, the State may consider additional factors including, but not limited to, geographic distribution of funds, priority populations, previous grant performance, and feasibility to accept partial funding.\n\n Eligible Project Examples\n\n The list below provides examples of eligible projects. The list is not exhaustive"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2689335,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Do not leave blank fields. Once completed, upload the questions, as an attachment, into RAPTR.\n\n 23\n\n \n\n \n  https://resources.ca.gov/grants/youthAPPENDIX D: COST ESTIMATE\n\n In preparing a cost estimate for the project, applicants should comply with the following:\n\n 1. All project elements should be detailed and customized to fit the project.\n\n 2. Each element should be clearly described in the project narrative.\n\n 3. Where possible, the cost of project elements funded by the Youth Community Access Grant should not be split between the grant and other funding sources.\n\n 4. Grantee’s staff labor must be computed on actual time spent on the project and evidenced by time and attendance records describing the work performed. Only salary plus benefits are eligible."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2574317,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AibVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 29,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Be sure to address all parts of each question as succinctly as possible.\n\n The Project\n\n 1. Describe the discrete project the grant would fund. The information provided should include grant deliverables and support the cost estimate submitted with the proposal. (See Appendix O for a definition and examples of grant deliverables).\n\n The following project-specific information should be included in response to this question (as applicable):\n\n a. The approximate number of experiences with natural or cultural resources youth will have (e.g., field trips, days at camp), the length of the project funded by the grant, any cost for youth to participate, and percentage of classroom versus outdoor program time.\n\n b. A description of the clean vehicle to be acquired and how the vehicle will be used both during and after the grant period.\n\n c. For Development Projects (see Appendix O for definition): The percentage of the project footprint located within a low-income community, the owners of the property on which the project will take place, the status of any agreements needed to access and implement the project and plans for long-term operations and maintenance of the project (See Appendix K).\n\n Requirements & Project Need\n\n 1. How many youth will be served by the project funded with the grant and across what time period?\n\n 2. How will youth be recruited to participate in the project? Describe the low-income communities and/or households to which at least 80% of the youth participants will belong.\n\n 3. How will applicant ensure that at least 80% of youth served through the project live within a low-income household and/or community?\n\n 4. Describe the underserved communities of color and/or vulnerable populations to which at least 80% of youth participants will belong.\n\n 5. How will applicant ensure that at least 80% of the youth to be served are members of underserved communities of color and/or vulnerable populations? (If funded, documentation must be available upon request and for audit purposes.)\n\n 96. Provide specific examples of natural and/or cultural resources youth will access because of the project.\n\n 7. Describe how the project addresses a critical need of the youth to be served.\n\n 8. What steps will be taken to address youth safety, well-being, and comfort throughout the project?\n\n 9. Describe the specific training staff receive in areas such as safety, risk management, cultural competency, trauma informed practices, etc.\n\n 10. Describe any existing ADA accessibility accommodations available to participating youth and/or planned accommodations to be created by the proposed project.\n\n Funding Priorities\n\n 11."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2491558,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Project Proposals are reviewed and evaluated. Incomplete or ineligible Project Proposals may be removed from the competitive process.\n\n Step Two • Teleconference visits are conducted for the most competitive projects. Applicants\n\n may be required to provide additional documentation prior to or after a teleconference visit.\n\n Step Three • Applicants selected to further compete will submit additional documentation.\n\n • Documentation is evaluated, with the most competitive projects being recommended for funding.\n\n Once Step 3 evaluations have been completed, funding recommendations are submitted to the California Secretary for Natural Resources. Upon approval by the Secretary, grant awards are announced.\n\n All information contained in the Project Proposal and supporting documentation is confidential until grant awards are announced.\n\n The State reserves the right to reject any Project Proposal from an applicant who is in violation of law or policy at any other public agency. Potential violations include, but are not limited to, being in default of performance requirements in other contracts or grant agreements issued by the State, being engaged in or suspected of criminal conduct that poorly reflects or brings discredit to the State or failing to have all required licenses necessary to carry out the project.\n\n The State further reserves the right to reject any proposal from an applicant who has a history of performance issues with past grants or other agreements with any public entity.\n\n Tribal Outreach and Consultation\n\n For projects that affect California Native American tribal communities, Grantees will be required to show early, often, and meaningful outreach and attempt to collaborate with local California Native American tribes through the implementation of their project.\n\n Meaningful outreach includes, but is not limited to, writing letters and emails, and following with phone calls updating the tribe throughout the development, implementation, and completion of the project, inviting tribal leadership to attend\n\n 6planning meetings, and meeting with local tribal government-led consortiums or other inter-tribal governmental organizations. Collaborating with local California Native American tribes can include developing the project with tribal leadership, ensuring the project provides benefits to the local tribe and its membership, and providing contracting opportunities to local tribes and their members where appropriate.\n\n Conflict of Interest\n\n All applicants and individuals who participate in the review of submitted Project Proposals are subject to state and federal conflict-of-interest laws. Any individual who has participated in planning or setting priorities for a specific solicitation over and above the public comment process or who will participate in any part of the grant development and negotiation process on behalf of the public is ineligible to receive funds or personally benefit from funds through that solicitation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2290001,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AeLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposal Form Signature Page – The signature page of the completed Project Proposal Form should be electronically signed (See Appendix B). In the alternative to electronic signature, the page may be printed, signed, and then scanned. This form should signed by the same Authorized Representative to be identified in the resolution or certification letter. (See Appendix G or Appendix H).\n\n 2. Project Proposal Questions Form – The Project Proposal Questions Form contains the project proposal questions and a space for responses. The form can be downloaded from RAPTR and is available on the program webpage.\n\n 3. Low-Income Community Documentation – Provide evidence the project meets the low-income community eligibility requirement. Submit at least one of the following:\n\n a. Color-coded map from State Parks Outdoor Equity Program Community Fact Finder demonstrating the project meets the low-income requirement.\n\n See https://www.parksforcalifornia.org/outdoorequity/\n\n b. Color-coded map from Department of Water Resources Mapping tool demonstrating project meets the low-income requirement.\n\n See https://gis.water.ca.gov/app/dacs/\n\n c. For those populations (e.g., foster or homeless youth) that may not be identifiable on the above tools, submit evidence demonstrating youth participants will meet the low-income requirement.\n\n 4. Cost Estimate – Provide a cost estimate reflecting all costs associated with the project. Identify costs to be funded by the grant and costs covered by other funding sources in separate columns. Where possible, the cost of project elements funded by the grant should not be split between the grant and other funding sources. (See Appendix D for a sample format).\n\n 5. Nonprofit Questionnaire – Nonprofit applicants provide a completed questionnaire. (See Appendix F).\n\n 6. Supporting Documentation – Submit up to eight pages of documentation that helps illustrate and support the proposed project, such as, but not limited to, brochures, curriculum samples, draft workplans, logic models, sample formats, modules, photographs of program or current site conditions for development (e.g., construction projects) marketing materials, or other relevant documentation.\n\n 12\n\n \n\n \n  https://www.parksforcalifornia.org/outdoorequity/\n \n\n \n  https://gis.water.ca.gov/app/dacs/Development Projects (see Appendix O for definition) should include the following additional documents:\n\n 7. Site Plan – Submit a drawing or schematic of the proposed changes to land or structures to support youth access to natural or cultural resources that clearly delineates exterior project boundaries and the location of proposed improvements described in the proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2198439,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 18,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   }
+  ]
+ },
+ "cc5173f16b1e4835": {
+  "query": "Youth Community Access timeline key dates",
+  "filter": "95287bfdbf7c84ca",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "YOUTH COMMUNITY ACCESS GRANT PROGRAM GUIDELINES\n\n STATE OF CALIFORNIA NATURAL RESOURCES AGENCY\n\n JUNE 2024(page intentionally left blank)TECHNICAL ASSISTANCE WORKSHOPS\n\n The California Natural Resources Agency will conduct online technical assistance workshops. A list of workshop dates and times can be found on the California Natural Resources Agency website at https://resources.ca.gov/grants/youth.\n\n These Guidelines include information to assist applicants in applying for funding. Please read them in their entirety for important information on project eligibility, evaluation criteria, and submission requirements.\n\n For general project evaluation process questions, contact the California Natural Resources Agency at:\n\n Phone: (916) 653-2812 Email: bondsandgrants@resources.ca.gov Website: www.resources.ca.gov/grants\n\n i\n\n \n\n \n  https://resources.ca.gov/grants/youth\n \n\n \n  mailto:bondsandgrants@resources.ca.gov\n \n\n \n  http://www.resources.ca.gov/grants\n \n\n \n  www.resources.ca.gov/grants\n \n\n \n  mailto:bondsandgrants@resources.ca.gov\n \n\n \n  https://resources.ca.gov/grants/youthHOW TO SUBMIT\n\n This grant program consists of a progressive, three-step evaluation process:\n\n 1) Project Proposal 2) Teleconference Visit 3) Supporting Documents\n\n All documents are submitted using the California Natural Resource Agency’s Project Tracking and Reporting (RAPTR) system, which can be found at https://raptr.resources.ca.gov.\n\n To access RAPTR, applicants must create a user account."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4320403,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AcbVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposition 64 created the Youth Education, Prevention, Early Intervention and Treatment Account (YEPEITA) into which the State Controller deposits 60 percent (60%) of the tax revenues from marijuana sales for youth programs designed to educate about and prevent substance use disorders and to prevent harm from substance use. These programs emphasize accurate education, effective prevention, early intervention, school retention, and timely treatment services for youth, their families, and caregivers.\n\n YEPEITA funds appropriated to the California Natural Resources Agency (the State) are to be used for competitive grants to support youth access to natural or cultural resources with a focus on low-income and disadvantaged communities. The grants may include, but are not limited to, community education and recreational amenities to support youth substance use prevention and early intervention. To meet this mandate, the State created the Youth Community Access Grant Program.\n\n The Youth Community Access Grant Program is a competitive program to award grants to communities disproportionately affected by past federal and state drug policies, also known as the War on Drugs, as well as other underserved communities. The War on Drugs disproportionately impacted communities of color, particularly low-income communities. Harsh federal and state drug policies enacted during the War on Drugs led to mass incarceration of people of color, decreased access to social services, loss of educational attainment due to diminished federal financial aid eligibility, prohibitions on the use of public assistance, and the separation of families. The Youth Community Access Grant Program aims to be a resource to address and repair the multi-generational community impacts of the War on Drugs.\n\n Funding Allocation\n\n Approximately $18.5 million is available for Youth Community Access projects.\n\n Grant Amounts\n\n The maximum award for an individual project is $500,000. The minimum award is $25,000.\n\n Eligible Applicants\n\n Eligible applicants include local, state, and federal agencies; nonprofit organizations; and federally recognized Native American tribes.\n\n Nonprofit organizations are defined as any nonprofit public benefit corporation that is formed pursuant to the Nonprofit Corporation Law (commencing with Section 5000 of\n\n 1the Corporations Code), incorporated for a minimum of two years, qualified to do business in California, and qualified as a tax-exempt 501(c)(3) organization under the US Internal Revenue Code. In addition, all nonprofit organizations must be active with the California Secretary of State and current with the registration and reporting requirements of the California Department of Justice, Office of the Attorney General Registry of Charities and Fundraisers."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.399442,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Youth-led outdoor skills workshops and classes for younger youth\n\n • Camp excursions that combine outdoor fun with support group activities for at-risk youth\n\n • Field trips to local, state, or national parks and outdoor areas in California and provide opportunities for hiking, birdwatching, environmental education, etc.\n\n • Acquire a clean vehicle to take youth hiking, camping, to archeological sites, etc.\n\n • Acquire a clean vehicle to take youth on eligible outdoor excursions along with educational programming to support/enhance the excursions\n\n • Youth interns, with adult guidance, design, and construct trailheads in a low-income community for use by youth and their families\n\n 4• Farming program to educate and provide job training in an outdoor environment with programming that addresses healthy choices\n\n • Educational programs that combine classroom instruction with excursions to access natural and/or cultural resources\n\n • Programs that teach youth about their history, culture, and language with trips to various culturally important sites in California to enhance the teachings\n\n • Workforce development programs that integrate new environments, healthy choices, and skills to advance careers relating to natural or cultural resources\n\n • ADA improvements to increase youth accessibility to natural and/or cultural resources\n\n Ineligible Project Examples\n\n The list below provides examples of projects and/or project components that are not eligible under the Youth Community Access Grant Program. This is not an exhaustive list.\n\n • Projects that do not directly support access to natural or cultural resources (e.g., indoor-only projects)\n\n • Acquisitions of non-eco-friendly or clean vehicles (as defined in Appendix O)\n\n • Acquisitions of eco-friendly or clean vehicles that are not primarily dedicated to transporting youth on excursions to natural or cultural resources\n\n • Educational or workforce development programs that do not include access to natural or cultural resources\n\n • Project Proposals that include more than one project (however, more than one Project Proposal can be submitted by an applicant)\n\n • Development Projects contingent on a future land acquisition for project implementation\n\n • Cash reserves, endowments, or fundraising activities\n\n • Payment of a debt or mortgage\n\n • Projects that do not serve youth\n\n • Projects where applicant intends to subgrant or regrant to another entity to implement the project\n\n 5SELECTION PROCESS\n\n Step One • Applicants submit Project Proposals though the Resources Agency’s Project Tracking\n\n and Reporting (RAPTR) system. No hardcopy Project Proposals are required"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3935524,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ad7VXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "K: SITE CONTROL/LAND TENURE REQUIREMENTS\n\n The State recognizes that specific activities on the project property may change over time; however, all uses on the property must remain compatible with the Youth Community Access Grant Program, in accordance with the following requirements:\n\n Development Projects (see definition in Appendix O) Grantee shall maintain and operate the property developed pursuant to this grant for a period of:\n\n • At least 10 years for grants up to $500,000\n\n Grantee shall not use or allow the use of any portion of the real property for mitigation (i.e., to compensate for adverse changes to the environment elsewhere) without written permission of the State."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3694962,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 44,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Timeline – Provide an estimated timeline for major project milestones.\n\n 4. Assurance Statement – Provide a statement signed by the applicant’s Authorized Representative attesting that if the project is awarded funding, at least 80 percent or more of youth participants will be from low-income communities or households based on median household income or free and reduced-price meals requirements, and from underserved communities of color or vulnerable populations as defined in the program guidelines. If the project includes a vehicle acquisition, provide a statement signed by the applicant’s Authorized Representative attesting that the clean vehicle will be used only for the intent of the project until completion.\n\n 15\n\n \n\n \n  http://resources.ca.gov/grants/youth/\n \n\n \n  https://apps.irs.gov/app/eos/\n \n\n \n  https://bizfileonline.sos.ca.gov/search/business\n \n\n \n  https://rct.doj.ca.gov/Verification/Web/Search.aspx?facility=Y5."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3148048,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AgrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 21,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Describe any youth leadership opportunities during project development and/or implementation. Provide information pertaining to any distinct youth participant roles that may be applicable (e.g., interns, youth advisory committee, etc.).\n\n 12. Of the total number of youth participants, how many will be given leadership opportunities during project development or implementation? If distinct roles are applicable, how many youth are anticipated for each role?\n\n 13. What skills and knowledge will youth gain because of the project?\n\n 14. Describe lasting impacts of the project and how project experiences will continue to influence youth participants after the project concludes.\n\n 15. Describe any youth participation in public awareness/outreach campaigns before and/or after project completion.\n\n 16. Explain how the project encourages and empowers youth to make healthy choices during and beyond the project.\n\n Project Readiness\n\n 17. Describe the immediate steps to be taken post-grant award and timeline for implementation and completion of each.\n\n 18. Explain how the applicant will fill any funding gaps to complete the project.\n\n 19. If the project requires hiring of staff, explain the timeline for hiring and the specific role(s) the new staff will perform for the grant-funded project.\n\n 20. If applicable, provide the status of communications about the project with entities (e.g., schools, nonprofit organizations, foster system, etc.) from which youth will be recruited.\n\n 1021. If a Development Project (see Appendix O for definition), will the project trigger any permits and/or environmental reviews? If so, provide the status and/or anticipated timeline of applicable compliance measures (See Appendix J).\n\n Organizational Capacity & Collaboration\n\n 22. Describe the applicant’s ability and experience with fundraising (e.g., grants, donations, etc.).\n\n 23. Describe the applicant’s experience in completing similar projects.\n\n 24. Describe the applicant’s fiscal capacity to carry out the proposed project.\n\n 25. What is the applicant’s primary source of revenue? Describe any partnerships with other entities and their roles in the project.\n\n 26. If funded, what documentation will applicant use to demonstrate that the project was successful—i.e., met expected outcomes and benefitted the intended audience?\n\n Additional Project Characteristics\n\n 27. Describe other project characteristics not previously discussed that would assist in evaluating the proposal. (No response or an answer of “Not Applicable” will be given a score of zero).\n\n End of Project Questions\n\n 11REQUIRED DOCUMENTATION FOR PROJECT PROPOSAL\n\n The following documents must be uploaded into RAPTR as part of the Project Proposal:\n\n 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3145517,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfbVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Do not leave blank fields. Once completed, upload the questions, as an attachment, into RAPTR.\n\n 23\n\n \n\n \n  https://resources.ca.gov/grants/youthAPPENDIX D: COST ESTIMATE\n\n In preparing a cost estimate for the project, applicants should comply with the following:\n\n 1. All project elements should be detailed and customized to fit the project.\n\n 2. Each element should be clearly described in the project narrative.\n\n 3. Where possible, the cost of project elements funded by the Youth Community Access Grant should not be split between the grant and other funding sources.\n\n 4. Grantee’s staff labor must be computed on actual time spent on the project and evidenced by time and attendance records describing the work performed. Only salary plus benefits are eligible."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3000838,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AibVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 29,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   }
+  ]
+ },
+ "d169673c4a6d9915": {
+  "query": "maximum award amount per grant",
+  "filter": "1561cdbcf9305d6a",
+  "retrievalResults": []
+ },
+ "ef6d602d24037ef4": {
+  "query": "available funding total amount this solicitation",
+  "filter": "95287bfdbf7c84ca",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Do not leave blank fields. Once completed, upload the questions, as an attachment, into RAPTR.\n\n 23\n\n \n\n \n  https://resources.ca.gov/grants/youthAPPENDIX D: COST ESTIMATE\n\n In preparing a cost estimate for the project, applicants should comply with the following:\n\n 1. All project elements should be detailed and customized to fit the project.\n\n 2. Each element should be clearly described in the project narrative.\n\n 3. Where possible, the cost of project elements funded by the Youth Community Access Grant should not be split between the grant and other funding sources.\n\n 4. Grantee’s staff labor must be computed on actual time spent on the project and evidenced by time and attendance records describing the work performed. Only salary plus benefits are eligible."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2532731,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AibVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 29,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Project Proposals are reviewed and evaluated. Incomplete or ineligible Project Proposals may be removed from the competitive process.\n\n Step Two • Teleconference visits are conducted for the most competitive projects. Applicants\n\n may be required to provide additional documentation prior to or after a teleconference visit.\n\n Step Three • Applicants selected to further compete will submit additional documentation.\n\n • Documentation is evaluated, with the most competitive projects being recommended for funding.\n\n Once Step 3 evaluations have been completed, funding recommendations are submitted to the California Secretary for Natural Resources. Upon approval by the Secretary, grant awards are announced.\n\n All information contained in the Project Proposal and supporting documentation is confidential until grant awards are announced.\n\n The State reserves the right to reject any Project Proposal from an applicant who is in violation of law or policy at any other public agency. Potential violations include, but are not limited to, being in default of performance requirements in other contracts or grant agreements issued by the State, being engaged in or suspected of criminal conduct that poorly reflects or brings discredit to the State or failing to have all required licenses necessary to carry out the project.\n\n The State further reserves the right to reject any proposal from an applicant who has a history of performance issues with past grants or other agreements with any public entity.\n\n Tribal Outreach and Consultation\n\n For projects that affect California Native American tribal communities, Grantees will be required to show early, often, and meaningful outreach and attempt to collaborate with local California Native American tribes through the implementation of their project.\n\n Meaningful outreach includes, but is not limited to, writing letters and emails, and following with phone calls updating the tribe throughout the development, implementation, and completion of the project, inviting tribal leadership to attend\n\n 6planning meetings, and meeting with local tribal government-led consortiums or other inter-tribal governmental organizations. Collaborating with local California Native American tribes can include developing the project with tribal leadership, ensuring the project provides benefits to the local tribe and its membership, and providing contracting opportunities to local tribes and their members where appropriate.\n\n Conflict of Interest\n\n All applicants and individuals who participate in the review of submitted Project Proposals are subject to state and federal conflict-of-interest laws. Any individual who has participated in planning or setting priorities for a specific solicitation over and above the public comment process or who will participate in any part of the grant development and negotiation process on behalf of the public is ineligible to receive funds or personally benefit from funds through that solicitation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2428102,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AeLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "No indirect rates or overhead costs may be folded into the hourly rate. No billable rates may be used.\n\n 5. Youth Community Access Grant and Other Funding Source columns should sum to the Total Cost column.\n\n 6. Add/delete elements and funding sources as needed. Be sure all costs are eligible, within allowable limits, and all columns add up correctly.\n\n 7. Contingency costs can be no more than ten percent (10%) of the grant request.\n\n 8. Any indirect costs must be included as a separate line item in the budget and are limited to no more than 15% of total direct costs of the grant. (See Appendix E for further information on indirect cost requirements).\n\n 24• A customizable cost estimate template can be found at: http://resources.ca.gov/grants/youth/\n\n 25\n\n \n\n \n  http://resources.ca.gov/grants/youth/APPENDIX E: ELIGIBLE COSTS\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. Indirect costs are limited to 15% of the grant-funded project budget.\n\n Projects must comply with Labor Code section 1771.5. Therefore, cost estimates should include prevailing wages, as applicable. See Department of Industrial Relations’ Division of Labor Statistics and Research website at Director's General Prevailing Wage Determinations (ca.gov) for general prevailing wage determinations. For questions about prevailing wage, contact the Department Industrial Relations.\n\n All Projects\n\n 1. Direct Costs – Costs that are directly tied to the implementation of the project to be funded and incurred during the project performance period specified in the grant agreement. Direct costs may include materials, equipment, technical consultants, subcontractors, Grantee’s staff labor, and other eligible costs. Direct costs do not include general administrative costs and overhead nor do they include endowments for ongoing project maintenance.\n\n 2. Contingency – Up to ten percent (10%) of the grant may be budgeted for contingency costs. All contingency costs must be eligible per these guidelines. Contingency funds may not be used to increase the amount of funds that can be used for project management/non-construction (pre-implementation) work or indirect costs.\n\n 3. Contracted Services – The costs of contracted services may be reimbursed if invoices identify the specific project activities and include evidence of payment.\n\n 4."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2369301,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AirVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposal Form Signature Page – The signature page of the completed Project Proposal Form should be electronically signed (See Appendix B). In the alternative to electronic signature, the page may be printed, signed, and then scanned. This form should signed by the same Authorized Representative to be identified in the resolution or certification letter. (See Appendix G or Appendix H).\n\n 2. Project Proposal Questions Form – The Project Proposal Questions Form contains the project proposal questions and a space for responses. The form can be downloaded from RAPTR and is available on the program webpage.\n\n 3. Low-Income Community Documentation – Provide evidence the project meets the low-income community eligibility requirement. Submit at least one of the following:\n\n a. Color-coded map from State Parks Outdoor Equity Program Community Fact Finder demonstrating the project meets the low-income requirement.\n\n See https://www.parksforcalifornia.org/outdoorequity/\n\n b. Color-coded map from Department of Water Resources Mapping tool demonstrating project meets the low-income requirement.\n\n See https://gis.water.ca.gov/app/dacs/\n\n c. For those populations (e.g., foster or homeless youth) that may not be identifiable on the above tools, submit evidence demonstrating youth participants will meet the low-income requirement.\n\n 4. Cost Estimate – Provide a cost estimate reflecting all costs associated with the project. Identify costs to be funded by the grant and costs covered by other funding sources in separate columns. Where possible, the cost of project elements funded by the grant should not be split between the grant and other funding sources. (See Appendix D for a sample format).\n\n 5. Nonprofit Questionnaire – Nonprofit applicants provide a completed questionnaire. (See Appendix F).\n\n 6. Supporting Documentation – Submit up to eight pages of documentation that helps illustrate and support the proposed project, such as, but not limited to, brochures, curriculum samples, draft workplans, logic models, sample formats, modules, photographs of program or current site conditions for development (e.g., construction projects) marketing materials, or other relevant documentation.\n\n 12\n\n \n\n \n  https://www.parksforcalifornia.org/outdoorequity/\n \n\n \n  https://gis.water.ca.gov/app/dacs/Development Projects (see Appendix O for definition) should include the following additional documents:\n\n 7. Site Plan – Submit a drawing or schematic of the proposed changes to land or structures to support youth access to natural or cultural resources that clearly delineates exterior project boundaries and the location of proposed improvements described in the proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2315462,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 18,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If applicable, certify that the project will comply with any laws and regulations including, but not limited to, the California Environmental Quality Act (CEQA), legal requirements for building codes, health and safety codes, and disabled access laws, and that prior to commencement of construction all applicable permits will have been obtained; and\n\n 6. Appoint the (Title/Position of Authorized Representative (e.g., Executive Director, President, etc., not the individual’s name)), or designee, as agent to conduct all negotiations, execute and submit all documents including, but not limited to, applications, agreements, payment requests and so on, which may be necessary for the completion of the aforementioned project(s).\n\n 7. Contain the signature of the Director or Chief Executive Officer.\n\n 33APPENDIX I: SIGNAGE & RECOGNITION GUIDELINES\n\n Funding acknowledgement recognition must be included for all projects as follows:\n\n • Programming – The Grantee shall use the Youth Community Access logo and acknowledgement language on project announcements, social media, website, marketing materials, and news releases. Materials should include the logo and acknowledgement language, at a minimum, throughout the performance period of the Grant Agreement.\n\n • Clean Vehicle Acquisition – The Grantee shall install a vehicle decal/banner with the Youth Community Access logo and required acknowledgment language on each vehicle purchased prior to activating the vehicle for program use. Said decal/banner should remain in place for at least four (4) years from the date the vehicle was purchased.\n\n • Development – The Grantee shall install a sign with the Youth Community Access logo and required acknowledgement language at the project location. The sign should remain in place for at least (4) years from the date the project was completed.\n\n Vehicle decals/banners and development project signage should contain the language included with the logo as shown below. The applicant’s name may be added, as well as the names (and/or logos) of partner organizations, individuals, and elected representatives. The logo must measure a minimum of 12 inches in size.\n\n The logo is available at https://resources.ca.gov/grants/Grant-Program-Resources under Logo Artwork.\n\n 34\n\n \n\n \n  https://resources.ca.gov/grants/Grant-Program-ResourcesThe cost of the funding acknowledgment materials is an eligible project cost."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.229775,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AkrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 39,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicable sections left blank will receive zero for that section.\n\n STEP ONE: PROJECT PROPOSAL\n\n Applicants are required to submit an online Project Proposal in the Resource Agency’s Project Tracking and Reporting (RAPTR) system. Applicants should refer to the solicitation notice for due dates. No hard copy Project Proposals are required. Applicants proposing the most competitive eligible projects will be invited to compete in the next phase of the evaluation process, a teleconference visit. The most competitive projects receiving a teleconference visit will be invited to submit additional supporting documentation for further evaluation. Incomplete or noncompliant proposals may be eliminated from the competitive process.\n\n All Project Proposal submittals must include both responses to the project questions below and the required project proposal documentation (See Appendix A for submittal checklist).\n\n 8PROJECT QUESTIONS\n\n Applicants must answer the following questions. If a question does not apply to the project, indicate “Not Applicable” with a brief explanation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2265459,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AerVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Describe any youth leadership opportunities during project development and/or implementation. Provide information pertaining to any distinct youth participant roles that may be applicable (e.g., interns, youth advisory committee, etc.).\n\n 12. Of the total number of youth participants, how many will be given leadership opportunities during project development or implementation? If distinct roles are applicable, how many youth are anticipated for each role?\n\n 13. What skills and knowledge will youth gain because of the project?\n\n 14. Describe lasting impacts of the project and how project experiences will continue to influence youth participants after the project concludes.\n\n 15. Describe any youth participation in public awareness/outreach campaigns before and/or after project completion.\n\n 16. Explain how the project encourages and empowers youth to make healthy choices during and beyond the project.\n\n Project Readiness\n\n 17. Describe the immediate steps to be taken post-grant award and timeline for implementation and completion of each.\n\n 18. Explain how the applicant will fill any funding gaps to complete the project.\n\n 19. If the project requires hiring of staff, explain the timeline for hiring and the specific role(s) the new staff will perform for the grant-funded project.\n\n 20. If applicable, provide the status of communications about the project with entities (e.g., schools, nonprofit organizations, foster system, etc.) from which youth will be recruited.\n\n 1021. If a Development Project (see Appendix O for definition), will the project trigger any permits and/or environmental reviews? If so, provide the status and/or anticipated timeline of applicable compliance measures (See Appendix J).\n\n Organizational Capacity & Collaboration\n\n 22. Describe the applicant’s ability and experience with fundraising (e.g., grants, donations, etc.).\n\n 23. Describe the applicant’s experience in completing similar projects.\n\n 24. Describe the applicant’s fiscal capacity to carry out the proposed project.\n\n 25. What is the applicant’s primary source of revenue? Describe any partnerships with other entities and their roles in the project.\n\n 26. If funded, what documentation will applicant use to demonstrate that the project was successful—i.e., met expected outcomes and benefitted the intended audience?\n\n Additional Project Characteristics\n\n 27. Describe other project characteristics not previously discussed that would assist in evaluating the proposal. (No response or an answer of “Not Applicable” will be given a score of zero).\n\n End of Project Questions\n\n 11REQUIRED DOCUMENTATION FOR PROJECT PROPOSAL\n\n The following documents must be uploaded into RAPTR as part of the Project Proposal:\n\n 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2257016,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfbVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   }
+  ]
+ },
+ "f205897e5bb0d162": {
+  "query": "application submission deadline proposal due date",
+  "filter": "1561cdbcf9305d6a",
+  "retrievalResults": []
+ },
+ "f5cdf933743c8b01": {
+  "query": "grant awards will be up to $ minimum maximum grant request",
+  "filter": "95287bfdbf7c84ca",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other – Project-specific additional documentation may be requested.\n\n 7. Payee Data Record/Government Agency Taxpayer ID Form – Nonprofit applicants must provide a completed and signed STD 204 Payee Data Record form. Government Agency applicants must provide a completed and signed Government Agency Taxpayer ID Form. (See Appendix L for links to both forms).\n\n End of Step Three Information\n\n 16GRANT PROJECT ADMINSTRATION (POST GRANT AWARD)\n\n For projects awarded grant funding, the following is the general post-award administrative procedure:\n\n 1. Grantee attends grant management workshop which addresses project administration, including proper submission of payment requests and periodic reports.\n\n 2. State Grant Administrator works with Grantee to develop and execute a grant agreement.\n\n 3. Grantee commences initial planning work and submits periodic reimbursement requests for eligible costs (subject to retention).\n\n 4. Grantee submits evidence of funding recognition on program materials, acquired vehicles, and/or at a Development project site, as applicable.\n\n 5. Grantee notifies the State of public events related to the project.\n\n 6. Grantee commences project work/activities.\n\n 7. Grantee submits periodic progress reports.\n\n 8. Grantee completes project and submits project completion forms.\n\n 9. The State conducts final project inspection and/or reviews final report and approves final payment request(s).\n\n Changes to Approved Project\n\n Grantees seeking changes or amendments to an approved project must obtain the State’s approval. Changes in project scope must continue to meet the need cited in the original Project Proposal. Grantees jeopardize funding should changes be made without prior notice to and approval by the State.\n\n Eligible Costs\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible for reimbursement. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. (See Appendix E for further information on Eligible Costs). Indirect costs are limited to 15% of the grant-funded budget.\n\n Site Visits\n\n The State may make periodic visits to the project site, including a final inspection. The State will determine if the work is consistent with the approved project scope and ensure compliance with signage requirements.\n\n 17Payment of Grant Funds\n\n Funds will not be disbursed until there is a fully executed grant agreement between the State and the Grantee. For Development Projects (see Appendix O for definition) that require an environmental review, funds cannot be disbursed until the review is complete and evidence provided to the State."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3144844,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "No indirect rates or overhead costs may be folded into the hourly rate. No billable rates may be used.\n\n 5. Youth Community Access Grant and Other Funding Source columns should sum to the Total Cost column.\n\n 6. Add/delete elements and funding sources as needed. Be sure all costs are eligible, within allowable limits, and all columns add up correctly.\n\n 7. Contingency costs can be no more than ten percent (10%) of the grant request.\n\n 8. Any indirect costs must be included as a separate line item in the budget and are limited to no more than 15% of total direct costs of the grant. (See Appendix E for further information on indirect cost requirements).\n\n 24• A customizable cost estimate template can be found at: http://resources.ca.gov/grants/youth/\n\n 25\n\n \n\n \n  http://resources.ca.gov/grants/youth/APPENDIX E: ELIGIBLE COSTS\n\n Direct project-related costs incurred during the project performance period specified in the grant agreement are eligible. All eligible costs must be supported by appropriate documentation. Costs incurred outside of the project performance period are not eligible for reimbursement. Indirect costs are limited to 15% of the grant-funded project budget.\n\n Projects must comply with Labor Code section 1771.5. Therefore, cost estimates should include prevailing wages, as applicable. See Department of Industrial Relations’ Division of Labor Statistics and Research website at Director's General Prevailing Wage Determinations (ca.gov) for general prevailing wage determinations. For questions about prevailing wage, contact the Department Industrial Relations.\n\n All Projects\n\n 1. Direct Costs – Costs that are directly tied to the implementation of the project to be funded and incurred during the project performance period specified in the grant agreement. Direct costs may include materials, equipment, technical consultants, subcontractors, Grantee’s staff labor, and other eligible costs. Direct costs do not include general administrative costs and overhead nor do they include endowments for ongoing project maintenance.\n\n 2. Contingency – Up to ten percent (10%) of the grant may be budgeted for contingency costs. All contingency costs must be eligible per these guidelines. Contingency funds may not be used to increase the amount of funds that can be used for project management/non-construction (pre-implementation) work or indirect costs.\n\n 3. Contracted Services – The costs of contracted services may be reimbursed if invoices identify the specific project activities and include evidence of payment.\n\n 4."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3080589,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AirVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Ten percent (10%) of the amount requested for reimbursement may be retained and issued as a final payment upon completion.\n\n • Upon compelling need, advances up to twenty-five percent (25%) of the grant award at a time may be available. For vehicle acquisitions, higher advances may be approved. Advances must be reconciled at least quarterly.\n\n Loss of Funding\n\n The following are examples of actions that may result in a Grantee’s loss of funding. This is not an exhaustive list.\n\n 1. Grantee fails to execute a grant agreement.\n\n 2. Grantee changes the project scope without prior notice to and approval by the State.\n\n 3. Grantee fails to timely submit all required documentation.\n\n 4. Grantee fails to complete the project.\n\n 5. Grantee fails to provide project updates as requested.\n\n Project Reporting\n\n Grantee is required to keep the State informed of the project’s progress throughout the project performance period. Grantee must submit periodic status reports as requested by the Grant Administrator. (See Appendix M for periodic reporting template).\n\n Insurance Requirements\n\n Grantees shall maintain commercial general liability workers compensation and employer’s liability, and, if applicable, automobile liability insurance with minimum coverage limits of $1 million. Upon request, Grantees must provide evidence of compliance with insurance requirements.\n\n 18STATE AUDIT & ACCOUNTING REQUIREMENTS\n\n Audit Requirements\n\n Projects are subject to audit by the State annually and for three (3) years following the final payment of grant funds. If the project is selected for audit, Grantee will be contacted in advance. The audit shall include all books, papers, accounts, documents, or other records for Grantee as they relate to the project. All project expenditure documentation should be available for an audit, whether paid with grant funds or other funds.\n\n Grantee must have project records, including source documents and evidence of payment, readily available and must provide an employee with knowledge of the project to assist the auditor. Grantee must provide a copy of any document, paper, record, etc., requested by the auditor. Further, Grantees must include planning, monitoring, and reporting necessary to ensure successful implementation of the project objectives and have documentation available for State review upon request.\n\n Accounting Requirements\n\n Grantee must maintain an accounting system that:\n\n • Accurately reflects fiscal transactions, with necessary controls and safeguards.\n\n • Provides a good audit trail, including original source documents such as purchase orders, receipts, progress payments, invoices, employee paystubs, and timecards, evidence of payment, etc."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3074431,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhrVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Personnel or Employee Services – Costs for the services of Grantee's employees directly engaged in project execution must be computed according to Grantee's prevailing wage or salary scales and may include benefits such as vacation, sick leave, Social Security contributions, etc., that are customarily charged to grantee’s various projects, excluding overhead allocations.\n\n a. Costs charged to the project must be computed on actual time spent on the project and evidenced by time and attendance records describing the work as well as payroll records. Overtime costs may be allowed under Grantee’s established policy, provided the regular work time was devoted to the same project.\n\n b. Salaries and wages claimed for employees working on State grant-funded projects must not exceed Grantee's established rates for similar positions.\n\n 26\n\n \n\n \n  https://www.dir.ca.gov/OPRL/DPreWageDetermination.htm\n \n\n \n  https://www.dir.ca.gov/OPRL/DPreWageDetermination.htm5. Supplies and Materials – Supplies and materials may be purchased for a specific project or may be drawn from a central stock, providing they are claimed at a cost no higher than that paid by the Grantee.\n\n 6. Community Engagement – Costs of engaging community members through community meetings and events directly related to the project are eligible.\n\n 7. Indirect Costs – Indirect costs (also known as administrative costs, incidental costs, or overhead) are the costs of doing business that are not directly related to carrying out the grant-funded project but are necessary for the general operation of the grantee organization. Examples of indirect costs include rent, computers, telephones, office supplies, internet access, copy machines, electricity as well as functions such as janitorial, human resources, business services, information technology, etc. Certain types of indirect costs are not allowed including food and beverage, fundraising, lobbying, and entertainment. Any cost that is billed as a direct cost may NOT be included in indirect costs.\n\n Indirect costs should be included as a single line item in the project cost estimate and is charged as a percentage of the grant-funded project budget (i.e., the direct costs). The maximum indirect rate is 15 percent of direct costs. For example, if direct project costs total $260,870, the maximum indirect cost that could be budgeted is $39,130 (15% x $260,870). Together, the direct and indirect costs should equal the total grant award, which is $300,000 in this example ($260,870 + $39,130)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.267778,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ai7VXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 32,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Do not leave blank fields. Once completed, upload the questions, as an attachment, into RAPTR.\n\n 23\n\n \n\n \n  https://resources.ca.gov/grants/youthAPPENDIX D: COST ESTIMATE\n\n In preparing a cost estimate for the project, applicants should comply with the following:\n\n 1. All project elements should be detailed and customized to fit the project.\n\n 2. Each element should be clearly described in the project narrative.\n\n 3. Where possible, the cost of project elements funded by the Youth Community Access Grant should not be split between the grant and other funding sources.\n\n 4. Grantee’s staff labor must be computed on actual time spent on the project and evidenced by time and attendance records describing the work performed. Only salary plus benefits are eligible."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2460183,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AibVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 29,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Project Proposals are reviewed and evaluated. Incomplete or ineligible Project Proposals may be removed from the competitive process.\n\n Step Two • Teleconference visits are conducted for the most competitive projects. Applicants\n\n may be required to provide additional documentation prior to or after a teleconference visit.\n\n Step Three • Applicants selected to further compete will submit additional documentation.\n\n • Documentation is evaluated, with the most competitive projects being recommended for funding.\n\n Once Step 3 evaluations have been completed, funding recommendations are submitted to the California Secretary for Natural Resources. Upon approval by the Secretary, grant awards are announced.\n\n All information contained in the Project Proposal and supporting documentation is confidential until grant awards are announced.\n\n The State reserves the right to reject any Project Proposal from an applicant who is in violation of law or policy at any other public agency. Potential violations include, but are not limited to, being in default of performance requirements in other contracts or grant agreements issued by the State, being engaged in or suspected of criminal conduct that poorly reflects or brings discredit to the State or failing to have all required licenses necessary to carry out the project.\n\n The State further reserves the right to reject any proposal from an applicant who has a history of performance issues with past grants or other agreements with any public entity.\n\n Tribal Outreach and Consultation\n\n For projects that affect California Native American tribal communities, Grantees will be required to show early, often, and meaningful outreach and attempt to collaborate with local California Native American tribes through the implementation of their project.\n\n Meaningful outreach includes, but is not limited to, writing letters and emails, and following with phone calls updating the tribe throughout the development, implementation, and completion of the project, inviting tribal leadership to attend\n\n 6planning meetings, and meeting with local tribal government-led consortiums or other inter-tribal governmental organizations. Collaborating with local California Native American tribes can include developing the project with tribal leadership, ensuring the project provides benefits to the local tribe and its membership, and providing contracting opportunities to local tribes and their members where appropriate.\n\n Conflict of Interest\n\n All applicants and individuals who participate in the review of submitted Project Proposals are subject to state and federal conflict-of-interest laws. Any individual who has participated in planning or setting priorities for a specific solicitation over and above the public comment process or who will participate in any part of the grant development and negotiation process on behalf of the public is ineligible to receive funds or personally benefit from funds through that solicitation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2442864,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AeLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Be sure to address all parts of each question as succinctly as possible.\n\n The Project\n\n 1. Describe the discrete project the grant would fund. The information provided should include grant deliverables and support the cost estimate submitted with the proposal. (See Appendix O for a definition and examples of grant deliverables).\n\n The following project-specific information should be included in response to this question (as applicable):\n\n a. The approximate number of experiences with natural or cultural resources youth will have (e.g., field trips, days at camp), the length of the project funded by the grant, any cost for youth to participate, and percentage of classroom versus outdoor program time.\n\n b. A description of the clean vehicle to be acquired and how the vehicle will be used both during and after the grant period.\n\n c. For Development Projects (see Appendix O for definition): The percentage of the project footprint located within a low-income community, the owners of the property on which the project will take place, the status of any agreements needed to access and implement the project and plans for long-term operations and maintenance of the project (See Appendix K).\n\n Requirements & Project Need\n\n 1. How many youth will be served by the project funded with the grant and across what time period?\n\n 2. How will youth be recruited to participate in the project? Describe the low-income communities and/or households to which at least 80% of the youth participants will belong.\n\n 3. How will applicant ensure that at least 80% of youth served through the project live within a low-income household and/or community?\n\n 4. Describe the underserved communities of color and/or vulnerable populations to which at least 80% of youth participants will belong.\n\n 5. How will applicant ensure that at least 80% of the youth to be served are members of underserved communities of color and/or vulnerable populations? (If funded, documentation must be available upon request and for audit purposes.)\n\n 96. Provide specific examples of natural and/or cultural resources youth will access because of the project.\n\n 7. Describe how the project addresses a critical need of the youth to be served.\n\n 8. What steps will be taken to address youth safety, well-being, and comfort throughout the project?\n\n 9. Describe the specific training staff receive in areas such as safety, risk management, cultural competency, trauma informed practices, etc.\n\n 10. Describe any existing ADA accessibility accommodations available to participating youth and/or planned accommodations to be created by the proposed project.\n\n Funding Priorities\n\n 11."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2416905,
+    "metadata": {
+     "documentIdentifier": "R3 YCA Guidelines_FINAL",
+     "agency": "CNRA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfLVXYKEBbayybwJOBOms",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/R3 YCA Guidelines_FINAL/NOFO-File-PDF",
+     "nofoName": "R3 YCA Guidelines_FINAL",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:21:06.811Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Education"
+    }
+   }
+  ]
+ }
+}

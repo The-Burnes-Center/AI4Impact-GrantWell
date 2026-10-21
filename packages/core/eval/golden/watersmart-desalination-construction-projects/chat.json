@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the application due?",
+    "expected": "There are two submission periods: August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT), and the second and final period August 26, 2027, at 4:00 p.m. MDT. A completed feasibility study must first be submitted to Reclamation by June 26, 2026 (first period) or January 15, 2027 (second period).",
+    "quote": "The first application submission period due date is August 26, 2026, at 4:00 p.m. Mountain",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who can apply?",
+    "expected": "States, departments or subdivisions of a State, and public agencies organized under State law (e.g., Tribes, municipalities, irrigation, water or wastewater districts) located in one of 17 western states; Federal entities, foreign entities, individuals, and institutes of higher education are not eligible.",
+    "quote": "Applicants eligible to receive funding under this NOFO include States, departments of a State,",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Can the grant pay for solar panels to power the desal plant?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

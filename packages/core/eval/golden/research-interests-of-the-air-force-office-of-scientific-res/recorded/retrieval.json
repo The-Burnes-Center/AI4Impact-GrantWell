@@ -1,0 +1,1244 @@
+{
+ "23dbd7af7f3a1cce": {
+  "query": "eligible organizations institutions of higher education nonprofit for-profit",
+  "filter": "549479224af01e3f",
+  "retrievalResults": []
+ },
+ "3c899d0ece1a62fc": {
+  "query": "application submission deadline",
+  "filter": "08b6e229e2b75203",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "SUBMISSION DATES AND TIMES\n\n E.1. PROPOSAL SUBMISSION\n\n This announcement remains open until superseded. We review and evaluate proposals as\n\n they are received. You may submit proposals at any time; however, some specific topic\n\n instructions may recommend submission by specific dates that align with funding expectations.\n\n Funding is limited.\n\n E.1.a. How Proposal Submission Time is Determined\n\n We use the system-generated Grants.gov time stamp to determine when you submitted\n\n your successfully validated proposal and the announcement your submission was\n\n associated with. Grants.gov policies and procedures for application submission and\n\n processing apply. We will only accept applications submitted electronically through\n\n Grants.gov.\n\n E.1.b. Grants.gov Tracking Number is Application Receipt\n\n Grants.gov generates a confirmation page when you submit your application. A second\n\n confirmation is provided by email when your application has passed Grants.gov\n\n validations and the status is updated from received to validated. The confirmation page\n\n includes a system-generated Grants.gov tracking number; this serves as your receipt. You\n\n should keep a copy of all confirmations.\n\n You can verify the submission time and application status with your tracking number\n\n through Grants.gov at Track My Application | Grants.gov\n\n E.1.c. Effect of Superseding Announcement\n\n This announcement is open until superseded. We generally allow approximately thirty\n\n (30) days for you to submit a proposal started under the announcement that is superseded\n\n before we close the previous announcement.\n\n Grants.gov will not accept your proposal after we close a superseded announcement.\n\n E.1.d. INTERGOVERNMENTAL REVIEW\n\n N/A - This program is excluded from coverage under Executive Order (E.O.) 12372.\n\n E.2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4245565,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdbVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 86,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "These fields are\n\n mandatory fields that must be completed to successfully submit your\n\n application"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3169858,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AZLVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 75,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "ADDRESS TO REQUEST APPLICATION PACKAGE ............................................................ 69\n\n D.2. APPLICATION CONTENTS ........................................................................................................ 70\n\n D.3. GRANTS.GOV APPLICATION SUBMISSION ......................................................................... 73\n\n D.4. COMPONENT PIECES OF THE APPLICATION……………………………………………..76\n\n D.5. INFORMATION YOU MUST SUBMIT IF SELECTED FOR POSSIBLE AWARD ............... 84\n\n D.6. UNIQUE ENTITY IDENTIFIER (UEI), CAGE, AND SYSTEM FOR AWARD MANAGEMENT (SAM)\n\n …………………………………………………………………………………………………...…85\n\n E. SUBMISSION DATES AND TIMES ..................................................................................................... 86\n\n E.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3159406,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7bVeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Complete SF-424 Fields First: The forms are designed to fill in common\n\n required fields across other forms, such as the applicant name, address,\n\n and UEI number. To trigger this feature, an applicant must complete the\n\n SF-424 information first. Once it is completed, the information will\n\n transfer to the other forms. Note: The applicant name is the Entity\n\n that is registered with SAM.gov.\n\n \n\n \n  https://grants.gov/applicants/applicant-registration/track-profile-role-status\n \n\n \n  https://grants.gov/system-to-system/applicant-system-to-system/web-services/submit-application\n \n\n \n  https://grants.gov/applicants/adobe-software-compatibility\n \n\n \n  https://grants.gov/applicants/adobe-software-compatibility76\n\n (3) Submit a Workspace\n\n An application may be submitted through workspace by clicking the Sign\n\n and Submit button on the Manage Workspace page, under the Forms tab.\n\n Grants.gov recommends submitting your application package at least 24-48\n\n hours prior to the close date to provide you with time to correct any\n\n potential technical issues that may disrupt the application submission.\n\n (4) Track a Workspace\n\n After successfully submitting a workspace package, a Grants.gov Tracking\n\n Number (GRANTXXXXXXXX) is automatically assigned to the package.\n\n The number will be listed on the Confirmation page that is generated after\n\n submission.\n\n For additional training resources, including video tutorials, refer to:\n\n Applicant Training | Grants.gov\n\n Applicant Support: Grants.gov provides applicants 24/7 support via the\n\n toll-free number 1- 800-518-4726 and email at support@grants.gov. For\n\n questions related to the specific grant opportunity, contact the number\n\n listed in the application package of the grant you are applying for.\n\n If you are experiencing difficulties with your submission, it is best to call\n\n the Grants.gov Support Center and get a ticket number. The Support Center\n\n ticket number will assist the administering agency with tracking your issue\n\n and understanding background information on the issue.\n\n D.4."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2805471,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AZbVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 75,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "You are encouraged to contact our Program Officer prior to developing a full proposal to briefly54\n\n discuss the current state-of-the-art, how your research would advance it, the approximate cost\n\n for a three (3) to five (5) year effort, and if there are any specific submission target dates.\n\n \n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2650462,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3APLVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 53,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposers are highly encouraged to contact the Program\n\n Officer via email prior to developing a full proposal to discuss the current state of the\n\n art in their area of interest, how the proposed research would advance it, the\n\n approximate cost for a three (3) year effort, and if there are any specific submission\n\n target dates.\n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2560148,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A9rVeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "http://www.nsf.gov/bfa/dias/policy/rppr/index.jsp\n \n\n \n  http://www.dtic.mil/whs/directives/forms/eforms/dd0882.pdf.\n \n\n \n  https://www.esd.whs.mil/Portals/54/Documents/DD/forms/dd/dd0882.pdf\n \n\n \n  https://www.gsa.gov/forms-library/federal-financial-report\n \n\n \n  https://piee.eb.mil/\n \n\n \n  https://piee.eb.mil/99\n\n If you have WAWF or iRAPT questions or problems, you can get help by telephone at\n\n (866) 618-5988, or the website\n\n https://piee.eb.mil/xhtml/unauth/web/homepage/vendorCustomerSupport.xhtml.\n\n H.2.e. Other Reports\n\n Our Program Officers may ask for informal technical reports as needed. We use these\n\n informal reports for program purposes, such as preparation for meetings and other\n\n technical purposes. We highly recommend you provide this information in a timely\n\n manner by electronic mail directly to the Program Officer.\n\n H.2.f. Electronic Submission of Reports\n\n You must plan on submitting reports electronically. You must submit most reports\n\n through the internet application detailed in the grant award document. Some\n\n reports must be sent using electronic mail. Our award documents provide specific\n\n instructions that you must follow.\n\n Note that the guidance and instructions for submitting technical reports will change\n\n in October of 2025. This is due to a new PI portal coming on-line. At that time, we\n\n will disseminate instructions detailing how to create a portal account and submit\n\n reports. which will require a login.gov account. For those who are unable to create\n\n a login.gov account, a backup method will be available. More information will be\n\n provided at a later date."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2528213,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aj7VeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 98,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "43961a1960f9109f": {
+  "query": "proposal page limit",
+  "filter": "08b6e229e2b75203",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Equipment\n\n 12. Other Attachments\n\n R&R Senior / Key Person Profile Form\n\n (Expanded) for all Covered Individuals\n\n Biographical Sketch\n\n Current & Pending\n\n Support\n\n Collaborators and Other\n\n Affiliations\n\n Training Certification(s)\n\n Compliance Attestation\n\n Privacy Act Disclosure\n\n Form (See Appendix 2)\n\n R&R Personal Data Form\n\n None\n\n R&R Budget Form\n\n Budget Justification\n\n R&R Subaward Budget Attachments\n\n Form\n\n Subaward Budget\n\n R&R Project / Performance Site\n\n Locations Form\n\n None\n\n The SF 424 (R&R) must include the signature of an authorized representative from your\n\n organization. The signature is affixed electronically by Grants.gov upon submission.\n\n You are still required to submit any documentation, including disclosure of any unpaid\n\n delinquent tax liability or a felony conviction under any Federal law (see FAR 52.209-\n\n 11).\n\n This signature is considered the signature for the application as a whole.\n\n D.2.c. Proposal Format\n\n i. Paper Size – 8.5 x 11-inch paper\n\n ii. Margins – 1 inch\n\n \n\n \n  http://www.grants.gov/72\n\n iii. Spacing – Single, 1.5, or 2.0-line spacing\n\n iv. Font – Times New Roman or Garamond, 10, 11, or 12point\n\n v. Page Limitation – None. However, unnecessarily elaborate or lengthy\n\n proposals are not desirable\n\n vi. Attachments – Electronic Portable Document Format (PDF)\n\n vii. Content – As described below\n\n D.2.d. Proposal Length\n\n We do not limit the length of your proposal for this competition; however, you must not\n\n include elaborate brochures, reprints, or presentations beyond those sufficient to present\n\n a complete and effective proposal.\n\n D.2.e. Marking Requirements for Confidential or Proprietary Information\n\n You must mark your proposal and any proposal sections that contain proprietary or\n\n confidential information. You must use the protective legend found at FAR 52.215- 1(e)\n\n Instructions to Offerors -- Competitive Acquisition (Nov 2021) modified to permit release\n\n to our outside evaluators.\n\n We make every effort to protect the confidentiality of proposals, including any proposal\n\n evaluations; however, under Freedom of Information Act (FOIA) requirements, some or\n\n all proposal information may be subject to release."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3687258,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AX7VeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 71,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposals spanning up to five (5) years that require collaborative,\n\n multidisciplinary teams with the goal of significantly advancing knowledge in one of the\n\n key program areas are highly encouraged. All proposals must be hypothesis-driven basic\n\n science focusing on filling fundamental knowledge gaps that prohibit the realization of\n\n nature-inspired materials. Proposals focused on medical applications, use-cases, or needs\n\n (e.g., diagnostic, therapeutic, pharmaceutical) will not be considered.\n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.328599,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ANbVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 49,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Pre-proposal Inquiries and Questions\n\n If you need help with technical matters, you should email the individual listed for your\n\n topic of interest in section A. Program Description. We provide a list of all the programs\n\n and Program Officers listed in this announcement again in section I.1. Technical Inquires\n\n and Questions.\n\n If you have general questions about this announcement or administrative matters, you\n\n must submit your question in writing by email to the contact listed in section I.2.General\n\n Inquiries and Questions.\n\n The Program Officer does not have the authority to make commitments for us. Grants\n\n and Contracting Officers acting within their warranted capacity are the only people\n\n authorized to make commitments for the Government.\n\n D.2.b. The Application as a Whole\n\n You must submit your proposal electronically through Grants.gov. We will not accept or\n\n evaluate any proposal submitted by any means other than through Grants.gov.\n\n You must use the electronic Standard Form (SF) 424 Research and Related (R&R) Form\n\n Family, OMB Number 4040-0001. The SF 424 (R&R) Application for Federal assistance\n\n form must be your cover page. No pages may precede the SF 424 (R&R).\n\n You may submit a proposal for one or more topics, or for a specific portion of a topic.\n\n You may submit different proposals on any number of topics, or different proposals on the\n\n same topic. We may not make awards in every topic area.\n\n You must mark your application with the announcement number.\n\n A summary of what is required for a complete proposal is summarized below:\n\n • We require the forms and attachments in bold text with all applications\n\n • Some applications require the attachments in italics\n\n • We provide more instructions in D.4. Component Pieces of the Application\n\n \n\n \n\n R&R FORM, OMB No. 4040-0001 FIELD ATTACHMENT\n\n SF 424 (R&R) Application for Federal\n\n Assistance, including an authorized\n\n signature\n\n 18. If applicable, SF- LLL\n\n Disclosure of Lobbying\n\n Activities Per instructions\n\n in G.2.a.\n\n R&R Other Project Information Form 7."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3070507,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXbVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 70,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "SUBMISSION DATES AND TIMES\n\n E.1. PROPOSAL SUBMISSION\n\n This announcement remains open until superseded. We review and evaluate proposals as\n\n they are received. You may submit proposals at any time; however, some specific topic\n\n instructions may recommend submission by specific dates that align with funding expectations.\n\n Funding is limited.\n\n E.1.a. How Proposal Submission Time is Determined\n\n We use the system-generated Grants.gov time stamp to determine when you submitted\n\n your successfully validated proposal and the announcement your submission was\n\n associated with. Grants.gov policies and procedures for application submission and\n\n processing apply. We will only accept applications submitted electronically through\n\n Grants.gov.\n\n E.1.b. Grants.gov Tracking Number is Application Receipt\n\n Grants.gov generates a confirmation page when you submit your application. A second\n\n confirmation is provided by email when your application has passed Grants.gov\n\n validations and the status is updated from received to validated. The confirmation page\n\n includes a system-generated Grants.gov tracking number; this serves as your receipt. You\n\n should keep a copy of all confirmations.\n\n You can verify the submission time and application status with your tracking number\n\n through Grants.gov at Track My Application | Grants.gov\n\n E.1.c. Effect of Superseding Announcement\n\n This announcement is open until superseded. We generally allow approximately thirty\n\n (30) days for you to submit a proposal started under the announcement that is superseded\n\n before we close the previous announcement.\n\n Grants.gov will not accept your proposal after we close a superseded announcement.\n\n E.1.d. INTERGOVERNMENTAL REVIEW\n\n N/A - This program is excluded from coverage under Executive Order (E.O.) 12372.\n\n E.2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3070104,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdbVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 86,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Research ideas are particularly encouraged that address long-standing or unanswered\n\n organic-based materials chemistry challenges that will have significant impact on\n\n advancing basic understanding behind property creation and control if successful.\n\n You are highly encouraged to contact the Program Officer prior to developing a full\n\n proposal to understand any specific submission target dates and to submit one or more\n\n idea paragraphs (3-5 sentences plus a title and descriptive figure) that describe the\n\n essence of the idea and the fundamental science to be investigated. Alternatively, one\n\n two-page (maximum) white paper pre-proposal can be submitted that includes the\n\n objective and approach of the proposed effort, research aims with the current state-of-45\n\n the-art, a brief rationale why the approach can achieve the goals, the anticipated\n\n outcomes if the research is successful; a third page can contain two or three (3) key\n\n references and a one sentence budget detailing the approximate yearly cost for a three\n\n (3) to five (5) year effort.\n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3030376,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALLVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 44,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposers are highly encouraged to contact the Program\n\n Officer via email prior to developing a full proposal to discuss the current state of the\n\n art in their area of interest, how the proposed research would advance it, the\n\n approximate cost for a three (3) year effort, and if there are any specific submission\n\n target dates.\n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2955694,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A9rVeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Your entire proposal, or any portions thereof, without protective markings or otherwise\n\n identified as requiring protection will be considered voluntarily furnished to us without\n\n restriction and will be treated as such for all purposes.\n\n D.2.f. Use of Generative Artificial Intelligence (GenAI) Tools\n\n While the use of GenAI Tools is not prohibited, AFOSR strongly encourages disclosure the\n\n use of such tools in your proposal.\n\n \n\n Any use of GenAI tools is at your own risk, and you are responsible for ensuring the use of\n\n GenAI tools in your proposal does not result in plagiarism, unauthorized use of intellectual\n\n property, or presentation of misinformation.\n\n Please note that external reviewers are prohibited from using GenAI tools in the review\n\n process, and AFOSR Program Officers (POs) are prohibited from sharing proposal\n\n information with external GenAI tools. AFOSR POs have access to an approved firewalled\n\n internal GenAI tool (e.g., GenAI.mil) which they may use for internal proposal processing.\n\n D.2.g. Electronic Form and Proposal Attachments\n\n Your application and proposal attachments must be in electronic file formats. You should\n\n use the Portable Document Format (PDF) for your attachments. DO NOT password\n\n protect any attachments. The website Adobe Software Compatibility | Grants.gov\n\n provides additional important instructions.\n\n \n\n \n  https://www.acquisition.gov/far/part-52#FAR_52_215_1\n \n\n \n  http://farsite.hill.af.mil/reghtml/regs/far2afmcfars/fardfars/far/52_215.htm#P2_52\n \n\n \n  https://www.grants.gov/applicants/adobe-software-compatibility73\n\n D.3. GRANTS.GOV APPLICATION SUBMISSION\n\n This section provides the application submission and receipt instructions for AFOSR program\n\n applications. Please read the following instructions carefully and completely.\n\n D.3.a. Electronic Delivery\n\n AFOSR is participating in the Grants.gov initiative to provide the grant community with\n\n a single site to find and apply for grant funding opportunities. AFOSR encourages\n\n applicants to submit their applications online through Grants.gov.\n\n D.3.b. How to Register to Apply through Grants.gov\n\n Instructions: Read the instructions below about registering to apply for AFOSR funds.\n\n Applicants should read the registration instructions carefully and prepare the information\n\n requested before beginning the registration process."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.288965,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AYLVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 72,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "456a8fe5891c8c13": {
+  "query": "proposal page limit",
+  "filter": "549479224af01e3f",
+  "retrievalResults": []
+ },
+ "46bdb7243c7ee55e": {
+  "query": "eligible organizations institutions of higher education nonprofit for-profit",
+  "filter": "08b6e229e2b75203",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "ELIGIBILITY\n\n C.1. ELIGIBLE APPLICANTS\n\n C.1.a. General\n\n All qualified, responsible organizational applicants from academia, the non-profit sector,\n\n \n\n \n  http://www.ecfr.gov/cgi-bin/text-idx?SID=de4cb739ce90fc71f364a622e495a608&amp%3Bamp%3Bmc=true&amp%3Bamp%3Bnode=se2.1.200_138&amp%3Bamp%3Brgn=div8\n \n\n \n  https://uscode.house.gov/view.xhtml?req=granuleid%3AUSC-prelim-title10-section4001&num=0&edition=prelim\n \n\n \n  https://uscode.house.gov/view.xhtml?req=granuleid%3AUSC-prelim-title31-chapter63&edition=prelim\n \n\n \n  http://www.acq.osd.mil/asda/dpc/cp/policy/other-policy-areas.html\n \n\n \n  http://www.acq.osd.mil/asda/dpc/cp/policy/other-policy-areas.html60\n\n and industry are eligible to submit research proposals. This includes University Affiliated\n\n Research Centers unless precluded from submitting a proposal by their Department of\n\n Defense operating contract.\n\n C.1.b. HBCU/MSI, Tribal College and University, and Small Business Applicants\n\n Encouraged\n\n Historically Black Colleges and Universities and Minority Serving Institutions\n\n (HBCU/MSI), Tribal Colleges and Universities, and HBCU/MI affiliated medical centers\n\n are encouraged to submit research proposals and join others in submitting proposals.\n\n Small business concerns are also encouraged to submit proposals and join others in\n\n submitting proposals. However, no funds under this announcement are reserved or\n\n otherwise set-aside for any specific entity type.\n\n C.1.c. Eligibility Notice for All Applicants\n\n We review your application, proposal, and Office of Management and Budget (OMB)\n\n designated repositories of government-wide public and non-public data, including\n\n comments you have made, as required by 31 U.S.C. 3321 and 41 U.S.C. 2313 and\n\n described in 2 CFR 200.205 and 32 CFR 22.410 to assess risk posed by applicants, and\n\n confirm applicants are qualified, responsible, and eligible to receive an award."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4446679,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ASLVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 59,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If we\n\n cannot determine you or your organization qualified and responsible, you are not eligible\n\n to receive an award.\n\n C.1.d. Ineligible Entities\n\n None of the following entity types are eligible to submit proposals as primary award recipients\n\n under this announcement.\n\n • Federally Funded Research and Development Centers (FFRDCs)\n\n • Individual persons or people\n\n • Federal agencies\n\n \n\n C.2. COST SHARING\n\n We do not require cost sharing for proposals under this announcement (except as may be required\n\n for transactions other than contracts, grants, and cooperative agreements entered into under 10\n\n U.S.C. 4021). Cost sharing is not an evaluation or selection criterion.\n\n C.3."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3949537,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ASbVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 60,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "You must certify your institution’s compliance\n\n with OUSW’s Research Protection policies as articulated in the most up to\n\n date OUSW DoD Component Decision Matrix to Inform Research\n\n Proposal Mitigation Decisions on official university letterhead, and attest\n\n for the duration of the grant that the recipient confirms that the Covered\n\n Individuals participating in the grant are:\n\n (1) not actively participating in a malign foreign talent recruitment program\n\n (MFTRP); and,\n\n (2) not involved in active collaboration on fundamental research with a\n\n Section 1286 Prohibited Entity or employee of a Prohibited Entity.\n\n \n\n For example: [The University] certifies that the information provided is\n\n current, accurate, and complete. This includes, but is not limited to, information\n\n related to current, pending, and other support (both foreign and domestic) as\n\n defined in 42 U.S.C. §6605.\n\n [The University] also certifies that, at the time of submission, no Covered\n\n Individual listed is a party in a malign foreign talent recruitment program.\n\n [The University] understands that misrepresentations and/or omissions may be\n\n subject to prosecution and liability pursuant to, but not limited to, 18 U.S.C.\n\n §§287, 1001, 1031 and 31 U.S.C. §§3729-3733 and 3802.\n\n Signature3: [Business Office, Provost, Dean, or someone with the authority to\n\n legally obligate the University]\n\n \n\n \n  https://www.nsf.gov/policies/nspm-33/definitions#malign-program65\n\n Date:\n\n \n\n In the event a security risk is identified, and the Government has determined the security\n\n risk exceeds the acceptable threshold and cannot be mitigated, the Applicant/Recipient\n\n will be notified and informed of the decline of award. The Government will provide an\n\n unclassified rationale for any rejection of a proposal due to security risks."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.242383,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AULVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 64,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "ELIGIBLE APPLICANTS ............................................................................................................. 59\n\n C.2. COST SHARING ............................................................................................................................ 60\n\n C.3. OTHER ............................................................................................................................................ 61\n\n C.4. AFOSR-SPECIFIC FUNDAMENTAL RESEARCH SECURITY RISK REVIEW (FRSR) INFORMATION\n\n .......................................................................................................................................................... 63\n\n D. APPLICATION CONTENTS AND FORMAT .................................................................................... 69\n\n D.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2032272,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7LVeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "BASIC INFORMATION .......................................................................................................................... 2\n\n A. PROGRAM DESCRIPTION ................................................................................................................... 6\n\n A.1. ENGINEERING AND COMPLEX SYSTEMS TEAM (RESA) ................................................... 6\n\n A.2. INFORMATION AND NETWORKS TEAM (RESA) ................................................................. 17\n\n A.3. PHYSICAL SCIENCES B RAN C H (RESB) .................................................................................... 29\n\n A.4. BIO-COGNITIVE BRANCH (RESC) .......................................................................................... 45\n\n A.5. AFOSR INTERNATIONAL OFFICES ........................................................................................ 57\n\n A.6. OTHER INNOVATIVE RESEARCH CONCEPTS .................................................................... 58\n\n B. FEDERAL AWARD INFORMATION .................................................................................................... 58\n\n C. ELIGIBILITY ....................................................................................................................................... ..59\n\n C.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.193558,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A67VeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(6) High Performance Computing Requirements\n\n You may be eligible to use DoD high performance computing resources at\n\n no cost to your research. You should address utilization of this program if\n\n you need high performance computing cycles to meet the needs of your\n\n research. This program provides access to a range of state-of-the-art high\n\n performance computing assets and user training opportunities that can be\n\n used in some of our awards; special terms and conditions apply. You can\n\n review the details, capabilities, and requirements of the program at\n\n www.hpc.mil.\n\n Our Program Officers will help you establish an account if your proposal is\n\n selected for an award and can answer questions before you submit your\n\n proposal.\n\n D.4.e. Bibliography and References Cited\n\n You must attach your narrative Bibliography and References to field 9 of the R&R\n\n Other Project Information Form.\n\n D.4.f. R&R Senior/Key Person Profile (Expanded) Form\n\n You must attach a short biographical sketch and list of significant publications (vitae)\n\n \n\n \n  http://www.hpc.mil/81\n\n for each Senior/Key Person. You must also attach a list of: Current and Pending\n\n Support, Collaborators and Other Affiliations, Training Certification(s), and\n\n Compliance Attestation as discussed in Principal Investigator (PI) and Senior Personnel\n\n Time.\n\n You must list all key persons proposed for the research on the R&R Senior/Key Person\n\n Profile (Expanded) Form. Key persons are generally the PI, any Co-PIs, and senior staff;\n\n however, our agency requires this form for all research personnel positions being funded\n\n by the grant. If a position is identified in the proposal, and hiring has not yet taken place,\n\n please do not leave areas of the form blank. Do not submit the additional name and\n\n corresponding forms until the individual has been identified or hired for the position. We\n\n use this information to evaluate the qualifications of you and your research team.\n\n To evaluate compliance with Title IX of the Education Amendments of 1972 (20 U.S.C.\n\n A subsection 1681 Et. Seq.), the DoD is collecting certain demographic and career\n\n information to be able to assess the success rates of women who are proposed for key\n\n roles in applications in STEM disciplines. To enable this assessment, each applicant must\n\n include this form completed as indicated.\n\n The “Credential, e.g., agency login” field will be used by DoD to track ORCID for each\n\n researcher."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1905863,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aa7VeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 80,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(2) Proposal produces immediately demonstrable results.\n\n (3) Selection should consider speed and accountability through demonstration of\n\n meaningful performance or deliverable milestones to accelerate the\n\n development of emerging technology for timely delivery to the warfighter.\n\n (4) Consider the possibility for potentially longer-term, breakthrough results, in a\n\n manner consistent with the funding opportunity announcement.\n\n (5) Proposals should include clear benchmarks for measuring success and progress\n\n towards relevant research and development goals.\n\n (6) Proposal demonstrably advances the President’s policy priorities.\n\n (7) Proposal does not promote, encourage subsidize, or facilitate: (a) racial\n\n preferences or other forms of racial discrimination by the grant recipient,\n\n including activities where race or intentional proxies for race will be used as a\n\n selection criterion for employment or program participation; (b) denial by the\n\n \n\n \n  https://www.ecfr.gov/current/title-32/subtitle-A/chapter-I/subchapter-C/part-22/subpart-C/section-22.31590\n\n grant recipient of the sex binary in humans or the notion that sex is a chosen or\n\n mutable characteristic; (c) illegal immigration; or (d) any other initiatives that\n\n compromise public safety or promote anti-American values.\n\n Step 2: Full Evaluation/Review (Selection Criteria):\n\n Primary Selection Criteria: Subject to funding availability, all applications/proposals\n\n will be reviewed using the following two primary criteria listed below, which are of\n\n equal importance. These evaluations will entail a “weight of scientific evidence”\n\n approach (EO 14303):\n\n (1) Technical merits of the proposed research and development.\n\n (2) Potential relationship of the proposed research and development to DOD\n\n missions.\n\n F.2.b. Additional Evaluation and Selection Criterion\n\n Less important than the primary criteria but of equal importance to each other:\n\n (1) The applicant’s capabilities integral to achieving U.S. Air Force and Space Force\n\n objectives. This includes principal investigator’s, team leaders, or key personnel’s\n\n qualifications, related experience, facilities, or techniques or a combination of these\n\n factors integral to achieving U.S. Air Force and Space Force objectives, and the\n\n potential risk of this effort to the U.S. Air Force and Space Force"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1829637,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfLVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 89,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "4b9352c45002aacc": {
+  "query": "font size and formatting requirements for proposal",
+  "filter": "08b6e229e2b75203",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Equipment\n\n 12. Other Attachments\n\n R&R Senior / Key Person Profile Form\n\n (Expanded) for all Covered Individuals\n\n Biographical Sketch\n\n Current & Pending\n\n Support\n\n Collaborators and Other\n\n Affiliations\n\n Training Certification(s)\n\n Compliance Attestation\n\n Privacy Act Disclosure\n\n Form (See Appendix 2)\n\n R&R Personal Data Form\n\n None\n\n R&R Budget Form\n\n Budget Justification\n\n R&R Subaward Budget Attachments\n\n Form\n\n Subaward Budget\n\n R&R Project / Performance Site\n\n Locations Form\n\n None\n\n The SF 424 (R&R) must include the signature of an authorized representative from your\n\n organization. The signature is affixed electronically by Grants.gov upon submission.\n\n You are still required to submit any documentation, including disclosure of any unpaid\n\n delinquent tax liability or a felony conviction under any Federal law (see FAR 52.209-\n\n 11).\n\n This signature is considered the signature for the application as a whole.\n\n D.2.c. Proposal Format\n\n i. Paper Size – 8.5 x 11-inch paper\n\n ii. Margins – 1 inch\n\n \n\n \n  http://www.grants.gov/72\n\n iii. Spacing – Single, 1.5, or 2.0-line spacing\n\n iv. Font – Times New Roman or Garamond, 10, 11, or 12point\n\n v. Page Limitation – None. However, unnecessarily elaborate or lengthy\n\n proposals are not desirable\n\n vi. Attachments – Electronic Portable Document Format (PDF)\n\n vii. Content – As described below\n\n D.2.d. Proposal Length\n\n We do not limit the length of your proposal for this competition; however, you must not\n\n include elaborate brochures, reprints, or presentations beyond those sufficient to present\n\n a complete and effective proposal.\n\n D.2.e. Marking Requirements for Confidential or Proprietary Information\n\n You must mark your proposal and any proposal sections that contain proprietary or\n\n confidential information. You must use the protective legend found at FAR 52.215- 1(e)\n\n Instructions to Offerors -- Competitive Acquisition (Nov 2021) modified to permit release\n\n to our outside evaluators.\n\n We make every effort to protect the confidentiality of proposals, including any proposal\n\n evaluations; however, under Freedom of Information Act (FOIA) requirements, some or\n\n all proposal information may be subject to release."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4891348,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AX7VeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 71,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Pre-proposal Inquiries and Questions\n\n If you need help with technical matters, you should email the individual listed for your\n\n topic of interest in section A. Program Description. We provide a list of all the programs\n\n and Program Officers listed in this announcement again in section I.1. Technical Inquires\n\n and Questions.\n\n If you have general questions about this announcement or administrative matters, you\n\n must submit your question in writing by email to the contact listed in section I.2.General\n\n Inquiries and Questions.\n\n The Program Officer does not have the authority to make commitments for us. Grants\n\n and Contracting Officers acting within their warranted capacity are the only people\n\n authorized to make commitments for the Government.\n\n D.2.b. The Application as a Whole\n\n You must submit your proposal electronically through Grants.gov. We will not accept or\n\n evaluate any proposal submitted by any means other than through Grants.gov.\n\n You must use the electronic Standard Form (SF) 424 Research and Related (R&R) Form\n\n Family, OMB Number 4040-0001. The SF 424 (R&R) Application for Federal assistance\n\n form must be your cover page. No pages may precede the SF 424 (R&R).\n\n You may submit a proposal for one or more topics, or for a specific portion of a topic.\n\n You may submit different proposals on any number of topics, or different proposals on the\n\n same topic. We may not make awards in every topic area.\n\n You must mark your application with the announcement number.\n\n A summary of what is required for a complete proposal is summarized below:\n\n • We require the forms and attachments in bold text with all applications\n\n • Some applications require the attachments in italics\n\n • We provide more instructions in D.4. Component Pieces of the Application\n\n \n\n \n\n R&R FORM, OMB No. 4040-0001 FIELD ATTACHMENT\n\n SF 424 (R&R) Application for Federal\n\n Assistance, including an authorized\n\n signature\n\n 18. If applicable, SF- LLL\n\n Disclosure of Lobbying\n\n Activities Per instructions\n\n in G.2.a.\n\n R&R Other Project Information Form 7."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3555752,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXbVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 70,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Your entire proposal, or any portions thereof, without protective markings or otherwise\n\n identified as requiring protection will be considered voluntarily furnished to us without\n\n restriction and will be treated as such for all purposes.\n\n D.2.f. Use of Generative Artificial Intelligence (GenAI) Tools\n\n While the use of GenAI Tools is not prohibited, AFOSR strongly encourages disclosure the\n\n use of such tools in your proposal.\n\n \n\n Any use of GenAI tools is at your own risk, and you are responsible for ensuring the use of\n\n GenAI tools in your proposal does not result in plagiarism, unauthorized use of intellectual\n\n property, or presentation of misinformation.\n\n Please note that external reviewers are prohibited from using GenAI tools in the review\n\n process, and AFOSR Program Officers (POs) are prohibited from sharing proposal\n\n information with external GenAI tools. AFOSR POs have access to an approved firewalled\n\n internal GenAI tool (e.g., GenAI.mil) which they may use for internal proposal processing.\n\n D.2.g. Electronic Form and Proposal Attachments\n\n Your application and proposal attachments must be in electronic file formats. You should\n\n use the Portable Document Format (PDF) for your attachments. DO NOT password\n\n protect any attachments. The website Adobe Software Compatibility | Grants.gov\n\n provides additional important instructions.\n\n \n\n \n  https://www.acquisition.gov/far/part-52#FAR_52_215_1\n \n\n \n  http://farsite.hill.af.mil/reghtml/regs/far2afmcfars/fardfars/far/52_215.htm#P2_52\n \n\n \n  https://www.grants.gov/applicants/adobe-software-compatibility73\n\n D.3. GRANTS.GOV APPLICATION SUBMISSION\n\n This section provides the application submission and receipt instructions for AFOSR program\n\n applications. Please read the following instructions carefully and completely.\n\n D.3.a. Electronic Delivery\n\n AFOSR is participating in the Grants.gov initiative to provide the grant community with\n\n a single site to find and apply for grant funding opportunities. AFOSR encourages\n\n applicants to submit their applications online through Grants.gov.\n\n D.3.b. How to Register to Apply through Grants.gov\n\n Instructions: Read the instructions below about registering to apply for AFOSR funds.\n\n Applicants should read the registration instructions carefully and prepare the information\n\n requested before beginning the registration process."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3452853,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AYLVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 72,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Indicate what your costs are based on, such\n\n as vendor quotes, historical data and/or engineering estimates. You should\n\n include vendor quotes and/or catalog pricing data.\n\n (3) Proposals including request to purchase equipment must include\n\n equipment quotes or vendor agreements. \"Equipment\" is nonexpendable,\n\n tangible personal property with a unit cost of $10,000 or more having a\n\n useful life of more than 1 year, unless determined otherwise by recipient’s\n\n internal policy. Items that do not meet the \"equipment\" definition can be\n\n included under supplies. List each piece of equipment to be purchased and\n\n provide description of how it will be used in the project. Budget narrative\n\n should explain why the equipment is necessary for successful completion\n\n of the project. Provide quotes in English Language (US Dollars) if83\n\n available, or indicate the basis of equipment cost. If you have any\n\n subaward(s), you should describe how you determined subaward costs\n\n were determined fair and reasonable. Your business office usually makes\n\n this determination"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3448651,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AbrVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 82,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposers are highly encouraged to contact the Program\n\n Officer via email prior to developing a full proposal to discuss the current state of the\n\n art in their area of interest, how the proposed research would advance it, the\n\n approximate cost for a three (3) year effort, and if there are any specific submission\n\n target dates.\n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3039811,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A9rVeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Administrative and National Policy Requirements for more\n\n information and links to the full text of these items.\n\n D.4.b. R&R Other Project Information Form\n\n Complete this form as indicated. You must include all necessary attachments.\n\n \n\n FIELD INSTRUCTION\n\n 1, 1a. You must address all prospective human subject involvement by answering these\n\n questions. Additional documentation pursuant to National Policy and\n\n U.S. Air Force and Space Force standards is required for all proposals with\n\n human use research or involvement.\n\n 2, 2a. You must address all prospective animal research and/or recombinant\n\n deoxyribonucleic acid (rDNA) involvement by answering these questions.\n\n Additional documentation pursuant to National Policy and U.S. Air Force\n\n standards is required for all proposals with animal or rDNA research or\n\n involvement.\n\n 4a. For any proposal that has an actual or potential impact on the environment,\n\n answer yes and provide the answers and attachments required for fields 4b, 4c,\n\n and 4d. Additional documentation in accordance with National Policy and\n\n U.S. Air Force and Space Force standards is required for any proposal with an\n\n actual or potential impact on the environment.\n\n 7. Attach your D.4.c. Publicly Releasable Abstract\n\n 8. Attach your D.4.d. Project Narrative\n\n 9. Attach your D.4.e. Bibliography and References Cited\n\n \n\n \n  https://www.grants.gov/forms78\n\n 10. Attach a Facilities and Other Resources description document here if you need to\n\n supplement your D.4.d. Proposal Narrative facilities and resources section.\n\n 11. You may supplement your D.4.h. Budget Justification by attaching an\n\n Equipment Justification here. Do not duplicate information included on your\n\n budget justification. If you attach an Equipment Justification, make sure you\n\n reference the attachment in your budget justification.\n\n 12. Attach the D.4.i R&R Subaward Budget Attachments Form if applicable and\n\n not attached elsewhere. You should have budgets for all subawards proposed\n\n attached within this form before attachment.\n\n Attach all D.4.j Subaward Budget Justifications as applicable Attach your\n\n D.4.l. Data Management Plan here if applicable\n\n D.4.c. Publicly Releasable Project Summary / Abstract\n\n You must attach the Project Summary / Abstract to field 7 of the R&R Other Project\n\n Information form."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3004949,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AZ7VeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 77,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "You must submit the “AFOSR Abstract” as an attachment with the proposal submission,\n\n this form’s located on the “Related Documents” tab of grants.gov. You must provide a\n\n concise abstract of 300 words or less with your proposal (no more than 2000 characters).\n\n You must mark this abstract publicly releasable. Your abstract should use terms the public\n\n can understand to describe the research objective, technical approach, anticipated\n\n outcome, and potential impact of the specific research.\n\n Enter the Project Summary / Abstract on the form as a single block of plain text. Do not\n\n use special formatting such as line breaks, tables, or superscript/subscript. Do not use\n\n special characters or symbols such as μ, λ, γ, π, &, :, /, \\ , “, or ?.\n\n Your abstract header should include the Program Officer's name and office symbol\n\n from section I.1. Technical Inquiries and Questions below.\n\n If you receive an award, we must publish your abstract to a searchable website available\n\n to the general public in accordance with Public Law 113-235. The website address is\n\n https://discover.dtic.mil/submit-documents/\n\n D.4.d. Project Narrative\n\n You must attach the Project Narrative to field 8 of the R&R Other Project Information\n\n Form. The narrative must be complete and self-contained to qualify for review.\n\n You must clearly describe your research, including your research objective and approach.\n\n Your project narrative will be evaluated using the section F.1. Criteria. You should show\n\n strength in as many of the evaluation and selection areas as practicable to demonstrate\n\n maximum competitiveness.\n\n You must describe any environmental impacts of your research outside the laboratory in\n\n \n\n \n  https://dodgrantawards.dtic.mil/grants/%23/home\n \n\n \n  https://www.gpo.gov/fdsys/pkg/PLAW-113publ235/content-detail.html\n \n\n \n  https://discover.dtic.mil/submit-documents/79\n\n any appropriate narrative section, including how you will ensure compliance with\n\n environmental statutes and regulations.\n\n Your narrative should include the following elements:\n\n (1) Statement of Objectives\n\n You must summarize your proposed research on a single page titled\n\n “Statement of Objectives.” We may decide to incorporate your statement\n\n of objectives into the award as a description of the work instead of\n\n incorporating the whole technical proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2998676,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AaLVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 78,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "573c972ddc28653a": {
+  "query": "BAA open period closing date white papers proposals due",
+  "filter": "08b6e229e2b75203",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Aspiring PIs are strongly recommended to carefully read the program BAA\n\n and develop a short summary to explain the basic science questions under contention,\n\n the current state-of-the-art, how your research would advance it, and the approximate\n\n cost for a three (3) to five (5) year effort. The optimal time frame for inquiring about\n\n portfolio needs is November-April, but prospective PIs are invited to reach out during\n\n any time of the year.\n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3533494,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8bVeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "As basic research aimed at having the broadest possible\n\n impact, the development of computational methods should include an emphasis on\n\n theoretical underpinnings, on rigorous convergence analysis, and on establishing\n\n performance guarantees for approximation methods. Areas of interest include, but are not\n\n limited to:\n\n • Integer and mixed-integer programming;\n\n • Continuous, nonconvex optimization;\n\n • Multi-level optimization;\n\n • Conic programming;\n\n • Combinatorial optimization; and,\n\n • Stochasticprogramming.\n\n Methodologies include:\n\n • Cutting plane and polyhedral methods for mixed-integer programs;\n\n • Decomposition methods for large, specially structured problem;\n\n • Global optimization for nonconvex programs; and,\n\n • Interior-point and first- and second order methods for conic/convex/nonconvex\n\n optimization.\n\n The application process is as follows. Submit a white paper of length at most four pages\n\n to the Program Officer that summarizes the research to be performed, the importance, the\n\n approach, a summary of senior personnel qualifications, and an estimate of the total cost.\n\n If desired, additional pages can describe further qualifications and include a bibliography.\n\n The white paper should not be overly technical but instead provide a clear description of\n\n the problem(s) to be solved, the approach and novelty, and the potential application to\n\n DoD missions. Then, depending on such factors as reviews and available budget, select\n\n white papers will be chosen for full-proposal development. A key evaluation criterion is\n\n the identification of innovative idea(s) that show promise for advancing the field of\n\n mathematical optimization, with reference to the optimization/mathematical\n\n programming literature.27\n\n Investigators are encouraged to contact the Program Officer prior to white paper\n\n submission to discuss the proposed research and how it will advance the state of the art,\n\n the approximate cost, and any specific target dates.\n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2356111,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ADrVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "SUBMISSION DATES AND TIMES\n\n E.1. PROPOSAL SUBMISSION\n\n This announcement remains open until superseded. We review and evaluate proposals as\n\n they are received. You may submit proposals at any time; however, some specific topic\n\n instructions may recommend submission by specific dates that align with funding expectations.\n\n Funding is limited.\n\n E.1.a. How Proposal Submission Time is Determined\n\n We use the system-generated Grants.gov time stamp to determine when you submitted\n\n your successfully validated proposal and the announcement your submission was\n\n associated with. Grants.gov policies and procedures for application submission and\n\n processing apply. We will only accept applications submitted electronically through\n\n Grants.gov.\n\n E.1.b. Grants.gov Tracking Number is Application Receipt\n\n Grants.gov generates a confirmation page when you submit your application. A second\n\n confirmation is provided by email when your application has passed Grants.gov\n\n validations and the status is updated from received to validated. The confirmation page\n\n includes a system-generated Grants.gov tracking number; this serves as your receipt. You\n\n should keep a copy of all confirmations.\n\n You can verify the submission time and application status with your tracking number\n\n through Grants.gov at Track My Application | Grants.gov\n\n E.1.c. Effect of Superseding Announcement\n\n This announcement is open until superseded. We generally allow approximately thirty\n\n (30) days for you to submit a proposal started under the announcement that is superseded\n\n before we close the previous announcement.\n\n Grants.gov will not accept your proposal after we close a superseded announcement.\n\n E.1.d. INTERGOVERNMENTAL REVIEW\n\n N/A - This program is excluded from coverage under Executive Order (E.O.) 12372.\n\n E.2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.233212,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdbVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 86,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If you have an exciting idea that doesn't seem to fit within one of the more specific topic\n\n descriptions of this Broad Agency Announcements (BAA) detailing our current technical\n\n programs, you may submit it under this section of the BAA. Research should investigate truly new\n\n and unique approaches and techniques that may enable revolutionary concepts with potentially\n\n high-payoff relevant to Air and Space Forces. Pre-coordination with the points of contact listed\n\n below is, however, very strongly encouraged before submitting a proposal.\n\n DR. VAN BLACKWOOD, AFOSR/RES\n\n Email: SPECIALTOPIC1@US.AF.MIL\n\n (703) 588-8618\n\n \n\n B. FEDERAL AWARD INFORMATION\n\n Approximately $200 million is anticipated to be available for support of actions awarded under this\n\n announcement, subject to availability of funds. Research proposals funded between $100,000 and\n\n $300,000 per year are encouraged. Most of our awards are three (3) years in duration. Awards may be\n\n proposed for not more than five (5) years.\n\n All applications received under this announcement will be considered applications for new awards,\n\n \n\n \n  mailto:lafosr.aoard@us.af.mil\n \n\n \n  mailto:eoard.orgbox@us.af.mil\n \n\n \n  mailto:afosr.aoard@us.af.mil\n \n\n \n  mailto:AFOSR.IOS.SOARD@us.af.mil\n \n\n \n  mailto:specialtopic1@us.af.mil59\n\n including any application marked renewal. Applications to supplement an existing project with\n\n additional funding may be considered on a case-by-case basis post-award but are not anticipated to\n\n compete with new award funding.\n\n Awards may start any time during the year. The actual start date is determined at the time of award and\n\n may be different than the date you propose. We discuss this more in section G."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2302263,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ARLVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 58,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Research ideas are particularly encouraged that address long-standing or unanswered\n\n organic-based materials chemistry challenges that will have significant impact on\n\n advancing basic understanding behind property creation and control if successful.\n\n You are highly encouraged to contact the Program Officer prior to developing a full\n\n proposal to understand any specific submission target dates and to submit one or more\n\n idea paragraphs (3-5 sentences plus a title and descriptive figure) that describe the\n\n essence of the idea and the fundamental science to be investigated. Alternatively, one\n\n two-page (maximum) white paper pre-proposal can be submitted that includes the\n\n objective and approach of the proposed effort, research aims with the current state-of-45\n\n the-art, a brief rationale why the approach can achieve the goals, the anticipated\n\n outcomes if the research is successful; a third page can contain two or three (3) key\n\n references and a one sentence budget detailing the approximate yearly cost for a three\n\n (3) to five (5) year effort.\n\n DR."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2145638,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALLVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 44,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "In addition to annual submission of RPPR, awardees will be required to annually re-\n\n certify their commitment to complying with the administration policies, procedures and\n\n guidance respecting Gold Standard Science and to report updates to their Conflicts of\n\n Interest and disclosures of all co-authors and collaborators.\n\n H.2.b. Department of Defense (DD) Form 882 Report of Inventions and Subcontracts\n\n (1) Invention Reports\n\n (a) You must provide at least a final invention report on DD Form 882.\n\n We may ask for annual reports. Our award documents specify the\n\n due date. You can get the form at\n\n http://www.dtic.mil/whs/directives/forms/eforms/dd0882.pdf.\n\n (b) You must submit invention reports even if you do not have a patent\n\n to report.\n\n (2) Sub-Award and Subcontract Reporting\n\n You must use the DD Form 882 to tell us about any subawards or\n\n subcontracts. Your award will provide specific instructions. You can get the\n\n form at http://www.dtic.mil/whs/directives/forms/eforms/dd0882.pdf.\n\n H.2.c. Standard Form (SF) 425 Federal Financial Report\n\n Our awards require a final SF 425 Federal Financial Report. You can get the form at\n\n https://www.gsa.gov/forms-library/federal-financial-report#.\n\n (1) If you request any advance payment(s) under your award or have\n\n scheduled payments, you must submit quarterly SF 425 reports for the life\n\n of the award. Our awards include specific instructions.\n\n (2) You do not have to submit quarterly SF 425 reports if you only request\n\n payments by reimbursement.\n\n H.2.d. Electronic Payment Requests and Electronic Payment\n\n You must register to use Wide Area Workflow (WAWF) for payment. Payment requests\n\n shall be made electronically using an SF270 through the WAWF application in the\n\n Procurement Integrated Enterprise Environment (PIEE) e-Business Suite at\n\n https://piee.eb.mil/. The website includes registration instructions. All payments must be\n\n made using the electronic funds transfer (EFT) method.\n\n To submit electronic payment requests you must register to use iRAPT in the Wide Area\n\n Workflow (WAWF) e-Business Suite at https://piee.eb.mil/. The website includes\n\n registration instructions."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2127719,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjrVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 98,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Administrative and National Policy Requirements for more\n\n information and links to the full text of these items.\n\n D.4.b. R&R Other Project Information Form\n\n Complete this form as indicated. You must include all necessary attachments.\n\n \n\n FIELD INSTRUCTION\n\n 1, 1a. You must address all prospective human subject involvement by answering these\n\n questions. Additional documentation pursuant to National Policy and\n\n U.S. Air Force and Space Force standards is required for all proposals with\n\n human use research or involvement.\n\n 2, 2a. You must address all prospective animal research and/or recombinant\n\n deoxyribonucleic acid (rDNA) involvement by answering these questions.\n\n Additional documentation pursuant to National Policy and U.S. Air Force\n\n standards is required for all proposals with animal or rDNA research or\n\n involvement.\n\n 4a. For any proposal that has an actual or potential impact on the environment,\n\n answer yes and provide the answers and attachments required for fields 4b, 4c,\n\n and 4d. Additional documentation in accordance with National Policy and\n\n U.S. Air Force and Space Force standards is required for any proposal with an\n\n actual or potential impact on the environment.\n\n 7. Attach your D.4.c. Publicly Releasable Abstract\n\n 8. Attach your D.4.d. Project Narrative\n\n 9. Attach your D.4.e. Bibliography and References Cited\n\n \n\n \n  https://www.grants.gov/forms78\n\n 10. Attach a Facilities and Other Resources description document here if you need to\n\n supplement your D.4.d. Proposal Narrative facilities and resources section.\n\n 11. You may supplement your D.4.h. Budget Justification by attaching an\n\n Equipment Justification here. Do not duplicate information included on your\n\n budget justification. If you attach an Equipment Justification, make sure you\n\n reference the attachment in your budget justification.\n\n 12. Attach the D.4.i R&R Subaward Budget Attachments Form if applicable and\n\n not attached elsewhere. You should have budgets for all subawards proposed\n\n attached within this form before attachment.\n\n Attach all D.4.j Subaward Budget Justifications as applicable Attach your\n\n D.4.l. Data Management Plan here if applicable\n\n D.4.c. Publicly Releasable Project Summary / Abstract\n\n You must attach the Project Summary / Abstract to field 7 of the R&R Other Project\n\n Information form."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1875666,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AZ7VeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 77,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "8a618c661ba612cb": {
+  "query": "BAA open period closing date white papers proposals due",
+  "filter": "549479224af01e3f",
+  "retrievalResults": []
+ },
+ "94e2cada061e60a5": {
+  "query": "application submission deadline",
+  "filter": "549479224af01e3f",
+  "retrievalResults": []
+ },
+ "9959218f42a788cc": {
+  "query": "eligibility who may apply individual applicants",
+  "filter": "549479224af01e3f",
+  "retrievalResults": []
+ },
+ "9fcdeca5a4cb87b0": {
+  "query": "eligibility who may apply individual applicants",
+  "filter": "08b6e229e2b75203",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "ELIGIBILITY\n\n C.1. ELIGIBLE APPLICANTS\n\n C.1.a. General\n\n All qualified, responsible organizational applicants from academia, the non-profit sector,\n\n \n\n \n  http://www.ecfr.gov/cgi-bin/text-idx?SID=de4cb739ce90fc71f364a622e495a608&amp%3Bamp%3Bmc=true&amp%3Bamp%3Bnode=se2.1.200_138&amp%3Bamp%3Brgn=div8\n \n\n \n  https://uscode.house.gov/view.xhtml?req=granuleid%3AUSC-prelim-title10-section4001&num=0&edition=prelim\n \n\n \n  https://uscode.house.gov/view.xhtml?req=granuleid%3AUSC-prelim-title31-chapter63&edition=prelim\n \n\n \n  http://www.acq.osd.mil/asda/dpc/cp/policy/other-policy-areas.html\n \n\n \n  http://www.acq.osd.mil/asda/dpc/cp/policy/other-policy-areas.html60\n\n and industry are eligible to submit research proposals. This includes University Affiliated\n\n Research Centers unless precluded from submitting a proposal by their Department of\n\n Defense operating contract.\n\n C.1.b. HBCU/MSI, Tribal College and University, and Small Business Applicants\n\n Encouraged\n\n Historically Black Colleges and Universities and Minority Serving Institutions\n\n (HBCU/MSI), Tribal Colleges and Universities, and HBCU/MI affiliated medical centers\n\n are encouraged to submit research proposals and join others in submitting proposals.\n\n Small business concerns are also encouraged to submit proposals and join others in\n\n submitting proposals. However, no funds under this announcement are reserved or\n\n otherwise set-aside for any specific entity type.\n\n C.1.c. Eligibility Notice for All Applicants\n\n We review your application, proposal, and Office of Management and Budget (OMB)\n\n designated repositories of government-wide public and non-public data, including\n\n comments you have made, as required by 31 U.S.C. 3321 and 41 U.S.C. 2313 and\n\n described in 2 CFR 200.205 and 32 CFR 22.410 to assess risk posed by applicants, and\n\n confirm applicants are qualified, responsible, and eligible to receive an award."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4068444,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ASLVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 59,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If we\n\n cannot determine you or your organization qualified and responsible, you are not eligible\n\n to receive an award.\n\n C.1.d. Ineligible Entities\n\n None of the following entity types are eligible to submit proposals as primary award recipients\n\n under this announcement.\n\n • Federally Funded Research and Development Centers (FFRDCs)\n\n • Individual persons or people\n\n • Federal agencies\n\n \n\n C.2. COST SHARING\n\n We do not require cost sharing for proposals under this announcement (except as may be required\n\n for transactions other than contracts, grants, and cooperative agreements entered into under 10\n\n U.S.C. 4021). Cost sharing is not an evaluation or selection criterion.\n\n C.3."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3467331,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ASbVeYKEBbayybwJO8vKv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 60,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "ELIGIBLE APPLICANTS ............................................................................................................. 59\n\n C.2. COST SHARING ............................................................................................................................ 60\n\n C.3. OTHER ............................................................................................................................................ 61\n\n C.4. AFOSR-SPECIFIC FUNDAMENTAL RESEARCH SECURITY RISK REVIEW (FRSR) INFORMATION\n\n .......................................................................................................................................................... 63\n\n D. APPLICATION CONTENTS AND FORMAT .................................................................................... 69\n\n D.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.326216,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7LVeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "ADDRESS TO REQUEST APPLICATION PACKAGE ............................................................ 69\n\n D.2. APPLICATION CONTENTS ........................................................................................................ 70\n\n D.3. GRANTS.GOV APPLICATION SUBMISSION ......................................................................... 73\n\n D.4. COMPONENT PIECES OF THE APPLICATION……………………………………………..76\n\n D.5. INFORMATION YOU MUST SUBMIT IF SELECTED FOR POSSIBLE AWARD ............... 84\n\n D.6. UNIQUE ENTITY IDENTIFIER (UEI), CAGE, AND SYSTEM FOR AWARD MANAGEMENT (SAM)\n\n …………………………………………………………………………………………………...…85\n\n E. SUBMISSION DATES AND TIMES ..................................................................................................... 86\n\n E.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2724367,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7bVeYKEBbayybwJO8vGv",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "G.2.f. Agency Review of Risk Posed by Applicants\n\n (1) We must review information available about you and entities included in\n\n your proposal through the Office of Management and Budget (OMB)\n\n designated repositories of government-wide eligibility qualification and\n\n financial integrity information. Our risk review is required by 31 U.S.C.\n\n 3321 and 41 U.S.C. 2313, and includes both public and non-public\n\n information. You must be qualified and responsible as described at 32\n\n CFR 22.415 Standards to receive a grant award. Contract applicants must\n\n be responsible based on the requirements in FAR Subpart 9.1 Responsible\n\n Prospective Contractors.\n\n (2) We must consider the non-public segment of the Federal Awardee\n\n Performance and Integrity Information System (FAPIIS) for all awards\n\n exceeding the current simplified acquisition threshold.\n\n (3) At a minimum, the information in the system for a prior Federal award\n\n recipient must demonstrate a satisfactory record of executing programs or\n\n activities under Federal grants, cooperative agreements, or procurement\n\n awards; and integrity and business ethics. We will consider any comments\n\n you provide, in addition to the other information in the designated integrity\n\n and performance system, when making our risk judgment about your\n\n integrity, business ethics, and record of performance under Federal awards.\n\n (a) We may make an award to a recipient who does not fully meet our\n\n standards as described at 2 CFR 200.206(a)(2) if it is determined\n\n that the information is not relevant to the current Federal award\n\n under consideration or there are specific conditions that can\n\n appropriately mitigate the effects of the non- Federal entity’s risk\n\n in accordance with 2 CFR 200.208 Specific conditions.\n\n (4) We must comply with the guidelines on government-wide suspension and\n\n debarment described in 2 CFR 200.213, and must require you to comply\n\n with these provisions for all work we fund.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200#Appendix-XII-to-Part-200\n \n\n \n  http://www.ecfr.gov/\n \n\n \n  https://uscode.house.gov/view.xhtml?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2499743,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhbVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 93,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "APPLICATION REVIEW INFORMATION\n\n \n\n \n  http://www.grants.gov/web/grants/applicants/applicant-faqs.html#applicationattachments89\n\n F.1. CRITERIA\n\n You should show strength in as many of the evaluation and selection areas as practicable\n\n to demonstrate maximum competitiveness. Merit-based, competitive procedures will be\n\n used, in accordance with 32 CFR 22.315.\n\n All proposals will be evaluated according to the weight of scientific evidence. “Weight of\n\n scientific evidence” means an approach to scientific evaluation in which each piece of\n\n relevant information is considered based on its quality and relevance, and then\n\n transparently integrated with other relevant information to inform the scientific\n\n evaluation prior to making a judgment about the scientific evaluation. Quality and\n\n relevance determinations, at a minimum, should include consideration of study design,\n\n fitness for purpose, replicability, peer review, and transparency and reliability of data (cf."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2332046,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AerVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 88,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(2) Proposal produces immediately demonstrable results.\n\n (3) Selection should consider speed and accountability through demonstration of\n\n meaningful performance or deliverable milestones to accelerate the\n\n development of emerging technology for timely delivery to the warfighter.\n\n (4) Consider the possibility for potentially longer-term, breakthrough results, in a\n\n manner consistent with the funding opportunity announcement.\n\n (5) Proposals should include clear benchmarks for measuring success and progress\n\n towards relevant research and development goals.\n\n (6) Proposal demonstrably advances the President’s policy priorities.\n\n (7) Proposal does not promote, encourage subsidize, or facilitate: (a) racial\n\n preferences or other forms of racial discrimination by the grant recipient,\n\n including activities where race or intentional proxies for race will be used as a\n\n selection criterion for employment or program participation; (b) denial by the\n\n \n\n \n  https://www.ecfr.gov/current/title-32/subtitle-A/chapter-I/subchapter-C/part-22/subpart-C/section-22.31590\n\n grant recipient of the sex binary in humans or the notion that sex is a chosen or\n\n mutable characteristic; (c) illegal immigration; or (d) any other initiatives that\n\n compromise public safety or promote anti-American values.\n\n Step 2: Full Evaluation/Review (Selection Criteria):\n\n Primary Selection Criteria: Subject to funding availability, all applications/proposals\n\n will be reviewed using the following two primary criteria listed below, which are of\n\n equal importance. These evaluations will entail a “weight of scientific evidence”\n\n approach (EO 14303):\n\n (1) Technical merits of the proposed research and development.\n\n (2) Potential relationship of the proposed research and development to DOD\n\n missions.\n\n F.2.b. Additional Evaluation and Selection Criterion\n\n Less important than the primary criteria but of equal importance to each other:\n\n (1) The applicant’s capabilities integral to achieving U.S. Air Force and Space Force\n\n objectives. This includes principal investigator’s, team leaders, or key personnel’s\n\n qualifications, related experience, facilities, or techniques or a combination of these\n\n factors integral to achieving U.S. Air Force and Space Force objectives, and the\n\n potential risk of this effort to the U.S. Air Force and Space Force"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2245686,
+    "metadata": {
+     "documentIdentifier": "Research Interests of the Air Force Office of Scientific Research",
+     "agency": "Air Force Office of Scientific Research",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfLVeYKEBbayybwJO9PIq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Interests of the Air Force Office of Scientific Research/NOFO-File-PDF",
+     "nofoName": "Research Interests of the Air Force Office of Scientific Research",
+     "x-amz-bedrock-kb-document-page-number": 89,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:25:46.768Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "a7016129983db61a": {
+  "query": "font size and formatting requirements for proposal",
+  "filter": "549479224af01e3f",
+  "retrievalResults": []
+ }
+}

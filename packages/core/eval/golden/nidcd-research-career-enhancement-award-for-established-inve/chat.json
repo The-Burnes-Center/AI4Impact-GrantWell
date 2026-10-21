@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the application due?",
+    "expected": "There are multiple receipt cycles, all due by 5:00 PM local time of the applicant organization; the last listed dates are June 08, 2026, October 08, 2026, and February 08, 2027 (new) / March 08, 2027 (resubmission), and the NOFO expires May 08, 2027.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "How much money does the award give besides salary?",
+    "expected": "NIDCD contributes $40,000 per year toward research development costs, plus salary up to the legislatively mandated salary cap; indirect costs are reimbursed at 8% of modified total direct costs.",
+    "quote": "NIDCD will contribute $40,000 per year toward the research development costs of the award recipient, which",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "How do my reference letters get submitted?",
+    "expected": "Reference letters are required (applications lacking them will not be reviewed) and are submitted directly by referees through the eRA Commons Submit Referee Information link, not through Grants.gov.",
+    "quote": "directly through the eRA Commons Submit Referee Information link and not through Grants.gov.",
+    "confirmed": false
+  }
+]

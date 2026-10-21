@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "What's the deadline to apply?",
+    "expected": "The NOFO is open continuously until September 30, 2027, 11:59 PM Eastern Time (or until a successor NOFO replaces it); some topics have scheduled review panels that require a pre-application, and applications after a panel's acceptance date may be held for the next panel.",
+    "quote": "This NOFO will remain open until September 30, 2027, 11:59 PM Eastern Time, or until",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who can apply?",
+    "expected": "All types of applicants are eligible except 501(c)(4) nonprofits that lobbied after December 31, 1995; DOE/NNSA National Laboratories cannot apply directly but may be subrecipients, while non-DOE FFRDCs and other federal agencies may apply.",
+    "quote": "All types of applicants are eligible to apply, except nonprofit organizations described in",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Is there an info webinar for applicants?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

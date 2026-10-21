@@ -1,6 +1,7 @@
 import fs from "node:fs";
 
 const FUNCTIONS_TS = new URL("../../lib/chatbot-api/functions/functions.ts", import.meta.url);
+const GENERIC_INSTANCES = new URL("../../../../instances/generic/config/instances.ts", import.meta.url);
 
 /** The model ids the deployed Lambdas get, read from the CDK source so the eval can't drift from it. */
 export function deployedModels() {
@@ -13,10 +14,16 @@ export function deployedModels() {
   return { sonnet: read("SONNET_MODEL_ID"), haiku: read("HAIKU_MODEL_ID") };
 }
 
+/** The Generic instance's states, as supportedStatesEnv injects them. */
+export function genericStates() {
+  const src = fs.readFileSync(GENERIC_INSTANCES, "utf8");
+  return [...src.matchAll(/\{ code: "([A-Z]{2})", name: "([^"]+)" \}/g)].map(([, code, name]) => ({ code, name }));
+}
+
 /** Must run before any handler is imported: the handlers read these at module load. */
 export function configure({ kbId } = {}) {
   const models = deployedModels();
-  for (const name of ["NOFO_METADATA_TABLE_NAME", "DAILY_USAGE_TABLE_NAME", "USER_DOCUMENTS_BUCKET", "NOFO_STATE_FILTER_ENABLED", "SUPPORTED_STATES"]) {
+  for (const name of ["NOFO_METADATA_TABLE_NAME", "DAILY_USAGE_TABLE_NAME", "USER_DOCUMENTS_BUCKET", "NOFO_STATE_FILTER_ENABLED"]) {
     delete process.env[name];
   }
   Object.assign(process.env, {
@@ -29,6 +36,7 @@ export function configure({ kbId } = {}) {
     WEBSOCKET_API_ENDPOINT: "https://eval.invalid",
     SESSION_HANDLER: "eval-session-handler",
     USER_POOL_ID: "eval-user-pool",
+    SUPPORTED_STATES: JSON.stringify(genericStates()),
   });
   return models;
 }

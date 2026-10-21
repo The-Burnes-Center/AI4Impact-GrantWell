@@ -63,7 +63,7 @@ export function withStage(stage, fn) {
 
 const decode = (bytes) => JSON.parse(new TextDecoder().decode(bytes));
 
-function usageRow(scope, command, t0, u, stop) {
+function usageRow(scope, command, t0, u, stop, firstTokenMs) {
   return {
     stage: scope.stage,
     model: command.input.modelId,
@@ -74,6 +74,7 @@ function usageRow(scope, command, t0, u, stop) {
     cacheWrite: u.cache_creation_input_tokens ?? 0,
     stop,
     ms: Date.now() - t0,
+    ...(firstTokenMs !== undefined && { firstTokenMs }),
   };
 }
 
@@ -89,11 +90,13 @@ async function liveBedrock(command, send, scope) {
   res.body = (async function* () {
     const u = {};
     let stop;
+    let firstTokenMs;
     try {
       for await (const event of source) {
         if (event.chunk?.bytes) {
           const chunk = decode(event.chunk.bytes);
           if (chunk.type === "message_start") Object.assign(u, chunk.message?.usage);
+          if (firstTokenMs === undefined && chunk.type === "content_block_delta") firstTokenMs = Date.now() - t0;
           if (chunk.type === "message_delta") {
             Object.assign(u, chunk.usage);
             stop = chunk.delta?.stop_reason ?? stop;
@@ -102,7 +105,7 @@ async function liveBedrock(command, send, scope) {
         yield event;
       }
     } finally {
-      scope.usage.push(usageRow(scope, command, t0, u, stop));
+      scope.usage.push(usageRow(scope, command, t0, u, stop, firstTokenMs));
     }
   })();
   return res;

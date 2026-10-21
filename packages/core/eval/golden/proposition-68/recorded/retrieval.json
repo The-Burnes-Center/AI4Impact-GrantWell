@@ -1,0 +1,1714 @@
+{
+ "0a414a1db6a40f93": {
+  "query": "application deadline and submission dates",
+  "filter": "bf3686dc6485d72f",
+  "retrievalResults": []
+ },
+ "0be885371beb1b91": {
+  "query": "application submission process and required documents",
+  "filter": "bf3686dc6485d72f",
+  "retrievalResults": []
+ },
+ "2eb5407f00642717": {
+  "query": "application submission deadline",
+  "filter": "bf3686dc6485d72f",
+  "retrievalResults": []
+ },
+ "31694623dda56e60": {
+  "query": "eligibility requirements applicant type",
+  "filter": "bf3686dc6485d72f",
+  "retrievalResults": []
+ },
+ "49b0f4c206c6cadf": {
+  "query": "eligibility requirements applicant type",
+  "filter": "45d0365ec75fdbfe",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Property acquired through this program must be purchased\n\n from a willing seller and in compliance with current laws governing acquisition of real property\n\n by public agencies for an amount not to exceed fair market value (Government Code (GOV)\n\n Section 7260 et seq.).\n\n NOTE: For implementation projects, California Environmental Quality Act (CEQA) compliance\n\n must be completed prior to grant award.\n\n G. Program Eligibility\n\n To be considered for funding through the Conservancy’s Community and Economic\n\n Enhancement Grant Program, eligibility must be met in four areas: bond, geographic, applicant,\n\n and project.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 6\n\n Bond Eligibility\n\n Proposition 68 is a general obligation bond. General obligation bond funds must be spent on\n\n the construction, acquisition, or long-term improvement of capital assets. Capital assets are\n\n defined as tangible property that has an expected useful life of no less than 15 years\n\n (GOV Sec. 16727(a)).\n\n Geographic Eligibility\n\n The Conservancy will fund projects within or benefitting the Delta and Suisun Marsh as defined\n\n in PRC Section 85058. A map can be found on the Conservancy’s website:\n\n http://deltaconservancy.ca.gov/about-delta-conservancy/.\n\n The Conservancy may fund a project outside the Delta and Suisun Marsh if the Conservancy\n\n Board makes all the findings described in the Sacramento-San Joaquin Delta Reform Act of\n\n 2009, Section 32360(g). These include:\n\n • The project implements the ecosystem goals of the Delta Plan.\n\n • The project is consistent with the requirements of any applicable State and federal\n\n permits.\n\n • The project will provide significant benefits to the Delta.\n\n Applicant Eligibility\n\n Applicants eligible for funding under this program are:\n\n • California public agencies. California public agencies include any city, county, district, or\n\n joint powers authority; State agencies; or California public colleges and universities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2443942,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AprVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Show consistency with program objectives and priorities as defined in these Guidelines.\n\n • Show consistency with the Conservancy’s mission and enabling legislation.\n\n • Align with the Delta Plan.\n\n \n\n \n  http://deltaconservancy.ca.gov/about-delta-conservancy/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 7\n\n • Comply with Proposition 68, State General Obligation Bond Law (GOV Sec. 16727), and\n\n other applicable State and federal laws.\n\n Ineligible Projects\n\n Projects not eligible for funding under Proposition 68 include:\n\n • Planning projects that do not advance an eligible implementation project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2279799,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Mapping resources available for the purpose of\n\n identifying SDACs and DACs by census track and/or block group are available on the Parks for\n\n All Californians website (http://www.parksforcalifornia.org/communities) and the\n\n Disadvantaged Communities Mapping Tool (https://gis.water.ca.gov/app/dacs/). The\n\n Conservancy may consider other means of identifying SDACs and DACs as well.\n\n Conservancy-funded projects must be bond eligible (see Bond Eligibility under Section G.\n\n Program Eligibility). Examples of ways in which a bond-eligible project might benefit a DAC or\n\n SDAC include, but are not limited to, the following.\n\n • Training and workforce education\n\n • Job opportunities\n\n • Recreational amenities\n\n • Educational opportunities\n\n • Increased resilience to climate change\n\n • Reduced flooding\n\n • Reduced pollution burden\n\n The Conservancy will prioritize projects that serve DACs and SDACs for its technical assistance\n\n efforts.\n\n \n\n \n\n \n  http://www.parksforcalifornia.org/communities\n \n\n \n  https://gis.water.ca.gov/app/dacs/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 5\n\n F. Project Types\n\n The Conservancy will grant funds for the planning or implementation phase of a bond-eligible\n\n project.\n\n Planning Projects\n\n Planning projects include activities necessary to advance a specific, bond-eligible, on-the-\n\n ground implementation project. Please note that receiving a planning grant does not guarantee\n\n that an implementation grant will be awarded for the same project.\n\n Examples of planning project activities include:\n\n • Project scoping: partnership development, outreach to impacted parties, stakeholder\n\n coordination, negotiation of site access or land tenure\n\n • Planning and design: engineering design, identifying appropriate best management\n\n practices\n\n • Environmental compliance: permitting, California Environmental Quality Act (CEQA)\n\n activities, Delta Plan consistency\n\n Pilot projects are a special type of planning project, and must inform the development of a\n\n specific, bond-eligible, on-the-ground implementation project. Pilot projects that are large in\n\n scale or duration may be considered implementation projects.\n\n Implementation Projects\n\n Implementation projects are specific, bond-eligible, on-the-ground projects that result in the\n\n construction, improvement, or acquisition of a capital asset that will be maintained for a\n\n minimum of 15 years. Implementation projects are “shovel-ready” projects.\n\n Land acquisitions are a special type of implementation project or may be a component of a\n\n larger implementation project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2135848,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "BACKGROUND ................................................................................................................. 2\n\n D. COMMUNITY AND ECONOMIC ENHANCEMENT PROGRAM PRIORITIES ............................. 3\n\n E. DISADVANTAGED AND SEVERELY DISADVANTAGED COMMUNITIES ................................. 4\n\n F. PROJECT TYPES ................................................................................................................ 5\n\n PLANNING PROJECTS ..................................................................................................................... 5\n\n IMPLEMENTATION PROJECTS ........................................................................................................... 5\n\n G. PROGRAM ELIGIBILITY ..................................................................................................... 5\n\n BOND ELIGIBILITY .......................................................................................................................... 6\n\n GEOGRAPHIC ELIGIBILITY ................................................................................................................ 6\n\n APPLICANT ELIGIBILITY .................................................................................................................... 6\n\n PROJECT ELIGIBILITY ...................................................................................................................... 6\n\n INELIGIBLE PROJECTS ...................................................................................................................... 7\n\n H. COST SHARE ..................................................................................................................... 7\n\n I. ELIGIBLE EXPENSES .......................................................................................................... 7\n\n DIRECT COSTS .............................................................................................................................. 7\n\n INDIRECT COSTS ............................................................................................................................ 7\n\n J. INELIGIBLE EXPENSES ....................................................................................................... 8\n\n K. APPLICATION PROCESS .................................................................................................... 8\n\n CONCEPT PROPOSAL ...................................................................................................................... 8\n\n VIABILITY ASSESSMENT .................................................................................................................. 8\n\n FULL PROPOSAL ............................................................................................................................ 9\n\n PROPOSAL ASSESSMENT ................................................................................................................. 9\n\n BOARD CONSIDERATION ............................................................................................................... 10\n\n TABLE OF APPLICATION PROCESS STEPS ........................................................................................... 10\n\n L. PRIVACY RIGHTS ............................................................................................................ 11\n\n M. PROGRAM REQUIREMENTS ............................................................................................ 11\n\n PERFORMANCE MONITORING ........................................................................................................ 11\n\n ENVIRONMENTAL COMPLIANCE ..................................................................................................... 11\n\n LONG-TERM MANAGEMENT.......................................................................................................... 12\n\n CALIFORNIA CONSERVATION CORPS ................................................................................................ 12\n\n LOCAL NOTIFICATIONS ................................................................................................................. 12\n\n N. GRANT AWARDS AND AGREEMENTS .............................................................................. 12Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 2\n\n A. Purpose of this Document\n\n This document serves as the Grant Guidelines (Guidelines) for the Sacramento-San Joaquin\n\n Delta Conservancy’s (Conservancy) Community and Economic Enhancement Grant Program\n\n (Grant Program) and provides guidance on how to apply."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2062039,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Nonprofit organizations. “Nonprofit organization” means an organization that is\n\n qualified to do business in California and qualified for exempt status under Section\n\n 501(c)(3) of Title 26 of the United States Code (USC 45 Sec. 80002(j)). An eligible\n\n nonprofit organization has among its principal charitable purposes preservation of land\n\n for scientific, recreational, scenic, or open-space opportunities, protection of the natural\n\n environment, preservation or enhancement of wildlife, preservation of cultural and\n\n historical resources, or efforts to provide for the enjoyment of public lands (PRC 22.3\n\n Sec. 32310(f)).\n\n Project Eligibility\n\n To be eligible to receive a grant from the Conservancy under this program, projects must:\n\n • Provide significant benefit to the Delta."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1927232,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ap7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "K. Application Process\n\n The Conservancy’s Community and Economic Enhancement Grant Program is a non-\n\n competitive program without proposal submission deadlines. This section provides a summary\n\n of the application and review process.\n\n Concept Proposal\n\n Concept proposals may be submitted at any time to initiate consideration of a project by the\n\n Conservancy. Applicants must submit a concept proposal using the Community and Economic\n\n Enhancement Grant Program Concept Proposal Form. (Program materials will be available on\n\n the Conservancy’s website when the program is opened.) The Conservancy will review each\n\n concept proposal as it is submitted. Once reviewed, the Conservancy will confer with the\n\n applicant to discuss the project concept, request additional information as needed, and discuss\n\n next steps. An in-person meeting and/or a site visit may also be deemed necessary at this time.\n\n Viability Assessment\n\n Based on information gathered during the concept proposal stage, along with input from\n\n technical experts if needed, Conservancy staff will evaluate the viability of the proposed project\n\n by assessing if the proposed project:\n\n • Is technically and financially feasible;\n\n • Is likely to provide locally-supported benefits to the Delta; and\n\n • Will significantly advance the Conservancy’s community and economic enhancement\n\n priorities.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 9\n\n Full Proposal\n\n If Conservancy staff determines that a project concept appears to be viable, staff will work with\n\n the applicant to develop the concept into a full proposal. The Conservancy may provide\n\n technical assistance to facilitate the development of project proposals."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1866658,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Conservancy may\n\n also assist in project implementation. Projects benefitting DACs will receive priority for the\n\n Conservancy’s technical assistance efforts.\n\n Proposal Assessment\n\n Conservancy staff will continually assess the project as they work with the applicant to develop\n\n the project proposal. Conservancy staff will consult external experts as needed.\n\n Conservancy staff will not recommend that the Conservancy Board fund a proposal unless the\n\n following criteria have been addressed to the satisfaction of the Conservancy and the applicant.\n\n 1. Project Design\n\n Are the project’s purpose, goals, deliverables, and schedule clear? Is the project well\n\n designed to meet the needs that the project addresses?\n\n 2. Public Benefits\n\n Will the project provide multiple tangible, enduring, public benefits with a high\n\n likelihood of being realized? Does the project have reasonable performance\n\n measurements and a clear plan for tracking them? Will the project benefit\n\n disadvantaged or severely disadvantaged communities?\n\n 3. Alignment with State and Other Priorities\n\n Does the project align with priorities identified in the following?:\n\n • Proposition 68\n\n • The Conservancy’s mission, governing statute, and strategic plan\n\n • The Delta Plan\n\n • Economic Sustainability Plan for the Sacramento-San Joaquin Delta\n\n • Other relevant local, regional, State, and federal plans\n\n (Links to relevant documents can be found at\n\n http://deltaconservancy.ca.gov/proposition-68/.)\n\n 4. Project Readiness\n\n Is the project ready to proceed promptly if funded?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1783979,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "4ce85b9e3a16802c": {
+  "query": "first step to apply, initial submission, concept proposal or pre-application",
+  "filter": "bf3686dc6485d72f",
+  "retrievalResults": []
+ },
+ "58dbb488a935fd9b": {
+  "query": "ineligible applicants not eligible",
+  "filter": "bf3686dc6485d72f",
+  "retrievalResults": []
+ },
+ "5ab89d93e82220ef": {
+  "query": "key dates, due date, closing date, application period",
+  "filter": "bf3686dc6485d72f",
+  "retrievalResults": []
+ },
+ "62799ec169d23b30": {
+  "query": "key dates, due date, closing date, application period",
+  "filter": "45d0365ec75fdbfe",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "K. Application Process\n\n The Conservancy’s Community and Economic Enhancement Grant Program is a non-\n\n competitive program without proposal submission deadlines. This section provides a summary\n\n of the application and review process.\n\n Concept Proposal\n\n Concept proposals may be submitted at any time to initiate consideration of a project by the\n\n Conservancy. Applicants must submit a concept proposal using the Community and Economic\n\n Enhancement Grant Program Concept Proposal Form. (Program materials will be available on\n\n the Conservancy’s website when the program is opened.) The Conservancy will review each\n\n concept proposal as it is submitted. Once reviewed, the Conservancy will confer with the\n\n applicant to discuss the project concept, request additional information as needed, and discuss\n\n next steps. An in-person meeting and/or a site visit may also be deemed necessary at this time.\n\n Viability Assessment\n\n Based on information gathered during the concept proposal stage, along with input from\n\n technical experts if needed, Conservancy staff will evaluate the viability of the proposed project\n\n by assessing if the proposed project:\n\n • Is technically and financially feasible;\n\n • Is likely to provide locally-supported benefits to the Delta; and\n\n • Will significantly advance the Conservancy’s community and economic enhancement\n\n priorities.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 9\n\n Full Proposal\n\n If Conservancy staff determines that a project concept appears to be viable, staff will work with\n\n the applicant to develop the concept into a full proposal. The Conservancy may provide\n\n technical assistance to facilitate the development of project proposals."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1697559,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Community and Economic Enhancement\n\n Grant Program http://deltaconservancy.ca.gov/proposition-68/\n\n \n\n GRANT GUIDELINES\n\n Adopted December 2019\n\n \n\n FUNDED BY THE\n\n California Drought, Water, Parks,\n\n Climate, Coastal Protection and\n\n Outdoor Access for All Act of 2018Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 1\n\n Contents\n\n A. PURPOSE OF THIS DOCUMENT ......................................................................................... 2\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1636331,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3An7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For planning projects, will planning\n\n activities advance the project toward implementation in a timely manner? For\n\n implementation projects, how complete is project planning, including the status of\n\n CEQA and permitting efforts?\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 10\n\n 5. Community and Institutional Support\n\n Does the project have public and relevant institutional support at the local, regional,\n\n State, or federal scale? Is the local community, or are other stakeholders, engaged in\n\n project planning or delivery? For planning projects, is there a plan to develop\n\n community support?\n\n 6. Cost Share\n\n Is cost share provided for this project?\n\n 7. Project Budget\n\n Is the budget adequate and reasonable for the project? Are costs clearly identified and\n\n justified?\n\n 8. Project Team\n\n Does the project team have sufficient experience and capacity to implement the project\n\n and to manage a State grant? Have necessary partnerships been developed?\n\n 9. Long-Term Management\n\n For planning projects, are next steps identified for movement towards a bond-eligible\n\n implementation project? For implementation projects, is a plan clearly identified for\n\n long-term management and sustainability of the project for a minimum of 15 years?\n\n Board Consideration\n\n If the above criteria have been addressed to the satisfaction of the Conservancy and the\n\n applicant and a proposal is assessed to be complete, Conservancy staff will make a\n\n recommendation to the Board for consideration of funding.\n\n NOTE: The Conservancy will consider the geographic distribution of projects, benefits related to\n\n disadvantaged and severely disadvantaged communities, reasonableness of costs, availability of\n\n funding, and diversity of project types, and may prioritize projects based on these\n\n considerations.\n\n Application Process Steps\n\n Step 1: Applicant completes concept proposal form and submits to the\n\n Conservancy.\n\n Step 2: Conservancy staff reviews concept proposal and confers with\n\n applicant. Site visit conducted if necessary.\n\n Step 3: Conservancy staff reviews information gathered, consults with\n\n technical experts if needed, and assesses if proposed project\n\n fits within the grant program and appears viable.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 11\n\n Step 4: If project appears to be viable, Conservancy staff works with\n\n applicant to develop full proposal.\n\n Step 5: Conservancy staff completes proposal assessment and makes\n\n recommendation to the Board.\n\n Step 6: Board considers funding for final proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1530006,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArrVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Grantees must have adequate proof of land tenure allowing the grantee access to the\n\n property to construct and maintain the project. Land tenure must be in place prior to\n\n the disbursement of funds. Proof of permission to access the project site is required for\n\n planning projects for which site access is required and the grantee is not the landowner.\n\n • The grantee is required to certify as part of the grant agreement that the grantee is\n\n responsible for complying with all federal, State, and local laws that apply to the project.\n\n • Grantees will not be paid:\n\n  If the grantee has been non-responsive or does not meet the conditions outlined\n\n in the grant agreement;\n\n  For costs for which alternative funding has been received;\n\n  For project changes that are not eligible; or\n\n  For work done after the grantee requests to end the project.\n\n • All grantees will be required to provide regular progress reports and a final report. The\n\n final report must be approved by Conservancy staff prior to the release of the final\n\n disbursement of grant funds. Specific reporting requirements will be included in the\n\n grant agreement.\n\n • To the extent practicable, grantees shall inform the public that the project received\n\n funds through the Delta Conservancy and from the California Drought, Water, Parks,\n\n Climate, Coastal Protection, and Outdoor Access for All Act of 2018 (PRC 45 Sec.\n\n 80001(b)(3)). Grantees shall recognize the Conservancy, in a manner approved in\n\n advance by the Conservancy, on signs, websites, press or promotional materials,\n\n advertisements, publications, or exhibits that they prepare or approve and that\n\n reference the project. For implementation projects, grantees shall post signs at the\n\n project site acknowledging the source of the funds. Size, location, and number of signs\n\n shall be approved by the Conservancy before they are produced.\n\n • Grants awarded through the Conservancy’s Community and Economic Enhancement\n\n Grant Program may be subject to prevailing wage provisions of Part 7 of Division 2 of\n\n the California Labor Code (CLC), commencing with Section 1720. The grantee shall pay\n\n prevailing wage to all persons employed in the performance of any part of the project if\n\n required by law to do so. Any questions regarding interpretation of the CLC should be\n\n directed to the Director of the Department of Industrial Relations (DIR), the State\n\n department having jurisdiction in these matters."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1462171,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "L. Privacy Rights\n\n Please note: once an applicant has submitted a proposal to the Conservancy, any privacy rights,\n\n as well as other confidentiality protections afforded by law with respect to the application\n\n package, are waived. All proposals are public records under the California Government Code\n\n Sections 6250-6276.48 and will be provided to the public upon request.\n\n M. Program Requirements\n\n Performance Monitoring\n\n Performance measures are used to track progress toward project goals and objectives. They\n\n provide a means of reliably measuring and reporting the implementation and effectiveness of a\n\n project and how it contributes value to the Delta and state. Performance measures will be\n\n developed to reflect the unique benefits of individual projects. Conservancy staff may provide\n\n assistance in development of performance measures.\n\n All implementation, acquisition, and pilot project proposals will include a performance\n\n monitoring and assessment framework that identifies the performance measures that will be\n\n used to demonstrate public benefits for at least 15 years following the end of the Grant Funding\n\n Term (See Section N. Grant Awards and Agreements below), how they will be monitored and\n\n assessed, and how monitoring data will be reported.\n\n Environmental Compliance\n\n Activities funded by this grant program must comply with applicable, local, State, and federal\n\n laws and regulations, including the California Environmental Quality Act (CEQA), the Delta Plan,\n\n and other environmental permitting requirements. Conservancy staff may assist the applicant\n\n with the compliance process; however, the applicant is solely responsible for project\n\n compliance. Applicants should be prepared to submit any permits, surveys, or reports that\n\n support the status of their environmental compliance.\n\n If a project is subject to CEQA, compliance must be completed prior to grant award. Funds for\n\n construction will not be disbursed until all required environmental compliance and permitting\n\n documents have been received by the Conservancy, including certification of consistency with\n\n the Delta Plan.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 12\n\n Long-Term Management\n\n The goal of long-term management is to foster the ongoing success of the project, ensuring that\n\n the benefits arising from the project endure beyond the end of the Grant Funding Term.\n\n Proposals will describe future project management or land management activities, explaining\n\n how the project, once implemented, will be stewarded for at least 15 years thereafter.\n\n Properties restored, enhanced, or protected, and facilities constructed or enhanced with funds\n\n provided by the Conservancy shall be operated, used, and maintained consistent with the\n\n purposes of the grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1437852,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ar7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "California Conservation Corps\n\n Consistent with Proposition 68 recommendations, all implementation projects that involve a\n\n site improvement component shall consult with representatives of both the California\n\n Conservation Corps and California Association of Local Conservation Corps (Corps) to determine\n\n the feasibility of Corps participation. Projects that do not include a site improvement\n\n component are exempt, but applicants are still encouraged to consult with the Corps to explore\n\n opportunities for collaboration. The Corps’ Proposition 68 Consultation Process form describes\n\n the consultation process. (A link can be found on the Conservancy’s Proposition 68 webpage:\n\n http://deltaconservancy.ca.gov/proposition-68/.)\n\n Local Notifications\n\n In compliance with the Conservancy’s governing statute, the Conservancy will notify local\n\n government agencies – such as counties, cities, and local districts –and relevant tribal entities\n\n about projects in their area being considered for grant funding. The Conservancy will work with\n\n applicants to make all reasonable efforts to address concerns raised by local government\n\n agencies and tribal entities.\n\n N. Grant Awards and Agreements\n\n For each awarded grant, the Conservancy will develop a grant agreement with detailed\n\n provisions and requirements specific to that project. (A draft grant agreement template will be\n\n available on the Conservancy’s Grant Program web page when the program opens.) Please be\n\n aware that for grants awarded by the Conservancy, the following apply.\n\n • Grantees will receive funding only during the Grant Funding Term, generally three years,\n\n during which time grantees may incur and be reimbursed for grant-related expenses.\n\n For implementation projects, the Grant Term will extend for an additional 15 years\n\n beyond the end of the Grant Funding Term, during which time projects must be\n\n maintained. Grantees will be held to the terms of the grant agreement until the end of\n\n the Grant Term.\n\n • Grant awards are conditional upon funds being available from the State.\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 13\n\n • In all but the most extenuating circumstances, grant funding will be paid in arrears on a\n\n reimbursement basis (with the exception of acquisition costs). All expenses require\n\n supporting documentation and are subject to audit"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1384528,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Property acquired through this program must be purchased\n\n from a willing seller and in compliance with current laws governing acquisition of real property\n\n by public agencies for an amount not to exceed fair market value (Government Code (GOV)\n\n Section 7260 et seq.).\n\n NOTE: For implementation projects, California Environmental Quality Act (CEQA) compliance\n\n must be completed prior to grant award.\n\n G. Program Eligibility\n\n To be considered for funding through the Conservancy’s Community and Economic\n\n Enhancement Grant Program, eligibility must be met in four areas: bond, geographic, applicant,\n\n and project.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 6\n\n Bond Eligibility\n\n Proposition 68 is a general obligation bond. General obligation bond funds must be spent on\n\n the construction, acquisition, or long-term improvement of capital assets. Capital assets are\n\n defined as tangible property that has an expected useful life of no less than 15 years\n\n (GOV Sec. 16727(a)).\n\n Geographic Eligibility\n\n The Conservancy will fund projects within or benefitting the Delta and Suisun Marsh as defined\n\n in PRC Section 85058. A map can be found on the Conservancy’s website:\n\n http://deltaconservancy.ca.gov/about-delta-conservancy/.\n\n The Conservancy may fund a project outside the Delta and Suisun Marsh if the Conservancy\n\n Board makes all the findings described in the Sacramento-San Joaquin Delta Reform Act of\n\n 2009, Section 32360(g). These include:\n\n • The project implements the ecosystem goals of the Delta Plan.\n\n • The project is consistent with the requirements of any applicable State and federal\n\n permits.\n\n • The project will provide significant benefits to the Delta.\n\n Applicant Eligibility\n\n Applicants eligible for funding under this program are:\n\n • California public agencies. California public agencies include any city, county, district, or\n\n joint powers authority; State agencies; or California public colleges and universities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1333759,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AprVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "69abbe3a519c0cd7": {
+  "query": "first step to apply, initial submission, concept proposal or pre-application",
+  "filter": "45d0365ec75fdbfe",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "K. Application Process\n\n The Conservancy’s Community and Economic Enhancement Grant Program is a non-\n\n competitive program without proposal submission deadlines. This section provides a summary\n\n of the application and review process.\n\n Concept Proposal\n\n Concept proposals may be submitted at any time to initiate consideration of a project by the\n\n Conservancy. Applicants must submit a concept proposal using the Community and Economic\n\n Enhancement Grant Program Concept Proposal Form. (Program materials will be available on\n\n the Conservancy’s website when the program is opened.) The Conservancy will review each\n\n concept proposal as it is submitted. Once reviewed, the Conservancy will confer with the\n\n applicant to discuss the project concept, request additional information as needed, and discuss\n\n next steps. An in-person meeting and/or a site visit may also be deemed necessary at this time.\n\n Viability Assessment\n\n Based on information gathered during the concept proposal stage, along with input from\n\n technical experts if needed, Conservancy staff will evaluate the viability of the proposed project\n\n by assessing if the proposed project:\n\n • Is technically and financially feasible;\n\n • Is likely to provide locally-supported benefits to the Delta; and\n\n • Will significantly advance the Conservancy’s community and economic enhancement\n\n priorities.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 9\n\n Full Proposal\n\n If Conservancy staff determines that a project concept appears to be viable, staff will work with\n\n the applicant to develop the concept into a full proposal. The Conservancy may provide\n\n technical assistance to facilitate the development of project proposals."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4545839,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For planning projects, will planning\n\n activities advance the project toward implementation in a timely manner? For\n\n implementation projects, how complete is project planning, including the status of\n\n CEQA and permitting efforts?\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 10\n\n 5. Community and Institutional Support\n\n Does the project have public and relevant institutional support at the local, regional,\n\n State, or federal scale? Is the local community, or are other stakeholders, engaged in\n\n project planning or delivery? For planning projects, is there a plan to develop\n\n community support?\n\n 6. Cost Share\n\n Is cost share provided for this project?\n\n 7. Project Budget\n\n Is the budget adequate and reasonable for the project? Are costs clearly identified and\n\n justified?\n\n 8. Project Team\n\n Does the project team have sufficient experience and capacity to implement the project\n\n and to manage a State grant? Have necessary partnerships been developed?\n\n 9. Long-Term Management\n\n For planning projects, are next steps identified for movement towards a bond-eligible\n\n implementation project? For implementation projects, is a plan clearly identified for\n\n long-term management and sustainability of the project for a minimum of 15 years?\n\n Board Consideration\n\n If the above criteria have been addressed to the satisfaction of the Conservancy and the\n\n applicant and a proposal is assessed to be complete, Conservancy staff will make a\n\n recommendation to the Board for consideration of funding.\n\n NOTE: The Conservancy will consider the geographic distribution of projects, benefits related to\n\n disadvantaged and severely disadvantaged communities, reasonableness of costs, availability of\n\n funding, and diversity of project types, and may prioritize projects based on these\n\n considerations.\n\n Application Process Steps\n\n Step 1: Applicant completes concept proposal form and submits to the\n\n Conservancy.\n\n Step 2: Conservancy staff reviews concept proposal and confers with\n\n applicant. Site visit conducted if necessary.\n\n Step 3: Conservancy staff reviews information gathered, consults with\n\n technical experts if needed, and assesses if proposed project\n\n fits within the grant program and appears viable.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 11\n\n Step 4: If project appears to be viable, Conservancy staff works with\n\n applicant to develop full proposal.\n\n Step 5: Conservancy staff completes proposal assessment and makes\n\n recommendation to the Board.\n\n Step 6: Board considers funding for final proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.25517,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArrVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Conservancy may\n\n also assist in project implementation. Projects benefitting DACs will receive priority for the\n\n Conservancy’s technical assistance efforts.\n\n Proposal Assessment\n\n Conservancy staff will continually assess the project as they work with the applicant to develop\n\n the project proposal. Conservancy staff will consult external experts as needed.\n\n Conservancy staff will not recommend that the Conservancy Board fund a proposal unless the\n\n following criteria have been addressed to the satisfaction of the Conservancy and the applicant.\n\n 1. Project Design\n\n Are the project’s purpose, goals, deliverables, and schedule clear? Is the project well\n\n designed to meet the needs that the project addresses?\n\n 2. Public Benefits\n\n Will the project provide multiple tangible, enduring, public benefits with a high\n\n likelihood of being realized? Does the project have reasonable performance\n\n measurements and a clear plan for tracking them? Will the project benefit\n\n disadvantaged or severely disadvantaged communities?\n\n 3. Alignment with State and Other Priorities\n\n Does the project align with priorities identified in the following?:\n\n • Proposition 68\n\n • The Conservancy’s mission, governing statute, and strategic plan\n\n • The Delta Plan\n\n • Economic Sustainability Plan for the Sacramento-San Joaquin Delta\n\n • Other relevant local, regional, State, and federal plans\n\n (Links to relevant documents can be found at\n\n http://deltaconservancy.ca.gov/proposition-68/.)\n\n 4. Project Readiness\n\n Is the project ready to proceed promptly if funded?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.226461,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "BACKGROUND ................................................................................................................. 2\n\n D. COMMUNITY AND ECONOMIC ENHANCEMENT PROGRAM PRIORITIES ............................. 3\n\n E. DISADVANTAGED AND SEVERELY DISADVANTAGED COMMUNITIES ................................. 4\n\n F. PROJECT TYPES ................................................................................................................ 5\n\n PLANNING PROJECTS ..................................................................................................................... 5\n\n IMPLEMENTATION PROJECTS ........................................................................................................... 5\n\n G. PROGRAM ELIGIBILITY ..................................................................................................... 5\n\n BOND ELIGIBILITY .......................................................................................................................... 6\n\n GEOGRAPHIC ELIGIBILITY ................................................................................................................ 6\n\n APPLICANT ELIGIBILITY .................................................................................................................... 6\n\n PROJECT ELIGIBILITY ...................................................................................................................... 6\n\n INELIGIBLE PROJECTS ...................................................................................................................... 7\n\n H. COST SHARE ..................................................................................................................... 7\n\n I. ELIGIBLE EXPENSES .......................................................................................................... 7\n\n DIRECT COSTS .............................................................................................................................. 7\n\n INDIRECT COSTS ............................................................................................................................ 7\n\n J. INELIGIBLE EXPENSES ....................................................................................................... 8\n\n K. APPLICATION PROCESS .................................................................................................... 8\n\n CONCEPT PROPOSAL ...................................................................................................................... 8\n\n VIABILITY ASSESSMENT .................................................................................................................. 8\n\n FULL PROPOSAL ............................................................................................................................ 9\n\n PROPOSAL ASSESSMENT ................................................................................................................. 9\n\n BOARD CONSIDERATION ............................................................................................................... 10\n\n TABLE OF APPLICATION PROCESS STEPS ........................................................................................... 10\n\n L. PRIVACY RIGHTS ............................................................................................................ 11\n\n M. PROGRAM REQUIREMENTS ............................................................................................ 11\n\n PERFORMANCE MONITORING ........................................................................................................ 11\n\n ENVIRONMENTAL COMPLIANCE ..................................................................................................... 11\n\n LONG-TERM MANAGEMENT.......................................................................................................... 12\n\n CALIFORNIA CONSERVATION CORPS ................................................................................................ 12\n\n LOCAL NOTIFICATIONS ................................................................................................................. 12\n\n N. GRANT AWARDS AND AGREEMENTS .............................................................................. 12Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 2\n\n A. Purpose of this Document\n\n This document serves as the Grant Guidelines (Guidelines) for the Sacramento-San Joaquin\n\n Delta Conservancy’s (Conservancy) Community and Economic Enhancement Grant Program\n\n (Grant Program) and provides guidance on how to apply."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1757679,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "L. Privacy Rights\n\n Please note: once an applicant has submitted a proposal to the Conservancy, any privacy rights,\n\n as well as other confidentiality protections afforded by law with respect to the application\n\n package, are waived. All proposals are public records under the California Government Code\n\n Sections 6250-6276.48 and will be provided to the public upon request.\n\n M. Program Requirements\n\n Performance Monitoring\n\n Performance measures are used to track progress toward project goals and objectives. They\n\n provide a means of reliably measuring and reporting the implementation and effectiveness of a\n\n project and how it contributes value to the Delta and state. Performance measures will be\n\n developed to reflect the unique benefits of individual projects. Conservancy staff may provide\n\n assistance in development of performance measures.\n\n All implementation, acquisition, and pilot project proposals will include a performance\n\n monitoring and assessment framework that identifies the performance measures that will be\n\n used to demonstrate public benefits for at least 15 years following the end of the Grant Funding\n\n Term (See Section N. Grant Awards and Agreements below), how they will be monitored and\n\n assessed, and how monitoring data will be reported.\n\n Environmental Compliance\n\n Activities funded by this grant program must comply with applicable, local, State, and federal\n\n laws and regulations, including the California Environmental Quality Act (CEQA), the Delta Plan,\n\n and other environmental permitting requirements. Conservancy staff may assist the applicant\n\n with the compliance process; however, the applicant is solely responsible for project\n\n compliance. Applicants should be prepared to submit any permits, surveys, or reports that\n\n support the status of their environmental compliance.\n\n If a project is subject to CEQA, compliance must be completed prior to grant award. Funds for\n\n construction will not be disbursed until all required environmental compliance and permitting\n\n documents have been received by the Conservancy, including certification of consistency with\n\n the Delta Plan.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 12\n\n Long-Term Management\n\n The goal of long-term management is to foster the ongoing success of the project, ensuring that\n\n the benefits arising from the project endure beyond the end of the Grant Funding Term.\n\n Proposals will describe future project management or land management activities, explaining\n\n how the project, once implemented, will be stewarded for at least 15 years thereafter.\n\n Properties restored, enhanced, or protected, and facilities constructed or enhanced with funds\n\n provided by the Conservancy shall be operated, used, and maintained consistent with the\n\n purposes of the grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1533842,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ar7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Community and Economic Enhancement\n\n Grant Program http://deltaconservancy.ca.gov/proposition-68/\n\n \n\n GRANT GUIDELINES\n\n Adopted December 2019\n\n \n\n FUNDED BY THE\n\n California Drought, Water, Parks,\n\n Climate, Coastal Protection and\n\n Outdoor Access for All Act of 2018Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 1\n\n Contents\n\n A. PURPOSE OF THIS DOCUMENT ......................................................................................... 2\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1330233,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3An7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "California Conservation Corps\n\n Consistent with Proposition 68 recommendations, all implementation projects that involve a\n\n site improvement component shall consult with representatives of both the California\n\n Conservation Corps and California Association of Local Conservation Corps (Corps) to determine\n\n the feasibility of Corps participation. Projects that do not include a site improvement\n\n component are exempt, but applicants are still encouraged to consult with the Corps to explore\n\n opportunities for collaboration. The Corps’ Proposition 68 Consultation Process form describes\n\n the consultation process. (A link can be found on the Conservancy’s Proposition 68 webpage:\n\n http://deltaconservancy.ca.gov/proposition-68/.)\n\n Local Notifications\n\n In compliance with the Conservancy’s governing statute, the Conservancy will notify local\n\n government agencies – such as counties, cities, and local districts –and relevant tribal entities\n\n about projects in their area being considered for grant funding. The Conservancy will work with\n\n applicants to make all reasonable efforts to address concerns raised by local government\n\n agencies and tribal entities.\n\n N. Grant Awards and Agreements\n\n For each awarded grant, the Conservancy will develop a grant agreement with detailed\n\n provisions and requirements specific to that project. (A draft grant agreement template will be\n\n available on the Conservancy’s Grant Program web page when the program opens.) Please be\n\n aware that for grants awarded by the Conservancy, the following apply.\n\n • Grantees will receive funding only during the Grant Funding Term, generally three years,\n\n during which time grantees may incur and be reimbursed for grant-related expenses.\n\n For implementation projects, the Grant Term will extend for an additional 15 years\n\n beyond the end of the Grant Funding Term, during which time projects must be\n\n maintained. Grantees will be held to the terms of the grant agreement until the end of\n\n the Grant Term.\n\n • Grant awards are conditional upon funds being available from the State.\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 13\n\n • In all but the most extenuating circumstances, grant funding will be paid in arrears on a\n\n reimbursement basis (with the exception of acquisition costs). All expenses require\n\n supporting documentation and are subject to audit"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1161785,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "69f1195edfdf1ba1": {
+  "query": "application submission process and required documents",
+  "filter": "45d0365ec75fdbfe",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "K. Application Process\n\n The Conservancy’s Community and Economic Enhancement Grant Program is a non-\n\n competitive program without proposal submission deadlines. This section provides a summary\n\n of the application and review process.\n\n Concept Proposal\n\n Concept proposals may be submitted at any time to initiate consideration of a project by the\n\n Conservancy. Applicants must submit a concept proposal using the Community and Economic\n\n Enhancement Grant Program Concept Proposal Form. (Program materials will be available on\n\n the Conservancy’s website when the program is opened.) The Conservancy will review each\n\n concept proposal as it is submitted. Once reviewed, the Conservancy will confer with the\n\n applicant to discuss the project concept, request additional information as needed, and discuss\n\n next steps. An in-person meeting and/or a site visit may also be deemed necessary at this time.\n\n Viability Assessment\n\n Based on information gathered during the concept proposal stage, along with input from\n\n technical experts if needed, Conservancy staff will evaluate the viability of the proposed project\n\n by assessing if the proposed project:\n\n • Is technically and financially feasible;\n\n • Is likely to provide locally-supported benefits to the Delta; and\n\n • Will significantly advance the Conservancy’s community and economic enhancement\n\n priorities.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 9\n\n Full Proposal\n\n If Conservancy staff determines that a project concept appears to be viable, staff will work with\n\n the applicant to develop the concept into a full proposal. The Conservancy may provide\n\n technical assistance to facilitate the development of project proposals."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2735442,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For planning projects, will planning\n\n activities advance the project toward implementation in a timely manner? For\n\n implementation projects, how complete is project planning, including the status of\n\n CEQA and permitting efforts?\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 10\n\n 5. Community and Institutional Support\n\n Does the project have public and relevant institutional support at the local, regional,\n\n State, or federal scale? Is the local community, or are other stakeholders, engaged in\n\n project planning or delivery? For planning projects, is there a plan to develop\n\n community support?\n\n 6. Cost Share\n\n Is cost share provided for this project?\n\n 7. Project Budget\n\n Is the budget adequate and reasonable for the project? Are costs clearly identified and\n\n justified?\n\n 8. Project Team\n\n Does the project team have sufficient experience and capacity to implement the project\n\n and to manage a State grant? Have necessary partnerships been developed?\n\n 9. Long-Term Management\n\n For planning projects, are next steps identified for movement towards a bond-eligible\n\n implementation project? For implementation projects, is a plan clearly identified for\n\n long-term management and sustainability of the project for a minimum of 15 years?\n\n Board Consideration\n\n If the above criteria have been addressed to the satisfaction of the Conservancy and the\n\n applicant and a proposal is assessed to be complete, Conservancy staff will make a\n\n recommendation to the Board for consideration of funding.\n\n NOTE: The Conservancy will consider the geographic distribution of projects, benefits related to\n\n disadvantaged and severely disadvantaged communities, reasonableness of costs, availability of\n\n funding, and diversity of project types, and may prioritize projects based on these\n\n considerations.\n\n Application Process Steps\n\n Step 1: Applicant completes concept proposal form and submits to the\n\n Conservancy.\n\n Step 2: Conservancy staff reviews concept proposal and confers with\n\n applicant. Site visit conducted if necessary.\n\n Step 3: Conservancy staff reviews information gathered, consults with\n\n technical experts if needed, and assesses if proposed project\n\n fits within the grant program and appears viable.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 11\n\n Step 4: If project appears to be viable, Conservancy staff works with\n\n applicant to develop full proposal.\n\n Step 5: Conservancy staff completes proposal assessment and makes\n\n recommendation to the Board.\n\n Step 6: Board considers funding for final proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1742339,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArrVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "L. Privacy Rights\n\n Please note: once an applicant has submitted a proposal to the Conservancy, any privacy rights,\n\n as well as other confidentiality protections afforded by law with respect to the application\n\n package, are waived. All proposals are public records under the California Government Code\n\n Sections 6250-6276.48 and will be provided to the public upon request.\n\n M. Program Requirements\n\n Performance Monitoring\n\n Performance measures are used to track progress toward project goals and objectives. They\n\n provide a means of reliably measuring and reporting the implementation and effectiveness of a\n\n project and how it contributes value to the Delta and state. Performance measures will be\n\n developed to reflect the unique benefits of individual projects. Conservancy staff may provide\n\n assistance in development of performance measures.\n\n All implementation, acquisition, and pilot project proposals will include a performance\n\n monitoring and assessment framework that identifies the performance measures that will be\n\n used to demonstrate public benefits for at least 15 years following the end of the Grant Funding\n\n Term (See Section N. Grant Awards and Agreements below), how they will be monitored and\n\n assessed, and how monitoring data will be reported.\n\n Environmental Compliance\n\n Activities funded by this grant program must comply with applicable, local, State, and federal\n\n laws and regulations, including the California Environmental Quality Act (CEQA), the Delta Plan,\n\n and other environmental permitting requirements. Conservancy staff may assist the applicant\n\n with the compliance process; however, the applicant is solely responsible for project\n\n compliance. Applicants should be prepared to submit any permits, surveys, or reports that\n\n support the status of their environmental compliance.\n\n If a project is subject to CEQA, compliance must be completed prior to grant award. Funds for\n\n construction will not be disbursed until all required environmental compliance and permitting\n\n documents have been received by the Conservancy, including certification of consistency with\n\n the Delta Plan.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 12\n\n Long-Term Management\n\n The goal of long-term management is to foster the ongoing success of the project, ensuring that\n\n the benefits arising from the project endure beyond the end of the Grant Funding Term.\n\n Proposals will describe future project management or land management activities, explaining\n\n how the project, once implemented, will be stewarded for at least 15 years thereafter.\n\n Properties restored, enhanced, or protected, and facilities constructed or enhanced with funds\n\n provided by the Conservancy shall be operated, used, and maintained consistent with the\n\n purposes of the grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1706572,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ar7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Conservancy may\n\n also assist in project implementation. Projects benefitting DACs will receive priority for the\n\n Conservancy’s technical assistance efforts.\n\n Proposal Assessment\n\n Conservancy staff will continually assess the project as they work with the applicant to develop\n\n the project proposal. Conservancy staff will consult external experts as needed.\n\n Conservancy staff will not recommend that the Conservancy Board fund a proposal unless the\n\n following criteria have been addressed to the satisfaction of the Conservancy and the applicant.\n\n 1. Project Design\n\n Are the project’s purpose, goals, deliverables, and schedule clear? Is the project well\n\n designed to meet the needs that the project addresses?\n\n 2. Public Benefits\n\n Will the project provide multiple tangible, enduring, public benefits with a high\n\n likelihood of being realized? Does the project have reasonable performance\n\n measurements and a clear plan for tracking them? Will the project benefit\n\n disadvantaged or severely disadvantaged communities?\n\n 3. Alignment with State and Other Priorities\n\n Does the project align with priorities identified in the following?:\n\n • Proposition 68\n\n • The Conservancy’s mission, governing statute, and strategic plan\n\n • The Delta Plan\n\n • Economic Sustainability Plan for the Sacramento-San Joaquin Delta\n\n • Other relevant local, regional, State, and federal plans\n\n (Links to relevant documents can be found at\n\n http://deltaconservancy.ca.gov/proposition-68/.)\n\n 4. Project Readiness\n\n Is the project ready to proceed promptly if funded?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1656477,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "BACKGROUND ................................................................................................................. 2\n\n D. COMMUNITY AND ECONOMIC ENHANCEMENT PROGRAM PRIORITIES ............................. 3\n\n E. DISADVANTAGED AND SEVERELY DISADVANTAGED COMMUNITIES ................................. 4\n\n F. PROJECT TYPES ................................................................................................................ 5\n\n PLANNING PROJECTS ..................................................................................................................... 5\n\n IMPLEMENTATION PROJECTS ........................................................................................................... 5\n\n G. PROGRAM ELIGIBILITY ..................................................................................................... 5\n\n BOND ELIGIBILITY .......................................................................................................................... 6\n\n GEOGRAPHIC ELIGIBILITY ................................................................................................................ 6\n\n APPLICANT ELIGIBILITY .................................................................................................................... 6\n\n PROJECT ELIGIBILITY ...................................................................................................................... 6\n\n INELIGIBLE PROJECTS ...................................................................................................................... 7\n\n H. COST SHARE ..................................................................................................................... 7\n\n I. ELIGIBLE EXPENSES .......................................................................................................... 7\n\n DIRECT COSTS .............................................................................................................................. 7\n\n INDIRECT COSTS ............................................................................................................................ 7\n\n J. INELIGIBLE EXPENSES ....................................................................................................... 8\n\n K. APPLICATION PROCESS .................................................................................................... 8\n\n CONCEPT PROPOSAL ...................................................................................................................... 8\n\n VIABILITY ASSESSMENT .................................................................................................................. 8\n\n FULL PROPOSAL ............................................................................................................................ 9\n\n PROPOSAL ASSESSMENT ................................................................................................................. 9\n\n BOARD CONSIDERATION ............................................................................................................... 10\n\n TABLE OF APPLICATION PROCESS STEPS ........................................................................................... 10\n\n L. PRIVACY RIGHTS ............................................................................................................ 11\n\n M. PROGRAM REQUIREMENTS ............................................................................................ 11\n\n PERFORMANCE MONITORING ........................................................................................................ 11\n\n ENVIRONMENTAL COMPLIANCE ..................................................................................................... 11\n\n LONG-TERM MANAGEMENT.......................................................................................................... 12\n\n CALIFORNIA CONSERVATION CORPS ................................................................................................ 12\n\n LOCAL NOTIFICATIONS ................................................................................................................. 12\n\n N. GRANT AWARDS AND AGREEMENTS .............................................................................. 12Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 2\n\n A. Purpose of this Document\n\n This document serves as the Grant Guidelines (Guidelines) for the Sacramento-San Joaquin\n\n Delta Conservancy’s (Conservancy) Community and Economic Enhancement Grant Program\n\n (Grant Program) and provides guidance on how to apply."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1456432,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Grantees must have adequate proof of land tenure allowing the grantee access to the\n\n property to construct and maintain the project. Land tenure must be in place prior to\n\n the disbursement of funds. Proof of permission to access the project site is required for\n\n planning projects for which site access is required and the grantee is not the landowner.\n\n • The grantee is required to certify as part of the grant agreement that the grantee is\n\n responsible for complying with all federal, State, and local laws that apply to the project.\n\n • Grantees will not be paid:\n\n  If the grantee has been non-responsive or does not meet the conditions outlined\n\n in the grant agreement;\n\n  For costs for which alternative funding has been received;\n\n  For project changes that are not eligible; or\n\n  For work done after the grantee requests to end the project.\n\n • All grantees will be required to provide regular progress reports and a final report. The\n\n final report must be approved by Conservancy staff prior to the release of the final\n\n disbursement of grant funds. Specific reporting requirements will be included in the\n\n grant agreement.\n\n • To the extent practicable, grantees shall inform the public that the project received\n\n funds through the Delta Conservancy and from the California Drought, Water, Parks,\n\n Climate, Coastal Protection, and Outdoor Access for All Act of 2018 (PRC 45 Sec.\n\n 80001(b)(3)). Grantees shall recognize the Conservancy, in a manner approved in\n\n advance by the Conservancy, on signs, websites, press or promotional materials,\n\n advertisements, publications, or exhibits that they prepare or approve and that\n\n reference the project. For implementation projects, grantees shall post signs at the\n\n project site acknowledging the source of the funds. Size, location, and number of signs\n\n shall be approved by the Conservancy before they are produced.\n\n • Grants awarded through the Conservancy’s Community and Economic Enhancement\n\n Grant Program may be subject to prevailing wage provisions of Part 7 of Division 2 of\n\n the California Labor Code (CLC), commencing with Section 1720. The grantee shall pay\n\n prevailing wage to all persons employed in the performance of any part of the project if\n\n required by law to do so. Any questions regarding interpretation of the CLC should be\n\n directed to the Director of the Department of Industrial Relations (DIR), the State\n\n department having jurisdiction in these matters."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1425979,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Community and Economic Enhancement\n\n Grant Program http://deltaconservancy.ca.gov/proposition-68/\n\n \n\n GRANT GUIDELINES\n\n Adopted December 2019\n\n \n\n FUNDED BY THE\n\n California Drought, Water, Parks,\n\n Climate, Coastal Protection and\n\n Outdoor Access for All Act of 2018Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 1\n\n Contents\n\n A. PURPOSE OF THIS DOCUMENT ......................................................................................... 2\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1331501,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3An7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "6bdf2741b5cdd746": {
+  "query": "application deadline and submission dates",
+  "filter": "45d0365ec75fdbfe",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "K. Application Process\n\n The Conservancy’s Community and Economic Enhancement Grant Program is a non-\n\n competitive program without proposal submission deadlines. This section provides a summary\n\n of the application and review process.\n\n Concept Proposal\n\n Concept proposals may be submitted at any time to initiate consideration of a project by the\n\n Conservancy. Applicants must submit a concept proposal using the Community and Economic\n\n Enhancement Grant Program Concept Proposal Form. (Program materials will be available on\n\n the Conservancy’s website when the program is opened.) The Conservancy will review each\n\n concept proposal as it is submitted. Once reviewed, the Conservancy will confer with the\n\n applicant to discuss the project concept, request additional information as needed, and discuss\n\n next steps. An in-person meeting and/or a site visit may also be deemed necessary at this time.\n\n Viability Assessment\n\n Based on information gathered during the concept proposal stage, along with input from\n\n technical experts if needed, Conservancy staff will evaluate the viability of the proposed project\n\n by assessing if the proposed project:\n\n • Is technically and financially feasible;\n\n • Is likely to provide locally-supported benefits to the Delta; and\n\n • Will significantly advance the Conservancy’s community and economic enhancement\n\n priorities.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 9\n\n Full Proposal\n\n If Conservancy staff determines that a project concept appears to be viable, staff will work with\n\n the applicant to develop the concept into a full proposal. The Conservancy may provide\n\n technical assistance to facilitate the development of project proposals."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1995447,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "L. Privacy Rights\n\n Please note: once an applicant has submitted a proposal to the Conservancy, any privacy rights,\n\n as well as other confidentiality protections afforded by law with respect to the application\n\n package, are waived. All proposals are public records under the California Government Code\n\n Sections 6250-6276.48 and will be provided to the public upon request.\n\n M. Program Requirements\n\n Performance Monitoring\n\n Performance measures are used to track progress toward project goals and objectives. They\n\n provide a means of reliably measuring and reporting the implementation and effectiveness of a\n\n project and how it contributes value to the Delta and state. Performance measures will be\n\n developed to reflect the unique benefits of individual projects. Conservancy staff may provide\n\n assistance in development of performance measures.\n\n All implementation, acquisition, and pilot project proposals will include a performance\n\n monitoring and assessment framework that identifies the performance measures that will be\n\n used to demonstrate public benefits for at least 15 years following the end of the Grant Funding\n\n Term (See Section N. Grant Awards and Agreements below), how they will be monitored and\n\n assessed, and how monitoring data will be reported.\n\n Environmental Compliance\n\n Activities funded by this grant program must comply with applicable, local, State, and federal\n\n laws and regulations, including the California Environmental Quality Act (CEQA), the Delta Plan,\n\n and other environmental permitting requirements. Conservancy staff may assist the applicant\n\n with the compliance process; however, the applicant is solely responsible for project\n\n compliance. Applicants should be prepared to submit any permits, surveys, or reports that\n\n support the status of their environmental compliance.\n\n If a project is subject to CEQA, compliance must be completed prior to grant award. Funds for\n\n construction will not be disbursed until all required environmental compliance and permitting\n\n documents have been received by the Conservancy, including certification of consistency with\n\n the Delta Plan.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 12\n\n Long-Term Management\n\n The goal of long-term management is to foster the ongoing success of the project, ensuring that\n\n the benefits arising from the project endure beyond the end of the Grant Funding Term.\n\n Proposals will describe future project management or land management activities, explaining\n\n how the project, once implemented, will be stewarded for at least 15 years thereafter.\n\n Properties restored, enhanced, or protected, and facilities constructed or enhanced with funds\n\n provided by the Conservancy shall be operated, used, and maintained consistent with the\n\n purposes of the grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1170907,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ar7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Community and Economic Enhancement\n\n Grant Program http://deltaconservancy.ca.gov/proposition-68/\n\n \n\n GRANT GUIDELINES\n\n Adopted December 2019\n\n \n\n FUNDED BY THE\n\n California Drought, Water, Parks,\n\n Climate, Coastal Protection and\n\n Outdoor Access for All Act of 2018Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 1\n\n Contents\n\n A. PURPOSE OF THIS DOCUMENT ......................................................................................... 2\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1150752,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3An7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For planning projects, will planning\n\n activities advance the project toward implementation in a timely manner? For\n\n implementation projects, how complete is project planning, including the status of\n\n CEQA and permitting efforts?\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 10\n\n 5. Community and Institutional Support\n\n Does the project have public and relevant institutional support at the local, regional,\n\n State, or federal scale? Is the local community, or are other stakeholders, engaged in\n\n project planning or delivery? For planning projects, is there a plan to develop\n\n community support?\n\n 6. Cost Share\n\n Is cost share provided for this project?\n\n 7. Project Budget\n\n Is the budget adequate and reasonable for the project? Are costs clearly identified and\n\n justified?\n\n 8. Project Team\n\n Does the project team have sufficient experience and capacity to implement the project\n\n and to manage a State grant? Have necessary partnerships been developed?\n\n 9. Long-Term Management\n\n For planning projects, are next steps identified for movement towards a bond-eligible\n\n implementation project? For implementation projects, is a plan clearly identified for\n\n long-term management and sustainability of the project for a minimum of 15 years?\n\n Board Consideration\n\n If the above criteria have been addressed to the satisfaction of the Conservancy and the\n\n applicant and a proposal is assessed to be complete, Conservancy staff will make a\n\n recommendation to the Board for consideration of funding.\n\n NOTE: The Conservancy will consider the geographic distribution of projects, benefits related to\n\n disadvantaged and severely disadvantaged communities, reasonableness of costs, availability of\n\n funding, and diversity of project types, and may prioritize projects based on these\n\n considerations.\n\n Application Process Steps\n\n Step 1: Applicant completes concept proposal form and submits to the\n\n Conservancy.\n\n Step 2: Conservancy staff reviews concept proposal and confers with\n\n applicant. Site visit conducted if necessary.\n\n Step 3: Conservancy staff reviews information gathered, consults with\n\n technical experts if needed, and assesses if proposed project\n\n fits within the grant program and appears viable.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 11\n\n Step 4: If project appears to be viable, Conservancy staff works with\n\n applicant to develop full proposal.\n\n Step 5: Conservancy staff completes proposal assessment and makes\n\n recommendation to the Board.\n\n Step 6: Board considers funding for final proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.106367,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArrVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "BACKGROUND ................................................................................................................. 2\n\n D. COMMUNITY AND ECONOMIC ENHANCEMENT PROGRAM PRIORITIES ............................. 3\n\n E. DISADVANTAGED AND SEVERELY DISADVANTAGED COMMUNITIES ................................. 4\n\n F. PROJECT TYPES ................................................................................................................ 5\n\n PLANNING PROJECTS ..................................................................................................................... 5\n\n IMPLEMENTATION PROJECTS ........................................................................................................... 5\n\n G. PROGRAM ELIGIBILITY ..................................................................................................... 5\n\n BOND ELIGIBILITY .......................................................................................................................... 6\n\n GEOGRAPHIC ELIGIBILITY ................................................................................................................ 6\n\n APPLICANT ELIGIBILITY .................................................................................................................... 6\n\n PROJECT ELIGIBILITY ...................................................................................................................... 6\n\n INELIGIBLE PROJECTS ...................................................................................................................... 7\n\n H. COST SHARE ..................................................................................................................... 7\n\n I. ELIGIBLE EXPENSES .......................................................................................................... 7\n\n DIRECT COSTS .............................................................................................................................. 7\n\n INDIRECT COSTS ............................................................................................................................ 7\n\n J. INELIGIBLE EXPENSES ....................................................................................................... 8\n\n K. APPLICATION PROCESS .................................................................................................... 8\n\n CONCEPT PROPOSAL ...................................................................................................................... 8\n\n VIABILITY ASSESSMENT .................................................................................................................. 8\n\n FULL PROPOSAL ............................................................................................................................ 9\n\n PROPOSAL ASSESSMENT ................................................................................................................. 9\n\n BOARD CONSIDERATION ............................................................................................................... 10\n\n TABLE OF APPLICATION PROCESS STEPS ........................................................................................... 10\n\n L. PRIVACY RIGHTS ............................................................................................................ 11\n\n M. PROGRAM REQUIREMENTS ............................................................................................ 11\n\n PERFORMANCE MONITORING ........................................................................................................ 11\n\n ENVIRONMENTAL COMPLIANCE ..................................................................................................... 11\n\n LONG-TERM MANAGEMENT.......................................................................................................... 12\n\n CALIFORNIA CONSERVATION CORPS ................................................................................................ 12\n\n LOCAL NOTIFICATIONS ................................................................................................................. 12\n\n N. GRANT AWARDS AND AGREEMENTS .............................................................................. 12Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 2\n\n A. Purpose of this Document\n\n This document serves as the Grant Guidelines (Guidelines) for the Sacramento-San Joaquin\n\n Delta Conservancy’s (Conservancy) Community and Economic Enhancement Grant Program\n\n (Grant Program) and provides guidance on how to apply."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.103799,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Conservancy may\n\n also assist in project implementation. Projects benefitting DACs will receive priority for the\n\n Conservancy’s technical assistance efforts.\n\n Proposal Assessment\n\n Conservancy staff will continually assess the project as they work with the applicant to develop\n\n the project proposal. Conservancy staff will consult external experts as needed.\n\n Conservancy staff will not recommend that the Conservancy Board fund a proposal unless the\n\n following criteria have been addressed to the satisfaction of the Conservancy and the applicant.\n\n 1. Project Design\n\n Are the project’s purpose, goals, deliverables, and schedule clear? Is the project well\n\n designed to meet the needs that the project addresses?\n\n 2. Public Benefits\n\n Will the project provide multiple tangible, enduring, public benefits with a high\n\n likelihood of being realized? Does the project have reasonable performance\n\n measurements and a clear plan for tracking them? Will the project benefit\n\n disadvantaged or severely disadvantaged communities?\n\n 3. Alignment with State and Other Priorities\n\n Does the project align with priorities identified in the following?:\n\n • Proposition 68\n\n • The Conservancy’s mission, governing statute, and strategic plan\n\n • The Delta Plan\n\n • Economic Sustainability Plan for the Sacramento-San Joaquin Delta\n\n • Other relevant local, regional, State, and federal plans\n\n (Links to relevant documents can be found at\n\n http://deltaconservancy.ca.gov/proposition-68/.)\n\n 4. Project Readiness\n\n Is the project ready to proceed promptly if funded?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.101939,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "CONTACT INFORMATION ................................................................................................. 2\n\n C."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.101645,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AoLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "70abeb1e4a30f5c5": {
+  "query": "eligible applicants who can apply",
+  "filter": "bf3686dc6485d72f",
+  "retrievalResults": []
+ },
+ "945ec1e5d5e85e4b": {
+  "query": "ineligible applicants not eligible",
+  "filter": "45d0365ec75fdbfe",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Show consistency with program objectives and priorities as defined in these Guidelines.\n\n • Show consistency with the Conservancy’s mission and enabling legislation.\n\n • Align with the Delta Plan.\n\n \n\n \n  http://deltaconservancy.ca.gov/about-delta-conservancy/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 7\n\n • Comply with Proposition 68, State General Obligation Bond Law (GOV Sec. 16727), and\n\n other applicable State and federal laws.\n\n Ineligible Projects\n\n Projects not eligible for funding under Proposition 68 include:\n\n • Planning projects that do not advance an eligible implementation project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2142792,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Mapping resources available for the purpose of\n\n identifying SDACs and DACs by census track and/or block group are available on the Parks for\n\n All Californians website (http://www.parksforcalifornia.org/communities) and the\n\n Disadvantaged Communities Mapping Tool (https://gis.water.ca.gov/app/dacs/). The\n\n Conservancy may consider other means of identifying SDACs and DACs as well.\n\n Conservancy-funded projects must be bond eligible (see Bond Eligibility under Section G.\n\n Program Eligibility). Examples of ways in which a bond-eligible project might benefit a DAC or\n\n SDAC include, but are not limited to, the following.\n\n • Training and workforce education\n\n • Job opportunities\n\n • Recreational amenities\n\n • Educational opportunities\n\n • Increased resilience to climate change\n\n • Reduced flooding\n\n • Reduced pollution burden\n\n The Conservancy will prioritize projects that serve DACs and SDACs for its technical assistance\n\n efforts.\n\n \n\n \n\n \n  http://www.parksforcalifornia.org/communities\n \n\n \n  https://gis.water.ca.gov/app/dacs/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 5\n\n F. Project Types\n\n The Conservancy will grant funds for the planning or implementation phase of a bond-eligible\n\n project.\n\n Planning Projects\n\n Planning projects include activities necessary to advance a specific, bond-eligible, on-the-\n\n ground implementation project. Please note that receiving a planning grant does not guarantee\n\n that an implementation grant will be awarded for the same project.\n\n Examples of planning project activities include:\n\n • Project scoping: partnership development, outreach to impacted parties, stakeholder\n\n coordination, negotiation of site access or land tenure\n\n • Planning and design: engineering design, identifying appropriate best management\n\n practices\n\n • Environmental compliance: permitting, California Environmental Quality Act (CEQA)\n\n activities, Delta Plan consistency\n\n Pilot projects are a special type of planning project, and must inform the development of a\n\n specific, bond-eligible, on-the-ground implementation project. Pilot projects that are large in\n\n scale or duration may be considered implementation projects.\n\n Implementation Projects\n\n Implementation projects are specific, bond-eligible, on-the-ground projects that result in the\n\n construction, improvement, or acquisition of a capital asset that will be maintained for a\n\n minimum of 15 years. Implementation projects are “shovel-ready” projects.\n\n Land acquisitions are a special type of implementation project or may be a component of a\n\n larger implementation project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1874179,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Property acquired through this program must be purchased\n\n from a willing seller and in compliance with current laws governing acquisition of real property\n\n by public agencies for an amount not to exceed fair market value (Government Code (GOV)\n\n Section 7260 et seq.).\n\n NOTE: For implementation projects, California Environmental Quality Act (CEQA) compliance\n\n must be completed prior to grant award.\n\n G. Program Eligibility\n\n To be considered for funding through the Conservancy’s Community and Economic\n\n Enhancement Grant Program, eligibility must be met in four areas: bond, geographic, applicant,\n\n and project.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 6\n\n Bond Eligibility\n\n Proposition 68 is a general obligation bond. General obligation bond funds must be spent on\n\n the construction, acquisition, or long-term improvement of capital assets. Capital assets are\n\n defined as tangible property that has an expected useful life of no less than 15 years\n\n (GOV Sec. 16727(a)).\n\n Geographic Eligibility\n\n The Conservancy will fund projects within or benefitting the Delta and Suisun Marsh as defined\n\n in PRC Section 85058. A map can be found on the Conservancy’s website:\n\n http://deltaconservancy.ca.gov/about-delta-conservancy/.\n\n The Conservancy may fund a project outside the Delta and Suisun Marsh if the Conservancy\n\n Board makes all the findings described in the Sacramento-San Joaquin Delta Reform Act of\n\n 2009, Section 32360(g). These include:\n\n • The project implements the ecosystem goals of the Delta Plan.\n\n • The project is consistent with the requirements of any applicable State and federal\n\n permits.\n\n • The project will provide significant benefits to the Delta.\n\n Applicant Eligibility\n\n Applicants eligible for funding under this program are:\n\n • California public agencies. California public agencies include any city, county, district, or\n\n joint powers authority; State agencies; or California public colleges and universities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1700009,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AprVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Nonprofit organizations. “Nonprofit organization” means an organization that is\n\n qualified to do business in California and qualified for exempt status under Section\n\n 501(c)(3) of Title 26 of the United States Code (USC 45 Sec. 80002(j)). An eligible\n\n nonprofit organization has among its principal charitable purposes preservation of land\n\n for scientific, recreational, scenic, or open-space opportunities, protection of the natural\n\n environment, preservation or enhancement of wildlife, preservation of cultural and\n\n historical resources, or efforts to provide for the enjoyment of public lands (PRC 22.3\n\n Sec. 32310(f)).\n\n Project Eligibility\n\n To be eligible to receive a grant from the Conservancy under this program, projects must:\n\n • Provide significant benefit to the Delta."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1566024,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ap7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "BACKGROUND ................................................................................................................. 2\n\n D. COMMUNITY AND ECONOMIC ENHANCEMENT PROGRAM PRIORITIES ............................. 3\n\n E. DISADVANTAGED AND SEVERELY DISADVANTAGED COMMUNITIES ................................. 4\n\n F. PROJECT TYPES ................................................................................................................ 5\n\n PLANNING PROJECTS ..................................................................................................................... 5\n\n IMPLEMENTATION PROJECTS ........................................................................................................... 5\n\n G. PROGRAM ELIGIBILITY ..................................................................................................... 5\n\n BOND ELIGIBILITY .......................................................................................................................... 6\n\n GEOGRAPHIC ELIGIBILITY ................................................................................................................ 6\n\n APPLICANT ELIGIBILITY .................................................................................................................... 6\n\n PROJECT ELIGIBILITY ...................................................................................................................... 6\n\n INELIGIBLE PROJECTS ...................................................................................................................... 7\n\n H. COST SHARE ..................................................................................................................... 7\n\n I. ELIGIBLE EXPENSES .......................................................................................................... 7\n\n DIRECT COSTS .............................................................................................................................. 7\n\n INDIRECT COSTS ............................................................................................................................ 7\n\n J. INELIGIBLE EXPENSES ....................................................................................................... 8\n\n K. APPLICATION PROCESS .................................................................................................... 8\n\n CONCEPT PROPOSAL ...................................................................................................................... 8\n\n VIABILITY ASSESSMENT .................................................................................................................. 8\n\n FULL PROPOSAL ............................................................................................................................ 9\n\n PROPOSAL ASSESSMENT ................................................................................................................. 9\n\n BOARD CONSIDERATION ............................................................................................................... 10\n\n TABLE OF APPLICATION PROCESS STEPS ........................................................................................... 10\n\n L. PRIVACY RIGHTS ............................................................................................................ 11\n\n M. PROGRAM REQUIREMENTS ............................................................................................ 11\n\n PERFORMANCE MONITORING ........................................................................................................ 11\n\n ENVIRONMENTAL COMPLIANCE ..................................................................................................... 11\n\n LONG-TERM MANAGEMENT.......................................................................................................... 12\n\n CALIFORNIA CONSERVATION CORPS ................................................................................................ 12\n\n LOCAL NOTIFICATIONS ................................................................................................................. 12\n\n N. GRANT AWARDS AND AGREEMENTS .............................................................................. 12Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 2\n\n A. Purpose of this Document\n\n This document serves as the Grant Guidelines (Guidelines) for the Sacramento-San Joaquin\n\n Delta Conservancy’s (Conservancy) Community and Economic Enhancement Grant Program\n\n (Grant Program) and provides guidance on how to apply."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1363769,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Projects dictated by a legal settlement or mandated to address a violation of, or an\n\n order (citation) to comply with, a law or regulation.\n\n • Projects that subsidize or decrease the mitigation obligations of any party.\n\n H. Cost Share\n\n Cost share is cash or in-kind contributions to the project borne by private, local, State, and\n\n federal funding partners other than the Conservancy. Cost share encourages and demonstrates\n\n collaboration and cooperation. Consistent with provisions of Proposition 68, all applicants are\n\n encouraged to provide cost share to support their project (PRC 45 Sec. 80001(b)(2)).\n\n Conservancy staff will consult with applicants to determine if cost share is available. Applicants\n\n stating that they have a cost share component must provide commitment letters from cost\n\n share partners before a proposal is recommended for funding; these letters must specifically\n\n confirm the dollar amount committed, including cost share from in-kind contributions.\n\n I. Eligible Expenses\n\n Only costs incurred during the Grant Funding Term are eligible for reimbursement (See Section\n\n N. Grant Awards and Agreements below).\n\n Direct Costs\n\n Direct costs are for work specified in the scope of work, terms, and conditions of the grant\n\n agreement, and that are distinctly related to tasks and expenditures to implement the project\n\n as described in the grant agreement. The Conservancy will fund direct costs related to\n\n personnel services, operating expenses (general), operating expenses (subcontractor),\n\n operating expenses (equipment), and acquisition costs.\n\n Indirect Costs\n\n Indirect costs do not have a specific direct relationship to the project but are required for\n\n completion of the project. The Conservancy funds indirect costs, not to exceed twenty (20)\n\n percent of the sum of grant-funded direct costs for personnel services and operating expenses\n\n (general).Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 8\n\n J. Ineligible Expenses\n\n Grant funding may not be used to:\n\n • Establish or increase an endowment or legal defense fund."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1297647,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For planning projects, will planning\n\n activities advance the project toward implementation in a timely manner? For\n\n implementation projects, how complete is project planning, including the status of\n\n CEQA and permitting efforts?\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 10\n\n 5. Community and Institutional Support\n\n Does the project have public and relevant institutional support at the local, regional,\n\n State, or federal scale? Is the local community, or are other stakeholders, engaged in\n\n project planning or delivery? For planning projects, is there a plan to develop\n\n community support?\n\n 6. Cost Share\n\n Is cost share provided for this project?\n\n 7. Project Budget\n\n Is the budget adequate and reasonable for the project? Are costs clearly identified and\n\n justified?\n\n 8. Project Team\n\n Does the project team have sufficient experience and capacity to implement the project\n\n and to manage a State grant? Have necessary partnerships been developed?\n\n 9. Long-Term Management\n\n For planning projects, are next steps identified for movement towards a bond-eligible\n\n implementation project? For implementation projects, is a plan clearly identified for\n\n long-term management and sustainability of the project for a minimum of 15 years?\n\n Board Consideration\n\n If the above criteria have been addressed to the satisfaction of the Conservancy and the\n\n applicant and a proposal is assessed to be complete, Conservancy staff will make a\n\n recommendation to the Board for consideration of funding.\n\n NOTE: The Conservancy will consider the geographic distribution of projects, benefits related to\n\n disadvantaged and severely disadvantaged communities, reasonableness of costs, availability of\n\n funding, and diversity of project types, and may prioritize projects based on these\n\n considerations.\n\n Application Process Steps\n\n Step 1: Applicant completes concept proposal form and submits to the\n\n Conservancy.\n\n Step 2: Conservancy staff reviews concept proposal and confers with\n\n applicant. Site visit conducted if necessary.\n\n Step 3: Conservancy staff reviews information gathered, consults with\n\n technical experts if needed, and assesses if proposed project\n\n fits within the grant program and appears viable.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 11\n\n Step 4: If project appears to be viable, Conservancy staff works with\n\n applicant to develop full proposal.\n\n Step 5: Conservancy staff completes proposal assessment and makes\n\n recommendation to the Board.\n\n Step 6: Board considers funding for final proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1068294,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArrVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "aadd0ff9f8baa283": {
+  "query": "eligible applicants who can apply",
+  "filter": "45d0365ec75fdbfe",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Property acquired through this program must be purchased\n\n from a willing seller and in compliance with current laws governing acquisition of real property\n\n by public agencies for an amount not to exceed fair market value (Government Code (GOV)\n\n Section 7260 et seq.).\n\n NOTE: For implementation projects, California Environmental Quality Act (CEQA) compliance\n\n must be completed prior to grant award.\n\n G. Program Eligibility\n\n To be considered for funding through the Conservancy’s Community and Economic\n\n Enhancement Grant Program, eligibility must be met in four areas: bond, geographic, applicant,\n\n and project.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 6\n\n Bond Eligibility\n\n Proposition 68 is a general obligation bond. General obligation bond funds must be spent on\n\n the construction, acquisition, or long-term improvement of capital assets. Capital assets are\n\n defined as tangible property that has an expected useful life of no less than 15 years\n\n (GOV Sec. 16727(a)).\n\n Geographic Eligibility\n\n The Conservancy will fund projects within or benefitting the Delta and Suisun Marsh as defined\n\n in PRC Section 85058. A map can be found on the Conservancy’s website:\n\n http://deltaconservancy.ca.gov/about-delta-conservancy/.\n\n The Conservancy may fund a project outside the Delta and Suisun Marsh if the Conservancy\n\n Board makes all the findings described in the Sacramento-San Joaquin Delta Reform Act of\n\n 2009, Section 32360(g). These include:\n\n • The project implements the ecosystem goals of the Delta Plan.\n\n • The project is consistent with the requirements of any applicable State and federal\n\n permits.\n\n • The project will provide significant benefits to the Delta.\n\n Applicant Eligibility\n\n Applicants eligible for funding under this program are:\n\n • California public agencies. California public agencies include any city, county, district, or\n\n joint powers authority; State agencies; or California public colleges and universities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2776742,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AprVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Show consistency with program objectives and priorities as defined in these Guidelines.\n\n • Show consistency with the Conservancy’s mission and enabling legislation.\n\n • Align with the Delta Plan.\n\n \n\n \n  http://deltaconservancy.ca.gov/about-delta-conservancy/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 7\n\n • Comply with Proposition 68, State General Obligation Bond Law (GOV Sec. 16727), and\n\n other applicable State and federal laws.\n\n Ineligible Projects\n\n Projects not eligible for funding under Proposition 68 include:\n\n • Planning projects that do not advance an eligible implementation project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2589633,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Mapping resources available for the purpose of\n\n identifying SDACs and DACs by census track and/or block group are available on the Parks for\n\n All Californians website (http://www.parksforcalifornia.org/communities) and the\n\n Disadvantaged Communities Mapping Tool (https://gis.water.ca.gov/app/dacs/). The\n\n Conservancy may consider other means of identifying SDACs and DACs as well.\n\n Conservancy-funded projects must be bond eligible (see Bond Eligibility under Section G.\n\n Program Eligibility). Examples of ways in which a bond-eligible project might benefit a DAC or\n\n SDAC include, but are not limited to, the following.\n\n • Training and workforce education\n\n • Job opportunities\n\n • Recreational amenities\n\n • Educational opportunities\n\n • Increased resilience to climate change\n\n • Reduced flooding\n\n • Reduced pollution burden\n\n The Conservancy will prioritize projects that serve DACs and SDACs for its technical assistance\n\n efforts.\n\n \n\n \n\n \n  http://www.parksforcalifornia.org/communities\n \n\n \n  https://gis.water.ca.gov/app/dacs/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 5\n\n F. Project Types\n\n The Conservancy will grant funds for the planning or implementation phase of a bond-eligible\n\n project.\n\n Planning Projects\n\n Planning projects include activities necessary to advance a specific, bond-eligible, on-the-\n\n ground implementation project. Please note that receiving a planning grant does not guarantee\n\n that an implementation grant will be awarded for the same project.\n\n Examples of planning project activities include:\n\n • Project scoping: partnership development, outreach to impacted parties, stakeholder\n\n coordination, negotiation of site access or land tenure\n\n • Planning and design: engineering design, identifying appropriate best management\n\n practices\n\n • Environmental compliance: permitting, California Environmental Quality Act (CEQA)\n\n activities, Delta Plan consistency\n\n Pilot projects are a special type of planning project, and must inform the development of a\n\n specific, bond-eligible, on-the-ground implementation project. Pilot projects that are large in\n\n scale or duration may be considered implementation projects.\n\n Implementation Projects\n\n Implementation projects are specific, bond-eligible, on-the-ground projects that result in the\n\n construction, improvement, or acquisition of a capital asset that will be maintained for a\n\n minimum of 15 years. Implementation projects are “shovel-ready” projects.\n\n Land acquisitions are a special type of implementation project or may be a component of a\n\n larger implementation project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2456168,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "BACKGROUND ................................................................................................................. 2\n\n D. COMMUNITY AND ECONOMIC ENHANCEMENT PROGRAM PRIORITIES ............................. 3\n\n E. DISADVANTAGED AND SEVERELY DISADVANTAGED COMMUNITIES ................................. 4\n\n F. PROJECT TYPES ................................................................................................................ 5\n\n PLANNING PROJECTS ..................................................................................................................... 5\n\n IMPLEMENTATION PROJECTS ........................................................................................................... 5\n\n G. PROGRAM ELIGIBILITY ..................................................................................................... 5\n\n BOND ELIGIBILITY .......................................................................................................................... 6\n\n GEOGRAPHIC ELIGIBILITY ................................................................................................................ 6\n\n APPLICANT ELIGIBILITY .................................................................................................................... 6\n\n PROJECT ELIGIBILITY ...................................................................................................................... 6\n\n INELIGIBLE PROJECTS ...................................................................................................................... 7\n\n H. COST SHARE ..................................................................................................................... 7\n\n I. ELIGIBLE EXPENSES .......................................................................................................... 7\n\n DIRECT COSTS .............................................................................................................................. 7\n\n INDIRECT COSTS ............................................................................................................................ 7\n\n J. INELIGIBLE EXPENSES ....................................................................................................... 8\n\n K. APPLICATION PROCESS .................................................................................................... 8\n\n CONCEPT PROPOSAL ...................................................................................................................... 8\n\n VIABILITY ASSESSMENT .................................................................................................................. 8\n\n FULL PROPOSAL ............................................................................................................................ 9\n\n PROPOSAL ASSESSMENT ................................................................................................................. 9\n\n BOARD CONSIDERATION ............................................................................................................... 10\n\n TABLE OF APPLICATION PROCESS STEPS ........................................................................................... 10\n\n L. PRIVACY RIGHTS ............................................................................................................ 11\n\n M. PROGRAM REQUIREMENTS ............................................................................................ 11\n\n PERFORMANCE MONITORING ........................................................................................................ 11\n\n ENVIRONMENTAL COMPLIANCE ..................................................................................................... 11\n\n LONG-TERM MANAGEMENT.......................................................................................................... 12\n\n CALIFORNIA CONSERVATION CORPS ................................................................................................ 12\n\n LOCAL NOTIFICATIONS ................................................................................................................. 12\n\n N. GRANT AWARDS AND AGREEMENTS .............................................................................. 12Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 2\n\n A. Purpose of this Document\n\n This document serves as the Grant Guidelines (Guidelines) for the Sacramento-San Joaquin\n\n Delta Conservancy’s (Conservancy) Community and Economic Enhancement Grant Program\n\n (Grant Program) and provides guidance on how to apply."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2362183,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Nonprofit organizations. “Nonprofit organization” means an organization that is\n\n qualified to do business in California and qualified for exempt status under Section\n\n 501(c)(3) of Title 26 of the United States Code (USC 45 Sec. 80002(j)). An eligible\n\n nonprofit organization has among its principal charitable purposes preservation of land\n\n for scientific, recreational, scenic, or open-space opportunities, protection of the natural\n\n environment, preservation or enhancement of wildlife, preservation of cultural and\n\n historical resources, or efforts to provide for the enjoyment of public lands (PRC 22.3\n\n Sec. 32310(f)).\n\n Project Eligibility\n\n To be eligible to receive a grant from the Conservancy under this program, projects must:\n\n • Provide significant benefit to the Delta."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2136339,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ap7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Projects dictated by a legal settlement or mandated to address a violation of, or an\n\n order (citation) to comply with, a law or regulation.\n\n • Projects that subsidize or decrease the mitigation obligations of any party.\n\n H. Cost Share\n\n Cost share is cash or in-kind contributions to the project borne by private, local, State, and\n\n federal funding partners other than the Conservancy. Cost share encourages and demonstrates\n\n collaboration and cooperation. Consistent with provisions of Proposition 68, all applicants are\n\n encouraged to provide cost share to support their project (PRC 45 Sec. 80001(b)(2)).\n\n Conservancy staff will consult with applicants to determine if cost share is available. Applicants\n\n stating that they have a cost share component must provide commitment letters from cost\n\n share partners before a proposal is recommended for funding; these letters must specifically\n\n confirm the dollar amount committed, including cost share from in-kind contributions.\n\n I. Eligible Expenses\n\n Only costs incurred during the Grant Funding Term are eligible for reimbursement (See Section\n\n N. Grant Awards and Agreements below).\n\n Direct Costs\n\n Direct costs are for work specified in the scope of work, terms, and conditions of the grant\n\n agreement, and that are distinctly related to tasks and expenditures to implement the project\n\n as described in the grant agreement. The Conservancy will fund direct costs related to\n\n personnel services, operating expenses (general), operating expenses (subcontractor),\n\n operating expenses (equipment), and acquisition costs.\n\n Indirect Costs\n\n Indirect costs do not have a specific direct relationship to the project but are required for\n\n completion of the project. The Conservancy funds indirect costs, not to exceed twenty (20)\n\n percent of the sum of grant-funded direct costs for personnel services and operating expenses\n\n (general).Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 8\n\n J. Ineligible Expenses\n\n Grant funding may not be used to:\n\n • Establish or increase an endowment or legal defense fund."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2104177,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "K. Application Process\n\n The Conservancy’s Community and Economic Enhancement Grant Program is a non-\n\n competitive program without proposal submission deadlines. This section provides a summary\n\n of the application and review process.\n\n Concept Proposal\n\n Concept proposals may be submitted at any time to initiate consideration of a project by the\n\n Conservancy. Applicants must submit a concept proposal using the Community and Economic\n\n Enhancement Grant Program Concept Proposal Form. (Program materials will be available on\n\n the Conservancy’s website when the program is opened.) The Conservancy will review each\n\n concept proposal as it is submitted. Once reviewed, the Conservancy will confer with the\n\n applicant to discuss the project concept, request additional information as needed, and discuss\n\n next steps. An in-person meeting and/or a site visit may also be deemed necessary at this time.\n\n Viability Assessment\n\n Based on information gathered during the concept proposal stage, along with input from\n\n technical experts if needed, Conservancy staff will evaluate the viability of the proposed project\n\n by assessing if the proposed project:\n\n • Is technically and financially feasible;\n\n • Is likely to provide locally-supported benefits to the Delta; and\n\n • Will significantly advance the Conservancy’s community and economic enhancement\n\n priorities.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 9\n\n Full Proposal\n\n If Conservancy staff determines that a project concept appears to be viable, staff will work with\n\n the applicant to develop the concept into a full proposal. The Conservancy may provide\n\n technical assistance to facilitate the development of project proposals."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2032053,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "ce24b8917e0883c6": {
+  "query": "application submission deadline",
+  "filter": "45d0365ec75fdbfe",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "K. Application Process\n\n The Conservancy’s Community and Economic Enhancement Grant Program is a non-\n\n competitive program without proposal submission deadlines. This section provides a summary\n\n of the application and review process.\n\n Concept Proposal\n\n Concept proposals may be submitted at any time to initiate consideration of a project by the\n\n Conservancy. Applicants must submit a concept proposal using the Community and Economic\n\n Enhancement Grant Program Concept Proposal Form. (Program materials will be available on\n\n the Conservancy’s website when the program is opened.) The Conservancy will review each\n\n concept proposal as it is submitted. Once reviewed, the Conservancy will confer with the\n\n applicant to discuss the project concept, request additional information as needed, and discuss\n\n next steps. An in-person meeting and/or a site visit may also be deemed necessary at this time.\n\n Viability Assessment\n\n Based on information gathered during the concept proposal stage, along with input from\n\n technical experts if needed, Conservancy staff will evaluate the viability of the proposed project\n\n by assessing if the proposed project:\n\n • Is technically and financially feasible;\n\n • Is likely to provide locally-supported benefits to the Delta; and\n\n • Will significantly advance the Conservancy’s community and economic enhancement\n\n priorities.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 9\n\n Full Proposal\n\n If Conservancy staff determines that a project concept appears to be viable, staff will work with\n\n the applicant to develop the concept into a full proposal. The Conservancy may provide\n\n technical assistance to facilitate the development of project proposals."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1996224,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Conservancy may\n\n also assist in project implementation. Projects benefitting DACs will receive priority for the\n\n Conservancy’s technical assistance efforts.\n\n Proposal Assessment\n\n Conservancy staff will continually assess the project as they work with the applicant to develop\n\n the project proposal. Conservancy staff will consult external experts as needed.\n\n Conservancy staff will not recommend that the Conservancy Board fund a proposal unless the\n\n following criteria have been addressed to the satisfaction of the Conservancy and the applicant.\n\n 1. Project Design\n\n Are the project’s purpose, goals, deliverables, and schedule clear? Is the project well\n\n designed to meet the needs that the project addresses?\n\n 2. Public Benefits\n\n Will the project provide multiple tangible, enduring, public benefits with a high\n\n likelihood of being realized? Does the project have reasonable performance\n\n measurements and a clear plan for tracking them? Will the project benefit\n\n disadvantaged or severely disadvantaged communities?\n\n 3. Alignment with State and Other Priorities\n\n Does the project align with priorities identified in the following?:\n\n • Proposition 68\n\n • The Conservancy’s mission, governing statute, and strategic plan\n\n • The Delta Plan\n\n • Economic Sustainability Plan for the Sacramento-San Joaquin Delta\n\n • Other relevant local, regional, State, and federal plans\n\n (Links to relevant documents can be found at\n\n http://deltaconservancy.ca.gov/proposition-68/.)\n\n 4. Project Readiness\n\n Is the project ready to proceed promptly if funded?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1152884,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArbVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Community and Economic Enhancement\n\n Grant Program http://deltaconservancy.ca.gov/proposition-68/\n\n \n\n GRANT GUIDELINES\n\n Adopted December 2019\n\n \n\n FUNDED BY THE\n\n California Drought, Water, Parks,\n\n Climate, Coastal Protection and\n\n Outdoor Access for All Act of 2018Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 1\n\n Contents\n\n A. PURPOSE OF THIS DOCUMENT ......................................................................................... 2\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.103526,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3An7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "L. Privacy Rights\n\n Please note: once an applicant has submitted a proposal to the Conservancy, any privacy rights,\n\n as well as other confidentiality protections afforded by law with respect to the application\n\n package, are waived. All proposals are public records under the California Government Code\n\n Sections 6250-6276.48 and will be provided to the public upon request.\n\n M. Program Requirements\n\n Performance Monitoring\n\n Performance measures are used to track progress toward project goals and objectives. They\n\n provide a means of reliably measuring and reporting the implementation and effectiveness of a\n\n project and how it contributes value to the Delta and state. Performance measures will be\n\n developed to reflect the unique benefits of individual projects. Conservancy staff may provide\n\n assistance in development of performance measures.\n\n All implementation, acquisition, and pilot project proposals will include a performance\n\n monitoring and assessment framework that identifies the performance measures that will be\n\n used to demonstrate public benefits for at least 15 years following the end of the Grant Funding\n\n Term (See Section N. Grant Awards and Agreements below), how they will be monitored and\n\n assessed, and how monitoring data will be reported.\n\n Environmental Compliance\n\n Activities funded by this grant program must comply with applicable, local, State, and federal\n\n laws and regulations, including the California Environmental Quality Act (CEQA), the Delta Plan,\n\n and other environmental permitting requirements. Conservancy staff may assist the applicant\n\n with the compliance process; however, the applicant is solely responsible for project\n\n compliance. Applicants should be prepared to submit any permits, surveys, or reports that\n\n support the status of their environmental compliance.\n\n If a project is subject to CEQA, compliance must be completed prior to grant award. Funds for\n\n construction will not be disbursed until all required environmental compliance and permitting\n\n documents have been received by the Conservancy, including certification of consistency with\n\n the Delta Plan.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 12\n\n Long-Term Management\n\n The goal of long-term management is to foster the ongoing success of the project, ensuring that\n\n the benefits arising from the project endure beyond the end of the Grant Funding Term.\n\n Proposals will describe future project management or land management activities, explaining\n\n how the project, once implemented, will be stewarded for at least 15 years thereafter.\n\n Properties restored, enhanced, or protected, and facilities constructed or enhanced with funds\n\n provided by the Conservancy shall be operated, used, and maintained consistent with the\n\n purposes of the grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1011881,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ar7VXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For planning projects, will planning\n\n activities advance the project toward implementation in a timely manner? For\n\n implementation projects, how complete is project planning, including the status of\n\n CEQA and permitting efforts?\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 10\n\n 5. Community and Institutional Support\n\n Does the project have public and relevant institutional support at the local, regional,\n\n State, or federal scale? Is the local community, or are other stakeholders, engaged in\n\n project planning or delivery? For planning projects, is there a plan to develop\n\n community support?\n\n 6. Cost Share\n\n Is cost share provided for this project?\n\n 7. Project Budget\n\n Is the budget adequate and reasonable for the project? Are costs clearly identified and\n\n justified?\n\n 8. Project Team\n\n Does the project team have sufficient experience and capacity to implement the project\n\n and to manage a State grant? Have necessary partnerships been developed?\n\n 9. Long-Term Management\n\n For planning projects, are next steps identified for movement towards a bond-eligible\n\n implementation project? For implementation projects, is a plan clearly identified for\n\n long-term management and sustainability of the project for a minimum of 15 years?\n\n Board Consideration\n\n If the above criteria have been addressed to the satisfaction of the Conservancy and the\n\n applicant and a proposal is assessed to be complete, Conservancy staff will make a\n\n recommendation to the Board for consideration of funding.\n\n NOTE: The Conservancy will consider the geographic distribution of projects, benefits related to\n\n disadvantaged and severely disadvantaged communities, reasonableness of costs, availability of\n\n funding, and diversity of project types, and may prioritize projects based on these\n\n considerations.\n\n Application Process Steps\n\n Step 1: Applicant completes concept proposal form and submits to the\n\n Conservancy.\n\n Step 2: Conservancy staff reviews concept proposal and confers with\n\n applicant. Site visit conducted if necessary.\n\n Step 3: Conservancy staff reviews information gathered, consults with\n\n technical experts if needed, and assesses if proposed project\n\n fits within the grant program and appears viable.Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 11\n\n Step 4: If project appears to be viable, Conservancy staff works with\n\n applicant to develop full proposal.\n\n Step 5: Conservancy staff completes proposal assessment and makes\n\n recommendation to the Board.\n\n Step 6: Board considers funding for final proposal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1000354,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArrVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "BACKGROUND ................................................................................................................. 2\n\n D. COMMUNITY AND ECONOMIC ENHANCEMENT PROGRAM PRIORITIES ............................. 3\n\n E. DISADVANTAGED AND SEVERELY DISADVANTAGED COMMUNITIES ................................. 4\n\n F. PROJECT TYPES ................................................................................................................ 5\n\n PLANNING PROJECTS ..................................................................................................................... 5\n\n IMPLEMENTATION PROJECTS ........................................................................................................... 5\n\n G. PROGRAM ELIGIBILITY ..................................................................................................... 5\n\n BOND ELIGIBILITY .......................................................................................................................... 6\n\n GEOGRAPHIC ELIGIBILITY ................................................................................................................ 6\n\n APPLICANT ELIGIBILITY .................................................................................................................... 6\n\n PROJECT ELIGIBILITY ...................................................................................................................... 6\n\n INELIGIBLE PROJECTS ...................................................................................................................... 7\n\n H. COST SHARE ..................................................................................................................... 7\n\n I. ELIGIBLE EXPENSES .......................................................................................................... 7\n\n DIRECT COSTS .............................................................................................................................. 7\n\n INDIRECT COSTS ............................................................................................................................ 7\n\n J. INELIGIBLE EXPENSES ....................................................................................................... 8\n\n K. APPLICATION PROCESS .................................................................................................... 8\n\n CONCEPT PROPOSAL ...................................................................................................................... 8\n\n VIABILITY ASSESSMENT .................................................................................................................. 8\n\n FULL PROPOSAL ............................................................................................................................ 9\n\n PROPOSAL ASSESSMENT ................................................................................................................. 9\n\n BOARD CONSIDERATION ............................................................................................................... 10\n\n TABLE OF APPLICATION PROCESS STEPS ........................................................................................... 10\n\n L. PRIVACY RIGHTS ............................................................................................................ 11\n\n M. PROGRAM REQUIREMENTS ............................................................................................ 11\n\n PERFORMANCE MONITORING ........................................................................................................ 11\n\n ENVIRONMENTAL COMPLIANCE ..................................................................................................... 11\n\n LONG-TERM MANAGEMENT.......................................................................................................... 12\n\n CALIFORNIA CONSERVATION CORPS ................................................................................................ 12\n\n LOCAL NOTIFICATIONS ................................................................................................................. 12\n\n N. GRANT AWARDS AND AGREEMENTS .............................................................................. 12Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 2\n\n A. Purpose of this Document\n\n This document serves as the Grant Guidelines (Guidelines) for the Sacramento-San Joaquin\n\n Delta Conservancy’s (Conservancy) Community and Economic Enhancement Grant Program\n\n (Grant Program) and provides guidance on how to apply."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.0981746,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "California Conservation Corps\n\n Consistent with Proposition 68 recommendations, all implementation projects that involve a\n\n site improvement component shall consult with representatives of both the California\n\n Conservation Corps and California Association of Local Conservation Corps (Corps) to determine\n\n the feasibility of Corps participation. Projects that do not include a site improvement\n\n component are exempt, but applicants are still encouraged to consult with the Corps to explore\n\n opportunities for collaboration. The Corps’ Proposition 68 Consultation Process form describes\n\n the consultation process. (A link can be found on the Conservancy’s Proposition 68 webpage:\n\n http://deltaconservancy.ca.gov/proposition-68/.)\n\n Local Notifications\n\n In compliance with the Conservancy’s governing statute, the Conservancy will notify local\n\n government agencies – such as counties, cities, and local districts –and relevant tribal entities\n\n about projects in their area being considered for grant funding. The Conservancy will work with\n\n applicants to make all reasonable efforts to address concerns raised by local government\n\n agencies and tribal entities.\n\n N. Grant Awards and Agreements\n\n For each awarded grant, the Conservancy will develop a grant agreement with detailed\n\n provisions and requirements specific to that project. (A draft grant agreement template will be\n\n available on the Conservancy’s Grant Program web page when the program opens.) Please be\n\n aware that for grants awarded by the Conservancy, the following apply.\n\n • Grantees will receive funding only during the Grant Funding Term, generally three years,\n\n during which time grantees may incur and be reimbursed for grant-related expenses.\n\n For implementation projects, the Grant Term will extend for an additional 15 years\n\n beyond the end of the Grant Funding Term, during which time projects must be\n\n maintained. Grantees will be held to the terms of the grant agreement until the end of\n\n the Grant Term.\n\n • Grant awards are conditional upon funds being available from the State.\n\n \n\n \n  http://deltaconservancy.ca.gov/proposition-68/Adopted December 2019\n\n \n\n Community and Economic Enhancement Grant Program Grant Guidelines 13\n\n • In all but the most extenuating circumstances, grant funding will be paid in arrears on a\n\n reimbursement basis (with the exception of acquisition costs). All expenses require\n\n supporting documentation and are subject to audit"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF"
+     }
+    },
+    "score": 1.0848098,
+    "metadata": {
+     "documentIdentifier": "Proposition 68",
+     "agency": "Sacramento - San Joaquin Delta Conservancy",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsLVXYKEBbayybwJOBunY",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Proposition 68/NOFO-File-PDF",
+     "nofoName": "Proposition 68",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:20:26.750Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CA",
+     "category": "Environment"
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are SS4A applications due?",
+    "expected": "Both Planning and Demonstration Grant and Implementation Grant applications must be submitted in Valid Eval by 5:00 PM (EDT) on May 26, 2026. The Implementation Grant pre-application eligibility review (due 5:00 PM EDT April 24, 2026) is optional.",
+    "quote": "be submitted by 5:00 PM (EDT) on May 26, 2026.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who is eligible to apply?",
+    "expected": "Metropolitan planning organizations, political subdivisions of a State or territory (cities, towns, counties), federally recognized Tribal governments, and multijurisdictional groups of these. States and territories are not eligible, nor are nonprofits unless created under State law with equivalent roadway safety/planning responsibilities.",
+    "quote": "Political subdivisions of a State or territory (e.g., cities, towns, counties);",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Is there a file size limit for uploads in Valid Eval?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  },
+  {
+    "id": "q4",
+    "kind": "allowable_cost",
+    "question": "Can we use SS4A money to build a new road?",
+    "expected": "No. Capital projects to construct new roadways used for motor vehicles are ineligible; a new facility exclusively for non-motorists (e.g., a pedestrian bridge) is eligible if its primary purpose is safety.",
+    "quote": "Capital projects to construct new roadways used for motor vehicles. A new roadway",
+    "verdict": "not_allowed",
+    "confirmed": false
+  }
+]

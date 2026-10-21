@@ -1,0 +1,35 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the application due?",
+    "expected": "Applications must be received by MSA by 2:00 P.M. EST on October 9th, 2026 via MSA's online application. An Intent to Apply by September 18, 2026 is optional but strongly encouraged.",
+    "quote": "Applications must be received by MSA by 2:00 P.M. EST on October 9th, 2026 via MSA's online application.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the most we can ask for per member?",
+    "expected": "The maximum request is $26,800 per Member Service Year (MSY) for cost reimbursement and full-cost fixed amount grants; EAP and Professional Corps fixed amount grants are capped at $1,000 per MSY.",
+    "quote": "The maximum cost per MSY that is allowable for applicants is $26,800.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "Do we have to include our audit?",
+    "expected": "Yes. The online application requires uploading your most recent audit, including a Single Audit if applicable, along with proof of eligibility such as a 501(c)(3) letter.",
+    "quote": "a. Uploaded: Most recent audit (including a Single Audit, if applicable)",
+    "confirmed": false
+  },
+  {
+    "id": "q4",
+    "kind": "allowable_cost",
+    "question": "Can we budget food for member trainings?",
+    "expected": "Food and beverage costs count as unallowable entertainment costs unless provided as part of an all-day training activity or business travel and in line with your organization's written policies. Gifts or food in an entertainment/event setting for member recognition are not allowable.",
+    "quote": "costs unless provided as part of an all-day training activity or provided as part of business travel and in",
+    "verdict": "conditional",
+    "confirmed": false
+  }
+]

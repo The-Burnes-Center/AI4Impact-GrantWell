@@ -1,0 +1,666 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NIH",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due March 13, 2025",
+      "date": "2025-03-13",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due May 28, 2025",
+      "date": "2025-05-28",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due September 29, 2025",
+      "date": "2025-09-29",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due January 28, 2026",
+      "date": "2026-01-28",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due May 28, 2026",
+      "date": "2026-05-28",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due September 28, 2026",
+      "date": "2026-09-28",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due January 28, 2027",
+      "date": "2027-01-28",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due May 28, 2027",
+      "date": "2027-05-28",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision applications due September 28, 2027",
+      "date": "2027-09-28",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "other",
+      "label": "Expiration Date",
+      "date": "2027-09-29",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Expiration Date September 29, 2027"
+    }
+  ],
+  "award": {
+    "ceiling": 6500000,
+    "floor": null,
+    "periodMonths": 84,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "maximum annual direct costs, Tier A (combined 5-year average NIH DC funding of applicant plus partners >$400,000,000)",
+        "value": 6500000
+      },
+      {
+        "what": "maximum annual direct costs, Tier C (combined NIH DC funding $265,000,000-$399,999,999)",
+        "value": 5000000
+      },
+      {
+        "what": "maximum annual direct costs, Tier T (combined NIH DC funding $190,000,000-$264,999,999)",
+        "value": 3600000
+      },
+      {
+        "what": "maximum annual direct costs, Tier G (combined NIH DC funding <$189,999,999)",
+        "value": 2600000
+      },
+      {
+        "what": "Element E CTS Research Program direct costs per year",
+        "value": 500000
+      },
+      {
+        "what": "each Pilot project budget, direct costs (minimum $25,000)",
+        "value": 50000
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement"
+    },
+    "quote": "For our CTSAs, NCATS has tiered thresholds that range from $2,600,000 to $6,500,000."
+  },
+  "sections": [
+    {
+      "name": "Specific Aims",
+      "order": 1,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "PHS 398 Research Plan",
+      "quote": "Specific Aims. Briefly summarize the aims for the entire application, including all Modules and Projects. 1 page."
+    },
+    {
+      "name": "Research Strategy: Element A. Overview",
+      "order": 2,
+      "limit": {
+        "type": "pages",
+        "value": 6
+      },
+      "conditional": null,
+      "component": "PHS 398 Research Plan: Research Strategy",
+      "quote": "Element A. Overview; one required, 6 pages"
+    },
+    {
+      "name": "Research Strategy: Element B. Strategic Management",
+      "order": 3,
+      "limit": {
+        "type": "pages",
+        "value": 12
+      },
+      "conditional": null,
+      "component": "PHS 398 Research Plan: Research Strategy",
+      "quote": "Element B. Strategic Management; one required, 12 pages"
+    },
+    {
+      "name": "Research Strategy: Element C. Training and Outreach",
+      "order": 4,
+      "limit": {
+        "type": "pages",
+        "value": 12
+      },
+      "conditional": null,
+      "component": "PHS 398 Research Plan: Research Strategy",
+      "quote": "Element C. Training and Outreach; one required, 12 pages"
+    },
+    {
+      "name": "Research Strategy: Element D. Clinical and Translational Science Resources and Pilots",
+      "order": 5,
+      "limit": {
+        "type": "pages",
+        "value": 18
+      },
+      "conditional": null,
+      "component": "PHS 398 Research Plan: Research Strategy",
+      "quote": "Element D. Clinical and Translational Science Resources and Pilots; one required, 18 pages"
+    },
+    {
+      "name": "Research Strategy: Element E. CTS Research Program description",
+      "order": 6,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "PHS 398 Research Plan: Research Strategy (Element E, 12 pages total)",
+      "quote": "Element E. Clinical and Translational Science Research Program; one required, 12 pages (Note: description of the Element E CTS Research Program may be up to 2 pages"
+    },
+    {
+      "name": "Research Strategy: Element E. Initial discrete CTS research project",
+      "order": 7,
+      "limit": {
+        "type": "pages",
+        "value": 10
+      },
+      "conditional": null,
+      "component": "PHS 398 Research Plan: Research Strategy (Element E, 12 pages total)",
+      "quote": "a single initial, discrete and clearly defined CTS research project for Element E may be up to 10 pages)"
+    },
+    {
+      "name": "Resource Sharing Plan",
+      "order": 8,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Research Plan",
+      "quote": "Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans"
+    },
+    {
+      "name": "Data Management and Sharing Plan",
+      "order": 9,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Research Plan: Other Plan(s)",
+      "quote": "all applicants must address all UM1 Elements (and/or Modules) in their Data Management and Sharing Plan (DMSP) that may generate data"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Significance",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Specific Aims",
+        "Research Strategy: Element A. Overview",
+        "Research Strategy: Element B. Strategic Management",
+        "Research Strategy: Element C. Training and Outreach",
+        "Research Strategy: Element D. Clinical and Translational Science Resources and Pilots",
+        "Research Strategy: Element E. CTS Research Program description",
+        "Research Strategy: Element E. Initial discrete CTS research project"
+      ],
+      "quote": "To what extent does the UM1 application clearly describe and justify a strategic vision to innovate CTS and further CTSA Program Goals"
+    },
+    {
+      "name": "Investigator(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Biographical Sketch"
+      ],
+      "quote": "Are the PD(s)/PI(s), collaborators, and other researchers well suited to the project?"
+    },
+    {
+      "name": "Innovation",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy: Element B. Strategic Management",
+        "Research Strategy: Element C. Training and Outreach",
+        "Research Strategy: Element D. Clinical and Translational Science Resources and Pilots",
+        "Research Strategy: Element E. Initial discrete CTS research project"
+      ],
+      "quote": "Does the application challenge and seek to shift current research or clinical practice paradigms by utilizing novel theoretical concepts"
+    },
+    {
+      "name": "Approach",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy: Element B. Strategic Management",
+        "Research Strategy: Element C. Training and Outreach",
+        "Research Strategy: Element D. Clinical and Translational Science Resources and Pilots",
+        "Research Strategy: Element E. Initial discrete CTS research project"
+      ],
+      "quote": "Are the overall strategy, methodology, and analyses well-reasoned and appropriate to accomplish the specific aims of the project?"
+    },
+    {
+      "name": "Environment",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Facilities & Other Resources"
+      ],
+      "quote": "Will the scientific environment in which the work will be done contribute to the probability of success?"
+    },
+    {
+      "name": "Study Timeline",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Is the study timeline described in detail, taking into account start-up activities, the anticipated rate of enrollment, and planned follow-up assessment?"
+    },
+    {
+      "name": "Protections for Human Subjects",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For research that involves human subjects but does not involve one of the categories of research that are exempt under 45 CFR Part 46"
+    },
+    {
+      "name": "Inclusion of Women, Minorities, and Individuals Across the Lifespan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When the proposed project involves human subjects and/or NIH-defined clinical research, the committee will evaluate the proposed plans for the inclusion (or exclusion)"
+    },
+    {
+      "name": "Vertebrate Animals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "The committee will evaluate the involvement of live vertebrate animals as part of the scientific assessment"
+    },
+    {
+      "name": "Biohazards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will assess whether materials or procedures proposed are potentially hazardous to research personnel and/or the environment"
+    },
+    {
+      "name": "Resubmissions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For Resubmissions, the committee will evaluate the application as now presented, taking into consideration the responses to comments"
+    },
+    {
+      "name": "Revisions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For Revisions, the committee will consider the appropriateness of the proposed expansion of the scope of the project."
+    },
+    {
+      "name": "Select Agent Research",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will assess the information provided in this section of the application, including 1) the Select Agent(s) to be used in the proposed research"
+    },
+    {
+      "name": "Resource Sharing Plans",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Resource Sharing Plan"
+      ],
+      "quote": "Reviewers will comment on whether the Resource Sharing Plan(s)"
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For projects involving key biological and/or chemical resources, reviewers will comment on the brief plans proposed for identifying and ensuring the validity of those resources."
+    },
+    {
+      "name": "Budget and Period of Support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will consider whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Descriptive title may not exceed 200 characters",
+      "Cover Letter is one PDF file only",
+      "Other Attachments: supportive data in table format (except Attachments 1 and 7), each a separate attachment with the suggested filename; upload required attachments only once and do not repeat them in the narrative",
+      "Only limited Appendix materials; no publications or other material except blank questionnaires or blank surveys",
+      "Applicants are encouraged to limit letters of support to no more than 30",
+      "Project/Performance Site Locations: enter primary site only",
+      "Paper applications will not be accepted"
+    ],
+    "quote": "Descriptive Title of Applicant's Project: Titles may not exceed 200 characters in length."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: public/state and private institutions of higher education; nonprofits with or without 501(c)(3) status; for-profit organizations including small businesses; state, county, city/township and special district governments; federally recognized and other tribal governments; eligible federal agencies; U.S. territories or possessions; independent school districts; public/Indian housing authorities; Native American tribal organizations; faith-based or community-based organizations; regional organizations",
+      "quote": "Nonprofits with 501(c)(3) IRS Status (Other than Institutions of Higher Education)"
+    },
+    {
+      "item": "A graduate school accredited to award higher degrees related to clinical or translational science must be included as the applicant or a partnering institution",
+      "quote": "a graduate school accredited to award higher degrees related to clinical or translational science (e.g., M.S. or Ph.D. in topics such as Clinical Research, Public Health, Pharmacology, Nursing, Informatics, Health Economics, or Epidemiology) must be included (applicant or partnering institution)"
+    },
+    {
+      "item": "Organizations with active grants under PAR-15-304, PAR-18-464, PAR-18-940 or PAR-21-293 with more than 16 months of support remaining on the submission deadline are not eligible",
+      "quote": "that have more than 16 months of support remaining on the day of the submission deadline are not eligible to apply."
+    },
+    {
+      "item": "A Partnering Institution may be a partner on only one CTSA UM1 hub application; applications including partners already on another UL1 or UM1 award or application are non-responsive",
+      "quote": "Applications that include Partner(s) which are already Partners on another UL1 award or UM1 award or application."
+    },
+    {
+      "item": "An organization named as a Partner on a UM1 application or award or a UL1 award may not apply as the applicant organization while that application or award is under review, under consideration for funding, or funded",
+      "quote": "An organization named as a Partner Institution in a CTSA UM1 application, UM1 award, or a CTSA UL1 award"
+    },
+    {
+      "item": "Non-domestic (non-U.S.) entities and non-domestic components of U.S. organizations are not eligible to apply",
+      "quote": "Non-domestic (non-U.S.) Entities (Foreign Organizations) are not eligible to apply. Non-domestic (non-U.S.) components of U.S. Organizations are not eligible to apply."
+    },
+    {
+      "item": "Foreign components, as defined in the NIH Grants Policy Statement, are allowed",
+      "quote": "Foreign components, as defined in the NIH Grants Policy Statement"
+    },
+    {
+      "item": "The application must be part of a collaborative set that includes the required companion K12 application (initially submitted concurrently with the UM1)",
+      "quote": "a set must contain 1 application to this UM1 NOFO and 1 application to the K12 NOFO"
+    },
+    {
+      "item": "Applications must answer Yes to the involvement of Human Subjects and complete all related sections",
+      "quote": "All applicants must answer Yes to the involvement of Human Subjects during the period of award and complete all related sections."
+    },
+    {
+      "item": "Each PD/PI must commit at least two months effort (preferably three to six months)",
+      "quote": "All PD(s)/PI(s) must each commit at least two months and preferably three to six months effort to the award."
+    },
+    {
+      "item": "The application must describe in detail a single initial, discrete Element E project with a detailed budget",
+      "quote": "Applications that do not describe, in detail, a single initial, discrete project for Element E including a detailed budget for the project described."
+    },
+    {
+      "item": "Applications submitted as not having clinical trials that NIH determines do have clinical trials are non-responsive",
+      "quote": "Applications that are submitted as not having clinical trials, but NIH determines that there are clinical trials"
+    },
+    {
+      "item": "Clinical trials are optional",
+      "quote": "Optional: Accepting applications that either propose or do not propose clinical trial(s)."
+    },
+    {
+      "item": "Funds may not directly support clinical trials beyond Phase IIB, except Phase III trials for rare diseases; projects not meeting this will not be reviewed",
+      "quote": "Funds may not directly support any clinical trial beyond phase IIB with the exception of Phase III clinical trials for treatment of rare diseases. Projects that do not meet these clinical trial limitations will not be reviewed."
+    },
+    {
+      "item": "Only New, Resubmission (for PAR-21-293 and this NOFO), or Revision application types are allowed",
+      "quote": "Resubmission - Resubmission Applications for PAR-21-293 and this NOFO"
+    },
+    {
+      "item": "The contact PD/PI must be designated as the Strategic Management Module Leader",
+      "quote": "The contact PD/PI must be designated as the Strategic Management Module Leader."
+    },
+    {
+      "item": "UM1 PD(s)/PI(s) may not be PD(s)/PI(s) on the companion K12, T32, or R25 application or award (the RC2 is allowed)",
+      "quote": "The UM1 PD(s)/PI(s) may not be a PD(s)/PI(s) on the required companion K12 and/or the optional companion T32, and/or R25 application or award"
+    },
+    {
+      "item": "Any individual with the skills, knowledge, and resources to carry out the research may serve as PD/PI with their organization",
+      "quote": "Any individual(s) with the skills, knowledge, and resources necessary to carry out the proposed research as the"
+    },
+    {
+      "item": "Organizations may submit more than one application only if each is scientifically distinct",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct."
+    },
+    {
+      "item": "A new (A0) application is not accepted before the summary statement issues for an overlapping A0 or A1 application",
+      "quote": "A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application."
+    },
+    {
+      "item": "A resubmission (A1) is not accepted before the summary statement issues for the previous A0 application",
+      "quote": "A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application."
+    },
+    {
+      "item": "An application substantially overlapping another application pending appeal of initial peer review is not accepted",
+      "quote": "An application that has substantial overlap with another application pending appeal of initial peer review"
+    },
+    {
+      "item": "All organizational registrations must be completed before the application is submitted (allow 6 weeks or more)",
+      "quote": "All registrations must be completed prior to the application being submitted. Registration can take 6 weeks or more"
+    },
+    {
+      "item": "Maintain an active SAM registration, renewed at least annually",
+      "quote": "Applicants must complete and maintain an active registration, which requires renewal at least annually."
+    },
+    {
+      "item": "Foreign organizations must obtain an NCAGE code to register in SAM",
+      "quote": "NCAGE code (in lieu of a CAGE code) in order to register in SAM."
+    },
+    {
+      "item": "Use the same UEI for all registrations and on the grant application",
+      "quote": "UEI must be used for all registrations, as well as on the grant application."
+    },
+    {
+      "item": "Organization must register in eRA Commons with at least one Signing Official and one PD/PI account",
+      "quote": "Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application."
+    },
+    {
+      "item": "Organization must complete Grants.gov registration (requires active SAM registration)",
+      "quote": "Applicants must have an active SAM registration in order to complete the Grants.gov registration."
+    },
+    {
+      "item": "All PD(s)/PI(s) must have an eRA Commons account affiliated with the applicant organization",
+      "quote": "All PD(s)/PI(s) must have an eRA Commons account. PD(s)/PI(s) should work with their organizational officials to"
+    },
+    {
+      "item": "A PD/PI who is also the organizational Signing Official must have two distinct eRA Commons accounts",
+      "quote": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role."
+    },
+    {
+      "item": "All PD(s)/PI(s) must enter their eRA Commons ID in the Credential field of the Senior/Key Person Profile form",
+      "quote": "All PD(s)/PI(s) must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF424(R&R) Cover form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Cover"
+    },
+    {
+      "item": "Cover Letter (one PDF) listing every application in the collaborative set with PD/PI name(s), NOFO number, title, and applicant institution; identical in each application of the set",
+      "userWrites": true,
+      "quote": "Applications that are part of a collaborative set must include a listing of all the applications that are a part of the set of collaborative applications being submitted"
+    },
+    {
+      "item": "SF424(R&R) Project/Performance Site Locations form (primary site only)",
+      "userWrites": false,
+      "quote": "SF424(R&R) Project/Performance Site Locations"
+    },
+    {
+      "item": "SF424(R&R) Other Project Information form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Other Project Information"
+    },
+    {
+      "item": "Other Attachment 1: Hub Institution Organization (charts of the hub's organizational status and its relationships with partnering institutions)",
+      "userWrites": true,
+      "quote": "Institution (use filename Hub Institution Organization): Include a description of the following in a single attachment:"
+    },
+    {
+      "item": "Other Attachment 2: Hub Senior Leadership (information and role of each PD/PI and Module/Program Leader), one page",
+      "userWrites": true,
+      "quote": "Hub's Senior Leadership (use filename Hub Senior Leadership): Provide information and role of each Contact PD/PI, Other PDs/PIs, Module, and Program Leaders and Co-Leaders. Limited to ONE page."
+    },
+    {
+      "item": "Other Attachment 3: Hub Partners and Collaborators table with contributions and justifications, three pages",
+      "userWrites": true,
+      "quote": "Information on Hub Partners and Collaborators (use filename Hub Partners and Collaborators): Include a table listing of all partnering and collaborating institutions with contributions and justifications"
+    },
+    {
+      "item": "Other Attachment 4: Resources to Achieve CTSA Objectives table, five pages",
+      "userWrites": true,
+      "quote": "Resources to Achieve CTSA Objectives (use filename Resources to Achieve CTSA Objectives): Include a table listing of SPECIFIC resources"
+    },
+    {
+      "item": "Other Attachment 5: Clinical Trial Experience (single and multi-site trials with site activation in the prior 6 months), five pages",
+      "userWrites": true,
+      "quote": "Clinical Trial Experience (use filename Clinical Trial Experience): Include a brief description of all single and multi- site clinical trials with site activation during the 6 months"
+    },
+    {
+      "item": "Other Attachment 6: CTS Track Record (accomplishments over the past 5 years), five pages",
+      "userWrites": true,
+      "quote": "Clinical and Translational Science Track Record (use filename CTS Track Record): Provide institution, partners, and collaborators' accomplishments and progress in CTS research efforts"
+    },
+    {
+      "item": "Other Attachment 7: Coordination and Integration Plan between the UM1, the K12, and any optional companion applications, three pages",
+      "userWrites": true,
+      "quote": "Coordination and Integration Plan (use filename Coordination and Integration Plan). Include a specific plan describing the partnership between the UM1, the required K12 and any optional companion applications."
+    },
+    {
+      "item": "SF424(R&R) Senior/Key Person Profile form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Senior/Key Person Profile"
+    },
+    {
+      "item": "R&R Budget (single budget) with budget justification broken out by Element and Module; first paragraph summarizes how the maximum DC amount was determined",
+      "userWrites": true,
+      "quote": "In the first paragraph of the budget justification, applicants must summarize how the maximum DC amount requested was determined"
+    },
+    {
+      "item": "Assurance statement that Workforce Development activities and costs are not duplicative with the UM1 or companion grants",
+      "userWrites": true,
+      "quote": "Applicant institutions should include a statement providing assurance that the activities and costs are not duplicative with the UM1 or other companion grant activities."
+    },
+    {
+      "item": "R&R Subaward Budget (same format as the main budget)",
+      "userWrites": true,
+      "quote": "R&R Subaward Budget"
+    },
+    {
+      "item": "PHS 398 Cover Page Supplement form",
+      "userWrites": false,
+      "quote": "PHS 398 Cover Page Supplement"
+    },
+    {
+      "item": "PHS 398 Research Plan form",
+      "userWrites": true,
+      "quote": "PHS 398 Research Plan"
+    },
+    {
+      "item": "Letter of support from every Partnering Institution, signed by its AOR, stating its role and affirming its relationship with the applicant",
+      "userWrites": false,
+      "quote": "All Partnering Institutions must provide a letter of support signed by the authorized organizational representative (AOR) stating its role as a Partnering Institution"
+    },
+    {
+      "item": "Letters of support/agreement for collaborative arrangements, subcontracts, or consultants",
+      "userWrites": false,
+      "quote": "Letters of support/agreement should be included for any collaborative/cooperative arrangements, subcontracts, or consultants."
+    },
+    {
+      "item": "Letter of assurance signed by the partner/collaborator and off-site institutional officials for any program activities conducted off site",
+      "userWrites": false,
+      "quote": "a letter of assurance or comparable documentation, signed by the partner/collaborator as well as the off-site institutional officials, must be submitted with the application"
+    },
+    {
+      "item": "PHS Human Subjects and Clinical Trials Information form with at least one human subjects study record or Delayed Onset Study record",
+      "userWrites": true,
+      "quote": "must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record."
+    },
+    {
+      "item": "PHS Assignment Request Form",
+      "userWrites": false,
+      "quote": "PHS Assignment Request Form"
+    }
+  ],
+  "libraryRequired": [
+    "Project Summary/Abstract",
+    "Project Narrative",
+    "Bibliography & References Cited",
+    "Facilities & Other Resources",
+    "Equipment",
+    "Biographical Sketch"
+  ]
+}

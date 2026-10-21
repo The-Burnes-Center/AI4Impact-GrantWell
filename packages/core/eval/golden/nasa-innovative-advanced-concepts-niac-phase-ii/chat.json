@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "when is the NIAC phase II proposal due?",
+    "expected": "Proposals are due June 12, 2026, at 5:00 PM ET, submitted through NSPIRES only.",
+    "quote": "Proposal Required June 12, 2026, 5:00 PM ET",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "my phase I study isn't finished yet, can I still apply for phase II?",
+    "expected": "Yes, if you are actively completing a NIAC Phase I study that has not already received a Phase II award. Your Phase I final report must reach the NIAC Program Office by the June 12, 2026, 5 PM ET proposal deadline, or the proposal will not be reviewed.",
+    "quote": "If the Phase I final report is not received by this date and time, the submitted proposal will not be reviewed",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "how many pages can the technical section be?",
+    "expected": "The Technical and Management Section is limited to 15 pages. The Overview Chart, Compliance Table and Phase I Key Findings are 1 page each, and references don't count toward the limit.",
+    "quote": "Technical and Management Section 15 pages",
+    "confirmed": false
+  }
+]

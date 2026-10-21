@@ -17,5 +17,5 @@ export function costOf(usage) {
 
 export function totals(usage) {
   const sum = (k) => usage.reduce((n, u) => n + (u[k] ?? 0), 0);
-  return { calls: usage.length, input: sum("input"), output: sum("output"), cacheRead: sum("cacheRead"), cacheWrite: sum("cacheWrite"), costUsd: costOf(usage) };
+  return { calls: usage.length, inputTokens: sum("input"), outputTokens: sum("output"), cacheReadTokens: sum("cacheRead"), cacheWriteTokens: sum("cacheWrite"), costUsd: costOf(usage) };
 }

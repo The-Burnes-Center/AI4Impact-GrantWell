@@ -1,0 +1,465 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NIH",
+  "deadlines": [
+    {
+      "kind": "loi",
+      "label": "Letter of intent (optional) due 30 days prior to the application due date",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Letter of Intent Due Date(s) 30 days prior to the application due date"
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 19, 2025",
+      "date": "2025-02-19",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 19, 2026",
+      "date": "2026-02-19",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 19, 2027",
+      "date": "2027-02-19",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "other",
+      "label": "Expiration Date",
+      "date": "2027-04-29",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Expiration Date April 29, 2027"
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 84,
+    "expectedAwards": {
+      "min": null,
+      "max": 20
+    },
+    "range": null,
+    "caps": [
+      {
+        "what": "direct costs per year",
+        "value": 700000
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement"
+    },
+    "quote": "The NHLBI intends to fund up to 20 new R35 awards per year in Fiscal Years 2026, 2027, and 2028. Award Budget Applications may request up to $700,000 direct costs per year."
+  },
+  "sections": [
+    {
+      "name": "Biographical Sketch",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "SF424(R&R) Senior/Key Person Profile",
+      "quote": "The PD/PI must, in the Biographical Sketch, address these considerations and demonstrate a history of conducting rigorous and reproducible research and reporting it in a transparent fashion."
+    },
+    {
+      "name": "Research Strategy",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Research Plan",
+      "quote": "Research Strategy : The Research Strategy should include the following information: 1. Background regarding the area(s) of research proposed and key gaps in our understanding"
+    },
+    {
+      "name": "Resource Sharing Plan",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Research Plan",
+      "quote": "Resource Sharing Plan : Individuals are required to comply with the instructions for the Resource Sharing Plans"
+    },
+    {
+      "name": "Data Management and Sharing Plan",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Research Plan: Other Plan(s)",
+      "quote": "All applications, regardless of the amount of direct costs requested for any one year, must address a Data Management and Sharing Plan."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "NOFO emphasis: PD/PI previous contributions, outstanding HLBS productivity, and potential for continued impact",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Biographical Sketch"
+      ],
+      "quote": "reviewers will emphasize the following: 1. Evidence of important previous contributions made by the PD/PI to their field"
+    },
+    {
+      "name": "Significance",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Significance Does the project address an important problem or a critical barrier to progress in the field?"
+    },
+    {
+      "name": "Investigator(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Biographical Sketch"
+      ],
+      "quote": "Investigator(s) Are the PD(s)/PI(s), collaborators, and other researchers well suited to the project?"
+    },
+    {
+      "name": "Innovation",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Innovation Does the application challenge and seek to shift current research or clinical practice paradigms"
+    },
+    {
+      "name": "Approach",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Approach Are the overall strategy, methodology, and analyses well-reasoned and appropriate to accomplish the specific aims of the project?"
+    },
+    {
+      "name": "Environment",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Facilities & Other Resources"
+      ],
+      "quote": "Environment Will the scientific environment in which the work will be done contribute to the probability of success?"
+    },
+    {
+      "name": "Study Timeline",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Study Timeline Specific to applications involving clinical trials Is the study timeline described in detail"
+    },
+    {
+      "name": "Protections for Human Subjects",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For research that involves human subjects but does not involve one of the categories of research that are exempt under 45 CFR Part 46"
+    },
+    {
+      "name": "Inclusion of Women, Minorities, and Individuals Across the Lifespan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Inclusion of Women, Minorities, and Individuals Across the Lifespan When the proposed project involves human subjects and/or NIH-defined clinical research"
+    },
+    {
+      "name": "Vertebrate Animals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "The committee will evaluate the involvement of live vertebrate animals as part of the scientific assessment"
+    },
+    {
+      "name": "Biohazards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Biohazards Reviewers will assess whether materials or procedures proposed are potentially hazardous to research personnel and/or the environment"
+    },
+    {
+      "name": "Applications from Foreign Organizations",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Applications from Foreign Organizations Reviewers will assess whether the project presents special opportunities"
+    },
+    {
+      "name": "Select Agent Research",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Select Agent Research Reviewers will assess the information provided in this section of the application"
+    },
+    {
+      "name": "Resource Sharing Plans",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Resource Sharing Plan"
+      ],
+      "quote": "Resource Sharing Plans Reviewers will comment on whether the Resource Sharing Plan(s)"
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For projects involving key biological and/or chemical resources, reviewers will comment on the brief plans proposed"
+    },
+    {
+      "name": "Budget and Period of Support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will consider whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Page limits follow the How to Apply - Application Guide and the Table of Page Limits",
+      "Specific Aims are not required and must not be submitted",
+      "Letter of Support must not exceed 2 pages",
+      "Only limited Appendix materials; no publications or other material except blank questionnaires or blank surveys",
+      "Budget may not request more than 7 years of support (10-year form provided)",
+      "Applications must be submitted electronically; paper applications will not be accepted"
+    ],
+    "quote": null
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: higher education institutions, nonprofits, for-profits (incl. small businesses), state/county/city/township/special district governments, tribal governments, eligible federal agencies, U.S. territories, independent school districts, public/Indian housing authorities, tribal organizations, faith- or community-based organizations, and regional organizations",
+      "quote": "Higher Education Institutions Public/State Controlled Institutions of Higher Education Private Institutions of Higher Education"
+    },
+    {
+      "item": "Non-domestic (non-U.S.) entities are not eligible to apply",
+      "quote": "Non-domestic (non-U.S.) Entities (Foreign Organizations) are not eligible to apply."
+    },
+    {
+      "item": "Non-domestic (non-U.S.) components of U.S. organizations are not eligible to apply",
+      "quote": "Non-domestic (non-U.S.) components of U.S. Organizations are not eligible to apply."
+    },
+    {
+      "item": "Foreign components, as defined in the NIH Grants Policy Statement, are allowed",
+      "quote": "Foreign components, as defined in the NIH Grants Policy Statement , are allowed."
+    },
+    {
+      "item": "Only single PD/PI applications are allowed; multiple-PD/PI applications will not be accepted",
+      "quote": "Only single PD/PI applications are allowed. Applications with multiple PDs/PIs will not be accepted."
+    },
+    {
+      "item": "PD/PI must currently be PD/PI on at least two NHLBI R01-equivalent (R01, DP1, or DP2) awards",
+      "quote": "Are currently PD/PI on at least two NHLBI R01-equivalent (defined here as R01, DP1, or DP2) awards."
+    },
+    {
+      "item": "At least one qualifying R01-equivalent award must be single-PD/PI, not in a no-cost extension, and not an NIH-defined clinical trial unless mechanistic or BESH",
+      "quote": "At least one of the R01-equivalent awards must meet all the following requirements : Be a single-PD/PI award, AND Not be in a no-cost extension (NCE), AND Not be an NIH-defined clinical trial"
+    },
+    {
+      "item": "One of the qualifying awards must be an NHLBI-funded NIH Early Stage Investigator (ESI) R01",
+      "quote": "One of the awards must be an NHLBI-funded NIH Early Stage Investigator (ESI) R01."
+    },
+    {
+      "item": "PD/PI must commit a minimum of six person months throughout the EIA",
+      "quote": "The PD/PI must commit a minimum of six person months"
+    },
+    {
+      "item": "Only New applications are allowed",
+      "quote": "Application Types Allowed New The OER Glossary and the How to Apply - Application Guide provide details on these application types."
+    },
+    {
+      "item": "Research must be within the scope of the NHLBI mission; research outside it is not responsive",
+      "quote": "Research outside the scope of the NHLBI mission ; and Research that includes Phase I, II, III, or T4 non-mechanistic clinical trials"
+    },
+    {
+      "item": "Phase I, II, III, and T4 non-mechanistic clinical trials are not permitted; mechanistic trials and BESH studies are permitted",
+      "quote": "However, Phase I, II, III, and T4 non-mechanistic clinical trials are not permitted under this NOFO."
+    },
+    {
+      "item": "Applications missing the AOR Letter of Support are not responsive and will not be reviewed",
+      "quote": "Applications missing Letters of Support will be considered not responsive and will not proceed to review."
+    },
+    {
+      "item": "Do not propose research that fits within the mission of other NIH Institutes and Centers",
+      "quote": "applicants should not propose research that fits appropriately within the mission of other NIH Institutes and Centers (ICs)."
+    },
+    {
+      "item": "Organizations may submit more than one application only if each is scientifically distinct",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct."
+    },
+    {
+      "item": "A new (A0) application is not accepted before the summary statement issues for an overlapping A0 or A1 application",
+      "quote": "A new (A0) application that is submitted before issuance of the summary statement from the review of an"
+    },
+    {
+      "item": "A resubmission (A1) is not accepted before the summary statement issues for the previous A0 application",
+      "quote": "A resubmission (A1) application that is submitted before issuance of the summary statement from the"
+    },
+    {
+      "item": "An application substantially overlapping another application pending appeal of initial peer review is not accepted",
+      "quote": "An application that has substantial overlap with another application pending appeal of initial peer review"
+    },
+    {
+      "item": "All organizational registrations must be completed before the application is submitted (allow 6 weeks or more)",
+      "quote": "All registrations must be completed prior to the application being submitted. Registration can take 6 weeks or more"
+    },
+    {
+      "item": "Maintain an active SAM registration, renewed at least annually",
+      "quote": "Applicants must complete and maintain an active registration, which requires renewal at least annually ."
+    },
+    {
+      "item": "Foreign organizations must obtain an NCAGE code to register in SAM",
+      "quote": "Foreign organizations must obtain an NCAGE code (in lieu of a CAGE code) in order to register in SAM."
+    },
+    {
+      "item": "Use the same UEI for all registrations and on the grant application",
+      "quote": "The same UEI must be used for all registrations, as well as on the grant application."
+    },
+    {
+      "item": "Organization must register in eRA Commons with at least one Signing Official and one PD/PI account",
+      "quote": "eRA Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account"
+    },
+    {
+      "item": "Organization must complete Grants.gov registration (requires active SAM registration)",
+      "quote": "Applicants must have an active SAM registration in order to complete the Grants.gov registration."
+    },
+    {
+      "item": "PD/PI must have an eRA Commons account affiliated with the applicant organization",
+      "quote": "All PD(s)/PI(s) must have an eRA Commons account."
+    },
+    {
+      "item": "A PD/PI who is also the organizational Signing Official must have two distinct eRA Commons accounts",
+      "quote": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role."
+    },
+    {
+      "item": "PD/PI must enter their eRA Commons ID in the Credential field of the Senior/Key Person Profile form",
+      "quote": "All PD(s)/PI(s) must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form ."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF424(R&R) Cover form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Cover All instructions in the How to Apply - Application Guide must be followed."
+    },
+    {
+      "item": "SF424(R&R) Project/Performance Site Locations form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Project/Performance Site Locations All instructions"
+    },
+    {
+      "item": "SF424(R&R) Other Project Information form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Other Project Information All instructions"
+    },
+    {
+      "item": "SF424(R&R) Senior/Key Person Profile form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Senior/Key Person Profile All instructions"
+    },
+    {
+      "item": "Current & Pending Support for the PD/PI (NHLBI grants first, then other NIH, then other sources; total award, person months, direct costs to the PD/PI's lab), attached to the Senior/Key Personnel form",
+      "userWrites": true,
+      "quote": "Current & Pending Support : Use the SF424 R&R Current and Pending Support instructions and attach this information to the Senior/Key Personnel Form."
+    },
+    {
+      "item": "Letter of Support from the institution's AOR (max 2 pages): PD/PI six-person-month commitment, the two qualifying NHLBI R01-equivalent awards, institutional commitment, and acceptance that NHLBI awards will be relinquished",
+      "userWrites": false,
+      "quote": "Applications that are missing a Letter of Support will not be reviewed. The Letter of Support must not exceed 2 pages in length."
+    },
+    {
+      "item": "R&R Budget, with budget justification (up to 7 years)",
+      "userWrites": true,
+      "quote": "While a 10-year R&R Detailed Budget form is provided in the application package, applicants may not request more than 7 years of support."
+    },
+    {
+      "item": "R&R Subaward Budget",
+      "userWrites": true,
+      "quote": "R&R Subaward Budget All instructions"
+    },
+    {
+      "item": "PHS 398 Cover Page Supplement form",
+      "userWrites": false,
+      "quote": "PHS 398 Cover Page Supplement All instructions"
+    },
+    {
+      "item": "PHS 398 Research Plan form",
+      "userWrites": true,
+      "quote": "PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions"
+    },
+    {
+      "item": "At least one human subjects study record (or Delayed Onset Study record) on the PHS Human Subjects and Clinical Trials Information form if human subjects are involved",
+      "userWrites": true,
+      "quote": "you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record."
+    },
+    {
+      "item": "PHS Assignment Request Form",
+      "userWrites": false,
+      "quote": "PHS Assignment Request Form All instructions"
+    }
+  ],
+  "libraryRequired": [
+    "Project Summary/Abstract",
+    "Project Narrative",
+    "Bibliography & References Cited",
+    "Facilities & Other Resources",
+    "Equipment"
+  ]
+}

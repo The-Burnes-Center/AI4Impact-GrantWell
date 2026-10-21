@@ -1,0 +1,1865 @@
+{
+ "0337c219b5954c30": {
+  "query": "application budget direct costs limit $ per year",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "08ce3719a2a222f6": {
+  "query": "appendix materials allowed publications",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "0de52ef1edbae698": {
+  "query": "project period and award amount R03",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "24ae0e98269a08bb": {
+  "query": "application budget direct costs limit $ per year",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423This initiative is not subject to intergovernmental review. (https://grants.nih.gov/grants/policy/nihgps/html5/section_10/10.10.1_executive_orders.htm)\n\n 6. Funding Restrictions\n\n All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11120).\n\n Pre-award costs are allowable only as described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost. (//grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2238526,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=82400\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide.html\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide.html\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide.html\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=61134\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=61134\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=61134\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide.html\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide.htmlSF424(R&R) Other Project Information\n\n All instructions in the How to Apply-Application Guide must be followed.\n\n SF424(R&R) Senior/Key Person Profile\n\n All instructions in the How to Apply- Application Guide must be followed.\n\n R&R or Modular Budget\n\n All instructions in the How to Apply- Application Guide must be followed.\n\n R&R Subaward Budget\n\n All instructions in the How to Apply-Application Guide must be followed.\n\n PHS 398 Cover Page Supplement\n\n All instructions in the How to Apply- Application Guide must be followed.\n\n PHS 398 Research Plan\n\n All instructions in the How to Apply- Application Guide must be followed, with the following additional instructions:\n\n Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply- Application Guide. \n\n Other Plan(s): \n\n All instructions in the How to Apply-Application Guide must be followed, with the following additional instructions:\n\n All applicants planning research (funded or conducted in whole or in part by NIH) that results in the generation of scientific data are required to comply with the instructions for the Data Management and Sharing Plan. All applications, regardless of the amount of direct costs requested for any one year, must include a Data Management and Sharing Plan.\n\n Appendix: Only limited Appendix materials are allowed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1866295,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AE7VYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Project Period\n\n The maximum project period is 1 year. \n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1823566,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ADLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "March 31, 2025 This funding opportunity was updated to align with agency priorities. Carefully reread the full funding opportunity and make\n\n any needed adjustments to your application prior to submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1700882,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_bVYYKEBbayybwJObOo-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package\n\n The application forms package specific to this opportunity must be accessed through ASSIST, Grants.gov Workspace or an institutional system-to-system solution. Links to apply using ASSIST or Grants.gov Workspace are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution.\n\n 2. Content and Form of Application Submission\n\n It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400) except where instructed in this notice of funding opportunity to do otherwise. Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review.\n\n Page Limitations\n\n All page limitations described in the How to Apply- Application Guide (https://grants.nih.gov/grants/how-to-apply- application-guide.html) and the Table of Page Limits (https://grants.nih.gov/grants/guide/url_redirect.php? id=61134) must be followed.\n\n Instructions for Application Submission The following section supplements the instructions found in the How to Apply- Application Guide (https://grants.nih.gov/grants/how-to-apply-application-guide.html) and should be used for preparing an application to this NOFO.\n\n SF424(R&R) Cover\n\n All instructions in the How to Apply- Application Guide must be followed.\n\n SF424(R&R) Project/Performance Site Locations\n\n All instructions in the How to Apply-Application Guide must be followed.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1656117,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AEbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11123) - Once the unique organization identifier is established, organizations can register with eRA Commons in tandem with completing their Grants.gov registration; all registrations must be in place by time of submission. eRA Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application. Grants.gov (//grants.nih.gov/grants/guide/url_redirect.php?id=82300) – Applicants must have an active SAM registration in order to complete the Grants.gov registration.\n\n Program Directors/Principal Investigators (PD(s)/PI(s))\n\n All PD(s)/PI(s) must have an eRA Commons account. PD(s)/PI(s) should work with their organizational officials to either create a new account or to affiliate their existing account with the applicant organization in eRA Commons. If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role. Obtaining an eRA Commons account can take up to 2 weeks. Eligible Individuals (Program Director/Principal Investigator) Any individual(s) with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director(s)/Principal Investigator(s) (PD(s)/PI(s)) is invited to work with their organization to develop an application for support.\n\n For institutions/organizations proposing multiple PDs/PIs, visit the Multiple Program Director/Principal Investigator Policy and submission details in the Senior/Key Person Profile (Expanded) Component of the How to Apply- Application Guide.\n\n 2. Cost Sharing\n\n This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definition of Terms (//grants.nih.gov/grants/guide/url_redirect.php?id=11126).\n\n 3. Additional Information on Eligibility\n\n Number of Applications\n\n Applicant organizations may submit more than one application, provided that each application is scientifically distinct.\n\n The NIH will not accept duplicate or highly overlapping applications under review at the same time, per NIH Grants Policy Statement Section 2.3.7.4 Submission of Resubmission Application (//grants.nih.gov/grants/guide/url_redirect.php?id=82415). This means that the NIH will not accept:\n\n A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1651218,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ADrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Due Dates Review and Award Cycles\n\n New\n\n Renewal / Resubmission / Revision (as\n\n allowed)\n\n AIDS - New/Renewal/Resubmission/Revision,\n\n as allowed\n\n Scientific Merit\n\n Review\n\n Advisory Council Review\n\n Earliest Start Date\n\n February 16, 2025 *\n\n March 16, 2025 * May 07, 2025 * July 2025 August 2025\n\n December 2025\n\n June 16, 2025 *\n\n July 16, 2025 * September 07, 2025 * November 2025\n\n January 2026\n\n April 2026\n\n October 16, 2025 *\n\n November 16, 2025 *\n\n January 07, 2026 * March 2026\n\n May 2026 July 2026\n\n February 16, 2026 *\n\n March 16, 2026 * May 07, 2026 * July 2026 August 2026\n\n December 2026\n\n June 16, 2026 *\n\n July 16, 2026 * Not Applicable November 2026\n\n January 2027\n\n April 2027\n\n October 16, 2026 *\n\n November 16, 2026 *\n\n Not Applicable March 2027\n\n May 2027 July 2027\n\n February 16, 2027 *\n\n March 16, 2027 * Not Applicable July 2027 August 2027\n\n December 2027\n\n June 16, 2027 *\n\n July 16, 2027 * Not Applicable November 2027\n\n January 2028\n\n April 2028\n\n October 16, 2027 *\n\n November 16, 2027 *\n\n Not Applicable March 2028\n\n May 2028 July 2028\n\n All applications are due by 5:00 PM local time of applicant organization. \n\n Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date.\n\n Required Application Instructions It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400), except where instructed to do otherwise (in this NOFO or in a Notice from NIH Guide for Grants and Contracts (//grants.nih.gov/grants/guide/url_redirect.php?id=11164))."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1588707,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AAbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "3313c2bea753fef7": {
+  "query": "biosketch publications list; letters of support; unpublished manuscripts",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11175\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11150\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11150\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11150Not Applicable Additional Review Considerations As applicable for the project proposed, reviewers will consider each of the following items, but will not give scores for these items, and should not consider them in providing an overall impact score.\n\n Authentication of Key Biological and/or Chemical Resources:\n\n For projects involving key biological and/or chemical resources, evaluate the brief plans proposed for identifying and ensuring the validity of those resources.\n\n Budget and Period of Support\n\n Evaluate whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research.\n\n 2. Review and Selection Process\n\n Applications will be evaluated for scientific and technical merit by (an) appropriate Scientific Review Group(s) convened by the Center for Scientific Review, in accordance with NIH peer review policy and procedures (//grants.nih.gov/grants/guide/url_redirect.php?id=11154), using the stated review criteria (file:///C:/Users/mckenziene/AppData/Local/Microsoft/Windows/INetCache/Content.Outlook/13V4QPZR/Research%20Draft.doc#_1._Criteria). The assignment to a Scientific Review Group will be shown in the eRA Commons.\n\n As part of the scientific peer review, all applications will receive a written critique.\n\n Applications will be assigned on the basis of established PHS referral guidelines to the appropriate NIH Institute or Center. Applications will compete for available funds with all other recommended applications. Following initial peer review, recommended applications will receive a second level of review by the National Advisory Council on Drug Abuse. The following will be considered in making funding decisions:\n\n Scientific and technical merit of the proposed project as determined by scientific peer review Availability of funds Relevance of the proposed project to program priorities\n\n If the application is under consideration for funding, NIH will request \"just-in-time\" information from the applicant as described in the NIH Grants Policy Statement Section 2.5.1. Just-in-Time Procedures (//grants.nih.gov/grants/guide/url_redirect.php?id=82418). This request is not a Notice of Award, nor should it be construed to be an indicator of possible funding."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2215227,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82420\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2092191,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application. An application that has substantial overlap with another application pending appeal of initial peer review (see NIH Grants Policy Statement 2.3.9.4 Similar, Essentially Identical, or Identical Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=82423))."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2003415,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AD7VYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications Not Responsive to this NOFO\n\n The following types of study are not responsive to this NOFO and will not be reviewed:\n\n Applications that do not address the neurobiology of substance use or SUD Applications that focus on alcohol or alcohol in combination with other addictive substances Applications that do not include brain imaging tools, techniques, or methods  \n\n See Section VIII. Other Information for award authorities and regulations.\n\n Investigators proposing NIH-defined clinical trials may refer to the Research Methods Resources (https://researchmethodsresources.nih.gov/) website for information about developing statistical methods and study designs.\n\n Section II."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1985189,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ABrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11159\n \n\n \n  https://www.hhs.gov/sites/default/files/form-hhs690.pdf\n \n\n \n  https://www.hhs.gov/sites/default/files/form-hhs690.pdf\n \n\n \n  https://www.hhs.gov/civil-rights/for-providers/laws-regulations-guidance/laws/index.html\n \n\n \n  https://www.hhs.gov/civil-rights/for-providers/laws-regulations-guidance/laws/index.html\n \n\n \n  https://www.hhs.gov/civil-rights/for-providers/laws-regulations-guidance/laws/index.html\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group-ECFR86b76dde0e1e9dc/section-200.340\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group-ECFR86b76dde0e1e9dc/section-200.340\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group-ECFR86b76dde0e1e9dc/section-200.340\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1955258,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See more tips (//grants.nih.gov/grants/guide/url_redirect.php?id=11146) for avoiding common errors.\n\n Upon receipt, applications will be evaluated for completeness and compliance with application instructions by the Center for Scientific Review and responsiveness by NIDA, NIH. Applications that are incomplete, non-compliant, and/or nonresponsive will not be reviewed.\n\n Mandatory Disclosure Recipients or subrecipients must submit any information related to violations of federal criminal law involving fraud, bribery, or gratuity violations potentially affecting the federal award. See Mandatory Disclosures, 2 CFR 200.113 (https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113)  and NIH Grants Policy Statement Section 4.1.35 (https://grants.nih.gov/grants/policy/nihgps/html5/section_4/4.1.35_mandatory_disclosures.htm).\n\n Send written disclosures to the NIH Chief Grants Management Officer listed on the Notice of Award for the IC that funded the award and to the HHS Office of Inspector Grant Self Disclosure Program (https://oig.hhs.gov/compliance/self-disclosure-info/hhs-oig-grant-self-disclosure-program/) at grantdisclosures@oig.hhs.gov (mailto:grantdisclosures@oig.hhs.gov).\n\n Post Submission Materials\n\n Applicants are required to follow the instructions for post-submission materials, as described in the policy. (//grants.nih.gov/grants/guide/url_redirect.php?id=82299)\n\n Section V."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1892033,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package\n\n The application forms package specific to this opportunity must be accessed through ASSIST, Grants.gov Workspace or an institutional system-to-system solution. Links to apply using ASSIST or Grants.gov Workspace are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution.\n\n 2. Content and Form of Application Submission\n\n It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400) except where instructed in this notice of funding opportunity to do otherwise. Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review.\n\n Page Limitations\n\n All page limitations described in the How to Apply- Application Guide (https://grants.nih.gov/grants/how-to-apply- application-guide.html) and the Table of Page Limits (https://grants.nih.gov/grants/guide/url_redirect.php? id=61134) must be followed.\n\n Instructions for Application Submission The following section supplements the instructions found in the How to Apply- Application Guide (https://grants.nih.gov/grants/how-to-apply-application-guide.html) and should be used for preparing an application to this NOFO.\n\n SF424(R&R) Cover\n\n All instructions in the How to Apply- Application Guide must be followed.\n\n SF424(R&R) Project/Performance Site Locations\n\n All instructions in the How to Apply-Application Guide must be followed.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1864626,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AEbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "3db570567129efb3": {
+  "query": "Award Budget NIDA anticipated funds total costs",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "61386e46efc19bb2": {
+  "query": "application due dates submission deadline",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "645f3643ae771f7c": {
+  "query": "award ceiling maximum direct costs budget",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "67a86bbeb9ee4612": {
+  "query": "appendix materials allowed publications",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Follow all instructions for the Appendix as described in the How to Apply- Application Guide.\n\n No publications or other material, with the exception of blank questionnaires or blank surveys, may be included in the Appendix.\n\n PHS Human Subjects and Clinical Trials Information\n\n When involving human subjects research, clinical research, and/or NIH-definedclinical trials (and when applicable, clinical trials research experience) follow all instructions for the PHS Human Subjects and Clinical Trials Information form in the How to Apply- Application Guide, with the following additional instructions:\n\n If you answered “Yes” to the question “Are Human Subjects Involved?” on the R&R Other Project Information form, you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record.\n\n Study Record: PHS Human Subjects and Clinical Trials Information\n\n All instructions in the How to Apply- Application Guide must be followed.\n\n Delayed Onset Study\n\n Note: Delayed onset (https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudy) does NOT apply to a study that can be described but will not start immediately (i.e., delayed start). All instructions in the How to Apply- Application Guide must be followed.\n\n PHS Assignment Request Form\n\n All instructions in the How to Apply-Application Guide must be followed.\n\n Foreign Organizations\n\n Foreign (non-U.S.) institutions must follow policies described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11137), and procedures for foreign institutions described throughout the How to Apply-Application Guide.\n\n 3. Unique Entity Identifier and System for Award Management (SAM)\n\n See Part 2. Section III.1 for information regarding the requirement for obtaining a unique entity identifier and for completing and maintaining active registrations in System for Award Management (SAM), NATO Commercial and Government Entity (NCAGE) Code (if applicable), eRA Commons, and Grants.gov.\n\n 4. Submission Dates and Times\n\n Part I."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3337808,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82420\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2101872,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11159\n \n\n \n  https://www.hhs.gov/sites/default/files/form-hhs690.pdf\n \n\n \n  https://www.hhs.gov/sites/default/files/form-hhs690.pdf\n \n\n \n  https://www.hhs.gov/civil-rights/for-providers/laws-regulations-guidance/laws/index.html\n \n\n \n  https://www.hhs.gov/civil-rights/for-providers/laws-regulations-guidance/laws/index.html\n \n\n \n  https://www.hhs.gov/civil-rights/for-providers/laws-regulations-guidance/laws/index.html\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group-ECFR86b76dde0e1e9dc/section-200.340\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group-ECFR86b76dde0e1e9dc/section-200.340\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group-ECFR86b76dde0e1e9dc/section-200.340\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1976147,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11154\n \n\n \n  file:///C:/Users/mckenziene/AppData/Local/Microsoft/Windows/INetCache/Content.Outlook/13V4QPZR/Research%20Draft.doc#_1._Criteria\n \n\n \n  file:///C:/Users/mckenziene/AppData/Local/Microsoft/Windows/INetCache/Content.Outlook/13V4QPZR/Research%20Draft.doc#_1._Criteria\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82418\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82418\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82416\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82416\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82416\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_5/5_the_notice_of_award.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_5/5_the_notice_of_award.htm\n \n\n \n  https://grants.nih.gov/grants/pre-award-process.htm#award\n \n\n \n  https://grants.nih.gov/grants/pre-award-process.htm#award\n \n\n \n  https://register.clinicaltrials.gov/\n \n\n \n  https://register.clinicaltrials.gov/\n \n\n \n  https://grants.nih.gov/policy/clinical-trials/reporting/index.htm\n \n\n \n  https://grants.nih.gov/policy/clinical-trials/reporting/index.htm\n \n\n \n  https://grants.nih.gov/policy/clinical-trials/reporting/index.htmunder a research protocol must be performed under a Food and Drug Administration (FDA) investigational new drug (IND) or investigational device exemption (IDE).\n\n 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1896975,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AI7VYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See more tips (//grants.nih.gov/grants/guide/url_redirect.php?id=11146) for avoiding common errors.\n\n Upon receipt, applications will be evaluated for completeness and compliance with application instructions by the Center for Scientific Review and responsiveness by NIDA, NIH. Applications that are incomplete, non-compliant, and/or nonresponsive will not be reviewed.\n\n Mandatory Disclosure Recipients or subrecipients must submit any information related to violations of federal criminal law involving fraud, bribery, or gratuity violations potentially affecting the federal award. See Mandatory Disclosures, 2 CFR 200.113 (https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113)  and NIH Grants Policy Statement Section 4.1.35 (https://grants.nih.gov/grants/policy/nihgps/html5/section_4/4.1.35_mandatory_disclosures.htm).\n\n Send written disclosures to the NIH Chief Grants Management Officer listed on the Notice of Award for the IC that funded the award and to the HHS Office of Inspector Grant Self Disclosure Program (https://oig.hhs.gov/compliance/self-disclosure-info/hhs-oig-grant-self-disclosure-program/) at grantdisclosures@oig.hhs.gov (mailto:grantdisclosures@oig.hhs.gov).\n\n Post Submission Materials\n\n Applicants are required to follow the instructions for post-submission materials, as described in the policy. (//grants.nih.gov/grants/guide/url_redirect.php?id=82299)\n\n Section V."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1840041,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Section VI."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1829302,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AILVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm)\n\n Recipients are responsible for ensuring that their activities comply with all applicable federal regulations.  NIH may terminate awards under certain circumstances.  See 2 CFR Part 200.340 Termination (https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group- ECFR86b76dde0e1e9dc/section-200.340) and NIH Grants Policy Statement Section 8.5.2 Remedies for Noncompliance or Enforcement Actions: Suspension, Termination, and Withholding of Support (https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions- _suspension__termination__and_withholding_of_support.htm). \n\n Cooperative Agreement Terms and Conditions of Award Not Applicable\n\n 3. Data Management and Sharing Consistent with the 2023 NIH Policy for Data Management and Sharing, when data management and sharing is applicable to the award, recipients will be required to adhere to the Data Management and Sharing requirements as outlined in the NIH Grants Policy Statement (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data). Upon the approval of a Data Management and Sharing Plan, it is required for recipients to implement the plan as described.\n\n 4. Reporting\n\n When multiple years are involved, recipients will be required to submit the Research Performance Progress Report (RPPR) (//grants.nih.gov/grants/rppr/index.htm) annually and financial statements as required in the NIH Grants Policy Statement Section 8.4.1 Reporting. (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm) To learn more about post- award monitoring and reporting, see the NIH Grants & Funding website, see Post-Award Monitoring and Reporting (https://grants.nih.gov/grants/guide/url_redirect.php?id=82428)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1699305,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "68bf5ff18a3ef6f7": {
+  "query": "key dates open date, application due date, earliest start date, expiration date",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "8128cc45f32afbfc": {
+  "query": "appendix limitations; do not include publications manuscripts",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "935e3c66b1e88fb4": {
+  "query": "appendix limitations; do not include publications manuscripts",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Follow all instructions for the Appendix as described in the How to Apply- Application Guide.\n\n No publications or other material, with the exception of blank questionnaires or blank surveys, may be included in the Appendix.\n\n PHS Human Subjects and Clinical Trials Information\n\n When involving human subjects research, clinical research, and/or NIH-definedclinical trials (and when applicable, clinical trials research experience) follow all instructions for the PHS Human Subjects and Clinical Trials Information form in the How to Apply- Application Guide, with the following additional instructions:\n\n If you answered “Yes” to the question “Are Human Subjects Involved?” on the R&R Other Project Information form, you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record.\n\n Study Record: PHS Human Subjects and Clinical Trials Information\n\n All instructions in the How to Apply- Application Guide must be followed.\n\n Delayed Onset Study\n\n Note: Delayed onset (https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudy) does NOT apply to a study that can be described but will not start immediately (i.e., delayed start). All instructions in the How to Apply- Application Guide must be followed.\n\n PHS Assignment Request Form\n\n All instructions in the How to Apply-Application Guide must be followed.\n\n Foreign Organizations\n\n Foreign (non-U.S.) institutions must follow policies described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11137), and procedures for foreign institutions described throughout the How to Apply-Application Guide.\n\n 3. Unique Entity Identifier and System for Award Management (SAM)\n\n See Part 2. Section III.1 for information regarding the requirement for obtaining a unique entity identifier and for completing and maintaining active registrations in System for Award Management (SAM), NATO Commercial and Government Entity (NCAGE) Code (if applicable), eRA Commons, and Grants.gov.\n\n 4. Submission Dates and Times\n\n Part I."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3257322,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11154\n \n\n \n  file:///C:/Users/mckenziene/AppData/Local/Microsoft/Windows/INetCache/Content.Outlook/13V4QPZR/Research%20Draft.doc#_1._Criteria\n \n\n \n  file:///C:/Users/mckenziene/AppData/Local/Microsoft/Windows/INetCache/Content.Outlook/13V4QPZR/Research%20Draft.doc#_1._Criteria\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82418\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82418\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82416\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82416\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82416\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_5/5_the_notice_of_award.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_5/5_the_notice_of_award.htm\n \n\n \n  https://grants.nih.gov/grants/pre-award-process.htm#award\n \n\n \n  https://grants.nih.gov/grants/pre-award-process.htm#award\n \n\n \n  https://register.clinicaltrials.gov/\n \n\n \n  https://register.clinicaltrials.gov/\n \n\n \n  https://grants.nih.gov/policy/clinical-trials/reporting/index.htm\n \n\n \n  https://grants.nih.gov/policy/clinical-trials/reporting/index.htm\n \n\n \n  https://grants.nih.gov/policy/clinical-trials/reporting/index.htmunder a research protocol must be performed under a Food and Drug Administration (FDA) investigational new drug (IND) or investigational device exemption (IDE).\n\n 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1675968,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AI7VYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications Not Responsive to this NOFO\n\n The following types of study are not responsive to this NOFO and will not be reviewed:\n\n Applications that do not address the neurobiology of substance use or SUD Applications that focus on alcohol or alcohol in combination with other addictive substances Applications that do not include brain imaging tools, techniques, or methods  \n\n See Section VIII. Other Information for award authorities and regulations.\n\n Investigators proposing NIH-defined clinical trials may refer to the Research Methods Resources (https://researchmethodsresources.nih.gov/) website for information about developing statistical methods and study designs.\n\n Section II."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.162861,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ABrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See more tips (//grants.nih.gov/grants/guide/url_redirect.php?id=11146) for avoiding common errors.\n\n Upon receipt, applications will be evaluated for completeness and compliance with application instructions by the Center for Scientific Review and responsiveness by NIDA, NIH. Applications that are incomplete, non-compliant, and/or nonresponsive will not be reviewed.\n\n Mandatory Disclosure Recipients or subrecipients must submit any information related to violations of federal criminal law involving fraud, bribery, or gratuity violations potentially affecting the federal award. See Mandatory Disclosures, 2 CFR 200.113 (https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113)  and NIH Grants Policy Statement Section 4.1.35 (https://grants.nih.gov/grants/policy/nihgps/html5/section_4/4.1.35_mandatory_disclosures.htm).\n\n Send written disclosures to the NIH Chief Grants Management Officer listed on the Notice of Award for the IC that funded the award and to the HHS Office of Inspector Grant Self Disclosure Program (https://oig.hhs.gov/compliance/self-disclosure-info/hhs-oig-grant-self-disclosure-program/) at grantdisclosures@oig.hhs.gov (mailto:grantdisclosures@oig.hhs.gov).\n\n Post Submission Materials\n\n Applicants are required to follow the instructions for post-submission materials, as described in the policy. (//grants.nih.gov/grants/guide/url_redirect.php?id=82299)\n\n Section V."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1624709,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A final RPPR, invention statement, and the expenditure data portion of the Federal Financial Report are required for closeout of an award, as described in the NIH Grants Policy Statement Section 8.6 Closeout (//grants.nih.gov/grants/guide/url_redirect.php?id=82420). NIH NOFOs outline intended research goals and objectives. Post award, NIH will review and measure performance based on the details and outcomes that are shared within the RPPR, as described at 2 CFR Part 200.301.\n\n Section VII."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.150016,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions-_suspension__termination__and_withholding_of_support.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82428\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82420\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1460693,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package\n\n The application forms package specific to this opportunity must be accessed through ASSIST, Grants.gov Workspace or an institutional system-to-system solution. Links to apply using ASSIST or Grants.gov Workspace are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution.\n\n 2. Content and Form of Application Submission\n\n It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400) except where instructed in this notice of funding opportunity to do otherwise. Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review.\n\n Page Limitations\n\n All page limitations described in the How to Apply- Application Guide (https://grants.nih.gov/grants/how-to-apply- application-guide.html) and the Table of Page Limits (https://grants.nih.gov/grants/guide/url_redirect.php? id=61134) must be followed.\n\n Instructions for Application Submission The following section supplements the instructions found in the How to Apply- Application Guide (https://grants.nih.gov/grants/how-to-apply-application-guide.html) and should be used for preparing an application to this NOFO.\n\n SF424(R&R) Cover\n\n All instructions in the How to Apply- Application Guide must be followed.\n\n SF424(R&R) Project/Performance Site Locations\n\n All instructions in the How to Apply-Application Guide must be followed.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1453564,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AEbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "b31e939faa1f0b2b": {
+  "query": "award ceiling maximum direct costs budget",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Project Period\n\n The maximum project period is 1 year. \n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3039317,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ADLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423This initiative is not subject to intergovernmental review. (https://grants.nih.gov/grants/policy/nihgps/html5/section_10/10.10.1_executive_orders.htm)\n\n 6. Funding Restrictions\n\n All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11120).\n\n Pre-award costs are allowable only as described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost. (//grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2680762,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Administration Information 1. Award Notices\n\n A Notice of Award (NoA) is the official authorizing document notifying the applicant that an award has been made and that funds may be requested from the designated HHS payment system or office. The NoA is signed by the Grants Management Officer and emailed to the recipient’s business official.\n\n In accepting the award, the recipient agrees that any activities under the award are subject to all provisions currently in effect or implemented during the period of the award, other Department regulations and policies in effect at the time of the award, and applicable statutory provisions.\n\n Recipients must comply with any funding restrictions described in Section IV.6. Funding Restrictions. Any pre- award costs incurred before receipt of the NoA are at the applicant's own risk. For more information on the Notice of Award, please refer to the NIH Grants Policy Statement Section 5. The Notice of Award (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_5/5_the_notice_of_award.htm) and NIH Grants & Funding website, see Award Process. (https://grants.nih.gov/grants/pre-award-process.htm#award)\n\n Individual awards are based on the application submitted to, and as approved by, the NIH and are subject to the IC-specific terms and conditions identified in the NoA.\n\n ClinicalTrials.gov: If an award provides for one or more clinical trials. By law (Title VIII, Section 801 of Public Law 110-85), the \"responsible party\" must register and submit results information for certain “applicable clinical trials” on the ClinicalTrials.gov Protocol Registration and Results System Information Website (https://register.clinicaltrials.gov (https://register.clinicaltrials.gov/)). NIH expects registration and results reporting of all trials whether required under the law or not. For more information, see https://grants.nih.gov/policy/clinical- trials/reporting/index.htm (https://grants.nih.gov/policy/clinical-trials/reporting/index.htm)\n\n Institutional Review Board or Independent Ethics Committee Approval: Recipient institutions must ensure that all protocols are reviewed by their IRB or IEC. To help ensure the safety of participants enrolled in NIH-funded studies, the recipient must provide NIH copies of documents related to all major changes in the status of ongoing protocols."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2424191,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AIbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Administrative and National Policy Requirements\n\n The following Federal wide and HHS-specific policy requirements apply to awards funded through NIH:\n\n The rules listed at 2 CFR Part 200 (https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200), Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards. All NIH grant and cooperative agreement awards include the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11120) as part of the terms and conditions in the Notice of Award (NoA). The NoA includes the requirements of this NOFO. For these terms of award, see the NIH Grants Policy Statement Part II: Terms and Conditions of NIH Grant Awards, Subpart A: General (//grants.nih.gov/grants/guide/url_redirect.php?id=11120) and Part II: Terms and Conditions of NIH Grant Awards, Subpart B: Terms and Conditions for Specific Types of Grants, Recipients, and Activities (//grants.nih.gov/grants/guide/url_redirect.php?id=11159). If a recipient receives an award, the recipient must follow all applicable nondiscrimination laws. The recipient agrees to this when registering in SAM.gov. The recipient must also submit an Assurance of Compliance (HHS-690 (https://www.hhs.gov/sites/default/files/form-hhs690.pdf)). To learn more, see the Laws and Regulations Enforced by the HHS Office for Civil Rights website (https://www.hhs.gov/civil- rights/for-providers/laws-regulations-guidance/laws/index.html).\n\n HHS recognizes that NIH research projects are often limited in scope for many reasons that are nondiscriminatory, such as the principal investigator’s scientific interest, funding limitations, recruitment requirements, and other considerations. Thus, criteria in research protocols that target or exclude certain populations are warranted where nondiscriminatory justifications establish that such criteria are appropriate with respect to the health or safety of the subjects, the scientific study design, or the purpose of the research. For additional guidance regarding how the provisions apply to NIH grant programs, please contact the Scientific/Research Contact that is identified in Section VII under Agency Contacts of this NOFO.\n\n All federal statutes and regulations relevant to federal financial assistance, including those highlighted in NIH Grants Policy Statement Section 4 Public Policy Requirements, Objectives and Other Appropriation Mandates."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.188371,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Information Funding Instrument\n\n \n\n \n  https://gcc02.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.drugabuse.gov%2Ffunding%2Fspecial-considerations-for-nida-funding&data=05%7C01%7Cyvonne.walker%40nih.gov%7C2b30605ae50740cd31fb08dad6eab2e5%7C14b77578977342d58507251ca2dc2b06%7C0%7C0%7C638058600752895551%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=RZWNDnsvUK%2BgiMQdFmQN7h9cG6ADsnh51v0XvRnqG6k%3D&reserved=0\n \n\n \n  https://gcc02.safelinks.protection.outlook.com/?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1840765,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AB7VYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm)\n\n Recipients are responsible for ensuring that their activities comply with all applicable federal regulations.  NIH may terminate awards under certain circumstances.  See 2 CFR Part 200.340 Termination (https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group- ECFR86b76dde0e1e9dc/section-200.340) and NIH Grants Policy Statement Section 8.5.2 Remedies for Noncompliance or Enforcement Actions: Suspension, Termination, and Withholding of Support (https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions- _suspension__termination__and_withholding_of_support.htm). \n\n Cooperative Agreement Terms and Conditions of Award Not Applicable\n\n 3. Data Management and Sharing Consistent with the 2023 NIH Policy for Data Management and Sharing, when data management and sharing is applicable to the award, recipients will be required to adhere to the Data Management and Sharing requirements as outlined in the NIH Grants Policy Statement (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data). Upon the approval of a Data Management and Sharing Plan, it is required for recipients to implement the plan as described.\n\n 4. Reporting\n\n When multiple years are involved, recipients will be required to submit the Research Performance Progress Report (RPPR) (//grants.nih.gov/grants/rppr/index.htm) annually and financial statements as required in the NIH Grants Policy Statement Section 8.4.1 Reporting. (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm) To learn more about post- award monitoring and reporting, see the NIH Grants & Funding website, see Post-Award Monitoring and Reporting (https://grants.nih.gov/grants/guide/url_redirect.php?id=82428)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1826612,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "March 31, 2025 This funding opportunity was updated to align with agency priorities. Carefully reread the full funding opportunity and make\n\n any needed adjustments to your application prior to submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1773077,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_bVYYKEBbayybwJObOo-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "c9df6b177129b0dd": {
+  "query": "Award Budget NIDA anticipated funds total costs",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Information Funding Instrument\n\n \n\n \n  https://gcc02.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.drugabuse.gov%2Ffunding%2Fspecial-considerations-for-nida-funding&data=05%7C01%7Cyvonne.walker%40nih.gov%7C2b30605ae50740cd31fb08dad6eab2e5%7C14b77578977342d58507251ca2dc2b06%7C0%7C0%7C638058600752895551%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=RZWNDnsvUK%2BgiMQdFmQN7h9cG6ADsnh51v0XvRnqG6k%3D&reserved=0\n \n\n \n  https://gcc02.safelinks.protection.outlook.com/?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4359932,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AB7VYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "url=https%3A%2F%2Fwww.drugabuse.gov%2Ffunding%2Fspecial-considerations-for-nida-funding&data=05%7C01%7Cyvonne.walker%40nih.gov%7C2b30605ae50740cd31fb08dad6eab2e5%7C14b77578977342d58507251ca2dc2b06%7C0%7C0%7C638058600752895551%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=RZWNDnsvUK%2BgiMQdFmQN7h9cG6ADsnh51v0XvRnqG6k%3D&reserved=0\n \n\n \n  https://gcc02.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.drugabuse.gov%2Ffunding%2Fspecial-considerations-for-nida-funding&data=05%7C01%7Cyvonne.walker%40nih.gov%7C2b30605ae50740cd31fb08dad6eab2e5%7C14b77578977342d58507251ca2dc2b06%7C0%7C0%7C638058600752895551%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=RZWNDnsvUK%2BgiMQdFmQN7h9cG6ADsnh51v0XvRnqG6k%3D&reserved=0\n \n\n \n  https://gcc02.safelinks.protection.outlook.com/?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3917745,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ACLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "url=https%3A%2F%2Fwww.drugabuse.gov%2Ffunding%2Fspecial-considerations-for-nida-funding&data=05%7C01%7Cyvonne.walker%40nih.gov%7C2b30605ae50740cd31fb08dad6eab2e5%7C14b77578977342d58507251ca2dc2b06%7C0%7C0%7C638058600752895551%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=RZWNDnsvUK%2BgiMQdFmQN7h9cG6ADsnh51v0XvRnqG6k%3D&reserved=0\n \n\n \n  https://researchmethodsresources.nih.gov/\n \n\n \n  https://researchmethodsresources.nih.gov/NIH grants policies as described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11120) will apply to the applications submitted and awards made from this NOFO."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3369964,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ACbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Administration Information 1. Award Notices\n\n A Notice of Award (NoA) is the official authorizing document notifying the applicant that an award has been made and that funds may be requested from the designated HHS payment system or office. The NoA is signed by the Grants Management Officer and emailed to the recipient’s business official.\n\n In accepting the award, the recipient agrees that any activities under the award are subject to all provisions currently in effect or implemented during the period of the award, other Department regulations and policies in effect at the time of the award, and applicable statutory provisions.\n\n Recipients must comply with any funding restrictions described in Section IV.6. Funding Restrictions. Any pre- award costs incurred before receipt of the NoA are at the applicant's own risk. For more information on the Notice of Award, please refer to the NIH Grants Policy Statement Section 5. The Notice of Award (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_5/5_the_notice_of_award.htm) and NIH Grants & Funding website, see Award Process. (https://grants.nih.gov/grants/pre-award-process.htm#award)\n\n Individual awards are based on the application submitted to, and as approved by, the NIH and are subject to the IC-specific terms and conditions identified in the NoA.\n\n ClinicalTrials.gov: If an award provides for one or more clinical trials. By law (Title VIII, Section 801 of Public Law 110-85), the \"responsible party\" must register and submit results information for certain “applicable clinical trials” on the ClinicalTrials.gov Protocol Registration and Results System Information Website (https://register.clinicaltrials.gov (https://register.clinicaltrials.gov/)). NIH expects registration and results reporting of all trials whether required under the law or not. For more information, see https://grants.nih.gov/policy/clinical- trials/reporting/index.htm (https://grants.nih.gov/policy/clinical-trials/reporting/index.htm)\n\n Institutional Review Board or Independent Ethics Committee Approval: Recipient institutions must ensure that all protocols are reviewed by their IRB or IEC. To help ensure the safety of participants enrolled in NIH-funded studies, the recipient must provide NIH copies of documents related to all major changes in the status of ongoing protocols."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3211287,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AIbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423This initiative is not subject to intergovernmental review. (https://grants.nih.gov/grants/policy/nihgps/html5/section_10/10.10.1_executive_orders.htm)\n\n 6. Funding Restrictions\n\n All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11120).\n\n Pre-award costs are allowable only as described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost. (//grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2739389,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Project Period\n\n The maximum project period is 1 year. \n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2640053,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ADLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Full Text of Announcement\n\n Section I. Notice of Funding Opportunity Description This notice of funding opportunity (NOFO) invites applications for the Imaging - Science Track Award for Research Transition (I/START) program, a continual program developed by the National Institute on Drug Abuse (NIDA) to foster the entry of investigators to the area of development and application of novel molecular tools and methods of brain imaging (e.g., PET, PET/CT, SPECT, SPECT/CT, and optical imaging methods) for substance use disorder (SUD) and addiction research.\n\n It is often difficult for new investigators or even established investigators to incorporate brain imaging tools or methods to advance their research programs due to the complexities involved in their development of these tools or methods, which often serves as a significant barrier to research, particularly for more translational efforts. This NOFO will facilitate the development of brain imaging tools or methods and the collection of \"proof-of-concept\" neuroimaging data that can accelerate the transition to more advanced, multi-year research applications.\n\n The proposed studies should have the potential to significantly expand our understanding of central nervous system (CNS) dysfunction in the context of substance use and/or SUD via the application of imaging tools or methods.\n\n This announcement seeks applications from all areas of research dealing with the neurobiology of substance use and SUD and encompassing a wide array of studies relevant to the development of brain imaging tools and their application in SUD and addiction. The research proposed under the I/START program must clearly delineate the potential relevance of the research to expand our understanding of substance use and/or SUD."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.250397,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ABLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "cd70459988991de6": {
+  "query": "project period and award amount R03",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Project Period\n\n The maximum project period is 1 year. \n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4283473,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ADLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "August 5, 2022 - Implementation Details for the NIH Data Management and Sharing Policy. See Notice NOT-OD-22-189 (https://grants.nih.gov/grants/guide/notice-files/NOT-OD-22-189.html).\n\n Funding Opportunity Number (FON)\n\n PAR-24-297\n\n Companion Funding Opportunity\n\n None\n\n Number of Applications\n\n See Section III. 3. Additional Information on Eligibility.\n\n Assistance Listing Number(s)\n\n 93.279\n\n Funding Opportunity Purpose\n\n This notice of funding opportunity (NOFO) encourages Small Research Grant (R03) applications to facilitate the entry of investigators to the area of neuroimaging, including both newly independent investigators and established investigators seeking to adopt neuroimaging methodologies in their research programs, to enable the conduct of small \"proof of concept\" studies. The R03 is intended to support research projects that can be carried out in a short period of time with limited resources.  \n\n Posted Date\n\n \n\n \n  http://www.nih.gov/\n \n\n \n  http://www.nih.gov/\n \n\n \n  https://www.drugabuse.gov/\n \n\n \n  https://www.drugabuse.gov/\n \n\n \n  https://grants.nih.gov/grants/funding/ac_search_results.htm?text_curr=r03&Search.x=0&Search.y=0&sort=ac&Search_Type=Activity&text_prev=\n \n\n \n  https://grants.nih.gov/grants/funding/ac_search_results.htm?text_curr=r03&Search.x=0&Search.y=0&sort=ac&Search_Type=Activity&text_prev=\n \n\n \n  https://grants.nih.gov/grants/funding/ac_search_results.htm?text_curr=r03&Search.x=0&Search.y=0&sort=ac&Search_Type=Activity&text_prev=\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-21-310.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-21-310.html\n \n\n \n  https://grants.nih.gov/grants/guide/NOSIs_targetingList.cfm?GuideDocID=41479\n \n\n \n  https://grants.nih.gov/grants/guide/NOSIs_targetingList.cfm?GuideDocID=41479\n \n\n \n  https://grants.nih.gov/grants/guide/NOSIs_targetingList.cfm?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4187591,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_7VYYKEBbayybwJObOo-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Department of Health and Human Services\n\n Part 1. Overview Information\n\n Key Dates\n\n Participating Organization(s)\n\n National Institutes of Health (NIH (http://www.nih.gov))\n\n Components of Participating Organizations\n\n National Institute on Drug Abuse (NIDA (https://www.drugabuse.gov/))\n\n Funding Opportunity Title\n\n Imaging - Science Track Award for Research Transition (I/START) (R03 Clinical Trial Optional)\n\n Activity Code\n\n R03 (//grants.nih.gov/grants/funding/ac_search_results.htm? text_curr=r03&Search.x=0&Search.y=0&sort=ac&Search_Type=Activity&text_prev=) Small Grant Program\n\n Announcement Type\n\n Reissue of PAR-21-310 (https://grants.nih.gov/grants/guide/pa-files/PAR-21-310.html)\n\n Related Notices\n\n See Notices of Special Interest (https://grants.nih.gov/grants/guide/NOSIs_targetingList.cfm? GuideDocID=41479) associated with this funding opportunity\n\n January 28, 2026 - NIH Removing AIDS Application Due Dates from NOFOs. See Notice NOT-OD-26-029 (https://grants.nih.gov/grants/guide/notice-files/NOT-OD-26-029.html). March 31, 2025 - This funding opportunity was updated to align with agency priorities. Carefully reread the full funding opportunity and make any needed adjustments to your application prior to submission. December 12, 2024 - Notice of Change to Eligibility Information for PAR-24-297, \"Imaging - Science Track Award for Research Transition (I/START) (R03 Clinical Trial Optional)\". See Notice NOT-DA-24-060 (https://grants.nih.gov/grants/guide/notice-files/NOT-DA-24-060.html). April 4, 2024 - Overview of Grant Application and Review Changes for Due Dates on or after January 25, 2025. See Notice NOT-OD-24-084 (https://grants.nih.gov/grants/guide/notice-files/NOT-OD-24-084.html).  August 31, 2022 - Implementation Changes for Genomic Data Sharing Plans Included with Applications Due on or after January 25, 2023. See Notice NOT-OD-22-198 (https://grants.nih.gov/grants/guide/notice- files/not-od-22-198.html)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3628519,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_rVYYKEBbayybwJObOo-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Due Dates Review and Award Cycles\n\n New\n\n Renewal / Resubmission / Revision (as\n\n allowed)\n\n AIDS - New/Renewal/Resubmission/Revision,\n\n as allowed\n\n Scientific Merit\n\n Review\n\n Advisory Council Review\n\n Earliest Start Date\n\n February 16, 2025 *\n\n March 16, 2025 * May 07, 2025 * July 2025 August 2025\n\n December 2025\n\n June 16, 2025 *\n\n July 16, 2025 * September 07, 2025 * November 2025\n\n January 2026\n\n April 2026\n\n October 16, 2025 *\n\n November 16, 2025 *\n\n January 07, 2026 * March 2026\n\n May 2026 July 2026\n\n February 16, 2026 *\n\n March 16, 2026 * May 07, 2026 * July 2026 August 2026\n\n December 2026\n\n June 16, 2026 *\n\n July 16, 2026 * Not Applicable November 2026\n\n January 2027\n\n April 2027\n\n October 16, 2026 *\n\n November 16, 2026 *\n\n Not Applicable March 2027\n\n May 2027 July 2027\n\n February 16, 2027 *\n\n March 16, 2027 * Not Applicable July 2027 August 2027\n\n December 2027\n\n June 16, 2027 *\n\n July 16, 2027 * Not Applicable November 2027\n\n January 2028\n\n April 2028\n\n October 16, 2027 *\n\n November 16, 2027 *\n\n Not Applicable March 2028\n\n May 2028 July 2028\n\n All applications are due by 5:00 PM local time of applicant organization. \n\n Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date.\n\n Required Application Instructions It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400), except where instructed to do otherwise (in this NOFO or in a Notice from NIH Guide for Grants and Contracts (//grants.nih.gov/grants/guide/url_redirect.php?id=11164))."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2798702,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AAbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Administration Information 1. Award Notices\n\n A Notice of Award (NoA) is the official authorizing document notifying the applicant that an award has been made and that funds may be requested from the designated HHS payment system or office. The NoA is signed by the Grants Management Officer and emailed to the recipient’s business official.\n\n In accepting the award, the recipient agrees that any activities under the award are subject to all provisions currently in effect or implemented during the period of the award, other Department regulations and policies in effect at the time of the award, and applicable statutory provisions.\n\n Recipients must comply with any funding restrictions described in Section IV.6. Funding Restrictions. Any pre- award costs incurred before receipt of the NoA are at the applicant's own risk. For more information on the Notice of Award, please refer to the NIH Grants Policy Statement Section 5. The Notice of Award (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_5/5_the_notice_of_award.htm) and NIH Grants & Funding website, see Award Process. (https://grants.nih.gov/grants/pre-award-process.htm#award)\n\n Individual awards are based on the application submitted to, and as approved by, the NIH and are subject to the IC-specific terms and conditions identified in the NoA.\n\n ClinicalTrials.gov: If an award provides for one or more clinical trials. By law (Title VIII, Section 801 of Public Law 110-85), the \"responsible party\" must register and submit results information for certain “applicable clinical trials” on the ClinicalTrials.gov Protocol Registration and Results System Information Website (https://register.clinicaltrials.gov (https://register.clinicaltrials.gov/)). NIH expects registration and results reporting of all trials whether required under the law or not. For more information, see https://grants.nih.gov/policy/clinical- trials/reporting/index.htm (https://grants.nih.gov/policy/clinical-trials/reporting/index.htm)\n\n Institutional Review Board or Independent Ethics Committee Approval: Recipient institutions must ensure that all protocols are reviewed by their IRB or IEC. To help ensure the safety of participants enrolled in NIH-funded studies, the recipient must provide NIH copies of documents related to all major changes in the status of ongoing protocols."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2591834,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AIbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(https://grants.nih.gov/grants/policy/nihgps/HTML5/section_4/4_public_policy_requirements__objectives_and_other_appropriation_mandates.htm)\n\n Recipients are responsible for ensuring that their activities comply with all applicable federal regulations.  NIH may terminate awards under certain circumstances.  See 2 CFR Part 200.340 Termination (https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group- ECFR86b76dde0e1e9dc/section-200.340) and NIH Grants Policy Statement Section 8.5.2 Remedies for Noncompliance or Enforcement Actions: Suspension, Termination, and Withholding of Support (https://grants.nih.gov/grants/policy/nihgps/html5/section_8/8.5.2_remedies_for_noncompliance_or_enforcement_actions- _suspension__termination__and_withholding_of_support.htm). \n\n Cooperative Agreement Terms and Conditions of Award Not Applicable\n\n 3. Data Management and Sharing Consistent with the 2023 NIH Policy for Data Management and Sharing, when data management and sharing is applicable to the award, recipients will be required to adhere to the Data Management and Sharing requirements as outlined in the NIH Grants Policy Statement (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data). Upon the approval of a Data Management and Sharing Plan, it is required for recipients to implement the plan as described.\n\n 4. Reporting\n\n When multiple years are involved, recipients will be required to submit the Research Performance Progress Report (RPPR) (//grants.nih.gov/grants/rppr/index.htm) annually and financial statements as required in the NIH Grants Policy Statement Section 8.4.1 Reporting. (https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.4.1_reporting.htm) To learn more about post- award monitoring and reporting, see the NIH Grants & Funding website, see Post-Award Monitoring and Reporting (https://grants.nih.gov/grants/guide/url_redirect.php?id=82428)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2433871,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Information Funding Instrument\n\n \n\n \n  https://gcc02.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.drugabuse.gov%2Ffunding%2Fspecial-considerations-for-nida-funding&data=05%7C01%7Cyvonne.walker%40nih.gov%7C2b30605ae50740cd31fb08dad6eab2e5%7C14b77578977342d58507251ca2dc2b06%7C0%7C0%7C638058600752895551%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=RZWNDnsvUK%2BgiMQdFmQN7h9cG6ADsnh51v0XvRnqG6k%3D&reserved=0\n \n\n \n  https://gcc02.safelinks.protection.outlook.com/?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2410644,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AB7VYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "e68b80c14f0a2cea": {
+  "query": "key dates open date, application due date, earliest start date, expiration date",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "GuideDocID=41479\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-26-029.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-26-029.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-DA-24-060.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-DA-24-060.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-24-084.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-24-084.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/not-od-22-198.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/not-od-22-198.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/not-od-22-198.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-22-189.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-22-189.htmlThe following table includes NIH standard due dates (https://grants.nih.gov/grants/how-to-apply-application- guide/due-dates-and-submission-policies/due-dates.htm) marked with an asterisk."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4476874,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AALVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Conformance to all requirements (both in the Application Guide and in the NOFO) is required and strictly enforced. Applicants must read and follow all application instructions in the Application Guide as well as any program-specific instructions noted in Section IV. When the program-specific instructions deviate from those in the Application Guide, follow the program-specific instructions.\n\n Applications that do not comply with these instructions may be delayed or not accepted for review.\n\n There are several options available to submit your application through Grants.gov to NIH and Department of Health and Human Services partners. You must use one of these submission options to access the application forms for this opportunity.\n\n 1. Use the NIH ASSIST system to prepare, submit and track your application online.\n\n Apply Online Using ASSIST\n\n 2. Use an institutional system-to-system (S2S) solution to prepare and submit your application to Grants.gov and eRA Commons (https://public.era.nih.gov/commons/) to track your application. Check with your institutional officials regarding availability.\n\n 3. Use Grants.gov (https://grants.gov/search-grants? oppStatuses=closed|archived|posted|forecasted&fon=PAR-24-297) Workspace to prepare and submit your application and eRA Commons (http://public.era.nih.gov/commons/) to track your application.\n\n September 17, 2024\n\n Open Date (Earliest Submission Date)\n\n January 16, 2025\n\n Expiration Date\n\n January 08, 2028\n\n Due Dates for E.O. 12372\n\n Not Applicable\n\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.437382,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AArVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information contains information about Key Dates and times. Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday (https://grants.nih.gov/grants/guide/url_redirect.php?id=82380), the application deadline is automatically extended to the next business day.\n\n Organizations must submit applications to Grants.gov (//grants.nih.gov/grants/guide/url_redirect.php?id=11128) (the online portal to find and apply for grants across all Federal agencies). Applicants must then complete the submission process by tracking the status of the application in the eRA Commons (https://grants.nih.gov/grants/guide/url_redirect.php?id=11123), NIH’s electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time.  If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications (//grants.nih.gov/grants/guide/url_redirect.php? id=82423).\n\n Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission.\n\n Information on the submission process and a definition of on-time submission are provided in the How to Apply- Application Guide.\n\n 5. Intergovernmental Review (E.O. 12372)\n\n \n\n \n  https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudy\n \n\n \n  https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudy\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11137\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11137\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4024603,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Due Dates Review and Award Cycles\n\n New\n\n Renewal / Resubmission / Revision (as\n\n allowed)\n\n AIDS - New/Renewal/Resubmission/Revision,\n\n as allowed\n\n Scientific Merit\n\n Review\n\n Advisory Council Review\n\n Earliest Start Date\n\n February 16, 2025 *\n\n March 16, 2025 * May 07, 2025 * July 2025 August 2025\n\n December 2025\n\n June 16, 2025 *\n\n July 16, 2025 * September 07, 2025 * November 2025\n\n January 2026\n\n April 2026\n\n October 16, 2025 *\n\n November 16, 2025 *\n\n January 07, 2026 * March 2026\n\n May 2026 July 2026\n\n February 16, 2026 *\n\n March 16, 2026 * May 07, 2026 * July 2026 August 2026\n\n December 2026\n\n June 16, 2026 *\n\n July 16, 2026 * Not Applicable November 2026\n\n January 2027\n\n April 2027\n\n October 16, 2026 *\n\n November 16, 2026 *\n\n Not Applicable March 2027\n\n May 2027 July 2027\n\n February 16, 2027 *\n\n March 16, 2027 * Not Applicable July 2027 August 2027\n\n December 2027\n\n June 16, 2027 *\n\n July 16, 2027 * Not Applicable November 2027\n\n January 2028\n\n April 2028\n\n October 16, 2027 *\n\n November 16, 2027 *\n\n Not Applicable March 2028\n\n May 2028 July 2028\n\n All applications are due by 5:00 PM local time of applicant organization. \n\n Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date.\n\n Required Application Instructions It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400), except where instructed to do otherwise (in this NOFO or in a Notice from NIH Guide for Grants and Contracts (//grants.nih.gov/grants/guide/url_redirect.php?id=11164))."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3952408,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AAbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "March 31, 2025 This funding opportunity was updated to align with agency priorities. Carefully reread the full funding opportunity and make\n\n any needed adjustments to your application prior to submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3083625,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_bVYYKEBbayybwJObOo-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11120\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11120\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11146\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2803223,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11164\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11164\n \n\n \n  https://public.era.nih.gov/commons/\n \n\n \n  https://public.era.nih.gov/commons/\n \n\n \n  https://grants.gov/search-grants?oppStatuses=closed|archived|posted|forecasted&fon=PAR-24-297\n \n\n \n  https://grants.gov/search-grants?oppStatuses=closed|archived|posted|forecasted&fon=PAR-24-297\n \n\n \n  https://grants.gov/search-grants?oppStatuses=closed|archived|posted|forecasted&fon=PAR-24-297\n \n\n \n  http://public.era.nih.gov/commons/\n \n\n \n  http://public.era.nih.gov/commons/Table of Contents Part 1. Overview Information\n\n Key Dates Part 2. Full Text of Announcement\n\n Section I. Notice of Funding Opportunity Description Section II. Award Information Section III. Eligibility Information Section IV. Application and Submission Information Section V. Application Review Information Section VI. Award Administration Information Section VII. Agency Contacts Section VIII. Other Information\n\n Part 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.246362,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AA7VYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "eb2342d5c0bf2894": {
+  "query": "biosketch publications list; letters of support; unpublished manuscripts",
+  "filter": "8add141e09e8a391",
+  "retrievalResults": []
+ },
+ "f599663c8da9eb8f": {
+  "query": "application due dates submission deadline",
+  "filter": "3990c2ef124e41ce",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information contains information about Key Dates and times. Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday (https://grants.nih.gov/grants/guide/url_redirect.php?id=82380), the application deadline is automatically extended to the next business day.\n\n Organizations must submit applications to Grants.gov (//grants.nih.gov/grants/guide/url_redirect.php?id=11128) (the online portal to find and apply for grants across all Federal agencies). Applicants must then complete the submission process by tracking the status of the application in the eRA Commons (https://grants.nih.gov/grants/guide/url_redirect.php?id=11123), NIH’s electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time.  If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications (//grants.nih.gov/grants/guide/url_redirect.php? id=82423).\n\n Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission.\n\n Information on the submission process and a definition of on-time submission are provided in the How to Apply- Application Guide.\n\n 5. Intergovernmental Review (E.O. 12372)\n\n \n\n \n  https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudy\n \n\n \n  https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudy\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11137\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11137\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5642056,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "GuideDocID=41479\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-26-029.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-26-029.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-DA-24-060.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-DA-24-060.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-24-084.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-24-084.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/not-od-22-198.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/not-od-22-198.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/not-od-22-198.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-22-189.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-22-189.htmlThe following table includes NIH standard due dates (https://grants.nih.gov/grants/how-to-apply-application- guide/due-dates-and-submission-policies/due-dates.htm) marked with an asterisk."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.483508,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AALVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Conformance to all requirements (both in the Application Guide and in the NOFO) is required and strictly enforced. Applicants must read and follow all application instructions in the Application Guide as well as any program-specific instructions noted in Section IV. When the program-specific instructions deviate from those in the Application Guide, follow the program-specific instructions.\n\n Applications that do not comply with these instructions may be delayed or not accepted for review.\n\n There are several options available to submit your application through Grants.gov to NIH and Department of Health and Human Services partners. You must use one of these submission options to access the application forms for this opportunity.\n\n 1. Use the NIH ASSIST system to prepare, submit and track your application online.\n\n Apply Online Using ASSIST\n\n 2. Use an institutional system-to-system (S2S) solution to prepare and submit your application to Grants.gov and eRA Commons (https://public.era.nih.gov/commons/) to track your application. Check with your institutional officials regarding availability.\n\n 3. Use Grants.gov (https://grants.gov/search-grants? oppStatuses=closed|archived|posted|forecasted&fon=PAR-24-297) Workspace to prepare and submit your application and eRA Commons (http://public.era.nih.gov/commons/) to track your application.\n\n September 17, 2024\n\n Open Date (Earliest Submission Date)\n\n January 16, 2025\n\n Expiration Date\n\n January 08, 2028\n\n Due Dates for E.O. 12372\n\n Not Applicable\n\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4643749,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AArVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Due Dates Review and Award Cycles\n\n New\n\n Renewal / Resubmission / Revision (as\n\n allowed)\n\n AIDS - New/Renewal/Resubmission/Revision,\n\n as allowed\n\n Scientific Merit\n\n Review\n\n Advisory Council Review\n\n Earliest Start Date\n\n February 16, 2025 *\n\n March 16, 2025 * May 07, 2025 * July 2025 August 2025\n\n December 2025\n\n June 16, 2025 *\n\n July 16, 2025 * September 07, 2025 * November 2025\n\n January 2026\n\n April 2026\n\n October 16, 2025 *\n\n November 16, 2025 *\n\n January 07, 2026 * March 2026\n\n May 2026 July 2026\n\n February 16, 2026 *\n\n March 16, 2026 * May 07, 2026 * July 2026 August 2026\n\n December 2026\n\n June 16, 2026 *\n\n July 16, 2026 * Not Applicable November 2026\n\n January 2027\n\n April 2027\n\n October 16, 2026 *\n\n November 16, 2026 *\n\n Not Applicable March 2027\n\n May 2027 July 2027\n\n February 16, 2027 *\n\n March 16, 2027 * Not Applicable July 2027 August 2027\n\n December 2027\n\n June 16, 2027 *\n\n July 16, 2027 * Not Applicable November 2027\n\n January 2028\n\n April 2028\n\n October 16, 2027 *\n\n November 16, 2027 *\n\n Not Applicable March 2028\n\n May 2028 July 2028\n\n All applications are due by 5:00 PM local time of applicant organization. \n\n Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date.\n\n Required Application Instructions It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400), except where instructed to do otherwise (in this NOFO or in a Notice from NIH Guide for Grants and Contracts (//grants.nih.gov/grants/guide/url_redirect.php?id=11164))."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.458034,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AAbVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See more tips (//grants.nih.gov/grants/guide/url_redirect.php?id=11146) for avoiding common errors.\n\n Upon receipt, applications will be evaluated for completeness and compliance with application instructions by the Center for Scientific Review and responsiveness by NIDA, NIH. Applications that are incomplete, non-compliant, and/or nonresponsive will not be reviewed.\n\n Mandatory Disclosure Recipients or subrecipients must submit any information related to violations of federal criminal law involving fraud, bribery, or gratuity violations potentially affecting the federal award. See Mandatory Disclosures, 2 CFR 200.113 (https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113)  and NIH Grants Policy Statement Section 4.1.35 (https://grants.nih.gov/grants/policy/nihgps/html5/section_4/4.1.35_mandatory_disclosures.htm).\n\n Send written disclosures to the NIH Chief Grants Management Officer listed on the Notice of Award for the IC that funded the award and to the HHS Office of Inspector Grant Self Disclosure Program (https://oig.hhs.gov/compliance/self-disclosure-info/hhs-oig-grant-self-disclosure-program/) at grantdisclosures@oig.hhs.gov (mailto:grantdisclosures@oig.hhs.gov).\n\n Post Submission Materials\n\n Applicants are required to follow the instructions for post-submission materials, as described in the policy. (//grants.nih.gov/grants/guide/url_redirect.php?id=82299)\n\n Section V."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3059239,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGLVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11120\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11120\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11146\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.303946,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGrVYYKEBbayybwJObOs-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "March 31, 2025 This funding opportunity was updated to align with agency priorities. Carefully reread the full funding opportunity and make\n\n any needed adjustments to your application prior to submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2996509,
+    "metadata": {
+     "documentIdentifier": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_bVYYKEBbayybwJObOo-",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)/NOFO-File-PDF",
+     "nofoName": "Imaging - Science Track Award for Research Transition (I-START) (R03 Clinical Trial Optional)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:01.810Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ }
+}

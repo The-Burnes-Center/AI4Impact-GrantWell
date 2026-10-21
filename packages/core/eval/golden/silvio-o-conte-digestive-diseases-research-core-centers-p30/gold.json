@@ -1,0 +1,829 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NIH",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision (as allowed) applications due September 29, 2026",
+      "date": "2026-09-29",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "Earliest Start Date September 29, 2026 September 29, 2026 Not Applicable March 2027 May 2027 July 2027"
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision (as allowed) applications due February 10, 2027",
+      "date": "2027-02-10",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "February 10, 2027 February 10, 2027 Not Applicable July 2027 October 2027 December 2027 All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "other",
+      "label": "Expiration Date",
+      "date": "2027-02-11",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Expiration Date February 11, 2027"
+    }
+  ],
+  "award": {
+    "ceiling": 750000,
+    "floor": null,
+    "periodMonths": 60,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "direct costs per year (application budget)",
+        "value": 750000
+      },
+      {
+        "what": "P and F project funds, direct costs per year for the program",
+        "value": 150000
+      },
+      {
+        "what": "Named Supported Investigator salary per year (limited to 3 years, 9.6 person months)",
+        "value": 90000
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2- Definitions of Terms."
+    },
+    "quote": "Application budgets are limited to $750,000 in direct costs per year and need to reflect the actual needs of the proposed Center. Award Project Period The maximum project period is five years."
+  },
+  "sections": [
+    {
+      "name": "Project Summary/Abstract",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: R&R Other Project Information",
+      "quote": "Project Summary/Abstract: Describe the scientific theme of the DDRCC and the need for a Cores Center to support the investigators in the research base."
+    },
+    {
+      "name": "Project Narrative",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: R&R Other Project Information",
+      "quote": "Project Narrative: In 1&ndash;3 sentences describe the relevance of the research to be supported and facilitated by Center Activities"
+    },
+    {
+      "name": "Facilities and Other Resources",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: R&R Other Project Information",
+      "quote": "Facilities and Other Resources: Describe the existing environment and facilities briefly in the context of how the Center will use or change existing access, space, and usage"
+    },
+    {
+      "name": "Equipment",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: R&R Other Project Information",
+      "quote": "Equipment: A general listing of major, shared pieces of equipment used by the Center members should be provided."
+    },
+    {
+      "name": "Introduction to Application",
+      "order": 5,
+      "limit": null,
+      "conditional": "Resubmission and Revision applications (also allowed in each other component for Resubmissions)",
+      "component": "Overall: PHS 398 Research Plan",
+      "quote": "Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is required in the Overall component."
+    },
+    {
+      "name": "Specific Aims (Overall)",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: PHS 398 Research Plan",
+      "quote": "Specific Aims: Describe the broad long-term objectives of the proposed DDRCC. Provide the central theme(s) of the DDRCC."
+    },
+    {
+      "name": "Research Strategy (Overall): Research Base",
+      "order": 7,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: PHS 398 Research Plan",
+      "quote": "Research Base: Applicants should include an overview of current research in digestive and/or liver diseases related areas being conducted at their institution"
+    },
+    {
+      "name": "Research Strategy (Overall): Membership",
+      "order": 8,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: PHS 398 Research Plan",
+      "quote": "Applicants should provide clear guidelines for how Center membership is defined (including, if applicable, how subsets of membership are defined), the application and selection processes for Center membership"
+    },
+    {
+      "name": "Research Strategy (Overall): Center Organization",
+      "order": 9,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: PHS 398 Research Plan",
+      "quote": "Center Organization: Summarize the services, resources, and expertise provided by the proposed Biomedical Research Cores, emphasizing the support they will provide for the thematic areas of the research base."
+    },
+    {
+      "name": "Research Strategy (Overall): Institutional Commitment",
+      "order": 10,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall: PHS 398 Research Plan",
+      "quote": "New applications should briefly describe plans for institutional commitment should the Center receive NIDDK support. Renewal applications should briefly describe both previous and ongoing instances of institutional commitment."
+    },
+    {
+      "name": "Research Strategy (Overall): Renewal Progress and Accomplishments",
+      "order": 11,
+      "limit": null,
+      "conditional": "Renewal applications",
+      "component": "Overall: PHS 398 Research Plan",
+      "quote": "For renewal applications: Briefly discuss the progress and accomplishments of the research base as influenced by the DDRCC"
+    },
+    {
+      "name": "Data Management and Sharing Plan",
+      "order": 12,
+      "limit": null,
+      "conditional": "Research that will generate scientific data",
+      "component": "Overall: PHS 398 Research Plan: Other Plan(s)",
+      "quote": "A Data Management and Sharing Plan (DMS Plan) is required for any NIH-funded or conducted research that will generate scientific data."
+    },
+    {
+      "name": "Specific Aims (Administrative Core)",
+      "order": 13,
+      "limit": null,
+      "conditional": null,
+      "component": "Admin Core: PHS 398 Research Plan",
+      "quote": "Specific Aims: Clearly state how the Administrative Core will contribute to the goals of the DDRCC and outline interactions of the Administrative Core with each of the other Cores"
+    },
+    {
+      "name": "Research Strategy (Administrative Core): Administrative Structure",
+      "order": 14,
+      "limit": null,
+      "conditional": null,
+      "component": "Admin Core: PHS 398 Research Plan",
+      "quote": "describe the administrative structure of the DDRCC, including chain-of-command; committee structures (e.g., Internal Advisory Committee, P and F review committee, other oversight or management committees, and the required External Advisory Committee)"
+    },
+    {
+      "name": "Research Strategy (Administrative Core): Center Evolution",
+      "order": 15,
+      "limit": null,
+      "conditional": null,
+      "component": "Admin Core: PHS 398 Research Plan",
+      "quote": "Center Evolution: Applicants must document policies and procedures for ensuring continuing evolution of Center activities, such as core services, in response to changing needs of the research base."
+    },
+    {
+      "name": "Facilities and Other Resources (Biomedical Research Core)",
+      "order": 16,
+      "limit": null,
+      "conditional": null,
+      "component": "Biomedical Research Core (each, 2-6): R&R Other Project Information",
+      "quote": "Facilities and Other Resources: The description of the physical arrangements and instrumentation for the cores should be given special attention."
+    },
+    {
+      "name": "Specific Aims (Biomedical Research Core)",
+      "order": 17,
+      "limit": null,
+      "conditional": null,
+      "component": "Biomedical Research Core (each, 2-6): PHS 398 Research Plan",
+      "quote": "Specific Aims: Clearly state the aims of the Biomedical Research Core."
+    },
+    {
+      "name": "Research Strategy (Biomedical Research Core)",
+      "order": 18,
+      "limit": null,
+      "conditional": null,
+      "component": "Biomedical Research Core (each, 2-6): PHS 398 Research Plan",
+      "quote": "Research Strategy: Provide the rationale for establishing or continuing the Core and the activities of the Core."
+    },
+    {
+      "name": "Resource Sharing Plan (Biomedical Research Core)",
+      "order": 19,
+      "limit": null,
+      "conditional": null,
+      "component": "Biomedical Research Core (each, 2-6): PHS 398 Research Plan",
+      "quote": "included within the relevant Core. In addition, other letters of support for the proposed Core may be included, as appropriate. Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans"
+    },
+    {
+      "name": "Specific Aims (Pilot and Feasibility Program)",
+      "order": 20,
+      "limit": null,
+      "conditional": null,
+      "component": "P and F Program: PHS 398 Research Plan",
+      "quote": "Specific Aims: Clearly state the goals of the Pilot and Feasibility Program."
+    },
+    {
+      "name": "Research Strategy (Pilot and Feasibility Program)",
+      "order": 21,
+      "limit": null,
+      "conditional": null,
+      "component": "P and F Program: PHS 398 Research Plan",
+      "quote": "Research Strategy: Describe the overall goals and structure of the Pilot and Feasibility Program. Describe its management plans, including both internal and external review mechanisms"
+    },
+    {
+      "name": "Representative P and F Project Synopses (4 projects)",
+      "order": 22,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "P and F Program: PHS 398 Research Plan: Research Strategy",
+      "quote": "the research strategy should also include a brief, no more than one-page synopsis for 4 representative P and F project applications that have been vetted by the Center."
+    },
+    {
+      "name": "Resource Sharing Plan (Pilot and Feasibility Program)",
+      "order": 23,
+      "limit": null,
+      "conditional": null,
+      "component": "P and F Program: PHS 398 Research Plan",
+      "quote": "if applicable. Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply- Application Guide ."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Overall: Significance",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Specific Aims (Overall)",
+        "Research Strategy (Overall): Research Base"
+      ],
+      "quote": "What are the strengths of the Center's research base (its breadth and depth)?"
+    },
+    {
+      "name": "Overall: Investigator(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall): Membership",
+        "Biographical Sketch"
+      ],
+      "quote": "How effectively do the Center investigators responsible for the individual research projects interact with each other and contribute to the overall objectives of the DDRCC?"
+    },
+    {
+      "name": "Overall: Innovation",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "How innovative is the research conducted by the research base/Center members and how likely is the DDRCC to enhance and advance digestive and/or liver disease research?"
+    },
+    {
+      "name": "Overall: Approach",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall): Center Organization",
+        "Research Strategy (Overall): Membership"
+      ],
+      "quote": "To what extent will the research base/users benefit from opportunities and services provided by the DDRCC that are not otherwise available at the institution/consortium"
+    },
+    {
+      "name": "Overall: Environment",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall): Institutional Commitment",
+        "Facilities and Other Resources"
+      ],
+      "quote": "How supportive is the institutional commitment to the Center program's management and scientific impact?"
+    },
+    {
+      "name": "Administrative Core: Significance",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Specific Aims (Administrative Core)",
+        "Research Strategy (Administrative Core): Administrative Structure"
+      ],
+      "quote": "How appropriate is the structure and organization of the Administrative Core for the oversight and management of the DDRCC and its components?"
+    },
+    {
+      "name": "Administrative Core: Investigator(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Administrative Core): Administrative Structure"
+      ],
+      "quote": "Are the members of the Internal Advisory Board and the External Advisory Board (if identified) well-suited for the overall oversight and management of the Center?"
+    },
+    {
+      "name": "Administrative Core: Innovation",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Scored Review Criteria &ndash; Administrative Core Reviewers will consider each of the review criteria below in the determination of scientific merit and give a separate score for each."
+    },
+    {
+      "name": "Administrative Core: Approach",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Administrative Core): Administrative Structure",
+        "Research Strategy (Administrative Core): Center Evolution"
+      ],
+      "quote": "How appropriate is the administrative organization proposed for the following: (a) coordination of ongoing research between the separately funded projects and the DDRCC"
+    },
+    {
+      "name": "Administrative Core: Environment",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Scored Review Criteria &ndash; Administrative Core Reviewers will consider each of the review criteria below in the determination of scientific merit and give a separate score for each."
+    },
+    {
+      "name": "Biomedical Research Cores: Significance",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Specific Aims (Biomedical Research Core)",
+        "Research Strategy (Biomedical Research Core)"
+      ],
+      "quote": "What are the strengths of the proposed Research Cores? Are the individual Research Core's services appropriate for the Center's research base?"
+    },
+    {
+      "name": "Biomedical Research Cores: Investigator(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Biomedical Research Core)"
+      ],
+      "quote": "Are the identified core users likely to use all of the proposed core services? Is the Core Director(s) able to devote adequate time to provide effective management of the Center program?"
+    },
+    {
+      "name": "Biomedical Research Cores: Innovation",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Biomedical Research Core)"
+      ],
+      "quote": "To what extent do the proposed Research Cores provide the latest or state-of-the-art resources, technical support, and new methods that will advance the Center members' research?"
+    },
+    {
+      "name": "Biomedical Research Cores: Approach",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Biomedical Research Core)"
+      ],
+      "quote": "How appropriate are the modes of operation and oversight for the Research Cores, including the funding model, quality control, prioritization of requests for services, and interaction with other institutional cores or Centers, etc.?"
+    },
+    {
+      "name": "Biomedical Research Cores: Environment",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Facilities and Other Resources (Biomedical Research Core)"
+      ],
+      "quote": "Scored Review Criteria - Biomedical Research Cores Reviewers will consider each of the review criteria below in the determination of scientific merit and give a separate score for each."
+    },
+    {
+      "name": "Pilot and Feasibility Program: Significance",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Specific Aims (Pilot and Feasibility Program)",
+        "Research Strategy (Pilot and Feasibility Program)"
+      ],
+      "quote": "Is the pool from which potential pilot and feasibility applications reasonable and well-justified? Are the metrics for assessing the productivity and success of the P and F program appropriate and reasonable?"
+    },
+    {
+      "name": "Pilot and Feasibility Program: Investigator(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Representative P and F Project Synopses (4 projects)"
+      ],
+      "quote": "Is the P and F Program Director able to devote adequate time to provide effective management of the P and F Program?"
+    },
+    {
+      "name": "Pilot and Feasibility Program: Innovation",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Pilot and Feasibility Program)"
+      ],
+      "quote": "How likely is the P and F program to support new investigators and encourage new research directions?"
+    },
+    {
+      "name": "Pilot and Feasibility Program: Approach",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Pilot and Feasibility Program)"
+      ],
+      "quote": "How appropriate and transparent are the processes for soliciting, evaluating, and selecting the P and F projects?"
+    },
+    {
+      "name": "Pilot and Feasibility Program: Environment",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "How supportive is the leadership of the institution to the DDRCC P and F program?"
+    },
+    {
+      "name": "Study Timeline",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Study Timeline Specific to applications involving clinical trials Is the study timeline described in detail, taking into account start-up activities, the anticipated rate of enrollment, and planned follow-up assessment?"
+    },
+    {
+      "name": "Protections for Human Subjects",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For research that involves human subjects but does not involve one of the categories of research that are exempt under 45 CFR Part 46"
+    },
+    {
+      "name": "Inclusion of Human Subjects Policies",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When the proposed project involves human subjects and/or NIH-defined clinical research, the committee will evaluate the proposed plans for inclusion."
+    },
+    {
+      "name": "Vertebrate Animals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "The committee will evaluate the involvement of live vertebrate animals as part of the scientific assessment according to the following three points"
+    },
+    {
+      "name": "Biohazards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will assess whether materials or procedures proposed are potentially hazardous to research personnel and/or the environment"
+    },
+    {
+      "name": "Resubmissions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Introduction to Application"
+      ],
+      "quote": "For Resubmissions (as applicable), the committee will evaluate the application as now presented, taking into consideration the responses to comments from the previous scientific review group"
+    },
+    {
+      "name": "Renewals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall): Renewal Progress and Accomplishments"
+      ],
+      "quote": "For Renewals (as applicable), the committee will consider the progress made in the last funding period."
+    },
+    {
+      "name": "Revisions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For Revisions (as applicable), the committee will consider the appropriateness of the proposed expansion of the scope of the project."
+    },
+    {
+      "name": "Select Agent Research",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Select Agent Research Reviewers will assess the information provided in this section of the application, including 1) the Select Agent(s) to be used in the proposed research"
+    },
+    {
+      "name": "Resource Sharing Plans",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Resource Sharing Plan (Biomedical Research Core)",
+        "Resource Sharing Plan (Pilot and Feasibility Program)"
+      ],
+      "quote": "Reviewers will comment on whether the Resource Sharing Plan(s) (e.g., Sharing Model Organisms ) or the rationale for not sharing the resources, is reasonable."
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For projects involving key biological and/or chemical resources, reviewers will comment on the brief plans proposed for identifying and ensuring the validity of those resources."
+    },
+    {
+      "name": "Budget and Period of Support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will consider whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Page limits per component (Table of Page Limits): Overall 12, Admin Core 12, each Biomedical Research Core 6, P and F Program 6",
+      "Components: 1 Overall, 1 Admin Core, 2-6 Biomedical Research Cores, 1 P and F Program",
+      "Follow the Multi-Project (M) Instructions in the How to Apply - Application Guide",
+      "All Other Attachments must be PDF; the filename becomes the bookmark in the application image",
+      "Project Narrative is completed only in the Overall component; DMS Plan goes only in the Overall component",
+      "DMS Plan uses the NIH DMS Plan Format Page; no added narrative where a Yes/No response is required",
+      "Submit electronically through ASSIST or an institutional system-to-system solution; paper applications are not accepted"
+    ],
+    "quote": "Overall Overall 12 Required 1 1 Admin Core Admin Core 12 Required 1 1 Biomedical Research Core Core 6 Required 2 6 NOFO Specific P and F Program 6 Required 1 1"
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: higher education institutions (public/state controlled and private), nonprofits with or without 501(c)(3) status, for-profit organizations including small businesses, state, county, city/township and special district governments, federally recognized and other tribal governments, eligible federal agencies, U.S. territories or possessions, independent school districts, public/Indian housing authorities, Native American tribal organizations, faith-based or community-based organizations, and regional organizations",
+      "quote": "Eligible Organizations Higher Education Institutions - Includes all types Public/State Controlled Institutions of Higher Education Private Institutions of Higher Education"
+    },
+    {
+      "item": "Only institutions with a strong ongoing base of digestive and/or liver diseases research related to the proposed Center theme are eligible",
+      "quote": "Only institutions at which there is a strong ongoing base of digestive and/or liver diseases-relevant research that relates to the proposed theme of the Center are eligible."
+    },
+    {
+      "item": "The already funded research base must have at least $3 million per year in direct costs within a theme area of primary interest to NIDDK",
+      "quote": "The already funded research base must have at least $3 million per year in direct costs of supported research within a proposed theme area that is of primary interest to the NIDDK."
+    },
+    {
+      "item": "At least 30 percent of the total research base funding must be secured from NIDDK",
+      "quote": "However, at least 30 percent of the total funding contributing to the research base must be secured from the NIDDK."
+    },
+    {
+      "item": "Enough research base awards must be Federal so that each Biomedical Research Core is used by at least two federally funded Center members",
+      "quote": "enough awards within the research base must be Federal to fulfill the requirement that each Biomedical Research Core must be utilized by a minimum of two federally funded Center members."
+    },
+    {
+      "item": "Training grants, education grants, and fellowship awards do not count toward the research base",
+      "quote": "Training grants, education grants, and fellowship awards are not considered part of the research base funding."
+    },
+    {
+      "item": "Facilities and Administration (indirect) costs must not be included in the research base calculation",
+      "quote": "Since \"Facilities and Administration\" costs vary considerably between institutions, these must not be included in the calculation of the research base."
+    },
+    {
+      "item": "The research base includes only support for investigators at the applicant institution/consortium",
+      "quote": "Although collaborations are encouraged, the research base includes ONLY support for the investigators at the applicant institution/consortium."
+    },
+    {
+      "item": "The DDRCC must be an identifiable unit within a single university medical center or a consortium of cooperating institutions including an affiliated university",
+      "quote": "A DDRCC must be an identifiable unit within a single university medical center or a consortium of cooperating institutions, including an affiliated university."
+    },
+    {
+      "item": "The Center's central theme must be within NIDDK's primary mission, not areas primarily funded by other NIH Institutes or Centers",
+      "quote": "The central theme must be within the primary mission of the NIDDK, and not thematic areas for which other NIH Institutes or Centers are considered the primary source of NIH funding."
+    },
+    {
+      "item": "Non-domestic (non-U.S.) entities (foreign organizations) are not eligible to apply",
+      "quote": "Non-domestic (non-U.S.) Entities (Foreign Organization) are not eligible to apply."
+    },
+    {
+      "item": "Non-domestic (non-U.S.) components of U.S. organizations are not eligible to apply",
+      "quote": "Non-domestic (non-U.S.) components of U.S. Organizations are not eligible to apply."
+    },
+    {
+      "item": "Foreign components, as defined in the NIH Grants Policy Statement, are not allowed",
+      "quote": "Foreign components, as defined in the NIH Grants Policy Statement , are not allowed."
+    },
+    {
+      "item": "Only New, Renewal, and Resubmission application types are allowed",
+      "quote": "Application Types Allowed New Renewal Resubmission The OER Glossary and the How to Apply - Application Guide provides details on these application types. Only those application types listed here are allowed for this NOFO."
+    },
+    {
+      "item": "Clinical trials are optional: applications may or may not propose clinical trials",
+      "quote": "Optional: Accepting applications that either propose or do not propose clinical trial(s)."
+    },
+    {
+      "item": "Any individual with the skills, knowledge, and resources to carry out the research may serve as PD/PI with their organization",
+      "quote": "Any individual(s) with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director(s)/Principal Investigator(s) (PD(s)/PI(s)) is invited to work with his/her organization"
+    },
+    {
+      "item": "A Named Supported Investigator, if requested, must be named in the application, be a junior investigator, and be a permanent resident or US citizen; eligible only once",
+      "quote": "The individual selected must be named in the application and be a junior investigator and a permanent resident or US citizen. Individuals are eligible only once for this support."
+    },
+    {
+      "item": "Organizations may submit more than one application only if each is scientifically distinct",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct."
+    },
+    {
+      "item": "A new (A0) application is not accepted before the summary statement issues for an overlapping A0 or A1 application",
+      "quote": "A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application."
+    },
+    {
+      "item": "A resubmission (A1) is not accepted before the summary statement issues for the previous A0 application",
+      "quote": "A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application."
+    },
+    {
+      "item": "An application substantially overlapping another application pending appeal of initial peer review is not accepted",
+      "quote": "An application that has substantial overlap with another application pending appeal of initial peer review"
+    },
+    {
+      "item": "All organizational registrations must be completed before the application is submitted (allow 6 weeks or more)",
+      "quote": "All registrations must be completed prior to the application being submitted. Registration can take 6 weeks or more"
+    },
+    {
+      "item": "Maintain an active SAM registration, renewed at least annually",
+      "quote": "Applicants must complete and maintain an active registration, which requires renewal at least annually ."
+    },
+    {
+      "item": "Use the same UEI for all registrations and on the grant application",
+      "quote": "The same UEI must be used for all registrations, as well as on the grant application."
+    },
+    {
+      "item": "Organization must register in eRA Commons with at least one Signing Official and one PD/PI account",
+      "quote": "eRA Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application."
+    },
+    {
+      "item": "Organization must complete Grants.gov registration (requires active SAM registration)",
+      "quote": "Applicants must have an active SAM registration in order to complete the Grants.gov registration."
+    },
+    {
+      "item": "All PD(s)/PI(s) must have an eRA Commons account affiliated with the applicant organization",
+      "quote": "All PD(s)/PI(s) must have an eRA Commons account. PD(s)/PI(s) should work with their organizational officials to either create a new account or to affiliate their existing account with the applicant organization"
+    },
+    {
+      "item": "A PD/PI who is also the organizational Signing Official must have two distinct eRA Commons accounts",
+      "quote": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role."
+    },
+    {
+      "item": "All PD(s)/PI(s) must be registered with ORCID and link the ORCID ID to their eRA Commons profile",
+      "quote": "All PD(s)/PI(s) must be registered with ORCID . The personal profile associated with the PD(s)/PI(s) eRA Commons account must be linked to a valid ORCID ID."
+    },
+    {
+      "item": "All PD(s)/PI(s) and component Project Leads must enter their eRA Commons ID in the Credential field of the Senior/Key Person Profile form",
+      "quote": "All PD(s)/PI(s) and component Project Leads must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form ."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF424(R&R) Cover form (complete in Overall; limited fields in each other component)",
+      "userWrites": false,
+      "quote": "SF424(R&R) Cover (Overall) Complete entire form."
+    },
+    {
+      "item": "PHS 398 Cover Page Supplement form (each component)",
+      "userWrites": false,
+      "quote": "PHS 398 Cover Page Supplement (Overall) Follow standard instructions."
+    },
+    {
+      "item": "Research & Related Other Project Information form (each component)",
+      "userWrites": false,
+      "quote": "Research & Related Other Project Information (Overall) Follow standard instructions."
+    },
+    {
+      "item": "Project/Performance Site Locations form (primary site in Overall; all sites per component)",
+      "userWrites": false,
+      "quote": "Project/Performance Site Locations (Overall) Enter primary site only."
+    },
+    {
+      "item": "Research and Related Senior/Key Person Profile form for each component, with the component role (Center Director, Core Director, P and F Program Director) and eRA Commons ID",
+      "userWrites": false,
+      "quote": "use Project Role of 'Other' with Category of 'Center Director' and provide a valid eRA Commons ID in the Credential field."
+    },
+    {
+      "item": "Biographical sketches for consultants and, for renewal applications only, External Advisory Committee members (Administrative Core)",
+      "userWrites": false,
+      "quote": "In this component, also provide biographical sketches for any consultants. For renewal applications only, provide biographical sketches for the members of the External Advisory Committee."
+    },
+    {
+      "item": "R&R Budget with justification for the Administrative Core, each Biomedical Research Core, and the P and F Program (Center Director at least 2.4 person months, 1.2 in the Admin Core; justify equipment over $5,000)",
+      "userWrites": true,
+      "quote": "The Center Director must devote a minimum of 2.4 person months to the Center and at least 1.2 of the person months must be within the Administrative Core"
+    },
+    {
+      "item": "PHS 398 Research Plan form (each component)",
+      "userWrites": true,
+      "quote": "PHS 398 Research Plan (Overall) Introduction to Application"
+    },
+    {
+      "item": "Table of DDRCC Research Base Investigators attachment, titled \"DDRCC Research Base Investigators\" (Overall, required)",
+      "userWrites": true,
+      "quote": "Table of DDRCC Research Base Investigators (Required) : Please title this attachment \"DDRCC Research Base Investigators\" and include all Federal or non-federal grant support for Center members"
+    },
+    {
+      "item": "Progress Report Publication List attachment, not to exceed 5 pages (Overall, renewal applications only)",
+      "userWrites": true,
+      "quote": "For renewal applications only, Progress Report Publication List (Required , not to exceed 5 pages )"
+    },
+    {
+      "item": "Core Facility Use attachment, titled \"Core Facility Use\", up to 3 pages per Biomedical Research Core (required)",
+      "userWrites": true,
+      "quote": "Core Facility Use (Required, up to 3 pages per Biomedical Research Core): For all applications, please title this attachment \"Core Facility Use\""
+    },
+    {
+      "item": "Pilot Project Outcomes attachment, titled \"Pilot Project Outcomes\", not to exceed 6 pages (P and F Program, renewal applications only)",
+      "userWrites": true,
+      "quote": "For renewal applications only, Pilot Project Outcomes (Required, not to exceed 6 pages ): Please title this attachment \"Pilot Project Outcomes\""
+    },
+    {
+      "item": "Letters of support from institutional officials verifying institutional commitment with specific details (Overall)",
+      "userWrites": false,
+      "quote": "These should be accompanied by letters of support from institutional officials verifying the commitment with specific details."
+    },
+    {
+      "item": "Letters of support from community members serving on the IAC or CAB (Administrative Core)",
+      "userWrites": false,
+      "quote": "Include any letters of support from community members who serve on the IAC or CAB."
+    },
+    {
+      "item": "Letter of support for any collaborative link between the CTSA and a Biomedical Research Core (in that Core)",
+      "userWrites": false,
+      "quote": "For any collaborative links between the CTSA and a specific Biomedical Research Core, a letter of support should be included within the relevant Core."
+    },
+    {
+      "item": "Letters addressing career potential of, and institutional commitment to, junior scientists serving as core managers/technical directors (Biomedical Research Core)",
+      "userWrites": false,
+      "quote": "provide letters to address the career potential of, and institutional commitment to, junior scientists who serve as core managers/technical directors."
+    },
+    {
+      "item": "Letters of support from officials at partnering organizations for the P and F Program, if applicable",
+      "userWrites": false,
+      "quote": "Include any letters of support for the Pilot & Feasibility Program by appropriate institutional officials at partnering organizations (other than the parent institution), if applicable."
+    },
+    {
+      "item": "At least one human subjects study record (or Delayed Onset Study record) on the PHS Human Subjects and Clinical Trials Information form if human subjects are involved",
+      "userWrites": true,
+      "quote": "there must be at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or a Delayed Onset Study record within the application."
+    },
+    {
+      "item": "PHS Assignment Request Form (Overall)",
+      "userWrites": false,
+      "quote": "PHS Assignment Request Form (Overall) All instructions in the How to Apply- Application Guide must be followed."
+    }
+  ],
+  "libraryRequired": [
+    "Biographical Sketch",
+    "Bibliography & References Cited"
+  ]
+}

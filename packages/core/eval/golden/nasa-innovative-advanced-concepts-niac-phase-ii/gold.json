@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NASA",
+  "deadlines": [
+    {
+      "kind": "loi",
+      "label": "Notice of Intent (encouraged, not required)",
+      "date": "2026-05-18",
+      "time": "17:00",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "Notice of Intent Encouraged, not Required May 18, 2026, 5:00 PM ET"
+    },
+    {
+      "kind": "application",
+      "label": "Proposal due",
+      "date": "2026-06-12",
+      "time": "17:00",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "Proposal Required June 12, 2026, 5:00 PM ET"
+    },
+    {
+      "kind": "other",
+      "label": "Phase I final report must reach the NIAC Program Office by the Phase II proposal due date and time",
+      "date": "2026-06-12",
+      "time": "17:00",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "Phase I final reports must be submitted to the NIAC Program Office, e.g., emailed to hq-niac@mail.nasa.gov , by the Phase II proposal due date and time."
+    }
+  ],
+  "award": {
+    "ceiling": 750000,
+    "floor": null,
+    "periodMonths": 24,
+    "expectedAwards": {
+      "min": 6,
+      "max": 8
+    },
+    "range": null,
+    "caps": [],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "There are no requirements for Phase II cost sharing or funds matching."
+    },
+    "quote": "Phase II awards are for up to two years at a total funding level of up to $750k per award"
+  },
+  "sections": [
+    {
+      "name": "Overview Chart",
+      "order": 1,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": null,
+      "quote": "The Overview Chart must follow the template provided in Figure 1 and included on the NSPIRES NIAC Phase II site."
+    },
+    {
+      "name": "Compliance Table",
+      "order": 2,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": null,
+      "quote": "It must be one page long and include each element of the evaluation criteria as noted in section F.1."
+    },
+    {
+      "name": "NIAC Phase I Key Findings",
+      "order": 3,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": null,
+      "quote": "This section should succinctly summarize the major outcomes of the NIAC Phase I study."
+    },
+    {
+      "name": "Technical and Management Section",
+      "order": 4,
+      "limit": {
+        "type": "pages",
+        "value": 15
+      },
+      "conditional": null,
+      "component": null,
+      "quote": "This section should describe how the Phase I concept will continue to be developed. This section should include a discussion of the major feasibility issues to be studied in Phase II."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "#1 Concept Progression",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "5-point rating, approximately equal weight",
+      "sections": [
+        "NIAC Phase I Key Findings",
+        "Technical and Management Section"
+      ],
+      "quote": "The proposed research objectives build on the Phase I study findings while also demonstrating unexplored, exciting, and valuable aspects to investigate beyond the Phase I study."
+    },
+    {
+      "name": "#2 Technical Study Approach",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "5-point rating, approximately equal weight",
+      "sections": [
+        "Technical and Management Section"
+      ],
+      "quote": "A work plan is proposed that demonstrates an understanding of major issues and proposes a logical, strategic, and judicious course of study"
+    },
+    {
+      "name": "#3 Representative Mission",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "5-point rating, approximately equal weight",
+      "sections": [
+        "Technical and Management Section"
+      ],
+      "quote": "The proposal describes a specific representative mission in sufficient detail to enable the assessment of proposed technology benefits by a cognizant reviewer"
+    },
+    {
+      "name": "#4 Potential Impact",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "5-point rating, approximately equal weight",
+      "sections": [
+        "Technical and Management Section"
+      ],
+      "quote": "The concept is exciting and offers compelling potential benefit."
+    }
+  ],
+  "format": {
+    "pageSize": "US letter (8.5x11)",
+    "margins": "at least one inch",
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": "no more than 5.5 lines per vertical inch",
+    "overallPageLimit": null,
+    "other": [
+      "Body text and captions may not exceed 15 characters per horizontal inch, including spaces, on average across a solid block of text",
+      "Expository text may not be located solely in figures, tables, or their captions",
+      "Proposal attachment should not exceed 20MB",
+      "Attachment includes only the listed sections, in the order listed",
+      "Overview Chart in landscape format, may be rotated to fit 11 x 8.5 inches with one-inch margins",
+      "TeX/LaTeX users must create a DVI file, convert to Postscript, then to PDF",
+      "Reviewers will not consider content beyond the page limits"
+    ],
+    "quote": "Proposals may not have more than 5.5 lines per vertical inch of text, must have at least one-inch margins, be set for US letter size (8.5x11) paper"
+  },
+  "eligibility": [
+    {
+      "item": "Open to all categories of U.S. organizations that have completed, or are actively completing, a NIAC Phase I study that has not previously received a Phase II award",
+      "quote": "This Appendix is open to all categories of U.S. organizations, providing they have successfully completed, or are actively completing, a NIAC Phase I study that has not previously received a Phase II award."
+    },
+    {
+      "item": "NIAC Fellows or designees of the predecessor NASA Institute for Advanced Concepts may not submit Phase II proposals based on those prior Phase I studies",
+      "quote": "NIAC Fellows or their designees of the predecessor NASA Institute for Advanced Concepts are no longer eligible to submit Phase II proposals based on those prior Phase I studies."
+    },
+    {
+      "item": "The Phase I final report must be submitted to the NIAC Program Office by the Phase II proposal due date and time, or the proposal will not be reviewed",
+      "quote": "If the Phase I final report is not received by this date and time, the submitted proposal will not be reviewed"
+    },
+    {
+      "item": "Individuals proposed to receive NIAC funding must be affiliated with a U.S. organization",
+      "quote": "Individuals proposed to receive NIAC funding must be affiliated with a U.S. organization."
+    },
+    {
+      "item": "Individuals not affiliated with a U.S. organization must obtain a UEI and CAGE Code from SAM.gov before proposal submission",
+      "quote": "Individuals not affiliated with a U.S. organization must receive a Unique Entity Identifier and Commercial and Government Entity (CAGE) Code from SAM.gov prior to NIAC proposal submission."
+    },
+    {
+      "item": "Non-U.S. organizations may participate only on a no-exchange-of-funds basis, subject to NASA's foreign participation policy",
+      "quote": "Non-U.S. organizations may participate in NIAC studies on a no-exchange of funds basis"
+    },
+    {
+      "item": "Previously declined proposals may be resubmitted",
+      "quote": "Proposals that had previously been declined for award may be resubmitted, consistent with the requirements of this solicitation."
+    },
+    {
+      "item": "The Phase II concept must be essentially based on the Phase I concept",
+      "quote": "the Phase II concept must be essentially based on the Phase I concept."
+    },
+    {
+      "item": "Proposals may be submitted via NSPIRES only",
+      "quote": "Proposals may be submitted via NSPIRES only."
+    },
+    {
+      "item": "All team personnel on the electronic cover page must be individually registered and affiliated with their organization in NSPIRES, each with one organizational affiliation",
+      "quote": "All team personnel listed on the proposal’s electronic cover page must be individually registered and affiliated with their organization in NSPIRES."
+    },
+    {
+      "item": "A Co-Principal Investigator (Co-PI) designation is not accepted",
+      "quote": "Note that NIAC does not accept a designation of Co-Principal Investigator (Co-PI)."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Proposal Cover Page (generated by the NSPIRES web form)",
+      "userWrites": false,
+      "quote": "Proposers will provide the required information and NSPIRES will generate the Proposal Cover Page automatically."
+    },
+    {
+      "item": "Table of Contents (one page preferred)",
+      "userWrites": true,
+      "quote": "A Table of Contents helps reviewers find specific proposal content. One page is preferred but can be exceeded if necessary."
+    },
+    {
+      "item": "Biographical sketch for each senior/key person (PI and Co-Is at 10% or more effort), on the NASA form",
+      "userWrites": false,
+      "quote": "A biographical sketch must be included for senior/key personnel listed on the cover page."
+    },
+    {
+      "item": "Current and pending (other) support form for each senior/key person",
+      "userWrites": false,
+      "quote": "Each senior/key person listed on a proposal is required to submit current and pending support disclosures with their application."
+    },
+    {
+      "item": "Letter of Commitment from the owner of any facility or resource not under the proposer's direct control (no team-member commitment letters or letters of affirmation)",
+      "userWrites": false,
+      "quote": "NIAC only requires a Letter of Commitment from the owner of any facility or resource not under the proposer’s direct control, acknowledging its availability for the proposed period of use."
+    },
+    {
+      "item": "Budget Justification substantiating the overall budget request",
+      "userWrites": true,
+      "quote": "A justification for the proposed expenditures must be included in the proposal. It must substantiate the overall budget request"
+    },
+    {
+      "item": "Data Management Plan, entered in the program-specific data form of the NSPIRES cover page",
+      "userWrites": true,
+      "quote": "All proposals submitted under this NOFO are required to provide a Data Management Plan (DMP)"
+    },
+    {
+      "item": "Completed Vertebrate Animal and Higher Order Cephalopod Section (VACS) form, for proposals involving animal research",
+      "userWrites": false,
+      "quote": "Completed Vertebrate Animal and Higher Order Cephalopod Section (VACS) Form (for proposals involving animal research)"
+    }
+  ],
+  "libraryRequired": []
+}

@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "CA state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Rolling: non-competitive program without proposal submission deadlines; concept proposals may be submitted at any time",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "The Conservancy's Community and Economic Enhancement Grant Program is a non- competitive program without proposal submission deadlines."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 36,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "indirect costs, percent of grant-funded direct costs for personnel services and operating expenses (general)",
+        "value": 20
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "Consistent with provisions of Proposition 68, all applicants are encouraged to provide cost share to support their project"
+    },
+    "quote": "Grantees will receive funding only during the Grant Funding Term, generally three years, during which time grantees may incur and be reimbursed for grant-related expenses."
+  },
+  "sections": [
+    {
+      "name": "Concept Proposal",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Community and Economic Enhancement Grant Program Concept Proposal Form",
+      "quote": "Applicants must submit a concept proposal using the Community and Economic Enhancement Grant Program Concept Proposal Form."
+    },
+    {
+      "name": "Performance Monitoring and Assessment Framework",
+      "order": 2,
+      "limit": null,
+      "conditional": "Implementation, acquisition, and pilot project proposals",
+      "component": "Full Proposal",
+      "quote": "All implementation, acquisition, and pilot project proposals will include a performance monitoring and assessment framework that identifies the performance measures that will be used to demonstrate public benefits for at least 15 years"
+    },
+    {
+      "name": "Long-Term Management",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Full Proposal",
+      "quote": "Proposals will describe future project management or land management activities, explaining how the project, once implemented, will be stewarded for at least 15 years thereafter."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "1. Project Design",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Are the project's purpose, goals, deliverables, and schedule clear? Is the project well designed to meet the needs that the project addresses?"
+    },
+    {
+      "name": "2. Public Benefits",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Performance Monitoring and Assessment Framework"
+      ],
+      "quote": "Will the project provide multiple tangible, enduring, public benefits with a high likelihood of being realized? Does the project have reasonable performance measurements and a clear plan for tracking them?"
+    },
+    {
+      "name": "3. Alignment with State and Other Priorities",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "3. Alignment with State and Other Priorities Does the project align with priorities identified in the following?:"
+    },
+    {
+      "name": "4. Project Readiness",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Is the project ready to proceed promptly if funded? For planning projects, will planning activities advance the project toward implementation in a timely manner?"
+    },
+    {
+      "name": "5. Community and Institutional Support",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Does the project have public and relevant institutional support at the local, regional, State, or federal scale?"
+    },
+    {
+      "name": "6. Cost Share",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "6. Cost Share Is cost share provided for this project?"
+    },
+    {
+      "name": "7. Project Budget",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "7. Project Budget Is the budget adequate and reasonable for the project? Are costs clearly identified and justified?"
+    },
+    {
+      "name": "8. Project Team",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Does the project team have sufficient experience and capacity to implement the project and to manage a State grant? Have necessary partnerships been developed?"
+    },
+    {
+      "name": "9. Long-Term Management",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Long-Term Management"
+      ],
+      "quote": "For implementation projects, is a plan clearly identified for long-term management and sustainability of the project for a minimum of 15 years?"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [],
+    "quote": null
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: California public agencies (cities, counties, districts, joint powers authorities, State agencies, California public colleges and universities) and nonprofit organizations qualified to do business in California with 501(c)(3) exempt status",
+      "quote": "California public agencies. California public agencies include any city, county, district, or joint powers authority; State agencies; or California public colleges and universities."
+    },
+    {
+      "item": "An eligible nonprofit must have among its principal charitable purposes land, environmental, wildlife, cultural/historical preservation or public-land enjoyment purposes",
+      "quote": "An eligible nonprofit organization has among its principal charitable purposes preservation of land for scientific, recreational, scenic, or open-space opportunities"
+    },
+    {
+      "item": "Project must be bond eligible: construction, acquisition, or long-term improvement of capital assets with an expected useful life of at least 15 years",
+      "quote": "General obligation bond funds must be spent on the construction, acquisition, or long-term improvement of capital assets. Capital assets are defined as tangible property that has an expected useful life of no less than 15 years"
+    },
+    {
+      "item": "Project must be within or benefit the Delta and Suisun Marsh (outside only if the Board makes the Delta Reform Act Section 32360(g) findings)",
+      "quote": "The Conservancy will fund projects within or benefitting the Delta and Suisun Marsh as defined in PRC Section 85058."
+    },
+    {
+      "item": "Project must provide significant benefit to the Delta",
+      "quote": "To be eligible to receive a grant from the Conservancy under this program, projects must: Provide significant benefit to the Delta."
+    },
+    {
+      "item": "Project must be consistent with the program objectives and priorities in the Guidelines",
+      "quote": "Show consistency with program objectives and priorities as defined in these Guidelines."
+    },
+    {
+      "item": "Project must be consistent with the Conservancy's mission and enabling legislation",
+      "quote": "Show consistency with the Conservancy's mission and enabling legislation."
+    },
+    {
+      "item": "Project must align with the Delta Plan",
+      "quote": "Align with the Delta Plan."
+    },
+    {
+      "item": "Project must comply with Proposition 68, State General Obligation Bond Law, and other applicable State and federal laws",
+      "quote": "Comply with Proposition 68, State General Obligation Bond Law (GOV Sec. 16727), and other applicable State and federal laws."
+    },
+    {
+      "item": "Planning projects that do not advance an eligible implementation project are ineligible",
+      "quote": "Planning projects that do not advance an eligible implementation project."
+    },
+    {
+      "item": "Projects dictated by a legal settlement or mandated to address a violation of or order to comply with a law or regulation are ineligible",
+      "quote": "Projects dictated by a legal settlement or mandated to address a violation of, or an order (citation) to comply with, a law or regulation."
+    },
+    {
+      "item": "Projects that subsidize or decrease the mitigation obligations of any party are ineligible",
+      "quote": "Projects that subsidize or decrease the mitigation obligations of any party."
+    },
+    {
+      "item": "Implementation projects must complete CEQA compliance before grant award",
+      "quote": "NOTE: For implementation projects, California Environmental Quality Act (CEQA) compliance must be completed prior to grant award."
+    },
+    {
+      "item": "Land acquisitions must be from a willing seller, comply with public-agency acquisition law, and not exceed fair market value",
+      "quote": "Property acquired through this program must be purchased from a willing seller and in compliance with current laws governing acquisition of real property by public agencies for an amount not to exceed fair market value"
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Commitment letters from cost share partners confirming the dollar amount committed, including in-kind (if the applicant states a cost share component)",
+      "userWrites": false,
+      "quote": "Applicants stating that they have a cost share component must provide commitment letters from cost share partners before a proposal is recommended for funding"
+    },
+    {
+      "item": "Project budget with costs clearly identified and justified",
+      "userWrites": true,
+      "quote": "Is the budget adequate and reasonable for the project? Are costs clearly identified and justified?"
+    },
+    {
+      "item": "Permits, surveys, or reports supporting the status of environmental compliance (CEQA, Delta Plan consistency)",
+      "userWrites": false,
+      "quote": "Applicants should be prepared to submit any permits, surveys, or reports that support the status of their environmental compliance."
+    },
+    {
+      "item": "California Conservation Corps / CALCC consultation (Corps' Proposition 68 Consultation Process form) for implementation projects with a site improvement component",
+      "userWrites": false,
+      "quote": "all implementation projects that involve a site improvement component shall consult with representatives of both the California Conservation Corps and California Association of Local Conservation Corps (Corps)"
+    }
+  ],
+  "libraryRequired": []
+}

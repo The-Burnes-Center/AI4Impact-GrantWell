@@ -1,0 +1,2768 @@
+Notice of Funding Opportunity
+Applications Due: Friday, January 22, 2027
+EPA
+Office of Air and Radiation
+2026 Diesel Emissions Reduction Act
+(DERA) National Program
+Funding Opportunity Number: EPA-OAR-OTAQ-26-01
+UNITED PROTECTION STATES AGENCY
+EPA-420-B-26-034
+September 2026
+Contents
+1.
+Basic Information
+1
+A. Executive Summary
+1
+B. Key Information:
+1
+C. Key Dates:
+1
+D. Funding Details:
+2
+E. Agency Contact Information:
+2
+F. Information Sessions
+2
+G. Question and Answer Process
+2
+2.
+Eligibility
+3
+A. Eligible Applicants
+3
+(1)
+Other Eligibility Requirements
+4
+B. Cost Sharing
+5
+3.
+Program Description
+8
+A. Purpose, Priorities, and Activities
+8
+(1)
+Diesel Emissions Reduction Solutions
+8
+(2)
+Outputs and Outcomes
+21
+(3)
+Performance Measures
+22
+B. Program Goals and Objectives
+23
+C. Statutory Authority
+23
+D. Funding Type
+23
+4.
+Application Contents and Format
+23
+A. Application Forms
+23
+B. Project Narrative Description
+24
+(1)
+Cover Page:
+24
+(2)
+Workplan:
+27
+(3)
+Required Attachments (not included in 14-page limit) - use "Other Attachments"
+form to submit
+38
+(4)
+Optional Attachments
+39
+C. Applicants Using Contractors
+40
+D. Coalition Coverage
+40
+5.
+Submission Requirements and Deadlines
+40
+A. Submission Dates and Times
+40
+B. Unique Entity Identifier (UEI) and System for Award Management (SAM.gov)
+40
+C. Submission Instructions
+41
+D. Technical Issues with Submission
+41
+E. Intergovernmental Review
+42
+6.
+Application Review Information
+42
+A. Responsiveness Review
+42
+i
+B. Review Criteria
+42
+C. Review and Selection Process
+45
+(1)
+Other Evaluation Factors
+45
+D. Risk Review
+46
+7.
+Award Notices
+46
+8.
+Post-Award Requirements and Administration
+46
+A. Administrative and National Policy Requirements
+46
+B. Reporting
+46
+C. Subaward and Executive Compensation Reporting
+47
+D. Post Award Project Requirements
+47
+9.
+Other Information
+48
+A. Additional Provisions for Applicants
+48
+B. Further information Regarding Contracts, Subawards, Participant Support Costs
+48
+ii
+1.
+Basic Information
+U.S. Environmental Protection Agency
+Office of Air and Radiation
+2026 Diesel Emissions Reduction Act (DERA) National Program
+https://www.epa.gov/dera/national
+A. Executive Summary
+This Notice of Funding Opportunity (NOFO) announces the
+availability of funds under the Diesel Emissions Reduction Act (DERA)
+B. Key Information:
+Program and solicits applications from eligible entities to incentivize
+and accelerate the upgrade or retirement of the nation's legacy
+Opportunity Number:
+diesel engine fleet. Eligible activities include the retrofit or
+EPA-OAR-OTAQ-26-01
+replacement of existing diesel engines, vehicles, and equipment with
+the U.S. Environmental Protection Agency (EPA) and California Air
+Assistance Listing:
+Resources Board (CARB) certified or verified technologies.
+66.039
+There are several ways DERA recipients may implement projects and
+Announcement Type:
+fund project partners, depending on the roles and responsibilities of
+each. If the applicant is the owner of the target vehicles, the
+Initial
+applicant may directly implement the project. If the applicant is
+partnering with diesel fleet owners, the applicant may award
+Funding Available:
+subawards or participant support costs (e.g., rebates). Please refer to
+Approximately $180 million
+Section 9.B. for detailed guidance on funding partnerships.
+Number of Awards:
+After an extensive review of the program, the EPA revamped DERA
+requirements to ensure alignment with the Administration's
+4-12 awards per EPA Region
+priorities, improve the quality of projects funded, expand the
+availability of technology choices, and respond to stakeholder requests for a simplified program
+structure. Consistent with agency grants direction, updates to 2 CFR $200.204 and DERA statutory
+requirements, this NOFO reflects these changes and inputs when compared to previous funding notice
+opportunities.
+This NOFO is a competitive grant program. The DERA Program has another competitive funding
+opportunity, DERA Tribal and Territory Program, which funds similar activities but is only open to eligible
+Tribal and territory applicants. Competitive funding for school bus replacement is also available through
+the EPA's Clean School Bus Program. The DERA Program also provides non-competitive funding to U.S.
+States and territories through the DERA State Program.
+C. Key Dates:
+November 24, 2026
+Final Date to Submit Questions
+January 22, 2027 11:59 pm ET
+Application Submission Deadline
+May 2027
+Anticipated Notification of Selection
+1
+July 2027
+Anticipated Award Notification
+D. Funding Details:
+The amount of funding is expected to be $180,000,000, depending on agency funding levels, the quality
+of applications received, agency priorities, and other applicable considerations. It is anticipated that 4-12
+awards per EPA Region will be made under this announcement. Awards funded under this opportunity
+are expected to have a 2-4 year project period.
+Under this announcement the EPA is combining approximately $65 million in FY 2024 funding; $62
+million in FY 2025 funding; and $53 million in FY 2026 funding into one competition for a total of
+approximately $180 million of available funding. Amount of potential funding according to applicant
+region can be found in Section 2.A.(1).1.
+Expenses Incurred Prior to the Project Period: Funding awarded under this NOFO cannot be used to
+cover expenses incurred prior to the award date, except for eligible pre-award costs as defined in 2 CFR
+$200.458 and as authorized by 2 CFR $200.309 and 2 CFR $1500.9.
+E. Agency Contact Information:
+Further information, if needed, may be obtained from the EPA contact indicated below.
+Program Contact: dera@epa.gov
+F. Information Sessions
+The EPA will host three information sessions regarding this NOFO via teleconference/webinar, based on
+the schedule listed on the DERA National website. The EPA encourages potential applicants to take
+advantage of these information sessions to learn more about the DERA Program and the grant
+application process. Participants will have the opportunity to have their questions answered by the EPA
+in a public forum. The EPA will attempt to answer any appropriate questions in these public forums. Pre-
+registration is not required. Webinar links and dial-in information for the information sessions can be
+found on the DERA National website.
+Questions and answers from these information sessions will also be posted in the question and answers
+document located on the DERA National website.
+G. Question and Answer Process
+Send written questions to dera@epa.gov with the subject line "DERA National NOFO Question."
+The EPA will answer questions about threshold eligibility, application submission/administrative
+issues, and clarification of NOFO language.
+EPA will post answers to all emailed questions in the online FAQ. Information from other sources
+may be inaccurate.
+Deadlines: Email questions by Tuesday, November 24, 2026, 11:59 p.m. ET. The final FAQ update
+will be posted on Friday, January 8, 2026.
+All applicants should review the question and answers document posted on the DERA National website
+for further clarification of this NOFO.
+2
+2.
+Eligibility
+A. Eligible Applicants
+Only these types of organizations may apply:
+A regional, State (including the District of Columbia), local agency, Tribal agency, or port
+authority, which has jurisdiction over transportation or air quality. School districts,
+municipalities, metropolitan planning organizations (MPOs), cities, and counties are all generally
+eligible entities under this grant program to the extent that they fall within this definition.
+A non-profit organization or institution that:
+Represents or provides pollution reduction or educational services to people or
+organizations that own or operate diesel fleets; or
+Has, as its principal purpose, the promotion of transportation or air quality.
+Non-profit organization, as defined by 2 CFR $200.1, means any corporation, trust, association,
+cooperative, or other organization that: (1) is operated primarily for scientific, educational,
+service, charitable, or similar purposes in the public interest; (2) is not organized primarily for
+profit; and (3) uses its net proceeds to maintain, improve, or expand its operations.
+Note that 2 CFR Part 200 specifically excludes the following types of organizations from the
+definition of "non-profit organization" because they are separately defined in the regulation: (1)
+Institutions of Higher Education; and (2) State, local, and federally recognized Indian Tribal
+governments. While not considered to be a "non-profit organization(s)" as defined by 2 CFR
+$200.1, Institutions of Higher Education are, nevertheless, eligible to submit applications under
+this NOFO to the extent they fall within the definition in the eligibility requirements above.
+Hospitals operated by State, Tribal, or local governments or that meet the definition of nonprofit
+at 2 CFR $200.1 are also eligible to apply. For-profit colleges, universities, trade schools, and
+hospitals are not eligible to apply.
+Eligible Tribal agencies are defined as federally recognized Indian Tribal governments, which are
+any Indian Tribe, band, nation, or other organized group or community (including Alaska Native
+Villages) certified by the Secretary of the Interior as eligible for the special programs and services
+provided through the Bureau of Indian Affairs, as well as any organization or intertribal
+consortium that represents federally recognized Tribes.
+For the purposes of this NOFO, "intertribal consortium" is defined as a partnership between two
+or more eligible Tribal agencies as defined above, that is authorized by the governing bodies of
+those Tribes to apply for and receive assistance under this program. Intertribal consortia are
+eligible to receive assistance under this program only if the consortium demonstrates that all
+members of the consortium meet the eligibility requirements for the program and authorize the
+consortium to apply for and receive assistance by submitting to the EPA documentation of (1)
+the existence of the partnership between Indian Tribal governments, and (2) authorization of the
+consortium by all its members to apply for and receive the assistance.
+For-profit organizations are not an eligible entity for this funding opportunity. Additionally, non-
+profit organizations described in Section 501(c)(4) of the Internal Revenue Code that engage in
+lobbying activities as defined in Section 3 of the Lobbying Disclosure Act of 1995 are not eligible
+to apply.
+3
+(1)
+Other Eligibility Requirements
+Applications must meet the following additional criteria to be considered eligible.
+1. Funding Request Limits: Applications must not request more than the regional funding cap in
+individual applications which request EPA grant funds above the applicable regional amounts
+specified in Section 1.D. (refer to Table 1). Applications over the cap are ineligible and will not be
+reviewed.
+Each application must request funds from only one EPA regional office, based on the project
+location (where the affected vehicles/engines operate). Refer to the regional boundaries below.
+For applications with long distance fleets, pick the single region that best fits (e.g., where the
+fleet is based or operates most) and briefly explain why.
+Each application must clearly identify the chosen EPA region on the cover page of the Project
+Narrative.
+A map showing Regional Collaboratives and EPA Regions is available on the EPA website.
+Table 1: EPA Regional Funding Allocations
+Total Anticipated Funding
+Maximum Federal Funding Request
+Region
+per Region
+per Application
+1
+$8,200,000
+$3,000,000
+2
+$18,300,000
+$4,000,000
+3
+$18,300,000
+$5,000,000
+4
+$17,800,000
+$4,000,000
+5
+$18,200,000
+$8,000,000
+6
+$24,400,000
+$3,500,000
+7
+$11,200,000
+$5,600,000
+8
+$12,100,000
+$3,500,000
+9
+$42,600,000
+$12,000,000
+10
+$8,900,000
+$4,500,000
+TOTAL
+$180,000,000
+2. Substantial Compliance: Applications that do not substantially comply with the application
+submission instructions and requirements set forth in Section 4 of this funding opportunity will
+be rejected.
+3. Application Submission Limit: Under this funding opportunity, applicants may submit up to two
+applications per EPA region, not exceeding 10 total applications. The EPA will accept the most
+recent applications submitted (regardless of region), up to the permitted amount.
+4. Multiple Application Submission: If the applicant submits multiple applications, each application
+must include a different project(s) and must be submitted separately. Applicants cannot include
+the same project(s) in multiple applications. For example, an applicant cannot list the same piece
+of equipment in an application to both EPA Regions 1 and 2.
+If an applicant submits more than one application that requests funding for projects that appear
+the same, the EPA will contact the applicant before reviewing the applications to confirm
+4
+whether the projects are the same. If they are, the EPA will ask the applicant to identify which
+application(s) should be withdrawn from consideration. If the applicant does not respond in a
+timely manner to either EPA request, the EPA will review only the last timely submitted
+application.
+5. Multiple Regions: Applicants cannot include multiple regions in a single application.
+6. Eligible Projects: Applications must include one or more eligible projects listed in Section 3.A.
+Eligible project costs include those costs directly related to the implementation, management,
+and oversight of the project, including but not limited to: recipient and subrecipient personnel
+and benefits; equipment; scrappage; contractual; travel; supplies; subgrants and rebates; and
+indirect costs.
+7. Ineligible Content: Any ineligible projects, activities, or costs will be excluded and may render the
+entire application ineligible, depending on how integral they are.
+Ineligible costs include:
+a. Leasing: Funding under this NOFO cannot be used for leasing vehicles, engines, or
+equipment.
+b. More information concerning specific ineligible equipment activities can be found in
+Section 3.A.
+B. Cost Sharing
+Any form of cost share, mandatory or voluntary, must be included in the budget detail portion of the
+project narrative, and the application must describe how and when the applicant will obtain the cost
+share and how the cost share funding will be used. Applicants may use their own funds or other sources
+for cost share if the standards of 2 CFR Part 200 are met. If the proposed cost share is to be provided by
+a named project partner, a partnership letter demonstrating the specified financial commitment is
+required in the application. Only eligible and allowable costs may be used for cost share.
+Applicants must demonstrate in their proposal how they will meet the cost share requirement to be
+considered eligible. Selected recipients must comply with 2 CFR $200.306 when meeting a cost share
+requirement. The EPA has developed an optional cost share calculator tool to assist in determining
+mandatory cost share requirements, which can be found on the DERA National website.
+1. Mandatory Cost Share Requirement: Projects are subject to the funding limitations and
+mandatory cost share requirements shown below in Table 2. Cost Share Requirements.
+Applications that do not demonstrate compliance with the mandatory cost share are not eligible
+and will not be reviewed.
+Mandatory Costs & SF-424/A: Applications that include projects with mandatory cost
+share requirements must demonstrate on the Standard Form 424 (SF-424) Application
+for Federal Assistance, on the SF-424A Budget Information for Non-Construction
+Programs, and in the project narrative how the applicant will be able to meet these
+minimum mandatory cost share requirements if they are selected for an award, or the
+application may be disqualified during the threshold eligibility review. Specifically, the
+application must indicate the mandatory cost share funds in the block in Section 15
+Estimated Funding on the SF-424. The mandatory cost share funds must also be
+5
+indicated on the SF-424A in Section A Column (f), Section B columns (2), (3), or (4), and
+Section C.
+Environmental Mitigation Funds: Please note, DERA funds may not be used to meet
+mandatory cost sharing requirements for projects funded with environmental mitigation
+funds resulting from federal settlements (e.g., Volkswagen Environmental Mitigation
+Trust). Furthermore, federal environmental mitigation funds may not be used to meet
+non-federal mandatory cost share requirements of any DERA grant.
+Territories: The Omnibus Territories Act, 48 U.S.C. Section 1469a waives any mandatory
+cost sharing requirements under $200,000 for the U.S. Virgin Islands, American Samoa,
+Guam, and the Commonwealth of the Northern Mariana Islands.
+Eligible territory applicants with applications that will require a cost share of $200,000 or
+more are advised to contact dera@epa.gov to determine if cost share requirements will
+be waived in whole or in part.
+2. Voluntary Cost Sharing: Voluntary cost sharing is when an applicant voluntarily proposes to
+legally commit to providing costs or contributions to support the project when a cost share is not
+required. Voluntary committed cost sharing is a binding requirement of a Federal award.
+Applicants who propose to use a voluntary cost share must include the costs or contributions for
+the voluntary cost share in the project budget on the SF-424 and SF-424A. Applicants will not be
+evaluated on the inclusion of voluntary committed cost share if they choose to propose it.
+If an applicant proposes a voluntary cost share, the following applies:
+A voluntary cost share is subject to the applicable provisions in the grant regulations of 2
+CFR $200.306, Cost sharing or matching.
+A voluntary cost share may only be met with eligible and allowable costs.
+The recipient may not use other sources of federal funds to meet a voluntary cost share
+unless the statute authorizing the other federal funding provides that the federal funds
+may be used to meet a cost share requirement on a federal grant or cooperative
+agreement.
+The recipient is legally obligated to meet any proposed voluntary cost share that is included in
+the approved project budget. If the proposed voluntary cost share does not materialize during
+the performance period of the grant or cooperative agreement, the EPA may reconsider the
+legitimacy of the award and/or take other appropriate action as authorized by 2 CFR Part 200.
+3. Federal Matching Funds: Funding under this NOFO cannot be included as a cost or used to meet
+cost sharing or matching requirements of any other federally financed grant, as required under 2
+CFR $200.306(b)(5) and 2 CFR §200.403(f). This includes funds received under the EPA's DERA
+State Program and Federal Supplemental Environmental Project funds.
+Table 2: Cost Share Requirements
+Eligible Technologies
+EPA Funding Limit
+Recipient
+Cost Share
+Highway Vehicle Replacement with certified engine meeting:
+0.20-0.11 g NOx/bhp-hr emission limit¹
+25%
+75%
+¹ 0.20 g NOx/bhp-hr is from the EPA's heavy-duty engines standard at 40 CFR 86.007-11(a)(1)(i)(A).
+6
+Eligible Technologies
+EPA Funding Limit
+Recipient
+Cost Share
+0.10-0.036 g NOx/bhp-hr emission limit²
+35%
+65%
+0.035 g NOx/bhp-hr or lower emission limit³
+45%
+55%
+Highway Engine Replacement with certified engine meeting:
+0.20-0.11 g NOx/bhp-hr emission limit
+40%
+60%
+0.10-0.036 g NOx/bhp-hr emission limit
+50%
+50%
+0.035 g NOx/bhp-hr or lower emission limit
+60%
+40%
+Nonroad/Locomotive/Marine Replacement
+Nonroad equipment, locomotive or vessel replacement with
+75%
+25%
+certified engine
+Engine replacement with certified engine or zero emission
+65%
+35%
+power source
+Nonroad, with unregulated or Tier 1 engine, equipment
+60%
+replacement with current (Tier 4) certified engine or zero
+40%
+emission power source
+EPA certified remanufacture systems
+80%
+20%
+Idle Reduction
+EPA Verified Highway Vehicle Idle Reduction Technologies when
+0%
+combined with new or previously installed exhaust after-
+100%
+treatment retrofit
+EPA Verified Locomotive Idle Reduction Technologies
+40%
+60%
+EPA Verified Electrified Parking Space Technologies
+30%
+70%
+EPA Verified Highway Idle Reduction Technologies without new
+75%
+25%
+exhaust after-treatment retrofit
+EPA Verified Marine shore connection systems
+25%
+75%
+Verified Retrofit Technologies
+EPA or CARB Verified Exhaust After-treatment Retrofits
+100%
+0%
+EPA Verified Engine Upgrade Retrofits
+100%
+0%
+EPA Verified Aerodynamics and Low Rolling Resistance Tires
+0%
+100%
+when combined with new exhaust after-treatment retrofit
+EPA Verified Hybrid Retrofit Systems
+60%
+40%
+Alternative Fuel Conversion
+40%
+60%
+Cost differential
+EPA Verified Fuel and Additive Retrofits when combined with
+between
+0%
+new retrofit, upgrade, or replacement
+conventional
+diesel fuel
+Identifying emissions to determine eligibility: NOₓ emissions for highway engines and vehicles should be
+estimated at the time of application by identifying the NOₓ standard an engine was certified to. An
+authorized dealer may be able to provide this information. Otherwise, it can be located in either an
+2 0.10 g NOx/bhp-hr is the highest of three NOx emission limits an original equipment manufacturer (OEM) could
+certify an engine to under CARB's Optional Low NOx rule. These rules have essentially been superseded since
+model year 2024.
+3 0.035 g NOx/bhp-hr is from the EPA's heavy-duty 2027 rule ("HD27") at 40 CFR 1036.104(a)(1)
+7
+issued CARB Executive Order or by locating the engine in the EPA's certification data table following the
+instructions below.
+1. Navigate to the EPA's Annual Certification Data website.
+2. Download the most recent Heavy-Duty Highway Gasoline and Diesel Certification Data.
+3. On the "Family Info" tab, locate the vehicle's EPA engine family name in the "Engine Family"
+column by searching using CTRL+f.
+4. Determine the correct row by locating "Nitrogen Oxides" in the "Pollutant name" column.
+5. If a value is listed in the "Transient FEL" column, that is the engine's applicable NOₓ emission
+standard. If no value is listed in that column, the applicable standard is in the "Transient
+Standard" column.
+Applicants will need to know the engine installed in a highway vehicle to be able to determine the
+applicable NOx emission standard for the new highway vehicle. If uncertain of a highway engine's EPA
+engine family name, the EPA recommends speaking with an authorized dealer of the vehicle or engine
+that is being applied for. Applicants are also able to find an EPA engine's family name using the EPA's
+interactive certificate data report on its annual certification data website by searching for it using the
+engine's model name. Prior model year engines or vehicles may be used at the time of application to
+provide an estimate of the NOₓ emissions from the engine or vehicle that will be purchased after
+selection.
+Applicants who do not identify a projected EPA engine family name at the time of application will only be
+able to apply for the lowest cost share for their highway project, as listed in Table 2. For more detailed
+instructions, reference the guidance on identifying a certified highway engine's certified Nitrogen Oxides
+(NOx) emissions limit on the DERA National website.
+3.
+Program Description
+A. Purpose, Priorities, and Activities
+(1)
+Diesel Emissions Reduction Solutions
+The EPA is seeking applications that propose projects that upgrade existing eligible diesel vehicles and
+equipment using the diesel emissions reduction solutions defined in Table 4. Any ineligible costs, tasks,
+or activities included in an application will render that portion ineligible for funding and may disqualify
+the entire application, depending on the extent to which the ineligible costs impact the application.
+1. Diesel Vehicles, Engines, and Equipment: Projects may include in-use medium- and heavy-duty
+diesel-powered highway vehicles and diesel-powered nonroad equipment, as defined below in
+Table 3.
+Table 3: Eligible Diesel Vehicles, Engines, and Equipment
+School Buses
+A "school bus" is defined as a diesel-powered passenger motor vehicle designed
+to carry a driver and more than 10 passengers, that the Secretary of
+Transportation decides is likely to be used significantly to transport preprimary,
+primary, and secondary school students to or from school or an event related to
+school.
+Transit Buses
+Includes diesel-powered medium-duty and heavy-duty transit buses (refer to the
+definition of eligible Class 5-8 vehicles below).
+8
+Medium-Duty or
+Includes diesel-powered medium-duty and heavy-duty highway vehicles with
+Heavy-Duty Trucks
+Gross Vehicle Weight Ratings (GVWRs) as defined below:
+Class 5 (16,001 -19,500 lb. GVWR);
+Class 6 (19,501 - 26,000 lb. GVWR);
+Class 7 (26,001 - 33,000 lb. GVWR);
+Class 8 (33,001 lb. GVWR and over).
+Marine Engines
+Includes diesel-powered commercial Category 1, 2, and 3 marine engines and
+vessels.
+Locomotives
+Includes diesel-powered line-haul, passenger, and switcher locomotives.
+Nonroad Engines
+Diesel-powered nonroad engines and equipment including, but not limited to,
+and Equipment
+those used in construction, handling of cargo (including at ports and airports),
+agriculture, mining, or energy production (including stationary generators and
+pumps).
+2. Drayage Trucks: Eligible heavy-duty trucks include drayage trucks. A "drayage truck" means any
+Class 8 highway vehicle operating on or transgressing through port or intermodal rail yard
+property for the purpose of loading, unloading, or transporting cargo, such as containerized,
+bulk, or break-bulk goods. If an application for the replacement of drayage trucks is selected for
+funding, the grant recipient will be required to establish guidelines to ensure that any existing
+truck replaced with grant funds has a history of operating on a frequent basis over the prior year
+as a drayage truck, and to ensure any new truck purchased with grant funds is operated in a
+manner consistent with the definition of a drayage truck, as defined above. Sample drayage
+guidelines can be found on the DERA National website.
+3. Transport Refrigeration Units: Eligible nonroad equipment includes transport refrigeration units
+(TRUs). Please refer to the Diesel Emissions Reduction Act transport refrigeration unit (TRU)
+factsheet found on the DERA National website for information on TRUs and eligible TRU
+projects.
+4. Diesel Emission Reduction Solutions: Projects may upgrade existing diesel vehicles and
+equipment using the diesel emissions reduction solutions defined below in Table 4.
+Table 4. Diesel Emission Reduction Solutions
+Certified Vehicle
+Highway diesel vehicles and nonroad equipment, locomotives, and marine
+and Equipment
+vessels can be replaced with newer, cleaner vehicles and equipment. Eligible
+Replacements
+replacement highway vehicles include those certified by the EPA or CARB to run
+on diesel or clean alternative fuel engines (including gasoline), electric
+generators (gensets), hybrid engines, and zero-emission power sources (i.e., grid,
+battery, or fuel cell). Eligible replacement nonroad equipment, locomotives, and
+marine vessels include those powered by EPA or CARB certified diesel or clean
+alternative fuel engines (including gasoline), electric generators (gensets), and
+hybrid engines. Nonroad equipment, locomotives, and marine vessels powered
+by zero-emission power sources (i.e., grid, battery, or fuel cell) do not require
+EPA or CARB certification.
+Certified Engine
+Highway diesel vehicles and nonroad equipment, locomotives, and marine
+Replacement
+vessels can have their engines replaced with newer, cleaner engines. Eligible
+9
+replacement highway engines include those certified by the EPA or CARB for use
+with diesel or cleaner alternative fuels (including gasoline), electric generators
+(gensets), and hybrid engines. Eligible replacement nonroad, locomotive, and
+marine engines include those powered by EPA or CARB certified diesel or clean
+alternative fuel engines (including gasoline), electric generators (gensets), and
+hybrid engines. Nonroad equipment, locomotive, and marine vessel engine
+replacements with zero-emission power sources (i.e., grid, battery, or fuel cell)
+do not require EPA or CARB certification.
+Certified
+Certified remanufacture systems are technologies for marine and locomotive
+Remanufacture
+engines, typically applied during engine rebuilds and involving the replacement
+Systems
+of existing parts. Eligible certified manufacture systems' projects result in an
+engine configuration that is a higher Tier than the original engine. Some
+locomotives and marine engines can be upgraded through the application of a
+certified remanufacture system (i.e., kit). Certified remanufacture systems may
+not be available for all engines, and not all certified remanufacture systems may
+achieve an emissions benefit. Applications for EPA certified remanufacture
+systems should include a discussion of the availability of a certified
+remanufacture system and indicate the pre- and post-project emissions standard
+level of the engines to demonstrate that the upgrade will result in a PM or NOₓ
+emissions benefit.
+Verified Idle
+An idle reduction project is generally defined as the installation of a technology
+Reduction
+or device that reduces unnecessary idling of diesel engines or is designed to
+Technologies
+provide services (such as heat, air conditioning, or electricity) to vehicles and
+equipment that would otherwise require the operation of the main or auxiliary
+engine(s) while the vehicle is temporarily parked or remains stationary. For an
+idle reduction technology to be considered verified, it must be a verified
+SmartWay Technology. EPA SmartWay verified technologies currently include
+options to reduce idling for school buses, TRUs, locomotives, marine vessels, and
+long-haul Class 8 trucks equipped with sleeper cabs.
+Verified Retrofit
+Diesel engine retrofits include engine exhaust after-treatment technologies, such
+Technologies
+as Diesel Oxidation Catalyst (DOC), Diesel Particulate Filter (DPF), Crankcase
+Ventilation (CCV), and Selective Catalytic Reduction (SCR) systems. For a retrofit
+technology to be considered verified it must be on the EPA's Verified
+Technologies List for Clean Diesel or CARB's similar list of Verified Diesel
+Emission Control Strategies. Manufacturer engine upgrades, which achieve
+specific levels of emission reductions by applying a package of components, have
+been verified as retrofits for some nonroad and marine engines. Several systems
+which convert a conventional diesel engine configuration to a hybrid-electric
+system have also been verified as retrofits for some nonroad and marine
+engines. Some cleaner fuels and additives have been verified as retrofits by the
+EPA or CARB to achieve emissions reductions when applied to an existing diesel
+engine. Older, heavy-duty diesel vehicles that will not be retired for several years
+are good candidates for verified retrofit technologies. The EPA suggests that
+applicants proposing to install verified retrofit technologies consult with
+suppliers to confirm that the proposed vehicles/engines and their duty-cycles are
+good candidates for the technology.
+10
+Clean Alternative
+Existing highway diesel engines can be altered to operate on alternative fuels
+Fuel Conversions
+such as propane and natural gas by applying a clean alternative fuel conversion
+kit.
+Verified
+To improve fuel efficiency, long-haul Class 8 trucks can be equipped with verified
+Aerodynamic
+aerodynamic devices or low rolling resistance (LRR) tires. To be considered
+Technologies and
+verified, the aerodynamic device or low resistance tires must be on SmartWay's
+Low Rolling
+Verified Lists for Aerodynamic Devices or LRR New and Retread Tire
+Resistance Tires
+Technologies.
+Table 5: Medium- and Heavy-Duty Truck, Transit Bus, and School Bus Project Eligibility
+Zero-
+Verified
+Vehicle or
+Verified Retrofit
+Emission⁴ or
+Idle
+Engine
+Clean
+Current
+Technologies
+Low-NOx5
+Reduction,
+Replacement:
+Alternative
+Engine Model
+Vehicle or
+Tires, or
+EMY 2024+
+Fuel
+Year (EMY)
+Engine
+Aero-
+(2019+ for
+Conversion
+DOC
+Replacement:
+dynamics
+Drayage)
++/-
+DPF
+SCR
+EMY 2024+
+CCV
+Older - 2006
+Yes
+Yes
+Yes
+Yes
+Yes
+Yes
+Yes
+2007 2009
+No
+No
+Yes
+Yes⁶
+Yes
+Yes
+Yes
+2010 newer
+No
+No
+No
+Yes⁶
+No
+Yes
+Yes
+Acronyms: DOC = Diesel Oxidation Catalyst; CCV = Closed Crankcase Ventilation; DPF = Diesel Particulate Filter; EMY
+= Engine Model Year; SCR = Selective Catalytic Reduction
+Table 6: Nonroad Engine Project Eligibility
+Nonroad Equipment Replacement
+Verified
+Spark
+Zero-
+Current Engine Tier
+Compression Ignition
+Retrofit
+Ignition
+Emission
+Tier 3-4i
+Tier 4
+Tier 2
+7
+Technologies
+Tier 0-2
+Unregulated - Tier 2
+No
+No
+Yes
+Yes
+Yes
+Yes
+Tier 3
+No
+No
+Yes
+Yes
+Yes
+Yes
+Tier 4
+No
+No
+No
+No
+Yes
+No
+4 Eligible zero-emission projects utilizing fuel cell technology are limited to vehicle replacement projects for eligible
+transit buses, shuttle buses, and drayage trucks.
+5 Engines are Low-NOx if they are certified to 0.10g NOx/bhp-hr or lower. Refer to the guidance on identifying a
+certified highway engine's certified nitrogen oxides (NOx) emissions limit on the DERA National website
+6 Auxiliary power units and generators are not eligible technologies for vehicles with EMY 2007 or newer.
+7 Eligible zero emission projects utilizing fuel cell technology are limited to nonroad equipment replacements for
+eligible terminal tractors/yard hostlers, stationary generators, and forklifts.
+11
+Nonroad Engine Replacement
+Verified
+Spark
+Zero-
+Current Engine Tier
+Compression Ignition
+Engine
+Ignition
+Emission
+Tier 0-2
+Tier 4
+Tier 2
+8
+Upgrade
+Tier 3-4i
+Unregulated - Tier 2
+No
+Yes⁹
+Yes
+Yes
+Yes
+Yes
+Tier 3
+No
+No
+Yes
+Yes
+Yes
+Yes
+Tier 4
+No
+No
+No
+No
+Yes
+No
+Table 7: Marine Engine Project Eligibility
+Engine & Vessel Replacement
+Certified
+Engine
+Verified
+Engine
+Current
+Compression Ignition
+Zero-
+Remanuf
+Horse-
+Category
+Spark
+Engine
+Engine Tier
+Emission
+acture
+power
+Tier 1-
+Ignition
+11
+System 10
+Upgrade
+Tier 3
+Tier 4
+2
+Unregulat
+C1, C2
+<803
+No
+Yes
+No 12
+Yes
+Yes
+Yes
+Yes
+ed - Tier 2
+Unregulat
+C1, C2
+≥804
+No
+Yes 13
+Yes
+Yes
+Yes
+Yes
+Yes
+ed - Tier 2
+C1, C2
+<803
+Tier 3
+No
+No
+No⁹
+Yes
+Yes
+No
+No
+C1, C2
+≥804
+Tier 3
+No
+No
+Yes
+Yes
+Yes
+No
+No
+C1, C2
+≥804
+Tier 4
+No
+No
+No
+No
+No
+No
+No
+Unregulat
+C3
+All
+No
+Yes
+No⁹
+No
+No
+No
+No
+ed - Tier 2
+C3
+All
+Tier 3
+No
+No
+No⁹
+No
+No
+No
+No
+8 Engine replacement with a fuel cell technology is not eligible.
+9 Tier 3 and Tier 4i engines may be used for engine replacement projects only with an approved best achievable
+technology analysis.
+10 Some marine engine projects may be subject to the restriction on mandated measures, refer to Section
+3.A.(1)13. above.
+11 Zero emission projects utilizing fuel cell engine and vessel replacements are ineligible.
+12 Tier 4 engines are not available for this type of engine.
+13 Tier 3 engines may be used for engine replacement projects with an approved best achievable technology
+analysis. Over 803 horsepower (HP), Tier 3 engines are not eligible technologies for full vessel replacement
+projects.
+12
+Table 8: Locomotive Engine Project Eligibility
+Engine & Locomotive Replacement
+Verified
+Idle-
+Certified
+Current
+Retrofit
+Reduction¹
+Remanufacture
+Locomotive Tier
+Tier
+Zero-
+Tier 3
+Tier 4
+0-2+
+Emission 16
+Technologies
+Technology
+System¹⁵
+Unregulated -
+No
+Yes
+17
+Yes
+Yes
+Yes
+Yes
+Yes
+Tier 2+
+Tier 3
+No
+No
+Yes
+Yes
+Yes
+Yes
+Yes
+Tier 4
+No
+No
+No
+No
+No
+Yes
+No
+5. Best Achievable Technology (BAT): Please refer to the Diesel Emissions Reduction Act best
+achievable technology analysis guidance found on the DERA National website for more
+information on how to conduct a BAT analysis.
+6. Ownership, Usage, and Remaining Life Requirements: To be eligible for funding, vehicles and
+equipment targeted for upgrades must meet certain ownership, usage, and remaining life
+requirements. Applicants should demonstrate in their application that all funded vehicles and
+equipment will meet the criteria defined below in a.- f.
+If selected for funding, participating fleet owners must attest to each criterion in a.-f. in a signed
+eligibility statement which includes each vehicle make, model, year, vehicle identification
+number, odometer/usage meter reading, engine make, model, year, horsepower, engine ID or
+serial number, and vehicle/equipment registration/licensing number, and State. Grant recipients
+must submit this documentation as part of the award's programmatic reporting to the EPA to
+verify the eligible use of grant funds. The DERA eligibility statement, also known as the burden
+statement for EPA form 5900-687, may be found on the DERA National website. The signed
+eligibility statement is not required at the time of application submittal.
+a. Operational: The existing vehicle, engine, or equipment must be fully operational.
+Operational equipment must be able to start, move, and have all necessary parts to be
+operational.
+b. Ownership: The participating fleet owner must currently own and operate the existing
+vehicle or equipment and have owned and operated the vehicle or equipment during
+the two years prior to upgrade.
+C. Remaining Life: The existing vehicle, engine, or equipment must have at least three
+years of remaining life when upgraded. Remaining life is the fleet owner's estimate of its
+operational lifespan before retirement if the unit were not being upgraded or scrapped
+14 Automatic engine start-stop technologies are only eligible to be installed on locomotives currently unregulated
+or certified to Tier 0, subject to the restriction on mandated measures.
+15 Some locomotive engine projects may be subject to the restriction on mandated measures.
+16 Zero emission projects utilizing fuel cell engine replacement are ineligible. However, zero emission fuel cell
+locomotive replacement projects are eligible for funding.
+17 Tier 3 engines may only be used for an engine replacement project if Tier 4 engines are demonstrated to not be
+available or feasible through an approved best achievable technology analysis. Full locomotive replacement projects
+with Tier 3 locomotives are ineligible for funding.
+13
+because of the grant funding regardless of rebuilding or resale. This estimate considers
+the unit's age, condition, usage, and maintenance.
+d. Highway Usage: The mileage of two or more units may be combined to reach the
+threshold below if those units are scrapped and replaced with a single unit.
+i. To be eligible for funding, the existing certified highway engine/vehicle must
+have accumulated at least 7,000 miles/year during the two years prior to
+upgrade.
+1) Exception: If an applicant can demonstrate that a certified highway
+engine/vehicle is being used in a predominately nonroad manner (e.g.,
+firetrucks or utility trucks which require the vehicle's engine to idle for
+long periods to power an auxiliary apparatus), engine operating hours as
+defined below in "nonroad usage" may be used for application eligibility
+purposes. If selected for award, the EPA will review and approve
+eligibility on a case-by-case basis.
+e. Nonroad Usage: The engine operating hours of two or more units may be combined to
+reach the thresholds below if those units are scrapped and replaced with a single unit.
+i. Agricultural Pumps: To be eligible for funding, nonroad agricultural pumps must
+operate at least 250 hours/year during the two years prior to upgrade.
+ii. All Other Nonroad Engines: To be eligible for funding, nonroad engines should
+operate at least 500 hours/year during the two years prior to upgrade.
+iii. Exception: If an applicant can demonstrate that a nonroad engine/piece of
+equipment is being used in a predominately highway manner, mileage as
+defined above in "highway usage" may be used for application eligibility
+purposes. If selected for award, the EPA will review and approve eligibility on a
+case-by-case basis.
+f. Locomotive and Marine Usage: The engine operating hours of two or more units may be
+combined to reach the thresholds below if those units are scrapped and replaced with a
+single unit.
+i. To be eligible for funding, the existing locomotive and marine engines must
+operate at least 1,000 hours/year during the two years prior to upgrade.
+7. Vehicle and Equipment Costs:
+a. Vehicles, Engines, and Equipment: Eligible project costs include the purchase price of
+eligible vehicles, engines and equipment as defined in Section 2.A.1. above.
+b. Ineligible Expenses for All Zero-Emission Projects: Grant funds (including cost share)
+cannot be used for charging infrastructure; power distribution to the property line;
+electricity; operation and maintenance of electrical systems; or stationary energy
+storage systems such as batteries and their installation. Similarly, these funds cannot be
+used for on-site power generation systems, like solar or wind power equipment, and
+their installation.
+14
+C. Vehicle and Equipment Replacement Projects:
+i. Certification: Prior to being legal for sale in the United States, regulated mobile
+sources must be certified by the EPA (or CARB). This requirement to be certified
+applies to the following internal combustion mobile sources: highway vehicles
+and highway, nonroad, marine, and locomotive engines. The only type of zero-
+emission mobile technology requiring certification is zero-emission highway
+vehicles. There are no certification requirements for zero-emission nonroad,
+marine, and locomotive engines.
+As a result of these regulatory requirements, to be eligible for DERA funding, all
+replacement highway vehicles must be certified by the EPA (or CARB) to meet
+applicable emission standards. This means for projects where the replacement
+highway vehicle is powered using an internal combustion engine, both the
+vehicle and the engine must have been certified. For projects where the
+replacement highway vehicle is powered by a zero-emission powertrain, only
+the vehicle must be certified.
+Similarly, all projects involving the replacement of nonroad equipment,
+locomotives, or marine vessels must be powered by engines certified to meet
+EPA (or CARB) emission standards unless the engine on the replacement
+nonroad equipment, locomotive, or marine vessel is a zero-emission engine.
+Certification data for highway vehicles and engines can be found on the EPA's
+Annual Certification Data for Vehicles, Engines, and Equipment website. More
+information on the EPA's engine emission standards for mobile sources may be
+found on the EPA's All EPA Emission Standards website. Engines certified by the
+CARB may be found by searching the CARB's Executive Orders for Heavy-duty
+Engines and Vehicles, found on CARB's New Vehicle and Engine Certification
+website.
+ii. To be eligible for funding, replacements must be of similar types, including
+similar gross vehicle weight rating or horsepower as the existing vehicle or
+equipment.
+1) Nonroad/Locomotive/Marine Projects: Horsepower increases of more
+than 40% require specific approval by the EPA prior to purchase, and the
+applicant may be required to pay the additional costs associated with
+the higher horsepower equipment.
+2) Highway Vehicles: The replacement vehicle must not be in a larger
+weight class than the existing vehicle. Exceptions may be granted for
+vocational purposes and require specific EPA approval prior to purchase.
+iii. Replacement vehicles and equipment must continue to perform similar
+functions and operations of the existing vehicles and equipment.
+iv. Replacement vehicles must resemble the replaced vehicle in form and function.
+The cost of optional components or "add-ons" that significantly increase the
+cost of the vehicle may not be eligible for funding under the grant.
+d. Grid Electric Powered Replacement Projects:
+i. Grant funds cannot be used for the purchase and installation of certain
+equipment required for power delivery directly related to the replacement
+15
+technology; design and engineering; electrical panels; upgrades to existing
+electrical panels or electrical service; and wiring/conduit.
+e. Engine Replacement Projects:
+i. To be eligible for funding, replacement highway, nonroad, marine, and
+locomotive engines must be certified to meet EPA or CARB emission standards,
+unless the replacement is a zero-emission powertrain. Please reference the EPA's
+Annual Certification Data for Vehicles, Engines, and Equipment, the EPA's mobile
+source Emission Standards, and the CARB's Executive Orders for Heavy-duty
+Engines and Vehicles.
+ii. Eligible costs include equipment and parts included in the certified engine
+configuration that are necessary to ensure the effective installation and
+functioning of the new technology such as design and engineering, parts and
+materials, and installation.
+iii. For engine replacement with battery, fuel cell, or grid electric, eligible costs
+include electric motors, electric inverters, battery assemblies, direct drive
+transmission/gearboxes, regenerative braking systems, vehicle control/central
+processing units, vehicle instrument clusters, hydrogen storage tanks, hydrogen
+management systems, and fuel cell stack assemblies.
+iv. Funding under this NOFO cannot be used to replace cabins, axles, paint, brakes,
+or mufflers.
+V. To be eligible for funding, the replacement engine must be of similar
+horsepower to the engine being replaced. Horsepower increases of more than
+40% require specific approval by the EPA prior to purchase, and the applicant
+may be required to pay the additional costs associated with the higher
+horsepower equipment.
+f.
+Certified Engine Remanufacture System Projects:
+i. To be eligible for funding, remanufacture systems for locomotives and marine
+engines must be certified by the EPA at the time of acquisition. The list of
+certified remanufacture systems is available on the EPA's Annual Certification
+Data for Vehicles, Engines, and Equipment website and additional information
+on marine engine remanufacture systems is available on the EPA's Marine
+Remanufacturing Program: Maintaining Compliance when Rebuilding Category 1
+and 2 Marine Diesel Engines website.
+ii. Eligible costs include the associated labor costs for installation of the system.
+iii. Funding under this NOFO cannot be used for the entire cost of an engine rebuild
+if a certified remanufacture system is applied at the time of rebuilding. The
+funds may only be used for the cost of the certified remanufacture system and
+associated labor costs for installation of the kit.
+g. All Idle Reduction Projects:
+i. Please refer to Table 2: Cost Share Requirements in Section 2.B. for the group of
+technologies considered idle reduction projects for the purpose of this NOFO.
+ii. Eligible costs for idle reduction technologies that are installed on the vehicle can
+include the associated labor costs for installation of the system.
+16
+iii. To be eligible for funding, technologies must be on the EPA's SmartWay Verified
+Technologies list at the time of acquisition, unless the technology is a marine
+shore power connection system which requires verification on a case-by-case
+basis. Please refer to Section 3.A.(1).7.j. for more information about marine
+shore power connection projects.
+h. Electrified Parking Space Projects:
+i. To address long duration idling and engine operation, eligible costs include the
+purchase and installation of certain equipment required for power delivery
+directly with a verified technology; design and engineering; electrical panels;
+upgrades to existing electrical panels or electrical service; wiring/conduit; and
+installation.
+i.
+Locomotive Shore Power Connection Projects:
+i. Eligible costs include purchase and installation of certain equipment required for
+power delivery directly related to the installation of a verified technology; design
+and engineering; electrical panels; upgrades to existing electrical panels or
+electrical service; wiring/conduit; and installation.
+j.
+Marine Shore Power Connection Projects:
+i. Funding may support new installations or expansions of existing marine shore
+power systems.
+ii. To be eligible for funding, marine shore power projects must meet the following
+criteria:
+1) Due to the unique nature and custom design of marine shore power
+connection systems, the EPA must review and approve marine shore
+power connection systems on a case-by-case basis. If the EPA selects the
+project application for funding, the final design of the marine shore
+power connection system requires specific EPA approval prior to
+purchase and installation.
+2) Applicants must commit to reporting usage information to the EPA for
+five years after the system is operational.
+3) Applicants must attest to compliance with international shore power
+design standards (IEC/ISO/IEEE 80005-1:2019/AMD 2:2023 High Voltage
+Shore Connection (HVSC) Systems or the IEC/IEEE 80005-3:2025 Low
+Voltage Shore Connection (LVSC) Systems).
+4) Shore power connection systems must be supplied with electricity from
+the local utility grid.
+5) Demonstration that the proposed system has the capacity, demand, and
+commitment necessary to be used for more than 1,000 megawatt hours
+per year. Smaller projects will be considered if the applicant can
+demonstrate cost effectiveness.
+6) Shore power capable vessels docked at a berth where shore power is
+available must be required to turn off the vessel's engines and use the
+shore power system, with limited exceptions for extreme circumstances.
+17
+7) Eligible costs include the purchase and installation of the shore side
+equipment and certain equipment required for power delivery directly
+related to the new equipment such as design and engineering, cables,
+cable management systems, shore power coupler systems, distribution
+control systems, grounding switches, service breakers, capacitor banks,
+electrical panels, upgrades to existing electrical panels or electrical
+service, wiring/conduit, and installation. Funding under this NOFO
+cannot be used for modifications to marine vessels to accept shore-
+based electrical power.
+k. Retrofit Projects:
+i. Eligible costs include the associated labor costs for installation of the system,
+design, and engineering, DPF cleaning machines, extra DPFs for maintenance
+rotation, replacement CCV filters, and filter cleaning contracts during the grant
+open period.
+ii. To be eligible for funding, verified retrofit technologies must be on the EPA's or
+CARB's Verified Technologies lists at the time of acquisition, must be used only
+for the vehicle/engine application specified on the lists, and must meet any
+applicable verification criteria.
+iii. The EPA will not fund the use of cleaner fuels or additives.
+I.
+Alternative Fuel Vehicle Conversion Projects:
+i. Eligible costs include the associated labor costs for installation of the system.
+ii. To be eligible for funding, alternative fuel conversion systems must be certified
+by the EPA or CARB or must be approved by the EPA for Intermediate-Age
+engines. Refer to the EPA's lists of "Certified Conversion Systems for New
+Vehicles and Engines" and "Conversion Systems for Intermediate-Age Vehicles
+and Engines" and the CARB's list of "Approved Alternate Fuel Retrofit Systems."
+iii. To be eligible for funding, alternative fuel conversion systems for engine model
+years 2006 and earlier must achieve at least a 30% NOx reduction and a 10% PM
+reduction from the applicable certified emission standards of the original
+engine.
+iv. To be eligible for funding, alternative fuel conversion systems for engine model
+years 2007 and newer must achieve at least a 20% NOₓ reduction with no
+increase in PM from the applicable certified emission standards of the original
+engine. Applications for clean alternative fuel conversions should include a
+discussion of the availability of alternative fuel conversion systems and indicate
+the pre- and post-project emission standard levels of the engines to
+demonstrate that the conversions result in the required emissions benefit.
+m. Aerodynamics and Low Rolling Resistance Tire Projects:
+i. Eligible costs include the associated labor costs for installation.
+ii. Eligible costs can include single-wide wheels only when a fleet is retrofitting
+from standard dual tires to SmartWay-verified single-wide low rolling resistance
+tires.
+iii. Funding under this NOFO cannot be used to replace steel wheels with aluminum
+wheels of the same configuration (singles or duals).
+18
+iv. To be eligible for funding, technologies must be on the EPA's verified
+aerodynamic technologies list and the verified list for low rolling resistance new
+and retread tire technologies at the time of acquisition. They also must be used
+only for the application specified on the lists and must meet any applicable
+verification criteria.
+V. The EPA will not fund stand-alone aerodynamic technologies or low rolling
+resistance tires unless these technologies are combined on the same vehicle
+with the new installation of an exhaust after-treatment retrofit funded under
+this NOFO.
+n. Replacement Technologies: Funding under this NOFO cannot be used for the purchase
+of engine retrofits, idle reduction technologies, low rolling resistance tires, or advanced
+aerodynamic technologies if similar technologies have previously been installed on the
+truck or trailer.
+8. Scrappage: The vehicle, equipment, or engine being replaced must be scrapped or rendered
+permanently disabled within ninety (90) days of being replaced. Vehicles, equipment, and
+engines are considered replaced when the new vehicle, equipment, or engine is operational.
+a. Cutting a three-inch diameter hole in the engine block (the part of the engine containing
+the cylinders) is the preferred scrapping method. Other acceptable scrappage methods
+may be considered but require prior EPA approval.
+b. Disabling the chassis may be completed by cutting through the frame/frame rails on
+each side at a point located between the front and rear axles. The grantee may consider
+other acceptable scrappage methods, which will require prior written approval from the
+EPA Project Officer.
+C. Equipment and vehicle components that are not part of the engine or chassis may be
+salvaged from the unit being replaced (e.g., plow blades, shovels, seats, tires, etc.).
+Program income requirements apply if disabled engines, disabled vehicles, disabled
+equipment, or parts are to be sold.
+d. Alternative Scrappage Options:
+i. If a 2010 EMY or newer highway vehicle is replaced, the 2010 EMY or newer
+vehicle may be retained or sold if the 2010 EMY or newer vehicle will replace a
+pre-2009 EMY vehicle, and the pre-2009 EMY vehicle will be scrapped. It is
+preferred that the scrapped unit currently operates within the same project
+location(s) as the 2010 EMY or newer vehicle currently operates; however,
+alternative scenarios will be considered. All existing and replacement vehicles
+are subject to the funding restrictions in this section of the NOFO. All equipment
+must operate within the United States. Under this scenario, the recipient must
+submit a detailed scrappage plan, which requires prior EPA approval before
+carrying out the alternative scrappage plan.
+ii. If a Tier 2, Tier 3, or Tier 4 locomotive, marine, nonroad vehicle, equipment, or
+engine is replaced, the units may be retained or sold if they replace a similar,
+lower Tiered unit, and the lower Tiered unit will be scrapped. It is preferred that
+the scrapped unit currently operates within the same project location(s) as the
+original Tier 2, 3, or 4 unit currently operates; however, alternative scenarios will
+be considered. All existing and replacement equipment is subject to the funding
+restrictions in this section (Section 2) of the NOFO. All equipment must operate
+within the United States. Under this scenario, the recipient must submit a
+19
+detailed scrappage plan, which requires prior EPA approval before carrying out
+the alternative scrappage plan.
+e. For Aerodynamic and Low Rolling Resistance tire projects, the original tires must be
+scrapped according to local and State requirements.
+f. Evidence of appropriate disposal must be submitted as part of the recipient's
+programmatic reporting to the EPA to verify the eligible use of grant funds. Participating
+fleet owners must attest to the appropriate disposal in a signed scrappage statement.
+The DERA scrappage statement, also known as burden statement for EPA form 5900-688,
+may be found on the DERA National website. The scrappage statement must include:
+i. Vehicle owner's name and address;
+ii. Vehicle make, vehicle model, vehicle model year, Vehicle Identification Number
+(VIN), odometer reading or usage meter reading, engine make, engine model,
+engine model year, engine horsepower, engine ID or serial number, as
+applicable;
+iii. Name, address, and signature of dismantler;
+iv. Date engine or vehicle/equipment was scrapped;
+V. Statement attesting to scrappage of vehicle/engine as defined above;
+vi. Signature of participating fleet owner; and
+vii. Digital photos are as follows:
+1) Side profile of the vehicle, prior to disabling;
+2) VIN tag or equipment serial number;
+3) Engine label (showing serial number, EPA engine family name, and
+engine model year);
+4) Engine block, prior to hole;
+5) Engine block, after hole;
+6) Cut frame rails or other cut structural components, as applicable; and
+7) Others, as needed.
+9. Mechanic and Driver Training: Eligible project costs can include mechanic/driver training related
+to the maintenance and operation of new technologies.
+10. Truck DPF Maintenance: Eligible costs for truck replacement projects include the
+required/scheduled vehicle maintenance, as specified in the owner's manual, which is necessary
+to meet the warranty requirements for diesel particulate filters installed on trucks. Funding for
+required maintenance is available for the duration of the project period.
+11. Emissions Testing: Funding under this NOFO cannot be used for emissions testing or air
+monitoring activities (including the acquisition cost of emissions testing equipment), research
+and development, or technology demonstration, commercialization, certification, or verification.
+12. Fueling and Charging Infrastructure: Funding under this NOFO cannot be used for fueling or
+charging infrastructure, such as for the production or distribution of biodiesel, compressed
+natural gas, hydrogen, or other fuels; or the purchase and installation of a charging unit for an
+electric vehicle/equipment or related Electric Vehicle Supply Equipment (EVSE).
+13. Mandated Measures: Funding under this NOFO cannot be used to fund the costs of emissions
+reductions that are mandated under federal law pursuant to 42 U.S.C. 16132(d)(2). Please
+reference the Mandated Measures Justification document on the DERA National website for
+20
+further information if the application includes marine, locomotive, or stationary generator
+projects.
+(2)
+Outputs and Outcomes
+Applicants are required to describe how funding will help the EPA achieve outputs and outcomes that
+support accelerating the upgrade, retrofit, and turnover of the legacy diesel fleet in their responses to
+the criteria in Section 6. The applicant must identify outputs and outcomes specific to each project as
+deliverables in the negotiated workplan if the application is selected for award. Recipients will be
+expected to report progress toward the attainment of expected project outputs and outcomes during
+the project performance period. Outputs and outcomes are defined below.
+Outputs are an activity, effort, or associated work product related to a goal or objective that will be
+produced or provided over time or by a specified date. Outputs may be quantitative or qualitative but
+must be measurable during the project period.
+The expected outputs for the grants awarded under these guidelines should include, but are not limited
+to:
+Number of replaced or retrofitted engines/vehicles/equipment; or
+Hours of idling reduced.
+Other potential outputs may include, but are not limited to:
+Engaging with the local community to ensure their meaningful participation with respect to the
+design, planning, and performance of the project;
+The project's inclusion in a broader-based environmental or air quality plan;
+The implementation of contract specifications requiring the use of cleaner vehicles and
+equipment;
+A documented commitment to continue to identify and address air quality issues in the affected
+community;
+Establishing a clear point of contact in a public platform for community issues and complaints;
+A publicly documented policy or process for getting community input on operations and projects
+that impact air quality;
+Adoption of an idle reduction policy;
+The completion of a baseline mobile source emission inventory for PM₂.₅ and NOx;
+Number of subawards; and
+Dissemination of project/technology information via listservs, websites, journals, and outreach
+events.
+Outcomes are the result, effect, or consequence that will occur from carrying out the activities under the
+grant. Outcomes may be environmental, behavioral, health-related, or programmatic; must be
+qualitative or quantitative; and may not necessarily be achievable during the project period. The EPA
+anticipates that the outcomes from the projects awarded under this announcement should result in
+long-term emissions reductions.
+Examples of anticipated outcomes include, but are not limited to the following:
+Tons of pollution reduced over the lifetime of the vehicles/engines/equipment, specifically:
+Fine particulate matter (PM₂.₅);
+Nitrogen oxides (NOx);
+Carbon monoxide (CO); and
+21
+Volatile organic compounds (VOCs).
+Tons of pollution reduced annually;
+Lifetime total project cost effectiveness for NOx and PM₂.₅;
+Lifetime capital cost effectiveness for NOₓ and PM₂.₅;
+Net reduction in gallons of diesel fuel used;
+Improved ambient air quality in communities in which the vehicles operate; and
+Reduction of emitted criteria pollutants from replaced vehicles.
+Other potential outcomes may include, but are not limited to:
+Community engagement and partnership;
+Health benefits achieved;
+Changes in driver behavior regarding idling practices;
+An increased understanding of the environmental or economic effectiveness of the implemented
+technology;
+Increased public awareness of project and results;
+Widespread adoption of implemented technology; and
+Emissions reductions along freight transportation corridors.
+Consistent with Assistance Listing No. 66.039 and the EPA's Policy for Competition of Assistance
+Agreements (EPA Order 5700.5A1), this funding opportunity is being limited to a subset of
+eligible applicants.
+Refer to EPA Order 5700.7A1: EPA's Policy for Environmental Results under EPA Assistance Agreements
+for more information about outputs and outcomes.
+(3)
+Performance Measures
+The applicant should also develop performance measures they expect to achieve through the proposed
+activities and describe them in their application. These performance measures will help gather insights
+and will be the mechanism to track progress concerning successful output and outcome strategies and
+will provide the basis for developing lessons to inform future recipients. Additional details on reporting
+requirements are included in Section 8.B. Descriptions of performance measures must directly relate to
+the progress of project outputs and outcomes.
+Examples of performance measures include, but are not limited to, the following:
+Tracking and reporting project progress on expenditures and purchases;
+Tracking, measuring, and reporting accomplishments and proposed timelines/milestones;
+Tracking and reporting project progress on installations/replacements by maintaining an
+accurate project fleet description;
+Measuring and reporting on outcomes by maintaining an accurate project fleet description and
+using the EPA's diesel emissions quantifier; and
+Tracking, measuring, and reporting the actual vehicle miles traveled, hours of use/operation, and
+fuel use for all vehicles and equipment involved in the project.
+The following are questions to consider when developing output and outcome measures of quantitative
+and qualitative results:
+What are the measurable short-term and long-term results of the project?
+How does the plan measure progress in achieving the expected results (including outputs and
+outcomes) and how will the approach use resources effectively and efficiently?
+22
+B. Program Goals and Objectives
+The activities to be funded under this funding announcement support Pillar 1: Clean Air, Land, and Water
+for Every American by reducing harmful diesel emissions that contribute to air pollution and Pillar 5:
+Protecting and Bringing Back American Auto Jobs by supporting American manufacturing and
+maintenance jobs. These pillars are part of the EPA's Five Pillars under the "Powering the Great American
+Comeback Initiative".
+C. Statutory Authority
+The DERA Program is authorized by the Diesel Emissions Reduction Act of 2010, 42 U.S.C.§§ 16131-
+16139. DERA authorizes the award of grants to reduce diesel emissions and diesel emissions exposure,
+particularly from fleets operating in areas designated by the Administrator as poor air quality areas.
+While the EPA has authority under DERA to support grant programs, the EPA's authority to obligate grant
+funds is subject to the availability of appropriated funds.
+D. Funding Type
+It is anticipated that grants and cooperative agreements will be funded under this funding
+opportunity.
+Cooperative agreements provide for substantial involvement between the EPA Project Officer and the
+selected applicant(s) in the performance of the work supported. Although the EPA will negotiate precise
+terms and conditions relating to substantial involvement as part of the award process, the anticipated
+substantial Federal involvement for these projects may include:
+Close monitoring of the successful applicant's performance to verify the results proposed by the
+applicant;
+Collaboration during performance of the scope of work;
+Review of proposed procurement, in accordance with 2 CFR $200.317 and 2 CFR $200.318;
+Approving qualifications of key personnel; and
+Review and comment on reports prepared under the cooperative agreement.
+The EPA does not have the authority to select employees or contractors employed by the recipient. The
+final decision on the content of reports rests with the recipient.
+4.
+Application Contents and Format
+A. Application Forms
+The following forms and documents are required under this announcement:
+Mandatory Documents:
+Application for Federal Assistance (SF-424)
+Budget Information for Non-Construction Programs (SF-424A)
+EPA Form 5700-54 Key Contacts
+EPA Form 4700-4 Pre-award Compliance Review Report
+Project Narrative Attachment Form: use this to submit the Cover Page and Workplan as
+described in Section 4.B.(1) and (2)
+23
+"Other Attachments" Form: use this form to submit the following documents as described in
+Section 4.B.(3):
+Applicant Fleet Description information including the DERA Supplemental Application
+Template (xlsx) also known as the Burden Statement for EPA Form: 5900-681
+Partnership Letters, if applicable
+Mandated Measures Justification Supporting Information, if applicable
+Optional Documents:
+"Other Attachments" Form: use this form to submit the following documents as described in
+4.B.(4). Applicants should note that while these forms are optional, the "Other Attachments"
+Form will be listed in the Mandatory Documents section of the Workspace:
+Negotiated Indirect Cost Rate Agreement, if applicable
+Maps
+Resumes
+B. Project Narrative Description
+The EPA is providing the following optional project narrative format for convenience to assist applicants
+in ensuring they provide all information needed for a competitive application. Applicants are not
+required to use the project narrative format below.
+The Cover Page and Workplan combined are limited to 14 pages. Attachments are not included in the
+page limitation.
+(1)
+Cover Page:
+The cover page should not exceed one page. The cover page should include the following information:
+EPA Region: Applicants must request funding from the single EPA regional office that covers the
+geographic project location. Refer to Section 1.D. of the NOFO.
+Applicant Information:
+Applicant organization
+Address
+Primary contact name, phone number, and email address
+Unique Entity Identifier (UEI) number
+Type of Eligible Applicant: Applicants must list their applicant type and how they meet the
+eligibility criteria.
+A regional, State (including the District of Columbia), local agency, Tribal agency, or port
+authority, which has jurisdiction over transportation or air quality. School districts,
+municipalities, metropolitan planning organizations (MPOs), cities, and counties are all
+generally eligible entities under this grant program to the extent that they fall within this
+definition.
+A non-profit organization or institution that:
+Represents or provides pollution reduction or educational services to people or
+organizations that own or operate diesel fleets; or
+Has, as its principal purpose, the promotion of transportation or air quality.
+Project Title: One descriptive sentence only.
+24
+Project Period of Performance: Provide beginning and ending dates of the proposed project.
+Short Project Description: Briefly describe the project in one to three sentences only, especially
+noting the expected outputs and outcomes. Use the applicable project sector(s) and target fleet
+type(s) shown below in Table 9 in the project description. Include the type and number of
+affected vehicles/equipment and the type of emission upgrade(s) proposed for funding. Example
+descriptions: School Bus: Retrofit 40 Class 6 school buses with Diesel Particulate Filters; Freight:
+Install DPFs and bunk heaters on 20 Class 8 long-haul trucks; Port: Replace engines in two ship-
+to-shore gantry cranes with electric power.
+Project Sector(s): Use the applicable sector(s) shown in Table 9 below to list the sector(s)
+targeted for emissions reductions. Indicate primary sector, secondary sector (as appropriate),
+and other sectors (as appropriate).
+Target Fleets: Use the applicable fleet(s) shown in Table 9 below to list the fleet(s) targeted for
+emissions reductions.
+Budget Summary: Include the following information:
+EPA Funding;
+Mandatory Cost Share & Source;
+Voluntary Cost Share & Source (if applicable); and
+Total Project Cost.
+As noted in Section 1.D. of the NOFO, each application can request EPA funding up to the
+individual application limit for the EPA regional office from which funding is being requested. The
+total amount of requested funding needs to correspond with the applicant's proposed activities.
+More budget information can be found in the EPA's General Budget Development Guidance for
+Applicants and Recipients of EPA Financial Assistance.
+Project Location: Primary project location (county, State, city, and zip code) listed in Section 3 of
+the workplan should be included here. In addition, briefly describe the area(s) where the
+affected vehicles or engines operate in a few sentences or less.
+Table 9. Project Sectors and Target Fleets
+Sectors
+Target Fleets
+Target Fleets
+(continued)
+Agriculture
+Aerial Lift
+Off-Highway
+Tractor
+Airport
+Agricultural Mower
+Off-Highway Truck
+Construction
+Agricultural Tractor
+Other Agricultural
+Equipment
+Freight (non-port goods movement)
+Airport Support Equipment
+Other
+Construction
+Equipment
+Industrial (non-port material handling, other)
+Backhoe Loader
+Other General
+Industrial
+Equipment
+25
+Sectors
+Target Fleets
+Target Fleets
+(continued)
+Mining
+Baler/Combine/Swather
+Other Material
+Handling
+Equipment
+Municipal (emergency, utility)
+Bore/Drill Rig
+Passenger
+Locomotive
+Port
+Cement & Mortar Mixer
+Paving/Surfacing
+Equipment
+Railyard
+Concrete/Industrial Saw
+Plate Compactor
+School Bus
+Container Handling Equipment
+Railcar Mover
+Stationary
+Crane
+Refuse Hauler
+Transit (non-port)
+Crawler Dozer/Loader
+Rough Terrain
+Forklift
+Crushing/Process Equipment
+Rubber Tire
+Dozer/Loader
+Dumpsters/Tender
+School Bus
+Excavator
+Short Haul -
+Combination
+Forklift
+Short -
+Single
+Gantry Crane
+Signal Board
+Line Haul Locomotive
+Line Haul Locomotive as Switch
+Logging Equip Fell/Bunch/Skidder
+Stationary Stationary Stationary Stationary Stationary Generator Compressor Compressor Irrigation Steer Haul Unit
+Skid Loader
+Air
+Gas
+Long Haul - Combination
+Long Haul - Single Unit
+Set
+Marine - Auxiliary
+Pump
+Marine - Propulsion
+Stationary Welder
+Mining Equipment
+Sweeper/Scrubber
+Mobile Air Compressor
+Switch
+Locomotive
+Mobile Gas Compressor
+Tamper/Rammer
+Mobile Generator
+Terminal Tractor
+Mobile Irrigation Set
+Transit Bus
+Mobile Pump
+Transport
+Refrigeration Unit
+Mobile Welder
+Trencher
+26
+(2)
+Workplan:
+Applicants must ensure that the workplan addresses the eligibility criteria in Section 2.A. of the NOFO.
+Applicants should use the section and subsection numbers and headings below which correspond with
+the evaluation criteria in Section 6.B. of the NOFO.
+Section 1 - Project Summary and Approach:
+a. Project Summary: The applicant should provide a project summary. This section should include
+details about how the activities will meet the goals and objectives of the program (Section 3.B.
+of the NOFO) and demonstrate that all activities meet the program eligibility criteria (Section 2
+of the NOFO).
+Applicants should include:
+A discussion of how the project meets the program goals and objectives.
+A summary of the vehicles, engines, or equipment targeted for emissions reductions and
+their eligibility under Section 2 of the NOFO, including but not limited to ownership,
+usage, and remaining life requirements.
+A discussion of how the applicant has considered the available/eligible technology
+options for the target fleet and has arrived at the chosen diesel emissions reduction
+solution(s).
+A summary of all verified and certified technologies to be funded by the applicant.
+Applications which include engine replacements and vehicle/equipment replacements
+should include the applicant's plans for engine/vehicle/equipment scrappage.
+Applicants proposing nonroad, locomotive, or marine replacements should commit to
+using Tier 4 vehicles, equipment, or engines if Tier 4 vehicles, equipment, or engines
+with the appropriate physical and performance characteristics are available, as described
+in Section 2.A.1. Applicants anticipating the use of lower tiered vehicles, equipment, or
+engines should discuss their rationale for proposing lower tiered replacements and will
+be required to submit a BAT analysis if selected for funding.
+Applications which include locomotives, marine engines, or stationary engines should
+include a clear and concise justification for why the proposed emissions reductions are
+not subject to the restriction for mandated measures under this NOFO, as described in
+Section 2.A.1. and the Mandated Measures Justification document found on the DERA
+National website.
+Applications should only include information in Section 1.a. that will not be detailed by
+another section of the workplan.
+b. Project Approach: The applicant should provide a detailed description of the proposed activities.
+Include details of every activity and task for which the applicant is seeking funding.
+Applicants should include:
+A discussion of the roles and responsibilities of the applicant organization and any other
+project partners, including subrecipients, beneficiaries, or contractors. Applicants should
+discuss whether they will directly implement the project or fund project partners
+through subawards or participant support costs as described in Section 9.B. of the
+NOFO.
+27
+Applicants should discuss which entities or organization(s) will retain ownership of any
+vehicles, engines, or equipment purchased with funding from this project.
+Section 2 - Goods Movement Facilities:
+This section of the workplan should include a detailed discussion of the project location in terms of
+vocational use of the vehicles/engines/equipment targeted for diesel emissions reductions.
+The EPA gives funding priority to projects based on whether the vehicles/engines/equipment targeted
+for diesel emissions reductions are located at, or service, goods movement facilities as defined below.
+Applicants should include the name of the specific port, airport, rail yard, terminal, or distribution center
+where the affected vehicles operate. Points will be based upon the percentage of time targeted vehicles
+operate at, and the percentage of the total targeted vehicles that operate at, goods movement facilities.
+Ports - places on land alongside navigable water (e.g., oceans, rivers, or lakes) with one
+or more facilities in close proximity for the loading and unloading of passengers or cargo
+from ships, ferries, and other commercial vessels. This includes facilities that support
+non-commercial Tribal fishing operations.
+Airports - places where aircraft operate that have paved runways and terminals which
+include cargo, baggage, or passenger-movement operations.
+Rail Yards - a system of tracks, other than main tracks and sidings, used for arranging
+trains, storing railway cars, and other purposes.
+Terminals - freight and passenger stations at the end of carrier lines, or that serve as
+junctions at any point with other lines, that have facilities for the handling of freight or
+passengers.
+Distribution Centers - facilities that perform consolidation, warehousing, packaging,
+decomposition, and other functions linked with handling freight, often in proximity to
+major transport routes or terminals, and which generate large amounts of truck traffic.
+Section 3 - Project Location:
+The EPA is prioritizing projects that serve poor air quality areas (including nonattainment or maintenance
+areas and areas with air toxic pollutant concerns).
+a. Nonattainment Areas: These areas were identified as priority locations for the DERA Program
+because they are designated, as of the release date of this NOFO, as Nonattainment Areas or
+Maintenance Areas for the following National Ambient Air Quality Standards (NAAQS). Data are
+sourced from the EPA's Green Book of Nonattainment Areas for Criteria Pollutants.
+Ozone (O₃) 2008 Standard (8-hour: 0.075ppm)
+Ozone (O₃) 2015 Standard (8-hour: 0.070ppm)
+PM₂.₅ 1997 Standard (Annual: 15 µg/m3, 24-hour: 65 µg/m3)
+PM₂.₅ 2006 Standard (Annual: 15 µg/m3, 24-hour: 35 µg/m3)
+PM₂.₅ 2012 Standard (Annual: 12 µg/m3, 24-hour: 35 µg/m3)
+The term "project location" refers to the area(s) where the affected vehicles, engines, or equipment
+operate. A list of counties that have been designated as priority project locations, the priority area
+list, can be found on the DERA National website.
+b. Areas with Air Toxics Concerns: Counties that are identified as priority project locations for the
+DERA Program because they contain at least one census tract where the modeled area-weighted
+28
+average ambient diesel PM concentration is above the 80th percentile (0.27 µg/m3 for 2020) for
+census tracts nationwide. The 80th percentile is a programmatic cutoff designed to help evaluate
+those areas that are most likely to have higher concentrations of diesel PM in the year of analysis
+(i.e., the year for which data are available); this level was not chosen based on risk or other
+health-based criteria or thresholds. AirToxScreen is a screening tool, and there are limitations
+and uncertainties associated with it; refer to AirToxScreen Limitations.
+This section of the workplan should include the following information. The use of the template below is
+optional, and the EPA will not penalize or withhold a benefit from the applicant for providing the
+information in another format. The term "project location" as used in this NOFO refers to the area(s)
+where the affected vehicles or engines operate. If a single application includes vehicles operating in
+more than one area, this section of the workplan should indicate where the vehicles operate and the
+amount (%) of time the vehicles typically operate in each area.
+Example Project Location Table:
+Air Toxics Concern:
+% of Time
+Nonattainment
+Contains High
+Goods
+Number
+City,
+Zip
+Vehicles
+or Maintenance
+Ambient Diesel PM
+Move
+County
+of
+State
+Code
+Spend in
+Area? (Y/N)
+Based on
+ment
+Vehicles
+Area
+AirToxScreen?
+Facility
+(Y/N)
+Instructions for table:
+In entry #1, enter a county, State, city, and ZIP code to indicate the "primary" place of
+performance (POP). The primary POP indicates the location where most of the affected vehicles
+operate, or where the affected vehicles operate most of the time. For port projects, the primary
+POP will likely be the port's address.
+If applicable, enter additional places of performance in lines #2, #3, etc., following the
+instructions below. Broader project locations may be represented by entering "statewide" into
+the county column, or "countywide" into the city column. Additional rows may be added to the
+table as needed.
+County: Enter the county name, if applicable, or "statewide".
+City, State: Enter the State name. Enter city name, if applicable, or "countywide".
+ZIP Code: Enter ZIP code, if applicable.
+Number of Vehicles: Enter the number of vehicles proposed for funding that will operate within
+the listed project location.
+% of Time Vehicles Spend in Area: Enter the estimated percentage of time the affected vehicles
+operated within the listed project location.
+Does the area contain a nonattainment or maintenance area (as defined above)?
+Does the area contain high ambient diesel PM based on AirToxScreen (as defined above)?
+29
+Goods Movement Facility: Do the affected vehicles operate at goods movement facilities within
+the listed project location? If yes, provide the name(s) of the specific port, airport, rail yard,
+terminal, or distribution center, as described above.
+Section 4 - Project Sustainability:
+The applicant should include details which demonstrate the ability of the applicant and project partners
+to promote and continue efforts to reduce emissions after the EPA funding for this project has ended.
+Specifically, applications will be evaluated on the extent and quality to which the applicant and its
+project partners meet the following sub criteria.
+a. Continuing Efforts: The applicant should have existing policies or new commitments to, by the
+end of the project period, adopt idle-reduction policies, adopt contract specifications requiring
+the use of cleaner, more efficient vehicles and equipment, complete an up-to-date mobile
+source equipment inventory, or adopt other policies to promote and continue efforts to reduce
+diesel emissions.
+b. Baseline Monitoring: The applicant should have a publicly available baseline mobile source
+emissions inventory for PM₂.₅ or NOₓ that was completed after 2021 or commit to completing
+one before the end of the project period.
+C. Emissions Plan: The applicant should have a publicly available plan finalized after 2021 to
+reduce mobile source emissions that include specific PM₂.₅ or NOₓ emission targets or commit to
+completing one before the end of the project period.
+d. Community Engagement: The applicant should demonstrate that the applicant or project
+partner(s) has an existing clear point of contact in a public platform (e.g., newsletter, website) for
+community issues and complaints (specific to air quality or broader) and a publicly documented
+policy or process to engage communities and get their input on operations and projects that
+impact air quality. The process could be a meeting in the past year or a policy or process to have
+a meeting or otherwise get input (e.g., a standing citizen advisory committee). If not, the
+application should demonstrate a commitment to establish both before the end of the project
+period.
+Section 5 - Environmental Results - Outputs, Outcomes and Performance Measures:
+a. Expected Project Outputs and Outcomes: The applicant should identify expected quantitative
+and qualitative project outputs and outcomes, including those identified in Section 3.A. of the
+NOFO. Specific outputs and outcomes should be provided and may include short- and longer-
+term activities.
+In addition to a narrative discussion of the outputs and outcomes above, the applicant is encouraged to
+include a table such as the one below. The use of the template is optional, and the EPA will not penalize
+or withhold a benefit from the applicant for providing the information in another format.
+30
+Example of Outputs and Outcomes Table:
+Anticipated Outputs and Outcomes
+Activities
+Outputs
+Outcomes
+Fleet A -
+Number of vehicles
+Emissions reductions, such as tons of pollution avoided
+vehicle
+replaced, or
+annually or over the lifetime of the vehicles and improved
+replacement
+technologies
+ambient air quality in nearby communities.
+installed
+Net reductions in gallons of diesel fuel used annually or over
+the lifetime of the vehicles.
+Fleet B -
+Number of pieces
+Emissions reductions, such as tons of pollution avoided
+equipment
+of equipment
+annually or over the lifetime of the equipment and improved
+replacement
+replaced, or
+ambient air quality in nearby communities.
+technologies
+installed
+Net reductions in gallons of diesel fuel used annually or over
+the lifetime of the equipment.
+b. Performance Measures and Plan: The applicant should describe the proposed performance
+measures, which will be the mechanism to track, measure, and report progress towards
+achieving the expected outputs and outcomes. The applicant should describe their plan for
+tracking and measuring progress toward achieving the expected project outputs and outcomes
+and how the results of the project will be evaluated, as described in Section 3.A. of the NOFO.
+C. Timeline and Milestones: The applicant should include a detailed timeline for the project
+including key milestones for specific tasks, such as bidding, procurement, installation, and
+reports, along with estimated dates. The applicant should include scheduled time for grants
+administration, including progress reports and final report preparation, into the project timeline.
+Section 6 - Programmatic Capability and Past Performance:
+a. Past Performance: The applicant should submit a list of up to five federally funded or non-
+federally funded assistance agreements that the applicant is performing or has performed within
+the last three years. Assistance agreements include federal grants and cooperative agreements
+but not federal contracts. These assistance agreements should be awarded directly to the
+applicant. For each of the agreements, include:
+Project title;
+Assistance agreement number;
+Funding agency and assistance listing number, if applicable; and
+Brief description of the agreement - no more than two sentences.
+Include a discussion of whether and if so how the applicant was able to successfully complete
+and manage the listed agreements.
+b. Reporting Requirements: For each of the assistance agreements listed, the applicant should
+describe their history of meeting the reporting requirements under the agreement(s). This
+should include:
+Whether the applicant submitted acceptable final reports under those agreements;
+The extent to which the applicant adequately and timely reported on its progress
+towards achieving the expected outputs and outcomes under those agreements; and
+31
+If progress was not being made and whether the applicant adequately reported why not.
+Note: In evaluating applicants under the past performance factors in Section 6.B. of the NOFO, the EPA
+will consider the information provided by the applicant and may also consider relevant information from
+other sources, including information from the EPA's files and from current/prior grantors (e.g., to verify
+or supplement the information provided by the applicant). If you do not have any relevant or available
+past performance or past reporting information, please indicate this in the application and a neutral
+score for these factors will be received, which is half of the total points available for these sub-criteria in
+Section 6.B. of the NOFO. If the applicant does not provide any response for these items, a score of zero
+for these factors may be received.
+C. Staff Expertise: The applicant should include information on the applicant's organizational
+experience and plan for timely and successfully achieving the objectives of the proposed project,
+and staff expertise/qualifications, staff knowledge, and resources or the ability to obtain them,
+to successfully achieve the goals of the proposed project. Only employees of the applicant
+organization, not contractors, can be listed as staff. Biographical sketches, including resumes or
+curriculum vitae for key staff, managers, and any other key personnel, can be included as an
+optional resume attachment, as listed in Section 4.A. of the NOFO.
+Section 7 - Budget:
+This section of the project narrative is a detailed description of the budget the applicant provides in the
+SF-424A and must include a discussion of the applicant's approach to ensuring proper management of
+grant/cooperative agreement funds, a detailed budget narrative, as well as an itemized budget table. An
+applicant's budget table and budget narrative must account for federal funds, non-federal mandatory
+cost share, and any non-federal voluntary cost share, if applicable. Applicants should note that recipients
+charging a negotiated indirect cost rate must submit a copy of their current indirect cost rate agreement
+that has been negotiated with a federal cognizant agency prior to drawing down indirect costs (IDCs).
+Additional guidance for developing the applicant's budget is available in RAIN-2019-G02-R2, General
+Budget Development Guidance for Applicants and Recipients of EPA Financial Assistance.
+Mandatory Cost Share: Applications that include projects with mandatory cost share requirements must
+demonstrate on the SF-424 Application for Federal Assistance, on the SF-424A Budget Information for
+Non-Construction Programs, and in the project narrative how the applicant will be able to meet these
+minimum mandatory cost share requirements if the EPA selects the application for an award. If a named
+project partner provides a proposed cost share, a partnership letter demonstrating commitment must
+be attached to the application as described in Section 4.A. of the NOFO.
+Voluntary Cost Sharing: Applicants should be aware that voluntary cost sharing is not required under
+this NOFO and will not be evaluated. However, applicants may propose to provide voluntary cost share.
+Applicants who propose to use a voluntary cost share must include the costs or contributions for the
+voluntary cost share in the project budget on the SF-424, SF-424A, and budget detail described later in
+this section. If a named project partner provides a proposed cost share, a partnership letter
+demonstrating commitment must be attached to the application as described in Section 4.A. of the
+NOFO. The budget detail described under this section must clearly specify the amount of federal funding
+and the cost share amount for each category of total project costs. The recipient is legally obligated to
+meet any proposed voluntary cost share that is included in the approved project budget. If the proposed
+voluntary cost sharing does not materialize during grant performance, the EPA may reconsider the
+legitimacy of the award or take other appropriate action authorized under 2 CFR Part 200.
+a. Budget Detail: Proposed budgets should provide a detailed breakout by funding type included in
+32
+the proper budget category for each activity requesting funds. Applicants should consult the
+EPA's General Budget Development Guidance for Applicants and Recipients of EPA Financial
+Assistance.
+Applicants should provide a detailed breakout by funding type included in the proper budget category
+for each activity requesting funds. Applicants should use the instructions, budget line-item descriptions,
+and example table below to complete the detailed budget section of the project narrative. The
+application should include the budget detail and the budget table in the project narrative which counts
+towards the 14-page limit. Applicants should include applicable rows of costs for each budget category in
+their budget table to accurately reflect the proposed project budget. Applicants must itemize costs
+related to personnel, fringe benefits, travel, equipment, construction, installation or labor supplies,
+contractual, other direct costs (i.e., subawards, participant support costs), indirect costs, and total costs.
+If providing a mandatory or voluntary cost share, the budget detail must clearly specify the amount of
+federal funding and the cost share amount for each category. For applicants proposing to implement a
+participant support cost or rebate program, the rebates are appropriately listed under the Other budget
+category as "Participant Support Costs.". Refer to Section 9.B. of the NOFO for more information on
+participant support costs and EPA Guidance on Participant Support Costs.
+Personnel - List all staff positions by title. Provide hourly wage and number of hours or provide
+annual salary and percentage of time assigned to the project, and the total cost for the budget
+period. This category includes only direct costs for the salaries of those individuals who will
+perform work directly for the project (paid employees of the applicant organization as reflected
+in payroll tax records). If the applicant organization includes staff time (in-kind services) as a cost
+share, this should be included as Personnel costs.
+Personnel costs do not include:
+Costs for services of contractors (including individual consultants), which are included in
+the "Contractual" category;
+Costs for employees of subrecipients under subawards or non-employee program
+participants (e.g., interns or volunteers), which are included in the "Other" category; or
+Effort that is not directly in support of the proposed project, which may be covered by
+the organization's negotiated indirect cost rate. The budget detail must identify the
+personnel category type by Full Time Equivalent (FTE), including percentage of FTE for
+part-time employees, number of personnel proposed for each category, and the
+estimated funding amounts.
+Fringe Benefits - Identify the percentage used, the basis for its computation, and the types of
+benefits included. Fringe benefits are allowances and services provided by employers to their
+employees as compensation in addition to regular salaries and wages. Fringe benefits may
+include, but are not limited to the cost of leave, employee insurance, pensions, and
+unemployment benefit plans. If the applicant's fringe rate does not include the cost of leave, and
+the applicant intends to charge leave to the agreement, it must provide supplemental
+information describing their proposed method(s) for determining and equitably distributing
+these costs.
+Travel - Specify the mileage, per diem, estimated number of trips in-state and out-of-state,
+number of travelers, and other costs for each type of travel. Travel may be integral to the
+purpose of the proposed project (e.g., inspections); related to proposed project activities (e.g.,
+attendance at meetings); or to a technical training or workshop that supports effective
+implementation of the project activities. Only includes travel costs for employees in the travel
+33
+category.
+Travel costs do not include:
+Costs for travel of contractors (including consultants), which are included in the
+"Contractual" category; or
+Travel costs for employees of subrecipients under subawards and non-employee
+program participants (e.g., trainees), which are included in the "Other" category; or
+Bus rentals for group trips, which would be covered under the "Contractual" category.
+Finally, if the applicant intends to use any funds for travel outside the United States, it must be
+specifically identified. All proposed foreign travel must be approved by the EPA's Office of
+International and Tribal Affairs (OITA) prior to being taken.
+Equipment - Identify each item to be purchased which has an estimated acquisition cost of
+$10,000 or more per unit and a useful life of more than one year. Equipment also includes
+accessories necessary to make the equipment operational.
+Equipment does not include:
+Equipment planned to be leased/rented, including lease/purchase agreement, which are
+included in the "Other" category; or
+Equipment service or maintenance contracts that are not included in the purchase price
+for the equipment, which are included in the "Other" category;
+Items with a unit cost of less than $10,000, which should be categorized in the
+"Supplies" category, pursuant to 2 CFR $200.1, "Equipment."
+The budget detail must include an itemized listing of all equipment proposed under the project. If
+installation costs are included in the equipment costs, labor expenses shall be itemized with the detailed
+number of hours charged and the hourly wage. If the applicant has written procurement procedures that
+define a threshold for equipment costs that are lower than $10,000, that threshold takes precedence.
+Construction - Anticipated costs for hiring general contractors and other contractors
+performing activities described in 2 CFR 33.103 of Construction will be categorized as
+"Construction." Applicants should rely on the definitions under 40 CFR $33.103 for the purpose
+of categorizing construction costs on the SF-424A budget form and budget narrative. Anticipated
+costs for hiring general contractors and other contractors performing activities described in
+definition of Construction will be categorized as "Construction." Other construction-related
+anticipated costs may be categorized under "Construction," "Contractual," or "Equipment,"
+depending on whether the cost falls under the regulation's definition of Construction, Services,
+or Equipment. For example, anticipated costs for pre-construction architectural and engineering
+Services as defined in the regulation will be categorized as "Contractual."
+Supplies - "Supplies" means all tangible personal property other than "equipment." The
+budget detail should identify categories of supplies to be procured (e.g., office supplies). Non-
+tangible goods and services associated with supplies, such as printing services, photocopy
+services, and rental costs should be included in the "Other" category.
+Contractual - Identify each proposed contract and specify its purpose and estimated cost.
+Contractual services (including consultant services) are those services to be carried out by an
+individual or organization, other than the applicant, in the form of a procurement relationship.
+The EPA's Subaward Policy and supplemental Frequent Questions has detailed guidance available
+for differentiating between contractors and subrecipients. The budget should include leased or
+34
+rented goods (equipment or supplies) in the "Other" category. The applicant should list the
+proposed contract activities along with a brief description of the anticipated scope of work or
+services to be provided, proposed duration, and proposed procurement method (competitive or
+non-competitive), if known. Any proposed non-competed/sole-source contracts more than
+$10,000 must include a justification. Note that it is unlikely that the EPA will accept proposed
+sole source contracts for goods and services (e.g., consulting) that are widely available in the
+commercial market. Refer to the EPA's Best Practice Guide for Procuring Services, Supplies, and
+Equipment Under EPA Assistance Agreements for the EPA's policies on competitive
+procurements. For further information on contracts, subawards, and participant support costs,
+refer to Section 9.B. of the NOFO.
+Other - List each item in sufficient detail for the EPA to determine the reasonableness and
+allowability of its cost. This category should include only those types of direct costs that do not
+fit in any of the other budget categories. Examples of costs that may be in this category are
+insurance; rental/lease of equipment or supplies; equipment service or maintenance contracts;
+printing or photocopying; participant support costs such as non-employee training stipends and
+travel; subsidies or rebates for purchases of pollution control equipment (such as a specified
+amount of funding for diesel particulate filters or for truck owners to purchase cleaner trucks);
+and subaward costs. Applicants should describe the items included in the "Other" category and
+include the estimated amount of participant support costs in a separate line item. Additional
+information about participant support costs is contained in EPA Guidance on Participant Support
+Costs.
+Subawards (e.g., subgrants) and participant support costs are a distinct type of cost under this
+category. The term "subaward" means an award of financial assistance (money or property) by
+any legal agreement made by the recipient to an eligible subrecipient even if the agreement is
+referred to as a contract. Rebates, subsidies, and similar one-time, lump-sum payments to
+program beneficiaries for purchase of eligible emissions control technologies are considered
+participant support costs. Please refer to Section 9.B. for detailed guidance on funding projects
+and partnerships and how to correctly categorize these costs in the workplan budget.
+"Other" does not include:
+Procurement purchases;
+Technical assistance in the form of services instead of money; or
+Other assistance in the form of revenue sharing, loans, loan guarantees, interest
+subsidies, insurance, or direct appropriations.
+Subcontracts are not subawards and belong in the contractual category. Applicants must provide
+the aggregate amount they propose to issue as subaward work as a separate line item in the
+"Other" category, and a description of the types of activities to be supported. Refer to the EPA's
+Subaward Policy and supplemental Frequent Questions for additional guidance.
+Indirect Charges - If the budget includes indirect charges, indicate the approved rate
+and base. Indirect costs are those incurred by the recipient for a common or joint
+purpose that benefit more than one cost objective or project and are not readily
+assignable to specific cost objectives or projects as a direct cost. Examples of Indirect
+Cost Rate calculations are shown below:
+Personnel (Indirect Rate X Personnel = Indirect Costs)
+Personnel and Fringe (Indirect Rate X Personnel & Fringe = Indirect Costs)
+35
+Total Direct Costs (Indirect Rate X Total direct costs = Indirect Costs)
+Direct Costs, less distorting or other factors such as contracts and equipment
+(Indirect Rate X (total direct cost - - distorting factors) = Indirect Costs)
+If you have an existing Negotiated Indirect Cost Agreement, submit it as an Optional Attachment (see
+Section 4.B.4). Additional indirect cost guidance is available in Indirect Cost Guidance for Recipients of
+EPA Assistance Agreements.
+Example Budget Table (Optional Template, part of the 14-page limit):
+The table below is an example of project costs and does not include all possible costs allowable under
+the DERA Program. If this template is used it should be updated to reflect accurate project costs in the
+grant application submitted. While a detailed budget narrative is required, the use of this budget table
+template is optional, and the EPA will not penalize or withhold a benefit from the applicant for providing
+the information in another format.
+Total
+Mandatory
+Voluntary
+Line Item & Itemized Costs:
+EPA Funding:¹⁸
+Project
+Cost Share:¹⁹
+Cost Share:
+Costs:
+Personnel
+Program Manager - $35/hr. X 1,200
+$42,000
+$0
+$0
+$42,000
+hrs.
+Administrative Specialist - $12/hr. X
+$2,100
+$0
+$0
+$2,100
+175 hrs.
+TOTAL PERSONNEL:
+$44,100
+$0
+$0
+$44,100
+Fringe Benefits
+Fringe rate at 10% of employee
+salaries for employee benefits (Health
+$4,410
+$0
+$0
+$4,410
+insurance and retirement)
+TOTAL FRINGE BENEFITS:
+$4,410
+$0
+$0
+$4,410
+Travel
+400 miles at $0.70/mile + $20 tolls per
+trip
+$600
+$0
+$0
+$600
+2 trips in-state with 1 traveler
+TOTAL TRAVEL:
+$600
+$0
+$0
+$600
+18 EPA Funding amount must be included on the SF-424 in Section 18.a and SF-424A in: cell 5(e) under Section A -
+Budget Summary; and Column (1) under Section B - - Budget Categories.
+19 Non-Federal Cost Share funding amount must be included on the SF-424 in Section 18.b-e and SF424A in: cell
+5(f) under Section A- - Budget Summary; columns (2) and (3) under Section B - Budget Categories; and Section c
+- Non-Federal Resources. Applicants must precisely describe in their budget narrative how they will account for
+any required or voluntary cost share, if applicable, and what role EPA funding will play in the overall project.
+36
+Total
+Mandatory
+Voluntary
+Line Item & Itemized Costs:
+EPA Funding:¹⁸
+Cost Share:¹⁹
+Project
+Cost Share:
+Costs:
+Equipment
+N/A
+TOTAL EQUIPMENT:
+$0
+$0
+$0
+$0
+Construction
+N/A
+TOTAL CONSTRUCTION:
+$0
+$0
+$0
+$0
+Supplies
+Office supplies
+$500
+$0
+$0
+$500
+TOTAL SUPPLIES:
+$500
+$0
+$0
+$500
+Contractual
+N/A
+TOTAL CONTRACTUAL:
+$0
+$0
+$0
+$0
+Other
+Participant Support Costs (rebates) - -
+Drayage Truck Replacements.
+A total of 40 vehicles at $45,000/each.
+$990,000
+$810,000 (45%)
+$0
+$1,800,000
+(Cost Share Requirements: Vehicle
+(55%)
+replacement, with certified engine
+meeting 0.035 g NOx/bhp-hr or lower
+emission limit).
+Subaward for Application Coordinator
+$0
+$0
+$85,0000
+$85,000
+to provide application services
+TOTAL OTHER:
+$810,000
+$990,000
+$85,000
+$1,885,000
+TOTAL DIRECT COSTS:
+$49,610
+$0
+$0
+$49,610
+Indirect Costs
+De minimis indirect cost rate (15%)
+[substitute with an approved
+$7,442
+$0
+$0
+$7,442
+Negotiated Indirect Cost Rate, if
+applicable]
+TOTAL INDIRECT COSTS:
+$7,442
+$0
+$0
+$7,442
+37
+Total
+Mandatory
+Voluntary
+Line Item & Itemized Costs:
+EPA Funding:¹⁸
+Cost Share:¹⁹
+Project
+Cost Share:
+Costs:
+TOTAL PROJECT COSTS:
+$867,052
+$990,000
+$85,000
+$1,942,052
+Note on Management Fees: When formulating budgets for applications, applicants must not include
+management fees or similar charges more than the direct costs and indirect costs at the rate approved
+by the applicant's cognizant federal audit agency, or at the rate provided for by the terms of the
+agreement negotiated with the EPA. The term "management fees or similar charges" refers to expenses
+added to the direct costs to accumulate and reserve funds for ongoing business expenses, unforeseen
+liabilities, or for other similar costs that are not allowable under EPA grants. Management fees or similar
+charges cannot be used to improve or expand the project funded under this agreement, except to the
+extent authorized as a direct cost of carrying out the workplan.
+b. Expenditure of Awarded Funds: Applicants should provide a detailed written description of the
+applicant's approach, procedures, and controls for ensuring that awarded grant funds will be
+expended in a timely and efficient manner.
+C. Reasonableness of Costs: The EPA will evaluate the reasonableness of the applicant's budget
+based on the applicant's narrative description of the budget and detailed breakout of requested
+funding for each work component or task. Provide a detailed description of every itemized cost,
+including how every cost relates to the project narrative and specific emission reduction
+activities. Instructions for what to include in the budget detail are described above in Section
+7.1. of the workplan.
+Applicants must itemize the cost categories as listed below and the SF-424A: personnel, fringe benefits,
+contractual costs, travel, equipment, supplies, contractional costs, other direct costs (subawards,
+participant support costs), indirect costs, and total costs. Round up to the nearest dollar and do not use
+any cents.
+For applicants that provide a mandatory or voluntary cost share as described in Section 2.B. of the
+NOFO, the budget narrative must include a detailed description of how the applicant will obtain the cost
+share and how the cost share funding will be used. Proposed mandatory or voluntary cost share included
+in the budget detail must also be included on the SF-424 and SF-424A.
+Recipients may issue subawards, contracts, or participant support costs to implement projects. Please
+refer to Section 9.B. for detailed guidance on these funding options and how to correctly categorize
+these costs in the workplan budget.
+(3)
+Required Attachments (not included in 14-page limit) - use "Other Attachments"
+form to submit
+1. Applicant Fleet Description
+Applicants must use the "Other Attachments" form in Grants.gov to upload their Applicant Fleet
+Description. The Applicant Fleet Description is a single file: the DERA Supplemental Application
+Template (excel), also known as the Burden Statement for EPA Form 5900-681. This can be found
+on the DERA National website. As listed in Section 4.B. of the NOFO, the purpose of the applicant
+fleet description is to describe in detail the specific vehicles and engines targeted for emissions
+reductions, as well as the diesel emissions reduction solution(s) to be implemented under the
+proposed project. The EPA will use information provided in the applicant fleet description to help
+38
+determine project eligibility based on the criteria in Section 2 and for evaluation purposes as
+described below. Applicants are required to the DERA Supplemental Application Template
+(excel), also known as the Burden Statement for EPA Form 5900-681, found on the DERA
+National website for the Applicant Fleet Description.
+Applicants should note that they will be evaluated on the degree to which the fleet information
+completed is provided via the DERA Supplemental Application Template (excel), also known as
+the Burden Statement for EPA Form: 5900-681 (Refer to Section 6.B., Criterion 8 Applicant Fleet
+Description).
+2. Partnership Letters, if applicable:
+If a named project partner is to provide the proposed cost share, a partnership letter
+demonstrating the specified financial commitment is required. If applicable, additional
+partnership letters demonstrating strong, long-term involvement throughout the project from a
+variety of project partners are encouraged. Letters should specifically indicate how project
+partners and supporting organizations will participate in or directly assist in the design and
+performance of the project, or how obtaining support from project partners will allow the
+applicant to more effectively perform the project. Project partners should address letters to the
+applicant organization, and the applicant should include them as attachments to the application.
+Letters submitted directly by partners to the EPA will not be accepted.
+3. Mandated Measures Justification Supporting Information, if applicable
+If applicable, the application must include a clear and concise justification in Section 1 of the
+project narrative for why and how the emissions reductions proposed for funding are not subject
+to the Restriction for Mandated Measures under this NOFO. Applicants must provide sufficient
+detail and information to support the justification, including maintenance schedules and history,
+if applicable. While the justification itself should be included in the project narrative and
+therefore will count toward the page limit, calculations and supporting details and information
+may be provided as an attachment and will not count towards the page limit. These attachments
+should be uploaded using the "Other Attachments" form in Grants.gov. Please refer to the
+Mandated Measures Justification document found on the DERA National website for more
+information.
+(4)
+Optional Attachments
+Use the "Other Attachments" Form to submit the following optional documents. Applicants should note
+that while these forms are optional, the Other Attachment Form will be listed in the Mandatory
+Documents section of the Workspace:
+a. Negotiated Indirect Cost Rate Agreement, if applicable
+Provide this if you have an existing Negotiated Indirect Cost Rate Agreement. Refer to
+Section 4.B.(2), Section 7 for more information.
+b. Maps
+C.
+Resumes, if applicable
+Provide resumes as described in Section 4.B.(2).
+39
+C. Applicants Using Contractors
+Applicants must compete contracts for services and products, including consultant contracts, and
+conduct cost and price analyses, to the extent required by the procurement provisions of the regulations
+at 2 CFR Part 200.
+Do not name a procurement contractor (including a consultant) as a "partner" or otherwise in your
+application unless the contractor has been selected in compliance with competitive procurement
+requirements. If an applicant selected for award has named a specific subrecipient, contractor, or
+consultant in the application, it does not relieve the applicant of its obligations to comply with subaward
+and/or competitive procurement requirements.
+The EPA will not consider the qualifications, experience, and expertise of named subrecipients or named
+contractor(s) during the application evaluation process unless the applicant provides documentation that
+it has complied with these requirements.
+For additional guidance, applicants should review the EPA's Best Practice Guide for Procuring Services,
+Supplies, and Equipment Under EPA Assistance Agreements, the EPA's Subaward Policy, and the EPA's
+Subaward Policy Frequent Questions. The EPA expects recipients of funding to comply with competitive
+procurement contracting requirements in 2 CFR Parts 200 and 1500, as well as the requirements in 2 CFR
+200.321 and 40 CFR Part 33 Subpart C.
+D. Coalition Coverage
+A coalition is formed when two or more eligible applicants coordinate to submit a single application.
+Coalitions must identify which single eligible organization will be the recipient of the grant and which
+eligible organization(s) will receive subawards from the recipient (the "pass-through entity"). The pass-
+through entity that administers the grant and subawards will be accountable to the EPA for proper
+expenditure of the funds and reporting and will be the point of contact for the coalition. Subawards
+must be consistent with the definition of that term in 2 CFR $200.1 and comply with the EPA's Subaward
+Policy.
+5.
+Submission Requirements and Deadlines
+A. Submission Dates and Times
+January 22, 2027 11:59 pm ET
+Application Submission Deadline
+Grants.gov creates a date and time record when it receives the application. If you submit the same
+application more than once, we will accept the last on-time submission.
+B. Unique Entity Identifier (UEI) and System for Award Management
+(SAM.gov)
+SAM.gov
+You must have an active account with SAM.gov. SAM.gov will provide a UEI for your organization, which
+is required to apply for grants using Grants.gov. To register, go to SAM.gov Entity Registration and click
+Get Started. From the same page, you can also click on the Entity Registration Checklist for the
+information you will need to register. Make sure you are current with SAM.gov and UEI requirements
+before applying for the award.
+40
+SAM.gov registration can take several weeks. Begin that process today.
+Grants.gov
+You must also have an active account with Grants.gov. You can refer to step-by-step instructions at the
+Grants.gov Quick Start Guide for Applicants.
+Please visit How to Register to Apply for Grants for additional information.
+C. Submission Instructions
+You must submit your application through Grants.gov. Refer to Section 5.B. above for information on
+getting registered.
+Important tips:
+To begin the application process under this grant announcement, go to Grants.gov and click the
+red "Apply" button at the top of the view grant opportunity page associated with this
+opportunity.
+Refer to the Quick Start Guide for Applicants for instructions on how to submit.
+Make sure your application passes the Grants.gov validation checks.
+Do not encrypt, zip, or password protect any files.
+Your application must be submitted by an official representative of your organization who is
+registered with Grants.gov and is authorized to sign applications for Federal financial assistance.
+If you receive an error or the button is grayed out, it may be because you do not have the
+appropriate role to submit in your organization. Contact your organization's EBiz point of contact
+or contact Grants.gov for assistance at 1-800-518-4726 or support@grants.gov.
+Refer to Grants.gov Errors for information on other Grants.gov errors.
+The UEI listed on the application must be registered to the applicant organization's SAM.gov
+account. If not, the application may be deemed ineligible.
+D. Technical Issues with Submission
+If applicants experience technical issues during the submission of an application that they are unable to
+resolve, follow these procedures before the application deadline date:
+Contact Grants.gov Support Center before the application deadline date.
+Document the Grants.gov ticket/case number.
+Send an email with Funding Opportunity Number (FON):EPA-OAR-OTAQ-26-01 in the subject line
+to dera@epa.gov before the application deadline time and date and must include the following:
+Grants.gov ticket/case number(s)
+Description of the issue
+The entire application package in PDF format.
+Without this information, the EPA may not be able to consider applications submitted outside of
+Grants.gov. Any application submitted after the application deadline time and date deadline will be
+deemed ineligible and not be considered.
+Please note that successful submission through Grants.gov or email does not necessarily mean your
+application is eligible for award.
+41
+Applicants with limited or no access to the internet may request an exception by following the
+procedures outlined here. The request must be received at least 15 calendar days before the application
+due date to allow enough time to negotiate alternative submission methods.
+E. Intergovernmental Review
+The application is not subject to Intergovernmental Review.
+6.
+Application Review Information
+A. Responsiveness Review
+Applications must meet the eligibility requirements described in Section 2 to be evaluated. Applicants
+not meeting these requirements will be deemed ineligible and will be notified within 15 calendar days of
+the determination.
+Applications must adhere to the page limit requirements. Any pages over the limit(s) in Section
+4 will not be reviewed.
+Initial applications must be submitted on or before the application deadline through Grants.gov
+or through limited circumstances as expressed in Section 5. The EPA will not evaluate
+applications that are not submitted on time.
+Technical difficulties applying: Applicants having technical difficulties applying must contact the
+Grants.gov hotline at 1-800-518-4726 and then must email a PDF of the full application to the
+EPA contact listed in Section 1.E. The submission must be received prior to the application
+deadline for consideration.
+B. Review Criteria
+Criteria Name and Description
+Points
+1. Project Summary and Approach: Under this criterion, the EPA will evaluate
+applications based on the applicant's project summary and overall approach.
+Specifically, the EPA will evaluate:
+a. Project Summary (10 points) The extent and quality to which the project
+meets the goals and objectives of the program (Section 3.B. of the NOFO) and
+20
+demonstrates that all activities meet the program eligibility criteria (Section 2).
+b. Project Approach (10 points) The extent and quality of the applicant's overall
+approach and implementation plan, including activities, tasks, roles and
+responsibilities, and partnerships.
+2. Goods Movement Facilities: Under this criterion, the EPA will evaluate applications
+based on the extent to which projects target vehicles located at, or that service,
+10
+goods movement facilities such as ports, airports, rail yards, terminals, or
+distribution centers, as described in Section 4.B.
+42
+Criteria Name and Description
+Points
+3. Project Location: Under this criterion, the EPA will evaluate applications based on:
+a. Nonattainment Areas (5 points) The extent to which the projects are located in
+and serve counties that contain ozone or PM₂.₅ nonattainment or maintenance
+10
+areas, as described in Section 4.B.
+b. Areas with Air Toxics Concerns (5 points) The extent to which projects are
+located in and serve counties that contain areas with air toxics concerns, as
+described in Section 4.B.
+4. Project Sustainability: Under this criterion, the EPA will evaluate applications based
+on the extent and quality to which the applicant and its project partners will
+promote and continue efforts to reduce emissions after EPA funding for this project
+has ended. Specifically, the EPA will evaluate the extent and quality to which:
+a. Continuing Efforts (5 points) The application demonstrates that the applicant
+and project partner(s) have policies in place to promote and continue efforts to
+reduce diesel emissions. These may include existing idle-reduction policies,
+contract specifications requiring the use of cleaner, more efficient vehicles and
+equipment, up to date mobile source equipment inventories, or other policies
+as necessary. If the applicant does not currently have these types of policies in
+place, the application will be evaluated on the quality and extent to which the
+application specifies a commitment to complete one or more before the end of
+the project period.
+b. Baseline Monitoring (5 points) The application demonstrates that the
+applicant and project partner(s) has a publicly available baseline mobile source
+emission inventory for PM₂.₅ or NOₓ that was completed after 2021. If not, the
+extent to which the application specifies a commitment to complete one
+20
+before the end of the project period.
+C. Emissions Plan (5 points) The application demonstrates that the applicant and
+project partner(s) has a publicly available plan, finalized after 2021, to reduce
+mobile source emissions that include specific PM₂.₅ or NOₓ emission targets. If
+not, the extent to which the applicant demonstrates a commitment to
+developing one before the end of the project period.
+d. Community Engagement (5 points) The extent and quality to which the
+application demonstrates that the applicant and project partner(s) have an
+existing clear point of contact in a public platform (e.g., newsletter, website)
+for community issues and complaints (specific to air quality or broader) and a
+publicly documented policy or process to engage communities and get their
+input on operations and projects that impact air quality. The process could be a
+meeting in the past year or a policy or process to have a meeting or otherwise
+get input (e.g., a standing citizen advisory committee). If not, the extent to
+which the application demonstrates a commitment to establish both the above
+before the end of the project period.
+5. Environmental Results - Outputs, Outcomes and Performance Measures: Under
+30
+this criterion, the EPA will evaluate:
+43
+Criteria Name and Description
+Points
+a. Expected Project Outputs and Outcomes (10 points) The extent and quality to
+which the applicant identifies and quantifies expected project outputs and
+outcomes, including those identified in Section 3.A.
+b. Performance Measures and Plan (10 points) The quality of the proposed
+performance measures and effectiveness of the applicant's plan for tracking
+and measuring their progress toward achieving the expected project outputs
+and outcomes, including those identified in Section 3.A.
+C. Timeline and Milestones (10 points) The reasonableness of the proposed
+timeline including key milestones for specific tasks and the likelihood of
+completion of the project's goals and objectives by project end.
+6. Programmatic Capability and Past Performance: Under this criterion, the EPA will
+evaluate applicants based on their ability to successfully complete and manage the
+proposed project considering their:
+a. Past Performance (5 points) Past performance in successfully completing and
+managing the grants identified in the project narrative as described in Section
+4.B. of the NOFO.
+b. Reporting Requirements (5 points) History of meeting the reporting
+requirements under the grants identified in the project narrative, including
+whether the applicant submitted acceptable final technical reports under those
+agreements and the extent to which the applicant adequately and timely
+reported on their progress towards achieving the expected outputs and
+outcomes under those agreements and if such progress was not being made,
+whether the applicant adequately reported why not.
+15
+C. Staff Expertise (5 points) Organizational experience and plan for timely and
+successfully achieving the objectives of the proposed project, and staff
+expertise/qualifications, staff knowledge, and resources or the ability to obtain
+them, to successfully achieve the goals of the proposed project.
+Note: In evaluating applicants under items a. and b. of this criterion, the agency will
+consider the information provided by the applicant and may also consider relevant
+information from other sources including agency files and prior/current grantors (i.e.,
+to verify or supplement the information supplied by the applicant). If the applicant
+does not have any relevant or available past performance or reporting information,
+please indicate this in the application and the applicant will receive a neutral score for
+these subfactors (items a. and b. above). A neutral score is half of the total points
+available in a subset of possible points). If the applicant does not provide any response
+for these items, a score of zero for these subfactors may be received.
+7. Budget: Under this criterion, the EPA will evaluate applicants based on the extent
+and quality to which:
+15
+a. Budget Detail (5 points) The proposed budget provides a detailed breakout by
+funding type in the proper budget category for each activity the applicant is
+requesting funding.
+44
+Criteria Name and Description
+Points
+b. Expenditure of Awarded Funds (5 points) The applicant's approach,
+procedures, and controls will ensure that awarded grant funds will be
+expended in a timely and efficient manner.
+C. Reasonableness of Costs (5 points) The proposed costs are reasonable to
+accomplish the proposed goals, objectives, and measurable environmental
+outcomes, including consideration of indirect/administrative costs.
+8. Applicant Fleet Description: Under this criterion, the EPA will evaluate applicants on
+the extent and quality of the detailed information provided in the applicant fleet
+description via the DERA Supplemental Application Template (excel), also known as
+the Burden Statement for EPA Form: 5900-681, of all required target fleet fields
+10
+(vessel(s), vehicle(s), engine(s), and equipment) as described in Section 4.B. and
+completed with sufficient detail and provided with accuracy and consistency, with
+no significant errors or omissions.
+Total Possible Points
+130
+Applicants will be evaluated based on the extent and quality to which they demonstrate that they have
+the capability to successfully perform the project as described in Section 3 of this funding opportunity.
+Only eligible entities whose applications meet the threshold criteria in Section 2 of this announcement
+will be evaluated. Applicants should explicitly address these criteria as part of their application
+package submittal in the project narrative. Each application will be rated using a point system.
+Applications will be evaluated based on a total of 130 possible points.
+C. Review and Selection Process
+Eligibility Review: The EPA will evaluate applications against the threshold criteria in Section 2. Only
+those applications which meet all threshold criteria will be deemed eligible.
+Merit Evaluation: All eligible applications will be evaluated by regional review panels using the evaluation
+criteria in Section 6.B. The regional review panels will score and rank applications.
+Preliminary funding recommendations will be provided to the EPA regional selection officials based on
+these reviews and rankings.
+The EPA anticipates funding the top 4-12 ranked proposals for each region, contingent on the quality of
+the proposals and funding availability.
+(1)
+Other Evaluation Factors
+The selection official in each region will make final funding decisions. In making the final funding
+decisions, the selection officials may also consider the following factors: sector (fleet type) diversity,
+technology diversity, geographic diversity, number and size of awards, and agency and programmatic
+priorities.
+45
+D. Risk Review
+The EPA will conduct a risk review of selected applications before making awards, as required by 2 CFR
+200.206. As part of this review, the EPA may consider the following:
+information available in the responsibility/qualification records in SAM.gov, including any
+comments made by the applicant.
+if the applicant is a new recipient, whether they have completed the mandatory training
+requirement outlined in RAIN-2024-G01 New Recipient Training Requirement
+any unresolved administrative findings in EPA records
+reported issues related to financial stability and/or management systems
+past performance or audit issues.
+7.
+Award Notices
+The EPA anticipates notification to successful applicants will be made by the applicable Regional Grants
+Management Office. The notification will be sent to the original signer of the application or the project
+contact listed in the application. This notification is not an authorization to begin work. The official
+notification of an award will be made by the applicable Regional Grants Management Office. Selection
+does not guarantee an award will be made. Statutory authorization, funding, or other issues during the
+award process may affect the ability of the EPA to make an award. The award notice, signed by an EPA
+grants officer, is the authorizing document and will be provided through electronic or postal mail. The
+successful applicant may need to prepare and submit additional documents and forms, which must be
+approved by the EPA, before the grant can officially be awarded. The time between notification of
+selection and award of a grant can take up to 90 days or longer.
+8.
+Post-Award Requirements and Administration
+A. Administrative and National Policy Requirements
+The recipient and any sub-recipient must comply with the applicable General Terms and Conditions.
+These terms and conditions are in addition to the assurances and certifications made as part of the
+award, terms and conditions, and restrictions reflected on the official assistance award document.
+Awards issued as a result of this funding opportunity are subject to the requirements of the Uniform
+Administrative Requirements, Cost Principles and Audit Requirements for Federal Awards; Title 2 CFR
+Part 200 and 2 CFR Part 1500.
+B. Reporting
+The EPA's General Terms and Conditions in the Notice of Award will have information on performance
+and financial reports, including:
+How often you will report.
+Any required form or formatting.
+How to submit them.
+46
+C. Subaward and Executive Compensation Reporting
+The Federal Financial Accountability and Transparency Act (FFATA) requires:
+Data entry at SAM.gov for all subawards and subcontracts issued for $30,000 or more.
+Reporting executive compensation for both recipient and subaward organizations.
+D. Post Award Project Requirements
+1. Build America, Buy America (BABA) Requirements: Certain projects under this competition are
+subject to the Buy America Sourcing requirements under the Build America, Buy America
+provisions of the Infrastructure Investment and Jobs Act (IIJA) (P.L. 117-58, 70911-70917) when
+using funds for the purchase of goods, products, and materials on any form of construction,
+alteration, maintenance, or repair of infrastructure in the United States. The Buy America
+preference requirement applies to all of the iron and steel, manufactured products, and
+construction materials used for the infrastructure project under an award for the EPA's financial
+assistance funding programs.
+These sourcing requirements require that all iron, steel, manufactured products, and
+construction materials used in federally funded infrastructure projects must be produced in the
+United States. The recipient must implement these requirements in its procurements, and this
+article must flow down to all subawards and contracts at any time.
+For more information about BABA requirements for DERA projects, applicants should consult the
+BABA Implementation Procedures for OTAQ's Federal Assistance Programs. Please consider this
+information when preparing budget information. A list of approved EPA general applicability
+waivers is available on the EPA's Build America, Buy America website. When supported by
+rationale provided in IIJA 70914, the recipient may submit a project-specific waiver request to
+the EPA if available general applicability waivers do not apply. For more information on waivers,
+refer to Section 5 and Appendix 5 of the BABA Implementation Procedures for OTAQ's Federal
+Assistance Programs.
+In addition to BABA requirements, all procurements under grants may be subject to the
+domestic preference provisions of 2 CFR 200.322.
+Refer to the "Build America, Buy America" clause in the EPA's Solicitation Clauses.
+2. Cross-Cutters: Cross-cutters refers to federal laws, regulations, or executive orders that apply
+across multiple federally funded programs, including certain projects awarded through the DERA
+program that involve construction or land disturbance. Construction activities consist of any
+project-related land-clearing or ground-breaking activities, including those that inform design or
+are part of the planning process, such as the drilling of test boreholes. Cross-cutting
+requirements ensure that projects comply with broader environmental standards. Applicability
+of cross-cutting requirements will depend upon the specifics of the project. A non-exhaustive list
+is available in the EPA's guidance to pass-through entities. Each cross-cutting authority has its
+own requirements and associated schedule. Additional time will be needed for activities that
+require consultation with other federal agencies or with State, local, and Tribal partners.
+47
+9.
+Other Information
+A. Additional Provisions for Applicants
+Additional provisions that apply this funding opportunity and/or awards made under this funding
+opportunity, can be found at EPA NOFO Clauses. If you are unable to access these provisions
+electronically at the website above, please contact the EPA point of contact to obtain the provisions.
+B. Further information Regarding Contracts, Subawards, Participant
+Support Costs
+I.
+Background
+The SF-424A includes a separate row for "Contractual" costs and "Other" costs. As noted in Section 7
+under Section 4.A. of the NOFO, the "Other" cost category on the SF-424A should be used to cover both
+subawards and participant support costs. Depending on the project, these costs may be applicable to a
+DERA application. This section helps clarify these differences. Additional information about participant
+support costs is contained in the EPA's Guidance on Participant Support Costs.
+Where the target fleets are owned and operated by the DERA grant recipient, the recipient may directly
+implement the project. The recipient is responsible for procuring all vehicles and equipment in
+accordance with applicable competitive procurement requirements in 2 CFR Part 200. The
+applicant's/recipient's budget should reflect only those expenses incurred directly by the recipient
+organization for personnel, fringe, travel, supplies, equipment, contractual, other, and indirect.
+If a recipient intends to fund the proposed project's technologies (i.e., vehicles, engines, equipment) that
+they do not directly own, the recipient may have the option to: (1) issue a contract; (2) make a subaward
+to an eligible entity; or (3) provide participant support costs to a program beneficiary. For options (2) and
+(3), the recipient may be able to fund technology and installation costs, but only subawards can be used
+to fund direct and indirect costs. If the grant recipient only intends to fund equipment and installation
+costs, the recipient may choose to provide participant support costs to a program beneficiary rather than
+a subaward. DERA recipients often use participant support costs to offer rebates or vouchers for vehicle
+costs.
+II.
+Contracts
+As described in 2 CFR $200.331, a contract is for the purpose of obtaining goods and services for the
+recipient's own use and creates a procurement relationship with the contractor. Characteristics indicative
+of a procurement relationship between the recipient and a contractor are when the contractor:
+a. Provides the goods and services within normal business operations;
+b. Provides similar goods or services to many different purchasers;
+C. Normally operates in a competitive environment;
+d. Provides goods or services that are ancillary to the operation of the federal program; and
+e. Is not subject to compliance requirements of the federal program because of the agreement,
+though similar requirements may apply for other reasons.
+Grant recipients that enter into procurement contracts, must comply with the applicable procurement
+provisions in 2 CFR $200.317 through $200.327.
+NOTE: If a contractor (including an individual consultant or equipment vendor) or a subrecipient is
+named as a project partner or otherwise in the application, the EPA recommends carefully reviewing,
+48
+and complying with, the directions contained in the "Contracts and Subawards" clause that can be
+accessed under Section 4.C. of this NOFO and at the EPA Funding opportunity Clauses. Refer to the EPA's
+Best Practice Guide for Procuring Services, Supplies, and Equipment Under EPA Assistance Agreements,
+the EPA's Subaward Policy and supplemental Frequent Questions for additional guidance. Applicants
+must demonstrate two key points. Firstly, they need to show that the contractors they have named,
+including individual consultants and equipment vendors, were selected in accordance with the
+competitive requirements outlined in the Procurement Standards of 2 CFR Part 200, as interpreted by
+EPA guidance. Secondly, applicants must demonstrate that their named subrecipients meet the eligibility
+criteria specified in the EPA's Subaward Policy. These steps are necessary for the EPA to evaluate the
+qualifications and roles of those involved in the proposed project.
+III.
+Subawards
+Under 2 CFR $200.1, subrecipient means an entity that receives a subaward from a pass-through entity
+to carry out part of a Federal award. The term subrecipient does not include a beneficiary or participant.
+A subrecipient may also be a recipient of other Federal awards directly from a Federal agency. Grant
+recipients may make subawards to subrecipients to carry out a portion of the grant project; in such case,
+the grant recipient is also known as a pass-through entity. Subawards establish a financial assistance
+relationship under which the subrecipient's employees and contractors implement programs and
+projects to accomplish the goals and objectives of the grant. It is important to bear in mind that
+subrecipients are subject to the same federal requirements as the pass-through entity.
+Under this competition, a non-federal entity is eligible to receive a subaward even if it is not eligible to
+receive a grant from the EPA directly. While there may be some situations in which a subaward to an
+individual may be appropriate, those situations are rare.
+Subrecipients only receive reimbursement for their actual direct or approved indirect costs and do not
+profit from the transaction. For-profit entities participating in grant activities are typically contractors
+rather than subrecipients.
+The EPA's Award Official must approve subawards to for-profit entities and individuals based on either a
+precise description of the subaward in the EPA approved budget and project narrative, or on a
+transaction-by-transaction basis.
+The applicant's project narrative and budget narrative should include detailed descriptions of any
+proposed subawards and include cost estimates for subawards as line items under the "Other" budget
+category in the SF-424A; refer to Section 9 in Section 4.A. Should a recipient decide to make a subaward
+that was not described in the approved project narrative and budget, the recipient must obtain prior
+written approval from the EPA's Award Official for the subaward.
+If a recipient chooses to pass funds from its grant to other entities through subawards, the recipient
+must comply with applicable subaward provisions of 2 CFR Part 200, the EPA Subaward Policy, and the
+EPA's National Term and Condition for Subawards. Note that under 2 CFR $200.331 through $200.333,
+there are extensive requirements for subrecipient monitoring and management that apply to pass-
+through entities.
+Many of the federal administrative grant regulations in 2 CFR Part 200 and 2 CFR Part 1500, as well as the
+grant terms and conditions, "flow down" to subrecipients receiving a subaward. The written subaward
+agreement between the recipient and the subrecipient needs to identify such requirements.
+Additionally, if a subrecipient intends to procure goods or services using DERA grant funds, the
+subrecipient must comply with the applicable federal procurement standards in 2 CFR Part 200 and 2
+CFR Part 1500.
+49
+There is no requirement for recipients to compete subawards under this NOFO; however, pass-through
+entities may choose to select subrecipients competitively, provided this practice is consistent with
+applicable statutes, regulations, and the terms and conditions of their DERA grant.
+Recipients may use the subaward template contained in Appendix D of the EPA's Subaward Policy to
+assist them in complying with the "subaward content" requirements; however, the EPA does not
+mandate the use of this template.
+IV.
+Participant Support Costs
+Recipients may provide participant support costs (PSCs) to program beneficiaries to enable beneficiaries
+to participate in the recipient's program or project. PSCs include rebates, subsidies, stipends, or other
+payments to program beneficiaries by a grant recipient, subrecipient, or contractor. For example, the
+recipient might use PSCs for the purchase of eligible technologies which the program beneficiaries,
+rather than the grant recipient, would own.
+PSCs are different from subawards because, with PSCs, the beneficiary takes part in the grant recipient's
+project or program instead of implementing their own project or program. Program beneficiaries may
+include but are not limited to individual owners/operators, private or public fleet owners, or residents in
+the applicable area. However, program beneficiaries are not employees, contractors, or subrecipients of
+the grant recipient.
+Recipients may also use PSCs to make purchases on behalf of program beneficiaries. In some situations,
+this approach allows grant recipients to achieve economies of scale or take advantage of existing
+purchase contracts. Competitive procurement requirements apply to the grant recipient when the
+recipient takes this approach.
+The federal administrative grant regulations in 2 CFR Part 200 and 2 CFR $1500.8, as well as the grant
+terms and conditions in the recipient's grant agreement, generally do not "flow down" to program
+beneficiaries receiving PSCs except that costs must be reasonable and incurred within the grant project
+period. Requirements for compliance with civil rights laws and ensuring that program beneficiaries are
+eligible to receive federal financial assistance are applicable as explained in the EPA Guidance on
+Participant Support Costs. In addition, program beneficiaries must abide by requirements to ensure that
+the funds are used only for authorized purposes.
+If a grant recipient, subrecipient, or contractor is issuing PSCs, it must have a written agreement in place.
+The written agreement should not be structured as a subaward agreement and should not refer to
+program beneficiaries as subrecipients consistent with 2 CFR $200.1, "Subrecipient." In addition, the
+written agreement should not include language requiring the program beneficiary to comply with the
+federal grant regulations at 2 CFR Part 200, 2 CFR $1500.8, or the terms and conditions found in the
+award between the EPA and the recipient, other than requiring that the costs must be reasonable,
+necessary, and allocable. The written agreement should also include the following:
+A description of the activities and amounts that will be supported by the PSCs;
+The program and statutory requirements that the program beneficiary must abide by to ensure
+that the funds are used only for authorized purposes;
+A specification of which party will have title to the technologies (e.g., vehicles, engines,
+equipment or appliances), if there are any, purchased with PSCs;
+Source documentation requirements to ensure proper accounting of the PSCs; and
+Any reporting that the program beneficiary must submit.
+50
+The EPA's Award Official must approve PSCs based on either a precise description of the PSCs in the EPA
+approved budget and workplan, or on a transaction-by-transaction basis. The applicant's project
+narrative and budget narrative should include detailed descriptions of any proposed PSCs and include
+cost estimates for PSCs as line items under the "Other" budget category. Should a recipient decide to
+issue PSCs that were not described in the approved workplan and budget, the recipient must obtain
+prior written approval from the EPA's Award Official. Moreover, after a grant is awarded, should a
+recipient decide to modify the amount approved (upwards or downwards) for PSCs, prior written
+approval from the EPA's Award Official is also required.
+When creating budgets, applicants/recipients must exclude PSCs from Modified Total Direct Costs for
+calculation of indirect costs as required by 2 CFR $200.1, "Modified Total Direct Costs."
+V.
+Resources:
+EPA Guidance on Participant Support Costs
+Best Practice Guide for Procuring Services, Supplies, and Equipment Under EPA
+Assistance Agreements
+EPA Subaward Policy for EPA Assistance Agreement Recipients, with attachments,
+including:
+EPA Subaward Policy
+Appendix A: Distinctions Between Subrecipients and Contractors
+Appendix B: National Term and Condition for Subawards
+Appendix C: Model Programmatic Subaward Reporting Requirement
+Appendix D: Subaward Agreement Template
+51

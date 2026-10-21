@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are WSRF applications due?",
+    "expected": "There is no single deadline: applications are reviewed on a bimonthly cycle, with submittal dates of October 1, December 1, February 1, April 1, June 1 and August 1 feeding the January, March, May, July, September and November CWCB Board meetings respectively. No time of day is stated.",
+    "quote": "the submittal deadlines for the respective Board meetings when WSRF",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who can apply for a WSRF grant?",
+    "expected": "Governmental entities (municipalities, districts, enterprises, counties and State of Colorado agencies; covered entities only if they have an approved Water Efficiency Plan) and private entities such as mutual ditch companies, non-profit corporations and partnerships.",
+    "quote": "enterprises, counties, and State of Colorado agencies. Federal agencies are",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "What format does the budget need to be in?",
+    "expected": "Applicants must upload Exhibit B Budget & Schedule, and the detailed budget must be provided in Excel.",
+    "quote": "Upload the Exhibit B Budget & Schedule. A detailed budget must be provided in",
+    "confirmed": false
+  }
+]

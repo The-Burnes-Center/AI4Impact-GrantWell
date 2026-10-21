@@ -1,0 +1,1286 @@
+{
+ "01cab47c6cd10131": {
+  "query": "due date for applications key dates",
+  "filter": "44785b1201bdf503",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "While not required, it is strongly recommended that applicants attend one of the workshops. Please RSVP for a workshop to melissa.cryan@mass.gov. When you RSVP, specify which you will be attending. If you select the virtual workshop, you will receive the Microsoft Teams invitation upon RSVPing. The workshop presentation and answers to any questions received in writing by Tuesday, December 22, 2026 will be posted on the DCS website. Any questions received after that date cannot be answered by the LWCF Stateside Coordinator. C. APPLICATION DUE DATE: Tuesday, January 5, 2027 at 11:59 pm."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3877636,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "D. ESTIMATED AWARD DATE: The Commonwealth of Massachusetts’ decisions are estimated to be\n\n \n\n \n  https://www.nps.gov/subjects/lwcf/lwcf-manual.htm\n \n\n \n  https://www.google.com/maps?q=1+Rabbit+Hill+Road,+Westborough,+MA+01581\n \n\n \n  mailto:melissa.cryan@mass.gov13\n\n announced on or about 100 days after grant application deadline. Please note that the NPS approval takes place after the state’s and may take a significant amount of time."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3628076,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqrViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "B. APPLICATION SUBMISSION INSTRUCTIONS: All Applicants must now use the Executive Office of Energy and Environmental Affairs (EEA) new EEA Grant Management System (GMS), a user-friendly platform designed to enhance the experience for applicants seeking grants. To submit a FY 27 LWCF grant application, please create a username and password and start the validation process, which could take several days to complete. Please note that at least one representative from the municipality, department, or tribe must have a valid account to apply for the grant. Please refer to Attachment H for further instructions regarding the GMS. Applications must be submitted via GMS by Tuesday, January 5, 2027 at 11:59 pm. Any application received after the deadline will be rejected."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3519703,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AoLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Post completion requirements: Participants should review DCS and NPS Post Completion\n\n requirements regarding fees, user limitations, and prohibitions against converting the conservation land or parkland to any other use or transfer of ownership in Chapter 8 of the LWCF Manual.\n\n 21. Public records: Please note that all responses and information submitted in response to this\n\n BID are subject to the Massachusetts Public Records Law, M.G.L. c. 66, s. 10, and to c. 4, s. 7, ss. 26. Any statements in submitted responses that are inconsistent with these statutes, including marking of information as confidential, shall be disregarded. Please do not submit any information that the Applicant may not wish to disclose publicly, such as home addresses or personal telephone numbers, social security numbers, or other similar information.\n\n 4. Deadlines and Procurement Calendar\n\n A. RELEASE OF BID: September 25, 2026 B. INFORMATION SESSION: Two information sessions will be held: the first virtual only on Wednesday, December 2, 2026 at 2:00 pm on Microsoft Teams and the second on Thursday, December 3, 2026 at 11:00 am in person only at the DFW Field Headquarters in Westboro. It is highly preferable to attend the in-person workshop."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2760341,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Select “Login/Register” 4. Select “Create a Business Account” 5. Follow the instructions provided. 6. For help, see EEA’s Grant Management System User Guide or Instructional Videos.\n\n The user profile may require one or more days to receive verification. Once verified, you will receive an email notification and access to the Grant Management System for your organization. This portal will serve as your locale to view all grant information. You may then view the FY26 Land and Water Conservation Fund Grant Program funding opportunity and apply through the Grant Management System.\n\n Applicants may save a draft application and return to modify and/or submit until the application deadline. After the deadline, applicants will not be able to edit, add files or submit materials. Please note that the “Grant Primary Contact” must be a valid system user and will receive all relevant notifications and updates to the grant record.\n\n The online application with supporting documents must be submitted on or before Tuesday, January 5, 2027 at 11:59 pm. Submissions through the site will be digitally time stamped. EEA shall make no allowance for technical difficulties or inability of the respondents to utilize the online system. No applications will be accepted after the deadline for any reason.\n\n Digital files uploaded to the application site must be provided in Microsoft Office compatible format or unlocked Adobe Acrobat.\n\n A few tips:\n\n • Filter and sort programs by Program Name or Agency to navigate to EEA’s FY26 Land and Water Conservation Fund Grant Program."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2716339,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 39,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "E. ESTIMATED CONTRACT START DATE: Notwithstanding any verbal representations by the parties, or an earlier start date listed in the Standard Contract Form, and only after an award is issued and a final scope of services has been negotiated, the effective start date of a contract shall be the latest of the following dates: the date the Standard Contract Form has been executed by an authorized signatory of the contractor and EEA; the date of secretariat or other approval(s) required by law or regulation; or a later date specified in the Standard Contract Form. The estimated start date for contracts resulting from this BID is December 14, 2027.\n\n 5. Miscellaneous A. TYPE OF PROCUREMENT: Grant B. USE OF THIS PROCUREMENT BY SINGLE OR MULTIPLE DEPARTMENTS: This BID is a single department procurement. All contracts awarded under this BID will be utilized solely by EEA. C. REQUEST FOR SINGLE OR MULTIPLE CONTRACTORS: This BID will result in multiple contracts. D. BID DISTRIBUTION METHOD: This BID has been distributed electronically using the COMMBUYS system. It is the responsibility of every Applicant to check COMMBUYS for any addenda or modifications to a BID to which they intend to respond. The Commonwealth of Massachusetts and its subdivisions accept no liability and will provide no accommodations to Applicants who fail to check for amended BIDs and submit inadequate or incorrect responses. Potential Applicants are advised to check the “last change” field on the summary page of BIDs for which they intend to submit a response to ensure they have the most recent BID files. The application and answers to questions will also be posted on the DCS website. Applicants may not alter BID language or any BID component files. Those submitting a proposal must respond in accordance to the BID directions and complete only those sections that prompt an Applicant for a response. Modifications to the body of this BID, specifications, terms and conditions, or which change the intent of this BID are prohibited. Any unauthorized alterations will disqualify response. E."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2621434,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aq7ViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "It is the Applicant’s responsibility to verify receipt of the application. A hard copy of the application must also be postmarked to the address below by the grant deadline. The outside of the package should be marked FY27LAND0025. Applications should be double sided, except for maps and graphics, and submitted to:\n\n Melissa Cryan Project # FY27LAND0025 Executive Office of Energy and Environmental Affairs 100 Cambridge Street – Suite 900 Boston, MA 02114\n\n Project proposals must include the following:\n\n  Application Form submitted using the GMS  Municipalities – Open Space and Recreation Plan (if not already on file with DCS)  Acquisition projects – appraisal report(s), including Statement of Work (note that the\n\n appraisal(s) deadline is March 1, 2027) Failure to provide any of the materials listed above may result in the disqualification of the application. See the Application Form (provided in Attachment A of this document) for more detail on required and recommended documents.\n\n \n\n \n  https://www.nps.gov/subjects/lwcf/lwcf-manual.htm\n \n\n \n  https://www.mass.gov/info-details/grants-management-system-gms\n \n\n \n  https://www.mass.gov/info-details/grants-management-system-gms9\n\n C. ADDITIONAL REQUIRED DOCUMENTATION: If selected, the Applicant will be required to submit the following forms to complete a contract or provide the information needed for the forms’ completion:\n\n • Commonwealth Standard Contract Form, signed by the Respondent • Project Scope and Budget Page(s) created by EEA • Contractor Authorized Signatory Listing • Federal Standard Form 424 • Federal Application and Revision Form • LWCF Description and Notification Form\n\n Respondents are encouraged to review the Commonwealth Standard Contract Form, Commonwealth Scope and Budget Form, and Contractor Authorized Signatory Listing prior to submission of a Response. They are available at https://www.mass.gov/lists/osd-forms."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.243603,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "0687ab4dc8f85603": {
+  "query": "minimum and maximum request, funding available, reimbursement percentage",
+  "filter": "44785b1201bdf503",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "In rare circumstances where the Secretary deems that the project demonstrates above average resilience to more frequent and intense storms and sea level rise, she has the sole discretion to increase the maximum grant award beyond $1,000,000. Please note that the grant reimbursement rate can go no higher than 50% as that has been set by the LWCF Act. Applicants must submit the type of appraisal appropriate for their project (if applicable), the estimated total project cost, and a specific grant request as part of the application package.\n\n \n\n \n  http://www.justice.gov/enrd/land-ack/Uniform-Appraisal-Standards.pdf\n \n\n \n  http://www.justice.gov/enrd/land-ack/Uniform-Appraisal-Standards.pdf\n \n\n \n  mailto:melissa.cryan@mass.gov6\n\n Costs eligible for reimbursement include all approved project costs incurred on or after a selected Applicant’s contract execution date and on or before December 31, 2029, such as engineering, design, construction, construction supervision, and land acquisition. Note that applications solely for designs or construction documents are not eligible for funding. Ineligible project costs include, but are not limited to, costs associated with the preparation and submission of an application in response to this BID, staff salaries, equipment, supplies, and due diligence for land acquisitions. For more on eligible and ineligible costs, see Chapter 5 of the federal LWCF Manual. Please note that the LWCF Manual acts as a guideline. It is up to Massachusetts to specifically determine what costs are eligible or ineligible for reimbursement. All contracts shall be subject to available funding, whether through the appropriation and authorization of sufficient funds or the receipt of sufficient revenues. If available funding ceases for any reason, a contract shall be deemed under suspension and contract performance must halt. A contractor will not be entitled to compensation for any performance provided during the period of contract suspension. EEA may lift the suspension if available funding is received. In the absence of foreseeable available funding, EEA may terminate the contract. Products funded with this grant (signs, fencing, landscaping timbers, structures, etc.) are strongly encouraged to be constructed of wood products grown and manufactured in Massachusetts unless the grantee can demonstrate that wood is not a suitable material or that Massachusetts grown and manufactured products are not available or will cost more than 10% more than equivalent products (MGL Chapter 30B, Section 20)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4893463,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Am7ViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Refer to the LWCF Manual Chapter 5 for eligible cost details. A sample budget can be found in Attachment E. Please note that LWCF grants have a maximum 50% reimbursement rate with a maximum $1,000,000 and minimum $50,000 grant request. The specific reimbursement rate for the project subject to this application will be based on what percentage the grant award is of the total eligible project cost. For acquisition projects without an appraisal at the time of the grant deadline, use best estimates here."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4702133,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The minimum grant award is $50,000. In rare circumstances, at the Secretary’s discretion, the maximum grant award for an individual project may be higher than $1,000,000 (see further detail on Funding Availability in section 2C). EEA reserves the right to fund projects through sources other than LWCF should it so choose. Note that LWCF falls under the Build America, Buy America Act. For more information on the law, as well as sourcing guidance and a potential waiver process, visit this website. G. BUDGET REQUIREMENT: Since the LWCF is a reimbursement program, municipal applicants selected to receive grant funding must have a successful City Council or Town Meeting vote that appropriates 100% of the total project cost. DCR and DFG must have capital budget approval from EEA for 100% of the eligible project budget. Tribal applicants must demonstrate their ability to pay for the project upfront. Grant recipients must use the reimbursements for projects that would qualify for LWCF. The land must not be purchased, or park development or renovation must not be started, until the selected Applicant has executed a contract with the Commonwealth or Interagency Service Agreement (ISA) with EEA in the case of state agencies. All projects must provide appropriate public access. (See further detail on budget requirement in section 2D.)"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4578578,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Final details will be worked out when appraisal is submitted.\n\n Total Eligible Project Cost: ___________ LWCF Request: ___________ (up to 50% of total project cost, maximum of $1,000,000, minimum of $50,000) Municipal Share: ___________ (Community Development Block Grant, Community Preservation Act, etc., please specify in narrative)\n\n Other: (i.e. private donation to community, fund raising, etc.) ___________\n\n \n\n \n  http://maps.tnc.org/resilientland/\n \n\n \n  https://mass-eoeea.maps.arcgis.com/home/item.html?id=6ef24687f7bf443085e22a1b65017354\n \n\n \n  https://www.mass.gov/doc/massachusetts-statewide-comprehensive-outdoor-recreation-plan-2023-scorp-2023/download\n \n\n \n  https://www2.census.gov/geo/pdfs/reference/GARM/Ch12GARM.pdf\n \n\n \n  https://www2.census.gov/geo/pdfs/reference/GARM/Ch12GARM.pdf\n \n\n \n  https://mass-eoeea.maps.arcgis.com/apps/webappviewer/index.html?id=1d6f63e7762a48e5930de84ed4849212\n \n\n \n  https://www.mass.gov/info-details/biomap-the-future-of-conservation-in-massachusetts\n \n\n \n  chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https:/www.nps.gov/subjects/lwcf/upload/LWCF-FA-Manual-Vol72_2023-10-01_508.pdf17\n\n Attach a one-page description of the proposed project budget including: • The source of all local funding including donations and Community Preservation Act funds. • Description of the details of any donation, if applicable (be sure these funds are gifted to the\n\n community or department and earmarked for the project). • Description of any other sources of funding including federal, state, municipal, or nonprofit\n\n organizations. List these partners and describe their contribution.\n\n 6."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4259541,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Where possible, Applicants should use firms that have signed agreements with the Department of Agricultural Resources as part of the Commonwealth Quality Program, which verifies their sustainable practices and that the products are grown and manufactured in Massachusetts. D. BUDGET REQUIREMENT: Municipal and Tribal Applicants selected to receive grant funding must show the use of funds from non-state sources for the project. Non-state funding sources include, but are not limited to, municipal funds, other grants from private or non-profit foundations, and cash contributions from local partners or individuals. As the LWCF program is a REIMBURSEMENT grant program, EEA will reimburse up to 50% of the total amount spent as shown by canceled municipal or Commonwealth (for DCR and DFG) checks up to the grant award maximum of $1,000,000. Any non-state funding sources must be deposited into a municipal, tribal, or state account the funds from which will be used to pay for the project costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3734009,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AnLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "All should include the following elements: I. Authorization to expend an amount equal to the full acquisition and/or development cost of\n\n the project. LWCF is a reimbursement program, not a match program; therefore, the total project cost must be raised or appropriated through current tax levy or borrowed; project bills paid by the municipality and then a reimbursement request is made to DCS for 50% of approved project costs up to the grant award amount.\n\n II."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3721541,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The total project cost must be raised or appropriated by the municipality or department shortly after project approval if it has not already been appropriated. Costs incurred prior to grant approval and contract execution are not eligible for reimbursement, including appraisal and/or design costs. Force account labor is also ineligible, as are donations and volunteer hours. Mention any previous, pending, or anticipated financial assistance on this project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3023932,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ar7ViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "08dbbbc93b14a76a": {
+  "query": "application narrative maximum pages formatting requirements",
+  "filter": "76f09b1ffb23378f",
+  "retrievalResults": []
+ },
+ "3d81843026ca6de2": {
+  "query": "maximum grant award amount",
+  "filter": "76f09b1ffb23378f",
+  "retrievalResults": []
+ },
+ "482491e60594a6ba": {
+  "query": "application narrative maximum pages formatting requirements",
+  "filter": "44785b1201bdf503",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "It is the Applicant’s responsibility to verify receipt of the application. A hard copy of the application must also be postmarked to the address below by the grant deadline. The outside of the package should be marked FY27LAND0025. Applications should be double sided, except for maps and graphics, and submitted to:\n\n Melissa Cryan Project # FY27LAND0025 Executive Office of Energy and Environmental Affairs 100 Cambridge Street – Suite 900 Boston, MA 02114\n\n Project proposals must include the following:\n\n  Application Form submitted using the GMS  Municipalities – Open Space and Recreation Plan (if not already on file with DCS)  Acquisition projects – appraisal report(s), including Statement of Work (note that the\n\n appraisal(s) deadline is March 1, 2027) Failure to provide any of the materials listed above may result in the disqualification of the application. See the Application Form (provided in Attachment A of this document) for more detail on required and recommended documents.\n\n \n\n \n  https://www.nps.gov/subjects/lwcf/lwcf-manual.htm\n \n\n \n  https://www.mass.gov/info-details/grants-management-system-gms\n \n\n \n  https://www.mass.gov/info-details/grants-management-system-gms9\n\n C. ADDITIONAL REQUIRED DOCUMENTATION: If selected, the Applicant will be required to submit the following forms to complete a contract or provide the information needed for the forms’ completion:\n\n • Commonwealth Standard Contract Form, signed by the Respondent • Project Scope and Budget Page(s) created by EEA • Contractor Authorized Signatory Listing • Federal Standard Form 424 • Federal Application and Revision Form • LWCF Description and Notification Form\n\n Respondents are encouraged to review the Commonwealth Standard Contract Form, Commonwealth Scope and Budget Form, and Contractor Authorized Signatory Listing prior to submission of a Response. They are available at https://www.mass.gov/lists/osd-forms."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2202766,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "LIST OF ATTACHMENTS:\n\n A. Application Form B. Boundary Map Guidelines C. LWCF Project Rating System D. Sample Municipal Vote E. Sample Budget F. Sample Statement of Work G. Resources for Designing Parks to Incorporate Climate Resilience H. EEA Grant Management System User Instructions\n\n \n\n \n  https://www.mass.gov/how-to/apply-to-the-massachusetts-land-and-water-conservation-fund-grant-program1415\n\n Attachment A FEDERAL LAND AND WATER CONSERVATION FUND\n\n FY27 APPLICATION FORM Instructions:\n\n • The application must be submitted through the EEA Grant Management System. The Applicant will be asked to enter the information below directly into the form.\n\n • Please reach out to Melissa Cryan, LWCF Grant Manager, at (857) 274-7173 or melissa.cryan@mass.gov with any questions.\n\n 1. Municipality, Tribal name, or state agency department name: ________________________________ 2. Project name: ______________________________________________________________\n\n Project street address: _______________________________________________________\n\n GPS coordinates at main entrance: _______________________ Congressional District: __________\n\n Project acreage: __________\n\n Project registry information for Development and Renovation projects only:\n\n Street address of the Registry of Deeds where the park’s deed is located\n\n (not the park’s street address): ______________________________\n\n Book: _________________ Page: ___________________\n\n Type of Project: Acquisition Acquisition and Development\n\n New Development Renovation\n\n If an acquisition, interest to be acquired: Fee Conservation Restriction\n\n Has this site received previous LWCF assistance? Yes No 3."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.213543,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Select “Login/Register” 4. Select “Create a Business Account” 5. Follow the instructions provided. 6. For help, see EEA’s Grant Management System User Guide or Instructional Videos.\n\n The user profile may require one or more days to receive verification. Once verified, you will receive an email notification and access to the Grant Management System for your organization. This portal will serve as your locale to view all grant information. You may then view the FY26 Land and Water Conservation Fund Grant Program funding opportunity and apply through the Grant Management System.\n\n Applicants may save a draft application and return to modify and/or submit until the application deadline. After the deadline, applicants will not be able to edit, add files or submit materials. Please note that the “Grant Primary Contact” must be a valid system user and will receive all relevant notifications and updates to the grant record.\n\n The online application with supporting documents must be submitted on or before Tuesday, January 5, 2027 at 11:59 pm. Submissions through the site will be digitally time stamped. EEA shall make no allowance for technical difficulties or inability of the respondents to utilize the online system. No applications will be accepted after the deadline for any reason.\n\n Digital files uploaded to the application site must be provided in Microsoft Office compatible format or unlocked Adobe Acrobat.\n\n A few tips:\n\n • Filter and sort programs by Program Name or Agency to navigate to EEA’s FY26 Land and Water Conservation Fund Grant Program."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1862714,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 39,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "North arrow. 6. Up to 11 inch x 17 inch format highly preferred for future administrative use such as copying\n\n and scanning. Avoid use of color as the only means to delineate areas.24\n\n Attachment C\n\n LWCF RATING SYSTEM\n\n Conservation Projects Recreation Projects Relevance to Statewide Comprehensive Outdoor Recreation Plan – how well does the project fit into the four goals of the SCORP? Points awarded on the number of goals met by the proposed project.\n\n 8 for 4 goals 6 for 3 goals 4 for 2 goals 2 for 1 goal (partial points may be awarded)\n\n Relevance to Statewide Comprehensive Outdoor Recreation Plan – how well does the project fit into the four goals of the SCORP? Points awarded on the number of goals met by the proposed project.\n\n 8 for 4 goals 6 for 3 goals 4 for 2 goals 2 for 1 goal (partial points may be awarded)\n\n Relevance to Open Space and Recreation Plan (for municipalities only) – how well does the project fit into the goals and objectives of the community’s OSRP. Points awarded on the specificity of project reference in the plan.\n\n 5 for specific reference to project 2 for indirect reference to project\n\n Relevance to Open Space and Recreation Plan (for municipalities only) – how well does the project fit into the goals and objectives of the community’s OSRP. Points awarded on the specificity of project reference in the plan.\n\n 5 for specific reference to project 2 for indirect reference to project\n\n Relevance to agency’s land acquisition or recreation capital plan (for state agencies only) – how well does the project fit into the agency’s land acquisition plan.\n\n 5 for specific reference to project 2 for indirect reference to project\n\n Relevance to agency’s land acquisition or recreation capital plan (for state agencies only) – how well does the project fit into the agency’s land acquisition plan.\n\n 5 for specific reference to project 2 for indirect reference to project\n\n Environmental Justice – does the project provide access to recreational resources to Environmental Justice populations?\n\n 4 points per EJ criteria within project location’s Census block group (12 pts max)\n\n Environmental Justice – does the project provide access to recreational resources to Environmental Justice populations?\n\n 4 points per EJ criteria within project location’s Census block group (12 pts max)\n\n Access for People with Disabilities – does the project provide access for people with disabilities? Points awarded based on thorough and creative accessibility plans are for people with disabilities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1838737,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AurViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 23,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A registered survey plan with deed references or assessor’s map with block and lot number are acceptable.\n\n 2. USGS Locus Map showing project boundaries, any adjacent or nearby public or quasi-public park or conservation land, nearby public transportation route(s), bike paths, trails, and EJ populations in project site area.\n\n 3. Massachusetts Historical Commission comments: Send the MHC a PNF with a photocopy of the USGS locus map with the property boundaries clearly indicated, smaller-scale property maps if available, and a cover letter to include information about any known historic or archaeological sites. See these webpages for any questions: http://www.sec.state.ma.us/mhc/mhcpdf/pnfguide.pdf and http://www.sec.state.ma.us/mhc/mhcrevcom/revcomidx.htm.\n\n 4. Massachusetts Natural Heritage and Endangered Species Program comments: Letter from the Natural Heritage and Endangered Species Program (NHESP) indicating the presence or absence of rare and endangered species on properties included in the application. To request comments, please submit a Request for State-listed Species Information to the NHESP. See https://www.mass.gov/how-to/request- rare-species-information for information on submitting that request online or by mail. The request should include “LWCF Grant” in the Project or Site Name. There is no charge for this request letter.\n\n 5. Project description and budget details, including a breakdown of how much is needed for design costs and construction costs, if proposing a development or renovation project, as well as any donations from partners. The project description should be written with the LWCF Rating System in mind so that the project can be awarded the most points available. (This fulfills questions 4 and 5 from application form.)\n\n 6. Evidence of public meeting on proposed project (copy of announcement and a list of where it was posted or actual newspaper ad and attendance sheets). Concentrate on local neighborhood participation by posting notices with tenants’ associations, in local grocery stores, or with Community Development Corporations. Pay special attention to Environmental Justice neighborhoods in the community. Please look at EEA’s Environmental Justice Policy to ensure proper outreach procedures in EJ neighborhoods, which includes, but is not limited to, advertising the public meeting in the language spoken in the neighborhood and having translation services available.\n\n 7. Preliminary park designs or plans for walking paths and trails on conservation acquisitions that demonstrate the site’s accessibility for people with disabilities.\n\n 8."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1784123,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtrViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Up to 10 points for design that incorporates resiliency, such as tree planting, removal of asphalt, permeable surfaces, rain gardens, etc.\n\n Access to open space – is the land in a Census-designated Urban Area or the trailhead is within a half-mile of a transit stop (for conservation land acquisition projects)?\n\n 5 points for each category (10 pts max)\n\n Access to open space – Does the park design facilitate community gatherings, such as community gardens, dog parks, Farmers’ Markets, etc. or makes previously acquired conservation land more accessible to the public by creating amenities, such as campsites, kiosks, trailheads?\n\n Up to 10 points\n\n Stewardship – does the applicant have a proven record of stewardship capacity and ability to currently steward the property? Points awarded based on demonstrated staff, volunteers, and/or financial capacity.\n\n Up to 6 points Stewardship – does the applicant have a proven record of stewardship capacity and ability to currently steward the property? Points awarded based on demonstrated staff, volunteers, and/or financial capacity.\n\n Up to 6 points\n\n Application quality – how thorough is the application? Points awarded to well organized and complete BID responses.\n\n 4 points for organization 2 points for thoroughness (partial points may be awarded) (6 pts max)\n\n Application quality – how thorough is the application? Points awarded to well organized and complete BID responses.\n\n 4 points for organization 2 points for thoroughness (partial points may be awarded) (6 pts max)\n\n Project quality – how well does the proposed project meet the goals of the Land and Water Conservation Fund?\n\n Up 18 points Project quality – how well does the proposed project meet the goals of the Land and Water Conservation Fund?\n\n Up 18 points26\n\n Attachment D\n\n SAMPLE MUNICIPAL VOTE\n\n Each community should draft its warrant article or city council order with the guidance of municipal counsel. The form will vary with the type of project, source of funding, etc."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.174232,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 25,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This is a resolution, motion, or similar action that has been duly adopted or passed as an official act of the community's governing body that authorizes the filing of the applications, including all understandings and assurances contained therein by the signatory, usually a page from the town/city charter will satisfy this requirement (this is not a DCS form to be completed, nor is it specific to this grant application); and\n\n b) Authorization for Application: Copy and paste this language into a letter and upload it as a part of this application:\n\n Authorization for Application\n\n The undersigned hereby certifies that they are authorized, by the bylaws or charter of ___________ or\n\n otherwise by law, acting in their official capacity as the ____________________ of said municipality\n\n and on behalf of said municipality, to submit the foregoing application for a grant from the Executive\n\n Office of Energy & Environmental Affairs, and hereby authorizes the person designated below as\n\n project manager to collaborate with the Executive Office of Energy & Environmental Affairs on matters\n\n pertaining to the grant application.\n\n Chief Executive Officer Signature: _____________ Printed Name: ______________ Date: _______\n\n Authorized project manager: Name: ___________________________ Position: ________________\n\n \n\n \n  https://www.mass.gov/topics/wetlands-waterways\n \n\n \n  https://www.mass.gov/regulations/301-CMR-1100-mepa-regulations20\n\n PLEASE LABEL ALL ATTACHMENTS\n\n REQUIRED ATTACHMENTS (applications that are missing these items will not be accepted) 1. Municipal Open Space and Recreation Plan, if not already approved and on file at DCS. Plans are\n\n approved by DCS for up to seven years of eligibility in DCS grant programs. Community is not eligible to apply without an approved plan, or submission of a draft plan. (If we have it on file, don’t send another copy.)\n\n 2. Acquisition Projects – Appraisal report as required by DCS. All applicants applying for an acquisition project must be in touch with Melissa Cryan no later than December 4, 2026 in order to coordinate the appraisal process. Note that the appraisal(s) must be done to federal appraisal standards (“Yellow Book”). Appraisal must include Statement of Work (Attachment F).\n\n RECOMMENDED ATTACHMENTS\n\n (provides details to information requested and assists in project evaluation) 1. Project boundary map showing the project boundary, see Attachment B. The project area must be shown\n\n in enough detail to be legally sufficient to identify the lands to be protected."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1710483,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 19,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "580155c4c7a884bc": {
+  "query": "minimum and maximum request, funding available, reimbursement percentage",
+  "filter": "76f09b1ffb23378f",
+  "retrievalResults": []
+ },
+ "6db336b1326e0a5c": {
+  "query": "project description page limit length",
+  "filter": "76f09b1ffb23378f",
+  "retrievalResults": []
+ },
+ "be530f86e80b4c9b": {
+  "query": "maximum grant award amount",
+  "filter": "44785b1201bdf503",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Refer to the LWCF Manual Chapter 5 for eligible cost details. A sample budget can be found in Attachment E. Please note that LWCF grants have a maximum 50% reimbursement rate with a maximum $1,000,000 and minimum $50,000 grant request. The specific reimbursement rate for the project subject to this application will be based on what percentage the grant award is of the total eligible project cost. For acquisition projects without an appraisal at the time of the grant deadline, use best estimates here."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4107304,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The minimum grant award is $50,000. In rare circumstances, at the Secretary’s discretion, the maximum grant award for an individual project may be higher than $1,000,000 (see further detail on Funding Availability in section 2C). EEA reserves the right to fund projects through sources other than LWCF should it so choose. Note that LWCF falls under the Build America, Buy America Act. For more information on the law, as well as sourcing guidance and a potential waiver process, visit this website. G. BUDGET REQUIREMENT: Since the LWCF is a reimbursement program, municipal applicants selected to receive grant funding must have a successful City Council or Town Meeting vote that appropriates 100% of the total project cost. DCR and DFG must have capital budget approval from EEA for 100% of the eligible project budget. Tribal applicants must demonstrate their ability to pay for the project upfront. Grant recipients must use the reimbursements for projects that would qualify for LWCF. The land must not be purchased, or park development or renovation must not be started, until the selected Applicant has executed a contract with the Commonwealth or Interagency Service Agreement (ISA) with EEA in the case of state agencies. All projects must provide appropriate public access. (See further detail on budget requirement in section 2D.)"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4105487,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "In rare circumstances where the Secretary deems that the project demonstrates above average resilience to more frequent and intense storms and sea level rise, she has the sole discretion to increase the maximum grant award beyond $1,000,000. Please note that the grant reimbursement rate can go no higher than 50% as that has been set by the LWCF Act. Applicants must submit the type of appraisal appropriate for their project (if applicable), the estimated total project cost, and a specific grant request as part of the application package.\n\n \n\n \n  http://www.justice.gov/enrd/land-ack/Uniform-Appraisal-Standards.pdf\n \n\n \n  http://www.justice.gov/enrd/land-ack/Uniform-Appraisal-Standards.pdf\n \n\n \n  mailto:melissa.cryan@mass.gov6\n\n Costs eligible for reimbursement include all approved project costs incurred on or after a selected Applicant’s contract execution date and on or before December 31, 2029, such as engineering, design, construction, construction supervision, and land acquisition. Note that applications solely for designs or construction documents are not eligible for funding. Ineligible project costs include, but are not limited to, costs associated with the preparation and submission of an application in response to this BID, staff salaries, equipment, supplies, and due diligence for land acquisitions. For more on eligible and ineligible costs, see Chapter 5 of the federal LWCF Manual. Please note that the LWCF Manual acts as a guideline. It is up to Massachusetts to specifically determine what costs are eligible or ineligible for reimbursement. All contracts shall be subject to available funding, whether through the appropriation and authorization of sufficient funds or the receipt of sufficient revenues. If available funding ceases for any reason, a contract shall be deemed under suspension and contract performance must halt. A contractor will not be entitled to compensation for any performance provided during the period of contract suspension. EEA may lift the suspension if available funding is received. In the absence of foreseeable available funding, EEA may terminate the contract. Products funded with this grant (signs, fencing, landscaping timbers, structures, etc.) are strongly encouraged to be constructed of wood products grown and manufactured in Massachusetts unless the grantee can demonstrate that wood is not a suitable material or that Massachusetts grown and manufactured products are not available or will cost more than 10% more than equivalent products (MGL Chapter 30B, Section 20)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3856788,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Am7ViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Where possible, Applicants should use firms that have signed agreements with the Department of Agricultural Resources as part of the Commonwealth Quality Program, which verifies their sustainable practices and that the products are grown and manufactured in Massachusetts. D. BUDGET REQUIREMENT: Municipal and Tribal Applicants selected to receive grant funding must show the use of funds from non-state sources for the project. Non-state funding sources include, but are not limited to, municipal funds, other grants from private or non-profit foundations, and cash contributions from local partners or individuals. As the LWCF program is a REIMBURSEMENT grant program, EEA will reimburse up to 50% of the total amount spent as shown by canceled municipal or Commonwealth (for DCR and DFG) checks up to the grant award maximum of $1,000,000. Any non-state funding sources must be deposited into a municipal, tribal, or state account the funds from which will be used to pay for the project costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2613676,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AnLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "C. ELIGIBLE PROJECTS: Eligible projects are those for the acquisition of parkland, development of new parks, renovations to existing parks, development of trails in an existing conservation or recreation area, or the acquisition of conservation land. (See further detail on eligible projects in section 2B.) D. ELIGIBLE APPLICANTS: Applications will be accepted from municipalities that have Open Space and Recreation Plans that are approved or currently under review (see further detail on eligible applicants in section 2A). Also eligible are the Departments of Conservation and Recreation and Fish and Game, as well as federally recognized Indian tribes. E. APPLICATION DEADLINE: Tuesday, January 5, 2027 at 11:59 pm. (See further detail on deadlines and grant program calendar in section 4.)2\n\n F. FUNDING AVAILABILITY: LWCF funding is provided to the Commonwealth of Massachusetts by the NPS and is administered by EEA’s Division of Conservation Services (DCS). The maximum grant award is $1,000,000."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2580248,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "B. APPLICATION SUBMISSION INSTRUCTIONS: All Applicants must now use the Executive Office of Energy and Environmental Affairs (EEA) new EEA Grant Management System (GMS), a user-friendly platform designed to enhance the experience for applicants seeking grants. To submit a FY 27 LWCF grant application, please create a username and password and start the validation process, which could take several days to complete. Please note that at least one representative from the municipality, department, or tribe must have a valid account to apply for the grant. Please refer to Attachment H for further instructions regarding the GMS. Applications must be submitted via GMS by Tuesday, January 5, 2027 at 11:59 pm. Any application received after the deadline will be rejected."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2208594,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AoLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Final details will be worked out when appraisal is submitted.\n\n Total Eligible Project Cost: ___________ LWCF Request: ___________ (up to 50% of total project cost, maximum of $1,000,000, minimum of $50,000) Municipal Share: ___________ (Community Development Block Grant, Community Preservation Act, etc., please specify in narrative)\n\n Other: (i.e. private donation to community, fund raising, etc.) ___________\n\n \n\n \n  http://maps.tnc.org/resilientland/\n \n\n \n  https://mass-eoeea.maps.arcgis.com/home/item.html?id=6ef24687f7bf443085e22a1b65017354\n \n\n \n  https://www.mass.gov/doc/massachusetts-statewide-comprehensive-outdoor-recreation-plan-2023-scorp-2023/download\n \n\n \n  https://www2.census.gov/geo/pdfs/reference/GARM/Ch12GARM.pdf\n \n\n \n  https://www2.census.gov/geo/pdfs/reference/GARM/Ch12GARM.pdf\n \n\n \n  https://mass-eoeea.maps.arcgis.com/apps/webappviewer/index.html?id=1d6f63e7762a48e5930de84ed4849212\n \n\n \n  https://www.mass.gov/info-details/biomap-the-future-of-conservation-in-massachusetts\n \n\n \n  chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https:/www.nps.gov/subjects/lwcf/upload/LWCF-FA-Manual-Vol72_2023-10-01_508.pdf17\n\n Attach a one-page description of the proposed project budget including: • The source of all local funding including donations and Community Preservation Act funds. • Description of the details of any donation, if applicable (be sure these funds are gifted to the\n\n community or department and earmarked for the project). • Description of any other sources of funding including federal, state, municipal, or nonprofit\n\n organizations. List these partners and describe their contribution.\n\n 6."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2203579,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "bfe9d21c61390373": {
+  "query": "due date for applications key dates",
+  "filter": "76f09b1ffb23378f",
+  "retrievalResults": []
+ },
+ "d3e0d9bf33d5abdc": {
+  "query": "project description page limit length",
+  "filter": "44785b1201bdf503",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Briefly describe the project on TWO attached pages (writing should be no smaller than single spaced,\n\n 11-point font, ¾” margins). Use the LWCF Rating System as an outline for the description, including (but not limited to) what is listed below, to ensure the maximum score possible for your project. • How the project will improve community health and resilience to climate change in the project’s\n\n neighborhood (e.g. reducing the heat island effect, mitigating stormwater and flooding issues, filtering pollution from local traffic and other sources, etc.; for acquisition projects include the TNC\n\n \n\n \n  https://www.mass.gov/info-details/grants-management-system-gms\n \n\n \n  mailto:melissa.cryan@mass.gov\n \n\n \n  http://maps.tnc.org/resilientland/16\n\n resiliency map and for park projects include the Hot Spots map) • Relevance to the Statewide Comprehensive Outdoor Recreation Plan and (for municipalities) local\n\n Open Space and Recreation Plan or (for departments) agency acquisition plan • How the project will increase the availability of recreational opportunities to residents in areas of\n\n the state that currently have inadequate access to open space o For conservation acquisitions, describe how the project provides access to those in Census-\n\n designated Urban Areas and/or if the trailhead is within a half-mile of a transit stop o For recreation projects, describe how the park will facilitate community gatherings\n\n • Ability for the project to provide access to people with disabilities – describe how the project goes above and beyond what is required by law\n\n • For projects in Environmental Justice neighborhoods, provide information on how use of new or restored greenspace will be encouraged\n\n • How the site is well equipped to deal with climate change – for acquisitions, is it mapped as resilient or are there BioMap elements on the parcel; for park development, does the site design consider climate resiliency?\n\n • Describe stewardship activities undertaken in your community/department – provide detailed information on baselines completed, staff dedicated to stewardship activities such as maintenance, number of LWCF inspection reports completed, etc.\n\n • Creation of new trails or expansion or connection of existing trail(s) • Water-based recreation (include linear footage of water resource, including beach shoreline, and\n\n what types of recreation will be provided, including wildlife viewing and shore fishing)\n\n 5. Proposed Funding: The LWCF program is a reimbursement program. Grant recipients are reimbursed after invoices have been paid."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.274507,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ArrViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "North arrow. 6. Up to 11 inch x 17 inch format highly preferred for future administrative use such as copying\n\n and scanning. Avoid use of color as the only means to delineate areas.24\n\n Attachment C\n\n LWCF RATING SYSTEM\n\n Conservation Projects Recreation Projects Relevance to Statewide Comprehensive Outdoor Recreation Plan – how well does the project fit into the four goals of the SCORP? Points awarded on the number of goals met by the proposed project.\n\n 8 for 4 goals 6 for 3 goals 4 for 2 goals 2 for 1 goal (partial points may be awarded)\n\n Relevance to Statewide Comprehensive Outdoor Recreation Plan – how well does the project fit into the four goals of the SCORP? Points awarded on the number of goals met by the proposed project.\n\n 8 for 4 goals 6 for 3 goals 4 for 2 goals 2 for 1 goal (partial points may be awarded)\n\n Relevance to Open Space and Recreation Plan (for municipalities only) – how well does the project fit into the goals and objectives of the community’s OSRP. Points awarded on the specificity of project reference in the plan.\n\n 5 for specific reference to project 2 for indirect reference to project\n\n Relevance to Open Space and Recreation Plan (for municipalities only) – how well does the project fit into the goals and objectives of the community’s OSRP. Points awarded on the specificity of project reference in the plan.\n\n 5 for specific reference to project 2 for indirect reference to project\n\n Relevance to agency’s land acquisition or recreation capital plan (for state agencies only) – how well does the project fit into the agency’s land acquisition plan.\n\n 5 for specific reference to project 2 for indirect reference to project\n\n Relevance to agency’s land acquisition or recreation capital plan (for state agencies only) – how well does the project fit into the agency’s land acquisition plan.\n\n 5 for specific reference to project 2 for indirect reference to project\n\n Environmental Justice – does the project provide access to recreational resources to Environmental Justice populations?\n\n 4 points per EJ criteria within project location’s Census block group (12 pts max)\n\n Environmental Justice – does the project provide access to recreational resources to Environmental Justice populations?\n\n 4 points per EJ criteria within project location’s Census block group (12 pts max)\n\n Access for People with Disabilities – does the project provide access for people with disabilities? Points awarded based on thorough and creative accessibility plans are for people with disabilities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.231266,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AurViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 23,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Final details will be worked out when appraisal is submitted.\n\n Total Eligible Project Cost: ___________ LWCF Request: ___________ (up to 50% of total project cost, maximum of $1,000,000, minimum of $50,000) Municipal Share: ___________ (Community Development Block Grant, Community Preservation Act, etc., please specify in narrative)\n\n Other: (i.e. private donation to community, fund raising, etc.) ___________\n\n \n\n \n  http://maps.tnc.org/resilientland/\n \n\n \n  https://mass-eoeea.maps.arcgis.com/home/item.html?id=6ef24687f7bf443085e22a1b65017354\n \n\n \n  https://www.mass.gov/doc/massachusetts-statewide-comprehensive-outdoor-recreation-plan-2023-scorp-2023/download\n \n\n \n  https://www2.census.gov/geo/pdfs/reference/GARM/Ch12GARM.pdf\n \n\n \n  https://www2.census.gov/geo/pdfs/reference/GARM/Ch12GARM.pdf\n \n\n \n  https://mass-eoeea.maps.arcgis.com/apps/webappviewer/index.html?id=1d6f63e7762a48e5930de84ed4849212\n \n\n \n  https://www.mass.gov/info-details/biomap-the-future-of-conservation-in-massachusetts\n \n\n \n  chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https:/www.nps.gov/subjects/lwcf/upload/LWCF-FA-Manual-Vol72_2023-10-01_508.pdf17\n\n Attach a one-page description of the proposed project budget including: • The source of all local funding including donations and Community Preservation Act funds. • Description of the details of any donation, if applicable (be sure these funds are gifted to the\n\n community or department and earmarked for the project). • Description of any other sources of funding including federal, state, municipal, or nonprofit\n\n organizations. List these partners and describe their contribution.\n\n 6."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2101717,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "E. PROJECT TERMS: All final contracts are subject to successful negotiation of a Final Scope of Services, as well as approval from the NPS. For more on the LWCF selection process, please see Chapter 6 of the LWCF Manual. Please note that EEA does not guarantee that any contracts may result from this BID or that any particular funding level will be awarded. It is anticipated that projects could commence immediately upon EEA’s decision and the NPS approval. The awarded contract(s) will be reviewed during their course and, upon request by the Applicant, may be extended or otherwise amended at the discretion of EEA and NPS. Any extensions\n\n \n\n \n  https://www.nps.gov/subjects/lwcf/lwcf-manual.htm\n \n\n \n  https://www.nps.gov/subjects/lwcf/lwcf-manual.htm7\n\n granted will not necessarily change, or increase, the monetary value of the contract. F. ANTICIPATED DURATION OF CONTRACTS: The anticipated end date of contracts awarded through this BID is December 31, 2029. Extension of the contract is at the discretion of the Secretary and the NPS. All land must be purchased on or before December 31, 2029 and all construction work must be completed on or before December 31, 2029 to be eligible for reimbursement. Timelines for each project will be included in the State Standard Contract or ISA and may be different than these dates."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1947846,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AnbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Up to 8 points for plans that go above and beyond ADA requirements (ie, Braille trails)\n\n Access for People with Disabilities – does the project provide access for people with disabilities? Points awarded based on thorough and creative accessibility plans are for people with disabilities.\n\n Up to 8 points for plans that go above and beyond ADA requirements (ie, Boundless Playgrounds)\n\n Availability of Water-based Recreation – does the project provide access to water-based recreation, most importantly, beaches of all kinds, or protect a water resource that allows for recreation? Most points awarded to projects with beaches.\n\n 10 points for the ability to recreate at a beach 7 points for the ability to recreate at other water bodies 5 points for shore fishing opportunities 2 points for viewing water resource (10 pts max)\n\n Availability of Water-based Recreation – does the project provide access to water-based recreation, most importantly, beaches of all kinds? Most points awarded to projects with beaches.\n\n 10 points for the ability to recreate at a beach 7 points for the ability to recreate at other water bodies 5 points for shore fishing opportunities 2 points for viewing water resource (10 pts max)25\n\n Trails – does the project facilitate the connection or completion of existing trail networks or create new trails or walking paths in a community/ region? Points awarded based on the increase in availability of trails/paths in the community.\n\n 7 points for land acquisition that will connect existing trail networks 4 points for land acquisition that will contain an isolated trail (7 pts max)\n\n Trails – does the project facilitate the connection or completion of existing trail networks or create new trails or walking paths in a community/region? Points awarded based on the increase in availability of trails/paths in the community.\n\n 7 points for land acquisition that will connect existing trail networks 4 points for land acquisition that will contain an isolated trail (7 pts max)\n\n Climate resiliency – how much of the parcel is mapped as resilient for climate change or BioMap Core, Critical Natural Landscape, or a Local or Regional Component (for conservation land acquisition projects)?\n\n 10 pts = >75% is designated 8 pts = 51%-75% is designated 6 pts = 26%-50% is designated 4 pts = 1%-25% is designated 1 pt = Project abuts designated lands\n\n Climate resiliency – does the park’s design incorporate resilient design standards (for recreation projects)?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1856366,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Au7ViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Up to 10 points for design that incorporates resiliency, such as tree planting, removal of asphalt, permeable surfaces, rain gardens, etc.\n\n Access to open space – is the land in a Census-designated Urban Area or the trailhead is within a half-mile of a transit stop (for conservation land acquisition projects)?\n\n 5 points for each category (10 pts max)\n\n Access to open space – Does the park design facilitate community gatherings, such as community gardens, dog parks, Farmers’ Markets, etc. or makes previously acquired conservation land more accessible to the public by creating amenities, such as campsites, kiosks, trailheads?\n\n Up to 10 points\n\n Stewardship – does the applicant have a proven record of stewardship capacity and ability to currently steward the property? Points awarded based on demonstrated staff, volunteers, and/or financial capacity.\n\n Up to 6 points Stewardship – does the applicant have a proven record of stewardship capacity and ability to currently steward the property? Points awarded based on demonstrated staff, volunteers, and/or financial capacity.\n\n Up to 6 points\n\n Application quality – how thorough is the application? Points awarded to well organized and complete BID responses.\n\n 4 points for organization 2 points for thoroughness (partial points may be awarded) (6 pts max)\n\n Application quality – how thorough is the application? Points awarded to well organized and complete BID responses.\n\n 4 points for organization 2 points for thoroughness (partial points may be awarded) (6 pts max)\n\n Project quality – how well does the proposed project meet the goals of the Land and Water Conservation Fund?\n\n Up 18 points Project quality – how well does the proposed project meet the goals of the Land and Water Conservation Fund?\n\n Up 18 points26\n\n Attachment D\n\n SAMPLE MUNICIPAL VOTE\n\n Each community should draft its warrant article or city council order with the guidance of municipal counsel. The form will vary with the type of project, source of funding, etc."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1777478,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 25,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Refer to the LWCF Manual Chapter 5 for eligible cost details. A sample budget can be found in Attachment E. Please note that LWCF grants have a maximum 50% reimbursement rate with a maximum $1,000,000 and minimum $50,000 grant request. The specific reimbursement rate for the project subject to this application will be based on what percentage the grant award is of the total eligible project cost. For acquisition projects without an appraisal at the time of the grant deadline, use best estimates here."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1749183,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "ea7ef1e1a847248d": {
+  "query": "application submission deadline",
+  "filter": "44785b1201bdf503",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "B. APPLICATION SUBMISSION INSTRUCTIONS: All Applicants must now use the Executive Office of Energy and Environmental Affairs (EEA) new EEA Grant Management System (GMS), a user-friendly platform designed to enhance the experience for applicants seeking grants. To submit a FY 27 LWCF grant application, please create a username and password and start the validation process, which could take several days to complete. Please note that at least one representative from the municipality, department, or tribe must have a valid account to apply for the grant. Please refer to Attachment H for further instructions regarding the GMS. Applications must be submitted via GMS by Tuesday, January 5, 2027 at 11:59 pm. Any application received after the deadline will be rejected."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3730757,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AoLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "While not required, it is strongly recommended that applicants attend one of the workshops. Please RSVP for a workshop to melissa.cryan@mass.gov. When you RSVP, specify which you will be attending. If you select the virtual workshop, you will receive the Microsoft Teams invitation upon RSVPing. The workshop presentation and answers to any questions received in writing by Tuesday, December 22, 2026 will be posted on the DCS website. Any questions received after that date cannot be answered by the LWCF Stateside Coordinator. C. APPLICATION DUE DATE: Tuesday, January 5, 2027 at 11:59 pm."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3697442,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "D. ESTIMATED AWARD DATE: The Commonwealth of Massachusetts’ decisions are estimated to be\n\n \n\n \n  https://www.nps.gov/subjects/lwcf/lwcf-manual.htm\n \n\n \n  https://www.google.com/maps?q=1+Rabbit+Hill+Road,+Westborough,+MA+01581\n \n\n \n  mailto:melissa.cryan@mass.gov13\n\n announced on or about 100 days after grant application deadline. Please note that the NPS approval takes place after the state’s and may take a significant amount of time."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3502729,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqrViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Select “Login/Register” 4. Select “Create a Business Account” 5. Follow the instructions provided. 6. For help, see EEA’s Grant Management System User Guide or Instructional Videos.\n\n The user profile may require one or more days to receive verification. Once verified, you will receive an email notification and access to the Grant Management System for your organization. This portal will serve as your locale to view all grant information. You may then view the FY26 Land and Water Conservation Fund Grant Program funding opportunity and apply through the Grant Management System.\n\n Applicants may save a draft application and return to modify and/or submit until the application deadline. After the deadline, applicants will not be able to edit, add files or submit materials. Please note that the “Grant Primary Contact” must be a valid system user and will receive all relevant notifications and updates to the grant record.\n\n The online application with supporting documents must be submitted on or before Tuesday, January 5, 2027 at 11:59 pm. Submissions through the site will be digitally time stamped. EEA shall make no allowance for technical difficulties or inability of the respondents to utilize the online system. No applications will be accepted after the deadline for any reason.\n\n Digital files uploaded to the application site must be provided in Microsoft Office compatible format or unlocked Adobe Acrobat.\n\n A few tips:\n\n • Filter and sort programs by Program Name or Agency to navigate to EEA’s FY26 Land and Water Conservation Fund Grant Program."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2709432,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 39,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "It is the Applicant’s responsibility to verify receipt of the application. A hard copy of the application must also be postmarked to the address below by the grant deadline. The outside of the package should be marked FY27LAND0025. Applications should be double sided, except for maps and graphics, and submitted to:\n\n Melissa Cryan Project # FY27LAND0025 Executive Office of Energy and Environmental Affairs 100 Cambridge Street – Suite 900 Boston, MA 02114\n\n Project proposals must include the following:\n\n  Application Form submitted using the GMS  Municipalities – Open Space and Recreation Plan (if not already on file with DCS)  Acquisition projects – appraisal report(s), including Statement of Work (note that the\n\n appraisal(s) deadline is March 1, 2027) Failure to provide any of the materials listed above may result in the disqualification of the application. See the Application Form (provided in Attachment A of this document) for more detail on required and recommended documents.\n\n \n\n \n  https://www.nps.gov/subjects/lwcf/lwcf-manual.htm\n \n\n \n  https://www.mass.gov/info-details/grants-management-system-gms\n \n\n \n  https://www.mass.gov/info-details/grants-management-system-gms9\n\n C. ADDITIONAL REQUIRED DOCUMENTATION: If selected, the Applicant will be required to submit the following forms to complete a contract or provide the information needed for the forms’ completion:\n\n • Commonwealth Standard Contract Form, signed by the Respondent • Project Scope and Budget Page(s) created by EEA • Contractor Authorized Signatory Listing • Federal Standard Form 424 • Federal Application and Revision Form • LWCF Description and Notification Form\n\n Respondents are encouraged to review the Commonwealth Standard Contract Form, Commonwealth Scope and Budget Form, and Contractor Authorized Signatory Listing prior to submission of a Response. They are available at https://www.mass.gov/lists/osd-forms."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2594749,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AobViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Post completion requirements: Participants should review DCS and NPS Post Completion\n\n requirements regarding fees, user limitations, and prohibitions against converting the conservation land or parkland to any other use or transfer of ownership in Chapter 8 of the LWCF Manual.\n\n 21. Public records: Please note that all responses and information submitted in response to this\n\n BID are subject to the Massachusetts Public Records Law, M.G.L. c. 66, s. 10, and to c. 4, s. 7, ss. 26. Any statements in submitted responses that are inconsistent with these statutes, including marking of information as confidential, shall be disregarded. Please do not submit any information that the Applicant may not wish to disclose publicly, such as home addresses or personal telephone numbers, social security numbers, or other similar information.\n\n 4. Deadlines and Procurement Calendar\n\n A. RELEASE OF BID: September 25, 2026 B. INFORMATION SESSION: Two information sessions will be held: the first virtual only on Wednesday, December 2, 2026 at 2:00 pm on Microsoft Teams and the second on Thursday, December 3, 2026 at 11:00 am in person only at the DFW Field Headquarters in Westboro. It is highly preferable to attend the in-person workshop."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2496068,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AqLViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Conservation Restriction review: Projects that involve a Conservation Restriction must\n\n have a draft CR reviewed by DCS. Draft CRs should be submitted no less than three months prior to closing date, refer to the DCS CR website for further instructions on how to submit a CR for review.\n\n 11. Municipal/Departmental/Tribal funding secured:\n\n a."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2303333,
+    "metadata": {
+     "documentIdentifier": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "agency": "Executive Office of Energy and Environmental Affairs, Division of Conservation Services",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApbViYKEBbayybwJOS_jc",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant/NOFO-File-PDF",
+     "nofoName": "FY27 Massachusetts Land and Water Conservation Fund (LWCF) Grant",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "state",
+     "processedAt": "2026-10-21T21:27:23.528Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "MA",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "f1188a1d59670805": {
+  "query": "application submission deadline",
+  "filter": "76f09b1ffb23378f",
+  "retrievalResults": []
+ }
+}

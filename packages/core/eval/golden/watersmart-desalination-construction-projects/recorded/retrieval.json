@@ -1,0 +1,1451 @@
+{
+ "01b031464c532306": {
+  "query": "allowable and unallowable costs construction project",
+  "filter": "67d8b8f5f7ad43fd",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the project is selected for award,\n\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdfPage 13 of 29\n\n these costs will be reviewed for accuracy and adjusted as needed. See “Administration and National Policy Requirements” for additional detail.\n\n Some of the projects funded under this NOFO typically incur high compliance costs (e.g., between $30,000 and $200,000 per project). In some cases, Reclamation may be able to complete a portion of its compliance activities without additional cost to the recipient. The actual amount of costs to the recipient associated with compliance will be identified while developing a final project budget for inclusion in the financial assistance agreement. If it is determined that the recipient will need to contribute funds for compliance costs, funds will be withheld from the grant agreement to cover such costs or will be incorporated into the budget as a cost-shared line item. If the recipient is responsible for covering a portion of the compliance costs, under no circumstances will the funds awarded exceed the amount allowable under this NOFO and cannot exceed what was requested in the application. If a portion of the amount budgeted in your application for compliance is not needed for compliance activities, that amount may be reallocated to other project costs during the process of developing a financial assistance agreement, so long as the non-Federal cost share contribution is maintained.\n\n Design and Cost Estimating Review: For projects with an estimated total project cost greater than or equal to $500 million that include final design or construction during the project performance period, Reclamation may conduct a programmatic check-in to review additional design and cost estimating information. Documents requested for this review will vary depending on the stage of development of the project. The following is a description of the types of documents that may be requested for review:\n\n • A design report that includes preliminary outline drawings of major features with the purpose of depicting layouts, process diagrams, and supporting cost estimates with unit prices, pay items, quantities, allowances, and assumptions.\n\n • A “Basis of Design” document for final design stages that identifies technical design criteria, design codes, and site-specific design drawings that include plan, elevation, and section drawings.\n\n Conflict of Interest and Unresolved Matters Disclosures:\n\n If any actual or potential conflict of interest exists related to this project at the time of application, the applicant must provide sufficient information to support a program determination of significance per 2 CFR 1402.112."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4090326,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A57VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Attachment B is a suggested format for capturing budget details to support the Narrative.\n\n The Federal share (i.e., Reclamation’s share in addition to any other sources of Federal funding), of any desalination project under Section 4009(a) of the WIIN Act, including any funding provided as a result of this NOFO, shall not exceed 25 percent of the total project cost.\n\n While the Project Narrative and responses to the majority of the Merit Review Criteria should include the scope of the project as a whole, budgets submitted under this NOFO may only include costs incurred after the date of Reclamation’s feasibility determination, and within three years from the application deadline for each submission period under this NOFO. Applicants may include work: • Planned within three years of the application’s submission deadline. For example, if an application is submitted on August 26, 2026, work planned through August 26, 2029, may be included; and • Eligible costs submitted for consideration must be for work conducted after the date of Reclamation’s feasibility study review findings for the project.\n\n Pre-award costs\n\n Pre-award costs (defined at 2 CFR 200.458) are allowed, subject to Grant Officer approval. To be eligible, pre-award costs must be incurred after the date of Reclamation’s feasibility study review findings. Pre-award costs are at the applicant’s risk. Successful applicants may submit requests for approval of pre-award costs to the awarding Grant Officer.\n\n Program Cost Restrictions Proposal costs: The costs for preparing and submitting an application in response to this funding opportunity, including developing data necessary to support the proposal, are not eligible project costs and must not be included in the project budget.\n\n Feasibility Study costs: The costs for preparing and submitting water recycling feasibility studies to meet the requirements of Reclamation’s Directives and Standards WTR 11-01, Title XVI Water Reclamation and Reuse Program and Desalination Construction Program Feasibility Study Review Process, or the additional requirements established in WTR TRMR-128, Large- Scale Water Recycling Program Feasibility Study Review Process are not eligible project costs and must not be included in the project budget.\n\n Environmental and Regulatory Compliance Costs Include costs in the budget for completing compliance activities for Federal environmental and cultural resources laws and regulations. Applicants should contact their local Reclamation office to discuss the compliance requirements and potential costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4073455,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Letters of support will not be counted towards page limits.\n\n Budget Narrative Applicants must describe and justify items and costs listed in their budget. The budget narrative must identify the following cost items: total estimated costs, non-Federal cost share, third-party contributions, and any pre-award costs. Total project cost is the sum of all allowable costs, including required and voluntary cost share and third-party contributions.\n\n Budget items must be:\n\n • Reasonable, allowable, allocable, and necessary • Compliant with 2 CFR §200 Subpart E cost principles\n\n Indirect Costs: Applicants must indicate in their budget narrative how they will charge indirect costs, including the rate to be applied:\n\n • De Minimis Rate: If eligible, state if your organization is opting to use the de minimis rate of up to 15% of total modified direct costs. Entities that do not have a current Federal negotiated indirect cost rate (including provisional rate) may propose to use the de minimis rate. For more information, refer to 2 CFR 200.414(f)"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3724608,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• The total estimated or actual costs to plan and design the project. Note: This should not include the cost to complete a feasibility study that meets the requirements of Reclamation’s Directives and Standards WTR 11-01.\n\n • The estimated expected average annual operation and maintenance costs for the life of the project. Do not include periodic replacement costs in the operation and maintenance costs.\n\n \n\n \n  http://www.usbr.gov/watersmart/title/faq.html\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdfPage 20 of 29\n\n Periodic replacement costs should be provided separately in response to Table 2 below. Note: this is an annual cost—not total cost"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2952075,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Note: Leveraging the experience of international partners does not include hiring an architecture and engineering firm or contractor with international employees or who happen to have done work in other countries.\n\n Merit Review Criterion F: Construction Priority (10 points)\n\n Up to 10 points may be awarded based on the extent that the proposed project is a construction project that can be completed within the allowable project duration. Projects that focus on construction of hard infrastructure to deliver durable, long-term improvements in water reliability and resilience will be prioritized. Hard infrastructure is tangible or built infrastructure. Please identify the hard infrastructure construction components of the project, if applicable.Page 24 of 29\n\n Merit Review Criterion G: Cost Share Priority (5 points)\n\n Up to 5 points may be awarded to proposals that include non-Federal cost share contributions exceeding the statutory minimum by at least 5 percent. Projects with a higher non-Federal cost share may be awarded more points. State the percentage of non-Federal funding provided using the following calculation:\n\n Non-Federal Funding / Total Project Cost = %\n\n See Cost Sharing Requirement and Budget Narrative for more information on cost-share requirements and eligible costs.\n\n Note: projects selected for award will have reported cost-share amounts verified."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2951407,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Ineligible Applicants - Those not eligible include, but are not limited to, the following entities:\n\n • Federal Governmental entities • Foreign entities • Individuals • Institutes of higher education\n\n Cost Sharing Requirement Cost Sharing Required? Yes 75% of total project costs.\n\n All cost-share contributions must be non-Federal in original source and meet the requirements of 2 CFR 200.306. Total project cost is the sum of all allowable costs, including cost share and third-party contributions. For example, if the total project cost is $10 million, the minimum amount of non-Federal cost share would be $7,500,000.\n\n Total Project Costs $10,000,000 Minimum required cost share- 75% x 75% Applicant share of project costs $7,500,000 Federal share $2,500,000Page 4 of 29\n\n GET READY TO APPLY\n\n Required System Registrations Unique Entity Identifier and SAM.gov Registration\n\n Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov. During the SAM.gov registration the entity will obtain their Unique Entity Identifier (UEI)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2919716,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A17VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Page 19 of 29\n\n o Has the project area been identified by the United States Drought Monitor as experiencing severe, extreme, or exceptional drought, or been designated as a drought disaster area by the State, at any time in the last 4 years? If so, provide details.\n\n Merit Review Criterion C: Economic Analysis (20 points)\n\n Up to 20 points may be awarded based on the economic analysis conducted to demonstrate the cost effectiveness of the project and the project’s benefits relative to the project’s costs.\n\n Subcriterion No. C.1.—Cost Effectiveness Analysis\n\n Points will be awarded based on the cost per acre-foot of water expected to be delivered upon completion of the project and how the cost of the project compares to a non-desalination alternative. Use costs related to the entire project, not just the cost of work over the next 3 years or the phase currently under development. Costs should be provided for the entire project described in the Reclamation-approved feasibility study.\n\n Reclamation will calculate the cost per acre-foot of water produced by the project using information provided by applicants. For a description of how this calculation is done, see the Title XVI Frequently Asked Questions webpage at www.usbr.gov/watersmart/title/faq.html.\n\n Provide the following information for this calculation:\n\n • The total estimated construction costs, by year, for the project (include all previous and planned work) as shown in Table 1.\n\n Table 1.—Estimated Construction Costs by Calendar Year\n\n Year Construction Cost Year Construction Cost\n\n 1. 6.\n\n 2. 7.\n\n 3. 8.\n\n 4. 9.\n\n 5. 10."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.268112,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A77VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "380cb1a5f0dc0744": {
+  "query": "application due date and time, SAM.gov registration and Grants.gov deadline",
+  "filter": "67d8b8f5f7ad43fd",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The SAM.gov registration process can take several months. If your organization is not already registered in SAM.gov, begin the registration process as soon as possible.\n\n To register in SAM.gov, go to the SAM.gov website and use the available resources to complete registration.\n\n • Financial assistance registrants must review and certify compliance with the SAM.gov “Financial Assistance General Representations and Certifications”."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.6167914,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A2LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Difficulties related to an applicant’s Grants.gov profile (e.g., incorrect organizational representative), uploading documents to Grants.gov, or an applicant’s SAM.gov registration are not considered technical issues with the Grants.gov system.\n\n Submission Dates and Times Closing Date for Applications: 08/26/2027\n\n Closing Date Explanation\n\n This NOFO will have two application submission periods with a final closing date of August 26, 2027. The due dates for each closing period are:\n\n The first application submission period due date is August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT).\n\n The second and final application submission period due date is August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT). Applications received after August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT) and before August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT), will be considered for the second application submission period.\n\n Submission Instructions Apply Through Grants.gov To apply through Grants.gov, please follow the instructions in the Quick Start Guide for Applicants. Before applying, ensure that at least one person at your organization is registered and has the Authorized Organization Representative (AOR). Only the AOR can submit the\n\n \n\n \n  https://www.grants.gov/applicants/grant-applications/how-to-apply-for-grants\n \n\n \n  mailto:bor-sha-fafoa@usbr.gov\n \n\n \n  https://www.grants.gov/\n \n\n \n  https://grants.gov/register\n \n\n \n  https://www.grants.gov/quick-start-guide/applicants\n \n\n \n  http://www.grants.gov/quick-start-guide/applicantsPage 15 of 29\n\n application. If you need more users, they must create their own Grants.gov account. Follow these steps below to apply:\n\n • Create a Workspace: Creating a workspace allows you to complete it online and route it through your organization for review before submitting.\n\n • Complete a Workspace: Invite participants to the workspace so you can collaborate on the application. Required applications forms are included in the Grants.gov Funding Opportunity Package and can be completed in the Workspace, unless noted otherwise in the Required Forms table above. Check for errors before submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5543976,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Already registered? You already have a Unique Entity ID. Before applying, check that your “Financial Assistance General Representations and Certifications” on SAM.gov is complete. Remember to renew your registration every year to keep it active while you have an award or application in progress. You can update your registration whenever you need, including during renewal."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5353549,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A2bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "An application will be removed if it does not include:\n\n • Completed SF-424 and SF-424A forms • SAM registration, with a valid UEI (unless an exemption at 2 CFR 25.110 applies, see\n\n below) • A project narrative • A budget narrative\n\n If an applicant selected for funding hasn't finished their SAM.gov registration (see 2 CFR 25.200 and 2 CFR 25.110) when the federal agency is ready to make an award, we may decide that the applicant is ineligible for the award and choose to grant it to someone else. Please refer 2 CFR 25.205 for more information.\n\n Prior to making an award, the DOI checks the anticipated recipient and their key project personnel against the current list of prohibited or restricted persons or entities in the System for Award Management (SAM.gov) Exclusions database. We are prohibited from making an award if a recipient or any key personnel are found ineligible, prohibited, restricted, or otherwise excluded from receiving or participating in an award, as their ineligibility condition applies to this program.\n\n If removed from consideration for ineligibility, the Federal agency will notify the applicant in writing.\n\n Merit Review The merit review criteria should be addressed in the Project Narrative. Applications should thoroughly address each criterion and any sub-criterion in the order presented below. Applications will be evaluated against the merit review criteria listed below.\n\n With the exceptions of criteria F and G, evaluation criteria should be applied to the project as a whole, not just the project activities that will be completed over the next 3 years. Responses to Criteria F and G should be limited to the project scope that is consistent with the anticipated period of performance for this grant application. An Application Review Committee (ARC), made up of experts in relevant disciplines, will review the technical merit of the application, based on the following evaluation criteria:\n\n Merit Review Criteria Scoring Summary Points:\n\n A. Increased Water Supply Available 25\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4793727,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A67VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Submit a Workspace: An application may be submitted through workspace by clicking the Sign and Submit button on the Manage Workspace page, under the Forms tab\n\n • Track a Workspace Submission: After successfully submitting a workspace application, a Grants.gov Tracking Number (GRANTXXXXXXXX) is automatically assigned to the application.\n\n The system generates a date and time stamp and sends it to the applicant’s AOR via email as proof of submission. Make sure your application passes the Grants.gov validation checks. Do not encrypt, zip, or password-protect any files. Only registered individuals in SAM as both a user and an AOR can submit applications. Please allow 30 days to register in Grants.gov.\n\n Application System Technical Support: For Grants.gov technical registration and submission, downloading forms, and application packages, contact Grants.gov Customer Support at 1-800- 518-4726 or by email at Support@grants.gov.\n\n Applicants can submit a hard copy application by U.S. Mail or express delivery to the addresses below.\n\n By mail or United States Postal Service overnight services: Bureau of Reclamation Financial Assistance Operations Section Attn: NOFO Team P.O. Box 25007, MS 84-27133 Denver, CO 80225\n\n By all other express delivery and courier services: Bureau of Reclamation mail services Attn: NOFO Team Denver Federal Center Bldg. 67, Rm. 152 6th Avenue and Kipling Street Denver, CO 80225\n\n Please notify the Reclamation Financial Assistance Contact listed in the “Basic Information” section by 2:00 PM MT on the submission date to confirm the hard copy submission.Page 16 of 29\n\n APPLICATION REVIEW INFORMATION\n\n Eligibility Review During the eligibility review, the application is checked for timely submission, completed packages (see Application Documents above) and alignment with the requirements of this announcement. The Federal agency may remove an application if it does not pass the eligibility review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4089335,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The review of applications will follow the requirements of E.O. 14332, such as ensuring review by senior appointees, and that selections demonstrably advance the President’s policy priorities consistent with applicable law. Geographic dispersion, project types, applicant types, previous award history, and applicant success in implementing Gold Standard Science (E.O. 14303) may be considered during the review. Selections are finalized once all reviews are complete, and all applicants are notified.\n\n Risk Review Prior to making an award, the applicant will be assessed for their level of risk per 2 CFR 200.206. This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n A Grants Officer conducts a detailed budget analysis and a business evaluation and responsibility determination. During this evaluation, the Grants Officer will consider several factors, such as:\n\n • Allowability, allocability, and reasonableness of proposed costs\n\n • Financial strength and stability of the applicant\n\n • Past performance, including satisfactory compliance with all terms and conditions of previous awards, such as environmental compliance, reporting requirements, and audit compliance\n\n • Adequacy of personnel practices, procurement procedures, and accounting policies and procedures.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3687499,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-7VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The second and final application submission period due date is August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT). Applications received after August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT) and before August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT), will be considered for the second application submission period.\n\n U.S. states and local governments may be required under Executive Order 12372, Intergovernmental Review of Federal Programs to submit their application to their State Single Point of Contact (SPOC) for review. For more information, see the Intergovernmental Review SPOC List.\n\n Have Questions? For questions regarding application and submission, contact the NOFO team at bor-sha- fafoa@usbr.gov.\n\n For questions regarding applicant and project eligibility or application content, contact the Program Coordinator, Maribeth Menendez, mmenendez@usbr.gov, 303-445-2094.\n\n Please include the NOFO number R26AS00034 in the subject line of any email correspondence.\n\n Executive Summary Through WaterSMART, the Bureau of Reclamation (Reclamation) leverages Federal and non- Federal funding to work cooperatively with States, Tribes, and other entities as they plan for and implement actions to increase water supply and hydropower reliability."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3468428,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "41bfcc424e19b0d7": {
+  "query": "applicant eligibility requirements entity types",
+  "filter": "ab0777318879d329",
+  "retrievalResults": []
+ },
+ "5e1eff028705b25f": {
+  "query": "allowable and unallowable costs construction project",
+  "filter": "ab0777318879d329",
+  "retrievalResults": []
+ },
+ "77a2b5f111d88ce0": {
+  "query": "application submission deadline",
+  "filter": "ab0777318879d329",
+  "retrievalResults": []
+ },
+ "7c41d5f845822428": {
+  "query": "solar panels renewable energy to power desalination facility",
+  "filter": "67d8b8f5f7ad43fd",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Need help? For additional information and contact information on the SAM.gov Help page.\n\n GRANTS.GOV\n\n This program accepts applications through Grants.gov so once you receive your UEI return to Grants.gov to register with Grants.gov. Please allow 30 days to register and set up a Workspace in Grants.gov. See Submission Instructions section below for additional details.\n\n PROGRAM OVERVIEW\n\n Program Goals • Through WaterSMART, Reclamation leverages Federal and non-Federal funding to work\n\n cooperatively with States, Tribes, and local entities as they plan for and implement actions to increase water supply reliability through investments in infrastructure and attention to local water needs.\n\n The objective of the WaterSMART: Desalination Construction Projects NOFO is to invite eligible applicants to leverage their funding and resources by cost sharing with Reclamation on the planning, design, and/or construction of facilities to desalinate seawater or brackish surface water or groundwater. By providing growing communities with new sources of local water supply, desalination projects diversify the water supply portfolio, increase water management flexibility during times of shortage, and make the water supply more reliable. This NOFO will be used to allocate available appropriations and funding under the Infrastructure Investment and Jobs Act, P.L. 117-58 available for Desalination Construction Projects.\n\n \n\n \n  https://sam.gov/content/entity-registration\n \n\n \n  https://sam.gov/content/help\n \n\n \n  https://sam.gov/content/help\n \n\n \n  https://www.grants.gov/applicants/applicant-registration\n \n\n \n  https://www.grants.gov/applicants/applicant-registrationPage 5 of 29\n\n Program Description The WaterSMART Desalination Construction Projects NOFO prioritizes projects that create a more reliable water supply in a cost-effective manner, address environmental and water quality concerns, and leverage state funding or the experience of international partners. Projects will address growing water demands and resource challenges by providing new, drought-resistant, local water supplies that stretch existing supplies and reduce water importation.\n\n Eligible Projects-\n\n Projects eligible for funding under this NOFO include planning, design, and/or construction of facilities to desalinate seawater or brackish surface water or groundwater. In order to be eligible for funding under this NOFO, the project must meet the following requirements:\n\n • The project must be constructed, operated, and maintained by an eligible applicant; or the project must be sponsored by an eligible applicant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.33474,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A2rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• The project must be included in a state-approved plan. The plan and documentation of state approval must be included with the proposal or submitted to Reclamation prior to the application deadline for this NOFO. In the alternative, if the project is not included in a state-approved plan, Federal participation in the project must have been requested by the Governor of the state in which the eligible desalination project is located. The applicant must submit documentation sufficient for Reclamation to make this determination along with their proposal prior to the application deadline. The state-approved plan or Governor’s request will not count toward the page limitation.\n\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdf\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdf\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdfPage 6 of 29\n\n Ineligible Projects- Projects that are not eligible for funding under this NOFO include, but are not limited to:\n\n • Projects that reclaim or reuse municipal, industrial, domestic, or agricultural wastewater. • Desalination projects that include water recycling components, such as municipal, industrial, or agricultural wastewater reuse, or treatment of impaired water supplies where primary targeted contaminants for removal are not brackish or ocean water. • Desalination projects that do not have a completed feasibility study that includes the information required by Reclamation Manual Directives and Standards WTR 11-01 (and WTR TRMR-128 for applicants with desalination projects that have an estimated total project cost greater than or equal to $500 million) that has been submitted to Reclamation by June 26, 2026, for applications submitted under the first submission period and by January 15, 2027, for applications submitted under the second submission period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3062186,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "To sponsor a project, the eligible applicant must contribute funding for a substantial portion of the capital construction costs of the project within the timeframe of this NOFO.\n\n • To be eligible for funding under this NOFO, the project must have a completed feasibility study submitted to Reclamation for review by June 26, 2026, for applications submitted under the first submission period and by January 15, 2027, for applications submitted under the second submission period. Completed feasibility studies must be found by Reclamation to meet all of the requirements of WTR 11-01 by November 20, 2026, for applications submitted under the first submission period and by July 15, 2027, for applications submitted under the second submission period. If a feasibility study has been reviewed by Reclamation and found to meet the requirements of WTR 11-01, but the review findings have not yet been transmitted to Congress, Reclamation will transmit those findings to Congress either before project selections are made or concurrently with project selections.\n\n • Applicants with desalination projects that have an estimated total project cost greater than or equal to $500 million (i.e., the minimum total project cost requirement for Large-Scale Water Recycling Projects) must meet additional feasibility study requirements beyond those in WTR 11-01. Additional requirements are established in WTR TRMR-128, Large-Scale Water Recycling Program Feasibility Study Review Process, and these same requirements are being extended to Desalination Construction Projects with a total project cost greater than or equal to $500 million. Projects with an estimated total project cost less than $500 million are not subject to the additional feasibility study requirements"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3042986,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A27VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Presidential and Department of the Interior Priorities 20\n\n E. Leveraging Regional Planning, State Funding, and International Experience 5\n\n F. Construction Priority 10\n\n G. Cost Share Priority 5\n\n Total 100\n\n Note: Projects may be prioritized to ensure balance among the program task areas and to ensure that the projects address this NOFO’s goals and objectives.\n\n Merit Review Criterion A: Increased Water Supply Available (25 points)\n\n Up to 25 points may be awarded based on the expected increase to water supply available as a result of the project. This criterion prioritizes projects that yield higher volumes of reclaimed water and offset other sources of water supply.\n\n Sub-Criterion A.1 Amount of Desalinated Water Supply Made Available\n\n Points will be awarded based on the expected amount of desalinated water made available. This criterion evaluates the amount of desalinated water produced and how much of the annual demand for the service area is offset by the desalinated water. Proposals containing a well- supported description and quantification of project benefits will receive more points under this criterion.\n\n • What is the estimated quantity of additional supply the project will provide upon completion and how was this estimate calculated? Provide this quantity in acre-feet per year as the average annual benefit over fifteen years, starting with the year that the project will begin delivering water (e.g., if the project captures flood flows in wet years, provide the average benefit over fifteen years including dry years). Provide information on how desalinated water produced will vary over the year based on any source water supply changes.\n\n • What percentage of the current annual demand for the service area does the additional desalinated water supply represent? How was this estimate calculated?\n\n Sub-Criterion A.2 Offset to Water Supplies\n\n Points will be awarded based on the extent to which the project will reduce demands on existing water supply sources or the need to develop new non-reclaimed water supply sources.\n\n • Describe the existing water supplies used in the project sponsor’s service area. Identify which of these supplies and associated facilities will benefit from the implementation of this project and explain how the project will reduce pressure on those resources. Include quantitative estimates to support your response.Page 18 of 29\n\n • If the project is expected to reduce, delay, or eliminate the need for new or expanded non- recycled water supplies, describe how these benefits will be quantified and measured. Include the methods, metrics, and data sources that will be used to assess the project's actual impact over time once completed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3009622,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 18,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Bureau of Reclamation\n\n Notice of Funding Opportunity\n\n WaterSMART: Desalination Construction Projects\n\n Funding Opportunity Number\n\n R26AS00034Page 1 of 29\n\n Table of Contents BASIC INFORMATION .................................................................................................................1\n\n ELIGIBILITY ..................................................................................................................................3\n\n Cost Sharing Requirement ...........................................................................................................3\n\n GET READY TO APPLY ...............................................................................................................4\n\n Required System Registrations ....................................................................................................4\n\n PROGRAM OVERVIEW ...............................................................................................................4\n\n Program Goals ..............................................................................................................................4\n\n Program Description ....................................................................................................................5\n\n Legislative Authority ...................................................................................................................7\n\n Type of Award .............................................................................................................................7\n\n PREPARE YOUR APPLICATION ................................................................................................7\n\n Application Content and Format ..................................................................................................7\n\n Application Documents ................................................................................................................8\n\n Program Cost Restrictions .........................................................................................................12\n\n SUBMISSION REQUIREMENTS AND DEADLINES ..............................................................14\n\n Address to Request Application Package ..................................................................................14\n\n Submission Dates and Times .....................................................................................................14\n\n Submission Instructions .............................................................................................................14\n\n APPLICATION REVIEW INFORMATION ................................................................................16\n\n Eligibility Review ......................................................................................................................16\n\n Merit Review ..............................................................................................................................16\n\n Review and Selection Process ....................................................................................................24\n\n Risk Review ...............................................................................................................................25\n\n AWARD NOTICES ......................................................................................................................25\n\n POST AWARD REQUIREMENTS AND ADMINISTRATION ................................................26\n\n Administration and National Policy Requirements ...................................................................26\n\n Reporting ....................................................................................................................................28\n\n \n\n BASIC INFORMATION Announcement Type: Initial\n\n Funding Opportunity Number: R26AS00034Page 2 of 29\n\n Assistance Listing Number(s): 15.591\n\n Estimated Total Program Funding: $120,000,000\n\n Expected Number of Awards: 10\n\n Award Ceiling: $120,000,000\n\n Award Floor: $1,000\n\n Approximately 10 awards will be awarded under this Notice of Funding Opportunity (NOFO), depending on the amount requested by each applicant and available Federal appropriations.\n\n The Federal funding amount is based on a maximum 25 percent of the total cost of planning, design, and construction activities completed after the date of Reclamation’s feasibility study review findings and within three years of the application’s submittal period deadline.\n\n Cost Sharing Required? Yes Closing Date Explanation\n\n This NOFO will have two application submission periods with a final closing date of August 26, 2027. The due dates for each closing period are:\n\n The first application submission period due date is August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2975521,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Does the project promote collaboration among multiple stakeholders with diverse interests? Identify the partners and describe the nature of the collaboration.\n\n • Does the project include public outreach or educational components to inform and engage the community? If so, describe the outreach efforts and intended audiences.\n\n Subcriterion No. E.2 Leveraging State Funding and Experience of International Partners\n\n Points will be awarded based on the extent to which the project leverages State funding for research and development of desalination technologies and projects and/or the experience of international partners with expertise in desalination.\n\n • Does the project leverage State funding for research and development of desalination technologies, and/or development and construction of the project? If so, how?\n\n • Does the project leverage the experience of international partners with expertise in desalination, for example, the State of Israel, Middle East Desalination Research Center, European Desalination Society, Centro de Investigaciones Energeticas, Medioambientales y Tecnologicas (CIEMAT) in Spain, or academic and public global institutions? If so, how?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2888577,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Recipient should expect the Federal agency to have substantial involvement in the project.\n\n Awards will be made through a grant or cooperative agreement, depending on the project. If a cooperative agreement is awarded, the recipient should expect Reclamation to have substantial involvement in the project. This may include collaboration or participation in the management of the project and/or review, input, and approval during implementation of the project.\n\n PREPARE YOUR APPLICATION\n\n Application Content and Format Pre-Application Requirements\n\n \n\n \n  https://www.usbr.gov/watersmart/title/desalination.html\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-I/part-184\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-I/part-184Page 8 of 29\n\n To be eligible for funding under this NOFO, projects must have a completed feasibility study submitted to Reclamation for review by June 26, 2026 for applications submitted under the first submission period and by January 15, 2027. Completed feasibility studies must be found by Reclamation to meet all of the requirements of WTR 11-01 and WTR TRMR-128 for applicants with desalination projects that have an estimated total project cost greater than or equal to $500 million by November 20, 2026, for applications submitted under the first submission period and by July 15, 2027, for applications submitted under the second submission period.\n\n Prior to applying, applicants should review presidential actions found at: https://www.whitehouse.gov/presidential-actions/ and DOI Secretary’s Orders found at: https://www.doi.gov/document-library/secretary-order. By applying in response to this Notice of Funding Opportunity, the applicant certifies awareness and compliance with all currently effective and applicable executive orders and secretary’s orders, including, but not limited to the Executive Order titled Ending Radical and Wasteful Government DEI Programs and Preferencing as well as the Executive Order and Secretary’s order titled Restoring Truth and Sanity to American History. Applicants are responsible for ensuring their proposed activities are consistent with the intent and requirements of these directives.\n\n Application Documents Applicants must submit the following forms with their application as specified below. Instructions for accessing and submitting application forms are provided in the Submission Instructions section of this document below. For instructions on completing form fields, see the form instructions on the Grants.gov Forms Repository."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2866583,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "99a84dc503d7a7d1": {
+  "query": "applicant eligibility requirements entity types",
+  "filter": "67d8b8f5f7ad43fd",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "An application will be removed if it does not include:\n\n • Completed SF-424 and SF-424A forms • SAM registration, with a valid UEI (unless an exemption at 2 CFR 25.110 applies, see\n\n below) • A project narrative • A budget narrative\n\n If an applicant selected for funding hasn't finished their SAM.gov registration (see 2 CFR 25.200 and 2 CFR 25.110) when the federal agency is ready to make an award, we may decide that the applicant is ineligible for the award and choose to grant it to someone else. Please refer 2 CFR 25.205 for more information.\n\n Prior to making an award, the DOI checks the anticipated recipient and their key project personnel against the current list of prohibited or restricted persons or entities in the System for Award Management (SAM.gov) Exclusions database. We are prohibited from making an award if a recipient or any key personnel are found ineligible, prohibited, restricted, or otherwise excluded from receiving or participating in an award, as their ineligibility condition applies to this program.\n\n If removed from consideration for ineligibility, the Federal agency will notify the applicant in writing.\n\n Merit Review The merit review criteria should be addressed in the Project Narrative. Applications should thoroughly address each criterion and any sub-criterion in the order presented below. Applications will be evaluated against the merit review criteria listed below.\n\n With the exceptions of criteria F and G, evaluation criteria should be applied to the project as a whole, not just the project activities that will be completed over the next 3 years. Responses to Criteria F and G should be limited to the project scope that is consistent with the anticipated period of performance for this grant application. An Application Review Committee (ARC), made up of experts in relevant disciplines, will review the technical merit of the application, based on the following evaluation criteria:\n\n Merit Review Criteria Scoring Summary Points:\n\n A. Increased Water Supply Available 25\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3167713,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A67VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Ineligible Applicants - Those not eligible include, but are not limited to, the following entities:\n\n • Federal Governmental entities • Foreign entities • Individuals • Institutes of higher education\n\n Cost Sharing Requirement Cost Sharing Required? Yes 75% of total project costs.\n\n All cost-share contributions must be non-Federal in original source and meet the requirements of 2 CFR 200.306. Total project cost is the sum of all allowable costs, including cost share and third-party contributions. For example, if the total project cost is $10 million, the minimum amount of non-Federal cost share would be $7,500,000.\n\n Total Project Costs $10,000,000 Minimum required cost share- 75% x 75% Applicant share of project costs $7,500,000 Federal share $2,500,000Page 4 of 29\n\n GET READY TO APPLY\n\n Required System Registrations Unique Entity Identifier and SAM.gov Registration\n\n Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov. During the SAM.gov registration the entity will obtain their Unique Entity Identifier (UEI)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3120067,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A17VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• The project must be included in a state-approved plan. The plan and documentation of state approval must be included with the proposal or submitted to Reclamation prior to the application deadline for this NOFO. In the alternative, if the project is not included in a state-approved plan, Federal participation in the project must have been requested by the Governor of the state in which the eligible desalination project is located. The applicant must submit documentation sufficient for Reclamation to make this determination along with their proposal prior to the application deadline. The state-approved plan or Governor’s request will not count toward the page limitation.\n\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdf\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdf\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdfPage 6 of 29\n\n Ineligible Projects- Projects that are not eligible for funding under this NOFO include, but are not limited to:\n\n • Projects that reclaim or reuse municipal, industrial, domestic, or agricultural wastewater. • Desalination projects that include water recycling components, such as municipal, industrial, or agricultural wastewater reuse, or treatment of impaired water supplies where primary targeted contaminants for removal are not brackish or ocean water. • Desalination projects that do not have a completed feasibility study that includes the information required by Reclamation Manual Directives and Standards WTR 11-01 (and WTR TRMR-128 for applicants with desalination projects that have an estimated total project cost greater than or equal to $500 million) that has been submitted to Reclamation by June 26, 2026, for applications submitted under the first submission period and by January 15, 2027, for applications submitted under the second submission period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.23739,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The review of applications will follow the requirements of E.O. 14332, such as ensuring review by senior appointees, and that selections demonstrably advance the President’s policy priorities consistent with applicable law. Geographic dispersion, project types, applicant types, previous award history, and applicant success in implementing Gold Standard Science (E.O. 14303) may be considered during the review. Selections are finalized once all reviews are complete, and all applicants are notified.\n\n Risk Review Prior to making an award, the applicant will be assessed for their level of risk per 2 CFR 200.206. This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n A Grants Officer conducts a detailed budget analysis and a business evaluation and responsibility determination. During this evaluation, the Grants Officer will consider several factors, such as:\n\n • Allowability, allocability, and reasonableness of proposed costs\n\n • Financial strength and stability of the applicant\n\n • Past performance, including satisfactory compliance with all terms and conditions of previous awards, such as environmental compliance, reporting requirements, and audit compliance\n\n • Adequacy of personnel practices, procurement procedures, and accounting policies and procedures.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2173638,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-7VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If reported cost share is found to be ineligible, there may be impacts to award. Accordingly, please ensure reported cost share amounts are accurate and eligible.\n\n Review and Selection Process This program reviews proposed budgets to ensure:\n\n • figures are correct • estimated costs are necessary and reasonable and clearly linked to project narratives • avoid obviously unallowable costs • identify costs requiring prior approval • ensure indirect cost rates are applied correctly • confirm cost sharing requirements are reflected in the budget.\n\n This program reviews applications for potential overlap or duplication between the proposed project and any other funded or proposed project. Depending on the circumstances, DOI may choose to not make an award.\n\n Initial Review Prior to conducting the comprehensive merit review, an initial review will be performed to determine whether: (1) the applicant is eligible for an award; (2) the information required by the NOFO has been submitted; (3) all mandatory requirements of the NOFO are satisfied; (4) the proposed project is responsive to the program objectives of the NOFO (program determination); and (5) the proposed project is in compliance with all applicable executive and secretary orders, including the President’s executive order on Ending Radical and Wasteful Government DEI Programs and Preferencing as well as the executive order and Secretary order on Restoring Truth and Sanity to American History. If an applicant fails to meet the requirements or objectives of the NOFO, or does not provide sufficient information for review, the applicant will be considered nonresponsive and eliminated from further review.\n\n An Application Review Committee (ARC), made up of experts in relevant disciplines, will review the technical merit of the application, based on the merit review criteria. The ARC will also review the application to ensure that the project is eligible and meets the objective of this NOFO. During ARC review, Reclamation may contact applicants to request clarifications to the information provided, if necessary.\n\n After the merit review, Reclamation conducts a “red-flag” review of top-ranking applications. During this review, Reclamation identifies any reasons a project would not be feasible or\n\n \n\n \n  bookmark://_Cost_Sharing_Requirement\n \n\n \n  bookmark://_Budget_NarrativePage 25 of 29\n\n advisable, including environmental or cultural compliance, permitting, legal, financial, performance or other concerns. After the red-flag review, Reclamation conducts a “managerial review” of top-ranking applications. The managerial review prioritizes applications for selection based on the objectives of the NOFO."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2135068,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 25,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Projects that have a Reclamation reviewed feasibility study that Reclamation determined did not meet the requirements of WTR 11-01. • Development of feasibility studies to meet the requirements Reclamation’s Directives and Standards WTR 11-01 and/or WTR TRMR-128. • Projects that are not constructed, operated, and maintained by an eligible entity and do not include a substantial financial contribution to capital construction costs by an eligible entity during the time period of this NOFO. • Lab-scale research, piloting, or demonstration research focused on the development and commercialization of new advanced water treatment technology, such as studies currently proposed or funded under Reclamation’s Desalination and Water Purification Research Program. • Projects that have a project-specific congressional authorization. • Projects that have already received funding under the WaterSMART Drought Response Program. • Operations, Maintenance, and Replacement: Projects that are considered normal operations, maintenance, and replacement (OM&R) are not eligible for funding under this NOFO. OM&R is described as system improvements that replace or repair existing infrastructure or function without providing increased efficiency or effectiveness of water distribution over the expected life of the improvement. Examples of ineligible OM&R projects include:\n\n o Replacing malfunctioning components of an existing facility with the same components o Improving an existing facility to operate as originally designed o Performing an activity on a recurring basis, even if that period is extended (e.g., a 10- year interval)\n\n Multiple Applications - Multiple applications for funding may be submitted for consideration under this funding opportunity, provided that the project scopes are not duplicative. In general, if an applicant is seeking funding for multiple project components, and the components are interrelated or closely related (e.g., projects that are physically and geographically linked), the applicant should combine these in one application. However, if the projects are only loosely related, an applicant should submit them as separate applications. Technical Assistance - Technical assistance should be discussed with Reclamation staff prior to applying. By request, Reclamation can provide technical assistance after award of a project. If you plan to receive Reclamation’s assistance, you must account for these costs in your budget."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2094892,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "To sponsor a project, the eligible applicant must contribute funding for a substantial portion of the capital construction costs of the project within the timeframe of this NOFO.\n\n • To be eligible for funding under this NOFO, the project must have a completed feasibility study submitted to Reclamation for review by June 26, 2026, for applications submitted under the first submission period and by January 15, 2027, for applications submitted under the second submission period. Completed feasibility studies must be found by Reclamation to meet all of the requirements of WTR 11-01 by November 20, 2026, for applications submitted under the first submission period and by July 15, 2027, for applications submitted under the second submission period. If a feasibility study has been reviewed by Reclamation and found to meet the requirements of WTR 11-01, but the review findings have not yet been transmitted to Congress, Reclamation will transmit those findings to Congress either before project selections are made or concurrently with project selections.\n\n • Applicants with desalination projects that have an estimated total project cost greater than or equal to $500 million (i.e., the minimum total project cost requirement for Large-Scale Water Recycling Projects) must meet additional feasibility study requirements beyond those in WTR 11-01. Additional requirements are established in WTR TRMR-128, Large-Scale Water Recycling Program Feasibility Study Review Process, and these same requirements are being extended to Desalination Construction Projects with a total project cost greater than or equal to $500 million. Projects with an estimated total project cost less than $500 million are not subject to the additional feasibility study requirements"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2012969,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A27VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "a486b2a80de3cadc": {
+  "query": "energy efficiency, energy use, and renewable energy components of project",
+  "filter": "ab0777318879d329",
+  "retrievalResults": []
+ },
+ "c592530267d2b91d": {
+  "query": "eligible applicants who can apply",
+  "filter": "67d8b8f5f7ad43fd",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "An application will be removed if it does not include:\n\n • Completed SF-424 and SF-424A forms • SAM registration, with a valid UEI (unless an exemption at 2 CFR 25.110 applies, see\n\n below) • A project narrative • A budget narrative\n\n If an applicant selected for funding hasn't finished their SAM.gov registration (see 2 CFR 25.200 and 2 CFR 25.110) when the federal agency is ready to make an award, we may decide that the applicant is ineligible for the award and choose to grant it to someone else. Please refer 2 CFR 25.205 for more information.\n\n Prior to making an award, the DOI checks the anticipated recipient and their key project personnel against the current list of prohibited or restricted persons or entities in the System for Award Management (SAM.gov) Exclusions database. We are prohibited from making an award if a recipient or any key personnel are found ineligible, prohibited, restricted, or otherwise excluded from receiving or participating in an award, as their ineligibility condition applies to this program.\n\n If removed from consideration for ineligibility, the Federal agency will notify the applicant in writing.\n\n Merit Review The merit review criteria should be addressed in the Project Narrative. Applications should thoroughly address each criterion and any sub-criterion in the order presented below. Applications will be evaluated against the merit review criteria listed below.\n\n With the exceptions of criteria F and G, evaluation criteria should be applied to the project as a whole, not just the project activities that will be completed over the next 3 years. Responses to Criteria F and G should be limited to the project scope that is consistent with the anticipated period of performance for this grant application. An Application Review Committee (ARC), made up of experts in relevant disciplines, will review the technical merit of the application, based on the following evaluation criteria:\n\n Merit Review Criteria Scoring Summary Points:\n\n A. Increased Water Supply Available 25\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.315536,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A67VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Ineligible Applicants - Those not eligible include, but are not limited to, the following entities:\n\n • Federal Governmental entities • Foreign entities • Individuals • Institutes of higher education\n\n Cost Sharing Requirement Cost Sharing Required? Yes 75% of total project costs.\n\n All cost-share contributions must be non-Federal in original source and meet the requirements of 2 CFR 200.306. Total project cost is the sum of all allowable costs, including cost share and third-party contributions. For example, if the total project cost is $10 million, the minimum amount of non-Federal cost share would be $7,500,000.\n\n Total Project Costs $10,000,000 Minimum required cost share- 75% x 75% Applicant share of project costs $7,500,000 Federal share $2,500,000Page 4 of 29\n\n GET READY TO APPLY\n\n Required System Registrations Unique Entity Identifier and SAM.gov Registration\n\n Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov. During the SAM.gov registration the entity will obtain their Unique Entity Identifier (UEI)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.271297,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A17VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• The project must be included in a state-approved plan. The plan and documentation of state approval must be included with the proposal or submitted to Reclamation prior to the application deadline for this NOFO. In the alternative, if the project is not included in a state-approved plan, Federal participation in the project must have been requested by the Governor of the state in which the eligible desalination project is located. The applicant must submit documentation sufficient for Reclamation to make this determination along with their proposal prior to the application deadline. The state-approved plan or Governor’s request will not count toward the page limitation.\n\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdf\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdf\n \n\n \n  https://www.usbr.gov/recman/wtr/wtr11-01.pdfPage 6 of 29\n\n Ineligible Projects- Projects that are not eligible for funding under this NOFO include, but are not limited to:\n\n • Projects that reclaim or reuse municipal, industrial, domestic, or agricultural wastewater. • Desalination projects that include water recycling components, such as municipal, industrial, or agricultural wastewater reuse, or treatment of impaired water supplies where primary targeted contaminants for removal are not brackish or ocean water. • Desalination projects that do not have a completed feasibility study that includes the information required by Reclamation Manual Directives and Standards WTR 11-01 (and WTR TRMR-128 for applicants with desalination projects that have an estimated total project cost greater than or equal to $500 million) that has been submitted to Reclamation by June 26, 2026, for applications submitted under the first submission period and by January 15, 2027, for applications submitted under the second submission period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2255878,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If reported cost share is found to be ineligible, there may be impacts to award. Accordingly, please ensure reported cost share amounts are accurate and eligible.\n\n Review and Selection Process This program reviews proposed budgets to ensure:\n\n • figures are correct • estimated costs are necessary and reasonable and clearly linked to project narratives • avoid obviously unallowable costs • identify costs requiring prior approval • ensure indirect cost rates are applied correctly • confirm cost sharing requirements are reflected in the budget.\n\n This program reviews applications for potential overlap or duplication between the proposed project and any other funded or proposed project. Depending on the circumstances, DOI may choose to not make an award.\n\n Initial Review Prior to conducting the comprehensive merit review, an initial review will be performed to determine whether: (1) the applicant is eligible for an award; (2) the information required by the NOFO has been submitted; (3) all mandatory requirements of the NOFO are satisfied; (4) the proposed project is responsive to the program objectives of the NOFO (program determination); and (5) the proposed project is in compliance with all applicable executive and secretary orders, including the President’s executive order on Ending Radical and Wasteful Government DEI Programs and Preferencing as well as the executive order and Secretary order on Restoring Truth and Sanity to American History. If an applicant fails to meet the requirements or objectives of the NOFO, or does not provide sufficient information for review, the applicant will be considered nonresponsive and eliminated from further review.\n\n An Application Review Committee (ARC), made up of experts in relevant disciplines, will review the technical merit of the application, based on the merit review criteria. The ARC will also review the application to ensure that the project is eligible and meets the objective of this NOFO. During ARC review, Reclamation may contact applicants to request clarifications to the information provided, if necessary.\n\n After the merit review, Reclamation conducts a “red-flag” review of top-ranking applications. During this review, Reclamation identifies any reasons a project would not be feasible or\n\n \n\n \n  bookmark://_Cost_Sharing_Requirement\n \n\n \n  bookmark://_Budget_NarrativePage 25 of 29\n\n advisable, including environmental or cultural compliance, permitting, legal, financial, performance or other concerns. After the red-flag review, Reclamation conducts a “managerial review” of top-ranking applications. The managerial review prioritizes applications for selection based on the objectives of the NOFO."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.224975,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 25,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Projects that have a Reclamation reviewed feasibility study that Reclamation determined did not meet the requirements of WTR 11-01. • Development of feasibility studies to meet the requirements Reclamation’s Directives and Standards WTR 11-01 and/or WTR TRMR-128. • Projects that are not constructed, operated, and maintained by an eligible entity and do not include a substantial financial contribution to capital construction costs by an eligible entity during the time period of this NOFO. • Lab-scale research, piloting, or demonstration research focused on the development and commercialization of new advanced water treatment technology, such as studies currently proposed or funded under Reclamation’s Desalination and Water Purification Research Program. • Projects that have a project-specific congressional authorization. • Projects that have already received funding under the WaterSMART Drought Response Program. • Operations, Maintenance, and Replacement: Projects that are considered normal operations, maintenance, and replacement (OM&R) are not eligible for funding under this NOFO. OM&R is described as system improvements that replace or repair existing infrastructure or function without providing increased efficiency or effectiveness of water distribution over the expected life of the improvement. Examples of ineligible OM&R projects include:\n\n o Replacing malfunctioning components of an existing facility with the same components o Improving an existing facility to operate as originally designed o Performing an activity on a recurring basis, even if that period is extended (e.g., a 10- year interval)\n\n Multiple Applications - Multiple applications for funding may be submitted for consideration under this funding opportunity, provided that the project scopes are not duplicative. In general, if an applicant is seeking funding for multiple project components, and the components are interrelated or closely related (e.g., projects that are physically and geographically linked), the applicant should combine these in one application. However, if the projects are only loosely related, an applicant should submit them as separate applications. Technical Assistance - Technical assistance should be discussed with Reclamation staff prior to applying. By request, Reclamation can provide technical assistance after award of a project. If you plan to receive Reclamation’s assistance, you must account for these costs in your budget."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2217118,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The WaterSMART Program demonstrably advances Trump administration priorities, such as those identified in Presidential Executive Order 14154 (January 20, 2025): Unleashing American Energy (E.O.14154) and Secretarial Order 3418, and aligns with other priorities and requirements, such\n\n \n\n \n  https://www.archives.gov/federal-register/codification/executive-order/12372.html\n \n\n \n  https://www.archives.gov/federal-register/codification/executive-order/12372.html\n \n\n \n  https://bidenwhitehouse.archives.gov/wp-content/uploads/2024/08/SPOC-list-as-of-August-2024.pdf\n \n\n \n  https://bidenwhitehouse.archives.gov/wp-content/uploads/2024/08/SPOC-list-as-of-August-2024.pdf\n \n\n \n  mailto:bor-sha-fafoa@usbr.gov\n \n\n \n  mailto:bor-sha-fafoa@usbr.gov\n \n\n \n  mailto:mmenendez@usbr.govPage 3 of 29\n\n as those identified in Presidential Executive Order 14332 (August 7, 2025): Improving Oversight in Federal Grantmaking (E.O. 14332). The WaterSMART: Desalination Construction Projects NOFO invites eligible applicants to submit proposals for the planning, design, and/or construction of facilities to desalinate seawater or brackish surface water or groundwater. By providing growing communities with new sources of local water supply, desalination projects diversify the water supply portfolio, increase water management flexibility during times of shortage, and make the water supply more reliable.\n\n ELIGIBILITY Eligible Applicants Others (see text field entitled \"Additional Information on Eligibility\" for clarification)\n\n Additional Information on Eligibility Applicants eligible to receive funding under this NOFO include States, departments of a State, subdivisions of a State, or public agencies organized pursuant to a State law, such as:\n\n • States, Tribes, municipalities, irrigation districts, and water districts, or wastewater districts\n\n All applicants must be located in one of the following States: Arizona, California, Colorado, Idaho, Kansas, Montana, Nebraska, Nevada, New Mexico, North Dakota, Oklahoma, Oregon, South Dakota, Texas, Utah, Washington, and Wyoming."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1952772,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Note: Leveraging the experience of international partners does not include hiring an architecture and engineering firm or contractor with international employees or who happen to have done work in other countries.\n\n Merit Review Criterion F: Construction Priority (10 points)\n\n Up to 10 points may be awarded based on the extent that the proposed project is a construction project that can be completed within the allowable project duration. Projects that focus on construction of hard infrastructure to deliver durable, long-term improvements in water reliability and resilience will be prioritized. Hard infrastructure is tangible or built infrastructure. Please identify the hard infrastructure construction components of the project, if applicable.Page 24 of 29\n\n Merit Review Criterion G: Cost Share Priority (5 points)\n\n Up to 5 points may be awarded to proposals that include non-Federal cost share contributions exceeding the statutory minimum by at least 5 percent. Projects with a higher non-Federal cost share may be awarded more points. State the percentage of non-Federal funding provided using the following calculation:\n\n Non-Federal Funding / Total Project Cost = %\n\n See Cost Sharing Requirement and Budget Narrative for more information on cost-share requirements and eligible costs.\n\n Note: projects selected for award will have reported cost-share amounts verified."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1866485,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "c622528a7e2aa22a": {
+  "query": "application due date and time, SAM.gov registration and Grants.gov deadline",
+  "filter": "ab0777318879d329",
+  "retrievalResults": []
+ },
+ "d56ca8cd573d2cac": {
+  "query": "application submission deadline",
+  "filter": "67d8b8f5f7ad43fd",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Difficulties related to an applicant’s Grants.gov profile (e.g., incorrect organizational representative), uploading documents to Grants.gov, or an applicant’s SAM.gov registration are not considered technical issues with the Grants.gov system.\n\n Submission Dates and Times Closing Date for Applications: 08/26/2027\n\n Closing Date Explanation\n\n This NOFO will have two application submission periods with a final closing date of August 26, 2027. The due dates for each closing period are:\n\n The first application submission period due date is August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT).\n\n The second and final application submission period due date is August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT). Applications received after August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT) and before August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT), will be considered for the second application submission period.\n\n Submission Instructions Apply Through Grants.gov To apply through Grants.gov, please follow the instructions in the Quick Start Guide for Applicants. Before applying, ensure that at least one person at your organization is registered and has the Authorized Organization Representative (AOR). Only the AOR can submit the\n\n \n\n \n  https://www.grants.gov/applicants/grant-applications/how-to-apply-for-grants\n \n\n \n  mailto:bor-sha-fafoa@usbr.gov\n \n\n \n  https://www.grants.gov/\n \n\n \n  https://grants.gov/register\n \n\n \n  https://www.grants.gov/quick-start-guide/applicants\n \n\n \n  http://www.grants.gov/quick-start-guide/applicantsPage 15 of 29\n\n application. If you need more users, they must create their own Grants.gov account. Follow these steps below to apply:\n\n • Create a Workspace: Creating a workspace allows you to complete it online and route it through your organization for review before submitting.\n\n • Complete a Workspace: Invite participants to the workspace so you can collaborate on the application. Required applications forms are included in the Grants.gov Funding Opportunity Package and can be completed in the Workspace, unless noted otherwise in the Required Forms table above. Check for errors before submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4761024,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The second and final application submission period due date is August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT). Applications received after August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT) and before August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT), will be considered for the second application submission period.\n\n U.S. states and local governments may be required under Executive Order 12372, Intergovernmental Review of Federal Programs to submit their application to their State Single Point of Contact (SPOC) for review. For more information, see the Intergovernmental Review SPOC List.\n\n Have Questions? For questions regarding application and submission, contact the NOFO team at bor-sha- fafoa@usbr.gov.\n\n For questions regarding applicant and project eligibility or application content, contact the Program Coordinator, Maribeth Menendez, mmenendez@usbr.gov, 303-445-2094.\n\n Please include the NOFO number R26AS00034 in the subject line of any email correspondence.\n\n Executive Summary Through WaterSMART, the Bureau of Reclamation (Reclamation) leverages Federal and non- Federal funding to work cooperatively with States, Tribes, and other entities as they plan for and implement actions to increase water supply and hydropower reliability."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3970386,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Submit a Workspace: An application may be submitted through workspace by clicking the Sign and Submit button on the Manage Workspace page, under the Forms tab\n\n • Track a Workspace Submission: After successfully submitting a workspace application, a Grants.gov Tracking Number (GRANTXXXXXXXX) is automatically assigned to the application.\n\n The system generates a date and time stamp and sends it to the applicant’s AOR via email as proof of submission. Make sure your application passes the Grants.gov validation checks. Do not encrypt, zip, or password-protect any files. Only registered individuals in SAM as both a user and an AOR can submit applications. Please allow 30 days to register in Grants.gov.\n\n Application System Technical Support: For Grants.gov technical registration and submission, downloading forms, and application packages, contact Grants.gov Customer Support at 1-800- 518-4726 or by email at Support@grants.gov.\n\n Applicants can submit a hard copy application by U.S. Mail or express delivery to the addresses below.\n\n By mail or United States Postal Service overnight services: Bureau of Reclamation Financial Assistance Operations Section Attn: NOFO Team P.O. Box 25007, MS 84-27133 Denver, CO 80225\n\n By all other express delivery and courier services: Bureau of Reclamation mail services Attn: NOFO Team Denver Federal Center Bldg. 67, Rm. 152 6th Avenue and Kipling Street Denver, CO 80225\n\n Please notify the Reclamation Financial Assistance Contact listed in the “Basic Information” section by 2:00 PM MT on the submission date to confirm the hard copy submission.Page 16 of 29\n\n APPLICATION REVIEW INFORMATION\n\n Eligibility Review During the eligibility review, the application is checked for timely submission, completed packages (see Application Documents above) and alignment with the requirements of this announcement. The Federal agency may remove an application if it does not pass the eligibility review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2564135,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Anticipated Project Start Date: 09/30/2027\n\n Anticipated Project End Date: 09/30/2029\n\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.206\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.206\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.206\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.211\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.458Page 26 of 29\n\n Reclamation anticipates contacting potential award recipients and unsuccessful applicants in approximately six months after the submission period due dates in this NOFO, subject to the timing and amount of final appropriations. Reclamation will contact award recipients individually to discuss the time frame for the completion of their agreement.\n\n Reclamation may post successful applications on a Reclamation website, after necessary redactions, in consultation with the successful applicant.\n\n POST AWARD REQUIREMENTS AND ADMINISTRATION\n\n Administration and National Policy Requirements For award administration and national policy requirements, see the DOI General Terms and Conditions. Infrastructure projects require the use of American iron, steel, manufacture products, and construction materials per 2 CFR 184.\n\n Automated Standard Application for Payments Registration\n\n All recipients must be registered with and willing to process all payments through the Department of Treasury Automated Standard Application for Payments (ASAP) system. All recipients with active financial assistance agreements with Reclamation must be enrolled in ASAP under the appropriate Agency Location Code(s) and UEI Number prior to the award of funds. If a recipient has multiple UEI numbers, they must separately enroll within ASAP for each unique UEI Number and/or Agency. If your entity is currently enrolled in the ASAP system with an agency other than Reclamation, you must enroll specifically with Reclamation in order to process payments. All of the information on the enrollment process for recipients, will be sent to you by ASAP staff if selected for award.\n\n Approvals and Permits\n\n Recipients shall adhere to Federal, State, Territorial, Tribal, and local laws, regulations, and codes, as applicable, and shall obtain all required approvals and permits. Recipients shall also coordinate and obtain approvals from site owners and operators.\n\n Environmental and Cultural Resources Compliance\n\n The recipient must comply with all applicable Federal, State, and local environmental, cultural, and paleontological resource laws and regulations."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2135153,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "An application will be removed if it does not include:\n\n • Completed SF-424 and SF-424A forms • SAM registration, with a valid UEI (unless an exemption at 2 CFR 25.110 applies, see\n\n below) • A project narrative • A budget narrative\n\n If an applicant selected for funding hasn't finished their SAM.gov registration (see 2 CFR 25.200 and 2 CFR 25.110) when the federal agency is ready to make an award, we may decide that the applicant is ineligible for the award and choose to grant it to someone else. Please refer 2 CFR 25.205 for more information.\n\n Prior to making an award, the DOI checks the anticipated recipient and their key project personnel against the current list of prohibited or restricted persons or entities in the System for Award Management (SAM.gov) Exclusions database. We are prohibited from making an award if a recipient or any key personnel are found ineligible, prohibited, restricted, or otherwise excluded from receiving or participating in an award, as their ineligibility condition applies to this program.\n\n If removed from consideration for ineligibility, the Federal agency will notify the applicant in writing.\n\n Merit Review The merit review criteria should be addressed in the Project Narrative. Applications should thoroughly address each criterion and any sub-criterion in the order presented below. Applications will be evaluated against the merit review criteria listed below.\n\n With the exceptions of criteria F and G, evaluation criteria should be applied to the project as a whole, not just the project activities that will be completed over the next 3 years. Responses to Criteria F and G should be limited to the project scope that is consistent with the anticipated period of performance for this grant application. An Application Review Committee (ARC), made up of experts in relevant disciplines, will review the technical merit of the application, based on the following evaluation criteria:\n\n Merit Review Criteria Scoring Summary Points:\n\n A. Increased Water Supply Available 25\n\n B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2077516,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A67VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Recipient should expect the Federal agency to have substantial involvement in the project.\n\n Awards will be made through a grant or cooperative agreement, depending on the project. If a cooperative agreement is awarded, the recipient should expect Reclamation to have substantial involvement in the project. This may include collaboration or participation in the management of the project and/or review, input, and approval during implementation of the project.\n\n PREPARE YOUR APPLICATION\n\n Application Content and Format Pre-Application Requirements\n\n \n\n \n  https://www.usbr.gov/watersmart/title/desalination.html\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-I/part-184\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-I/part-184Page 8 of 29\n\n To be eligible for funding under this NOFO, projects must have a completed feasibility study submitted to Reclamation for review by June 26, 2026 for applications submitted under the first submission period and by January 15, 2027. Completed feasibility studies must be found by Reclamation to meet all of the requirements of WTR 11-01 and WTR TRMR-128 for applicants with desalination projects that have an estimated total project cost greater than or equal to $500 million by November 20, 2026, for applications submitted under the first submission period and by July 15, 2027, for applications submitted under the second submission period.\n\n Prior to applying, applicants should review presidential actions found at: https://www.whitehouse.gov/presidential-actions/ and DOI Secretary’s Orders found at: https://www.doi.gov/document-library/secretary-order. By applying in response to this Notice of Funding Opportunity, the applicant certifies awareness and compliance with all currently effective and applicable executive orders and secretary’s orders, including, but not limited to the Executive Order titled Ending Radical and Wasteful Government DEI Programs and Preferencing as well as the Executive Order and Secretary’s order titled Restoring Truth and Sanity to American History. Applicants are responsible for ensuring their proposed activities are consistent with the intent and requirements of these directives.\n\n Application Documents Applicants must submit the following forms with their application as specified below. Instructions for accessing and submitting application forms are provided in the Submission Instructions section of this document below. For instructions on completing form fields, see the form instructions on the Grants.gov Forms Repository."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2007402,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The review of applications will follow the requirements of E.O. 14332, such as ensuring review by senior appointees, and that selections demonstrably advance the President’s policy priorities consistent with applicable law. Geographic dispersion, project types, applicant types, previous award history, and applicant success in implementing Gold Standard Science (E.O. 14303) may be considered during the review. Selections are finalized once all reviews are complete, and all applicants are notified.\n\n Risk Review Prior to making an award, the applicant will be assessed for their level of risk per 2 CFR 200.206. This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n A Grants Officer conducts a detailed budget analysis and a business evaluation and responsibility determination. During this evaluation, the Grants Officer will consider several factors, such as:\n\n • Allowability, allocability, and reasonableness of proposed costs\n\n • Financial strength and stability of the applicant\n\n • Past performance, including satisfactory compliance with all terms and conditions of previous awards, such as environmental compliance, reporting requirements, and audit compliance\n\n • Adequacy of personnel practices, procurement procedures, and accounting policies and procedures.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.198948,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-7VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "d6cb18145974ae36": {
+  "query": "solar panels renewable energy to power desalination facility",
+  "filter": "ab0777318879d329",
+  "retrievalResults": []
+ },
+ "df649d42d452c6fc": {
+  "query": "eligible applicants who can apply",
+  "filter": "ab0777318879d329",
+  "retrievalResults": []
+ },
+ "ebe2c5e0549ec7b2": {
+  "query": "energy efficiency, energy use, and renewable energy components of project",
+  "filter": "67d8b8f5f7ad43fd",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Use costs related to the entire project—not just the expected cost of work over the next 3 years.\n\n Summarize the economic analysis performed for the project including information on the project’s estimated benefits and costs. Describe the methodologies used for the analysis that has been conducted. Points will be awarded based on a comparison of the benefits and costs of the project. Please note that information must be included in the proposal to be considered; scores will not be based on information provided in the project’s feasibility study.\n\n The information provided should include:\n\n • Quantified and monetized project costs, including expected capital costs and operations and maintenance costs.\n\n • Quantified and monetized project benefits. This includes benefits that can be quantified and expressed as a monetized benefit per acre-foot. These may include, but are not limited to, benefits related to water supply quantity and reliability, recreational benefits, ecosystem benefits, water quality, and energy efficiency. Benefits may also include the avoided costs of no action (i.e., the costs that would be incurred if the project were not implemented), and the willingness of water users to pay for a benefit or to avoid a negative outcome (e.g., the willingness of households to pay for a water supply system that would reduce groundwater overdraft). If quantified and/or monetized information for these benefits is not available, they may be addressed in response to question two below"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.275789,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8rVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• State the length of time and estimated completion date for the proposed project (month/year).\n\n • Whether or not the proposed project is located on a Federal facility.\n\n \n\n Project Location\n\n Provide detailed information on the proposed project location or project area including a map showing the geographic location. For example, [project name] is located in [state and county] approximately [distance] miles [direction, e.g., northeast] of [nearest town]. The project latitude is [##°##’N] and longitude is [###°##’W].\n\n Technical Project Description\n\n This section provides an opportunity for the applicant to clearly describe the technical scope and construction process of the proposed project and to address any aspect of the project that reviewers may need additional information to understand.\n\n Provide a comprehensive description of the technical aspects of your project, outlining the full scope of the overall project and how the project in its entirety is included within the Reclamation-reviewed feasibility study. The description should include details about the advanced water treatment process involved along with a process flow diagram identifying which components of the facility are existing, which are new, and which will be upgraded. If any existing components are being upgraded as part of the scope of work, please describe what the current equipment and describe the upgrade.Page 11 of 29\n\n Identify the current stage of the project and provide a detailed work plan for the activities to be completed over the next three years, consistent with the anticipated grant period of performance. Describe the status of required Federal environmental and cultural resource compliance measures for the proposed project. Please provide an updated status on any relevant changes or issues the project sponsor is currently addressing. This may include permitting challenges, pending agency approvals, or any unresolved issues that have emerged since the completion of the feasibility study. Clearly describe the nature of each issue, its status, and any steps being taken to resolve it.\n\n Merit Review Criteria\n\n “The Merit Review Criteria” section provides a detailed description of each criterion and sub- criterion and points associated with each. The merit review criteria portion of the application should thoroughly address each criterion and sub-criterion in the order presented to assist in the complete and accurate merit review of the proposal.\n\n Copying and pasting the merit review criteria and sub-criteria in Project Narrative’s Merit Review Criteria into your applications is suggested to ensure that all necessary information is adequately addressed.\n\n Letters of Support:\n\n Attach all support letters from interested stakeholders at the end of your application. Letters received after the application deadline will not be evaluated."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2456276,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A47VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n \n\n • The year the project has or is expected to begin to deliver desalinated water.\n\n \n\n • The projected life (in years) that the project is expected to last. Note: this should be measured from the time the project starts delivering water\n\n Table 2.—Replacement Costs by Year\n\n Description of Replacement Requirement Year Cost\n\n 1.\n\n 2.\n\n 3.\n\n 4.\n\n 5.\n\n 6.\n\n 7.\n\n 8.\n\n 9.\n\n \n\n • All estimated replacement costs by year as shown in Table 2. If there are multiple replacement costs in one (1) year, or at the same interval, total them and put them on one line with the year or interval.\n\n • The maximum volume of water (in acre-feet) expected to be produced annually upon completion of the project. This volume of water must correspond to the costs provided above. If costs are only provided for a portion or phase of the project, then only the water produced by that same portion or phase of the project will be considered under this criterion.\n\n Reclamation will calculate the cost per acre-foot for the project using the information requested above and compare it to the non-reclaimed water alternative, and any other water supply options that the applicant identifies to evaluate the cost effectiveness of the project. Provide the following information for this comparison:\n\n • A description of the economic conditions that exist in the area and projections of the future with, and without, the project.Page 21 of 29\n\n • Provide the cost per acre-foot of other water supply alternatives that could be implemented by the non-Federal project sponsor in lieu of the project. This must include, but is not limited to, one non-reclaimed water alternative that would satisfy the same demand as the project. Other water supply alternatives beyond one non-reclaimed water alternative are not required but may be provided where available to demonstrate the cost effectiveness of the project.\n\n • If available, provide the cost per acre-foot of one water supply project with similar characteristics to the project. This information does not have to be provided if it is not available. It is intended to provide another possible comparison to demonstrate the cost effectiveness of the project.\n\n • Discussion of the degree to which the project is cost-effective. Where applicable, include a discussion of why the project may be cost effective even if the overall project cost appears to be high.\n\n Subcriterion No. C.2 —Benefit/Cost Analysis\n\n Points will be awarded based on the analysis of the project’s benefits relative to the project’s costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2275046,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8bVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 21,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • A comparison of the project’s quantified and monetized benefits and costs.\n\n Describe any economic benefits of the project that are difficult to quantify and/or monetize, and the economic impact of these benefits. Points will be awarded based on the potential economic impact of the project-related benefits."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.216017,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A87VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Page 19 of 29\n\n o Has the project area been identified by the United States Drought Monitor as experiencing severe, extreme, or exceptional drought, or been designated as a drought disaster area by the State, at any time in the last 4 years? If so, provide details.\n\n Merit Review Criterion C: Economic Analysis (20 points)\n\n Up to 20 points may be awarded based on the economic analysis conducted to demonstrate the cost effectiveness of the project and the project’s benefits relative to the project’s costs.\n\n Subcriterion No. C.1.—Cost Effectiveness Analysis\n\n Points will be awarded based on the cost per acre-foot of water expected to be delivered upon completion of the project and how the cost of the project compares to a non-desalination alternative. Use costs related to the entire project, not just the cost of work over the next 3 years or the phase currently under development. Costs should be provided for the entire project described in the Reclamation-approved feasibility study.\n\n Reclamation will calculate the cost per acre-foot of water produced by the project using information provided by applicants. For a description of how this calculation is done, see the Title XVI Frequently Asked Questions webpage at www.usbr.gov/watersmart/title/faq.html.\n\n Provide the following information for this calculation:\n\n • The total estimated construction costs, by year, for the project (include all previous and planned work) as shown in Table 1.\n\n Table 1.—Estimated Construction Costs by Calendar Year\n\n Year Construction Cost Year Construction Cost\n\n 1. 6.\n\n 2. 7.\n\n 3. 8.\n\n 4. 9.\n\n 5. 10."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.182188,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A77VXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Water Management Concerns and Project Benefits 15\n\n \n\n \n  https://www.ecfr.gov/current/title-2/section-25.200\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-I/part-25/subpart-A/section-25.110\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-I/part-25/subpart-B/section-25.205\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-I/part-25/subpart-B/section-25.205Page 17 of 29\n\n C. Economic Analysis 20\n\n D."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1770594,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Examples of benefits may include, but are not limited to, acres of land or stream miles that may be benefitted or not harmed, benefits to habitat or species, flood risk mitigation, local impacts on residents and/or businesses, job creation, and regional impacts. This may also include benefits identified previously in the application, if they have not been monetized (e.g., water reliability, water quality, and recreation).Page 22 of 29\n\n \n\n Merit Review Criterion D: Presidential and Department of the Interior Priorities (20 points)\n\n Up to 20 points may be awarded based on the extent that the project demonstrably:\n\n • advances the Trump Administration’s priorities, including E.O. 14154: Unleashing American Energy, justifies alignment with priorities and requirements in E.O. 14332: Improving Oversight in Federal Grantmaking;\n\n • includes primary project elements that develop, demonstrate, and or implement artificial intelligence (AI) technologies that advance the Trump Administration and Department of Interior’s priorities for AI, including OMB M-25-21 Accelerating the Use of AI through Innovation, Governance, and Public Trust; S.O. 3444: Leading Interior’s Path to Artificial Intelligence Transformation;\n\n • aligns with Secretary Burgum’s strategic objectives, including those identified in S.O.s 3417: Addressing the National Energy Emergency, 3418 Unleashing American Energy, 3419 Delivering Emergency Price Relief for American Families and Defeating the Cost- of-Living Crisis;\n\n • aligns with goals and objectives in the U.S. Department of the Interior FY 2026-2030 Strategic Plan; and\n\n • supports water management and enhanced operational flexibility in Reclamation States, with priority given to the Colorado River Basin, which is experiencing long-term drought conditions.\n\n Please address only those priorities that are applicable to your project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1709569,
+    "metadata": {
+     "documentIdentifier": "WaterSMART: Desalination Construction Projects",
+     "agency": "Bureau of Reclamation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A9LVXYKEBbayybwJODOn1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/WaterSMART: Desalination Construction Projects/NOFO-File-PDF",
+     "nofoName": "WaterSMART: Desalination Construction Projects",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:21:28.070Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ }
+}

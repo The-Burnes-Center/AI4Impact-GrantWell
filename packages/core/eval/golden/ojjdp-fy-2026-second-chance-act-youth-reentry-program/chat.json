@@ -1,0 +1,35 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the application due?",
+    "expected": "The full application is due in JustGrants by 8:59 p.m. ET on November 9, 2026; before that, the SF-424 must be submitted in Grants.gov by 11:59 p.m. ET on November 2, 2026.",
+    "quote": "2. Submit full application in JustGrants: November 9, 2026, by 8:59 p.m. ET",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Can a nonprofit apply?",
+    "expected": "Yes, but only under Category 2 (Strengthening Community-Based Youth Reentry Programs): nonprofits with or without 501(c)(3) status, other than institutions of higher education. Category 1 is limited to state, county, city/township, federally recognized tribal governments and other units of local government.",
+    "quote": "Nonprofits that do not have a 501(c)(3) status with the IRS, other than",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "How long can the abstract be?",
+    "expected": "The proposal abstract, entered in JustGrants, is limited to 2,000 characters and should not include personally identifying information such as staff names.",
+    "quote": "In JustGrants, enter a proposal abstract (limited to 2,000 characters) summarizing the",
+    "confirmed": false
+  },
+  {
+    "id": "q4",
+    "kind": "allowable_cost",
+    "question": "Can grant funds pay for legal services for undocumented youth?",
+    "expected": "No. Funds used to provide legal services to any removable alien or alien unlawfully present in the U.S. are unallowable, except for legal services to obtain protection orders for crime victims or immigration-related legal services expressly authorized or required by law or judicial ruling.",
+    "quote": "in the United States shall be unallowable costs for purposes any award",
+    "verdict": "not_allowed",
+    "confirmed": false
+  }
+]

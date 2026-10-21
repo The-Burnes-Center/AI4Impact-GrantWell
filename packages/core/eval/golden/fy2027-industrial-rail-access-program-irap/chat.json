@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are IRAP applications due?",
+    "expected": "Applications are accepted on a rolling basis and reviewed quarterly; FY2027 application period close dates are June 30, 2026, September 30, 2026, December 31, 2026, and March 31, 2027 (no time of day is given).",
+    "quote": "Applications will be accepted on a rolling basis throughout the year.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "How much funding can one project get?",
+    "expected": "MassDOT reimburses up to 80% of eligible project costs, and a project's grant funding may not exceed $700,000 (whichever is less).",
+    "quote": "A project's grant funding may not exceed $700,000. The grantee will be required to provide",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "Do I need a support letter from the town?",
+    "expected": "Yes. A letter of support from the host municipality must be provided, along with letters from the businesses impacted by the improvement.",
+    "quote": "B. A letter of support from the host municipality must be provided",
+    "confirmed": false
+  }
+]

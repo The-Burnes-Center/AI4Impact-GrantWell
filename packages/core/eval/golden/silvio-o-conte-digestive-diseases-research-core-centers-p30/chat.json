@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the DDRCC P30 application due?",
+    "expected": "There are two receipt dates, September 29, 2026 and February 10, 2027 (same for new and renewal/resubmission/revision), and applications are due by 5:00 PM local time of the applicant organization.",
+    "quote": "September 29, 2026 September 29, 2026 Not Applicable March 2027 May 2027 July 2027 February 10, 2027 February 10, 2027 Not Applicable July 2027 October 2027 December 2027 All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the max budget per year?",
+    "expected": "Application budgets are limited to $750,000 in direct costs per year, with a maximum project period of five years.",
+    "quote": "Application budgets are limited to $750,000 in direct costs per year and need to reflect the actual needs of the proposed Center.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "What are the page limits for each part?",
+    "expected": "The Overall and Admin Core components are each limited to 12 pages, each Biomedical Research Core (2 to 6 required) to 6 pages, and the Pilot and Feasibility Program to 6 pages.",
+    "quote": "Overall Overall 12 Required 1 1 Admin Core Admin Core 12 Required 1 1 Biomedical Research Core Core 6 Required 2 6 NOFO Specific P and F Program 6 Required 1 1",
+    "confirmed": false
+  }
+]

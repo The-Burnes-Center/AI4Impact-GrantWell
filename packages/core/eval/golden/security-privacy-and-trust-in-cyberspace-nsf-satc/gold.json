@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NSF",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Full Proposal Target Date: September 29, 2025, then the last Monday in September annually; proposals accepted anytime but may miss a panel",
+      "date": "2025-09-29",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date."
+    },
+    {
+      "kind": "application",
+      "label": "Full Proposal Target Date: January 26, 2026, then the last Monday in January annually; proposals accepted anytime but may miss a panel",
+      "date": "2026-01-26",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date. Proposals will be accepted anytime, but they may miss a particular panel or committee meeting."
+    }
+  ],
+  "award": {
+    "ceiling": 1200000,
+    "floor": null,
+    "periodMonths": 48,
+    "expectedAwards": 75,
+    "range": null,
+    "caps": [
+      {
+        "what": "total budget, RES designation (up to four years, including any TTE plan)",
+        "value": 1200000
+      },
+      {
+        "what": "total budget, EDU designation (up to three years)",
+        "value": 500000
+      },
+      {
+        "what": "total budget, education research focused EDU with cybersecurity and education researcher PI team (extra $100,000)",
+        "value": 600000
+      },
+      {
+        "what": "total budget, SEED designation (up to two years)",
+        "value": 300000
+      },
+      {
+        "what": "optional Transition to Education (TTE) plan, within the RES total budget",
+        "value": 50000
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "Cost Sharing Requirements: Inclusion of voluntary committed cost sharing is prohibited."
+    },
+    "quote": "RES projects are limited to $1,200,000 in total budget, with durations of up to four years. Proposals with a total budget of more than $600,000 have additional requirements"
+  },
+  "sections": [
+    {
+      "name": "Project Summary",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": null,
+      "quote": "All RES and SEED proposals must include a prioritized list of 1-6 keywords that describe the general area(s) of the investigation"
+    },
+    {
+      "name": "Project Description",
+      "order": 2,
+      "limit": {
+        "type": "pages",
+        "value": 15
+      },
+      "conditional": null,
+      "component": null,
+      "quote": "Project Description: The project description for proposals submitted to the RES and EDU designations is limited to 15 pages, and 10 pages for the SEED designation."
+    },
+    {
+      "name": "Collaboration Plan",
+      "order": 3,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": "Projects with more than one PI and a total budget of more than $600,000 (optional otherwise)",
+      "component": "Supplementary Documents",
+      "quote": "all proposals with more than one investigator and a total of more than $600,000 must include a Collaboration Plan of up to 2 pages."
+    },
+    {
+      "name": "Data Management and Sharing Plan",
+      "order": 4,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Supplementary Documents",
+      "quote": "Data Management and Sharing Plan (required): Proposals must include a Supplementary Document of no more than two pages labeled \"Data Management and Sharing Plan.\""
+    },
+    {
+      "name": "Broadening Participation in Computing (BPC) Plan",
+      "order": 5,
+      "limit": {
+        "type": "pages",
+        "value": 3
+      },
+      "conditional": "Projects with a budget greater than $600,000 that include a computing organization; Standalone up to 3 pages, Connected up to 2 pages plus verified Departmental BPC Plans",
+      "component": "Supplementary Documents",
+      "quote": "Each project with a budget greater than $600,000 and with a lead or non-lead organization (department, school, or institute) that primarily carries out research and education in computer science"
+    },
+    {
+      "name": "Transition to Education Plan",
+      "order": 6,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": "Optional, RES proposals only",
+      "component": "Supplementary Documents",
+      "quote": "Optional TTE Plan for RES proposals: The TTE plan should be labeled as \"Transition to Education Plan\" and should not exceeding 2 pages."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Intellectual Merit",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Summary",
+        "Project Description"
+      ],
+      "quote": "Intellectual Merit: The Intellectual Merit criterion encompasses the potential to advance knowledge"
+    },
+    {
+      "name": "Broader Impacts",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Summary",
+        "Project Description"
+      ],
+      "quote": "Broader Impacts: The Broader Impacts criterion encompasses the potential to benefit society and contribute to the achievement of specific, desired societal outcomes."
+    },
+    {
+      "name": "RES: project scope justifies the level of investment requested",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "For all RES projects, reviewers will be asked to evaluate the extent to which the project scope justifies the level of investment requested."
+    },
+    {
+      "name": "Multi-investigator RES over $600,000: Collaboration Plan synergy and adequate time allocation of key personnel",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Collaboration Plan"
+      ],
+      "quote": "For multi-investigator RES projects with a budget greater than $600,000, reviewers will be asked to comment on: the degree to which the Collaboration Plan adequately demonstrates that the participating investigators will work synergistically"
+    },
+    {
+      "name": "RES with TTE Plan: TTE plan meaningfully addresses need, novelty, transition, early adopters, deployment, sustainability and feedback into research",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Transition to Education Plan"
+      ],
+      "quote": "For RES projects with a TTE Plan, reviewers will be asked to comment on whether the TTE plan meaningfully addresses: the need and novelty of the educational content"
+    },
+    {
+      "name": "BPC Plan meaningfully addresses the five elements",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Broadening Participation in Computing (BPC) Plan"
+      ],
+      "quote": "For projects that are required to include a BPC plan , reviewer will be asked to comment on whether the Broadening Participation in Computing (BPC) plan meaningfully addresses the five elements of a BPC Plan"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Project Description limited to 10 pages for the SEED designation (15 for RES and EDU)",
+      "Title must begin with \"SaTC 2.0:\" followed by the designation acronym (RES, EDU, SEED, and TTE when used), e.g. SaTC 2.0: RES: TTE: Title; collaborative sets prepend \"Collaborative Research:\"",
+      "RES and SEED: the last paragraph of the Project Summary Overview must be a prioritized list of 1-6 keywords separated by semi-colons; the first keyword must come from the solicitation's topic list (RWR)",
+      "Project Personnel and Partner Institutions list must be numbered, one person per line: Full name; Organization(s); Role",
+      "Letters of collaboration may be no longer than one page each, with fonts and margins per PAPPG Chapter II.C.2",
+      "BPC plan must begin with the heading \"Broadening Participation in Computing (BPC) Plan -\" followed by Standalone or Connected",
+      "No other Supplementary Documents are allowed except as permitted by the PAPPG",
+      "Collaborative proposals submitted as separate submissions must be submitted via Research.gov"
+    ],
+    "quote": "The last paragraph of the Overview section of the Project Summary must consist of a prioritized list of 1-6 keywords, separated by semi-colons. (RWR)"
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: accredited two- and four-year US institutions of higher education (including community colleges) acting on behalf of their faculty, and US non-profit, non-academic organizations directly associated with educational or research activities (independent museums, observatories, research laboratories, professional societies)",
+      "quote": "Proposals may only be submitted by the following: Institutions of Higher Education (IHEs): Two- and four-year IHEs (including community colleges) accredited in, and having a campus located in the U.S., acting on behalf of their faculty members."
+    },
+    {
+      "item": "Funding to an international branch campus of a US IHE must be justified (benefit of performing there and why it cannot be done at the US campus)",
+      "quote": "the proposer must explain the benefit(s) to the project of performance at the international branch campus, and justify why the project activities cannot be performed at the US campus."
+    },
+    {
+      "item": "PI, co-PI and Senior/Key personnel must hold a tenured/tenure-track position or a primary, full-time, paid research or teaching appointment at a US-based campus of an eligible organization",
+      "quote": "any PI, co-PI, or other Senior/Key project personnel must hold either: a tenured or tenure-track position, or a primary, full-time, paid appointment in a research or teaching position at a US-based campus"
+    },
+    {
+      "item": "Individuals with primary appointments at for-profit non-academic organizations or overseas branch campuses of US IHEs are not eligible",
+      "quote": "Individuals with primary appointments at for-profit non-academic organizations or at overseas branch campuses of U.S. institutions of higher education are not eligible."
+    },
+    {
+      "item": "No more than four proposals per individual (as PI, co-PI or Senior/Key Personnel) in any contiguous 12-month period: two RES, one EDU, one SEED; excess proposals are returned without review",
+      "quote": "During any contiguous 12-month period, an individual may not participate as PI, co-PI, or Senior/Key Personnel in more than four proposals. There is a limit of: two proposals designated as RES; one proposal designated as EDU; and one proposal designated as SEED."
+    },
+    {
+      "item": "No limit on the number of proposals per organization",
+      "quote": "Limit on Number of Proposals per Organization: There are no restrictions or limits."
+    },
+    {
+      "item": "Sub-awards to overseas campuses/offices of US-based proposing organizations are not permitted",
+      "quote": "Additional Eligibility Info: Sub-awards are not permitted to overseas campuses/offices of US-based proposing organizations."
+    },
+    {
+      "item": "Proposals must be submitted under one designation: RES, EDU or SEED",
+      "quote": "Proposals must be submitted pursuant to one of the following designations, each of which may have additional requirements:"
+    },
+    {
+      "item": "SEED proposals are solicited only through Dear Colleague Letters within specified submission windows (may require concept outlines or specific team composition)",
+      "quote": "The accompanying DCLs will only solicit proposals within specified submission windows and all active DCLs will be listed on the SaTC 2.0 Program web page ."
+    },
+    {
+      "item": "Proposals focused primarily on design, development or use of offensive techniques are out of scope",
+      "quote": "Proposals that focus primarily on the design, development, or use of offensive techniques are out of scope"
+    },
+    {
+      "item": "Budget on the Cover Sheet and budget sheets must not exceed the designation maximum or the proposal is returned without review",
+      "quote": "The maximum budget shown on the Cover Sheet and on the budget sheets must not exceed $300,000 for SEED proposals, $1,200,000 for RES proposals (including the budget for the optional TTE plan)"
+    },
+    {
+      "item": "EDU proposals must include detailed assessment and evaluation plans and must request funds for an evaluator independent of the project",
+      "quote": "All EDU proposals must have detailed plans for assessment and evaluation that are clearly aligned with the project's stated goals based on appropriate metrics."
+    },
+    {
+      "item": "Project budgets must include travel for one or more project representatives to attend the SaTC PI meeting",
+      "quote": "Project budgets must include funding for one or more project representatives (PI/co-PI/senior researcher or NSF-approved replacement) to attend the first SaTC PI meeting held after the beginning of the award."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "List of Project Personnel and Partner Institutions (Supplementary Document; lead institution provides for all participants)",
+      "userWrites": true,
+      "quote": "(required) A list of Project Personnel and Partner Institutions (required. Note: in collaborative proposals, the lead institution should provide this information for all participants)"
+    },
+    {
+      "item": "Letters of collaboration from academic or industry partners (optional, one page each)",
+      "userWrites": false,
+      "quote": "Letters of collaboration: Letter of collaboration from academic or industry partners are welcome to document specific contributions they will make to the project."
+    },
+    {
+      "item": "Verified Departmental BPC Plans from each institution (for a Connected BPC Plan)",
+      "userWrites": false,
+      "quote": "up to 2 pages that describe (5) what strategies in the departmental plan the PI and co-PIs will focus on, their specific roles, and their preparation for their work; followed by the verified Departmental BPC Plans from each institution."
+    },
+    {
+      "item": "Collaborators and Other Affiliations Information for each participant (Single Copy Document)",
+      "userWrites": false,
+      "quote": "Single Copy Documents: Collaborators and Other Affiliations Information: Proposers should follow the guidance specified in PAPPG Chapter II.D.2."
+    },
+    {
+      "item": "Budget, including travel to the SaTC PI meetings",
+      "userWrites": true,
+      "quote": "PIs are explicitly required to budget for travel to the PI meetings."
+    }
+  ],
+  "libraryRequired": [
+    "References Cited",
+    "Biographical Sketch",
+    "Current and Pending (Other) Support",
+    "Facilities, Equipment and Other Resources",
+    "Mentoring Plan"
+  ]
+}

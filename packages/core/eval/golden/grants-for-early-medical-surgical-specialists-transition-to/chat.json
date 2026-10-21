@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the GEMSSTAR R03 due?",
+    "expected": "There are multiple cycles: new applications are due November 10, 2026, June 16, 2027 and June 16, 2028; resubmission applications (the only other type allowed) are due November 16, 2026, July 16, 2027 and July 16, 2028. All are due by 5:00 PM local time of the applicant organization.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the budget cap for this grant?",
+    "expected": "Application budgets are limited to $125,000 in direct costs per year, and the project period is limited to 2 years.",
+    "quote": "Award Budget Application budgets are limited to $125,000 in direct costs per year.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "Is there an extra attachment I need besides the research plan, and how long can it be?",
+    "expected": "Yes. Applicants must include an Other Attachment titled \"Professional Development Plan\" (PDP), and that section is limited to 5 pages.",
+    "quote": "applicants are encouraged to describe specific activities that will augment their skills in geriatrics and/or aging research in order to develop into independent researchers in aging science. This section is limited to 5 pages.",
+    "confirmed": false
+  }
+]

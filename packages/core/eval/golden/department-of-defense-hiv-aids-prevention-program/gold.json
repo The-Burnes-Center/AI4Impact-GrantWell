@@ -1,0 +1,414 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "DOD",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Application due per every country specific narrative in Attachment 1 (all 10 narratives say 12pm EST on 15 May 2026)",
+      "date": "2026-05-15",
+      "time": "12:00",
+      "tzAsWritten": "EST",
+      "fromBrokenTable": false,
+      "quote": "NOTE: Application submissions for this narrative are due by 12pm EST on 15 May 2026. Submissions received after the deadline will not be considered for funding."
+    },
+    {
+      "kind": "application",
+      "label": "Base announcement Section D: applications due 5:00 p.m. ET on the date in the country narrative (15 May 2026); conflicts with the narratives' 12pm EST",
+      "date": "2026-05-15",
+      "time": "17:00",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "Submission Dates and Times: Applications must be received by 5:00 p.m. Eastern Time (ET), on the date specified in the country specific narrative in Attachment 1."
+    },
+    {
+      "kind": "other",
+      "label": "Announcement closes (open continuously until 18 September 2027)",
+      "date": "2027-09-18",
+      "time": "17:00",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "This announcement will be open to receive applications continuously until 5:00 p.m. Eastern Time (ET), 18 September 2027, at which point all applications must be received."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 48,
+    "expectedAwards": {
+      "min": 10,
+      "max": 20
+    },
+    "range": null,
+    "caps": [],
+    "match": null,
+    "quote": "The Period of Performance for these awards is 4 years."
+  },
+  "sections": [
+    {
+      "name": "Cover Page",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Technical Narrative",
+      "quote": "Cover Page - Should include the words \"Technical Narrative\" as well as the following:"
+    },
+    {
+      "name": "Project Abstract",
+      "order": 2,
+      "limit": {
+        "type": "chars",
+        "value": 4000
+      },
+      "conditional": null,
+      "component": "Technical Narrative",
+      "quote": "Project Abstract - Concise, single-spaced abstract, not to exceed 4000 characters, summarizing the proposed program effort"
+    },
+    {
+      "name": "Executive Summary",
+      "order": 3,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "Executive Summary (Not to exceed two pages). Brief description of proposed activities, goals, purposes, and anticipated results."
+    },
+    {
+      "name": "Background Information",
+      "order": 4,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "Background Information (Not to exceed two pages). Provide contextual information relevant to setting goals and technical approaches."
+    },
+    {
+      "name": "Goal and Objectives",
+      "order": 5,
+      "limit": {
+        "type": "pages",
+        "value": 5
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "Goal and Objectives (Not to exceed five pages). Provide high level goals/aims of programming to include outcomes and impacts in target populations"
+    },
+    {
+      "name": "Work Plan",
+      "order": 6,
+      "limit": {
+        "type": "pages",
+        "value": 6
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "Work Plan (Not to exceed six pages). Provide expanded detail on activities contributing to approach and sequencing."
+    },
+    {
+      "name": "Data Management Plan",
+      "order": 7,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "Data Management Plan (Not to exceed two pages). Data Management Plan should include:"
+    },
+    {
+      "name": "Monitoring and Evaluation",
+      "order": 8,
+      "limit": {
+        "type": "pages",
+        "value": 5
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "Monitoring and Evaluation (Not to exceed five pages, inclusive of table of indicators). State how you will demonstrate that the proposed program will have an impact"
+    },
+    {
+      "name": "Schedule and milestones",
+      "order": 9,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "Schedule and milestones (Not to exceed two pages). Provide a schedule and description of major milestones or tasks to be accomplished in the proposed program by quarter"
+    },
+    {
+      "name": "In-Country Participation",
+      "order": 10,
+      "limit": {
+        "type": "pages",
+        "value": 4
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "In-Country Participation (Not to exceed four pages). Describe the involvement of the host country's military and its leadership in:"
+    },
+    {
+      "name": "Relevance of the Program",
+      "order": 11,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section I: Technical Approach",
+      "quote": "Relevance of the Program (Not to exceed two pages). (a) Describe the relevance of the proposed program to the needs, priorities and circumstances of the host country's military"
+    },
+    {
+      "name": "Management Approach",
+      "order": 12,
+      "limit": {
+        "type": "pages",
+        "value": 15
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section II: Management and Qualifications Approach",
+      "quote": "Management Approach (Not to exceed fifteen pages). The Management Plan will provide a clear description of how the cooperative agreement will be managed"
+    },
+    {
+      "name": "The Organization's Qualifications",
+      "order": 13,
+      "limit": {
+        "type": "pages",
+        "value": 5
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section II: Management and Qualifications Approach",
+      "quote": "The Organization's Qualifications (Not to exceed five pages) - In this section, the applicant should describe its organizational knowledge, capability and experience in managing similar programs."
+    },
+    {
+      "name": "Current and Pending Support",
+      "order": 14,
+      "limit": {
+        "type": "pages",
+        "value": 5
+      },
+      "conditional": null,
+      "component": "Technical Narrative: Section II: Management and Qualifications Approach",
+      "quote": "Current and Pending Support (Not to exceed five pages) - The applicant must provide information on all current and pending projects"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Technical Approach: Goals and Objectives",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Goal and Objectives"
+      ],
+      "quote": "Goals and Objectives. The proposal clearly states the overall goal(s) of the program and has specific, measurable objectives."
+    },
+    {
+      "name": "Technical Approach: Work Plan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Work Plan"
+      ],
+      "quote": "Work Plan: The proposal contains sound scientific methods, an appropriate work plan described in sufficient detail and appropriate deliverables."
+    },
+    {
+      "name": "Technical Approach: Methodology for monitoring and evaluation procedures",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Monitoring and Evaluation"
+      ],
+      "quote": "Methodology for monitoring and evaluation procedures. The proposed plan includes a description of how the program will have an impact on the country's military"
+    },
+    {
+      "name": "Technical Approach: Schedule and milestones",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Schedule and milestones"
+      ],
+      "quote": "Schedule and milestones. The proposed plan for HIV prevention efforts is feasible and contains concrete, achievable schedule and milestones."
+    },
+    {
+      "name": "Technical Approach: Relevance to the host country's military",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "In-Country Participation",
+        "Relevance of the Program"
+      ],
+      "quote": "Relevance to the host country's military. The proposal clearly describes the involvement of the host country military and the relevance of the proposed program"
+    },
+    {
+      "name": "Qualifications: Key Personnel",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Management Approach",
+        "The Organization's Qualifications"
+      ],
+      "quote": "b. Qualifications Key Personnel are qualified and eligible to perform the work."
+    },
+    {
+      "name": "Whether the applicant qualifies as a local partner (unscored)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "In addition, the following unscored criteria will also contribute to the overall evaluation of the application: Whether the applicant qualifies as a local partner."
+    }
+  ],
+  "format": {
+    "pageSize": "8 1/2 by 11 inches",
+    "margins": "1 inch on all sides",
+    "font": "Times New Roman",
+    "fontSizePt": 12,
+    "lineSpacing": "single",
+    "overallPageLimit": 45,
+    "other": [
+      "Technical Narrative not to exceed 45 pages; pages beyond any \"Not to exceed\" limit are deleted before review",
+      "All proposals and documents must be in English or they will be rejected",
+      "Project abstract over 4000 characters is withdrawn/rejected; standard QWERTY characters only, spell out Greek letters and symbols, no graphics",
+      "Project abstract must contain no proprietary or confidential information and be marked \"Approved for Public Release\"",
+      "Mark each page of the submission that contains proprietary information",
+      "Do not include classified national security information",
+      "Cover Page must include funding opportunity number, targeted country, title, prime respondent and subcontractors, technical and administrative contacts, duration of effort, and a table of contents"
+    ],
+    "quote": "Font: Times New Roman, 12 point Margins: 1 inch on all sides Paper size: 8 ½ by 11\" Single-spaced"
+  },
+  "eligibility": [
+    {
+      "item": "Responsible sources from academia, industry, and non-governmental organizations are eligible",
+      "quote": "Eligible Applicants: All responsible sources from academia, industry, and non- governmental organizations may submit proposals under this announcement."
+    },
+    {
+      "item": "No award may be made directly to a foreign military establishment",
+      "quote": "No grants, contracts or cooperative agreements may be awarded directly to foreign military establishments."
+    },
+    {
+      "item": "Demonstrate the active support of the in-country military and the DoW representative at the U.S. Embassy in planning and submitting the proposal",
+      "quote": "All respondents must demonstrate the active support of the in-country military and the DoW representative in the corresponding U.S. Embassy in the planning and submission of their proposals."
+    },
+    {
+      "item": "Proposals must be submitted through Grants.gov",
+      "quote": "DoW will only accept proposals submitted through Grants.gov on or before the date specified in the country specific narrative provided in Attachment 1."
+    },
+    {
+      "item": "Organization must have a UEI, an active SAM registration, and a Grants.gov account",
+      "quote": "Organizations must have a Unique Entity Identifier (UEI) Number, active System for Award Management (SAM) registration, and Grants.gov account to apply for grants."
+    },
+    {
+      "item": "SAM registration must show \"Active\" status before submitting through Grants.gov",
+      "quote": "receive confirmation of an \"Active\" status before submitting an application through Grants.gov."
+    },
+    {
+      "item": "Submitter must hold the Grants.gov AOR role authorized by the organization's EBiz POC",
+      "quote": "You will be able to submit your application online any time after you have been assigned the AOR role."
+    },
+    {
+      "item": "Institutions of higher education must certify compliance with 10 U.S.C. 983 and 32 C.F.R. 216 (ROTC and military recruiting access)",
+      "quote": "Institutions of higher education must certify compliance with 10 U.S.C 983, Institutions Of Higher Education That Prevent ROTC Access Or Military Recruiting On Campus"
+    },
+    {
+      "item": "Applicant must not require employees, contractors, or subrecipients to sign confidentiality agreements that restrict lawful reporting of fraud, waste, or abuse",
+      "quote": "Recipient will not require any of its employees, contractors, or sub- recipients seeking to report fraud, waste, or abuse to sign or comply with internal confidentiality agreements"
+    },
+    {
+      "item": "A corporation with unpaid assessed federal tax liability or a federal felony conviction in the preceding 24 months is ineligible unless the suspension and debarment official clears it",
+      "quote": "the applicant is ineligible to receive an award unless the agency suspension and debarment official has considered suspension or debarment and determined that further action is not required"
+    },
+    {
+      "item": "Investigators on collaborative projects should each write and submit a separate proposal naming the collaborator's proposal",
+      "quote": "Investigators on collaborative projects should each write and submit separate, unique proposals, and provide the name and title of their collaborator's proposal within the project narrative of the application."
+    },
+    {
+      "item": "Funds will not support scientists from countries designated as State Sponsors of Terrorism",
+      "quote": "The Federal Government will not provide funds to support scientists from countries meeting the criteria for designation as a State Sponsor of Terrorism"
+    },
+    {
+      "item": "Multi-country SABERS narrative only: respondents must demonstrate previous experience designing, managing, and implementing epidemiological research and surveillance",
+      "quote": "All respondents must demonstrate previous experience in the design, management, and implementation of epidemiological research and surveillance."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF-424 Research and Related, Application for Federal Assistance (cover page of the proposal)",
+      "userWrites": false,
+      "quote": "SF-424 Research and Related, Application for Federal Assistance - (included in the application package available on grants.gov posted with this Program Announcement)."
+    },
+    {
+      "item": "SF-424 Research and Related Budget, one submission per budget year",
+      "userWrites": true,
+      "quote": "SF-424 Research and Related Budget - included in the application package available on grants.gov posted with this Program Announcement. Please ensure there is a submission for each budget year."
+    },
+    {
+      "item": "Budget Narrative Attachment Form with the budget justification",
+      "userWrites": true,
+      "quote": "Budget Narrative Attachment Form - Attach the Budget justification the SF424 R&R as required under Section L of the SF424 (R&R) form."
+    },
+    {
+      "item": "SF-424B Assurances - Non-construction Programs",
+      "userWrites": false,
+      "quote": "SF-424B, Assurances - Nonconstruction Programs - (included in the application package available on grants.gov posted with this Program Announcement)."
+    },
+    {
+      "item": "Statement of Work (SOW) file in the program office's Excel workbook, summarizing planned activities per program area for each year",
+      "userWrites": true,
+      "quote": "Statement of Work (SOW) File: Proposals must include a supplementary document for Statement of Work. In the Excel workbook provided by the program office"
+    },
+    {
+      "item": "Milestone metrics table mapping each activity to its milestone, outcome or process metric, and budget (country narratives)",
+      "userWrites": true,
+      "quote": "All proposals must include milestone metrics by activity and which outcome or process metric each activity supports."
+    },
+    {
+      "item": "Letter of support from the in-country military (country narratives)",
+      "userWrites": false,
+      "quote": "All respondents must demonstrate the active support of the in-country military in the planning and execution of their proposals. This should be done by attaching an appropriate letter of support."
+    },
+    {
+      "item": "Letters of support from all stakeholders mentioned in In-Country Participation, as addendums",
+      "userWrites": false,
+      "quote": "(*Letters of support from all stakeholders mentioned should be included as addendums to the proposal)."
+    },
+    {
+      "item": "MOUs with proposed partners where existing relationships exist, in the Attachment/Annex",
+      "userWrites": false,
+      "quote": "Applicant should state whether or not they have any existing relationships with the proposed partners and, if so, should include the Memoranda of Understanding (MOUs) in the Attachment/Annex."
+    },
+    {
+      "item": "Representations Regarding Unpaid Federal Tax Liabilities and Felony Convictions form (from eBRAP), uploaded under Attachments",
+      "userWrites": false,
+      "quote": "The form for completion and submission is posted in eBRAP (https://ebrap.org/eBRAP/public/Program.htm). Upload the form into Grants.gov under Attachments."
+    },
+    {
+      "item": "SF LLL Disclosure of Lobbying Activities, if applicable, attached to Block 18 of the SF 424",
+      "userWrites": false,
+      "quote": "Complete SFLLL (Disclosure of Lobbying Activities), if applicable, and attach to Block 18 of the SF424 (Application for Federal Assistance) Form."
+    },
+    {
+      "item": "Supporting documentation of local partner status, if claiming it",
+      "userWrites": false,
+      "quote": "To be considered a local partner, the applicant must submit supporting documentation demonstrating their organization meets at least one of the criteria listed below at the time of application."
+    }
+  ],
+  "libraryRequired": []
+}

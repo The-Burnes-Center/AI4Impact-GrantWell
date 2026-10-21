@@ -1,0 +1,371 @@
+THE COMMONWEALTH OF MASSACHUSETTS
+EXECUTIVE OFFICE OF ENERGY &
+ENVIRONMENTAL AFFAIRS
+ONE HUNDRED CAMBRIDGE STREET SUITE 900, BOSTON, MA 02114
+VSSVW PERCIDER o-o SIGILLIN REIPURT
+Request for Responses (RFR)
+Drought Resiliency and Water Efficiency Grant Program
+Project #: FY27EVRO0050
+COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+October 1, 2026
+1. RFR Introduction and General Description
+1.1 Description
+In recent years, the Commonwealth has been experiencing more frequent and intense drought.
+Since 2016, nine of the eleven years have had multiple months of drought. These droughts have
+caused impacts to water supply, habitat and the natural environment, and are exacerbating fire
+danger across the state. With climate change, increasing temperatures and predictions of more
+consecutive number of dry days, droughts are expected to increase in Massachusetts. The
+Massachusetts Executive Office of Energy and Environmental Affairs (EEA) is soliciting proposals
+from municipalities, public water suppliers, nonprofit organizations, public
+schools/colleges/universities, and regional planning agencies (RPAs) to participate in a Drought
+Resiliency and Water Efficiency (DRWE) Grant Program. The DRWE Grant Program aims to
+provide funding for projects that will help the Commonwealth become more climate resilient,
+specifically by reducing indoor and outdoor water use, improving water loss control, and increasing
+drought management/planning in communities and public water systems across the state. This is a
+REIMBURSEMENT program. Target awards are up to $50,000 per project. The program helps
+implement actions in the 2023 ResilientMass Plan.¹ For the third year of this program, EEA has
+again adopted a relatively broad scope to encourage a diverse range of innovative proposals and is
+particularly interested in water efficiency and demand management projects that are not currently
+funded through other programs. The focus is on initiatives that promise the greatest long-term
+impact on water use reduction, ensuring sustainable water management for the future.
+Examples of project types that are eligible include (but are not limited to):
+-
+Water Loss Control Program Development and Implementation
+Comprehensive water loss control program development
+Implementation of water loss control audit recommendations including distribution
+system leak detection activities and equipment meter calibration services/upgrades
+Piloting or demonstrating new and innovative approaches (e.g. regional collaboration,
+new technology for leakage reduction and asset management)
+-
+Water Efficiency Program Development and Implementation
+Comprehensive water conservation program/plan development and review of existing
+programs
+Residential water use (rgpcd) and unaccounted-for water (UAW) compliance plan
+assistance
+Data management and analysis assistance to inform water efficiency programs (e.g.
+compiling and analyzing use sectors and prioritizing largest users)
+Residential leak detection activities (e.g. device incentive programs)
+Public sector facility/municipal building upgrades to high-efficiency appliances/fixtures
+-
+Outdoor Water Use Efficiency Improvements
+Drought resilient landscape design and/or implementation (i.e., conversions of irrigated
+turf to non-irrigated native plant landscapes, etc.)
+Irrigation system audits (for functional turf areas)
+Irrigation system upgrades to increase efficiency (for functional turf areas)
+Drought resilient native plant demonstration/teaching gardens
+-
+Drought Management Planning
+Bathymetric surveys, stage storage curve development, reservoir water level
+measurement implementation
+Local drought plan development
+Development of water use restriction programs
+1 The ResilientMass Plan is Massachusetts' 2023 State Hazard Mitigation and Climate Adaptation Plan.
+Project #: FY27EVRO0050 I COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+Page 1
+Proposals will be evaluated based on the eligibility outlined in Section 1.3 and the evaluation criteria
+outlined in Section 3 of this Request for Responses (RFR).
+SINGLE/MULTIPLE CONTRACTS:
+EEA reserves the right to issue multiple contracts under this document. Eligible parties may file
+multiple responses.
+SUBMISSION OF QUESTIONS:
+Written questions must be entered by pressing the "Bid Q&A" tab for the Bid in COMMBUYS no
+later than October 23, 2026. The issuing department reserves the right not to respond to questions
+submitted after this date. It is the Bidder's responsibility to verify receipt of questions. At its
+discretion, EEA may publish answers to submitted questions via COMMBUYS
+(https://www.mass.gov/media/1455956/download - this is a .pdf file). If posted, EEA intends to post
+Questions and Answers on or before November 2, 2026.
+BUDGET REQUIREMENT: Applicants selected to receive grant funding will be required to submit
+documentation of expenditure for total approved project cost.
+PROJECT TERMS: If awarded, all projects will be required to abide by the Standard
+Commonwealth of Massachusetts Terms and Conditions. EEA does not guarantee that any
+contracts may result from this bid or that any particular funding level will be awarded. Only costs
+incurred during the contract period are eligible for reimbursement.
+CONTRACT DURATION: All contracts for grant assistance will end on or before June 30, 2027.
+All contracts will be delivered electronically for execution with a digital signature.
+DELIVERABLES:
+Grant recipients will be required to submit a brief Progress Report halfway through project
+completion and a Final Report following project completion. The progress report should include
+updates on key milestones, information on the implementation of project activities, and data
+demonstrating the impact of the project, including any measurable reductions in water use or
+improvements in water efficiency or loss control. The Final Report must supplement the Progress
+Report and also include an evaluation of project outcomes, lessons learned, recommendations for
+future efforts, and materials/language to support EEA outreach efforts related to the project. Lastly,
+grant recipients will be required to provide a brief presentation summarizing the project to the
+Massachusetts Water Resources Commission (WRC) or a separate forum, as applicable.
+Digital submissions must be provided in Microsoft Office compatible format or Adobe Acrobat and
+uploaded via the EEA Grant Management System (GMS).
+INVOICING:
+THIS IS A REIMBURSEMENT PROGRAM. Successful applicants will be required to execute a
+State Standard Contract prior to commencing work and will be required to manage their grant
+award contract, reports and reimbursement through the Grant Management System. Expenses
+incurred during the project may be reimbursed periodically.
+All reimbursement requests must use the form posted for this purpose in the GMS. Awardees also
+will be required to upload original vendor invoices and proof-of-payment via the online form.
+FORM OF AWARDS:
+For the selected projects, responding applicants will be offered a grant providing for reimbursement
+of approved costs. Budget proposals will be scrutinized and considered as part of the evaluation
+Project #: FY27EVRO0050 I COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+Page 2
+process. If an award is offered, elements of the budget may be negotiated or an award may be
+made to satisfy a portion of the budget.
+All contracts shall be subject to available funding, whether through the appropriation and
+authorization of sufficient funds or the receipt of sufficient revenues. If available funding ceases for
+any reason, a contract shall be deemed under suspension and contract performance must halt. An
+applicant (contractor) will not be entitled to compensation for any performance provided during the
+period of contract suspension. EEA may lift the suspension if additional funding is received. In the
+absence of foreseeable available funding, EEA may terminate the contract.
+ALLOWABLE COSTS:
+If an award is offered, allowable project costs will include all costs deemed by EEA to be necessary
+and reasonable for a project, including:
+Execution of any agreements and sub-agreements deemed by the Secretary to be critical to
+the project
+Procurement, provision, and use of engineering, inspection, legal, financial, planning,
+geological, hydrological, landscaping and other professional services, estimates and advice,
+as well as permitting fees
+Consultant fees for program development, data management, and compliance strategies
+Software purchases and staff training for data analysis
+Leak detection and metering equipment
+Irrigation system audits and efficiency upgrades
+Fees for landscape design services, landscape materials, and site preparation for turf
+conversions
+Public outreach and educational materials
+Incentives for residential water-saving devices
+Survey and measurement tools for drought planning
+Other reasonable costs not specifically listed above may be eligible for reimbursement if they are
+directly related to an eligible project's objectives. Applicants are encouraged to identify such costs
+in their proposals for evaluation by EEA during the application review process. All costs must be
+necessary and reasonable to achieve the project outcomes, and EEA will assess the eligibility of
+these expenses on a case-by-case basis.
+The following costs will NOT be considered allowable project costs and should not be included in
+the request for funding, but may be cited by an applicant thereby providing evidence of local
+commitment to the project:
+Any related costs incurred prior to the execution of a grant with EEA or after the contract has
+ended
+Unrelated equipment purchases
+Ongoing operations and maintenance
+Travel costs not directly related to project implementation
+Any costs funded by any other Federal or other State grant or loan to the applicant
+Costs incurred by police details
+Costs to acquire an interest in real property
+EEA shall not provide additional financial assistance above the total award amount regardless
+of additional project costs which may be incurred by the recipient of an award.
+1.2 Background
+With the increasing frequency of droughts in Massachusetts due to climate change, the need for
+Project #: FY27EVRO0050 I COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+Page 3
+water users across the Commonwealth to find ways to reduce water consumption has become
+more urgent than ever. Water efficiency and water loss control are critical tools in this effort. By
+reducing the demand for water, communities can better preserve their water supplies during periods
+of drought and for fire protection, ensuring both the environment and the population have access to
+adequate water resources.
+Water efficiency measures such as upgrading infrastructure, installing efficient fixtures, and
+encouraging behavioral changes can significantly reduce the strain on water systems, particularly
+during peak demand periods. Outdoor water use, which often spikes in the summer months, can be
+a major contributor to water shortages, making conservation efforts in landscaping and irrigation
+systems vital to long-term water sustainability.
+At the same time, addressing water loss through implementing or improving comprehensive water
+loss control programs helps ensure that valuable water resources are not wasted. Many public
+water systems experience significant losses due to aging infrastructure, leaks, and inefficient
+operations. Tackling these losses not only helps conserve water but also improves the overall
+efficiency and resilience of the water supply network.
+The DRWE Grant Program seeks to fund innovative projects that promote climate resilience by
+helping communities and public water suppliers reduce both indoor and outdoor water use, improve
+water loss control programs, and increase drought management/planning. By supporting these
+efforts, the program aims to create lasting impacts on water conservation and drought
+preparedness, helping Massachusetts communities better adapt to the evolving climate and
+ensuring the sustainability of their water resources for future generations.
+1.3 Eligible Entities
+Eligible Entities include Municipalities, Public Water Suppliers, Nonprofit Organizations, Public
+Schools/Colleges/Universities, and Regional Planning Agencies. Partnerships between two or more
+entities are encouraged.
+We recognize that many water resource challenges, including drought management and water
+conservation, can often be addressed at a regional scale, where water systems and usage patterns
+often transcend municipal boundaries. Regional collaboration allows for a more holistic approach to
+water efficiency, as communities and organizations can pool resources, share best practices, and
+implement solutions that address broader watershed and regional water supply concerns. With this
+understanding, we are encouraging project proposals that incorporate regional-scale
+initiatives involving collaborations among multiple organization types, such as
+municipalities, public water suppliers, and nonprofit organizations.
+1.4 Compliance with Section 3A of MGL C. 40A (Zoning Act, MBTA Communities):
+The receipt of grant funds is contingent upon the grantee being able to certify that it will comply with
+the Massachusetts General Laws, including G.L. C. 40A, § 3A, the MBTA Communities Act.
+Compliance with the MBTA Communities Act is determined by the Executive Office of Housing and
+Livable Communities.
+Project #: FY27EVRO0050 I COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+Page 4
+2. Estimated Calendar
+Event
+Date
+Request for Responses (RFR) posting on COMMBUYS
+October 1, 2026
+Deadline for Submission of Questions through COMMBUYS
+October 23, 2026 at 5:00 pm
+Official Answers for Bid Q&A published (Estimated)
+November 2, 2026
+Deadline for Submission of Proposals via the Grant Management System
+November 12, 2026 at 11:59 PM
+Application Review
+November 13 - Dec 11, 2026
+Approval process
+December 14, 2026 - Jan 15, 2027
+Notification of Apparent Successful Applicants
+January 19 - Jan 29, 2027
+Contract Start Date
+February 1 - Feb 12, 2027
+Deadline for Completion of Projects
+June 30, 2027
+3. Evaluation Criteria
+Responses to this RFR will be used to rank Applicants. As stated above, responses will not create any
+obligation by EEA to the responding parties.
+3.1 Evaluation Components
+An EEA selection committee will review applications from responding organizations. Applications
+will be evaluated based, at a minimum, upon the following criteria:
+Alignment with Program Goals (15%)
+Proposals will be assessed on how well they align with the program's overall objectives of reducing
+indoor and outdoor water use, improving water loss control, and drought planning.
+Project Impact (40%)
+Proposals must outline expected water savings, improvements in water loss control, and/or
+increased drought resiliency, with preference given to those that can deliver significant and
+measurable impacts. Proposals should outline clear, measurable outcomes and describe how
+project success will be monitored and evaluated.
+Additional consideration/preference will be given to proposals that:
+incorporate regional-scale initiatives and demonstrate collaboration between multiple
+organizations (i.e., municipalities, water suppliers, and non-profit organizations)
+demonstrate a long-term ability and commitment to drought resiliency and water
+conservation, beyond the immediate scope of the grant period
+include innovative approaches or incorporate sustainable practices with long-term benefits
+serve as a demonstration project and are transferable to other communities (i.e., innovative
+projects that provide deliverables that can be easily adopted by other communities or outline
+processes that will streamline other similar projects)
+Cost, Budget, Feasibility and Readiness (30%)
+Proposals should provide justification for the project's costs relative to its expected outcomes,
+including detailed budgets and quotes, as applicable.
+Project #: FY27EVRO0050 I COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+Page 5
+The technical and operational feasibility of the project will be assessed, including the ability of the
+applicant to implement the proposed activities within the grant period (funded portions of projects
+must be completed by June 30, 2027).
+Overall Project Quality (15%)
+In general, projects that are well planned and have a high likelihood of success will be preferred.
+4. Response Application Submission Process
+Respondents are REQUIRED to use the online application form and upload tool provided at the EEA
+Grant Management System. Applicants are required to establish a profile on the system and apply
+through the portal.
+Link to the Executive Office of Energy and Environmental Affairs GMS: greenhub.mass.gov
+No paper applications will be accepted for this program. No applications will be accepted through any
+other electronic means other than the online system. The online application and other supporting
+documents must be submitted on or before, November 12, 2026 at 11:59 PM at which time the online
+portal will close for this opportunity. Submissions through the site will be digitally time stamped. EEA
+shall make no allowance for technical difficulties or inability of the respondent to utilize the online
+system. No applications will be accepted after the deadline for any reason. No additional
+documentation will be accepted after the deadline for any reason.
+Digital files uploaded to the application site must be provided in Microsoft Office compatible format or
+unlocked Adobe Acrobat. Respondents may not return to the application form to edit or add files after
+the deadline.
+Applicants will need to create a user profile in order to apply.
+1. Obtain a username and password utilizing the MyMassGov (MyMassGov Mass.gov).
+MyMassGov is a secure service that allows members of the public to use a single account and
+password to sign in to all participating Massachusetts state services and applications.
+2. When creating your new MyMassGov username and password, please select the business
+account option and utilize your work email address.
+3. Follow the steps to verify your email address and set up multifactor authorization.
+When logged into the MyMassGov you will see a number of Commonwealth of Massachusetts
+Services. Select the Executive Office of Energy and Environmental Affairs Grant Management System.
+The System will request some information about the user in order to validate the user. Users will not be
+provided access to the grant application until their profile is validated. Please follow the instructions
+provided. Please note that validation may require one or more days to complete.
+5. Response Format
+Application Cover Form (Online)
+A sample of the online form used in the Grant Management System may also be found on the
+COMMBUYS page for this procurement. Use of this form for the application is required.
+Appendices (Online - To be uploaded as attachments)
+Project Site Map
+Cost Estimates/Quotes from Vendors
+Project #: FY27EVRO0050 I COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+Page 6
+Additional Project Information that may be helpful (i.e., Planning Report(s), existing plans used as
+project basis, Scope of Work, Project Narrative, etc.)
+Guidance for each response section in the online form is offered below:
+Section 1 - Application Summary
+Please verify that the information shown from the user profile is correct. Information input here
+will be used by EEA to contact the applicant.
+Applicant Name - This is the name of the eligible entity applying for the grant
+Contact Name - This is the individual that will be the primary contact for EEA program
+managers
+Contact Title
+Street Address - This is the business address of the applicant
+Primary Contact Phone - This is the preferred phone number for EEA use only
+Primary Contact Email Address
+Summary application information
+Project Title
+Short description. Use this field to provide a 1 paragraph description of the project suitable for
+use in press releases or program summaries.
+Amount requested from EEA
+Municipality - this is the municipality(ies) the project will occur within. This may be different than
+the mailing address of the applicant.
+Section 2 - Project Type Questions
+The selection of the project type while filling out the application in the GMS will direct the applicant to
+specific questions. Please ensure the appropriate project type is selected and that all required
+questions are answered completely.
+Section 3 - Project Identification and Narrative - Must be answered on online form only
+Using the questions in the online form, the narrative should describe how the project will help the
+Commonwealth become more climate resilient, specifically by reducing indoor and outdoor water use,
+improving water loss control, and/or increasing drought management/planning in communities and
+public water systems across the state.
+Each response should provide enough detail to allow reviewers to fully understand the project idea, its
+feasibility, and its potential impact.
+a. Project Overview
+Provide a concise summary of the project, including its goals, objectives, and how it aligns with
+the program's purpose of reducing indoor and outdoor water use, improving water loss control,
+and improving drought planning and resiliency across Massachusetts.
+b. Project Description
+Describe the scope of work for this project in detail, outlining the specific activities/tasks and
+methods that will be used to achieve the stated goals. Identify how details regarding the
+proposed project and associated outcomes will be shared with the public. Confirm that EEA will
+be acknowledged for project funding.
+C. Organizations Involved and Regional Collaboration
+Provide a description of the individuals/organizations that will be involved. If applicable, detail
+any collaboration among organizations such as municipalities, water suppliers, or nonprofit
+groups, and describe how the project will operate at a regional scale.
+d. Expected Outcomes
+Project #: FY27EVRO0050 I COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+Page 7
+Clearly define the anticipated outcomes of the project, including specific, measurable impacts
+on water use reduction, efficiency improvements, water loss control, or drought resiliency.
+Provide any relevant metrics that will be used to measure success.
+e. Budget, Project Schedule, and Cost Estimates
+Provide a detailed breakdown of the project costs, including all expenses related to personnel,
+materials, equipment, and other associated costs. Please note that no match is required to be
+eligible for this program.
+Present a comprehensive work plan that includes the key tasks, deliverables, milestones, and
+timeline for completing the project. Ensure that the timeline is realistic and aligned with the grant
+period (funded portions of projects must be completed by June 30, 2026). In addition,
+describe how the project's benefits will be sustained beyond the grant period. This may include
+long-term maintenance plans, funding strategies, or other measures to ensure water efficiency
+goals are continued to be met in the future. Identify how the project can be transferable to other
+locations or communities (i.e., innovative projects that provide deliverables that can be easily
+adopted by other communities or outline processes that will streamline other similar projects).
+Outline what these deliverables are and how they can/will be shared with other communities.
+REQUIRED FORMS (IF SELECTED FOR FUNDING)
+If selected for funding, additional forms will be required to execute a contract, including:
+Commonwealth Standard Contract Form, filled out and signed by the Respondent
+Commonwealth Scope and Budget Form
+Commonwealth Terms and Conditions filled out and signed by the Respondent
+Commonwealth W-9 tax information form filled out and signed by the Respondent
+Completed Contractor Authorized Signature Verification Form
+Electronic Funds Transfer Form
+These forms are posted on the COMMBUYS site for this procurement. Respondents are encouraged to review
+these forms prior to sFyubmission of their proposal.
+PUBLIC RECORDS:
+Please note that all responses and information submitted in response to this RFR are subject to the
+Massachusetts Public Records Law, M.G.L. C. 66, S. 10, and to C. 4, S. 7, SS. 26. Any statements in submitted
+responses that are inconsistent with these statutes, including marking of information as confidential, shall be
+disregarded. Please do not submit any information that the Applicant may not wish to disclose publicly, such as
+home addresses or personal telephone numbers, social security numbers, or other similar information.
+TOTAL ANTICIPATED DURATION OF CONTRACT(S): The contract period will begin on the date EEA executes
+the contract. Approved project costs must be expended by June 30, 2026.
+REGULATIONS, STATUTES, OR AUTHORIZATION GOVERNING THIS GRANT PROGRAM: Allocated to this
+project through FY27 Appropriation/Source: EEA budget line E134: State Hazard Mitigation and Climate
+Adaptation Plan.
+Project #: FY27EVRO0050 I COMMBUYS #: BD-27-1042-ENV-ENV01-134023
+Page 8

@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "AmeriCorps",
+  "deadlines": [
+    {
+      "kind": "loi",
+      "label": "Online Intent to Apply (optional, strongly encouraged)",
+      "date": "2026-09-18",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "September 18, 2026 Online Intent to Apply Due (optional, strongly encouraged)"
+    },
+    {
+      "kind": "application",
+      "label": "Competitive grant application due to MSA via the online application",
+      "date": "2026-10-09",
+      "time": "14:00",
+      "tzAsWritten": "EST",
+      "fromBrokenTable": false,
+      "quote": "Applications must be received by MSA by 2:00 P.M. EST on October 9th, 2026 via MSA's online application. Submission through other means is not acceptable."
+    },
+    {
+      "kind": "other",
+      "label": "Final applications (for applicants invited forward) uploaded to AmeriCorps eGrants",
+      "date": "2026-12-15",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "December 15, 2026 Final applications uploaded to AmeriCorps system (eGrants)."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 12,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "cost per Member Service Year (MSY) for cost reimbursement and full-cost fixed amount operating grants",
+        "value": 26800
+      },
+      {
+        "what": "per Member Service Year (MSY) for Education Award Only (EAP) and Professional Corps fixed amount grants",
+        "value": 1000
+      }
+    ],
+    "match": {
+      "required": true,
+      "ratio": "0.24",
+      "appliesTo": "Cost Reimbursement grants only (years 1-3; rises to 30% by year 10); no specific match for fixed amount grants",
+      "quote": "Cost Reimbursement Minimum grantee share is 24% of program costs for the first three years. Overall grantee share of total program costs increases gradually beginning in year four to 30% by the tenth year of funding and any year thereafter."
+    },
+    "quote": "The maximum cost per MSY (full-time equivalent member) an applicant may request through this application is $26,800."
+  },
+  "sections": [
+    {
+      "name": "Executive Summary",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Program Narrative (Narrative Template)",
+      "quote": "1. Executive Summary (0 points) Follow instructions in the Narrative Template. You will include this text in the template AND copy and paste it into Form Assembly when you upload your application."
+    },
+    {
+      "name": "Community and Logic Model",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Program Narrative (Narrative Template)",
+      "quote": "2. Community and Logic Model (20 Points) In the Narrative Template, the applicant will provide a detailed summary of: a. The community problem, including relevant data to establish the scope and impact of the problem;"
+    },
+    {
+      "name": "Evidence Base",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Program Narrative (Narrative Template)",
+      "quote": "3. Evidence Base (20 points total) Applicants should provide and describe evidence from research and evaluation studies that their proposed intervention will lead to the outcomes identified in their theory of change."
+    },
+    {
+      "name": "Notice Priority",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Program Narrative (Narrative Template)",
+      "quote": "4. Notice Priority (4 points) Describe whether one or more of the AmeriCorps funding priorities is a significant part of the program focus and intended outcomes."
+    },
+    {
+      "name": "AmeriCorps Volunteer Experience",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Program Narrative (Narrative Template)",
+      "quote": "5. AmeriCorps Volunteer Experience (6 points) Describe how AmeriCorps Volunteers will be provided opportunities for skill attainment, personal growth and connection to the community they are serving"
+    },
+    {
+      "name": "Organizational Background and Staffing",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Program Narrative (Narrative Template)",
+      "quote": "6. Organizational Background and Staffing (15 points) Describe the roles, responsibilities, and structure of the staff that will implement and provide oversight of the program"
+    },
+    {
+      "name": "AmeriCorps Volunteer Supervision",
+      "order": 7,
+      "limit": null,
+      "conditional": null,
+      "component": "Program Narrative (Narrative Template)",
+      "quote": "7. AmeriCorps Volunteer Supervision (10 points) Describe how AmeriCorps Volunteers will receive sufficient guidance and support from their supervisor to provide effective service."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Community and Logic Model",
+      "scored": true,
+      "points": 20,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Community and Logic Model"
+      ],
+      "quote": "2. Community and Logic Model (20 Points)"
+    },
+    {
+      "name": "Evidence Tier",
+      "scored": true,
+      "points": 12,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Evidence Base"
+      ],
+      "quote": "EVIDENCE TIER (12 Points) Each applicant will receive an evidence tier assessment."
+    },
+    {
+      "name": "Evidence Quality",
+      "scored": true,
+      "points": 8,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Evidence Base"
+      ],
+      "quote": "EVIDENCE QUALITY (8 points) Reviewers will score the quality of an applicant's evidence and the extent to which it supports the proposed program design."
+    },
+    {
+      "name": "Notice Priority",
+      "scored": true,
+      "points": 4,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Notice Priority"
+      ],
+      "quote": "4. Notice Priority (4 points)"
+    },
+    {
+      "name": "AmeriCorps Volunteer Experience",
+      "scored": true,
+      "points": 6,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "AmeriCorps Volunteer Experience"
+      ],
+      "quote": "5. AmeriCorps Volunteer Experience (6 points)"
+    },
+    {
+      "name": "Organizational Background and Staffing",
+      "scored": true,
+      "points": 15,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Organizational Background and Staffing"
+      ],
+      "quote": "6. Organizational Background and Staffing (15 points)"
+    },
+    {
+      "name": "AmeriCorps Volunteer Supervision",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "AmeriCorps Volunteer Supervision"
+      ],
+      "quote": "7. AmeriCorps Volunteer Supervision (10 points)"
+    },
+    {
+      "name": "AmeriCorps Volunteer Recruitment (Budget Narratives)",
+      "scored": true,
+      "points": 7,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "8. Budget Narratives (25 points total) AMERICORPS VOLUNTEER RECRUITMENT (7 points):"
+    },
+    {
+      "name": "AmeriCorps Volunteer Retention (Budget Narratives)",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "AMERICORPS VOLUNTEER RETENTION (10 Points): Provide a description of budget expenses to support retention of AmeriCorps Volunteers."
+    },
+    {
+      "name": "Data Collection (Budget Narratives)",
+      "scored": true,
+      "points": 8,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "DATA COLLECTION (8 points):"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Use the Narrative Template without format changes; do not adjust any text outside of the brackets",
+      "The application narrative and Logic Model may not exceed the limits in each section listed in the provided templates",
+      "Submit only via MSA's online application at https://www.tfaforms.com/5142083; other means are not acceptable",
+      "Upload the Budget Worksheet as an Excel file",
+      "Do not submit supplemental materials such as brochures or newsletters; they will not be reviewed",
+      "Sign the Assurances, Certifications and Supplementary Certifications as a single document and upload as a PDF"
+    ],
+    "quote": "The application narrative and Logic Model may not exceed the limits in each section listed in the provided templates."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible non-Federal entities: Indian Tribes; institutions of higher education; local governments, including school districts; nonprofit organizations; State Service Commissions (submit sub-applicants but not operate programs); states and US Territories",
+      "quote": "Indian Tribes; institutions of higher education; local governments, including school districts; nonprofit organizations; State Service Commissions (submit sub-applicants but not operate programs); and states and US Territories."
+    },
+    {
+      "item": "Tribal organizations controlled, authorized, or chartered by federally recognized Indian Tribes are eligible, with documentation of control/charter or a Tribal Council authorization resolution",
+      "quote": "In addition to Indian Tribes as defined in 2 CFR 200.1, Tribal organizations that are controlled, authorized, or chartered by Federally recognized Indian Tribes are also eligible to apply."
+    },
+    {
+      "item": "Must have and maintain an active SAM registration and valid Unique Entity Identifier (UEI)",
+      "quote": "All applicants must register with the System for Award Management (SAM) and maintain an active SAM registration until the application process is complete."
+    },
+    {
+      "item": "Use the SAM-registered legal name and physical address on the application; eGrants information must match SAM exactly",
+      "quote": "Applicants must use their SAM-registered legal name and physical address on all grant applications to AmeriCorps."
+    },
+    {
+      "item": "Application must include an Employer Identification Number (EIN)",
+      "quote": "Applications must include an Employer Identification Number (EIN)."
+    },
+    {
+      "item": "New applicants may apply for cost reimbursement, EAP and Professional Corps grants but not full-cost fixed amount grants",
+      "quote": "New applicants are eligible to apply for cost reimbursement, Education Award Program (EAP), and Professional Corps grants, but are not eligible to apply for full cost fixed amount grants."
+    },
+    {
+      "item": "Fixed amount or EAP applicants must contact MSA at least 2 weeks before the application deadline",
+      "quote": "If you are interested in a Fixed or EAP grant, you must contact MSA directly to discuss your specific situation at least 2 weeks before the application deadline."
+    },
+    {
+      "item": "Must apply for a minimum of 20 members; applications not requesting the minimum MSYs will not be reviewed",
+      "quote": "Applicants must apply for a minimum of 20 members."
+    },
+    {
+      "item": "Grant start date must be on or after July 1, 2027",
+      "quote": "Programs must select a grant start date on or after July 1, 2027 to ensure sufficient time for the grant to be awarded by AmeriCorps before program implementation."
+    },
+    {
+      "item": "Proposed budget should reflect only first-year costs of the three-year grant cycle",
+      "quote": "Your proposed budget should only reflect costs associated with the first year of the three-year grant cycle"
+    },
+    {
+      "item": "Applications that fail any submission requirement will not be reviewed",
+      "quote": "Any application that fails to meet all application submission requirements will not be reviewed."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Logic Model Worksheet",
+      "userWrites": true,
+      "quote": "3. Uploaded: Logic Model Worksheet"
+    },
+    {
+      "item": "Performance Measures Worksheet (aligned performance measures using the Performance Measure Template)",
+      "userWrites": true,
+      "quote": "Complete an aligned Performance Measurement worksheet using the \"Performances Measure Template\" form."
+    },
+    {
+      "item": "Budget Worksheet (Excel), with detailed budget narrative explaining purpose, justification and basis of calculations",
+      "userWrites": true,
+      "quote": "Your detailed budget narrative must provide a full explanation of the proposed costs including their purpose, justification, and the basis of your calculations."
+    },
+    {
+      "item": "Budget Narrative: AmeriCorps Volunteer Recruitment (description of budget expenses supporting recruitment)",
+      "userWrites": true,
+      "quote": "Provide a description of budget expenses to support recruitment of AmeriCorps Volunteers best suited to serve the community."
+    },
+    {
+      "item": "Budget Narrative: AmeriCorps Volunteer Retention (description of budget expenses supporting retention)",
+      "userWrites": true,
+      "quote": "Provide a description of budget expenses to support retention of AmeriCorps Volunteers."
+    },
+    {
+      "item": "Budget Narrative: Data Collection (description of budget expenses supporting data collection and evaluation)",
+      "userWrites": true,
+      "quote": "Provide a description of budget expenses that support data collection and evaluation, including the process for collecting and maintaining high-quality performance data"
+    },
+    {
+      "item": "Authorization, Assurances and Certifications (signed, uploaded)",
+      "userWrites": false,
+      "quote": "Complete each section of the Assurances and Certification and upload them with your application."
+    },
+    {
+      "item": "Most recent audit (including a Single Audit, if applicable)",
+      "userWrites": false,
+      "quote": "A. Most recent Audit (including a Single Audit, if applicable)"
+    },
+    {
+      "item": "Proof of eligibility: 501(c)(3) letter (or equivalent)",
+      "userWrites": false,
+      "quote": "B. Proof of 501(c)(3) status (or equivalent)"
+    },
+    {
+      "item": "Federally Negotiated Indirect Cost Rate Agreement (NICRA), if applicable",
+      "userWrites": false,
+      "quote": "C. Federally Negotiated Indirect Cost Rate Agreement (NICRA), if applicable"
+    },
+    {
+      "item": "Evaluation Plan Summary (programs with 3 or more years of Competitive AmeriCorps funding)",
+      "userWrites": true,
+      "quote": "Programs that have received 3 or more years of Competitive AmeriCorps funding are required to submit an Evaluation Plan Summary with their application."
+    },
+    {
+      "item": "Compliant Evaluation Report aligned with the submitted Evaluation Plan (programs with more than 6 years of funding)",
+      "userWrites": false,
+      "quote": "Programs that have received more than 6 years of funding are required to submit a compliant Evaluation Report aligned with their submitted Evaluation Plan."
+    },
+    {
+      "item": "Evidence documents (up to two, plus the evaluation report from the last three-year grant cycle, if applicable) to qualify for the Preliminary, Moderate or Strong tier",
+      "userWrites": false,
+      "quote": "To qualify for the Preliminary, Moderate, or Strong evidence tier, applicants may submit up to two evidence documents, plus the evaluation report from their last three-year grant cycle, if applicable."
+    },
+    {
+      "item": "Tribal documentation of control/charter or Tribal Council authorization resolution (tribal organizations, if applicable)",
+      "userWrites": false,
+      "quote": "it must submit a resolution or other authorization, adopted by the Tribal Council (or comparable tribal governing body) of each Indian Tribe."
+    }
+  ],
+  "libraryRequired": []
+}

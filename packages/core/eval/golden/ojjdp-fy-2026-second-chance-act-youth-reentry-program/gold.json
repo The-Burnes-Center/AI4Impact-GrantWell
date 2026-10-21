@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "DOJ",
+  "deadlines": [
+    {
+      "kind": "other",
+      "label": "SAM.gov registration/renewal: begin by October 2, 2026, no later than October 16, 2026",
+      "date": "2026-10-16",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "SAM.gov Registration/Renewal Begin the process by October 2, 2026, and no later than October 16, 2026"
+    },
+    {
+      "kind": "other",
+      "label": "Step 1: Complete SF-424 and submit in Grants.gov",
+      "date": "2026-11-02",
+      "time": "23:59",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "Application Deadlines in Eastern Time (ET): 1. Complete SF-424 and submit in Grants.gov: November 2, 2026, by 11:59 p.m. ET"
+    },
+    {
+      "kind": "application",
+      "label": "Step 2: Submit full application in JustGrants",
+      "date": "2026-11-09",
+      "time": "20:59",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "2. Submit full application in JustGrants: November 9, 2026, by 8:59 p.m. ET"
+    }
+  ],
+  "award": {
+    "ceiling": 750000,
+    "floor": null,
+    "periodMonths": 36,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [],
+    "match": {
+      "required": true,
+      "ratio": "0.5",
+      "appliesTo": "Category 1 only",
+      "quote": "Federal funds awarded under this funding opportunity require a 50 percent match from nonfederal sources. For each federal dollar awarded, the recipient must provide 50 cents toward the project costs."
+    },
+    "quote": "Anticipated Award Amount Up to $750,000 Expected Award Period(s) 36 months starting on January 1, 2027"
+  },
+  "sections": [
+    {
+      "name": "Proposal Abstract",
+      "order": 1,
+      "limit": {
+        "type": "chars",
+        "value": 2000
+      },
+      "conditional": null,
+      "component": null,
+      "quote": "In JustGrants, enter a proposal abstract (limited to 2,000 characters) summarizing the proposed project. As abstracts for funded projects are public, do not include any personally identifying information"
+    },
+    {
+      "name": "Description of the Need",
+      "order": 2,
+      "limit": {
+        "type": "paragraphs",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Proposal Questionnaire",
+      "quote": "The response to each question should be no more than 1 - 2 paragraphs. The questions are: Description of the Need (5% of application score):"
+    },
+    {
+      "name": "Project Goals and Objectives",
+      "order": 3,
+      "limit": {
+        "type": "paragraphs",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Proposal Questionnaire",
+      "quote": "Project Goals and Objectives (15% of application score): What are the project goals (goals are broad, visionary statements on what you hope to accomplish)?"
+    },
+    {
+      "name": "Project Design and Implementation",
+      "order": 4,
+      "limit": {
+        "type": "paragraphs",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Proposal Questionnaire",
+      "quote": "Project Design and Implementation (35% of application score): What activities will you conduct to achieve the proposed goals and objectives?"
+    },
+    {
+      "name": "Capabilities and Competencies",
+      "order": 5,
+      "limit": {
+        "type": "paragraphs",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Proposal Questionnaire",
+      "quote": "What is your capacity to deliver the proposed project and meet the post-award requirements, if funded?"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Description of the Need",
+      "scored": true,
+      "points": null,
+      "weightPct": 5,
+      "scale": null,
+      "sections": [
+        "Description of the Need"
+      ],
+      "quote": "Description of the Need (5% of application score): What is the need, gap, or issue to be addressed by the proposed project?"
+    },
+    {
+      "name": "Project Goals and Objectives",
+      "scored": true,
+      "points": null,
+      "weightPct": 15,
+      "scale": null,
+      "sections": [
+        "Project Goals and Objectives"
+      ],
+      "quote": "Project Goals and Objectives (15% of application score): What are the project goals"
+    },
+    {
+      "name": "Project Design and Implementation",
+      "scored": true,
+      "points": null,
+      "weightPct": 35,
+      "scale": null,
+      "sections": [
+        "Project Design and Implementation"
+      ],
+      "quote": "Project Design and Implementation (35% of application score): What activities will you conduct to achieve the proposed goals and objectives?"
+    },
+    {
+      "name": "Capabilities and Competencies",
+      "scored": true,
+      "points": null,
+      "weightPct": 30,
+      "scale": null,
+      "sections": [
+        "Capabilities and Competencies"
+      ],
+      "quote": "Capabilities and Competencies (30% of application score):"
+    },
+    {
+      "name": "Budget",
+      "scored": true,
+      "points": null,
+      "weightPct": 15,
+      "scale": null,
+      "sections": [],
+      "quote": "Budget (15% of application score) *Required* Use the Budget Detail Worksheet (Web-Based Form) to submit the budget."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [],
+    "quote": null
+  },
+  "eligibility": [
+    {
+      "item": "Category 1 (Improving Youth Reentry): state, county, city or township governments, other units of local government (towns, boroughs, parishes, villages, other general purpose political subdivisions of a state), and federally recognized Native American Tribal governments",
+      "quote": "Category 1: Improving Youth Reentry Government Entities State governments County governments City or township governments Native American Tribal governments (federally recognized) Other Units of local government"
+    },
+    {
+      "item": "Category 2 (Strengthening Community-Based Youth Reentry Programs): nonprofits with or without 501(c)(3) IRS status, other than institutions of higher education",
+      "quote": "Nonprofits having a 501(c)(3) status with the Internal Revenue Service (IRS), other than institutions of higher education Nonprofits that do not have a 501(c)(3) status with the IRS, other than institutions of higher education"
+    },
+    {
+      "item": "Category 1 applications must include the required cost sharing (match) or they are ineligible for funding",
+      "quote": "This NOFO category requires cost sharing (match). See Program Description: Cost Sharing (Match) Requirement for details on the cost sharing (match) calculation and what types of contributions are acceptable. If your application does not include the required cost sharing, it will be deemed ineligible for funding."
+    },
+    {
+      "item": "More than one application is allowed only if each proposes a different project",
+      "quote": "Limit on Number of Applications: You may submit more than one application if each application proposes a different project."
+    },
+    {
+      "item": "Each application should apply to only one category",
+      "quote": "Each application should apply to only one category of the NOFO."
+    },
+    {
+      "item": "For multi-entity projects only one entity applies; partners must be proposed as subrecipients, not co-applicants",
+      "quote": "If a project will be carried out by two or more entities (project partners), only one entity may submit the application. The other entities (project partners) must be proposed as subrecipients rather than co-applicants."
+    },
+    {
+      "item": "Category 1: include evidence of partnership with federal corrections and supervision agencies, service providers, and nonprofit organizations (may be documented through an MOU)",
+      "quote": "Category 1: Improving Youth Reentry. Applicants should include evidence of partnership including federal corrections and supervision agencies, service providers, and nonprofit organizations. This may be documented through a Memorandum of Understanding (MOU)."
+    },
+    {
+      "item": "Category 2: must attach a draft or fully executed MOU with the correctional agencies that oversee the recruitment facilities and community corrections (probation and/or parole) for the target population",
+      "quote": "Applicants must include-as an attachment-a draft or fully executed MOU that clearly demonstrates an established relationship between the applicant and the correctional agencies that (1) oversee the specific facility or facilities from which the applicant proposes to recruit the target reentering population"
+    },
+    {
+      "item": "Category 2 projects must conduct pre-release case planning at least 90 days prior to program youth's release",
+      "quote": "pre-release access to confined youth for purposes of conducting pre-release case planning within 90 days, at minimum, prior to program youth's release, as is required for Category 2 projects"
+    },
+    {
+      "item": "Requested award amount must not exceed the award ceiling",
+      "quote": "The application is submitted by an eligible applicant. The requested award amount does not exceed the award ceiling. The application is responsive to the scope of the NOFO."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF-424 Application for Federal Assistance, submitted in Grants.gov",
+      "userWrites": false,
+      "quote": "Step 1: Grants.gov Application for Federal Assistance: SF-424 *Required*"
+    },
+    {
+      "item": "Standard Applicant Information in JustGrants (review SF-424 data, add ZIP codes for affected areas)",
+      "userWrites": false,
+      "quote": "Review and edit as needed the information imported from the SF-424 submitted in Grants.gov. Add ZIP codes for areas affected by the project."
+    },
+    {
+      "item": "Financial Management and System of Internal Controls Questionnaire (including Applicant Disclosure of High-Risk Status)",
+      "userWrites": false,
+      "quote": "Financial Management and System of Internal Controls Questionnaire (including Applicant Disclosure of High-Risk Status) Review information on this questionnaire."
+    },
+    {
+      "item": "Agency Funding Priorities Inventory (if seeking priority consideration)",
+      "userWrites": false,
+      "quote": "Applicants seeking priority consideration under the Agency Funding Priorities section should answer the inventory questions in their entirety in the web-based form in JustGrants."
+    },
+    {
+      "item": "Letter of support from the U.S. Attorney's Office Lead HSTF Attorney, or 287(g) partnership evidence (if requesting that priority consideration)",
+      "userWrites": false,
+      "quote": "To request priority consideration, applicants must provide a letter of support from DOJ through the U.S. Attorney's Office's Lead HSTF Attorney (for the applicable HSTF)"
+    },
+    {
+      "item": "Budget (Budget Detail Worksheet web-based form)",
+      "userWrites": true,
+      "quote": "Use the Budget Detail Worksheet (Web-Based Form) to submit the budget. Read information on budget preparation and JustGrants Application Submission Training."
+    },
+    {
+      "item": "Budget narrative explaining cost calculations and their connection to project goals, objectives, and activities (as needed, in the Budget Detail Worksheet)",
+      "userWrites": true,
+      "quote": "Enter narrative, as needed, to explain the cost calculations and connection to your project goals, objectives, and activities."
+    },
+    {
+      "item": "Indirect Cost Rate Agreement (if applicable)",
+      "userWrites": false,
+      "quote": "If the budget includes indirect costs calculated using a current, federally approved indirect cost rate, upload your indirect cost rate agreement."
+    },
+    {
+      "item": "Consultant Rate approval request (if applicable)",
+      "userWrites": false,
+      "quote": "Consultant Rate (if applicable): Read information on limits to consultant rates and whether you need to request approval to exceed those limits."
+    },
+    {
+      "item": "Waiver of the limitation on award funds for employee compensation, for awards over $250,000 (if applicable)",
+      "userWrites": false,
+      "quote": "Limitation on Use of Award Funds for Employee Compensation for Awards Over $250,000; Waiver (if applicable): Read information on this limitation and to determine whether you need to submit a waiver."
+    },
+    {
+      "item": "Category 2: draft or fully executed MOU or letter of support with the correctional agencies, as one separate attachment",
+      "userWrites": true,
+      "quote": "Category 2 applicants must include, as an attachment, a draft or fully executed MOU or letter of support that clearly demonstrates an established, collaborative relationship between the applicant and the correctional agencies"
+    },
+    {
+      "item": "Signed MOU or letter of intent from each named project partner",
+      "userWrites": false,
+      "quote": "For each named partner involved in the project (whether as a subrecipient that will receive federal funds to carry out part of the federal award, or otherwise), applicants should include a signed MOU or a letter of intent"
+    },
+    {
+      "item": "Cover page explaining why a draft MOU is unsigned (if submitting an unsigned MOU)",
+      "userWrites": true,
+      "quote": "Unsigned draft MOUs may be submitted with the application, but the applicant should describe in a cover page to the attachment why it is unsigned."
+    },
+    {
+      "item": "Tribal Authorizing Resolution (if applicable)",
+      "userWrites": false,
+      "quote": "Tribal Authorizing Resolution (if applicable): Read information on whether you may need to submit a Tribal Authorizing Resolution."
+    },
+    {
+      "item": "Research and Evaluation Independence and Integrity Statement (if applicable)",
+      "userWrites": true,
+      "quote": "Research and Evaluation Independence and Integrity Statement (if applicable): Read information whether you may need to submit this statement."
+    },
+    {
+      "item": "Curriculum vitae or resumes of key personnel (or a description of their experience and skills)",
+      "userWrites": false,
+      "quote": "Curriculum Vitae or Resumes: Provide resumes of key personnel who will work on the proposed project or a description of the experience and skills of key personnel necessary to implement the project."
+    },
+    {
+      "item": "Timeline of key activities and milestones by month or quarter",
+      "userWrites": true,
+      "quote": "Timeline: Provide a timeline listing key activities and milestones, and the months, or quarters, during which they will take place."
+    },
+    {
+      "item": "Disclosures and assurances in JustGrants: Disclosure of Lobbying Activities, Disclosure of Duplication in Cost Items (if applicable), DOJ Certified Standard Assurances, DOJ Certifications, Applicant Disclosure and Justification - DOJ High-Risk Grantees (if applicable)",
+      "userWrites": false,
+      "quote": "Read the disclosures and assurances and complete them in JustGrants: Disclosure of Lobbying Activities Disclosure of Duplication in Cost Items (if applicable) DOJ Certified Standard Assurances DOJ Certifications"
+    }
+  ],
+  "libraryRequired": []
+}

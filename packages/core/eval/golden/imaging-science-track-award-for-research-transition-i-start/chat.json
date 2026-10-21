@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the I/START application due?",
+    "expected": "It uses NIH standard due dates over multiple cycles: new applications February 16, June 16 and October 16, and resubmission applications March 16, July 16 and November 16 (2025 through 2027), all by 5:00 PM local time of the applicant organization; the notice expires January 08, 2028.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "How much money can I ask for?",
+    "expected": "Up to $150,000 in direct costs for a single year; the maximum project period is 1 year.",
+    "quote": "Applicants may request direct costs of up to $150,000 for a period of one year only.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "Can I put my publications in the appendix?",
+    "expected": "No. Only limited Appendix materials are allowed, and no publications or other material may be included except blank questionnaires or blank surveys.",
+    "quote": "No publications or other material, with the exception of blank questionnaires or blank surveys, may be",
+    "confirmed": false
+  }
+]

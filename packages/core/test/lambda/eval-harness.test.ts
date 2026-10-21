@@ -99,10 +99,11 @@ beforeEach(() => {
 });
 
 describe("eval harness", () => {
-  it("uses the deployed model ids", () => {
+  it("uses the deployed model ids and states", () => {
     const src = fs.readFileSync(path.join(__dirname, "../../lib/chatbot-api/functions/functions.ts"), "utf8");
     expect(src).toContain(`"${h.models.sonnet}"`);
     expect(src).toContain(`"${h.models.haiku}"`);
+    expect(JSON.parse(process.env.SUPPORTED_STATES!)).toContainEqual({ code: "MA", name: "Massachusetts" });
   });
 
   it("extract runs both handlers and records usage per stage", async () => {
@@ -174,6 +175,7 @@ describe("eval harness", () => {
       [500, 30, "tool_use"],
       [900, 12, "end_turn"],
     ]);
+    expect(r.usage.every((u: any) => u.firstTokenMs >= 0)).toBe(true);
 
     kb.reset();
     bedrock.reset();

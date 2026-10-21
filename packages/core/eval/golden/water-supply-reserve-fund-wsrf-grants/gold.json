@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "CO state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "October 1 submittal date (no year; recurring annually), reviewed at the January CWCB Board Meeting",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "WSRF Application Submittal Date Reviewed October 1 January CWCB Board Meeting"
+    },
+    {
+      "kind": "application",
+      "label": "December 1 submittal date (no year; recurring annually), reviewed at the March CWCB Board Meeting",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "January CWCB Board Meeting December 1 March CWCB Board Meeting"
+    },
+    {
+      "kind": "application",
+      "label": "February 1 submittal date (no year; recurring annually), reviewed at the May CWCB Board Meeting",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "March CWCB Board Meeting February 1 May CWCB Board Meeting"
+    },
+    {
+      "kind": "application",
+      "label": "April 1 submittal date (no year; recurring annually), reviewed at the July CWCB Board Meeting",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "May CWCB Board Meeting April 1 July CWCB Board Meeting"
+    },
+    {
+      "kind": "application",
+      "label": "June 1 submittal date (no year; recurring annually), reviewed at the September CWCB Board Meeting",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "July CWCB Board Meeting June 1 September CWCB Board Meeting"
+    },
+    {
+      "kind": "application",
+      "label": "August 1 submittal date (no year; recurring annually), reviewed at the November CWCB Board Meeting",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "September CWCB Board Meeting August 1 November CWCB Board Meeting"
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [],
+    "match": {
+      "required": true,
+      "ratio": "0.25",
+      "appliesTo": "All WSRF projects (minimum 25%, no more than half in-kind); statewide requests also need at least 10% of total project cost from roundtable Basin Account funds, and statewide WSRF funds cover at most 75% of project costs",
+      "quote": "A minimum of 25% match is required for all WSRF projects. Greater weight may be given to projects with a higher match."
+    },
+    "quote": null
+  },
+  "sections": [
+    {
+      "name": "Exhibit A (Statement of Work)",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": null,
+      "quote": "Upload a Word version of Exhibit A (Statement of Work)"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Alignment with the respective Basin Implementation Plan(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "In general, the proposal will be evaluated on how well it aligns with the respective Basin Implementation Plan(s)."
+    },
+    {
+      "name": "Multiple benefits, multiple purposes and multiple stakeholders",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Preference will be given to projects that have multiple benefits, multiple purposes and involve multiple stakeholders."
+    },
+    {
+      "name": "Project timing (earlier start date)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Consideration is also given to the timing of projects with priority given to projects with an earlier start date."
+    },
+    {
+      "name": "Higher match",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Greater weight may be given to projects with a higher match."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Application documents are uploaded to the CWCB Portal",
+      "Exhibit A (Statement of Work) must be a Word document",
+      "The detailed budget (Exhibit B Budget & Schedule) must be in Excel",
+      "Letters of Commitment and photos or drawings are uploaded as PDFs"
+    ],
+    "quote": "Applicants must upload application documents into the online portal CWCB created to process water project grants and loans (CWCB Portal)."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: governmental entities (municipalities, districts, enterprises, counties, State of Colorado agencies) and private entities (mutual ditch companies, non-profit corporations, partnerships, etc.)",
+      "quote": "Governmental Entities: Governmental entities include municipalities, districts, enterprises, counties, and State of Colorado agencies."
+    },
+    {
+      "item": "Federal agencies are encouraged to work with local entities",
+      "quote": "Federal agencies are encouraged to work with local entities."
+    },
+    {
+      "item": "Covered Entities (Section 37-60-126, C.R.S.) are eligible only if they have adopted an approved Water Efficiency Plan",
+      "quote": "Covered Entities as defined in Section 37- 60-126, C.R.S., are eligible if the applicant has adopted an approved Water Efficiency Plan."
+    },
+    {
+      "item": "Provide at least 25% matching funds",
+      "quote": "A minimum of 25% match is required for all WSRF projects."
+    },
+    {
+      "item": "No more than half of the match may be in-kind",
+      "quote": "Matching funds may consist of a combination of in-kind and cash match with no more than half of the match coming from in-kind."
+    },
+    {
+      "item": "Identify matching funds as pending or secure and provide evidence (e.g. an award letter)",
+      "quote": "Applicants should identify matching funds as either pending or secure and provide evidence of those matching funds (such as an award letter)."
+    },
+    {
+      "item": "Matching funds must be secured within one year of the application date and before contracting",
+      "quote": "Matching funds must be secured within one year of the application date and prior to contracting."
+    },
+    {
+      "item": "Statewide grant requests: at least 10% of the total WSRF project cost must come from roundtable Basin Account funds",
+      "quote": "at least one tenth (0.1 or 10%) of the total WSRF project cost⁸ must come from roundtable(s) Basin Account funds which can count toward the applicant's 25% match"
+    },
+    {
+      "item": "The application must be recommended by the basin roundtable, via a letter signed by the Roundtable Chair, before CWCB review",
+      "quote": "If the application is recommended for approval, the roundtable will submit a written recommendation to the CWCB signed by the Roundtable Chair through the CWCB Portal."
+    },
+    {
+      "item": "WSRF funds generally cannot be used as match for a Water Plan Grant without written CWCB approval obtained before submission",
+      "quote": "WSRF grant funds are generally not eligible to be used as match funding for a Water Plan Grant and may not be approved."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Completed application through the CWCB Portal",
+      "userWrites": true,
+      "quote": "Completed Application through the CWCB Portal"
+    },
+    {
+      "item": "Exhibit B Budget & Schedule, with a detailed budget in Excel",
+      "userWrites": true,
+      "quote": "Upload the Exhibit B Budget & Schedule. A detailed budget must be provided in Excel"
+    },
+    {
+      "item": "Engineer's estimate of probable cost (construction projects over $100,000)",
+      "userWrites": false,
+      "quote": "Upload Engineer's estimate of probable cost for construction projects over $100,000"
+    },
+    {
+      "item": "Maps (if applicable)",
+      "userWrites": false,
+      "quote": "Upload Maps to the CWCB Portal (if applicable)"
+    },
+    {
+      "item": "Letters of Commitment for matching funds, as PDFs",
+      "userWrites": false,
+      "quote": "Upload Letters of Commitment (matching funds) as PDFs"
+    },
+    {
+      "item": "Photos or drawings, as PDFs",
+      "userWrites": false,
+      "quote": "Upload Photos or drawings as PDFs"
+    },
+    {
+      "item": "Roundtable letter of recommendation signed by the Roundtable Chair (submitted by the roundtable via the CWCB Portal), stating the Basin Account amount requested and how the activity meets Basin Implementation Plan goals",
+      "userWrites": false,
+      "quote": "The letter of recommendation must specify the amount of grant funding requested from the Basin Account and describe how the water activity meets Basin Implementation Plan goals."
+    }
+  ],
+  "libraryRequired": []
+}

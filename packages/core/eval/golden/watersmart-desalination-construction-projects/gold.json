@@ -1,0 +1,434 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "DOI",
+  "deadlines": [
+    {
+      "kind": "other",
+      "label": "Feasibility study must be submitted to Reclamation for review (first submission period)",
+      "date": "2026-06-26",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "the project must have a completed feasibility study submitted to Reclamation for review by June 26, 2026, for applications submitted under the first submission period"
+    },
+    {
+      "kind": "application",
+      "label": "First application submission period due date",
+      "date": "2026-08-26",
+      "time": "16:00",
+      "tzAsWritten": "Mountain Daylight Time (MDT)",
+      "fromBrokenTable": false,
+      "quote": "The first application submission period due date is August 26, 2026, at 4:00 p.m. Mountain Daylight Time (MDT)."
+    },
+    {
+      "kind": "other",
+      "label": "Feasibility study must be found by Reclamation to meet WTR 11-01 requirements (first submission period)",
+      "date": "2026-11-20",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Completed feasibility studies must be found by Reclamation to meet all of the requirements of WTR 11-01 by November 20, 2026, for applications submitted under the first submission period"
+    },
+    {
+      "kind": "other",
+      "label": "Feasibility study must be submitted to Reclamation for review (second submission period)",
+      "date": "2027-01-15",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "and by January 15, 2027, for applications submitted under the second submission period."
+    },
+    {
+      "kind": "other",
+      "label": "Feasibility study must be found by Reclamation to meet WTR 11-01 requirements (second submission period)",
+      "date": "2027-07-15",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "and by July 15, 2027, for applications submitted under the second submission period. If a feasibility study has been reviewed by Reclamation"
+    },
+    {
+      "kind": "application",
+      "label": "Second and final application submission period due date (closing date)",
+      "date": "2027-08-26",
+      "time": "16:00",
+      "tzAsWritten": "Mountain Daylight Time (MDT)",
+      "fromBrokenTable": false,
+      "quote": "The second and final application submission period due date is August 26, 2027, at 4:00 p.m. Mountain Daylight Time (MDT)."
+    }
+  ],
+  "award": {
+    "ceiling": 120000000,
+    "floor": 1000,
+    "periodMonths": null,
+    "expectedAwards": 10,
+    "range": null,
+    "caps": [
+      {
+        "what": "Federal share as a percentage of total project cost",
+        "value": 25
+      }
+    ],
+    "match": {
+      "required": true,
+      "ratio": "0.75",
+      "appliesTo": "total project costs (non-Federal cost share of at least 75%; Federal share may not exceed 25%)",
+      "quote": "Cost Sharing Required? Yes 75% of total project costs."
+    },
+    "quote": "Estimated Total Program Funding: $120,000,000 Expected Number of Awards: 10 Award Ceiling: $120,000,000 Award Floor: $1,000"
+  },
+  "sections": [
+    {
+      "name": "Project Abstract Summary",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Abstract Summary form (OMB 4040-0019)",
+      "quote": "Project Abstract Summary (OMB 4040-0019). Must include, in"
+    },
+    {
+      "name": "Executive Summary",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative (40-page limit including Merit Review Criteria responses)",
+      "quote": "A short paragraph project summary that provides the location of the project, a brief description of the work that will be carried out, any partners involved, expected benefits,"
+    },
+    {
+      "name": "Project Location",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative (40-page limit including Merit Review Criteria responses)",
+      "quote": "Provide detailed information on the proposed project location or project area including a map showing the geographic location."
+    },
+    {
+      "name": "Technical Project Description",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative (40-page limit including Merit Review Criteria responses)",
+      "quote": "Provide a comprehensive description of the technical aspects of your project, outlining the full scope of the overall project and how the project in its entirety is included within the Reclamation-reviewed feasibility study."
+    },
+    {
+      "name": "Sub-Criterion A.1 Amount of Desalinated Water Supply Made Available",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Sub-Criterion A.1 Amount of Desalinated Water Supply Made Available Points will be awarded based on the expected amount of desalinated water made available."
+    },
+    {
+      "name": "Sub-Criterion A.2 Offset to Water Supplies",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Sub-Criterion A.2 Offset to Water Supplies Points will be awarded based on the extent to which the project will reduce demands on existing water supply sources"
+    },
+    {
+      "name": "Criterion B: Water Management Concerns and Project Benefits",
+      "order": 7,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Describe the water management challenge(s) occurring within your project area and the severity of the challenge to be addressed."
+    },
+    {
+      "name": "Subcriterion C.1 Cost Effectiveness Analysis",
+      "order": 8,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Points will be awarded based on the cost per acre-foot of water expected to be delivered upon completion of the project and how the cost of the project compares to a non-desalination alternative."
+    },
+    {
+      "name": "Subcriterion C.2 Benefit/Cost Analysis",
+      "order": 9,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Summarize the economic analysis performed for the project including information on the project's estimated benefits and costs."
+    },
+    {
+      "name": "Criterion D: Presidential and Department of the Interior Priorities",
+      "order": 10,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Up to 20 points may be awarded based on the extent that the project demonstrably: advances the Trump Administration's priorities,"
+    },
+    {
+      "name": "Subcriterion E.1 Collaborative Regional Planning",
+      "order": 11,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Points will be awarded based on the extent to which the project implements a regional planning effort and meets the needs of different areas and stakeholders within the region."
+    },
+    {
+      "name": "Subcriterion E.2 Leveraging State Funding and Experience of International Partners",
+      "order": 12,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Points will be awarded based on the extent to which the project leverages State funding for research and development of desalination technologies and projects and/or the experience of international partners"
+    },
+    {
+      "name": "Criterion F: Construction Priority",
+      "order": 13,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "Please identify the hard infrastructure construction components of the project, if applicable."
+    },
+    {
+      "name": "Criterion G: Cost Share Priority",
+      "order": 14,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative: Merit Review Criteria",
+      "quote": "State the percentage of non-Federal funding provided using the following calculation: Non-Federal Funding / Total Project Cost = %"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "A. Increased Water Supply Available",
+      "scored": true,
+      "points": 25,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Sub-Criterion A.1 Amount of Desalinated Water Supply Made Available",
+        "Sub-Criterion A.2 Offset to Water Supplies"
+      ],
+      "quote": "Merit Review Criterion A: Increased Water Supply Available (25 points)"
+    },
+    {
+      "name": "B. Water Management Concerns and Project Benefits",
+      "scored": true,
+      "points": 15,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Criterion B: Water Management Concerns and Project Benefits"
+      ],
+      "quote": "Merit Review Criterion B: Water Management Concerns and Project Benefits (15 points)"
+    },
+    {
+      "name": "C. Economic Analysis",
+      "scored": true,
+      "points": 20,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Subcriterion C.1 Cost Effectiveness Analysis",
+        "Subcriterion C.2 Benefit/Cost Analysis"
+      ],
+      "quote": "Merit Review Criterion C: Economic Analysis (20 points)"
+    },
+    {
+      "name": "D. Presidential and Department of the Interior Priorities",
+      "scored": true,
+      "points": 20,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Criterion D: Presidential and Department of the Interior Priorities"
+      ],
+      "quote": "Merit Review Criterion D: Presidential and Department of the Interior Priorities (20 points)"
+    },
+    {
+      "name": "E. Leveraging Regional Planning, State Funding, and International Experience",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Subcriterion E.1 Collaborative Regional Planning",
+        "Subcriterion E.2 Leveraging State Funding and Experience of International Partners"
+      ],
+      "quote": "Merit Review Criterion E: Leveraging Regional Planning, State Funding, and International Experience (5 points)"
+    },
+    {
+      "name": "F. Construction Priority",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Criterion F: Construction Priority"
+      ],
+      "quote": "Merit Review Criterion F: Construction Priority (10 points)"
+    },
+    {
+      "name": "G. Cost Share Priority",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Criterion G: Cost Share Priority"
+      ],
+      "quote": "Merit Review Criterion G: Cost Share Priority (5 points)"
+    }
+  ],
+  "format": {
+    "pageSize": "8.5 x 11 inches",
+    "margins": "1 inch",
+    "font": null,
+    "fontSizePt": 12,
+    "lineSpacing": null,
+    "overallPageLimit": 125,
+    "other": [
+      "Project Narrative, including Merit Review Criteria responses, is limited to 40 consecutively numbered pages; only the first 40 pages are evaluated",
+      "Full application including all attachments should not exceed 125 pages; only the first 125 pages are considered in merit review",
+      "Font at least 12 points and easily readable; oversized pages will not be accepted",
+      "Project Narrative includes a Title Page and Table of Contents",
+      "Address merit review criteria and sub-criteria in the order presented",
+      "Letters of support and the state-approved plan or Governor's request do not count toward page limits",
+      "Do not encrypt, zip, or password-protect any files"
+    ],
+    "quote": "The Project Narrative, including responses to the Merit Review Criteria shall be limited to a maximum of 40 consecutively numbered pages."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: States, departments or subdivisions of a State, or public agencies organized under State law (e.g., Tribes, municipalities, irrigation districts, water districts, wastewater districts)",
+      "quote": "Applicants eligible to receive funding under this NOFO include States, departments of a State, subdivisions of a State, or public agencies organized pursuant to a State law, such as:"
+    },
+    {
+      "item": "Applicants must be located in Arizona, California, Colorado, Idaho, Kansas, Montana, Nebraska, Nevada, New Mexico, North Dakota, Oklahoma, Oregon, South Dakota, Texas, Utah, Washington, or Wyoming",
+      "quote": "All applicants must be located in one of the following States: Arizona, California, Colorado, Idaho, Kansas, Montana, Nebraska, Nevada, New Mexico, North Dakota, Oklahoma, Oregon, South Dakota, Texas, Utah, Washington, and Wyoming."
+    },
+    {
+      "item": "Federal governmental entities, foreign entities, individuals, and institutes of higher education are not eligible",
+      "quote": "Ineligible Applicants - Those not eligible include, but are not limited to, the following entities: Federal Governmental entities Foreign entities Individuals Institutes of higher education"
+    },
+    {
+      "item": "Projects must be planning, design, and/or construction of facilities to desalinate seawater or brackish surface water or groundwater",
+      "quote": "Projects eligible for funding under this NOFO include planning, design, and/or construction of facilities to desalinate seawater or brackish surface water or groundwater."
+    },
+    {
+      "item": "Project must be constructed, operated, and maintained by an eligible applicant, or sponsored by one that funds a substantial portion of capital construction costs within the NOFO timeframe",
+      "quote": "The project must be constructed, operated, and maintained by an eligible applicant; or the project must be sponsored by an eligible applicant."
+    },
+    {
+      "item": "Project must have a completed feasibility study submitted to Reclamation by June 26, 2026 (first period) or January 15, 2027 (second period) and found to meet WTR 11-01 by November 20, 2026 or July 15, 2027",
+      "quote": "To be eligible for funding under this NOFO, the project must have a completed feasibility study submitted to Reclamation for review by June 26, 2026,"
+    },
+    {
+      "item": "Projects with total cost of $500 million or more must also meet WTR TRMR-128 feasibility study requirements",
+      "quote": "Applicants with desalination projects that have an estimated total project cost greater than or equal to $500 million (i.e., the minimum total project cost requirement for Large-Scale Water Recycling Projects) must meet additional feasibility study requirements"
+    },
+    {
+      "item": "Project must be in a state-approved plan (with documentation of state approval), or Federal participation must have been requested by the state's Governor, documented before the application deadline",
+      "quote": "The project must be included in a state-approved plan. The plan and documentation of state approval must be included with the proposal or submitted to Reclamation prior to the application deadline for this NOFO."
+    },
+    {
+      "item": "Water recycling/reuse projects and desalination projects with water recycling components are not eligible",
+      "quote": "Projects that reclaim or reuse municipal, industrial, domestic, or agricultural wastewater."
+    },
+    {
+      "item": "Projects whose feasibility study Reclamation found not to meet WTR 11-01 are not eligible",
+      "quote": "Projects that have a Reclamation reviewed feasibility study that Reclamation determined did not meet the requirements of WTR 11-01."
+    },
+    {
+      "item": "Development of feasibility studies is not eligible for funding",
+      "quote": "Development of feasibility studies to meet the requirements Reclamation's Directives and Standards WTR 11-01 and/or WTR TRMR-128."
+    },
+    {
+      "item": "Lab-scale research, piloting, or demonstration research on new advanced water treatment technology is not eligible",
+      "quote": "Lab-scale research, piloting, or demonstration research focused on the development and commercialization of new advanced water treatment technology,"
+    },
+    {
+      "item": "Projects with a project-specific congressional authorization are not eligible",
+      "quote": "Projects that have a project-specific congressional authorization."
+    },
+    {
+      "item": "Projects that already received WaterSMART Drought Response Program funding are not eligible",
+      "quote": "Projects that have already received funding under the WaterSMART Drought Response Program."
+    },
+    {
+      "item": "Normal operations, maintenance, and replacement (OM&R) projects are not eligible",
+      "quote": "Projects that are considered normal operations, maintenance, and replacement (OM&R) are not eligible for funding under this NOFO."
+    },
+    {
+      "item": "Multiple applications are allowed if project scopes are not duplicative; closely related components should be combined in one application",
+      "quote": "Multiple applications for funding may be submitted for consideration under this funding opportunity, provided that the project scopes are not duplicative."
+    },
+    {
+      "item": "Budgets may only include costs incurred after Reclamation's feasibility study review findings and within three years of the submission period deadline",
+      "quote": "budgets submitted under this NOFO may only include costs incurred after the date of Reclamation's feasibility determination, and within three years from the application deadline for each submission period under this NOFO."
+    },
+    {
+      "item": "Buy America preferences apply: iron, steel, manufactured products and construction materials must be produced in the U.S.",
+      "quote": "Buy America preferences apply to Federal awards for infrastructure projects in the United States."
+    },
+    {
+      "item": "Applicant must be registered in SAM.gov with a UEI and certify the Financial Assistance General Representations and Certifications before applying",
+      "quote": "Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov."
+    },
+    {
+      "item": "Applicant must register with Grants.gov (allow 30 days), and an Authorized Organization Representative (AOR) must submit",
+      "quote": "Before applying, ensure that at least one person at your organization is registered and has the Authorized Organization Representative (AOR). Only the AOR can submit the"
+    },
+    {
+      "item": "By applying, the applicant certifies awareness of and compliance with all applicable executive orders and secretary's orders",
+      "quote": "By applying in response to this Notice of Funding Opportunity, the applicant certifies awareness and compliance with all currently effective and applicable executive orders and secretary's orders,"
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF-424, Application for Federal Assistance (required from all applicants)",
+      "userWrites": false,
+      "quote": "SF-424, Application for Federal Assistance"
+    },
+    {
+      "item": "SF-424A, Budget Information, fully completed with Federal and non-Federal costs",
+      "userWrites": false,
+      "quote": "Reclamation uses the SF-424A for both construction and non-construction programs."
+    },
+    {
+      "item": "SF-LLL, Disclosure of Lobbying Activities (if requesting more than $100,000 and using non-Federal funds for lobbying)",
+      "userWrites": false,
+      "quote": "SF-LLL, Disclosure of Lobbying Activities"
+    },
+    {
+      "item": "Budget Narrative describing and justifying all costs, cost share, third-party contributions, pre-award costs, and the indirect cost approach",
+      "userWrites": true,
+      "quote": "Applicants must describe and justify items and costs listed in their budget. The budget narrative must identify the following cost items: total estimated costs, non-Federal cost share, third-party contributions, and any pre-award costs."
+    },
+    {
+      "item": "Copy of the most recently negotiated indirect cost rate agreement (if a rate was previously negotiated)",
+      "userWrites": false,
+      "quote": "If your organization has previously negotiated a rate, attach a copy of the most recently negotiated rate agreement (active or expired)."
+    },
+    {
+      "item": "Letters of Support from interested stakeholders, attached at the end of the application",
+      "userWrites": false,
+      "quote": "Attach all support letters from interested stakeholders at the end of your application. Letters received after the application deadline will not be evaluated."
+    },
+    {
+      "item": "Letters of Commitment from third-party cost share sources",
+      "userWrites": false,
+      "quote": "Applicants should include letters of commitment from third-party cost share sources."
+    },
+    {
+      "item": "Overlap or Duplication of Effort Statement",
+      "userWrites": true,
+      "quote": "Applicants must state in their application if the activities, costs, or time commitment of key personnel proposed in this application overlap with those in any other Federal proposal or award or not."
+    },
+    {
+      "item": "Conflict of interest disclosure (if any actual or potential conflict exists)",
+      "userWrites": true,
+      "quote": "If any actual or potential conflict of interest exists related to this project at the time of application, the applicant must provide sufficient information"
+    },
+    {
+      "item": "State-approved plan with documentation of state approval, or documentation of the Governor's request for Federal participation",
+      "userWrites": false,
+      "quote": "The applicant must submit documentation sufficient for Reclamation to make this determination along with their proposal prior to the application deadline."
+    }
+  ],
+  "libraryRequired": []
+}

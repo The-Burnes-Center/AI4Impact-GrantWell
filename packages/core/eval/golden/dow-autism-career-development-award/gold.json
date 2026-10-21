@@ -1,0 +1,658 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "DOD",
+  "deadlines": [
+    {
+      "kind": "preapp",
+      "label": "Pre-Application (Preproposal) Submission Deadline",
+      "date": "2026-07-27",
+      "time": "17:00",
+      "tzAsWritten": "Eastern Time (ET)",
+      "fromBrokenTable": false,
+      "quote": "Pre-Application (Preproposal) Submission Deadline: 5:00 p.m. Eastern Time (ET), July 27, 2026"
+    },
+    {
+      "kind": "application",
+      "label": "Application Submission Deadline (invited full applications)",
+      "date": "2026-10-22",
+      "time": "23:59",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "Application Submission Deadline: 11:59 p.m. ET, October 22, 2026"
+    },
+    {
+      "kind": "other",
+      "label": "End of Application Verification Period (last day to review, modify and verify the full application in eBRAP)",
+      "date": "2026-10-27",
+      "time": "17:00",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "End of Application Verification Period: 5:00 p.m. ET, October 27, 2026"
+    }
+  ],
+  "award": {
+    "ceiling": 750000,
+    "floor": null,
+    "periodMonths": 36,
+    "expectedAwards": 2,
+    "range": null,
+    "caps": [
+      {
+        "what": "total costs (direct and indirect) budgeted for the entire period of performance",
+        "value": 750000
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "Cost sharing is not an eligibility requirement."
+    },
+    "quote": "expects to allot roughly $1.5 million (M) to fund approximately two Career Development Award applications with total cost caps of $0.75M per award. The maximum period of performance is 3 years."
+  },
+  "sections": [
+    {
+      "name": "Preproposal Narrative: Principal Investigator",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Pre-Application: Preproposal Narrative (two-page limit)",
+      "quote": "Principal Investigator: Describe the PI's potential for a career at the forefront of autism research, including qualifications and achievements that make the PI an ideal candidate for this award. Describe the PI's career goals as an autism researcher"
+    },
+    {
+      "name": "Preproposal Narrative: Research Idea",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Pre-Application: Preproposal Narrative (two-page limit)",
+      "quote": "Research Idea: State the hypothesis to be tested or the objective(s) to be reached. State the FY26 ARP Career Development Award Areas of Interest that will be addressed."
+    },
+    {
+      "name": "Preproposal Narrative: Impact",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Pre-Application: Preproposal Narrative (two-page limit)",
+      "quote": "Impact: Describe the potential impact, both short- and long-term, of this study on the outcomes of Autistic individuals, their families/caregivers, and/or the understanding of autism."
+    },
+    {
+      "name": "Background",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 1: Project Narrative (eight-page limit without a clinical trial; 15-page limit with a clinical trial component)",
+      "quote": "Background: Present the scientific rationale behind the proposed research; include relevant literature citations. Describe and show the preliminary data to justify the rationale for the proposed project."
+    },
+    {
+      "name": "Hypothesis(es) and/or Objective(s)",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 1: Project Narrative (eight-page limit without a clinical trial; 15-page limit with a clinical trial component)",
+      "quote": "Hypothesis(es) and/or Objective(s): State the hypotheses/study questions to be tested and overall objective(s) to be reached."
+    },
+    {
+      "name": "Specific Aims",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 1: Project Narrative (eight-page limit without a clinical trial; 15-page limit with a clinical trial component)",
+      "quote": "Specific Aims: Concisely explain the project's specific aims supported by this application. If this application is part of a larger study, present only tasks that this award would fund."
+    },
+    {
+      "name": "Research Strategy",
+      "order": 7,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 1: Project Narrative (eight-page limit without a clinical trial; 15-page limit with a clinical trial component)",
+      "quote": "Research Strategy: Describe the experimental design, methods, and analyses, with appropriate controls, in sufficient detail for assessment. Address potential limitations and present alternative methods and approaches."
+    },
+    {
+      "name": "Clinical Strategy",
+      "order": 8,
+      "limit": null,
+      "conditional": "Projects with a clinical trial component",
+      "component": "Attachment 1: Project Narrative (eight-page limit without a clinical trial; 15-page limit with a clinical trial component)",
+      "quote": "Clinical Strategy: Describe the following under separate subheadings: Type of clinical trial: Describe the type of clinical trial to be performed (e.g., prospective, randomized, controlled)"
+    },
+    {
+      "name": "Statistical Plan",
+      "order": 9,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 1: Project Narrative (eight-page limit without a clinical trial; 15-page limit with a clinical trial component)",
+      "quote": "Statistical Plan: Clearly describe the statistical plan and the rationale for the statistical methodology as well as an appropriate power analysis."
+    },
+    {
+      "name": "Principal Investigator",
+      "order": 10,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 1: Project Narrative (eight-page limit without a clinical trial; 15-page limit with a clinical trial component)",
+      "quote": "Describe the PI's plan for continued development as an autism researcher and/or clinician (early-stage investigator) and/or the transition into a career in the field of autism research (established investigator)"
+    },
+    {
+      "name": "Facilities, Existing Equipment and Other Resources",
+      "order": 11,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 2: Supporting Documentation",
+      "quote": "Facilities, Existing Equipment and Other Resources: Describe the facilities and equipment available for performance of the proposed project"
+    },
+    {
+      "name": "Sex as a Biological Variable (SABV) Strategy",
+      "order": 12,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 2: Supporting Documentation",
+      "quote": "Sex as a Biological Variable (SABV) Strategy (two-page limit is recommended): Describe the strategy for how sex will be considered as a biological variable."
+    },
+    {
+      "name": "Intellectual and Material Property Plan",
+      "order": 13,
+      "limit": null,
+      "conditional": "If applicable",
+      "component": "Attachment 2: Supporting Documentation",
+      "quote": "Intellectual and Material Property Plan (if applicable): Provide a plan for resolving intellectual and material property issues among participating organizations."
+    },
+    {
+      "name": "Research Sharing Plan",
+      "order": 14,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment 2: Supporting Documentation",
+      "quote": "Research Sharing Plan: Describe the type of data or research resources (e.g., bio- specimen, analysis tool/software, training material) to be made publicly available as a result of the proposed work."
+    },
+    {
+      "name": "Technical Abstract",
+      "order": 15,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "Attachment 3",
+      "quote": "Attachment 3: Technical Abstract (one-page limit): Upload as"
+    },
+    {
+      "name": "Lay Abstract",
+      "order": 16,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "Attachment 4",
+      "quote": "Attachment 4: Lay Abstract (one-page limit): Upload as \"LayAbs.pdf\"."
+    },
+    {
+      "name": "Statement of Work",
+      "order": 17,
+      "limit": {
+        "type": "pages",
+        "value": 3
+      },
+      "conditional": null,
+      "component": "Attachment 5",
+      "quote": "Attachment 5: Statement of Work (three-page limit): Upload as \"SOW.pdf\"."
+    },
+    {
+      "name": "Impact Statement",
+      "order": 18,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "Attachment 6",
+      "quote": "Attachment 6: Impact Statement (one-page limit): Upload as \"Impact.pdf\"."
+    },
+    {
+      "name": "Research Outcomes Plan",
+      "order": 19,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "Attachment 8",
+      "quote": "Attachment 8: Research Outcomes Plan (one-page limit): Upload as \"Outcomes.pdf\". Describe the anticipated research outcomes, including knowledge products, clinical products for development, etc."
+    },
+    {
+      "name": "Animal Research Plan",
+      "order": 20,
+      "limit": {
+        "type": "pages",
+        "value": 3
+      },
+      "conditional": "Applications proposing animal studies",
+      "component": "Attachment 10",
+      "quote": "Attachment 10: Animal Research Plan (only applicable and required for applications proposing animal studies; three-page limit): Upload as"
+    },
+    {
+      "name": "Collaborative Research Statement",
+      "order": 21,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": "Required if proposing a clinical trial component",
+      "component": "Attachment 11: Community Collaboration Plan",
+      "quote": "Collaborative Research Statement (two-page limit): Describe the collaborative research approach that will be used."
+    },
+    {
+      "name": "Regulatory Strategy",
+      "order": 22,
+      "limit": null,
+      "conditional": "Applicable only if proposing a clinical trial",
+      "component": "Attachment 12",
+      "quote": "Attachment 12: Regulatory Strategy (applicable only if proposing a clinical trial; no page limit): If submitting multiple documents, start each document on a new page."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Pre-Application Screening: Principal Investigator",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Preproposal Narrative: Principal Investigator"
+      ],
+      "quote": "Principal Investigator: How well the PI's potential for a career at the forefront of autism research is supported by their qualifications and achievements."
+    },
+    {
+      "name": "Pre-Application Screening: Research Idea",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Preproposal Narrative: Research Idea"
+      ],
+      "quote": "Whether the proposed research addresses one or more of the FY26 ARP Career Development Award Areas of Interest or, if not, whether justification was provided"
+    },
+    {
+      "name": "Pre-Application Screening: Impact",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Preproposal Narrative: Impact"
+      ],
+      "quote": "Impact: What potential both short- and long-term impact this study will have on the outcomes of Autistic individuals, their families/caregivers and/or the understanding of autism."
+    },
+    {
+      "name": "Scientific Merit (applications without a clinical trial)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Background",
+        "Hypothesis(es) and/or Objective(s)",
+        "Specific Aims",
+        "Research Strategy",
+        "Statistical Plan"
+      ],
+      "quote": "To what extent a clear hypothesis is stated and supported through scientific rationale, preliminary data, and referenced literature."
+    },
+    {
+      "name": "Impact (applications without a clinical trial)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Impact Statement"
+      ],
+      "quote": "To what extent the anticipated near-term outcome(s)/product(s) of the project will impact Autistic individuals and their families/caregivers and/or improve understanding of autism."
+    },
+    {
+      "name": "Research Outcomes Plan (applications without a clinical trial)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Outcomes Plan",
+        "Research Sharing Plan"
+      ],
+      "quote": "Whether the application described the anticipated research outcomes, including knowledge products, clinical products for development, etc."
+    },
+    {
+      "name": "Principal Investigator and Research Team (applications without a clinical trial)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Principal Investigator"
+      ],
+      "quote": "For early-stage investigators, to what extent the PI has a potential for continued development in the field of autism research."
+    },
+    {
+      "name": "Scientific Merit (applications with a clinical trial component)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Background",
+        "Hypothesis(es) and/or Objective(s)",
+        "Specific Aims",
+        "Research Strategy",
+        "Statistical Plan"
+      ],
+      "quote": "How well the scientific rationale for testing the intervention/clinical research is supported by the preliminary data, critical review and analysis of the literature"
+    },
+    {
+      "name": "Clinical Strategy and Regulatory Strategy",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Clinical Strategy",
+        "Regulatory Strategy"
+      ],
+      "quote": "How well the clinical trial portion of the application is designed with appropriate study variables, controls, endpoints, and data analysis plan."
+    },
+    {
+      "name": "Clinical Impact",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Impact Statement"
+      ],
+      "quote": "Whether the aims of the project are likely to have a significant clinical impact on Autistic individuals."
+    },
+    {
+      "name": "Research Outcomes Plan (applications with a clinical trial component)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Outcomes Plan",
+        "Research Sharing Plan"
+      ],
+      "quote": "How well the application demonstrated methods and strategies to move the anticipated research outcomes to the next phase of development or clinical application after successful completion of the project."
+    },
+    {
+      "name": "Ethical Considerations",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Clinical Strategy"
+      ],
+      "quote": "How well the evidence shows that the intervention is consistent with sound research design and minimizes the level of risk to human subjects"
+    },
+    {
+      "name": "Community Collaboration",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Collaborative Research Statement"
+      ],
+      "quote": "To what extent the background, experience, and effort of the community collaborative research partner(s) are appropriate to support the proposed research study."
+    },
+    {
+      "name": "Principal Investigator and Research Team (applications with a clinical trial component)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Principal Investigator"
+      ],
+      "quote": "To what degree the qualifications and background of the community partners are relevant to their roles within the team and to the proposed research project."
+    },
+    {
+      "name": "Budget (unscored)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Whether the budget is appropriate for the proposed research."
+    },
+    {
+      "name": "Environment (unscored)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Facilities, Existing Equipment and Other Resources"
+      ],
+      "quote": "To what extent the scientific environment is appropriate for the proposed research project."
+    },
+    {
+      "name": "Application Presentation (unscored)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "To what extent the writing, clarity and presentation of the application components influence the review."
+    },
+    {
+      "name": "Programmatic Review: Ratings and evaluations of peer reviewers",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "the following criteria are used by programmatic reviewers: Ratings and evaluations of peer reviewers"
+    },
+    {
+      "name": "Programmatic Review: Relevance to the priorities of the FY26 ARP",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Relevance to the priorities of the FY26 ARP, as evidenced by the following: Adherence to the intent of the award mechanism Program portfolio balance Relative impact"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Formatting guidelines are deferred to the General Application Instructions (GAI), version CD26_01",
+      "Pre-application documents are uploaded as individual PDF files unless otherwise noted",
+      "Each full application attachment is uploaded as an individual file named as specified (e.g., \"ProjectNarrative.pdf\")",
+      "Project Narrative page limit: eight pages for projects without a clinical trial; 15 pages for projects with a clinical trial component",
+      "Preproposal Narrative page limit is two pages and applies to text and non-text elements (figures, tables, graphs, etc.)",
+      "URLs are not allowed except in the References Cited and Publication and/or Patent sections",
+      "Pages exceeding the specified limits will be removed prior to review; documents not requested will be removed",
+      "Letters of Support: two-page limit per letter is recommended",
+      "Sex as a Biological Variable (SABV) Strategy: two-page limit is recommended (not a hard limit)"
+    ],
+    "quote": "Each attachment of the full application components must be uploaded as an individual file in the format specified and in accordance with the formatting guidelines in the GAI."
+  },
+  "eligibility": [
+    {
+      "item": "Extramural and intramural DOW organizations are eligible, including foreign and domestic, for-profit and nonprofit, and public or private entities",
+      "quote": "Extramural and intramural U.S. Department of War (DOW) organizations are eligible to apply, including foreign and domestic organizations, for-profit and nonprofit organizations, and public or private entities."
+    },
+    {
+      "item": "PI must be an independent investigator affiliated with an eligible organization (any ethnicity, nationality or citizenship) who is either at or below Assistant Professor (or equivalent), or an established independent investigator outside autism at or above Assistant Professor transitioning to autism research, as of the application deadline",
+      "quote": "An independent investigator at or below the level of Assistant Professor or equivalent; or An established independent investigator in an area other than autism at or above the level of Assistant Professor seeking to transition to a career in autism"
+    },
+    {
+      "item": "PI must not have previously received a Career Development Award (or equivalent) from any CDMRP program or any other federal funding agency",
+      "quote": "Not have received a Career Development Award (or equivalent) previously from any program within the CDMRP or any other federal funding agency."
+    },
+    {
+      "item": "PI must not have received more than $250,000 in total direct costs for previous or concurrent autism research as PI of non-mentored, peer-reviewed grants (Section 2.1.2 says $250,000; the Attachment 7 Eligibility Statement instructions say $300,000 — the notice contradicts itself)",
+      "quote": "Not have received more than $250,000 in total direct costs for previous or concurrent autism research as a PI of one or more federally or privately funded, non-mentored, peer-reviewed grants."
+    },
+    {
+      "item": "PI must hold a Ph.D., M.D., M.D./Ph.D., or equivalent at the time of pre-application submission",
+      "quote": "Must hold a Ph.D., M.D., M.D./Ph.D., or equivalent at time of pre-application submission."
+    },
+    {
+      "item": "PI must not be a graduate student, postdoctoral fellow, or other mentored researcher",
+      "quote": "Not be a graduate student, postdoctoral fellow, or other \"mentored\" researcher."
+    },
+    {
+      "item": "A pre-application is required, and a full application may be submitted only by invitation; uninvited full applications are rejected",
+      "quote": "Applicants must receive an invitation to submit a full application. Uninvited full application submissions will be rejected."
+    },
+    {
+      "item": "Extramural organizations must submit the full application through Grants.gov; only intramural DOW organizations may submit through eBRAP",
+      "quote": "Extramural organizations submitting a full application must follow instructions for"
+    },
+    {
+      "item": "Active SAM.gov, eBRAP.org and Grants.gov registrations are required before submission",
+      "quote": "Active SAM.gov, eBRAP.org and Grants.gov registrations are required for application submission."
+    },
+    {
+      "item": "Applicant organization must have an Active SAM registration, include its UEI in the application, and maintain the registration while the application is under consideration",
+      "quote": "Organizations must include the unique entity identifier (UEI) generated by the SAM in applications to this funding opportunity and maintain an active registration in the SAM"
+    },
+    {
+      "item": "An investigator may be named as PI on only one application to this announcement",
+      "quote": "An investigator may be named as a PI on a single application to this program announcement."
+    },
+    {
+      "item": "The same research project may not be submitted to different funding opportunities within the same program and fiscal year",
+      "quote": "Submitting applications that propose essentially the same research project to different funding opportunities within the same program and fiscal year is prohibited"
+    },
+    {
+      "item": "The invited full application must propose the same research project as the pre-application (do not change title or research objectives)",
+      "quote": "investigators should not change the title or research objectives after the pre-application is submitted."
+    },
+    {
+      "item": "FY26 ARP Programmatic Panel members must not be involved in the pre-application or application",
+      "quote": "Members of the FY26 ARP Programmatic Panel must not be involved in any pre-application or full application including, but not limited to, concept design, application development, budget"
+    },
+    {
+      "item": "Applications with a pilot clinical trial component must include community collaborations and name at least one community partner",
+      "quote": "FY26 Career Development Award submissions with a pilot clinical trial component are required to include community collaborations to optimize research impact."
+    },
+    {
+      "item": "If an IND or IDE application is required, it must be submitted to the FDA before the application submission deadline",
+      "quote": "it must be submitted to the FDA prior to the FY26 ARP Career Development Award application submission deadline."
+    },
+    {
+      "item": "CDMRP does not support painful research (USDA pain category D or E) involving domestic cats or dogs, except studies relating to military or service animals",
+      "quote": "CDMRP does not support the conduct of painful research (U.S. Department of Agriculture pain category D or E) involving domestic cats or dogs, except for studies relating to military or service animals."
+    },
+    {
+      "item": "Applications must not include classified research data or propose research that may produce classified or national-security-sensitive outcomes",
+      "quote": "The application includes research data that are classified and/or proposes research that may produce classified outcomes, or outcomes deemed sensitive to national security concerns."
+    },
+    {
+      "item": "Applicant organizations must disclose foreign affiliations of all key personnel",
+      "quote": "All applicant organizations must disclose foreign affiliations of all key personnel named on applications."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Pre-application References Cited (one-page limit)",
+      "userWrites": true,
+      "quote": "References Cited (one-page limit): List the references cited (including URLs if available) in the Preproposal Narrative"
+    },
+    {
+      "item": "Pre-application List of Abbreviations, Acronyms, and Symbols",
+      "userWrites": true,
+      "quote": "List of Abbreviations, Acronyms, and Symbols: Provide a list of abbreviations, acronyms, and symbols used in the Preproposal Narrative."
+    },
+    {
+      "item": "Pre-application Key Personnel Biographical Sketches, uploaded as a single combined file",
+      "userWrites": true,
+      "quote": "Key Personnel Biographical Sketches: All biographical sketches should be"
+    },
+    {
+      "item": "SF424 Research & Related Application for Federal Assistance form (Grants.gov submissions only), with the eBRAP log number in Block 4a",
+      "userWrites": false,
+      "quote": "When completing the SF424 R&R, enter the eBRAP log number assigned during pre-application submission into Block 4a - Federal Identifier."
+    },
+    {
+      "item": "Summary (Tab 1) and Application Contacts (Tab 2) (eBRAP submissions only)",
+      "userWrites": false,
+      "quote": "Summary (Tab 1) and Application Contacts (Tab 2) (eBRAP submissions only)"
+    },
+    {
+      "item": "Full application References Cited (Attachment 2)",
+      "userWrites": true,
+      "quote": "References Cited: List the references cited in the Project Narrative using a standard reference format (include URLs, if available)."
+    },
+    {
+      "item": "Full application List of Abbreviations, Acronyms and Symbols (Attachment 2)",
+      "userWrites": true,
+      "quote": "List of Abbreviations, Acronyms and Symbols: Provide a list of abbreviations, acronyms and symbols."
+    },
+    {
+      "item": "Publications and/or Patents list (up to five manuscripts if not publicly available) (Attachment 2)",
+      "userWrites": false,
+      "quote": "Publications and/or Patents: Include a list of relevant publication URLs and/or patent abstracts."
+    },
+    {
+      "item": "Letters of Support from collaborators and organizational officials, including the Department Chair confirming PI eligibility (Attachment 2)",
+      "userWrites": false,
+      "quote": "Letters from the PI's Department Chair, or appropriate organization official, should also confirm that the PI(s) meet eligibility criteria."
+    },
+    {
+      "item": "Eligibility Statement letter signed by the PI and department chair/dean (one-page limit; Attachment 7) — its instructions state a $300,000 prior-direct-cost limit, contradicting the $250,000 in Section 2.1.2",
+      "userWrites": true,
+      "quote": "has not received more than $300,000 in total direct costs for previous or concurrent autism research as a PI of one or more federally or privately funded, non-mentored peer- reviewed grants"
+    },
+    {
+      "item": "Inclusion Enrollment Report (PHS Inclusion Enrollment Report form; required only for clinical research studies; Attachment 9)",
+      "userWrites": false,
+      "quote": "Attachment 9: Inclusion Enrollment Report (only applicable and required for applications proposing clinical research studies): Upload as \"Enrollment.pdf\"."
+    },
+    {
+      "item": "Letters of Community Collaboration signed by each community partner (suggested two-page limit per letter; Attachment 11, clinical trial applications)",
+      "userWrites": false,
+      "quote": "Letters of Community Collaboration (suggested two-page limit per letter): Provide a letter signed by each community partner confirming their role and commitment to participate"
+    },
+    {
+      "item": "Representations (Required Representations document from eBRAP; Grants.gov submissions only; Attachment 13)",
+      "userWrites": false,
+      "quote": "All extramural applicants must complete and submit the Required Representations document available on eBRAP."
+    },
+    {
+      "item": "Suggested Intragovernmental/Intramural Budget Form if an intramural DOW organization is a collaborator (Attachment 14)",
+      "userWrites": true,
+      "quote": "If an intramural DOW organization will be a collaborator in the performance of the project, complete a separate budget for that organization"
+    },
+    {
+      "item": "Research & Related Senior/Key Person Profile (Expanded) with Biographical Sketch and Current/Pending Support",
+      "userWrites": false,
+      "quote": "i. Research & Related Senior/Key Person Profile (Expanded) Biographical Sketch Current/Pending Support"
+    },
+    {
+      "item": "Research & Related Budget",
+      "userWrites": true,
+      "quote": "ii. Research & Related Budget"
+    },
+    {
+      "item": "Project/Performance Site Location(s) form",
+      "userWrites": false,
+      "quote": "iii. Project/Performance Site Location(s)"
+    },
+    {
+      "item": "Research & Related Subaward Budget Attachment(s) (if applicable, Grants.gov submissions only)",
+      "userWrites": true,
+      "quote": "iv. Research & Related Subaward Budget Attachment(s) (if applicable, Grants.gov submissions only)"
+    }
+  ],
+  "libraryRequired": []
+}

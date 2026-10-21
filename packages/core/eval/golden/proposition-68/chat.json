@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "What's the deadline to apply?",
+    "expected": "There is no deadline: the program is non-competitive with no proposal submission deadlines, and concept proposals may be submitted at any time.",
+    "quote": "Concept proposals may be submitted at any time to initiate consideration of a project by the",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who can apply for this?",
+    "expected": "California public agencies (any city, county, district, joint powers authority, State agency, or California public college or university) and 501(c)(3) nonprofit organizations qualified to do business in California with qualifying charitable purposes.",
+    "quote": "California public agencies. California public agencies include any city, county, district, or",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "What do I submit first to get started?",
+    "expected": "A concept proposal, submitted on the Community and Economic Enhancement Grant Program Concept Proposal Form; staff then work with viable applicants to develop a full proposal.",
+    "quote": "Applicants must submit a concept proposal using the Community and Economic",
+    "confirmed": false
+  }
+]

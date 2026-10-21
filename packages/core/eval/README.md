@@ -35,6 +35,42 @@ golden/<slug>/
   recorded/retrieval.json
 ```
 
+## Answer keys
+
+`gold.json` holds what a correct extraction contains, in the shape the v2 summary will use (plan §2.3) so scorers compare like with like. Every item carries a verbatim `quote` from `source/raw.txt`; `page` is added once WS2 gives the text page numbers.
+
+```jsonc
+{
+  "schemaVersion": 1,
+  "status": "prelabeled | checked | confirmed",  // Claude pre-labels, a second agent checks, a person confirms (Q5)
+  "family": "NIH | NSF | DOD | DOE | NASA | DOJ | EPA | DOT | DOI | AmeriCorps | CA state | CO state | MA state | foundation",
+  "deadlines": [{"kind": "application | loi | preapp | other", "label": "", "date": "2026-11-02", "time": "20:59", "tzAsWritten": "ET",
+                 "fromBrokenTable": false, "quote": ""}],
+  "award": {"ceiling": 750000, "floor": null, "periodMonths": 36, "expectedAwards": {"min": 6, "max": 8},
+            "range": {"min": 100000, "max": 25000000, "quote": ""},
+            "caps": [{"what": "direct costs in any one year", "value": 200000}],
+            "match": {"required": true, "ratio": "0.5", "appliesTo": "Category 1 only", "quote": ""}, "quote": ""},
+  "sections": [{"name": "", "order": 1, "limit": {"type": "pages | words | chars | paragraphs", "value": 1}, "conditional": null, "component": null, "quote": ""}],
+  "criteria": [{"name": "", "scored": true, "points": 30, "weightPct": null, "scale": null, "sections": ["<section or libraryRequired name>"], "quote": ""}],
+  "format": {"pageSize": null, "margins": null, "font": null, "fontSizePt": null, "lineSpacing": null, "overallPageLimit": null,
+             "other": ["files must be Microsoft Office or unlocked PDF"], "quote": null},
+  "eligibility": [{"item": "", "quote": ""}],
+  "requiredDocuments": [{"item": "", "userWrites": true, "quote": ""}],
+  "libraryRequired": ["Specific Aims"]  // standard sections the notice defers to a guide for
+}
+```
+
+Rules:
+- Only what the notice states. `null` means it does not say; never add up or infer a value (no `expectedAwards` summed from categories).
+- A quote matches `raw.txt` after collapsing whitespace, so it may cross a line break. Aim for 8–40 words; shorter only when the source item itself is shorter.
+- Points and percentage weights go in `points` or `weightPct`, never both. A rating scale ("scored on a 5-point scale") is not points: put it in `scale` and leave `points` null.
+- Every criterion has `scored`. Review items the notice says are not scored (NIH "Additional Review Considerations", programmatic review, Likely/Unlikely selection considerations) are kept with `scored: false`; scorers rate criteria recall and points on the scored ones.
+- `expectedAwards` is a number, `{"min", "max"}` for a stated range ("6-8", "up to 20" is `{"min": null, "max": 20}`), or `null`. An "expected funding range" goes in `award.range`; `floor` and `ceiling` hold only hard limits.
+- NIH AIDS due dates removed by NOT-OD-26-029 are left out, even where the notice's table still prints them.
+- One item per distinct requirement. A list of eligible organization types is one eligibility item.
+- Dates rebuilt from a table the text extraction scrambled set `fromBrokenTable: true`, so a scorer can treat them as lower confidence.
+- Budget narratives and justifications are `requiredDocuments` with `userWrites: true`, never `sections`. An applicant-written short description or abstract is a section.
+
 ## Output
 
 `eval/out/<runner>-<time>/` (gitignored) holds `<slug>.json` per grant, with the output, every model call (`stage`, `model`, `promptHash`, tokens, `stop`, `ms`) and its cost, plus `run.json` with the code sha, model ids and totals. Cost uses the US-profile prices in `lib/cost.mjs`. Model ids are read from `functions.ts`, so they always match the deployment.
