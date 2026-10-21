@@ -80,6 +80,10 @@ Rules:
 - Never infer sections the notice does not name. The "0 sections" bar counts `sections` plus `libraryRequired`; a key with both empty (an external application form, e.g. Gates, Prop 68) is exempt.
 - A paragraph or word limit that applies to each question inside a section sets `limit.per: "question"`; otherwise `per` is "section" or absent.
 
+## Scoring
+
+`node eval/score.mjs <run dir>` scores a run against the answer keys and writes `score.json` and `score.md` into it: each plan §5.2 bar with its value, pooled counts, pass/fail and the baseline (`eval/baseline.json`, written by ws0-05). Dates and counts are compared in code. Haiku pairs extracted items with key items and finds key facts in the output; Sonnet grades chat answers and drafts. Every pair and every "found" must quote evidence that is really in the extraction, or it does not count. Each grant's judge decisions, with their evidence, are kept under `perGrant[].audit` for the 10% spot check. A v1 summary has no fields for criteria, limits, award or format, so those are looked for in its text and the report says so.
+
 ## Output
 
 `eval/out/<runner>-<time>/` (gitignored) holds `<slug>.json` per grant, with the output, every model call (`stage`, `model`, `promptHash`, tokens, `stop`, `ms`) and its cost, plus `run.json` with the code sha, model ids and totals. Cost uses the US-profile prices in `lib/cost.mjs`. Model ids are read from `functions.ts`, so they always match the deployment.
