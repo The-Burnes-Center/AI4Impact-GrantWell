@@ -3,6 +3,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 const bedrock = vi.hoisted(() => ({ inputs: [] as any[], responses: [] as any[] }));
 const s3 = vi.hoisted(() => ({ puts: [] as any[] }));
 
+vi.mock("../lib/chatbot-api/functions/nofo-scraper/opportunity-processor/download.mjs", () => import("./fetch-backed-download"));
 vi.mock("@aws-sdk/client-bedrock-runtime", () => ({
   BedrockRuntimeClient: class {
     async send(cmd: any) {

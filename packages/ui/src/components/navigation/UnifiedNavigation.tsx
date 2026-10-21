@@ -406,6 +406,7 @@ export const AppSidebar: React.FC = () => {
                   display: "block",
                   height: "28px",
                   width: "auto",
+                  aspectRatio: "auto 352 / 70",
                   maxWidth: "100%",
                   objectFit: "contain",
                 }}
