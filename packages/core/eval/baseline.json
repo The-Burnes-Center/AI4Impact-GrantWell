@@ -1,0 +1,46 @@
+{
+ "_meta": {
+  "release": "3.3.1 (staging 5545054)",
+  "date": "2026-10-21",
+  "runs": {
+   "extract": "baseline-v3.3-extract",
+   "draft": "baseline-v3.3-draft",
+   "chat": "baseline-v3.3-chat"
+  },
+  "note": "Pooled values from eval/score.mjs; rewrite only from a full run on a release.",
+  "extractCodeSha": "554505447d71325757d1ef715e879739998b3982",
+  "draftCodeSha": "554505447d71325757d1ef715e879739998b3982",
+  "chatCodeSha": "554505447d71325757d1ef715e879739998b3982"
+ },
+ "extract": {
+  "deadline.dateExact": 0.8,
+  "deadline.timeTz": 0.68,
+  "eligibility.precision": 0.569,
+  "eligibility.recall": 0.812,
+  "documents.precision": 0.521,
+  "documents.recall": 0.869,
+  "sections.recall": 0.742,
+  "sections.zeroGrants": 1,
+  "sections.duplicatePairs": 10,
+  "criteria.recall": 0.521,
+  "criteria.pointsExact": 0.484,
+  "limits.captured": 0.917,
+  "format.captured": 0.842,
+  "library.present": 0.268,
+  "questions.criteriaCovered": 0.548,
+  "questions.describeShare": 0.543,
+  "cost.perGrant": 0.16
+ },
+ "draft": {
+  "draft.withinLimit": null,
+  "draft.untracedNumbers": 6.25,
+  "draft.contradictions": 4,
+  "draft.criteriaAddressed": 0.679,
+  "draft.trapsHandled": 0.235
+ },
+ "chat": {
+  "chat.correct": 0.852,
+  "chat.absentCorrect": 1,
+  "chat.allowableCost": 1
+ }
+}

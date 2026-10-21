@@ -4,11 +4,7 @@ import { pool } from "../lib/pool.mjs";
 
 const DRAFT = new URL("../../lib/chatbot-api/functions/draft-pipeline/", import.meta.url);
 
-// The draft state machine's Map itemSelector and maxConcurrency.
-const MAP_FIELDS = [
-  "jobId", "query", "documentIdentifier", "projectBasics", "questionnaire", "questionnaireAnswers",
-  "additionalInfo", "sessionId", "userId", "userState", "totalSections", "sectionNames",
-];
+// The draft state machine's Map maxConcurrency.
 const MAP_CONCURRENCY = 5;
 
 /**
@@ -28,7 +24,8 @@ export async function draft(grant, { summary, retrieval }) {
     s3: only("GetObjectCommand", () => ({ Body: s3Body(JSON.stringify({ ProjectNarrativeSections: sections ?? [] })) })),
     dynamodb: only("UpdateItemCommand", (command) => {
       const saved = command.input.ExpressionAttributeValues?.[":content"];
-      if (saved) content[command.input.ExpressionAttributeNames["#sectionId"]] = saved.S;
+      const names = command.input.ExpressionAttributeNames ?? {};
+      if (saved) content[names["#sectionId"] ?? names["#sectionName"]] = saved.S;
       return {};
     }),
     kb: retrieval.route,
@@ -40,28 +37,34 @@ export async function draft(grant, { summary, retrieval }) {
       query: input.query ?? "",
       documentIdentifier: `${grant.name}/`,
       projectBasics: input.projectBasics,
-      questionnaire: input.questionnaire,
+      // Releases before 3.3 read the answers from questionnaire; 3.3 reads questionnaireAnswers and ignores this.
+      questionnaire: input.questionnaire ?? input.questionnaireAnswers,
       questionnaireAnswers: input.questionnaireAnswers,
       additionalInfo: input.additionalInfo,
       sessionId: `eval-${grant.slug}`,
       userId: input.userId,
       userState: input.userState,
     });
-    const shared = Object.fromEntries(MAP_FIELDS.map((k) => [k, job[k]]));
+    // Everything prepare returns except the section list, as each release's Map item selector passes it on.
+    const { sections: _items, outline: _outline, ...shared } = job;
     const errors = {};
     await pool(job.sections, MAP_CONCURRENCY, (sectionItem) =>
-      withStage(`draft:${sectionItem.id}`, () => generateSection({ ...shared, sectionItem })).catch((e) => {
-        errors[sectionItem.id] = `${e.name}: ${e.message}`;
+      withStage(`draft:${sectionItem.id ?? sectionItem.item}`, () => generateSection({ ...shared, sectionItem })).catch((e) => {
+        errors[sectionItem.id ?? sectionItem.item] = `${e.name}: ${e.message}`;
       })
     );
     return {
-      sections: job.outline.map(({ id, name }) => ({
-        id,
-        name,
-        content: content[id] ?? null,
-        words: content[id] ? content[id].split(/\s+/).filter(Boolean).length : 0,
-        ...(errors[id] && { error: errors[id] }),
-      })),
+      // Releases before 3.3 return no outline and no section ids; generate-section then keys by name.
+      sections: (job.outline ?? job.sections.map((s) => ({ id: s.id, name: s.item }))).map(({ id, name }) => {
+        const key = id ?? name;
+        return {
+          id: key,
+          name,
+          content: content[key] ?? null,
+          words: content[key] ? content[key].split(/\s+/).filter(Boolean).length : 0,
+          ...(errors[key] && { error: errors[key] }),
+        };
+      }),
     };
   });
 }

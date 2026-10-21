@@ -21,7 +21,7 @@ Options: `--grant a,b` limits the slugs, `--concurrency` sets grants in parallel
 
 ## Retrieval
 
-Draft and chat read the dev Knowledge Base (`grantwell-burnes-staging-kb`, `DMGPNNYLEA`) only when recording. `--retrieval record` saves every Retrieve response to `golden/<slug>/recorded/retrieval.json`, `replay` (the default) serves them back, and `live` reads without saving. Draft queries replay exactly. Chat queries are written by the model, so a replay miss is served from the recorded query with the same filter that shares the most words, and counted under `retrieval.nearest`. Re-record after any retrieval change. The grant must be in the dev bucket under `grant.json`'s `name`.
+Draft and chat read the dev Knowledge Base (`grantwell-burnes-staging-kb`, `DMGPNNYLEA`) only when recording. `--retrieval record` saves every Retrieve response to `golden/<slug>/recorded/retrieval.json`, `replay` (the default) serves them back, and `live` reads without saving. Draft queries replay exactly. Chat queries are written by the model, so a replay miss is served from the recorded query with the same filter that shares the most words, and counted under `retrieval.nearest`. Re-record after any retrieval change. The grant must be in the dev bucket under `grant.json`'s `name`. A draft's searches come from its section titles and descriptions, so drafts from a fresh extraction miss the recording; run those with `--retrieval record`.
 
 ## Golden grant
 
