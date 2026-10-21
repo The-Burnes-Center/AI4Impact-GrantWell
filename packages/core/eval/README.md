@@ -42,7 +42,7 @@ golden/<slug>/
 ```jsonc
 {
   "schemaVersion": 1,
-  "status": "prelabeled | checked | confirmed",  // Claude pre-labels, a second agent checks, a person confirms (Q5)
+  "status": "prelabeled | checked | confirmed",  // Claude pre-labels, a second agent checks, a person confirms (Q5; 2026-10-21: 4 graded + 6 sampled, by deciding every contested call)
   "family": "NIH | NSF | DOD | DOE | NASA | DOJ | EPA | DOT | DOI | AmeriCorps | CA state | CO state | MA state | foundation",
   "deadlines": [{"kind": "application | loi | preapp | other", "label": "", "date": "2026-11-02", "time": "20:59", "tzAsWritten": "ET",
                  "fromBrokenTable": false, "quote": ""}],
@@ -50,7 +50,7 @@ golden/<slug>/
             "range": {"min": 100000, "max": 25000000, "quote": ""},
             "caps": [{"what": "direct costs in any one year", "value": 200000}],
             "match": {"required": true, "ratio": "0.5", "appliesTo": "Category 1 only", "quote": ""}, "quote": ""},
-  "sections": [{"name": "", "order": 1, "limit": {"type": "pages | words | chars | paragraphs", "value": 1}, "conditional": null, "component": null, "quote": ""}],
+  "sections": [{"name": "", "order": 1, "limit": {"type": "pages | words | chars | paragraphs", "value": 1, "per": "section | question"}, "conditional": null, "component": null, "quote": ""}],
   "criteria": [{"name": "", "scored": true, "points": 30, "weightPct": null, "scale": null, "sections": ["<section or libraryRequired name>"], "quote": ""}],
   "format": {"pageSize": null, "margins": null, "font": null, "fontSizePt": null, "lineSpacing": null, "overallPageLimit": null,
              "other": ["files must be Microsoft Office or unlocked PDF"], "quote": null},
@@ -70,6 +70,15 @@ Rules:
 - One item per distinct requirement. A list of eligible organization types is one eligibility item.
 - Dates rebuilt from a table the text extraction scrambled set `fromBrokenTable: true`, so a scorer can treat them as lower confidence.
 - Budget narratives and justifications are `requiredDocuments` with `userWrites: true`, never `sections`. An applicant-written short description or abstract is a section.
+- A section is prose the applicant drafts for this application. Biosketches, Current and Pending Support, title pages, tables of contents and forms are `requiredDocuments` (`userWrites: true` when the applicant prepares them). A plan with notice-specific instructions (resource sharing, data management) is a section; without them it goes in `libraryRequired`.
+- NIH Research Strategy is one section per component, with the notice's own instructions in its quote, never split by review factor or unlimited sub-part. Parts the notice gives their own page limits (CTSA Elements A–E) stay separate.
+- `libraryRequired` holds standard prose sections the notice defers to a guide (Specific Aims, Research Strategy, Project Summary, Resource Sharing Plan…). Biosketches, Current and Pending Support, Facilities, Equipment and Bibliography are `requiredDocuments` with `userWrites: true`.
+- "Should", "encouraged" and "recommended" are not requirements: leave them out of `eligibility` and `requiredDocuments`; recommended page allowances go in `format.other`.
+- When the notice contradicts itself, record each statement with its quote and set `"conflict": true` on each; scorers accept either value.
+- Pass/fail screens and eligibility gates are criteria with `scored: false`.
+- "Target", "typical" or "expected" amounts are `award.range`, never `ceiling`, `floor` or `caps`.
+- Never infer sections the notice does not name. The "0 sections" bar counts `sections` plus `libraryRequired`; a key with both empty (an external application form, e.g. Gates, Prop 68) is exempt.
+- A paragraph or word limit that applies to each question inside a section sets `limit.per: "question"`; otherwise `per` is "section" or absent.
 
 ## Output
 

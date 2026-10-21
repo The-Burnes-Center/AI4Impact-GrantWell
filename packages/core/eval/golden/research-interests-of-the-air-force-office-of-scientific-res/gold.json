@@ -288,12 +288,12 @@
     },
     {
       "item": "Biographical sketch and list of significant publications for each Senior/Key Person",
-      "userWrites": false,
+      "userWrites": true,
       "quote": "D.4.f. R&R Senior/Key Person Profile (Expanded) Form You must attach a short biographical sketch and list of significant publications (vitae)"
     },
     {
       "item": "Current and Pending (Other) Support for each covered individual",
-      "userWrites": false,
+      "userWrites": true,
       "quote": "Common Disclosure Forms: Biosketch, Current and Pending (Other) Support, and Collaborators and Other Affiliations (to be submitted with SF-424);"
     },
     {

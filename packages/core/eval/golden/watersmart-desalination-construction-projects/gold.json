@@ -285,7 +285,6 @@
       "Project Narrative, including Merit Review Criteria responses, is limited to 40 consecutively numbered pages; only the first 40 pages are evaluated",
       "Full application including all attachments should not exceed 125 pages; only the first 125 pages are considered in merit review",
       "Font at least 12 points and easily readable; oversized pages will not be accepted",
-      "Project Narrative includes a Title Page and Table of Contents",
       "Address merit review criteria and sub-criteria in the order presented",
       "Letters of support and the state-approved plan or Governor's request do not count toward page limits",
       "Do not encrypt, zip, or password-protect any files"
@@ -380,6 +379,16 @@
   ],
   "requiredDocuments": [
     {
+      "item": "Title Page with project title, applicant name and address, and Project Manager contact details (Project Narrative)",
+      "userWrites": true,
+      "quote": "Title Page Provide a brief, informative, and descriptive title for the proposed work that indicates the nature of the project. Include the name and address of the applicant"
+    },
+    {
+      "item": "Table of Contents listing all major sections of the proposal (Project Narrative)",
+      "userWrites": true,
+      "quote": "Table of Contents List all major sections of the proposal in the table of contents."
+    },
+    {
       "item": "SF-424, Application for Federal Assistance (required from all applicants)",
       "userWrites": false,
       "quote": "SF-424, Application for Federal Assistance"
@@ -408,11 +417,6 @@
       "item": "Letters of Support from interested stakeholders, attached at the end of the application",
       "userWrites": false,
       "quote": "Attach all support letters from interested stakeholders at the end of your application. Letters received after the application deadline will not be evaluated."
-    },
-    {
-      "item": "Letters of Commitment from third-party cost share sources",
-      "userWrites": false,
-      "quote": "Applicants should include letters of commitment from third-party cost share sources."
     },
     {
       "item": "Overlap or Duplication of Effort Statement",

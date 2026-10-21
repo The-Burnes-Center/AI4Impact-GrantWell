@@ -108,16 +108,8 @@
       "quote": "Research Strategy: In accordance with the goals of the GEMSSTAR program, the Research Strategy should emphasize how the candidate's proposed research will advance the understanding of aging- or geriatrics-related science"
     },
     {
-      "name": "Resource Sharing Plan",
-      "order": 3,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan",
-      "quote": "Resource Sharing Plan : Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply - Application Guide ."
-    },
-    {
       "name": "Data Management and Sharing Plan",
-      "order": 4,
+      "order": 3,
       "limit": null,
       "conditional": "Research that will generate scientific data",
       "component": "PHS 398 Research Plan: Other Plan(s)",
@@ -125,7 +117,7 @@
     },
     {
       "name": "Recruitment and Retention Plan",
-      "order": 5,
+      "order": 4,
       "limit": null,
       "conditional": "Human subjects research",
       "component": "Study Record: PHS Human Subjects and Clinical Trials Information, Section 2.5",
@@ -161,10 +153,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Biographical Sketch",
-        "Facilities & Other Resources"
-      ],
+      "sections": [],
       "quote": "Factor 3. Expertise and Resources (Investigator(s) and Environment) Investigator(s) Evaluate whether the investigator(s) have demonstrated background, training, and expertise"
     },
     {
@@ -335,16 +324,8 @@
       "quote": "Eligibility is limited to candidates who have, or will have, a faculty appointment at the start of GEMSSTAR funding."
     },
     {
-      "item": "Candidates should typically be within 10 years of completing training and early in aging-related research",
-      "quote": "Candidates should typically be within 10 years of completing their training, although exceptions may be granted."
-    },
-    {
       "item": "Applications are expected to have a single PD/PI; other personnel are collaborators or consultants",
       "quote": "It is expected that GEMSSTAR applications will have a single PD/PI and that other personnel will be listed as collaborators or consultants."
-    },
-    {
-      "item": "Include at least one senior collaborator with complementary aging research experience",
-      "quote": "there should be at least one senior research collaborator with such complementary aging research experience as documented through aging-related publications, funding, and resources"
     },
     {
       "item": "A concurrent mentored K application must not have aims overlapping the GEMSSTAR application",
@@ -396,19 +377,14 @@
       "quote": "SF424(R&R) Other Project Information All instructions in the How to Apply- Application Guide must be followed."
     },
     {
-      "item": "SF424(R&R) Senior/Key Person Profile, with biosketches showing aging expertise, including the senior collaborator's",
-      "userWrites": false,
-      "quote": "Applicants should use the biographical sketch of the principal investigator to illustrate how this award will advance the investigator's career in aging research."
-    },
-    {
-      "item": "Modular Budget (multiples of $25,000 up to $125,000 per year)",
-      "userWrites": false,
-      "quote": "Applicants should use the Modular Budget format. Annual direct costs can be requested in multiples of $25,000 up to $125,000."
-    },
-    {
-      "item": "Budget justification describing travel to the annual GEMSSTAR grantees meeting",
+      "item": "SF424(R&R) Senior/Key Person Profile, with biographical sketches",
       "userWrites": true,
-      "quote": "There is no specific line item in the Modular Budget format in which to list travel costs; instead, the proposed travel should be described in the budget justification section."
+      "quote": "SF424(R&R) Senior/Key Person Profile All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "R&R or Modular Budget (annual direct costs in multiples of $25,000 up to $125,000)",
+      "userWrites": false,
+      "quote": "R&R or Modular Budget All instructions in the How to Apply- Application Guide must be followed."
     },
     {
       "item": "R&R Subaward Budget",
@@ -426,21 +402,6 @@
       "quote": "PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions"
     },
     {
-      "item": "Letters of Support from department/division chairs, institutional leaders, senior collaborators and PDP mentors",
-      "userWrites": false,
-      "quote": "Letters of support from department or division chairs, other institutional leaders, senior collaborators, and other contributors should describe, where appropriate, the following"
-    },
-    {
-      "item": "For applicants in their last year of training: documentation of the institution's commitment to the faculty appointment",
-      "userWrites": false,
-      "quote": "For applicants in their last year of training, documentation of the institution's commitment to the applicant's faculty appointment, which should commence no later than the start of the GEMSSTAR R03 award"
-    },
-    {
-      "item": "If PDP funding is known: official letter from the funding source stating amount, duration and stipulations, as an Other Attachment",
-      "userWrites": false,
-      "quote": "If PDP funding support is known at the time of application, an official letter from the institution, society, foundation, or other source should be provided"
-    },
-    {
       "item": "At least one human subjects study record (or Delayed Onset Study record) if human subjects are involved",
       "userWrites": true,
       "quote": "you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record."
@@ -449,15 +410,32 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
     "Project Summary/Abstract",
     "Project Narrative",
     "Specific Aims",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment",
-    "Biographical Sketch"
+    "Resource Sharing Plan"
   ]
 }

@@ -169,28 +169,12 @@
       "quote": "A sound research project that is consistent with the candidate's level of research development and objectives of their career development plan must be provided."
     },
     {
-      "name": "Training in the Responsible Conduct of Research",
-      "order": 6,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Career Development Award Supplemental Form: Research Plan Section",
-      "quote": "All applications must include a plan to fulfill NIH requirements for instruction in the Responsible Conduct of Research (RCR)."
-    },
-    {
       "name": "Description of Institutional Environment",
-      "order": 7,
+      "order": 6,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Career Development Award Supplemental Form: Environmental and Institutional Commitment to the Candidate",
       "quote": "Describe how the institutional research environment is particularly suited for the development of the candidate's research career and the pursuit of the proposed research plan."
-    },
-    {
-      "name": "Data Management and Sharing Plan",
-      "order": 8,
-      "limit": null,
-      "conditional": null,
-      "component": "Other Plan(s)",
-      "quote": "All applications, regardless of the amount of direct costs requested for any one year, must address a Data Management and Sharing Plan."
     }
   ],
   "criteria": [
@@ -407,11 +391,7 @@
       "quote": "However, a six-month research experience may be apportioned over two successive summer semesters (of three months each), provided the experience is pursued on a full-time (100%) basis during these periods."
     },
     {
-      "item": "Candidates with VA appointments should contact the relevant Institute or Center before preparing an application",
-      "quote": "Candidates with VA appointments should contact the staff person in the relevant Institute or Center prior to preparing an application to discuss their eligibility."
-    },
-    {
-      "item": "Before submitting, the candidate must identify a mentor (active investigator in the area) who will supervise the career development and research experience",
+      "item": "Before submitting, the candidate must identify a mentor who will supervise the career development and research experience",
       "quote": "Before submitting the application, the candidate must identify a mentor who will supervise the proposed career development and research experience."
     },
     {
@@ -558,14 +538,32 @@
       "item": "Reference letters, submitted by referees through the eRA Commons Submit Referee Information link (applications lacking them are not reviewed)",
       "userWrites": false,
       "quote": "Applications lacking the appropriate required reference letters will not be reviewed."
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
     "Specific Aims",
     "Project Narrative",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment",
-    "Biographical Sketch"
+    "Training in the Responsible Conduct of Research",
+    "Data Management and Sharing Plan"
   ]
 }

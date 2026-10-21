@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "NIH",
   "deadlines": [
     {
@@ -195,24 +195,7 @@
     },
     "quote": "The combined budget for direct costs for the two-year project period may not exceed $275,000. No more than $200,000 may be requested in any single year. Award Project Period The total project period may not exceed 2 years."
   },
-  "sections": [
-    {
-      "name": "Resource Sharing Plan",
-      "order": 1,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan",
-      "quote": "Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply- Application uide"
-    },
-    {
-      "name": "Data Management and Sharing Plan",
-      "order": 2,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan: Other Plan(s)",
-      "quote": "All applications, regardless of the amount of direct costs requested for any one year, must address a Data Management and Sharing Plan."
-    }
-  ],
+  "sections": [],
   "criteria": [
     {
       "name": "Factor 1. Importance of the Research (Significance and Innovation)",
@@ -242,10 +225,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Biographical Sketch",
-        "Facilities & Other Resources"
-      ],
+      "sections": [],
       "quote": "Factor 3. Expertise and Resources (Investigator(s) and Environment) Investigator(s) Evaluate whether the investigator(s) have demonstrated background, training, and expertise"
     },
     {
@@ -465,6 +445,26 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form All instructions in the How to Apply- Application uide"
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
@@ -472,9 +472,7 @@
     "Project Narrative",
     "Specific Aims",
     "Research Strategy",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment",
-    "Biographical Sketch"
+    "Resource Sharing Plan",
+    "Data Management and Sharing Plan"
   ]
 }

@@ -480,7 +480,8 @@
       "URLs are not allowed except in the References Cited and Publication and/or Patent sections",
       "Pages exceeding the specified limits will be removed prior to review; documents not requested will be removed",
       "Letters of Support: two-page limit per letter is recommended",
-      "Sex as a Biological Variable (SABV) Strategy: two-page limit is recommended (not a hard limit)"
+      "Sex as a Biological Variable (SABV) Strategy: two-page limit is recommended (not a hard limit)",
+      "Letters of Community Collaboration: two-page limit per letter is suggested"
     ],
     "quote": "Each attachment of the full application components must be uploaded as an individual file in the format specified and in accordance with the formatting guidelines in the GAI."
   },
@@ -498,8 +499,14 @@
       "quote": "Not have received a Career Development Award (or equivalent) previously from any program within the CDMRP or any other federal funding agency."
     },
     {
-      "item": "PI must not have received more than $250,000 in total direct costs for previous or concurrent autism research as PI of non-mentored, peer-reviewed grants (Section 2.1.2 says $250,000; the Attachment 7 Eligibility Statement instructions say $300,000 — the notice contradicts itself)",
-      "quote": "Not have received more than $250,000 in total direct costs for previous or concurrent autism research as a PI of one or more federally or privately funded, non-mentored, peer-reviewed grants."
+      "item": "PI must not have received more than $250,000 in total direct costs for previous or concurrent autism research as PI of non-mentored, peer-reviewed grants (Section 2.1.2)",
+      "quote": "Not have received more than $250,000 in total direct costs for previous or concurrent autism research as a PI of one or more federally or privately funded, non-mentored, peer-reviewed grants.",
+      "conflict": true
+    },
+    {
+      "item": "PI has not received more than $300,000 in total direct costs for previous or concurrent autism research as PI of non-mentored, peer-reviewed grants (Attachment 7 Eligibility Statement instructions)",
+      "quote": "has not received more than $300,000 in total direct costs for previous or concurrent autism research as a PI of one or more federally or privately funded, non-mentored peer- reviewed grants",
+      "conflict": true
     },
     {
       "item": "PI must hold a Ph.D., M.D., M.D./Ph.D., or equivalent at the time of pre-application submission",
@@ -532,10 +539,6 @@
     {
       "item": "The same research project may not be submitted to different funding opportunities within the same program and fiscal year",
       "quote": "Submitting applications that propose essentially the same research project to different funding opportunities within the same program and fiscal year is prohibited"
-    },
-    {
-      "item": "The invited full application must propose the same research project as the pre-application (do not change title or research objectives)",
-      "quote": "investigators should not change the title or research objectives after the pre-application is submitted."
     },
     {
       "item": "FY26 ARP Programmatic Panel members must not be involved in the pre-application or application",
@@ -604,14 +607,14 @@
       "quote": "Publications and/or Patents: Include a list of relevant publication URLs and/or patent abstracts."
     },
     {
-      "item": "Letters of Support from collaborators and organizational officials, including the Department Chair confirming PI eligibility (Attachment 2)",
+      "item": "Letters of Support signed by collaborating individuals and/or organizational officials (Attachment 2)",
       "userWrites": false,
-      "quote": "Letters from the PI's Department Chair, or appropriate organization official, should also confirm that the PI(s) meet eligibility criteria."
+      "quote": "Provide individual letters signed by collaborating individuals and/or organizational officials demonstrating that the PI has the support and resources necessary for the proposed work."
     },
     {
-      "item": "Eligibility Statement letter signed by the PI and department chair/dean (one-page limit; Attachment 7) — its instructions state a $300,000 prior-direct-cost limit, contradicting the $250,000 in Section 2.1.2",
+      "item": "Eligibility Statement letter signed by the PI and department chair/dean verifying eligibility (one-page limit; Attachment 7)",
       "userWrites": true,
-      "quote": "has not received more than $300,000 in total direct costs for previous or concurrent autism research as a PI of one or more federally or privately funded, non-mentored peer- reviewed grants"
+      "quote": "Provide a letter, signed by the PI and the department chair, dean, or equivalent official, verifying that the eligibility requirements will be met by the application submission deadline."
     },
     {
       "item": "Inclusion Enrollment Report (PHS Inclusion Enrollment Report form; required only for clinical research studies; Attachment 9)",
@@ -619,9 +622,9 @@
       "quote": "Attachment 9: Inclusion Enrollment Report (only applicable and required for applications proposing clinical research studies): Upload as \"Enrollment.pdf\"."
     },
     {
-      "item": "Letters of Community Collaboration signed by each community partner (suggested two-page limit per letter; Attachment 11, clinical trial applications)",
+      "item": "Letters of Community Collaboration signed by each community partner (Attachment 11, clinical trial applications)",
       "userWrites": false,
-      "quote": "Letters of Community Collaboration (suggested two-page limit per letter): Provide a letter signed by each community partner confirming their role and commitment to participate"
+      "quote": "Provide a letter signed by each community partner confirming their role and commitment to participate as part of the research team."
     },
     {
       "item": "Representations (Required Representations document from eBRAP; Grants.gov submissions only; Attachment 13)",
@@ -635,7 +638,7 @@
     },
     {
       "item": "Research & Related Senior/Key Person Profile (Expanded) with Biographical Sketch and Current/Pending Support",
-      "userWrites": false,
+      "userWrites": true,
       "quote": "i. Research & Related Senior/Key Person Profile (Expanded) Biographical Sketch Current/Pending Support"
     },
     {

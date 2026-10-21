@@ -224,16 +224,8 @@
       "quote": "Research Strategy A sound research project that is consistent with the candidate's level of research development and objectives of their career development plan must be provided."
     },
     {
-      "name": "Training in the Responsible Conduct of Research",
-      "order": 5,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Career Development Award Supplemental Form: Research Plan",
-      "quote": "All applications must include a plan to fulfill NIH requirements for instruction in the Responsible Conduct of Research (RCR)."
-    },
-    {
       "name": "Plans and Statements of Mentor and Co-mentor(s)",
-      "order": 6,
+      "order": 5,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Career Development Award Supplemental Form: Mentor, Co-Mentor, Consultant, Collaborators",
@@ -241,7 +233,7 @@
     },
     {
       "name": "Description of Institutional Environment",
-      "order": 7,
+      "order": 6,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Career Development Award Supplemental Form: Environment & Institutional Commitment to the Candidate",
@@ -249,7 +241,7 @@
     },
     {
       "name": "Data Management and Sharing Plan",
-      "order": 8,
+      "order": 7,
       "limit": null,
       "conditional": "Research that will generate scientific data",
       "component": "PHS 398 Career Development Award Supplemental Form: Other Plan(s)",
@@ -531,7 +523,7 @@
       "quote": "Candidates are required to commit a minimum of 75% of full-time professional effort (i.e., a minimum of 9 person-months) to their program of career development."
     },
     {
-      "item": "VA appointment effort cannot count toward the full-time requirement; VA-appointed candidates should contact IC staff before applying",
+      "item": "VA appointment effort cannot count toward the full-time requirement at the applicant institution",
       "quote": "Candidates who have VA appointments may not consider part of the VA effort toward satisfying the full time requirement at the applicant institution."
     },
     {
@@ -618,11 +610,6 @@
       "quote": "The sponsoring institution must provide a statement of commitment to the candidate's development into a productive, independent investigator and to meeting the requirements of this award."
     },
     {
-      "item": "Letter of agreement from the CTSA PD/PI (if using CTSA resources)",
-      "userWrites": false,
-      "quote": "Candidates who will be using resources associated with a Clinical and Translational Science Award (CTSA) during the course of their career development award should include a letter of agreement from the CTSA PD/PI"
-    },
-    {
       "item": "At least one human subjects study record (PHS Human Subjects and Clinical Trials Information) or Delayed Onset Study record if human subjects are involved",
       "userWrites": true,
       "quote": "you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record."
@@ -636,15 +623,32 @@
       "item": "Reference letters, submitted by referees through eRA Commons",
       "userWrites": false,
       "quote": "Reference letters are submitted directly through the eRA Commons Submit Referee Information link and not through Grants.gov."
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
     "Project Summary/Abstract",
     "Project Narrative",
     "Specific Aims",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment",
-    "Biographical Sketch"
+    "Training in the Responsible Conduct of Research"
   ]
 }

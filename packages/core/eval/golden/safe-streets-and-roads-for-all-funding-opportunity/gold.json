@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "DOT",
   "deadlines": [
     {
@@ -50,16 +50,7 @@
       "max": 25000000,
       "quote": "Expected funding range: $2,500,000 to $25,000,000 $305,678,320 is available for Planning and Demonstration Grants Expected number of awards: 400 to 700 Expected funding range: $100,000 to $5,000,000"
     },
-    "caps": [
-      {
-        "what": "Implementation Grant expected funding range maximum (range $2,500,000 to $25,000,000)",
-        "value": 25000000
-      },
-      {
-        "what": "Planning and Demonstration Grant expected funding range maximum (range $100,000 to $5,000,000)",
-        "value": 5000000
-      }
-    ],
+    "caps": [],
     "match": {
       "required": true,
       "ratio": "0.2",
@@ -304,10 +295,6 @@
       "quote": "the applicant must certify that they have an existing plan that is substantially similar to an Action Plan as defined in Section B and Table 1: Action Plan Components and has been finalized and/or last updated between 2021 and May 26, 2026."
     },
     {
-      "item": "Applicants without an existing Action Plan must apply for a Planning and Demonstration Grant, not an Implementation Grant",
-      "quote": "If an applicant does not have an existing Action Plan or is not located in a jurisdiction which has an existing Action Plan, they should apply for a Planning and Demonstration Grant to develop one. They should NOT apply for an Implementation Grant."
-    },
-    {
       "item": "State-level plans (SHSP, State Highway Safety Plans, Commercial Vehicle Safety Plans, PTASPs) cannot qualify for an Implementation Grant",
       "quote": "State-level Action Plans (e.g., a Strategic Highway Safety Plan required under 23 U.S.C. § 148, State Highway Safety Plans required under 23 U.S.C. § 402, Commercial Vehicle Safety Plans"
     },
@@ -344,8 +331,8 @@
       "quote": "Be registered in SAM (https://sam.gov/content/home) before submitting its application; b. Provide an active unique entity identifier in its application; and"
     },
     {
-      "item": "Budgets must not include previously incurred expenses or costs incurred before award and obligation",
-      "quote": "This budget should not include any previously incurred expenses, or costs to be incurred before the time of award and obligation because these expenses are not eligible for reimbursement or cost-sharing."
+      "item": "Pre-award costs (incurred before DOT obligates funds) are ineligible for reimbursement and cannot be used as match, unless DOT authorizes them in writing",
+      "quote": "any costs incurred prior to DOT's obligation of funds for activities (\"pre-award costs\") are ineligible for reimbursement and may not be used as matching funds."
     }
   ],
   "requiredDocuments": [
@@ -413,11 +400,6 @@
       "item": "Detailed activity schedule of all major project and strategy milestones, including NEPA, utility relocation and right-of-way disposition (Implementation, in Project Readiness)",
       "userWrites": true,
       "quote": "As part of this portion of the narrative, the applicant must include a detailed activity schedule that identifies all major project and strategy milestones."
-    },
-    {
-      "item": "Letters of support (encouraged), as one consolidated attachment",
-      "userWrites": false,
-      "quote": "Letters of support are encouraged, especially from relevant stakeholders and Public Safety Agencies and associated Labor Unions representing First Responders."
     }
   ],
   "libraryRequired": []

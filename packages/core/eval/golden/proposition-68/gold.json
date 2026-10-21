@@ -33,36 +33,11 @@
     },
     "quote": "Grantees will receive funding only during the Grant Funding Term, generally three years, during which time grantees may incur and be reimbursed for grant-related expenses."
   },
-  "sections": [
-    {
-      "name": "Concept Proposal",
-      "order": 1,
-      "limit": null,
-      "conditional": null,
-      "component": "Community and Economic Enhancement Grant Program Concept Proposal Form",
-      "quote": "Applicants must submit a concept proposal using the Community and Economic Enhancement Grant Program Concept Proposal Form."
-    },
-    {
-      "name": "Performance Monitoring and Assessment Framework",
-      "order": 2,
-      "limit": null,
-      "conditional": "Implementation, acquisition, and pilot project proposals",
-      "component": "Full Proposal",
-      "quote": "All implementation, acquisition, and pilot project proposals will include a performance monitoring and assessment framework that identifies the performance measures that will be used to demonstrate public benefits for at least 15 years"
-    },
-    {
-      "name": "Long-Term Management",
-      "order": 3,
-      "limit": null,
-      "conditional": null,
-      "component": "Full Proposal",
-      "quote": "Proposals will describe future project management or land management activities, explaining how the project, once implemented, will be stewarded for at least 15 years thereafter."
-    }
-  ],
+  "sections": [],
   "criteria": [
     {
       "name": "1. Project Design",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -71,18 +46,16 @@
     },
     {
       "name": "2. Public Benefits",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Performance Monitoring and Assessment Framework"
-      ],
+      "sections": [],
       "quote": "Will the project provide multiple tangible, enduring, public benefits with a high likelihood of being realized? Does the project have reasonable performance measurements and a clear plan for tracking them?"
     },
     {
       "name": "3. Alignment with State and Other Priorities",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -91,7 +64,7 @@
     },
     {
       "name": "4. Project Readiness",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -100,7 +73,7 @@
     },
     {
       "name": "5. Community and Institutional Support",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -109,7 +82,7 @@
     },
     {
       "name": "6. Cost Share",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -118,7 +91,7 @@
     },
     {
       "name": "7. Project Budget",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -127,7 +100,7 @@
     },
     {
       "name": "8. Project Team",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -136,13 +109,11 @@
     },
     {
       "name": "9. Long-Term Management",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Long-Term Management"
-      ],
+      "sections": [],
       "quote": "For implementation projects, is a plan clearly identified for long-term management and sustainability of the project for a minimum of 15 years?"
     }
   ],
@@ -216,6 +187,11 @@
   ],
   "requiredDocuments": [
     {
+      "item": "Concept Proposal (Community and Economic Enhancement Grant Program Concept Proposal Form)",
+      "userWrites": true,
+      "quote": "Applicants must submit a concept proposal using the Community and Economic Enhancement Grant Program Concept Proposal Form."
+    },
+    {
       "item": "Commitment letters from cost share partners confirming the dollar amount committed, including in-kind (if the applicant states a cost share component)",
       "userWrites": false,
       "quote": "Applicants stating that they have a cost share component must provide commitment letters from cost share partners before a proposal is recommended for funding"
@@ -224,11 +200,6 @@
       "item": "Project budget with costs clearly identified and justified",
       "userWrites": true,
       "quote": "Is the budget adequate and reasonable for the project? Are costs clearly identified and justified?"
-    },
-    {
-      "item": "Permits, surveys, or reports supporting the status of environmental compliance (CEQA, Delta Plan consistency)",
-      "userWrites": false,
-      "quote": "Applicants should be prepared to submit any permits, surveys, or reports that support the status of their environmental compliance."
     },
     {
       "item": "California Conservation Corps / CALCC consultation (Corps' Proposition 68 Consultation Process form) for implementation projects with a site improvement component",

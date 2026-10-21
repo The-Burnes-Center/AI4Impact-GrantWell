@@ -192,40 +192,16 @@
   },
   "sections": [
     {
-      "name": "Research Strategy: Factor 1. Importance of the Research (Significance and Innovation)",
+      "name": "Research Strategy",
       "order": 1,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Research Plan: Research Strategy",
-      "quote": "Discuss how the results of the proposed work will lead to a firm conclusion about the tested hypothesis."
-    },
-    {
-      "name": "Research Strategy: Factor 2. Rigor and Feasibility (Approach)",
-      "order": 2,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan: Research Strategy",
-      "quote": "For studies that evaluate interventions (using non-clinical trial designs) or can inform future intervention development and testing (including services and system-level interventions), describe plans to inform how,"
-    },
-    {
-      "name": "Research Strategy: Factor 3. Expertise and Resources (Investigators and Environment)",
-      "order": 3,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan: Research Strategy",
-      "quote": "Describe how the study will leverage resources and expertise from existing infrastructure (e.g., CTSAs; practice-based research networks;"
-    },
-    {
-      "name": "Resource Sharing Plan",
-      "order": 4,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan",
-      "quote": "Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply- Application Guide."
+      "quote": "Research Strategy: Factor 1. IMPORTANCE OF THE RESEARCH (SIGNIFICANCE AND INNOVATION) 1. Discuss how the results of the proposed work will lead to a firm conclusion about the tested hypothesis."
     },
     {
       "name": "Data Management and Sharing Plan (including NIMH Data Archive data sharing)",
-      "order": 5,
+      "order": 2,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Research Plan: Other Plan(s)",
@@ -233,7 +209,7 @@
     },
     {
       "name": "Recruitment and Retention Plan",
-      "order": 6,
+      "order": 3,
       "limit": null,
       "conditional": "Studies involving human subjects",
       "component": "Study Record: PHS Human Subjects and Clinical Trials Information, Section 2.5",
@@ -241,7 +217,7 @@
     },
     {
       "name": "Study Timeline",
-      "order": 7,
+      "order": 4,
       "limit": null,
       "conditional": "Studies involving human subjects (study record)",
       "component": "Study Record: PHS Human Subjects and Clinical Trials Information, Section 2.7",
@@ -256,7 +232,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy: Factor 1. Importance of the Research (Significance and Innovation)"
+        "Research Strategy"
       ],
       "quote": "Factor 1. Importance of the Research (Significance and Innovation) Significance Evaluate the importance of the proposed research"
     },
@@ -267,7 +243,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy: Factor 2. Rigor and Feasibility (Approach)",
+        "Research Strategy",
         "Recruitment and Retention Plan"
       ],
       "quote": "Evaluate the scientific quality of the proposed work. Evaluate the likelihood that compelling, reproducible findings will result (rigor)"
@@ -279,7 +255,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy: Factor 3. Expertise and Resources (Investigators and Environment)"
+        "Research Strategy"
       ],
       "quote": "Factor 3. Expertise and Resources (Investigator(s) and Environment) Investigator(s) Evaluate whether the investigator(s) have demonstrated background"
     },
@@ -486,9 +462,9 @@
       "quote": "SF424(R&R) Senior/Key Person Profile"
     },
     {
-      "item": "R&R or Modular Budget, including funds for collecting and submitting Common Data Elements to the NIMH Data Archive",
+      "item": "R&R or Modular Budget, with budget justification",
       "userWrites": true,
-      "quote": "The necessary funds for collecting and submitting these CDE data from all research participants to the NIMH Data Archive_(NDA)_(https://nda.nih.gov/) should be included in the requested budget."
+      "quote": "R&R or Modular Budget"
     },
     {
       "item": "R&R Subaward Budget",
@@ -514,15 +490,32 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form"
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
     "Project Summary/Abstract",
     "Project Narrative",
     "Specific Aims",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment",
-    "Biographical Sketch"
+    "Resource Sharing Plan"
   ]
 }

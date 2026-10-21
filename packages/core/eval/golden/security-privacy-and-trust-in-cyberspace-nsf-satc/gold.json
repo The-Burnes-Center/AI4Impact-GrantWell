@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "NSF",
   "deadlines": [
     {
@@ -273,11 +273,6 @@
       "quote": "(required) A list of Project Personnel and Partner Institutions (required. Note: in collaborative proposals, the lead institution should provide this information for all participants)"
     },
     {
-      "item": "Letters of collaboration from academic or industry partners (optional, one page each)",
-      "userWrites": false,
-      "quote": "Letters of collaboration: Letter of collaboration from academic or industry partners are welcome to document specific contributions they will make to the project."
-    },
-    {
       "item": "Verified Departmental BPC Plans from each institution (for a Connected BPC Plan)",
       "userWrites": false,
       "quote": "up to 2 pages that describe (5) what strategies in the departmental plan the PI and co-PIs will focus on, their specific roles, and their preparation for their work; followed by the verified Departmental BPC Plans from each institution."
@@ -291,13 +286,29 @@
       "item": "Budget, including travel to the SaTC PI meetings",
       "userWrites": true,
       "quote": "PIs are explicitly required to budget for travel to the PI meetings."
+    },
+    {
+      "item": "References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Current and Pending (Other) Support",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities, Equipment and Other Resources",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
-    "References Cited",
-    "Biographical Sketch",
-    "Current and Pending (Other) Support",
-    "Facilities, Equipment and Other Resources",
     "Mentoring Plan"
   ]
 }

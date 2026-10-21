@@ -259,16 +259,8 @@
       "quote": "The description of the proposed research may not exceed one page (excluding Project Title and list of investigators)"
     },
     {
-      "name": "DOE Title Page",
-      "order": 3,
-      "limit": null,
-      "conditional": null,
-      "component": "Project Narrative file, Field 8",
-      "quote": "The application narrative must begin with a title page. The title page must include the following items:"
-    },
-    {
       "name": "Title Page Supplement for Collaborative Applications",
-      "order": 4,
+      "order": 3,
       "limit": null,
       "conditional": "Multi-institutional teams submitting collaborative applications",
       "component": "Project Narrative file, Field 8",
@@ -276,7 +268,7 @@
     },
     {
       "name": "Buy America Infrastructure Statement",
-      "order": 5,
+      "order": 4,
       "limit": null,
       "conditional": null,
       "component": "Project Narrative",
@@ -284,7 +276,7 @@
     },
     {
       "name": "Background/Introduction",
-      "order": 6,
+      "order": 5,
       "limit": null,
       "conditional": null,
       "component": "Project Narrative",
@@ -292,7 +284,7 @@
     },
     {
       "name": "Project Objectives",
-      "order": 7,
+      "order": 6,
       "limit": null,
       "conditional": null,
       "component": "Project Narrative",
@@ -300,7 +292,7 @@
     },
     {
       "name": "Progress Report",
-      "order": 8,
+      "order": 7,
       "limit": null,
       "conditional": "Renewal applications only",
       "component": "Project Narrative",
@@ -308,7 +300,7 @@
     },
     {
       "name": "Proposed Research and Methods",
-      "order": 9,
+      "order": 8,
       "limit": null,
       "conditional": null,
       "component": "Project Narrative",
@@ -316,7 +308,7 @@
     },
     {
       "name": "Advancement of Basic Scientific Understanding (for-profit applicants)",
-      "order": 10,
+      "order": 9,
       "limit": {
         "type": "words",
         "value": 200
@@ -327,7 +319,7 @@
     },
     {
       "name": "Bibliography & References Cited",
-      "order": 11,
+      "order": 10,
       "limit": null,
       "conditional": null,
       "component": "Project Narrative Appendix 1",
@@ -335,7 +327,7 @@
     },
     {
       "name": "Facilities and Other Resources",
-      "order": 12,
+      "order": 11,
       "limit": null,
       "conditional": null,
       "component": "Project Narrative Appendix 2",
@@ -343,7 +335,7 @@
     },
     {
       "name": "Equipment",
-      "order": 13,
+      "order": 12,
       "limit": null,
       "conditional": null,
       "component": "Project Narrative Appendix 3",
@@ -351,7 +343,7 @@
     },
     {
       "name": "Data Management and Sharing Plan",
-      "order": 14,
+      "order": 13,
       "limit": null,
       "conditional": "Not required for conference, workshop, or scientific meeting support applications",
       "component": "Project Narrative Appendix 4",
@@ -359,7 +351,7 @@
     },
     {
       "name": "Synergistic Activities",
-      "order": 15,
+      "order": 14,
       "limit": {
         "type": "pages",
         "value": 1
@@ -402,8 +394,7 @@
       "scale": null,
       "sections": [
         "Facilities and Other Resources",
-        "Equipment",
-        "Biographical Sketch"
+        "Equipment"
       ],
       "quote": "How well qualified is the research team to carry out the proposed research? Are the research environment and facilities adequate for performing the research?"
     },
@@ -470,10 +461,6 @@
       "quote": "Other Federal agencies are eligible to submit applications (either as a lead organization or as a team member in a multi-institutional team)"
     },
     {
-      "item": "Individuals not affiliated with a research institution must demonstrate the skills, abilities, and resources to accomplish the objectives",
-      "quote": "Individuals not affiliated with a research institution should ensure that their applications demonstrate that they possess the skills, abilities, and resources"
-    },
-    {
       "item": "Non-domestic applicants must demonstrate skills, resources, and abilities that do not exist among potential domestic applicants",
       "quote": "For non-domestic applicants, successful applications include a detailed demonstration of how the applicant possesses the skills, resources, and abilities that do not exist among potential domestic applicants."
     },
@@ -514,8 +501,8 @@
       "quote": "If a multi-institutional team is submitting collaborative applications, only the lead institution may submit a pre-application."
     },
     {
-      "item": "Register with SAM.gov and obtain a Unique Entity Identifier (UEI); allow at least four weeks for SAM.gov and Grants.gov registration",
-      "quote": "Applicants not currently registered with SAM.gov and Grants.gov should allow at least four weeks to complete these requirements."
+      "item": "Register with SAM.gov and obtain a Unique Entity Identifier (UEI)",
+      "quote": "Applicants must register with SAM.gov and obtain a Unique Entity Identifier (UEI)."
     },
     {
       "item": "Provide an IRS-assigned EIN as the TIN for SAM.gov registration; do not use a social security number",
@@ -523,6 +510,11 @@
     }
   ],
   "requiredDocuments": [
+    {
+      "item": "DOE Title Page (project title, applicant, PIs, contacts, NOFO number, program office, senior/key personnel, budget table), first page of the Project Narrative file in Field 8",
+      "userWrites": true,
+      "quote": "The application narrative must begin with a title page. The title page must include the following items:"
+    },
     {
       "item": "SF-424 (R&R) form",
       "userWrites": false,
@@ -540,7 +532,7 @@
     },
     {
       "item": "Research and Related Senior/Key Person Profile (Expanded) form with each person's biographical sketch and current and pending support",
-      "userWrites": false,
+      "userWrites": true,
       "quote": "Attach the person's biographical sketch, following the instructions in Part 2 of this NOFO for crafting a biographical sketch."
     },
     {
@@ -587,10 +579,17 @@
       "item": "Record of Discussion from DIII-D National Fusion Facility (if research includes DIII-D activities)",
       "userWrites": false,
       "quote": "then a Record of Discussion from the facility must be included in the submission."
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Current and Pending Support",
+      "userWrites": true,
+      "quote": null
     }
   ],
-  "libraryRequired": [
-    "Biographical Sketch",
-    "Current and Pending Support"
-  ]
+  "libraryRequired": []
 }

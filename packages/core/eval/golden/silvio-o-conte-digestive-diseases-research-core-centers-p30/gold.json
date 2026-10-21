@@ -109,48 +109,16 @@
       "quote": "Specific Aims: Describe the broad long-term objectives of the proposed DDRCC. Provide the central theme(s) of the DDRCC."
     },
     {
-      "name": "Research Strategy (Overall): Research Base",
+      "name": "Research Strategy (Overall)",
       "order": 7,
       "limit": null,
       "conditional": null,
       "component": "Overall: PHS 398 Research Plan",
-      "quote": "Research Base: Applicants should include an overview of current research in digestive and/or liver diseases related areas being conducted at their institution"
-    },
-    {
-      "name": "Research Strategy (Overall): Membership",
-      "order": 8,
-      "limit": null,
-      "conditional": null,
-      "component": "Overall: PHS 398 Research Plan",
-      "quote": "Applicants should provide clear guidelines for how Center membership is defined (including, if applicable, how subsets of membership are defined), the application and selection processes for Center membership"
-    },
-    {
-      "name": "Research Strategy (Overall): Center Organization",
-      "order": 9,
-      "limit": null,
-      "conditional": null,
-      "component": "Overall: PHS 398 Research Plan",
-      "quote": "Center Organization: Summarize the services, resources, and expertise provided by the proposed Biomedical Research Cores, emphasizing the support they will provide for the thematic areas of the research base."
-    },
-    {
-      "name": "Research Strategy (Overall): Institutional Commitment",
-      "order": 10,
-      "limit": null,
-      "conditional": null,
-      "component": "Overall: PHS 398 Research Plan",
-      "quote": "New applications should briefly describe plans for institutional commitment should the Center receive NIDDK support. Renewal applications should briefly describe both previous and ongoing instances of institutional commitment."
-    },
-    {
-      "name": "Research Strategy (Overall): Renewal Progress and Accomplishments",
-      "order": 11,
-      "limit": null,
-      "conditional": "Renewal applications",
-      "component": "Overall: PHS 398 Research Plan",
-      "quote": "For renewal applications: Briefly discuss the progress and accomplishments of the research base as influenced by the DDRCC"
+      "quote": "Research Strategy: The Research Strategy should include the following sections. Research Base: Applicants should include an overview of current research in digestive and/or liver diseases related areas being conducted at their institution"
     },
     {
       "name": "Data Management and Sharing Plan",
-      "order": 12,
+      "order": 8,
       "limit": null,
       "conditional": "Research that will generate scientific data",
       "component": "Overall: PHS 398 Research Plan: Other Plan(s)",
@@ -158,31 +126,23 @@
     },
     {
       "name": "Specific Aims (Administrative Core)",
-      "order": 13,
+      "order": 9,
       "limit": null,
       "conditional": null,
       "component": "Admin Core: PHS 398 Research Plan",
       "quote": "Specific Aims: Clearly state how the Administrative Core will contribute to the goals of the DDRCC and outline interactions of the Administrative Core with each of the other Cores"
     },
     {
-      "name": "Research Strategy (Administrative Core): Administrative Structure",
-      "order": 14,
+      "name": "Research Strategy (Administrative Core)",
+      "order": 10,
       "limit": null,
       "conditional": null,
       "component": "Admin Core: PHS 398 Research Plan",
-      "quote": "describe the administrative structure of the DDRCC, including chain-of-command; committee structures (e.g., Internal Advisory Committee, P and F review committee, other oversight or management committees, and the required External Advisory Committee)"
-    },
-    {
-      "name": "Research Strategy (Administrative Core): Center Evolution",
-      "order": 15,
-      "limit": null,
-      "conditional": null,
-      "component": "Admin Core: PHS 398 Research Plan",
-      "quote": "Center Evolution: Applicants must document policies and procedures for ensuring continuing evolution of Center activities, such as core services, in response to changing needs of the research base."
+      "quote": "Research Strategy: The Administrative Core is key to the coordination and functioning of the Center. Therefore, describe the administrative structure of the DDRCC, including chain-of-command;"
     },
     {
       "name": "Facilities and Other Resources (Biomedical Research Core)",
-      "order": 16,
+      "order": 11,
       "limit": null,
       "conditional": null,
       "component": "Biomedical Research Core (each, 2-6): R&R Other Project Information",
@@ -190,7 +150,7 @@
     },
     {
       "name": "Specific Aims (Biomedical Research Core)",
-      "order": 17,
+      "order": 12,
       "limit": null,
       "conditional": null,
       "component": "Biomedical Research Core (each, 2-6): PHS 398 Research Plan",
@@ -198,23 +158,15 @@
     },
     {
       "name": "Research Strategy (Biomedical Research Core)",
-      "order": 18,
+      "order": 13,
       "limit": null,
       "conditional": null,
       "component": "Biomedical Research Core (each, 2-6): PHS 398 Research Plan",
       "quote": "Research Strategy: Provide the rationale for establishing or continuing the Core and the activities of the Core."
     },
     {
-      "name": "Resource Sharing Plan (Biomedical Research Core)",
-      "order": 19,
-      "limit": null,
-      "conditional": null,
-      "component": "Biomedical Research Core (each, 2-6): PHS 398 Research Plan",
-      "quote": "included within the relevant Core. In addition, other letters of support for the proposed Core may be included, as appropriate. Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans"
-    },
-    {
       "name": "Specific Aims (Pilot and Feasibility Program)",
-      "order": 20,
+      "order": 14,
       "limit": null,
       "conditional": null,
       "component": "P and F Program: PHS 398 Research Plan",
@@ -222,7 +174,7 @@
     },
     {
       "name": "Research Strategy (Pilot and Feasibility Program)",
-      "order": 21,
+      "order": 15,
       "limit": null,
       "conditional": null,
       "component": "P and F Program: PHS 398 Research Plan",
@@ -230,7 +182,7 @@
     },
     {
       "name": "Representative P and F Project Synopses (4 projects)",
-      "order": 22,
+      "order": 16,
       "limit": {
         "type": "pages",
         "value": 1
@@ -238,14 +190,6 @@
       "conditional": null,
       "component": "P and F Program: PHS 398 Research Plan: Research Strategy",
       "quote": "the research strategy should also include a brief, no more than one-page synopsis for 4 representative P and F project applications that have been vetted by the Center."
-    },
-    {
-      "name": "Resource Sharing Plan (Pilot and Feasibility Program)",
-      "order": 23,
-      "limit": null,
-      "conditional": null,
-      "component": "P and F Program: PHS 398 Research Plan",
-      "quote": "if applicable. Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply- Application Guide ."
     }
   ],
   "criteria": [
@@ -257,7 +201,7 @@
       "scale": null,
       "sections": [
         "Specific Aims (Overall)",
-        "Research Strategy (Overall): Research Base"
+        "Research Strategy (Overall)"
       ],
       "quote": "What are the strengths of the Center's research base (its breadth and depth)?"
     },
@@ -268,8 +212,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Overall): Membership",
-        "Biographical Sketch"
+        "Research Strategy (Overall)"
       ],
       "quote": "How effectively do the Center investigators responsible for the individual research projects interact with each other and contribute to the overall objectives of the DDRCC?"
     },
@@ -289,8 +232,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Overall): Center Organization",
-        "Research Strategy (Overall): Membership"
+        "Research Strategy (Overall)"
       ],
       "quote": "To what extent will the research base/users benefit from opportunities and services provided by the DDRCC that are not otherwise available at the institution/consortium"
     },
@@ -301,7 +243,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Overall): Institutional Commitment",
+        "Research Strategy (Overall)",
         "Facilities and Other Resources"
       ],
       "quote": "How supportive is the institutional commitment to the Center program's management and scientific impact?"
@@ -314,7 +256,7 @@
       "scale": null,
       "sections": [
         "Specific Aims (Administrative Core)",
-        "Research Strategy (Administrative Core): Administrative Structure"
+        "Research Strategy (Administrative Core)"
       ],
       "quote": "How appropriate is the structure and organization of the Administrative Core for the oversight and management of the DDRCC and its components?"
     },
@@ -325,7 +267,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Administrative Core): Administrative Structure"
+        "Research Strategy (Administrative Core)"
       ],
       "quote": "Are the members of the Internal Advisory Board and the External Advisory Board (if identified) well-suited for the overall oversight and management of the Center?"
     },
@@ -345,8 +287,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Administrative Core): Administrative Structure",
-        "Research Strategy (Administrative Core): Center Evolution"
+        "Research Strategy (Administrative Core)"
       ],
       "quote": "How appropriate is the administrative organization proposed for the following: (a) coordination of ongoing research between the separately funded projects and the DDRCC"
     },
@@ -532,7 +473,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Overall): Renewal Progress and Accomplishments"
+        "Research Strategy (Overall)"
       ],
       "quote": "For Renewals (as applicable), the committee will consider the progress made in the last funding period."
     },
@@ -561,8 +502,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Resource Sharing Plan (Biomedical Research Core)",
-        "Resource Sharing Plan (Pilot and Feasibility Program)"
+        "Resource Sharing Plan"
       ],
       "quote": "Reviewers will comment on whether the Resource Sharing Plan(s) (e.g., Sharing Model Organisms ) or the rationale for not sharing the resources, is reasonable."
     },
@@ -753,7 +693,7 @@
     },
     {
       "item": "Biographical sketches for consultants and, for renewal applications only, External Advisory Committee members (Administrative Core)",
-      "userWrites": false,
+      "userWrites": true,
       "quote": "In this component, also provide biographical sketches for any consultants. For renewal applications only, provide biographical sketches for the members of the External Advisory Committee."
     },
     {
@@ -787,19 +727,9 @@
       "quote": "For renewal applications only, Pilot Project Outcomes (Required, not to exceed 6 pages ): Please title this attachment \"Pilot Project Outcomes\""
     },
     {
-      "item": "Letters of support from institutional officials verifying institutional commitment with specific details (Overall)",
-      "userWrites": false,
-      "quote": "These should be accompanied by letters of support from institutional officials verifying the commitment with specific details."
-    },
-    {
       "item": "Letters of support from community members serving on the IAC or CAB (Administrative Core)",
       "userWrites": false,
       "quote": "Include any letters of support from community members who serve on the IAC or CAB."
-    },
-    {
-      "item": "Letter of support for any collaborative link between the CTSA and a Biomedical Research Core (in that Core)",
-      "userWrites": false,
-      "quote": "For any collaborative links between the CTSA and a specific Biomedical Research Core, a letter of support should be included within the relevant Core."
     },
     {
       "item": "Letters addressing career potential of, and institutional commitment to, junior scientists serving as core managers/technical directors (Biomedical Research Core)",
@@ -820,10 +750,14 @@
       "item": "PHS Assignment Request Form (Overall)",
       "userWrites": false,
       "quote": "PHS Assignment Request Form (Overall) All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
-    "Biographical Sketch",
-    "Bibliography & References Cited"
+    "Resource Sharing Plan"
   ]
 }

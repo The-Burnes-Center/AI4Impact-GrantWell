@@ -156,7 +156,8 @@
       "Attachment includes only the listed sections, in the order listed",
       "Overview Chart in landscape format, may be rotated to fit 11 x 8.5 inches with one-inch margins",
       "TeX/LaTeX users must create a DVI file, convert to Postscript, then to PDF",
-      "Reviewers will not consider content beyond the page limits"
+      "Reviewers will not consider content beyond the page limits",
+      "Table of Contents: one page preferred, but may exceed one page if necessary"
     ],
     "quote": "Proposals may not have more than 5.5 lines per vertical inch of text, must have at least one-inch margins, be set for US letter size (8.5x11) paper"
   },
@@ -213,18 +214,18 @@
       "quote": "Proposers will provide the required information and NSPIRES will generate the Proposal Cover Page automatically."
     },
     {
-      "item": "Table of Contents (one page preferred)",
+      "item": "Table of Contents",
       "userWrites": true,
       "quote": "A Table of Contents helps reviewers find specific proposal content. One page is preferred but can be exceeded if necessary."
     },
     {
       "item": "Biographical sketch for each senior/key person (PI and Co-Is at 10% or more effort), on the NASA form",
-      "userWrites": false,
+      "userWrites": true,
       "quote": "A biographical sketch must be included for senior/key personnel listed on the cover page."
     },
     {
       "item": "Current and pending (other) support form for each senior/key person",
-      "userWrites": false,
+      "userWrites": true,
       "quote": "Each senior/key person listed on a proposal is required to submit current and pending support disclosures with their application."
     },
     {

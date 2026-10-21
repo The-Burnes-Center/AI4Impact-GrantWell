@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "foundation",
   "deadlines": [
     {
@@ -36,7 +36,7 @@
   "criteria": [
     {
       "name": "Projects that address root problems with substantive solutions",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -45,7 +45,7 @@
     },
     {
       "name": "Evidence of community involvement and support",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -54,7 +54,7 @@
     },
     {
       "name": "Projects in rural and low-income areas",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -63,7 +63,7 @@
     },
     {
       "name": "Projects that serve individuals and communities of color",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -72,7 +72,7 @@
     },
     {
       "name": "Engagement and financial support from the governing board",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -81,7 +81,7 @@
     },
     {
       "name": "Reinforces the foundation's strategic priorities",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -90,7 +90,7 @@
     },
     {
       "name": "Climate change, green building and sustainable development practices",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,
@@ -99,7 +99,7 @@
     },
     {
       "name": "Sound management, effective leadership and engaged board",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": null,

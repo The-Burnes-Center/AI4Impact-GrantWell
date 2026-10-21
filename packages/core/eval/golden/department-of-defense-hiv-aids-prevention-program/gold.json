@@ -10,16 +10,18 @@
       "time": "12:00",
       "tzAsWritten": "EST",
       "fromBrokenTable": false,
-      "quote": "NOTE: Application submissions for this narrative are due by 12pm EST on 15 May 2026. Submissions received after the deadline will not be considered for funding."
+      "quote": "NOTE: Application submissions for this narrative are due by 12pm EST on 15 May 2026. Submissions received after the deadline will not be considered for funding.",
+      "conflict": true
     },
     {
       "kind": "application",
-      "label": "Base announcement Section D: applications due 5:00 p.m. ET on the date in the country narrative (15 May 2026); conflicts with the narratives' 12pm EST",
+      "label": "Base announcement Section D: applications due 5:00 p.m. ET on the date in the country narrative (15 May 2026)",
       "date": "2026-05-15",
       "time": "17:00",
       "tzAsWritten": "ET",
       "fromBrokenTable": false,
-      "quote": "Submission Dates and Times: Applications must be received by 5:00 p.m. Eastern Time (ET), on the date specified in the country specific narrative in Attachment 1."
+      "quote": "Submission Dates and Times: Applications must be received by 5:00 p.m. Eastern Time (ET), on the date specified in the country specific narrative in Attachment 1.",
+      "conflict": true
     },
     {
       "kind": "other",
@@ -46,16 +48,8 @@
   },
   "sections": [
     {
-      "name": "Cover Page",
-      "order": 1,
-      "limit": null,
-      "conditional": null,
-      "component": "Technical Narrative",
-      "quote": "Cover Page - Should include the words \"Technical Narrative\" as well as the following:"
-    },
-    {
       "name": "Project Abstract",
-      "order": 2,
+      "order": 1,
       "limit": {
         "type": "chars",
         "value": 4000
@@ -66,7 +60,7 @@
     },
     {
       "name": "Executive Summary",
-      "order": 3,
+      "order": 2,
       "limit": {
         "type": "pages",
         "value": 2
@@ -77,7 +71,7 @@
     },
     {
       "name": "Background Information",
-      "order": 4,
+      "order": 3,
       "limit": {
         "type": "pages",
         "value": 2
@@ -88,7 +82,7 @@
     },
     {
       "name": "Goal and Objectives",
-      "order": 5,
+      "order": 4,
       "limit": {
         "type": "pages",
         "value": 5
@@ -99,7 +93,7 @@
     },
     {
       "name": "Work Plan",
-      "order": 6,
+      "order": 5,
       "limit": {
         "type": "pages",
         "value": 6
@@ -110,7 +104,7 @@
     },
     {
       "name": "Data Management Plan",
-      "order": 7,
+      "order": 6,
       "limit": {
         "type": "pages",
         "value": 2
@@ -121,7 +115,7 @@
     },
     {
       "name": "Monitoring and Evaluation",
-      "order": 8,
+      "order": 7,
       "limit": {
         "type": "pages",
         "value": 5
@@ -132,7 +126,7 @@
     },
     {
       "name": "Schedule and milestones",
-      "order": 9,
+      "order": 8,
       "limit": {
         "type": "pages",
         "value": 2
@@ -143,7 +137,7 @@
     },
     {
       "name": "In-Country Participation",
-      "order": 10,
+      "order": 9,
       "limit": {
         "type": "pages",
         "value": 4
@@ -154,7 +148,7 @@
     },
     {
       "name": "Relevance of the Program",
-      "order": 11,
+      "order": 10,
       "limit": {
         "type": "pages",
         "value": 2
@@ -165,7 +159,7 @@
     },
     {
       "name": "Management Approach",
-      "order": 12,
+      "order": 11,
       "limit": {
         "type": "pages",
         "value": 15
@@ -176,7 +170,7 @@
     },
     {
       "name": "The Organization's Qualifications",
-      "order": 13,
+      "order": 12,
       "limit": {
         "type": "pages",
         "value": 5
@@ -184,17 +178,6 @@
       "conditional": null,
       "component": "Technical Narrative: Section II: Management and Qualifications Approach",
       "quote": "The Organization's Qualifications (Not to exceed five pages) - In this section, the applicant should describe its organizational knowledge, capability and experience in managing similar programs."
-    },
-    {
-      "name": "Current and Pending Support",
-      "order": 14,
-      "limit": {
-        "type": "pages",
-        "value": 5
-      },
-      "conditional": null,
-      "component": "Technical Narrative: Section II: Management and Qualifications Approach",
-      "quote": "Current and Pending Support (Not to exceed five pages) - The applicant must provide information on all current and pending projects"
     }
   ],
   "criteria": [
@@ -336,10 +319,6 @@
       "quote": "the applicant is ineligible to receive an award unless the agency suspension and debarment official has considered suspension or debarment and determined that further action is not required"
     },
     {
-      "item": "Investigators on collaborative projects should each write and submit a separate proposal naming the collaborator's proposal",
-      "quote": "Investigators on collaborative projects should each write and submit separate, unique proposals, and provide the name and title of their collaborator's proposal within the project narrative of the application."
-    },
-    {
       "item": "Funds will not support scientists from countries designated as State Sponsors of Terrorism",
       "quote": "The Federal Government will not provide funds to support scientists from countries meeting the criteria for designation as a State Sponsor of Terrorism"
     },
@@ -353,6 +332,16 @@
       "item": "SF-424 Research and Related, Application for Federal Assistance (cover page of the proposal)",
       "userWrites": false,
       "quote": "SF-424 Research and Related, Application for Federal Assistance - (included in the application package available on grants.gov posted with this Program Announcement)."
+    },
+    {
+      "item": "Technical Narrative Cover Page with the funding opportunity number, targeted country, title, prime respondent and subcontractors, technical and administrative contacts, duration of effort, and a table of contents",
+      "userWrites": true,
+      "quote": "Cover Page - Should include the words \"Technical Narrative\" as well as the following:"
+    },
+    {
+      "item": "Current and Pending Support for all current and pending projects (Technical Narrative Section II, not to exceed five pages)",
+      "userWrites": true,
+      "quote": "Current and Pending Support (Not to exceed five pages) - The applicant must provide information on all current and pending projects"
     },
     {
       "item": "SF-424 Research and Related Budget, one submission per budget year",
@@ -378,21 +367,6 @@
       "item": "Milestone metrics table mapping each activity to its milestone, outcome or process metric, and budget (country narratives)",
       "userWrites": true,
       "quote": "All proposals must include milestone metrics by activity and which outcome or process metric each activity supports."
-    },
-    {
-      "item": "Letter of support from the in-country military (country narratives)",
-      "userWrites": false,
-      "quote": "All respondents must demonstrate the active support of the in-country military in the planning and execution of their proposals. This should be done by attaching an appropriate letter of support."
-    },
-    {
-      "item": "Letters of support from all stakeholders mentioned in In-Country Participation, as addendums",
-      "userWrites": false,
-      "quote": "(*Letters of support from all stakeholders mentioned should be included as addendums to the proposal)."
-    },
-    {
-      "item": "MOUs with proposed partners where existing relationships exist, in the Attachment/Annex",
-      "userWrites": false,
-      "quote": "Applicant should state whether or not they have any existing relationships with the proposed partners and, if so, should include the Memoranda of Understanding (MOUs) in the Attachment/Annex."
     },
     {
       "item": "Representations Regarding Unpaid Federal Tax Liabilities and Felony Convictions form (from eBRAP), uploaded under Attachments",

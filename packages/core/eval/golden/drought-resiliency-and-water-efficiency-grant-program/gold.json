@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "MA state",
   "deadlines": [
     {
@@ -23,12 +23,23 @@
     },
     {
       "kind": "other",
-      "label": "Deadline for Completion of Projects (all contracts end on or before this date)",
+      "label": "Deadline for completion of projects / contract end (June 30, 2027)",
       "date": "2027-06-30",
       "time": null,
       "tzAsWritten": null,
       "fromBrokenTable": false,
-      "quote": "CONTRACT DURATION: All contracts for grant assistance will end on or before June 30, 2027."
+      "quote": "CONTRACT DURATION: All contracts for grant assistance will end on or before June 30, 2027.",
+      "conflict": true
+    },
+    {
+      "kind": "other",
+      "label": "Section 3e work plan and contract duration: funded portions completed and approved costs expended by June 30, 2026",
+      "date": "2026-06-30",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Ensure that the timeline is realistic and aligned with the grant period (funded portions of projects must be completed by June 30, 2026).",
+      "conflict": true
     }
   ],
   "award": {
@@ -93,6 +104,14 @@
       "conditional": null,
       "component": "Section 3 - Project Identification and Narrative",
       "quote": "Clearly define the anticipated outcomes of the project, including specific, measurable impacts on water use reduction, efficiency improvements, water loss control, or drought resiliency."
+    },
+    {
+      "name": "Project Schedule",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Section 3e - Budget, Project Schedule, and Cost Estimates",
+      "quote": "Present a comprehensive work plan that includes the key tasks, deliverables, milestones, and timeline for completing the project. Ensure that the timeline is realistic and aligned with the grant period"
     }
   ],
   "criteria": [
@@ -125,7 +144,9 @@
       "points": null,
       "weightPct": 30,
       "scale": null,
-      "sections": [],
+      "sections": [
+        "Project Schedule"
+      ],
       "quote": "Cost, Budget, Feasibility and Readiness (30%) Proposals should provide justification for the project's costs relative to its expected outcomes, including detailed budgets and quotes, as applicable."
     },
     {
@@ -172,7 +193,7 @@
       "quote": "The selection of the project type while filling out the application in the GMS will direct the applicant to specific questions. Please ensure the appropriate project type is selected and that all required questions are answered completely."
     },
     {
-      "item": "Budget, Project Schedule, and Cost Estimates (Section 3e): detailed cost breakdown, work plan and timeline, sustainability beyond the grant period, and transferability",
+      "item": "Budget and Cost Estimates (Section 3e): detailed breakdown of project costs (personnel, materials, equipment, other)",
       "userWrites": true,
       "quote": "e. Budget, Project Schedule, and Cost Estimates Provide a detailed breakdown of the project costs, including all expenses related to personnel, materials, equipment, and other associated costs."
     },

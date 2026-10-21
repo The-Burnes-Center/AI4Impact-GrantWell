@@ -197,24 +197,16 @@
   },
   "sections": [
     {
-      "name": "Research Strategy: scalability and generalizability (Factor 1, Significance and Innovation)",
+      "name": "Research Strategy",
       "order": 1,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Research Plan",
-      "quote": "Applicants are also expected to demonstrate the potential for scalability and generalizability of the proposed tool or approach beyond the specific use case,"
-    },
-    {
-      "name": "Research Strategy: metrics, benchmarking, validation, limitations, accuracy and maintenance (Factor 2, Rigor and Feasibility)",
-      "order": 2,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan",
-      "quote": "Applicants are also expected to demonstrate robust metrics for describing the scope, scale, and evaluation of use cases; well-defined strategies for benchmarking, validation, and comparison to existing methodologies;"
+      "quote": "PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: Applicants are also expected to demonstrate the potential for scalability and generalizability of the proposed tool or approach beyond the specific use case,"
     },
     {
       "name": "Resource Sharing Plan (including software dissemination plan)",
-      "order": 3,
+      "order": 2,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Research Plan",
@@ -222,7 +214,7 @@
     },
     {
       "name": "Data Management and Sharing Plan",
-      "order": 4,
+      "order": 3,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Research Plan: Other Plan(s)",
@@ -237,7 +229,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy: scalability and generalizability (Factor 1, Significance and Innovation)"
+        "Research Strategy"
       ],
       "quote": "Evaluate whether the proposed tool or approach has the potential to be generalized beyond the specific use case."
     },
@@ -248,7 +240,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy: metrics, benchmarking, validation, limitations, accuracy and maintenance (Factor 2, Rigor and Feasibility)"
+        "Research Strategy"
       ],
       "quote": "Evaluate all metrics provided, including those for describing the scope and scale of the study, and for describing and evaluating use cases."
     },
@@ -508,15 +500,31 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form"
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
     "Project Summary/Abstract",
     "Project Narrative",
-    "Specific Aims",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment",
-    "Biographical Sketch"
+    "Specific Aims"
   ]
 }

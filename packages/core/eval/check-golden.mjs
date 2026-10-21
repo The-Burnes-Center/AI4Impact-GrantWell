@@ -45,6 +45,7 @@ export function checkGrant(grant) {
     }
     for (const [i, s] of (gold.sections ?? []).entries()) {
       if (s.limit && !LIMIT_TYPES.has(s.limit.type)) problems.push(`gold.json.sections[${i}]: limit type "${s.limit.type}"`);
+      if (s.limit?.per != null && !["section", "question"].includes(s.limit.per)) problems.push(`gold.json.sections[${i}]: limit.per "${s.limit.per}"`);
     }
     for (const [i, c] of (gold.criteria ?? []).entries()) {
       if (c.points != null && c.weightPct != null) problems.push(`gold.json.criteria[${i}]: both points and weightPct`);

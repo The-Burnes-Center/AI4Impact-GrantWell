@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "EPA",
   "deadlines": [
     {
@@ -80,19 +80,8 @@
   },
   "sections": [
     {
-      "name": "Cover Page",
-      "order": 1,
-      "limit": {
-        "type": "pages",
-        "value": 1
-      },
-      "conditional": null,
-      "component": "Project Narrative",
-      "quote": "The cover page should not exceed one page. The cover page should include the following information: EPA Region: Applicants must request funding from the single EPA regional office that covers the geographic project location."
-    },
-    {
       "name": "Short Project Description",
-      "order": 2,
+      "order": 1,
       "limit": null,
       "conditional": null,
       "component": "Cover Page",
@@ -100,7 +89,7 @@
     },
     {
       "name": "Project Summary",
-      "order": 3,
+      "order": 2,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 1 - Project Summary and Approach",
@@ -108,7 +97,7 @@
     },
     {
       "name": "Project Approach",
-      "order": 4,
+      "order": 3,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 1 - Project Summary and Approach",
@@ -116,7 +105,7 @@
     },
     {
       "name": "Goods Movement Facilities",
-      "order": 5,
+      "order": 4,
       "limit": null,
       "conditional": null,
       "component": "Workplan",
@@ -124,7 +113,7 @@
     },
     {
       "name": "Project Location",
-      "order": 6,
+      "order": 5,
       "limit": null,
       "conditional": null,
       "component": "Workplan",
@@ -132,7 +121,7 @@
     },
     {
       "name": "Continuing Efforts",
-      "order": 7,
+      "order": 6,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 4 - Project Sustainability",
@@ -140,7 +129,7 @@
     },
     {
       "name": "Baseline Monitoring",
-      "order": 8,
+      "order": 7,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 4 - Project Sustainability",
@@ -148,7 +137,7 @@
     },
     {
       "name": "Emissions Plan",
-      "order": 9,
+      "order": 8,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 4 - Project Sustainability",
@@ -156,7 +145,7 @@
     },
     {
       "name": "Community Engagement",
-      "order": 10,
+      "order": 9,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 4 - Project Sustainability",
@@ -164,7 +153,7 @@
     },
     {
       "name": "Expected Project Outputs and Outcomes",
-      "order": 11,
+      "order": 10,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 5 - Environmental Results - Outputs, Outcomes and Performance Measures",
@@ -172,7 +161,7 @@
     },
     {
       "name": "Performance Measures and Plan",
-      "order": 12,
+      "order": 11,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 5 - Environmental Results - Outputs, Outcomes and Performance Measures",
@@ -180,7 +169,7 @@
     },
     {
       "name": "Timeline and Milestones",
-      "order": 13,
+      "order": 12,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 5 - Environmental Results - Outputs, Outcomes and Performance Measures",
@@ -188,7 +177,7 @@
     },
     {
       "name": "Past Performance",
-      "order": 14,
+      "order": 13,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 6 - Programmatic Capability and Past Performance",
@@ -196,7 +185,7 @@
     },
     {
       "name": "Reporting Requirements",
-      "order": 15,
+      "order": 14,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 6 - Programmatic Capability and Past Performance",
@@ -204,7 +193,7 @@
     },
     {
       "name": "Staff Expertise",
-      "order": 16,
+      "order": 15,
       "limit": null,
       "conditional": null,
       "component": "Workplan Section 6 - Programmatic Capability and Past Performance",
@@ -423,6 +412,7 @@
     "overallPageLimit": 14,
     "other": [
       "Cover Page and Workplan combined are limited to 14 pages; attachments are not included in the page limit",
+      "Cover page should not exceed one page (recommended)",
       "Pages over the limit will not be reviewed",
       "Do not encrypt, zip, or password protect any files"
     ],
@@ -498,7 +488,7 @@
       "quote": "the existing certified highway engine/vehicle must have accumulated at least 7,000 miles/year during the two years prior to upgrade."
     },
     {
-      "item": "Nonroad agricultural pumps must operate at least 250 hours/year, and other nonroad engines at least 500 hours/year, during the two years prior to upgrade",
+      "item": "Nonroad agricultural pumps must operate at least 250 hours/year during the two years prior to upgrade",
       "quote": "Agricultural Pumps: To be eligible for funding, nonroad agricultural pumps must operate at least 250 hours/year during the two years prior to upgrade."
     },
     {
@@ -546,6 +536,11 @@
       "item": "EPA Form 4700-4 Pre-award Compliance Review Report",
       "userWrites": false,
       "quote": "EPA Form 4700-4 Pre-award Compliance Review Report Project Narrative Attachment Form"
+    },
+    {
+      "item": "Cover Page (EPA Region, applicant information, eligible applicant type, project title, period of performance, sectors, target fleets, budget summary), submitted with the Workplan on the Project Narrative Attachment Form",
+      "userWrites": true,
+      "quote": "Project Narrative Attachment Form: use this to submit the Cover Page and Workplan as described in Section 4.B.(1) and (2)"
     },
     {
       "item": "Workplan Section 7 - Budget: itemized budget table, detailed budget narrative (including cost share sources and use), expenditure of awarded funds, and reasonableness of costs",

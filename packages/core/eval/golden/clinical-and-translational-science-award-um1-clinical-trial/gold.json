@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "NIH",
   "deadlines": [
     {
@@ -213,16 +213,8 @@
       "quote": "a single initial, discrete and clearly defined CTS research project for Element E may be up to 10 pages)"
     },
     {
-      "name": "Resource Sharing Plan",
-      "order": 8,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan",
-      "quote": "Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans"
-    },
-    {
       "name": "Data Management and Sharing Plan",
-      "order": 9,
+      "order": 8,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Research Plan: Other Plan(s)",
@@ -253,9 +245,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Biographical Sketch"
-      ],
+      "sections": [],
       "quote": "Are the PD(s)/PI(s), collaborators, and other researchers well suited to the project?"
     },
     {
@@ -292,9 +282,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Facilities & Other Resources"
-      ],
+      "sections": [],
       "quote": "Will the scientific environment in which the work will be done contribute to the probability of success?"
     },
     {
@@ -550,7 +538,7 @@
       "quote": "SF424(R&R) Cover"
     },
     {
-      "item": "Cover Letter (one PDF) listing every application in the collaborative set with PD/PI name(s), NOFO number, title, and applicant institution; identical in each application of the set",
+      "item": "Cover Letter (one PDF) listing every application in the collaborative set with PD/PI name(s), NOFO number, title, and applicant institution",
       "userWrites": true,
       "quote": "Applications that are part of a collaborative set must include a listing of all the applications that are a part of the set of collaborative applications being submitted"
     },
@@ -600,19 +588,14 @@
       "quote": "Coordination and Integration Plan (use filename Coordination and Integration Plan). Include a specific plan describing the partnership between the UM1, the required K12 and any optional companion applications."
     },
     {
-      "item": "SF424(R&R) Senior/Key Person Profile form",
-      "userWrites": false,
+      "item": "SF424(R&R) Senior/Key Person Profile form, with biographical sketches",
+      "userWrites": true,
       "quote": "SF424(R&R) Senior/Key Person Profile"
     },
     {
       "item": "R&R Budget (single budget) with budget justification broken out by Element and Module; first paragraph summarizes how the maximum DC amount was determined",
       "userWrites": true,
       "quote": "In the first paragraph of the budget justification, applicants must summarize how the maximum DC amount requested was determined"
-    },
-    {
-      "item": "Assurance statement that Workforce Development activities and costs are not duplicative with the UM1 or companion grants",
-      "userWrites": true,
-      "quote": "Applicant institutions should include a statement providing assurance that the activities and costs are not duplicative with the UM1 or other companion grant activities."
     },
     {
       "item": "R&R Subaward Budget (same format as the main budget)",
@@ -635,11 +618,6 @@
       "quote": "All Partnering Institutions must provide a letter of support signed by the authorized organizational representative (AOR) stating its role as a Partnering Institution"
     },
     {
-      "item": "Letters of support/agreement for collaborative arrangements, subcontracts, or consultants",
-      "userWrites": false,
-      "quote": "Letters of support/agreement should be included for any collaborative/cooperative arrangements, subcontracts, or consultants."
-    },
-    {
       "item": "Letter of assurance signed by the partner/collaborator and off-site institutional officials for any program activities conducted off site",
       "userWrites": false,
       "quote": "a letter of assurance or comparable documentation, signed by the partner/collaborator as well as the off-site institutional officials, must be submitted with the application"
@@ -653,14 +631,26 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form"
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
     "Project Summary/Abstract",
     "Project Narrative",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment",
-    "Biographical Sketch"
+    "Resource Sharing Plan"
   ]
 }

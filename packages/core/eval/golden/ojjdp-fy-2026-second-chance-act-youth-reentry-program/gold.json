@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "DOJ",
   "deadlines": [
     {
@@ -63,7 +63,8 @@
       "order": 2,
       "limit": {
         "type": "paragraphs",
-        "value": 2
+        "value": 2,
+        "per": "question"
       },
       "conditional": null,
       "component": "Proposal Questionnaire",
@@ -74,7 +75,8 @@
       "order": 3,
       "limit": {
         "type": "paragraphs",
-        "value": 2
+        "value": 2,
+        "per": "question"
       },
       "conditional": null,
       "component": "Proposal Questionnaire",
@@ -85,7 +87,8 @@
       "order": 4,
       "limit": {
         "type": "paragraphs",
-        "value": 2
+        "value": 2,
+        "per": "question"
       },
       "conditional": null,
       "component": "Proposal Questionnaire",
@@ -96,7 +99,8 @@
       "order": 5,
       "limit": {
         "type": "paragraphs",
-        "value": 2
+        "value": 2,
+        "per": "question"
       },
       "conditional": null,
       "component": "Proposal Questionnaire",
@@ -156,6 +160,15 @@
       "scale": null,
       "sections": [],
       "quote": "Budget (15% of application score) *Required* Use the Budget Detail Worksheet (Web-Based Form) to submit the budget."
+    },
+    {
+      "name": "Responsiveness review (basic minimum requirements: eligible applicant, request within the award ceiling, responsive to the NOFO scope)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "the following are considered basic minimum requirement elements that are considered in the responsiveness review: The application is submitted by an eligible applicant. The requested award amount does not exceed the award ceiling."
     }
   ],
   "format": {
@@ -186,16 +199,8 @@
       "quote": "Limit on Number of Applications: You may submit more than one application if each application proposes a different project."
     },
     {
-      "item": "Each application should apply to only one category",
-      "quote": "Each application should apply to only one category of the NOFO."
-    },
-    {
       "item": "For multi-entity projects only one entity applies; partners must be proposed as subrecipients, not co-applicants",
       "quote": "If a project will be carried out by two or more entities (project partners), only one entity may submit the application. The other entities (project partners) must be proposed as subrecipients rather than co-applicants."
-    },
-    {
-      "item": "Category 1: include evidence of partnership with federal corrections and supervision agencies, service providers, and nonprofit organizations (may be documented through an MOU)",
-      "quote": "Category 1: Improving Youth Reentry. Applicants should include evidence of partnership including federal corrections and supervision agencies, service providers, and nonprofit organizations. This may be documented through a Memorandum of Understanding (MOU)."
     },
     {
       "item": "Category 2: must attach a draft or fully executed MOU with the correctional agencies that oversee the recruitment facilities and community corrections (probation and/or parole) for the target population",
@@ -225,11 +230,6 @@
       "item": "Financial Management and System of Internal Controls Questionnaire (including Applicant Disclosure of High-Risk Status)",
       "userWrites": false,
       "quote": "Financial Management and System of Internal Controls Questionnaire (including Applicant Disclosure of High-Risk Status) Review information on this questionnaire."
-    },
-    {
-      "item": "Agency Funding Priorities Inventory (if seeking priority consideration)",
-      "userWrites": false,
-      "quote": "Applicants seeking priority consideration under the Agency Funding Priorities section should answer the inventory questions in their entirety in the web-based form in JustGrants."
     },
     {
       "item": "Letter of support from the U.S. Attorney's Office Lead HSTF Attorney, or 287(g) partnership evidence (if requesting that priority consideration)",
@@ -262,19 +262,9 @@
       "quote": "Limitation on Use of Award Funds for Employee Compensation for Awards Over $250,000; Waiver (if applicable): Read information on this limitation and to determine whether you need to submit a waiver."
     },
     {
-      "item": "Category 2: draft or fully executed MOU or letter of support with the correctional agencies, as one separate attachment",
+      "item": "Category 2: draft or fully executed MOU or letter of support with the correctional agencies",
       "userWrites": true,
       "quote": "Category 2 applicants must include, as an attachment, a draft or fully executed MOU or letter of support that clearly demonstrates an established, collaborative relationship between the applicant and the correctional agencies"
-    },
-    {
-      "item": "Signed MOU or letter of intent from each named project partner",
-      "userWrites": false,
-      "quote": "For each named partner involved in the project (whether as a subrecipient that will receive federal funds to carry out part of the federal award, or otherwise), applicants should include a signed MOU or a letter of intent"
-    },
-    {
-      "item": "Cover page explaining why a draft MOU is unsigned (if submitting an unsigned MOU)",
-      "userWrites": true,
-      "quote": "Unsigned draft MOUs may be submitted with the application, but the applicant should describe in a cover page to the attachment why it is unsigned."
     },
     {
       "item": "Tribal Authorizing Resolution (if applicable)",

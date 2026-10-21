@@ -116,16 +116,8 @@
       "quote": "Research Strategy: The Research Strategy section should highlight the following subsections: Significance and Relevance to SRP Mandates and Superfund; Research Team; Innovation, Approach; Environment; and Center Integration."
     },
     {
-      "name": "Resource Sharing Plan (Overall)",
-      "order": 6,
-      "limit": null,
-      "conditional": null,
-      "component": "Overall",
-      "quote": "Resource Sharing Plan : Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply - Application Guide . Other Plan(s):"
-    },
-    {
       "name": "Data Management and Sharing Plan",
-      "order": 7,
+      "order": 6,
       "limit": {
         "type": "pages",
         "value": 2
@@ -136,7 +128,7 @@
     },
     {
       "name": "Project Summary/Abstract (Administrative Core)",
-      "order": 8,
+      "order": 7,
       "limit": null,
       "conditional": null,
       "component": "Administrative Core",
@@ -144,7 +136,7 @@
     },
     {
       "name": "Project Narrative (Administrative Core)",
-      "order": 9,
+      "order": 8,
       "limit": null,
       "conditional": null,
       "component": "Administrative Core",
@@ -152,7 +144,7 @@
     },
     {
       "name": "Specific Aims (Administrative Core)",
-      "order": 10,
+      "order": 9,
       "limit": null,
       "conditional": null,
       "component": "Administrative Core",
@@ -160,7 +152,7 @@
     },
     {
       "name": "Research Strategy (Administrative Core)",
-      "order": 11,
+      "order": 10,
       "limit": {
         "type": "pages",
         "value": 12
@@ -171,7 +163,7 @@
     },
     {
       "name": "Project Summary/Abstract (TREC)",
-      "order": 12,
+      "order": 11,
       "limit": null,
       "conditional": null,
       "component": "Translational Research and Engagement Core",
@@ -179,7 +171,7 @@
     },
     {
       "name": "Project Narrative (TREC)",
-      "order": 13,
+      "order": 12,
       "limit": null,
       "conditional": null,
       "component": "Translational Research and Engagement Core",
@@ -187,7 +179,7 @@
     },
     {
       "name": "Specific Aims (TREC)",
-      "order": 14,
+      "order": 13,
       "limit": null,
       "conditional": null,
       "component": "Translational Research and Engagement Core",
@@ -195,7 +187,7 @@
     },
     {
       "name": "Research Strategy (TREC)",
-      "order": 15,
+      "order": 14,
       "limit": {
         "type": "pages",
         "value": 12
@@ -206,7 +198,7 @@
     },
     {
       "name": "Project Summary/Abstract (Research Project)",
-      "order": 16,
+      "order": 15,
       "limit": null,
       "conditional": null,
       "component": "Research Project (each of 3-4)",
@@ -214,7 +206,7 @@
     },
     {
       "name": "Project Narrative (Research Project)",
-      "order": 17,
+      "order": 16,
       "limit": null,
       "conditional": null,
       "component": "Research Project (each of 3-4)",
@@ -222,7 +214,7 @@
     },
     {
       "name": "Specific Aims (Research Project)",
-      "order": 18,
+      "order": 17,
       "limit": null,
       "conditional": null,
       "component": "Research Project (each of 3-4)",
@@ -230,7 +222,7 @@
     },
     {
       "name": "Research Strategy (Research Project)",
-      "order": 19,
+      "order": 18,
       "limit": {
         "type": "pages",
         "value": 12
@@ -241,7 +233,7 @@
     },
     {
       "name": "Translational Research Plan (Research Project)",
-      "order": 20,
+      "order": 19,
       "limit": null,
       "conditional": null,
       "component": "Research Project (each of 3-4)",
@@ -249,7 +241,7 @@
     },
     {
       "name": "Project Summary/Abstract (Research Support Core)",
-      "order": 21,
+      "order": 20,
       "limit": null,
       "conditional": "Only if the optional Research Support Core is included",
       "component": "Research Support Core",
@@ -257,7 +249,7 @@
     },
     {
       "name": "Project Narrative (Research Support Core)",
-      "order": 22,
+      "order": 21,
       "limit": null,
       "conditional": "Only if the optional Research Support Core is included",
       "component": "Research Support Core",
@@ -265,7 +257,7 @@
     },
     {
       "name": "Specific Aims (Research Support Core)",
-      "order": 23,
+      "order": 22,
       "limit": null,
       "conditional": "Only if the optional Research Support Core is included",
       "component": "Research Support Core",
@@ -273,7 +265,7 @@
     },
     {
       "name": "Research Strategy (Research Support Core)",
-      "order": 24,
+      "order": 23,
       "limit": {
         "type": "pages",
         "value": 6
@@ -284,7 +276,7 @@
     },
     {
       "name": "Authentication of Key Biological and/or Chemical Resources",
-      "order": 25,
+      "order": 24,
       "limit": null,
       "conditional": "Projects/cores working with biological or chemical substances",
       "component": "Each Research Project and Core, as applicable",
@@ -292,7 +284,7 @@
     },
     {
       "name": "Biohazards",
-      "order": 26,
+      "order": 25,
       "limit": null,
       "conditional": "Projects/cores working with hazardous substances",
       "component": "Each Research Project and Core, as applicable",
@@ -318,8 +310,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Overall)",
-        "Biographical Sketch"
+        "Research Strategy (Overall)"
       ],
       "quote": "Investigator(s) Are the PD(s)/PI(s), collaborators, and other researchers well suited to the project?"
     },
@@ -352,8 +343,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Overall)",
-        "Facilities & Other Resources"
+        "Research Strategy (Overall)"
       ],
       "quote": "Environment Will the scientific environment in which the work will be done contribute to the probability of success?"
     },
@@ -460,7 +450,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Resource Sharing Plan (Overall)",
+        "Resource Sharing Plan",
         "Translational Research Plan (Research Project)"
       ],
       "quote": "Resource Sharing Plans Reviewers will comment on whether the Resource Sharing Plan(s) (e.g., Sharing Model Organisms ) or the rationale for not sharing the resources, is reasonable."
@@ -487,7 +477,7 @@
     },
     {
       "name": "Review Criteria Specific to Administrative Core (acceptable/not acceptable)",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": "acceptable / not acceptable descriptive score, no criterion scores",
@@ -498,7 +488,7 @@
     },
     {
       "name": "Review Criteria Specific to Translational Research and Engagement Core (acceptable/not acceptable)",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": "acceptable / not acceptable descriptive score, no criterion scores",
@@ -525,8 +515,7 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Research Project)",
-        "Biographical Sketch"
+        "Research Strategy (Research Project)"
       ],
       "quote": "Investigator(s) (Research Projects) To what extent are the project investigators (i.e., lead investigator for the project), collaborators, and other researchers well suited to the project?"
     },
@@ -560,14 +549,13 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Research Strategy (Research Project)",
-        "Facilities & Other Resources"
+        "Research Strategy (Research Project)"
       ],
       "quote": "Environment (Research Projects) To what extent will the scientific environment in which the work will be done contribute to the probability of success?"
     },
     {
       "name": "Review Criteria Specific to the Research Support Core (acceptable/not acceptable)",
-      "scored": true,
+      "scored": false,
       "points": null,
       "weightPct": null,
       "scale": "acceptable / not acceptable descriptive score, no criterion scores",
@@ -612,7 +600,13 @@
     },
     {
       "item": "Only one application per institution is allowed",
-      "quote": "Number of Applications Only one application per institution is allowed, as defined in Section III. 3. Additional Information on Eligibility."
+      "quote": "Number of Applications Only one application per institution is allowed, as defined in Section III. 3. Additional Information on Eligibility.",
+      "conflict": true
+    },
+    {
+      "item": "Organizations may submit more than one application, provided each is scientifically distinct",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct.",
+      "conflict": true
     },
     {
       "item": "Only New, Renewal, or Resubmission application types are allowed",
@@ -769,12 +763,29 @@
       "item": "PHS Assignment Request Form (Overall)",
       "userWrites": false,
       "quote": "PHS Assignment Request Form (Overall) All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
-    "Biographical Sketch",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment"
+    "Resource Sharing Plan"
   ]
 }

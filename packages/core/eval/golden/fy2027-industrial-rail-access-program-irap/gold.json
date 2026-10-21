@@ -66,7 +66,7 @@
       "order": 1,
       "limit": null,
       "conditional": null,
-      "component": "Project Narrative, Section A (narrative limit 6 single-spaced pages per Section IX; Section XII says 5-page narrative)",
+      "component": "Project Narrative, Section A",
       "quote": "Project Need Statement - Include a clear and concise statement of the industry transportation logistics problem/product distribution issue(s) that the proposed IRAP project will address and alleviate."
     },
     {
@@ -197,8 +197,17 @@
     "lineSpacing": "single",
     "overallPageLimit": null,
     "other": [
-      "Project Narrative must not exceed 6 single-spaced pages in 12-point font (Section IX); Section XII instead refers to a \"5-page narrative response\" — the notice contradicts itself",
-      "Narrative sections must follow the stated sequence; per-section page allowances are recommendations that may be exceeded as long as the overall narrative limit is not",
+      {
+        "item": "Project Narrative must not exceed 6 single-spaced pages in 12-point font (Section IX)",
+        "conflict": true,
+        "quote": "The project narrative should not exceed 6 single-spaced pages in 12-point font."
+      },
+      {
+        "item": "Project Narrative is a 5-page narrative response (Section XII)",
+        "conflict": true,
+        "quote": "followed by the 5-page narrative response and Attachments B - E below."
+      },
+      "Narrative sections must follow the stated sequence; recommended maximum space allowances (may be exceeded as long as the overall narrative limit is not): Project Need Statement 1 page, Project Description 1 page, Project Management 1 page, Project Readiness 2 pages, Anticipated Project Public Benefits 1 page",
       "Italicized narrative instructions do not count toward the narrative page limit; the cover sheet and Attachments A-E are not counted",
       "Application Cover Pages are the first 2 pages of the package, followed by the narrative and Attachments B-E",
       "Submit the complete application in a single email to MassDOTIRAPProgram@dot.state.ma.us; emails with attachments must be less than 23MB"

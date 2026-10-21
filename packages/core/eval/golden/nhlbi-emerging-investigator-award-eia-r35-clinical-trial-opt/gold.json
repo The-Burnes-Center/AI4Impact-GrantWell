@@ -74,36 +74,12 @@
   },
   "sections": [
     {
-      "name": "Biographical Sketch",
-      "order": 1,
-      "limit": null,
-      "conditional": null,
-      "component": "SF424(R&R) Senior/Key Person Profile",
-      "quote": "The PD/PI must, in the Biographical Sketch, address these considerations and demonstrate a history of conducting rigorous and reproducible research and reporting it in a transparent fashion."
-    },
-    {
       "name": "Research Strategy",
-      "order": 2,
+      "order": 1,
       "limit": null,
       "conditional": null,
       "component": "PHS 398 Research Plan",
       "quote": "Research Strategy : The Research Strategy should include the following information: 1. Background regarding the area(s) of research proposed and key gaps in our understanding"
-    },
-    {
-      "name": "Resource Sharing Plan",
-      "order": 3,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan",
-      "quote": "Resource Sharing Plan : Individuals are required to comply with the instructions for the Resource Sharing Plans"
-    },
-    {
-      "name": "Data Management and Sharing Plan",
-      "order": 4,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan: Other Plan(s)",
-      "quote": "All applications, regardless of the amount of direct costs requested for any one year, must address a Data Management and Sharing Plan."
     }
   ],
   "criteria": [
@@ -113,9 +89,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Biographical Sketch"
-      ],
+      "sections": [],
       "quote": "reviewers will emphasize the following: 1. Evidence of important previous contributions made by the PD/PI to their field"
     },
     {
@@ -135,9 +109,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Biographical Sketch"
-      ],
+      "sections": [],
       "quote": "Investigator(s) Are the PD(s)/PI(s), collaborators, and other researchers well suited to the project?"
     },
     {
@@ -168,9 +140,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Facilities & Other Resources"
-      ],
+      "sections": [],
       "quote": "Environment Will the scientific environment in which the work will be done contribute to the probability of success?"
     },
     {
@@ -337,10 +307,6 @@
       "quote": "Applications missing Letters of Support will be considered not responsive and will not proceed to review."
     },
     {
-      "item": "Do not propose research that fits within the mission of other NIH Institutes and Centers",
-      "quote": "applicants should not propose research that fits appropriately within the mission of other NIH Institutes and Centers (ICs)."
-    },
-    {
       "item": "Organizations may submit more than one application only if each is scientifically distinct",
       "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct."
     },
@@ -415,6 +381,11 @@
       "quote": "SF424(R&R) Senior/Key Person Profile All instructions"
     },
     {
+      "item": "Biographical Sketch for the PD/PI, addressing the NOFO considerations and showing a history of rigorous, reproducible, transparently reported research",
+      "userWrites": true,
+      "quote": "The PD/PI must, in the Biographical Sketch, address these considerations and demonstrate a history of conducting rigorous and reproducible research and reporting it in a transparent fashion."
+    },
+    {
       "item": "Current & Pending Support for the PD/PI (NHLBI grants first, then other NIH, then other sources; total award, person months, direct costs to the PD/PI's lab), attached to the Senior/Key Personnel form",
       "userWrites": true,
       "quote": "Current & Pending Support : Use the SF424 R&R Current and Pending Support instructions and attach this information to the Senior/Key Personnel Form."
@@ -453,13 +424,27 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form All instructions"
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
     "Project Summary/Abstract",
     "Project Narrative",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment"
+    "Resource Sharing Plan",
+    "Data Management and Sharing Plan"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "MA state",
   "deadlines": [
     {
@@ -72,10 +72,10 @@
       }
     ],
     "match": {
-      "required": true,
+      "required": false,
       "ratio": null,
-      "appliesTo": "grant reimburses no more than 50% of total eligible project cost; municipal and tribal applicants must show funds from non-state sources",
-      "quote": "Please note that the grant reimbursement rate can go no higher than 50% as that has been set by the LWCF Act."
+      "appliesTo": null,
+      "quote": "LWCF is a reimbursement program, not a match program; therefore, the total project cost must be raised or appropriated through current tax levy or borrowed"
     },
     "quote": "The maximum grant award is $1,000,000. The minimum grant award is $50,000. In rare circumstances, at the Secretary's discretion, the maximum grant award for an individual project may be higher than $1,000,000"
   },

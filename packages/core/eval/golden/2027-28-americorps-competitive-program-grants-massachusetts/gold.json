@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "checked",
+  "status": "confirmed",
   "family": "AmeriCorps",
   "deadlines": [
     {
@@ -232,7 +232,9 @@
       "Submit only via MSA's online application at https://www.tfaforms.com/5142083; other means are not acceptable",
       "Upload the Budget Worksheet as an Excel file",
       "Do not submit supplemental materials such as brochures or newsletters; they will not be reviewed",
-      "Sign the Assurances, Certifications and Supplementary Certifications as a single document and upload as a PDF"
+      "Sign the Assurances, Certifications and Supplementary Certifications as a single document and upload as a PDF",
+      "Proposed budget should reflect only first-year costs of the three-year grant cycle",
+      "Grant start date must be on or after July 1, 2027"
     ],
     "quote": "The application narrative and Logic Model may not exceed the limits in each section listed in the provided templates."
   },
@@ -268,14 +270,6 @@
     {
       "item": "Must apply for a minimum of 20 members; applications not requesting the minimum MSYs will not be reviewed",
       "quote": "Applicants must apply for a minimum of 20 members."
-    },
-    {
-      "item": "Grant start date must be on or after July 1, 2027",
-      "quote": "Programs must select a grant start date on or after July 1, 2027 to ensure sufficient time for the grant to be awarded by AmeriCorps before program implementation."
-    },
-    {
-      "item": "Proposed budget should reflect only first-year costs of the three-year grant cycle",
-      "quote": "Your proposed budget should only reflect costs associated with the first year of the three-year grant cycle"
     },
     {
       "item": "Applications that fail any submission requirement will not be reviewed",

@@ -190,24 +190,7 @@
     },
     "quote": "Applicants may request direct costs of up to $150,000 for a period of one year only."
   },
-  "sections": [
-    {
-      "name": "Resource Sharing Plan",
-      "order": 1,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan",
-      "quote": "Resource Sharing Plan: Individuals are required to comply with the instructions for the Resource Sharing Plans"
-    },
-    {
-      "name": "Data Management and Sharing Plan",
-      "order": 2,
-      "limit": null,
-      "conditional": null,
-      "component": "PHS 398 Research Plan: Other Plan(s)",
-      "quote": "All applications, regardless of the amount of direct costs requested for any one year, must include a Data Management and Sharing Plan."
-    }
-  ],
+  "sections": [],
   "criteria": [
     {
       "name": "Factor 1: Importance of the Research (Significance and Innovation)",
@@ -238,10 +221,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Biographical Sketch",
-        "Facilities & Other Resources"
-      ],
+      "sections": [],
       "quote": "Factor 3. Expertise and Resources Investigator(s) Evaluate whether the investigator(s) have demonstrated background, training, and expertise"
     },
     {
@@ -449,6 +429,26 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form"
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
     }
   ],
   "libraryRequired": [
@@ -456,9 +456,7 @@
     "Project Narrative",
     "Specific Aims",
     "Research Strategy",
-    "Bibliography & References Cited",
-    "Facilities & Other Resources",
-    "Equipment",
-    "Biographical Sketch"
+    "Resource Sharing Plan",
+    "Data Management and Sharing Plan"
   ]
 }
