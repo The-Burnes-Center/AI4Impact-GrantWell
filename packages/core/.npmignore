@@ -1,6 +1,7 @@
 *.ts
 !*.d.ts
 /test/
+/eval/
 /scripts/
 /tsconfig.json
 

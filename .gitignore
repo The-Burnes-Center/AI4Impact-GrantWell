@@ -23,3 +23,4 @@ cdk.out
 .env.local
 .env.production
 aws-exports.json
+packages/core/eval/out/
