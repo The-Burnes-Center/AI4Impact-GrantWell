@@ -66,19 +66,28 @@ type Store = Record<string, Row[]>;
 // A fake DynamoDB: Query reads rows by partition key (paged by `pageSize` with a key cursor, as
 // DynamoDB does, so deleting rows mid-scan doesn't shift pages), BatchWriteItem and
 // DeleteItem remove them and UpdateItem drops query_text, so a second handler run sees what the first left.
+// Like DynamoDB, Query refuses a FilterExpression that names a key attribute.
 function serveTables(store: Store, pageSize = 100) {
-  const partitionKey: Record<string, string> = {
-    chats: "user_id",
-    drafts: "user_id",
-    versions: "draft_key",
-    analytics: "pk",
+  const keySchema: Record<string, [string, string]> = {
+    chats: ["user_id", "session_id"],
+    drafts: ["user_id", "session_id"],
+    versions: ["draft_key", "rev"],
+    analytics: ["pk", "sk"],
   };
   ddb.on(QueryCommand).callsFake((input) => {
     const values = unmarshall(input.ExpressionAttributeValues);
-    const pk = partitionKey[input.TableName];
+    const [pk, sk] = keySchema[input.TableName];
     let rows = (store[input.TableName] || []).filter((r) => r[pk] === values[Object.keys(values)[0]]);
-    if (input.TableName === "analytics") {
-      rows = rows.filter((r) => r.sk === "PROFILE" || r.query_text !== undefined);
+    if (input.FilterExpression) {
+      const named = [pk, sk].find((k) => new RegExp(`\\b${k}\\b`).test(input.FilterExpression));
+      if (named) {
+        throw Object.assign(
+          new Error(`Filter Expression can only contain non-primary key attributes: Primary key attribute: ${named}`),
+          { name: "ValidationException" }
+        );
+      }
+      expect(input.FilterExpression).toBe("attribute_exists(query_text)");
+      rows = rows.filter((r) => r.query_text !== undefined);
     }
     const after = input.ExclusiveStartKey ? String(unmarshall(input.ExclusiveStartKey).cursor) : "";
     const ordered = rows.map((r) => [JSON.stringify(r), r] as const).sort(([a], [b]) => (a < b ? -1 : 1));
