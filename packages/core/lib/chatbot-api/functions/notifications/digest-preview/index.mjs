@@ -67,7 +67,7 @@ export const handler = async (event) => {
     const prefs = (await getPrefs(userId)) || { user_id: userId };
     const activeNofos = await queryActiveNofos();
     const now = new Date();
-    const sections = selectDigestSections(activeNofos, prefs, frequency, now);
+    const sections = selectDigestSections(activeNofos, prefs, frequency, now, { allStates: true });
     const sendCount = sections.total;
     const rendered = buildDigest(frequency, {
       appUrl: APP_URL,
