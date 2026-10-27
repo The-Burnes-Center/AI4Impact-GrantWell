@@ -83,6 +83,9 @@ export const handler = async (event) => {
   }
 };
 
+/** Grant folder names end in "/", and application titles made from them inherit it. */
+const displayName = (text) => String(text || "").replace(/\/+$/, "");
+
 function badRequest(message) {
   const error = new Error(message);
   error.statusCode = 400;
@@ -194,8 +197,8 @@ async function recordOutcome(userId, state, sessionId, body) {
     ...(outcome.amountAwarded !== undefined && { amount_awarded: outcome.amountAwarded }),
     ...(outcome.status === "submitted" && { next_reminder_at: new Date(now.getTime() + REMIND_EVERY_MS).toISOString() }),
     // Snapshots, so the row still reads right after the application or account is gone.
-    title: String(draft.title || ""),
-    grant: String(draft.document_identifier || ""),
+    title: displayName(draft.title),
+    grant: displayName(draft.document_identifier),
     requested_amount: String(draft.project_basics?.requestedAmount || ""),
     organization: String(profile?.organization || ""),
     region: String(profile?.region || ""),
@@ -321,8 +324,8 @@ async function dueApplications(userId, now) {
     .sort((a, b) => a.dueAt - b.dueAt)
     .map(({ draft, nofo, outcome }) => ({
       sessionId: draft.session_id,
-      title: String(draft.title || ""),
-      grant: String(draft.document_identifier || ""),
+      title: displayName(draft.title),
+      grant: displayName(draft.document_identifier),
       deadline: deadlineMs(nofo) === null ? null : String(nofo.expiration_date),
       status: outcome?.status ?? null,
       submittedDate: outcome?.submitted_date ?? null,
@@ -377,8 +380,8 @@ async function adminList(event) {
       organization: r.organization || "",
       region: r.region || "",
       state: r.state || "",
-      grant: r.grant || "",
-      title: r.title || "",
+      grant: displayName(r.grant),
+      title: displayName(r.title),
       status: r.status,
       requestedAmount: r.requested_amount || "",
       amountAwarded: r.amount_awarded ?? null,

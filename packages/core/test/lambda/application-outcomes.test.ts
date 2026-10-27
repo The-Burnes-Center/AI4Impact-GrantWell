@@ -185,7 +185,7 @@ describe("user routes", () => {
   it("records an outcome with snapshots of the application and profile", async () => {
     const { handler } = await load();
     const tables = {
-      drafts: [{ user_id: "sub-1", session_id: "a", title: "Fiber plan", document_identifier: "Broadband", project_basics: basics }],
+      drafts: [{ user_id: "sub-1", session_id: "a", title: "Fiber plan", document_identifier: "Broadband/", project_basics: basics }],
       analytics: [{ pk: "USER#sub-1", sk: "PROFILE", organization: "Town of Lee", region: "Region 2" }],
       outcomes: [] as Row[],
     };

@@ -35,6 +35,9 @@ interface Session {
   status?: DraftStatus;
 }
 
+// Grant folder names end in "/", and titles made from them inherit it.
+const withoutTrailingSlash = (text: string) => text.replace(/\/+$/, "");
+
 export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const appContext = useContext(AppContext);
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -75,7 +78,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         setOutcomes(Object.fromEntries(recorded.map((o) => [o.sessionId, o])));
         setSessions(result.map(draft => ({
           draft_id: draft.sessionId,
-          title: draft.title,
+          title: withoutTrailingSlash(draft.title),
           created_at: draft.lastModified,
           last_modified: draft.lastModified,
           document_identifier: draft.documentIdentifier,
@@ -246,9 +249,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       borderRadius: '12px',
       fontSize: '12px',
       fontWeight: '500',
-      backgroundColor: color + '15', // 15% opacity background
+      // color-mix, not a hex alpha suffix: some colors are var() tokens.
+      backgroundColor: `color-mix(in srgb, ${color} 8%, transparent)`,
       color: color,
-      border: `1px solid ${color}30`, // 30% opacity border
+      border: `1px solid color-mix(in srgb, ${color} 19%, transparent)`,
       // Ensure sufficient contrast for text
       minWidth: '100px',
       textAlign: 'center' as const,
@@ -391,7 +395,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               <button
                 onClick={() => !isLoading && handleSort("title")}
                 disabled={isLoading}
-                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit" }}
+                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit", textTransform: "inherit", letterSpacing: "inherit" }}
               >
                 Title {!isLoading && getSortIcon("title")}
               </button>
@@ -404,14 +408,14 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               <button
                 onClick={() => !isLoading && handleSort("last_modified")}
                 disabled={isLoading}
-                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit" }}
+                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit", textTransform: "inherit", letterSpacing: "inherit" }}
               >
                 Last Modified {!isLoading && getSortIcon("last_modified")}
               </button>
             </div>
             <div className="header-cell" role="columnheader">Grant</div>
             <div className="header-cell" role="columnheader" style={{ textAlign: 'center' }}>Status</div>
-            <div className="header-cell" role="columnheader">Outcome</div>
+            <div className="header-cell" role="columnheader" style={{ textAlign: "left" }}>Outcome</div>
           </div>
         </div>
         <div className="table-body" role={isLoading || paginatedItems.length === 0 ? undefined : "rowgroup"}>
@@ -472,8 +476,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   </div>
                 </div>
                 <div className="row-cell" role="cell">
-                  <span aria-label={`Grant: ${item.document_identifier || 'Not specified'}`}>
-                    {item.document_identifier || '—'}
+                  <span aria-label={`Grant: ${withoutTrailingSlash(item.document_identifier || '') || 'Not specified'}`}>
+                    {withoutTrailingSlash(item.document_identifier || '') || '—'}
                   </span>
                 </div>
                 <div className="row-cell" role="cell" style={{ justifyContent: 'center' }}>
