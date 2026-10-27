@@ -156,3 +156,28 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+
+.analytics__outcomes {
+  margin-top: 24px;
+}
+
+.analytics__outcomes-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.analytics__outcomes-head .analytics__window-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.analytics__outcomes-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 12px;
+}

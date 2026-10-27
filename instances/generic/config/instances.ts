@@ -60,6 +60,8 @@ export const instances: InstanceConfig[] = [
     scraper: { dailySchedule: false },
     monitoring: { dailyBrief: false },
     e2e: { testEmails: ["e2e-dev@grantwell.invalid"] },
+    // TEMP for v3.3.3 testing on burnes-staging; remove before release.sh prepare.
+    regions: ["Region 1", "Region 2", "Region 3"],
     tags: {},
     branding,
   },

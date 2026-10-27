@@ -42,6 +42,9 @@ Put your own images in `public/` and point `config/branding.ts` at them by their
 - **Region:** `regions: ["Region 1", "Region 2"]` adds a required Region dropdown to the one-time profile step and the Profile page. Users who already exist are asked once at their next sign-in, and again if their region is later removed from the list. Admins see each user's region in User Management; nothing else uses it.
 - **Email:** `email: { cognitoDefault: true }` sends sign-in mail from Cognito's own sender when your account has no SES set up (about 50 a day); grant digest emails are then off.
 
+## Application outcomes
+Every deployment asks users what happened with the applications they wrote: submitted, awarded (with the amount), not awarded, withdrawn or didn't submit. They answer from My Applications, or in a reminder after sign-in once the grant's deadline has passed (rolling grants: 90 days after the last edit), repeated every 60 days while no decision is in. Only applications edited after the deployment first runs this release are reminded about; older ones can still be updated from My Applications. Admins see every outcome in their scope under Analytics > Application outcomes and can export it as CSV. Outcomes stay when an application is deleted; when an account is deleted they stay without the user, email and application title.
+
 ## Processing-queue email
 With `notifications: { processingQueueEmail: true }` on a deployment, admins get one email at 09:00 Eastern on weekdays when grants are waiting in the processing queue, soonest deadline first; nothing is sent when the queue is empty. It needs an SES sender, so it can't be combined with `email: { cognitoDefault: true }`.
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import Modal from "../common/Modal";
 import Button from "../ui/Button";
@@ -25,24 +25,32 @@ function markSeen(userId: string, version: string): void {
   }
 }
 
-/** The newest release's highlights, once per browser. */
-export default function WhatsNewDialog() {
+/** The newest release's highlights, once per browser. onDone fires once: when it decides not to show, or when it is closed. */
+export default function WhatsNewDialog({ onDone }: { onDone?: () => void }) {
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const release = LATEST_RELEASE;
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
 
   useEffect(() => {
-    if (!release?.highlights) return;
+    if (!release?.highlights) {
+      onDoneRef.current?.();
+      return;
+    }
     let active = true;
     (async () => {
+      let shown = false;
       try {
         const signIn = await currentSignIn();
-        if (!active || !signIn) return;
-        if (seenVersion(signIn.userId) === release.version) return;
-        setUserId(signIn.userId);
+        if (active && signIn && seenVersion(signIn.userId) !== release.version) {
+          setUserId(signIn.userId);
+          shown = true;
+        }
       } catch (err) {
         console.error("Could not check What's new", err);
       }
+      if (active && !shown) onDoneRef.current?.();
     })();
     return () => {
       active = false;
@@ -54,6 +62,7 @@ export default function WhatsNewDialog() {
   const close = () => {
     markSeen(userId, release.version);
     setUserId("");
+    onDoneRef.current?.();
   };
 
   return (

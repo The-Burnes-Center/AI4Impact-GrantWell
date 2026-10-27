@@ -9,6 +9,7 @@ import {
   DeleteItemCommand,
   DynamoDBClient,
   QueryCommand,
+  TransactWriteItemsCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
@@ -31,6 +32,7 @@ const ENV = {
   USER_NOTIFICATION_PREFS_TABLE_NAME: "prefs",
   USER_DOCUMENTS_BUCKET: "user-docs",
   SYNC_KB_FUNCTION_NAME: "sync-kb",
+  OUTCOME_TABLE_NAME: "outcomes",
 };
 
 async function load(env: Record<string, string> = {}) {
@@ -73,6 +75,7 @@ function serveTables(store: Store, pageSize = 100) {
     drafts: ["user_id", "session_id"],
     versions: ["draft_key", "rev"],
     analytics: ["pk", "sk"],
+    outcomes: ["user_id", "session_id"],
   };
   ddb.on(QueryCommand).callsFake((input) => {
     const values = unmarshall(input.ExpressionAttributeValues);
@@ -117,6 +120,13 @@ function serveTables(store: Store, pageSize = 100) {
     const found = rows.find(matches(key));
     store[input.TableName] = rows.filter((r) => !matches(key)(r));
     return found ? { Attributes: marshall(found) } : {};
+  });
+  ddb.on(TransactWriteItemsCommand).callsFake((input) => {
+    for (const item of input.TransactItems) {
+      if (item.Put) (store[item.Put.TableName] ||= []).push(unmarshall(item.Put.Item));
+      if (item.Delete) store[item.Delete.TableName] = (store[item.Delete.TableName] || []).filter((r) => !matches(unmarshall(item.Delete.Key))(r));
+    }
+    return {};
   });
   ddb.on(UpdateItemCommand).callsFake((input) => {
     const row = (store[input.TableName] || []).find(matches(unmarshall(input.Key)));
@@ -184,6 +194,11 @@ beforeEach(() => {
       { pk: "USER#sub-2", sk: "PROFILE" },
     ],
     prefs: [{ user_id: "sub-1" }, { user_id: "sub-2" }],
+    outcomes: [
+      { user_id: "sub-1", session_id: "d1", status: "awarded", title: "Our plan", grant: "Broadband", organization: "Town of Lee", region: "Region 2", amount_awarded: 5000, next_reminder_at: "x" },
+      { user_id: "sub-1", session_id: "d2", next_reminder_at: "2026-12-01T00:00:00.000Z" },
+      { user_id: "sub-2", session_id: "d9", status: "submitted", title: "Theirs" },
+    ],
   };
   bucket = [
     { Key: "user-uuid/grant/plan.pdf", VersionId: "v1" },
@@ -232,8 +247,17 @@ describe("DELETE /user-management/users/{username}", () => {
         profile: true,
         searchTextsErased: 1,
         notificationPreferences: true,
+        outcomesKept: 1,
       },
     });
+
+    const kept = store.outcomes.filter((r) => String(r.user_id).startsWith("deleted#"));
+    expect(kept).toHaveLength(1);
+    expect(kept[0]).toMatchObject({ session_id: "d1", status: "awarded", grant: "Broadband", organization: "Town of Lee", region: "Region 2", amount_awarded: 5000 });
+    expect(kept[0]).not.toHaveProperty("title");
+    expect(kept[0]).not.toHaveProperty("next_reminder_at");
+    expect(store.outcomes.filter((r) => r.user_id === "sub-1")).toEqual([]);
+    expect(store.outcomes.find((r) => r.user_id === "sub-2")).toMatchObject({ title: "Theirs" });
 
     expect(batchKeys("chats")).toEqual([
       { user_id: "sub-1", session_id: "c1" },
@@ -383,6 +407,7 @@ describe("DELETE /user-management/users/{username}", () => {
       profile: false,
       searchTextsErased: 0,
       notificationPreferences: false,
+      outcomesKept: 0,
     });
     expect(cognito.commandCalls(AdminDeleteUserCommand)).toHaveLength(1);
     expect(bucket).toEqual([{ Key: "user-uuid-2/grant/theirs.pdf", VersionId: "x1" }]);

@@ -28,6 +28,7 @@ export class TableStack extends Stack {
   public readonly nofoStateOverlayTable: Table;
   public readonly analyticsTable: Table;
   public readonly dailyUsageTable: Table;
+  public readonly applicationOutcomeTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -254,5 +255,16 @@ export class TableStack extends Stack {
     });
 
     this.dailyUsageTable = dailyUsageTable;
+
+    // One row per application with a recorded outcome or a snoozed reminder, keyed like DraftTable.
+    // Rows outlive the application, and survive the account de-identified under "deleted#<uuid>".
+    const applicationOutcomeTable = new Table(this, 'ApplicationOutcomeTable', {
+      ...BACKED_UP,
+      partitionKey: { name: 'user_id', type: AttributeType.STRING },
+      sortKey: { name: 'session_id', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
+    this.applicationOutcomeTable = applicationOutcomeTable;
   }
 }
