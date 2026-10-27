@@ -41,13 +41,21 @@ describe("validation", () => {
 });
 
 for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
-  describe(`${env} (no regions)`, () => {
-    it("asks no Region question anywhere", () => {
+  describe(env, () => {
+    it("wires the Region question exactly when the config lists regions", async () => {
+      const instances: InstanceConfig[] = (await import(path.join(appDir, "config", "instances.ts"))).instances;
+      const listed = instances.find((i) => i.aws.environment === ENVS[env].ENVIRONMENT)!.regions ?? [];
       const all = resourcesIn(outDir(env));
-      expect(vars(fn(all, "ChatbotAPIUserProfileFunction"))).not.toHaveProperty("REGIONS");
+      const profileVars = vars(fn(all, "ChatbotAPIUserProfileFunction"));
       const users = fn(all, "ChatbotAPIManageUsersFunction");
-      expect(vars(users)).not.toHaveProperty("REGIONS_ENABLED");
-      expect(actionsOf(all, users)).not.toContain("dynamodb:BatchGetItem");
+      if (listed.length) {
+        expect(JSON.parse(profileVars.REGIONS)).toEqual(listed);
+        expect(vars(users).REGIONS_ENABLED).toBe("true");
+      } else {
+        expect(profileVars).not.toHaveProperty("REGIONS");
+        expect(vars(users)).not.toHaveProperty("REGIONS_ENABLED");
+        expect(actionsOf(all, users)).not.toContain("dynamodb:BatchGetItem");
+      }
     });
   });
 }
