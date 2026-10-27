@@ -959,7 +959,6 @@ export class LambdaFunctionStack extends cdk.Stack {
           ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
-          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         ...SINGLE_STATE_ENV,
@@ -990,10 +989,6 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     nofoSummaryUpdateFunction.addToRolePolicy(s3ReadWritePolicy(props.grantArtifactsBucket.bucketArn));
-
-    nofoSummaryUpdateFunction.addToRolePolicy(
-      lambdaInvokePolicy(kbSyncAPIHandlerFunction.functionArn)
-    );
 
     this.nofoSummaryUpdateFunction = nofoSummaryUpdateFunction;
 

@@ -48,6 +48,20 @@ beforeEach(() => {
   vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 
+describe("nofo-summary-update storage", () => {
+  it("saves requirements to the artifacts bucket without re-syncing the Knowledge Base", async () => {
+    given({}, { ProjectNarrativeSections: [section("Need")] });
+
+    const res = await save({ ProjectNarrativeSections: [section("Need"), section("Budget")] });
+
+    expect(res.statusCode).toBe(200);
+    expect(s3.commandCalls(PutObjectCommand).map((c) => [c.args[0].input.Bucket, c.args[0].input.Key])).toEqual([
+      ["grant-artifacts", "Grant A/summary.json"],
+    ]);
+    expect(lambda.commandCalls(InvokeCommand)).toHaveLength(0);
+  });
+});
+
 describe("nofo-summary-update review flag", () => {
   it("clears the flag once every flagged section has content", async () => {
     given({ review_flag: flag(["ProjectNarrativeSections"]) }, { ProjectNarrativeSections: [], KeyDeadlines: [section("Due")] });
