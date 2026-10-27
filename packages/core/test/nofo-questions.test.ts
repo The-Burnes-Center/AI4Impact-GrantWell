@@ -16,7 +16,7 @@ const aws = vi.hoisted(() => {
     dynamo: vi.fn(),
     lambda: vi.fn(),
     s3: vi.fn(),
-    uploads: [] as { Key: string; Body: string }[],
+    uploads: [] as { Bucket: string; Key: string; Body: string }[],
   };
 });
 
@@ -45,7 +45,7 @@ vi.mock("@aws-sdk/lib-storage", () => ({
   Upload: class {
     constructor(private opts: any) {}
     async done() {
-      aws.uploads.push({ Key: this.opts.params.Key, Body: this.opts.params.Body });
+      aws.uploads.push({ Bucket: this.opts.params.Bucket, Key: this.opts.params.Key, Body: this.opts.params.Body });
     }
   },
 }));
@@ -55,6 +55,7 @@ vi.mock("@aws-sdk/client-lambda", () => ({
 }));
 vi.mock("grantwell-shared", async () => ({
   ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/sections.mjs")),
+  ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/artifacts.mjs")),
   requireAdmin: () => null,
   assertCanEditNofoOr403: async () => null,
   resolveCallerScope: () => ({ role: "admin" }),
@@ -63,6 +64,7 @@ vi.mock("grantwell-shared", async () => ({
 
 process.env.HAIKU_MODEL_ID = "haiku";
 process.env.BUCKET = "nofo-bucket";
+process.env.ARTIFACTS_BUCKET = "grant-artifacts";
 process.env.REVIEW_TABLE_NAME = "reviews";
 process.env.PUBLISH_FUNCTION_NAME = "publish";
 
@@ -196,6 +198,15 @@ describe("publish", () => {
   it("writes questions.json when questions are present", async () => {
     await publish(event(QUESTIONS));
     expect(aws.uploads.map((u) => u.Key)).toContain("G/questions.json");
+  });
+
+  it("keeps the summary and questions out of the bucket the Knowledge Base indexes", async () => {
+    await publish(event(QUESTIONS));
+    expect(aws.uploads.map((u) => [u.Bucket, u.Key])).toEqual([
+      ["grant-artifacts", "G/summary.json"],
+      ["grant-artifacts", "G/questions.json"],
+      [expect.not.stringMatching(/^grant-artifacts$/), "G/NOFO-File-PDF.metadata.json"],
+    ]);
   });
 
   it("gives every narrative section of the published summary an id", async () => {

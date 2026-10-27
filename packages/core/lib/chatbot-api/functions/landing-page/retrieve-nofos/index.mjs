@@ -6,9 +6,9 @@
 import { DynamoDBClient, QueryCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
+import { artifactsBucket } from 'grantwell-shared';
 
-// SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts). Parsed inline because
-// this function does not attach the grantwell-shared Lambda layer.
+// SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts).
 const SUPPORTED_STATE_CODES = (() => {
   try {
     const parsed = JSON.parse(process.env.SUPPORTED_STATES || "[]");
@@ -188,40 +188,37 @@ async function fetchFromS3(s3Bucket) {
 
     console.log(`Found ${allFolders.length} folders in S3 bucket`);
 
-    // Get all summary.json files
-    let summaryFiles = [];
-    continuationToken = undefined;
-
-    do {
-      const command = new ListObjectsV2Command({
-        Bucket: s3Bucket,
-        ContinuationToken: continuationToken,
-      });
-
-      const result = await s3Client.send(command);
-      
-      if (result.Contents) {
-        const summaryObjects = result.Contents.filter((item) => {
-          if (!item.Key.endsWith('summary.json')) return false;
-          const folderName = item.Key.substring(0, item.Key.lastIndexOf('/'));
-          return allFolders.includes(folderName);
+    // Get all summary.json files; a grant's copy in the artifacts bucket wins over a legacy one.
+    const summaryFiles = new Map();
+    for (const bucket of [artifactsBucket(), s3Bucket]) {
+      continuationToken = undefined;
+      do {
+        const command = new ListObjectsV2Command({
+          Bucket: bucket,
+          ContinuationToken: continuationToken,
         });
 
-        summaryFiles = [...summaryFiles, ...summaryObjects.map(item => item.Key)];
-      }
+        const result = await s3Client.send(command);
 
-      continuationToken = result.IsTruncated ? result.NextContinuationToken : undefined;
-    } while (continuationToken);
+        for (const item of result.Contents || []) {
+          if (!item.Key.endsWith('summary.json')) continue;
+          const folderName = item.Key.substring(0, item.Key.lastIndexOf('/'));
+          if (allFolders.includes(folderName) && !summaryFiles.has(folderName)) {
+            summaryFiles.set(folderName, { bucket, key: item.Key });
+          }
+        }
+
+        continuationToken = result.IsTruncated ? result.NextContinuationToken : undefined;
+      } while (continuationToken);
+    }
 
     // Read summary.json files
     let nofoData = await Promise.all(
-      summaryFiles.map(async (summaryFile) => {
-        const folderName = summaryFile.substring(0, summaryFile.lastIndexOf('/'));
-        
+      [...summaryFiles].map(async ([folderName, summaryFile]) => {
         try {
           const getCommand = new GetObjectCommand({
-            Bucket: s3Bucket,
-            Key: summaryFile,
+            Bucket: summaryFile.bucket,
+            Key: summaryFile.key,
           });
           
           const result = await s3Client.send(getCommand);

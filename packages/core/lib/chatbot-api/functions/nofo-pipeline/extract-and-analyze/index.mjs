@@ -1,6 +1,6 @@
 import { EXTRACTION_PROMPT } from "./prompts.mjs";
 import { updateProcessingStatus } from "../shared/status.mjs";
-import { readS3Text } from "../shared/s3.mjs";
+import { readRawText } from "../shared/s3.mjs";
 import { invokeStructuredOutput, isRetryableError } from "../shared/bedrock.mjs";
 import { validateMergedSummary, countItems } from "../shared/json.mjs";
 import { EXTRACTION_SCHEMA } from "../shared/schemas.mjs";
@@ -20,7 +20,7 @@ export const handler = async (event, context) => {
 
   await updateProcessingStatus(nofoName, "extracting");
 
-  const rawText = await readS3Text(s3Bucket, rawTextKey);
+  const rawText = await readRawText(s3Bucket, rawTextKey);
   const chunks = rawText.length <= CHUNK_SIZE ? [rawText] : splitIntoChunks(rawText, CHUNK_SIZE, CHUNK_OVERLAP);
   if (chunks.length > 1) {
     console.log(`Document ${nofoName} is ${rawText.length} chars, split into ${chunks.length} chunks`);

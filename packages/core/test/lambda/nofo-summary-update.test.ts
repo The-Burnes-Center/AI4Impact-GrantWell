@@ -14,6 +14,7 @@ let handler: (event: any) => Promise<{ statusCode: number; body: string }>;
 let reviewFlagResolved: (flag: any, summary: any) => boolean;
 beforeAll(async () => {
   vi.stubEnv("BUCKET", "nofos-bucket");
+  vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   vi.stubEnv("NOFO_METADATA_TABLE_NAME", "nofos");
   vi.stubEnv("ENABLE_DYNAMODB_CACHE", "true");
   vi.stubEnv("SUPPORTED_STATES", JSON.stringify([{ code: "MA", name: "Massachusetts" }]));

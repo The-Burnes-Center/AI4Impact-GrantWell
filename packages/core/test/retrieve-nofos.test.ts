@@ -29,6 +29,7 @@ vi.mock("@aws-sdk/client-dynamodb", () => ({
   },
 }));
 vi.mock("@aws-sdk/util-dynamodb", () => ({ marshall: (x: any) => x, unmarshall: (x: any) => x }));
+vi.mock("grantwell-shared", () => ({ artifactsBucket: () => "grant-artifacts" }));
 vi.mock("@aws-sdk/client-s3", () => ({
   S3Client: class {
     async send() {

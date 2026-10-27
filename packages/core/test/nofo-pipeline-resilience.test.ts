@@ -41,9 +41,13 @@ vi.mock("@aws-sdk/client-textract", () => ({
   StartDocumentTextDetectionCommand: aws.command("StartDocumentTextDetectionCommand"),
   GetDocumentTextDetectionCommand: aws.command("GetDocumentTextDetectionCommand"),
 }));
-vi.mock("grantwell-shared", async () => import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/sections.mjs"));
+vi.mock("grantwell-shared", async () => ({
+  ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/sections.mjs")),
+  ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/artifacts.mjs")),
+}));
 
 process.env.SONNET_MODEL_ID = "sonnet";
+process.env.ARTIFACTS_BUCKET = "grant-artifacts";
 process.env.NOFO_METADATA_TABLE_NAME = "nofos";
 
 const fns = "../lib/chatbot-api/functions/nofo-pipeline";

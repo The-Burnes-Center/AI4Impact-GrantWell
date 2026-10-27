@@ -32,6 +32,7 @@ export function configure({ kbId } = {}) {
     HAIKU_MODEL_ID: models.haiku,
     KB_ID: kbId || "eval-replay",
     BUCKET: "eval-nofos",
+    ARTIFACTS_BUCKET: "eval-artifacts",
     DRAFT_GENERATION_JOBS_TABLE_NAME: "eval-draft-jobs",
     WEBSOCKET_API_ENDPOINT: "https://eval.invalid",
     SESSION_HANDLER: "eval-session-handler",

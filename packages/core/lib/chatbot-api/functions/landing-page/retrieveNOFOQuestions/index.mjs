@@ -4,12 +4,12 @@
  * Access is gated by the same state-scoping rule as the NOFO summary endpoint.
  */
 
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client } from "@aws-sdk/client-s3";
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { getArtifact, isMissingObject } from "grantwell-shared";
 
-// SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts). Parsed inline because
-// this function does not attach the grantwell-shared Lambda layer.
+// SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts).
 const SUPPORTED_STATES = (() => {
   try {
     const parsed = JSON.parse(process.env.SUPPORTED_STATES || "[]");
@@ -165,15 +165,11 @@ export const handler = async (event) => {
     // questions can still be returned; any other S3 error is a genuine failure.
     let data = { questions: [] };
     try {
-      const result = await s3Client.send(
-        new GetObjectCommand({ Bucket: s3Bucket, Key: `${basePath}/questions.json` })
-      );
+      const result = await getArtifact(s3Client, `${basePath}/questions.json`, s3Bucket);
       const fileContent = await streamToString(result.Body);
       data = JSON.parse(fileContent);
     } catch (s3Error) {
-      if (s3Error?.name !== "NoSuchKey" && s3Error?.$metadata?.httpStatusCode !== 404) {
-        throw s3Error;
-      }
+      if (!isMissingObject(s3Error)) throw s3Error;
     }
     if (!Array.isArray(data.questions)) data.questions = [];
 

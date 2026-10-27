@@ -32,12 +32,16 @@ import {
   bedrockInvokePolicy,
   metadataTableReadWritePolicy,
   reviewTableReadWritePolicy,
+  s3ListBucketPolicy,
+  s3ObjectReadWriteDeletePolicy,
+  s3ReadOnlyPolicy,
   s3ReadWritePolicy,
   textractPolicy,
 } from "./shared-policies";
 
 export interface NofoPipelineStackProps extends cdk.NestedStackProps {
   readonly ffioNofosBucket: s3.Bucket;
+  readonly grantArtifactsBucket: s3.Bucket;
   readonly nofoMetadataTable: Table;
   readonly nofoProcessingReviewTable: Table;
   /** Shared with functions outside this stack, so it stays in the parent. */
@@ -80,17 +84,22 @@ export class NofoPipelineStack extends cdk.NestedStack {
 
     // --- Pipeline Lambda Functions ---
 
+    const artifactsBucketArn = props.grantArtifactsBucket.bucketArn;
+
     const extractTextFunction = new lambda.Function(this, "ExtractTextFunction", {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "extract-text/index.handler",
+      layers: [props.jsSharedLayer],
       environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
       timeout: cdk.Duration.minutes(15),
       memorySize: 512,
     });
     extractTextFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    extractTextFunction.addToRolePolicy(s3ReadWritePolicy(artifactsBucketArn));
     extractTextFunction.addToRolePolicy(textractPolicy());
     extractTextFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
@@ -98,7 +107,9 @@ export class NofoPipelineStack extends cdk.NestedStack {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "extract-and-analyze/index.handler",
+      layers: [props.jsSharedLayer],
       environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SONNET_MODEL_ID: props.sonnetNofoProfileArn,
       },
@@ -106,6 +117,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       memorySize: 512,
     });
     extractAndAnalyzeFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    extractAndAnalyzeFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
     extractAndAnalyzeFunction.addToRolePolicy(bedrockInvokePolicy());
     extractAndAnalyzeFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
@@ -113,7 +125,9 @@ export class NofoPipelineStack extends cdk.NestedStack {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "synthesize/index.handler",
+      layers: [props.jsSharedLayer],
       environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         HAIKU_MODEL_ID: props.haikuNofoProfileArn,
       },
@@ -121,6 +135,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       memorySize: 512,
     });
     synthesizeFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    synthesizeFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
     synthesizeFunction.addToRolePolicy(bedrockInvokePolicy());
     synthesizeFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
@@ -143,6 +158,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       layers: [props.jsSharedLayer],
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SYNC_KB_FUNCTION_NAME: `${props.stackName}-syncKBFunction`,
       },
@@ -150,6 +166,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       memorySize: 256,
     });
     publishFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    publishFunction.addToRolePolicy(s3ReadWritePolicy(artifactsBucketArn));
     publishFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     publishFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -163,7 +180,9 @@ export class NofoPipelineStack extends cdk.NestedStack {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "quarantine/index.handler",
+      layers: [props.jsSharedLayer],
       environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
@@ -171,6 +190,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       memorySize: 256,
     });
     quarantineFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    quarantineFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
     quarantineFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     quarantineFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
@@ -278,6 +298,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         BUCKET: props.ffioNofosBucket.bucketName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         PUBLISH_FUNCTION_NAME: publishFunction.functionName,
         HAIKU_MODEL_ID: props.haikuNofoProfileArn,
         SUPPORTED_STATES: props.supportedStatesEnv,
@@ -307,6 +328,8 @@ export class NofoPipelineStack extends cdk.NestedStack {
         ],
       })
     );
+    nofoAdminFunction.addToRolePolicy(s3ListBucketPolicy(artifactsBucketArn));
+    nofoAdminFunction.addToRolePolicy(s3ObjectReadWriteDeletePolicy(artifactsBucketArn));
     nofoAdminFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,

@@ -22,6 +22,7 @@ beforeAll(async () => {
   vi.stubEnv("SONNET_MODEL_ID", "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/sonnet");
   vi.stubEnv("DRAFT_GENERATION_JOBS_TABLE_NAME", "");
   vi.stubEnv("KB_ID", "kb-1");
+  vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   vi.stubEnv("NOFO_METADATA_TABLE_NAME", "");
   ({ handler: generateSection } = await import("../../lib/chatbot-api/functions/draft-pipeline/generate-section/index.mjs"));
   ({ handler: extractAndAnalyze } = await import(

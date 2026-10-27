@@ -2,7 +2,7 @@ import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { DEADLINE_EXTRACTION_PROMPT } from "./prompts.mjs";
 import { updateProcessingStatus } from "../shared/status.mjs";
-import { readS3Text } from "../shared/s3.mjs";
+import { readRawText } from "../shared/s3.mjs";
 import { invokeBedrockWithRetry } from "../shared/bedrock.mjs";
 import { countItems } from "../shared/json.mjs";
 import { documentSampleOf, generateQuestionsWithRetry } from "../shared/questions.mjs";
@@ -40,7 +40,7 @@ export const handler = async (event) => {
     }
   }
 
-  const documentSample = documentSampleOf(await readS3Text(s3Bucket, rawTextKey));
+  const documentSample = documentSampleOf(await readRawText(s3Bucket, rawTextKey));
 
   // Run deadline extraction and question generation in parallel
   const needsDeadline = !existingExpirationDate && mergedSummary.KeyDeadlines?.length > 0;

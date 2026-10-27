@@ -2,7 +2,7 @@
  * This Lambda function renames a NOFO.
  *
  * A rename touches four places, because the NOFO's folder name doubles as its identity:
- *   1. S3 — copy every object under `oldName/` to `newName/`, then delete the originals.
+ *   1. S3 — copy every object under `oldName/` to `newName/` (grant and artifacts buckets), then delete the originals.
  *   2. The `.metadata.json` sidecars — these embed `documentIdentifier` (the old folder path),
  *      and websocket-chat filters KB retrieval on exactly that value, so copying them verbatim
  *      would leave chat returning nothing for the renamed NOFO.
@@ -20,7 +20,7 @@ import { S3Client, ListObjectsV2Command, CopyObjectCommand, DeleteObjectCommand,
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { DynamoDBClient, GetItemCommand, PutItemCommand, DeleteItemCommand, QueryCommand, BatchWriteItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { requireAdmin, assertCanEditNofoOr403 } from 'grantwell-shared';
+import { requireAdmin, assertCanEditNofoOr403, copyArtifacts, deleteArtifacts } from 'grantwell-shared';
 
 const dynamoClient = new DynamoDBClient();
 const scopeDeps = { client: dynamoClient, GetItemCommand, marshall, unmarshall };
@@ -110,6 +110,7 @@ export const handler = async (event) => {
         Key: destinationKey,
       }));
     }
+    await copyArtifacts(s3Client, oldName, newName);
 
     // The copied sidecars still carry the old documentIdentifier — rewrite them in place.
     await rewriteMetadataSidecars(s3Client, s3Bucket, objects, oldName, newName);
@@ -117,6 +118,7 @@ export const handler = async (event) => {
     for (const object of objects) {
       await s3Client.send(new DeleteObjectCommand({ Bucket: s3Bucket, Key: object.Key }));
     }
+    await deleteArtifacts(s3Client, oldName);
 
     if (claimedNewRow) {
       await dynamoClient.send(new DeleteItemCommand({

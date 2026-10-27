@@ -5,10 +5,10 @@
  * and returns success or error accordingly.
  */
 
-import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBClient, PutItemCommand, UpdateItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { requireAdmin, assertCanEditNofoOr403 } from 'grantwell-shared';
+import { requireAdmin, assertCanEditNofoOr403, getArtifact, putArtifact } from 'grantwell-shared';
 
 const scopeDeps = { client: new DynamoDBClient(), GetItemCommand, marshall, unmarshall };
 
@@ -203,15 +203,10 @@ export const handler = async (event) => {
     const summaryKey = `${nofoName}/summary.json`;
 
     // First, get the existing summary.json file if it exists
-    const getCommand = new GetObjectCommand({
-      Bucket: s3Bucket,
-      Key: summaryKey,
-    });
-
     let summaryObject;
     try {
       // Try to get the existing summary file
-      const getResult = await s3Client.send(getCommand);
+      const getResult = await getArtifact(s3Client, summaryKey, s3Bucket);
       const fileContent = await streamToString(getResult.Body);
       summaryObject = JSON.parse(fileContent);
     } catch (error) {
@@ -275,14 +270,7 @@ export const handler = async (event) => {
     }
 
     // Write the updated summary back to S3
-    const putCommand = new PutObjectCommand({
-      Bucket: s3Bucket,
-      Key: summaryKey,
-      Body: JSON.stringify(summaryObject, null, 2),
-      ContentType: 'application/json',
-    });
-
-    await s3Client.send(putCommand);
+    await putArtifact(s3Client, summaryKey, JSON.stringify(summaryObject, null, 2), 'application/json');
     console.log(`Updated S3 summary.json for ${nofoName}`);
 
     // Update DynamoDB if enabled

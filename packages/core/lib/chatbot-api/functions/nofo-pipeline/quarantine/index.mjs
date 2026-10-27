@@ -2,7 +2,7 @@ import { DynamoDBClient, PutItemCommand, QueryCommand, UpdateItemCommand } from 
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { randomUUID } from "crypto";
 import { updateProcessingStatus, setNofoStatus, markProcessingComplete } from "../shared/status.mjs";
-import { readS3Text } from "../shared/s3.mjs";
+import { readRawText } from "../shared/s3.mjs";
 
 const dynamoClient = new DynamoDBClient();
 
@@ -77,7 +77,7 @@ export const handler = async (event) => {
   let documentTextPreview = "";
   if (rawTextKey) {
     try {
-      const fullText = await readS3Text(s3Bucket, rawTextKey);
+      const fullText = await readRawText(s3Bucket, rawTextKey);
       documentTextPreview = fullText.substring(0, 2000);
     } catch (error) {
       console.warn(`Could not read source text for preview: ${error.message}`);
