@@ -2,11 +2,12 @@
  * Removes what a user stored, ahead of deleting their account: chats, applications and their
  * version history, supporting documents (every version and delete marker under the user's folder,
  * knowledge-base sidecars included), the profile row, notification preferences, and the typed query
- * on each search event. Usage events themselves stay so the dashboard's counts don't change.
+ * on each search event. Usage events themselves stay so the dashboard's counts don't change, and
+ * application outcomes stay de-identified so the outcome totals don't either.
  * Each step re-reads what is left, so a retry after a partial failure finishes the job.
  *
  * Env: CHAT_HISTORY_TABLE_NAME, DRAFT_TABLE_NAME, DRAFT_VERSION_TABLE_NAME, ANALYTICS_TABLE_NAME,
- * USER_NOTIFICATION_PREFS_TABLE_NAME, USER_DOCUMENTS_BUCKET, SYNC_KB_FUNCTION_NAME
+ * USER_NOTIFICATION_PREFS_TABLE_NAME, USER_DOCUMENTS_BUCKET, SYNC_KB_FUNCTION_NAME, OUTCOME_TABLE_NAME
  */
 
 import {
@@ -14,8 +15,10 @@ import {
   DeleteItemCommand,
   DynamoDBClient,
   QueryCommand,
+  TransactWriteItemsCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
+import { randomUUID } from "node:crypto";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { DeleteObjectsCommand, ListObjectVersionsCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
@@ -39,6 +42,7 @@ function config() {
     notificationPrefs: process.env.USER_NOTIFICATION_PREFS_TABLE_NAME,
     bucket: process.env.USER_DOCUMENTS_BUCKET,
     syncFunction: process.env.SYNC_KB_FUNCTION_NAME,
+    outcomes: process.env.OUTCOME_TABLE_NAME,
   };
   const missing = Object.entries(env).filter(([, value]) => !value);
   if (missing.length) {
@@ -65,6 +69,7 @@ export async function deleteUserData({ sub, username }) {
     deleteDocuments(env, username),
     deleteProfile(env, sub),
     deleteNotificationPrefs(env, sub),
+    deidentifyOutcomes(env, sub),
   ]);
   const failed = steps.filter((step) => step.status === "rejected");
   if (failed.length) {
@@ -76,7 +81,7 @@ export async function deleteUserData({ sub, username }) {
     throw error;
   }
 
-  const [chats, applications, documents, profile, notificationPreferences] = steps.map((s) => s.value);
+  const [chats, applications, documents, profile, notificationPreferences, outcomesKept] = steps.map((s) => s.value);
   return {
     chats,
     applications: applications.drafts,
@@ -85,7 +90,37 @@ export async function deleteUserData({ sub, username }) {
     profile: profile.profile,
     searchTextsErased: profile.searchTextsErased,
     notificationPreferences,
+    outcomesKept,
   };
+}
+
+// Recorded outcomes move to a fresh "deleted#<uuid>" key without the title; the grant, status,
+// amounts, dates, organization, region and state stay. A snooze with no outcome is just deleted.
+async function deidentifyOutcomes(env, sub) {
+  let kept = 0;
+  for await (const rows of queryPages({
+    TableName: env.outcomes,
+    KeyConditionExpression: "user_id = :u",
+    ExpressionAttributeValues: marshall({ ":u": sub }),
+  })) {
+    await batchDelete(
+      env.outcomes,
+      rows.filter((r) => !r.status).map(({ user_id, session_id }) => ({ user_id, session_id }))
+    );
+    for (const { title, next_reminder_at, ...row } of rows.filter((r) => r.status)) {
+      const moved = { ...row, user_id: `deleted#${randomUUID()}`, deidentified_at: new Date().toISOString() };
+      await dynamo.send(
+        new TransactWriteItemsCommand({
+          TransactItems: [
+            { Put: { TableName: env.outcomes, Item: marshall(moved) } },
+            { Delete: { TableName: env.outcomes, Key: marshall({ user_id: row.user_id, session_id: row.session_id }) } },
+          ],
+        })
+      );
+      kept += 1;
+    }
+  }
+  return kept;
 }
 
 async function* queryPages(params) {

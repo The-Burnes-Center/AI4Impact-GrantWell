@@ -18,6 +18,7 @@ import type {
   RankedItem,
 } from "../../../common/api-client/analytics-client";
 import { SINGLE_STATE, SUPPORTED_STATES, stateNameFromCode } from "../../../common/states";
+import OutcomesSection from "./OutcomesSection";
 import "../../../styles/analytics.css";
 
 interface AnalyticsTabProps {
@@ -281,6 +282,8 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
           </div>
         </div>
       )}
+
+      <OutcomesSection apiClient={apiClient} state={stateFilter} addNotification={addNotification} />
     </div>
   );
 };

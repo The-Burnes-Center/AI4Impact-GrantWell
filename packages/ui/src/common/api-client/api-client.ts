@@ -8,6 +8,7 @@ import { DraftsClient } from "./drafts-client";
 import { NotificationsClient } from "./notifications-client";
 import { AnalyticsClient } from "./analytics-client";
 import { UserProfileClient } from "./user-profile-client";
+import { OutcomesClient } from "./outcomes-client";
 
 export class ApiClient {
   private _sessionsClient: SessionsClient | undefined;
@@ -19,6 +20,7 @@ export class ApiClient {
   private _notificationsClient: NotificationsClient | undefined;
   private _analyticsClient: AnalyticsClient | undefined;
   private _userProfileClient: UserProfileClient | undefined;
+  private _outcomesClient: OutcomesClient | undefined;
 
   public get userDocuments() {
     if (!this._userDocumentsClient) {
@@ -67,6 +69,13 @@ export class ApiClient {
       this._notificationsClient = new NotificationsClient(this._appConfig);
     }
     return this._notificationsClient;
+  }
+
+  public get outcomes() {
+    if (!this._outcomesClient) {
+      this._outcomesClient = new OutcomesClient(this._appConfig);
+    }
+    return this._outcomesClient;
   }
 
   public get analytics() {
