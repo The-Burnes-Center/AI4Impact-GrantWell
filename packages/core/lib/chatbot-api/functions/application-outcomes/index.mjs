@@ -42,6 +42,8 @@ const MAX_AMOUNT = 1_000_000_000_000;
 const MAX_SNOOZE_IDS = 100;
 const BATCH_GET_SIZE = 100;
 const MAX_LIST_PAGES = 50;
+/** Holds when this deployment started reminding; applications last edited before then never prompt. */
+export const REMINDERS_FROM_KEY = { user_id: "#meta", session_id: "reminders_from" };
 
 /** Which dates and amounts each status needs. "submitted" waits for a decision, so it keeps reminding. */
 export const STATUS_FIELDS = {
@@ -224,6 +226,29 @@ async function snooze(userId, body) {
 
 // --- Reminders ------------------------------------------------------------------------------
 
+let remindersFrom;
+
+/** The first call after the feature deploys stamps the start; every later call reads it back. */
+async function remindersFromMs() {
+  if (remindersFrom !== undefined) return remindersFrom;
+  const now = new Date().toISOString();
+  try {
+    await dynamo.send(
+      new PutItemCommand({
+        TableName: OUTCOME_TABLE,
+        Item: marshall({ ...REMINDERS_FROM_KEY, started_at: now }),
+        ConditionExpression: "attribute_not_exists(user_id)",
+      })
+    );
+    remindersFrom = Date.parse(now);
+  } catch (error) {
+    if (error?.name !== "ConditionalCheckFailedException") throw error;
+    const row = await getItem(OUTCOME_TABLE, REMINDERS_FROM_KEY, "started_at");
+    remindersFrom = Date.parse(row?.started_at);
+  }
+  return remindersFrom;
+}
+
 function hasProjectBasics(draft) {
   const basics = draft.project_basics;
   return Boolean(basics && typeof basics === "object" && Object.values(basics).some((v) => String(v ?? "").trim()));
@@ -282,7 +307,8 @@ async function dueApplications(userId, now) {
     }),
     userOutcomes(userId),
   ]);
-  const withBasics = drafts.filter(hasProjectBasics);
+  const from = await remindersFromMs();
+  const withBasics = drafts.filter((d) => hasProjectBasics(d) && Date.parse(d.last_modified) >= from);
   const outcomeBySession = new Map(outcomes.map((o) => [o.session_id, o]));
   const nofos = await batchGetNofos([...new Set(withBasics.map((d) => d.document_identifier).filter(Boolean))]);
   return withBasics

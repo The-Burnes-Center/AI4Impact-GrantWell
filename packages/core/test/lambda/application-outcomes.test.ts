@@ -72,6 +72,9 @@ function serve(tables: Record<string, Row[]>) {
     const item = unmarshall(input.Item);
     const rows = (tables[input.TableName] ||= []);
     const i = rows.findIndex(matches({ user_id: item.user_id, session_id: item.session_id }));
+    if (i >= 0 && input.ConditionExpression === "attribute_not_exists(user_id)") {
+      throw Object.assign(new Error("The conditional request failed"), { name: "ConditionalCheckFailedException" });
+    }
     if (i >= 0) rows.splice(i, 1);
     rows.push(item);
     return {};
@@ -133,16 +136,35 @@ describe("dueAtMs", () => {
 describe("user routes", () => {
   const basics = { projectName: "Fiber", requestedAmount: "$40,000" };
 
+  it("stamps the start on first use and never prompts for applications last edited before it", async () => {
+    const { handler } = await load();
+    const tables: Record<string, Row[]> = {
+      drafts: [{ user_id: "sub-1", session_id: "old", title: "Old", document_identifier: "Early grant", project_basics: basics, last_modified: "2026-09-01T00:00:00Z" }],
+      nofos: [{ nofo_name: "Early grant", expiration_date: "2026-08-01" }],
+      outcomes: [],
+    };
+    serve(tables);
+    expect((await call(handler, event("GET /application-outcomes/due"))).body.due).toEqual([]);
+    expect(tables.outcomes).toEqual([{ user_id: "#meta", session_id: "reminders_from", started_at: new Date(NOW).toISOString() }]);
+
+    const again = await load();
+    serve(tables);
+    await call(again.handler, event("GET /application-outcomes/due"));
+    expect(tables.outcomes).toHaveLength(1);
+    expect(tables.outcomes[0].started_at).toBe(new Date(NOW).toISOString());
+  });
+
   it("lists due applications with project basics only, most overdue first", async () => {
     const { handler } = await load();
     serve({
       drafts: [
         { user_id: "sub-1", session_id: "a", title: "A", document_identifier: "Late grant", project_basics: basics, last_modified: "2026-10-20T00:00:00Z" },
         { user_id: "sub-1", session_id: "b", title: "B", document_identifier: "Early grant", project_basics: basics, last_modified: "2026-10-20T00:00:00Z" },
-        { user_id: "sub-1", session_id: "c", title: "Empty", document_identifier: "Early grant", project_basics: { projectName: "" } },
-        { user_id: "sub-1", session_id: "d", title: "Future", document_identifier: "Future grant", project_basics: basics },
-        { user_id: "sub-1", session_id: "e", title: "Snoozed", document_identifier: "Early grant", project_basics: basics },
-        { user_id: "sub-1", session_id: "f", title: "Done", document_identifier: "Early grant", project_basics: basics },
+        { user_id: "sub-1", session_id: "c", title: "Empty", document_identifier: "Early grant", project_basics: { projectName: "" }, last_modified: "2026-10-20T00:00:00Z" },
+        { user_id: "sub-1", session_id: "g", title: "Before rollout", document_identifier: "Early grant", project_basics: basics, last_modified: "2026-09-15T00:00:00Z" },
+        { user_id: "sub-1", session_id: "d", title: "Future", document_identifier: "Future grant", project_basics: basics, last_modified: "2026-10-20T00:00:00Z" },
+        { user_id: "sub-1", session_id: "e", title: "Snoozed", document_identifier: "Early grant", project_basics: basics, last_modified: "2026-10-20T00:00:00Z" },
+        { user_id: "sub-1", session_id: "f", title: "Done", document_identifier: "Early grant", project_basics: basics, last_modified: "2026-10-20T00:00:00Z" },
       ],
       nofos: [
         { nofo_name: "Late grant", expiration_date: "2026-10-15" },
@@ -150,6 +172,7 @@ describe("user routes", () => {
         { nofo_name: "Future grant", expiration_date: "2026-12-31" },
       ],
       outcomes: [
+        { user_id: "#meta", session_id: "reminders_from", started_at: "2026-10-01T00:00:00Z" },
         { user_id: "sub-1", session_id: "e", next_reminder_at: "2026-11-15T00:00:00Z" },
         { user_id: "sub-1", session_id: "f", status: "awarded" },
       ],
